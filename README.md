@@ -10,7 +10,7 @@ osu!player is a music player for *osu!* with the focus of playing your osu! song
 
 If you want to contribute, feel free to fork the repository, read the [contributing information](https://github.com/Founntain/osuplayer.git) and head to the [official osu!player discord](https://discord.gg/RJQSc5B). There you can add all valuable ideas and discuss other stuff regarding development.
 
-## Requirements
+## ☝️ Requirements
 
 #### osu!player requirements
 ✔ A working computer  
