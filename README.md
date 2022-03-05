@@ -79,8 +79,8 @@ Best practice is, that we discuss (new) features and if they are needed. So don'
 ❌ Steering wheel support
 
 ## Contact
-- 📨 7@founntain.dev
-- [Discord](https://discord.gg/RJQSc5B)
+- ✉️ 7@founntain.dev
+- 📣 [Discord](https://discord.gg/RJQSc5B)
 
 ## Screenshots
 
