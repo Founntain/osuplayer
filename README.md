@@ -3,8 +3,8 @@
 </P>
 
 This is the *official* **osu!player** (Avalonia) repository and is mainly developed by [@Founntain](https://github.com/Founntain), with help of [@Cesan](https://github.com/Cesan).  
-This repository will be a complete rewrite of the osu!player plus, so keep in mind this is all *work in progress*, with the *ultimate goal to go cross-platform*.  
-So if we speak osu!player in this repository we mean the Avalonia (this) version. If you want to refer to other versions of the osu!player mention them by their name, either osu!player **plus** or osu!player **legacy** (osu!player versions before the plus)  
+This repository will be a complete rewrite of osu!player plus, so keep in mind this is all *work in progress*, with the *ultimate goal to go cross-platform*.  
+So if we speak osu!player in this repository we mean the Avalonia (this) version. If you want to refer to other versions of the osu!player mention them by their name, either *osu!player **plus*** or *osu!player **legacy*** (osu!player versions before the plus).  
 
 osu!player is a music player for *osu!* with the focus of playing your osu! songs **without having to start osu!**.
 
@@ -24,7 +24,7 @@ You have to build the project for yourself, see the section below
 
 ## ⚒️Building the project
  - Clone / Download the source
- - Open it with Visual Studio, Visual Studio Code, Rider or a anIDE of your choice that supports C# and .NET
+ - Open it with Visual Studio, Visual Studio Code, Rider or an IDE of your choice that supports C# and .NET
  - Run `dotnet restore` (or IDE tools) to restore all packages and dependencies
  - Build/Run the project
 
@@ -78,10 +78,9 @@ Best practice is, that we discuss (new) features and if they are needed. So don'
 #### 🎱 Stop asking for it
 ❌ Steering wheel support
 
-## Source Code
-
-The source code of the *legacy osu!player* was never released and never will.  
-However the osu!player (Avalonia) will be open source from the beginning!
+## Contact
+- 📨 7@founntain.dev
+- [Discord](https://discord.gg/RJQSc5B)
 
 ## Screenshots
 
