@@ -1,4 +1,8 @@
+using System;
+using System.Collections.ObjectModel;
 using Avalonia.ReactiveUI;
+using OsuPlayer.Audio;
+using OsuPlayer.Extensions;
 using ReactiveUI;
 
 namespace OsuPlayer.ViewModels;
@@ -33,13 +37,8 @@ public class MainWindowBaseViewModel : BaseViewModel, IScreen
         set => this.RaiseAndSetIfChanged(ref currentSongText, value);
     }
 
-    private double songPosition;
-    public double SongPosition
-    {
-        get => songPosition;
-        set => this.RaiseAndSetIfChanged(ref songPosition, value);
-    }
-    
+    public ObservableCollection<AudioDevice> OutputDeviceComboboxItems { get; set; }
+
     public MainWindowBaseViewModel()
     {
         TopBar = new TopBarViewModel();
