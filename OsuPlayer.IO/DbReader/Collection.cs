@@ -1,6 +1,4 @@
-using System.Collections.Generic;
-
-namespace OsuPlayer.DbReader
+namespace OsuPlayer.IO.DbReader
 {
     public class Collection
     {

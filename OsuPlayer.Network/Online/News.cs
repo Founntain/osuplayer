@@ -1,7 +1,6 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 
-namespace OsuPlayerPlus.Classes.Online;
+namespace OsuPlayer.Network.Online;
 
 public sealed class News
 {

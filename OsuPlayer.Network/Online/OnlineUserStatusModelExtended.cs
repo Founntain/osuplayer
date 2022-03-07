@@ -1,7 +1,7 @@
 ﻿using OsuPlayer.Data.API.Enums;
 using OsuPlayer.Data.API.Models.User;
 
-namespace OsuPlayerPlus.Classes.Online;
+namespace OsuPlayer.Network.Online;
 
 public sealed class OnlineUserStatusModelExtended : UserOnlineStatusModel
 {

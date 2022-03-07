@@ -33,6 +33,7 @@
         <PackageReference Include="XamlNameReferenceGenerator" Version="1.3.4" />
     </ItemGroup>
     <ItemGroup>
+      <ProjectReference Include="..\OsuPlayer.Network\OsuPlayer.Network.csproj" />
       <Compile Update="Views\MainWindow.axaml.cs">
         <DependentUpon>MainWindow.axaml</DependentUpon>
         <SubType>Code</SubType>

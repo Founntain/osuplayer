@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using OsuPlayerPlus.Classes.Online;
+﻿using OsuPlayer.Network.Online;
 
-namespace OsuPlayerPlus.Classes.API;
+namespace OsuPlayer.Network.API;
 
 public class ApiLanguage
 {

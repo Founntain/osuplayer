@@ -1,7 +1,6 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 
-namespace OsuPlayerPlus.Classes.Online;
+namespace OsuPlayer.Network.Online;
 
 public sealed class Article
 {
@@ -12,6 +11,5 @@ public sealed class Article
 
     public string Creator { get; set; }
     public string Title { get; set; }
-    public string Image { get; set; }
     public string Content { get; set; }
 }

@@ -1,6 +1,6 @@
 ﻿using Avalonia.Media;
 
-namespace OsuPlayerPlus.Classes.Online;
+namespace OsuPlayer.Network.Online;
 
 public static class UserColors
 {
