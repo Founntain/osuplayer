@@ -1,11 +1,8 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
-using OsuPlayer.Network;
 
-namespace OsuPlayerPlus.Classes.API.ApiEndpoints;
+namespace OsuPlayer.Network.API.ApiEndpoints;
 
 public static partial class ApiAsync
 {
@@ -34,22 +31,22 @@ public static partial class ApiAsync
     }
 
     /// <summary>
-    ///     Creates a GET request to the osu!player API return <see cref="T" />
+    /// Creates a GET request to the osu!player API return T.
     /// </summary>
-    /// <param name="call">The route of the controller</param>
     /// <param name="controller">The controller to call</param>
+    /// <param name="action">The route of the controller</param>
     /// <typeparam name="T"></typeparam>
     /// <returns>Returns an object of type T</returns>
-    public static async Task<T> GetRequestAsync<T>(string call, string controller)
+    public static async Task<T?> GetRequestAsync<T>(string controller, string action)
     {
         if (Constants.OfflineMode)
             return default;
 
         try
         {
-            using (var wc = new HttpClient())
+            using (var client = new HttpClient())
             {
-                var data = await wc.GetByteArrayAsync(new Uri($"{Url}{controller}/{call}"));
+                var data = await client.GetByteArrayAsync(new Uri($"{Url}{controller}/{action}"));
 
                 return JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(data));
             }
@@ -63,29 +60,31 @@ public static partial class ApiAsync
     }
 
     /// <summary>
-    ///     Creates a POST request to the osu!player API returning <see cref="T" />.
+    /// Creates a POST request to the osu!player API returning T.
     /// </summary>
-    /// <param name="call">The route of the controller</param>
-    /// <param name="controller">The controller to call</param>
+    /// /// <param name="controller">The controller to call</param>
+    /// <param name="action">The route of the controller</param>
     /// <param name="data">Date to send</param>
     /// <typeparam name="T"></typeparam>
     /// <returns>Returns an object of type T</returns>
-    public static async Task<T?> ApiRequestAsync<T>(string call, string controller, object data = null)
+    public static async Task<T?> ApiRequestAsync<T>(string controller, string action, object data = null)
     {
         if (Constants.OfflineMode)
             return default;
 
         try
         {
-            using (var wc = new WebClient())
+            using (var client = new HttpClient())
             {
-                wc.Headers.Add("Content-Type", "application/json");
-                wc.Encoding = Encoding.UTF8;
+                client.DefaultRequestHeaders.Add("Content-Type", "application/json");
 
-                var url = new Uri($"{Url}{controller}/{call}");
-                var result = await wc.UploadStringTaskAsync(url, "POST", JsonConvert.SerializeObject(data));
+                var url = new Uri($"{Url}{controller}/{action}");
+                
+                var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8);
+                
+                var result = await client.PostAsync(url, content);
 
-                return JsonConvert.DeserializeObject<T>(result);
+                return JsonConvert.DeserializeObject<T>(await result.Content.ReadAsStringAsync());
             }
         }
         catch (Exception ex)
@@ -96,16 +95,24 @@ public static partial class ApiAsync
         }
     }
 
-    public static async Task<T?> GetRequestWithIdAsync<T>(string call, string controller, string id)
+    /// <summary>
+    /// Creates a GET request to the osu!player api with parameters returning T.
+    /// </summary>
+    /// <param name="controller">The controller to call</param>
+    /// <param name="action">The route of the controller</param>
+    /// <param name="parameters">Paramaters for the call</param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns>Returns an object of type T</returns>
+    public static async Task<T?> GetRequestWithParameterAsync<T>(string controller, string action, string parameters)
     {
         if (Constants.OfflineMode)
             return default;
 
         try
         {
-            using (var wc = new HttpClient())
+            using (var client = new HttpClient())
             {
-                var data = await wc.GetByteArrayAsync(new Uri($"{Url}{controller}/{call}?id={id}"));
+                var data = await client.GetByteArrayAsync(new Uri($"{Url}{controller}/{action}?{parameters}"));
 
                 return JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(data));
             }
@@ -118,16 +125,38 @@ public static partial class ApiAsync
         }
     }
 
-    public static async Task<T?> GetRequestWithNameAsync<T>(string call, string controller, string name)
+    public static async Task<T?> GetRequestWithIdAsync<T>(string controller, string action, string id)
     {
         if (Constants.OfflineMode)
             return default;
 
         try
         {
-            using (var wc = new HttpClient())
+            using (var client = new HttpClient())
             {
-                var data = await wc.GetByteArrayAsync(new Uri($"{Url}{controller}/{call}?name={name}"));
+                var data = await client.GetByteArrayAsync(new Uri($"{Url}{controller}/{action}?id={id}"));
+
+                return JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(data));
+            }
+        }
+        catch (Exception ex)
+        {
+            ParseWebException(ex);
+
+            return default;
+        }
+    }
+
+    public static async Task<T?> GetRequestWithNameAsync<T>(string controller, string action, string name)
+    {
+        if (Constants.OfflineMode)
+            return default;
+
+        try
+        {
+            using (var client = new HttpClient())
+            {
+                var data = await client.GetByteArrayAsync(new Uri($"{Url}{controller}/{action}?name={name}"));
                 
                 return JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(data));
             }

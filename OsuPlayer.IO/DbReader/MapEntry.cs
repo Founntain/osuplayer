@@ -1,4 +1,4 @@
-﻿namespace OsuPlayer.DbReader
+﻿namespace OsuPlayer.IO.DbReader
 {
     public class MapEntry
     {
