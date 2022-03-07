@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Media;
@@ -17,7 +17,7 @@ public class ViewLocator : IDataTemplate
 
         if (type != null)
         {
-            return (Control) Activator.CreateInstance(type);
+            return (Control)Activator.CreateInstance(type);
         }
 
         return new Button { Content = $"Not Found: {name}, please buy at founntain.dev"};

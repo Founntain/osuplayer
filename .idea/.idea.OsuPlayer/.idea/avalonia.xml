@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="OsuPlayer/App.axaml" value="OsuPlayer/OsuPlayer.csproj" />
+        <entry key="OsuPlayer/Styles/Slider/HorizontalSlider/OsuPlayerHorizontalSliderBgStyle.axaml" value="OsuPlayer/OsuPlayer.csproj" />
+        <entry key="OsuPlayer/Styles/Slider/HorizontalSlider/OsuPlayerHorizontalSliderBgStyle.xaml" value="OsuPlayer/OsuPlayer.csproj" />
+        <entry key="OsuPlayer/Views/MainWindow.axaml" value="OsuPlayer/OsuPlayer.csproj" />
+        <entry key="OsuPlayer/Views/PlayerControlView.axaml" value="OsuPlayer/OsuPlayer.csproj" />
+        <entry key="OsuPlayer/Views/TopBarView.axaml" value="OsuPlayer/OsuPlayer.csproj" />
+      </map>
+    </option>
+  </component>
+</project>
