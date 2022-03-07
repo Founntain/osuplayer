@@ -1,0 +1,126 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="OsuPlayer.Views.PlayerControlView">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/SliderStyle.axaml" />
+    </UserControl.Styles>
+
+    <Grid>
+        <Grid.Background>
+            <SolidColorBrush Color="{DynamicResource BaseColor}" />
+        </Grid.Background>
+
+        <Grid ColumnDefinitions="200, *, 200">
+            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                <DockPanel>
+                    <Border Name="Volume" PointerReleased="Volume_OnPointerReleased" Cursor="Hand">
+                        <ToolTip.Tip>
+                            <TextBlock Text="Click to toggle mute"></TextBlock>
+                        </ToolTip.Tip>
+                        <Image Height="18" Width="18" Source="../Resources/Icons/max_vol.png" Margin="5 0" />
+                    </Border>
+
+                    <Slider Name="VolumeSlider"
+                            VerticalAlignment="Center" Minimum="0" Maximum="100" Value="{Binding Volume}" />
+                </DockPanel>
+
+                <DockPanel>
+                    <Border x:Name="PlaybackSpeed"
+                            PointerReleased="PlaybackSpeedBtn_OnPointerReleased" Cursor="Hand">
+                        <ToolTip.Tip>
+                            <TextBlock Text="Click to reset playback speed" />
+                        </ToolTip.Tip>
+                        <Image Height="18" Width="18"
+                               Source="../Resources/Icons/speed.png" Margin="5 0 5 0" />
+                    </Border>
+                    <Slider x:Name="PlaybackSpeedSlider" VerticalAlignment="Center"
+                            Minimum="32100" Maximum="56100" Value="{Binding PlaybackSpeed}" />
+                </DockPanel>
+            </StackPanel>
+
+            <DockPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
+                <Border x:Name="Favorite" PointerReleased="FavoriteBtn_OnMouseLeftButtonUp">
+                    <ToolTip.Tip>
+                        <TextBlock Text="Add/Remove song from your current selected playlist." />
+                    </ToolTip.Tip>
+                    <Image Cursor="Hand" Height="26" Width="26"
+                           Source="../Resources/Icons/heart_off.png" Margin="5 0" />
+                </Border>
+
+                <Border x:Name="Blacklist" PointerReleased="BlacklistBtn_OnMouseLeftButtonUp">
+                    <ToolTip.Tip>
+                        <TextBlock Text="Add/Remove song from your blacklist." />
+                    </ToolTip.Tip>
+                    <Image Cursor="Hand" Height="26" Width="26"
+                           Source="../Resources/Icons/blacklist_heart_off.png" />
+                </Border>
+
+                <Border x:Name="NavigationSettings" Margin="10 0"
+                        PointerReleased="NavigationSettingsBtn_OnMouseLeftButtonUp" Cursor="Hand">
+                    <Image Height="32" Width="32"
+                           Source="../Resources/Icons/cog.png" />
+                </Border>
+            </DockPanel>
+
+            <DockPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock x:Name="CurrentSongTimeText" Text="{Binding CurrentSongTime}" VerticalAlignment="Center" Margin="5"
+                           FontFamily="{DynamicResource NovaMono}" />
+
+                <Border Name="Repeat" Height="32" Width="32" CornerRadius="50" Cursor="Hand"
+                        BorderThickness="2"
+                        PointerReleased="SongControl">
+                    <Border.Background>
+                        <SolidColorBrush Color="{DynamicResource SecondaryColor}" />
+                    </Border.Background>
+
+                    <Image Width="16" Height="16"
+                           Source="../Resources/Icons/Controls/Light/repeat.png" />
+                </Border>
+
+                <Border Name="Previous" Height="32" Width="32" Margin="2 0" CornerRadius="50" Cursor="Hand"
+                        PointerReleased="SongControl">
+                    <Border.Background>
+                        <SolidColorBrush Color="{DynamicResource SecondaryColor}" />
+                    </Border.Background>
+
+                    <Image Width="16" Height="16" Source="../Resources/Icons/Controls/Light/backwards.png" />
+                </Border>
+
+                <Border Name="PlayPause" Height="42" Width="42" CornerRadius="50" Cursor="Hand"
+                        PointerReleased="SongControl">
+                    <Border.Background>
+                        <SolidColorBrush Color="{DynamicResource SecondaryColor}" />
+                    </Border.Background>
+
+                    <Image Source="../Resources/Icons/Controls/Light/play.png" />
+                </Border>
+
+                <Border Name="Next" Height="32" Width="32" Margin="2 0" CornerRadius="50" Cursor="Hand"
+                        PointerReleased="SongControl">
+                    <Border.Background>
+                        <SolidColorBrush Color="{DynamicResource SecondaryColor}" />
+                    </Border.Background>
+
+                    <Image Width="16" Height="16"
+                           Source="../Resources/Icons/Controls/Light/forward.png" />
+                </Border>
+
+                <Border Name="Shuffle" Height="32" Width="32" CornerRadius="50" Cursor="Hand"
+                        BorderThickness="2"
+                        PointerReleased="SongControl">
+                    <Border.Background>
+                        <SolidColorBrush Color="{DynamicResource SecondaryColor}" />
+                    </Border.Background>
+                    <Image Width="16" Height="16" Source="../Resources/Icons/Controls/Light/shuffle.png" />
+                </Border>
+
+                <TextBlock Name="CurrentSongTimeLeft" Text="{Binding CurrentSongTimeLeft}" VerticalAlignment="Center"
+                           HorizontalAlignment="Left" FontFamily="{DynamicResource NovaMono}" Margin="5 0" />
+            </DockPanel>
+        </Grid>
+    </Grid>
+
+</UserControl>
