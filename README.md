@@ -57,7 +57,8 @@ Best practice is, that we discuss (new) features and if they are needed. So don'
 ## osu!player todo list
 
 #### 🛠️ Features with higher priority
-- [ ] Import songs from osu! via osu!.db  
+- [x] Import songs from osu! via osu!.db  
+- [ ] Play songs
 - [ ] Favorise songs and create custom playlists  
 - [ ] Create playlists from collection.db   
 - [ ] Nightcore and daycore function  
