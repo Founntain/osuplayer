@@ -1,0 +1,87 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:controls="clr-namespace:OsuPlayer.Controls"
+             x:Class="OsuPlayer.Views.TopBarView">
+    <Grid Name="TopBarGrid">
+        <Grid.Background>
+            <SolidColorBrush Color="{DynamicResource BaseColor}" />
+        </Grid.Background>
+
+        <Grid>
+            <Border Background="Transparent" />
+
+            <DockPanel>
+                <Image Source="../Resources/Icons/music.png" HorizontalAlignment="Left" Width="24" Height="24"
+                       Margin="10 0 " />
+                <TextBlock Name="CurrentSongText" Text="{Binding $parent[Window].DataContext.CurrentSongText}"
+                           VerticalAlignment="Center" HorizontalAlignment="Left" Width="475"
+                           TextTrimming="CharacterEllipsis" />
+            </DockPanel>
+            <DockPanel HorizontalAlignment="Center">
+                <!--Search Button-->
+                <Border Name="SearchNavigation" BorderThickness="2" Height="40" Width="40"
+                        Background="#7F000000" CornerRadius="50" Cursor="Hand"
+                        PointerReleased="NavigationPressed">
+                    <Image Width="24" Height="24" Source="../Resources/Icons/search.png" />
+                </Border>
+                <!--Playlist Button-->
+                <Border Name="PlaylistNavigation" BorderThickness="2" Height="40" Width="40"
+                        Background="#7F000000" CornerRadius="50" Cursor="Hand"
+                        PointerReleased="NavigationPressed">
+                    <Image Width="24" Height="24" Source="../Resources/Icons/menu.png" />
+                </Border>
+                <!--Home Button-->
+                <Border x:Name="HomeNavigation" BorderThickness="2" Height="40" Width="40" CornerRadius="50"
+                        Cursor="Hand" PointerReleased="NavigationPressed">
+                    <Image Width="32" Height="32"
+                           Source="../Resources/logo_outline.png" />
+                    <Border.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem x:Name="OpenFullscreenMenuItem" Header="Open Fullscreen-Mode"
+                                      Click="OpenFullscreenMenuItem_OnClick" />
+                            <MenuItem x:Name="OpenMiniplayerMenuItem" Header="Open Miniplayer"
+                                      Click="OpenMiniplayerMenuItem_OnClick" />
+                            <MenuItem x:Name="OpenEqualizerMenuItem" Header="Open Equalizer"
+                                      Click="OpenEqualizerMenuItem_OnClick" />
+                            <Separator />
+                            <MenuItem x:Name="OpenContributersMenuItem" Header="Creators of the osu!player"
+                                      Click="OpenContributersMenuItem_OnClick" />
+                        </ContextMenu>
+                    </Border.ContextMenu>
+                </Border>
+                <!--User Button-->
+                <Border x:Name="UserNavigation" BorderThickness="2" Height="40" Width="40"
+                        Background="#7F000000" CornerRadius="50" Cursor="Hand"
+                        PointerReleased="NavigationPressed">
+                    <Image Width="24" Height="24" Source="../Resources/Icons/user.png" />
+                </Border>
+                <!--Party Button-->
+                <Border x:Name="PartyNavigation" BorderThickness="2" Height="40" Width="40"
+                        Background="#7F000000" CornerRadius="50" Cursor="Hand"
+                        PointerReleased="NavigationPressed">
+                    <Image Width="24" Height="24" Source="../Resources/Icons/party.png" />
+                </Border>
+            </DockPanel>
+            
+            <!--Window Buttons-->
+            <DockPanel HorizontalAlignment="Right">
+                <TextBlock Name="StatusText" VerticalAlignment="Center" 
+                           HorizontalAlignment="Right" Margin="10 0" />
+                
+                <Image Name="Minimize" Cursor="Hand" Source="../Resources/Icons/minimize.png"
+                       PointerReleased="WindowButtonPressed"
+                       HorizontalAlignment="Left" Width="24" Height="24" Margin="0 0 5 0"/>
+                <Image x:Name="Miniplayer" Cursor="Hand" Source="../Resources/Icons/miniPlayer.png"
+                       PointerReleased="WindowButtonPressed"
+                       HorizontalAlignment="Left" Width="24" Height="24" />
+                <Image x:Name="Close" Cursor="Hand" Source="../Resources/Icons/close.png"
+                       PointerReleased="WindowButtonPressed"
+                       HorizontalAlignment="Left" Width="32" Height="32" Margin="0 0 10 0" />
+            </DockPanel>
+        </Grid>
+
+    </Grid>
+</UserControl>

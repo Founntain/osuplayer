@@ -22,6 +22,7 @@
         <PackageReference Include="Avalonia.Desktop" Version="0.10.13" />
         <PackageReference Include="Avalonia.Diagnostics" Version="0.10.13" />
         <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.13" />
+        <PackageReference Include="Avalonia.Skia" Version="0.10.13" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Include="ManagedBass" Version="3.1.0" />
         <PackageReference Include="ManagedBass.Fx" Version="3.1.0" />
@@ -34,5 +35,13 @@
     <ItemGroup>
       <ProjectReference Include="..\OsuPlayer.IO\OsuPlayer.IO.csproj" />
       <ProjectReference Include="..\OsuPlayer.Network\OsuPlayer.Network.csproj" />
+      <Compile Update="Views\MainWindow.axaml.cs">
+        <DependentUpon>MainWindow.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
+    <ItemGroup>
+        <Folder Include="Resources" />
+        <AvaloniaResource Include="Resources\**" />
     </ItemGroup>
 </Project>

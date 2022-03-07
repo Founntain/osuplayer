@@ -3,7 +3,7 @@
              xmlns:views="clr-namespace:OsuPlayer.Views"
              x:Class="OsuPlayer.App">
     <Application.DataTemplates>
-        <views:ViewLocator/>
+        <views:ViewLocator />
     </Application.DataTemplates>
 
     <Application.Resources>
@@ -24,8 +24,8 @@
         <FontFamily x:Key="Torus">/Resources/Fonts/#Torus</FontFamily>
         <FontFamily x:Key="NovaMono">/Resources/Fonts/#NovaMono</FontFamily>
     </Application.Resources>
-    
+
     <Application.Styles>
-        <FluentTheme Mode="Dark"/>
+        <FluentTheme Mode="Dark" />
     </Application.Styles>
 </Application>

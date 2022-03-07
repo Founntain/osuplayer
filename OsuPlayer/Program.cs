@@ -2,6 +2,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.ReactiveUI;
 
 namespace OsuPlayer
 {
@@ -18,6 +19,9 @@ namespace OsuPlayer
         public static AppBuilder BuildAvaloniaApp()
             => AppBuilder.Configure<App>()
                 .UsePlatformDetect()
-                .LogToTrace();
+                .LogToTrace()
+                .UseSkia()
+                .UseReactiveUI()
+                .With(new Win32PlatformOptions {AllowEglInitialization = true});
     }
 }

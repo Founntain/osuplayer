@@ -1,11 +1,11 @@
-﻿# Default ignored files
+# Default ignored files
 /shelf/
 /workspace.xml
 # Rider ignored files
+/contentModel.xml
+/modules.xml
 /projectSettingsUpdater.xml
 /.idea.OsuPlayer.iml
-/modules.xml
-/contentModel.xml
 # Editor-based HTTP Client requests
 /httpRequests/
 # Datasource local storage ignored files

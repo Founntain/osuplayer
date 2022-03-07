@@ -4,9 +4,11 @@
     <option name="projectPerEditor">
       <map>
         <entry key="OsuPlayer/App.axaml" value="OsuPlayer/OsuPlayer.csproj" />
-        <entry key="OsuPlayer/MainWindow.axaml" value="OsuPlayer/OsuPlayer.csproj" />
-        <entry key="OsuPlayer/UI Extensions/MessageBox.axaml" value="OsuPlayer/OsuPlayer.csproj" />
-        <entry key="OsuPlayer/UI Extensions/MessageBoxWindow.axaml" value="OsuPlayer/OsuPlayer.csproj" />
+        <entry key="OsuPlayer/Styles/Slider/HorizontalSlider/OsuPlayerHorizontalSliderBgStyle.axaml" value="OsuPlayer/OsuPlayer.csproj" />
+        <entry key="OsuPlayer/Styles/Slider/HorizontalSlider/OsuPlayerHorizontalSliderBgStyle.xaml" value="OsuPlayer/OsuPlayer.csproj" />
+        <entry key="OsuPlayer/Views/MainWindow.axaml" value="OsuPlayer/OsuPlayer.csproj" />
+        <entry key="OsuPlayer/Views/PlayerControlView.axaml" value="OsuPlayer/OsuPlayer.csproj" />
+        <entry key="OsuPlayer/Views/TopBarView.axaml" value="OsuPlayer/OsuPlayer.csproj" />
       </map>
     </option>
   </component>

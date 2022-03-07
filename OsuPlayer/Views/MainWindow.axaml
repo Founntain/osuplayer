@@ -1,0 +1,23 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="OsuPlayer.Views.MainWindow"
+        Title="OsuPlayer" Width="1280" Height="720" 
+        WindowStartupLocation="CenterScreen"
+        Foreground="White"
+        FontFamily="avares://OsuPlayer/Resources/Fonts/Torus-Regular.ttf#Torus"
+        FontSize="16"
+        CanResize="True">
+    <Window.Styles>
+        <StyleInclude Source="/Styles/SliderStyle.axaml"/>
+    </Window.Styles>
+    <Grid Name="MainGrid" RowDefinitions="50, *, 50">
+        <ContentControl Name="TopBarPanel" Grid.Row="0" Content="{Binding TopBar}" />
+        <ContentControl Name="MainViewPanel" Grid.Row="1" Content="{Binding MainView}" />
+        <ContentControl Name="PlayerControlPanel" Grid.Row="2" Content="{Binding PlayerControl}" />
+        <Slider Grid.Row="2" Name="SongProgressSlider" VerticalAlignment="Top" Value="{Binding SongPosition}"
+                Margin="0 -4 0 0" PointerReleased="SongProgressSlider_OnPointerReleased" PointerPressed="SongProgressSlider_OnPointerPressed"/>
+    </Grid>
+</Window>

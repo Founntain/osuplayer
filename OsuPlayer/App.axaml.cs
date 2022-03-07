@@ -1,10 +1,12 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using OsuPlayer.ViewModels;
+using OsuPlayer.Views;
 
 namespace OsuPlayer
 {
-    public partial class App : Application
+    public class App : Application
     {
         public override void Initialize()
         {
@@ -15,7 +17,10 @@ namespace OsuPlayer
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                desktop.MainWindow = new MainWindow();
+                desktop.MainWindow = new MainWindow
+                {
+                    ViewModel = new MainWindowBaseViewModel()
+                };
             }
 
             base.OnFrameworkInitializationCompleted();
