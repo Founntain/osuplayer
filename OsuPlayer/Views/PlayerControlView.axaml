@@ -117,7 +117,7 @@
                     <Image Width="16" Height="16" Source="../Resources/Icons/Controls/Light/shuffle.png" />
                 </Border>
 
-                <TextBlock Name="CurrentSongTimeLeft" Text="{Binding CurrentSongTimeLeft}" VerticalAlignment="Center"
+                <TextBlock Name="CurrentSongTimeLeft" Text="{Binding CurrentSongLength}" VerticalAlignment="Center"
                            HorizontalAlignment="Left" FontFamily="{DynamicResource NovaMono}" Margin="5 0" />
             </DockPanel>
         </Grid>

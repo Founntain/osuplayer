@@ -1,4 +1,6 @@
+using System;
 using System.Reactive.Disposables;
+using OsuPlayer.Extensions;
 using ReactiveUI;
 
 namespace OsuPlayer.ViewModels;
@@ -20,6 +22,17 @@ public class PlayerControlViewModel : BaseViewModel, IActivatableViewModel
         get => playbackSpeed;
         set => this.RaiseAndSetIfChanged(ref playbackSpeed, value);
     }
+    
+    private double songTime;
+    public double SongTime
+    {
+        get => songTime;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref songTime, value);
+            CurrentSongTime = TimeSpan.FromSeconds(value).FormatTime();
+        }
+    }
 
     private string currentSongTime = "00:00";
     public string CurrentSongTime
@@ -27,14 +40,25 @@ public class PlayerControlViewModel : BaseViewModel, IActivatableViewModel
         get => currentSongTime;
         set => this.RaiseAndSetIfChanged(ref currentSongTime, value);
     }
-    
-    private string currentSongTimeLeft = "00:00";
-    public string CurrentSongTimeLeft
+
+    private double songLength;
+    public double SongLength
     {
-        get => currentSongTimeLeft;
-        set => this.RaiseAndSetIfChanged(ref currentSongTimeLeft, value);
+        get => songLength;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref songLength, value);
+            CurrentSongLength = TimeSpan.FromSeconds(value).FormatTime();
+        }
     }
 
+    private string currentSongLength = "00:00";
+    public string CurrentSongLength
+    {
+        get => currentSongLength;
+        set => this.RaiseAndSetIfChanged(ref currentSongLength, value);
+    }
+    
     public PlayerControlViewModel()
     {
         Activator = new ViewModelActivator();

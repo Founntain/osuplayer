@@ -218,12 +218,7 @@ namespace OsuPlayer.Audio
                 if (oldValue != _channelLengthD)
                 {
                     NotifyPropertyChanged("ChannelLength");
-                    OsuPlayer.Dashboard.ViewModel!.SongLength = value;
-                    var time = TimeSpan.FromSeconds(value);
-                    string timeStr = "";
-                    if (time.Hours > 0) timeStr += time.ToString(@"%h\:");
-                    timeStr += time.ToString(@"%m\:ss");
-                    OsuPlayer.Dashboard.ViewModel.CurrentSongLength = timeStr;
+                    Core.MainWindow.ViewModel!.PlayerControl.SongLength = value;
                 }
             }
         }
@@ -242,7 +237,7 @@ namespace OsuPlayer.Audio
                 if (Math.Abs(_currentChannelPosition - value) > 0.1)
                 {
                     NotifyPropertyChanged("ChannelPosition");
-                    OsuPlayer.Dashboard.ViewModel!.SongPosition = value;
+                    Core.MainWindow.ViewModel!.PlayerControl.SongTime = value;
                     _currentChannelPosition = value;
                 }
                 _inChannelSet = false;
@@ -253,8 +248,11 @@ namespace OsuPlayer.Audio
 
         #region Callbacks
 
-        private void EndTrack(int handle, int channel, int data, IntPtr user) =>
-            Dispatcher.UIThread.Post(OsuPlayer.NextSong);
+        private void EndTrack(int handle, int channel, int data, IntPtr user)
+        {
+            //TODO: add next song method
+            //Dispatcher.UIThread.Post(OsuPlayer.NextSong);
+        }
 
         private void RepeatCallback(int handle, int channel, int data, IntPtr user) =>
             Dispatcher.UIThread.Post(() => ChannelPosition = SelectionBegin.TotalSeconds);
@@ -481,7 +479,7 @@ namespace OsuPlayer.Audio
             _positionTimer.Start();
             AvailableAudioDevices = new Collection<AudioDevice>();
 
-            var mainWindow = OsuPlayer.Dashboard;
+            var mainWindow = Core.MainWindow;
             if (mainWindow == null) return;
 
             //var interopHelper = new Interop(mainWindow);
@@ -508,8 +506,7 @@ namespace OsuPlayer.Audio
                 counter++;
             }
 
-            OsuPlayer.Dashboard.ViewModel.OutputDeviceComboboxItems =
-                new ObservableCollection<AudioDevice>(GetAudioDevices());
+            Core.MainWindow.ViewModel.OutputDeviceComboboxItems = new ObservableCollection<AudioDevice>(GetAudioDevices());
 
             //SetDeviceInfo(OsuPlayer.Config.ConfigStorage.SelectedOutputDevice);
         }

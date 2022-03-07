@@ -17,7 +17,7 @@
         <ContentControl Name="TopBarPanel" Grid.Row="0" Content="{Binding TopBar}" />
         <ContentControl Name="MainViewPanel" Grid.Row="1" Content="{Binding MainView}" />
         <ContentControl Name="PlayerControlPanel" Grid.Row="2" Content="{Binding PlayerControl}" />
-        <Slider Grid.Row="2" Name="SongProgressSlider" VerticalAlignment="Top" Value="{Binding SongPosition}"
+        <Slider Grid.Row="2" Name="SongProgressSlider" VerticalAlignment="Top" Value="{Binding $self.DataContext.PlayerControl.SongTime}" Maximum="{Binding $self.DataContext.PlayerControl.SongLength}"
                 Margin="0 -4 0 0" PointerReleased="SongProgressSlider_OnPointerReleased" PointerPressed="SongProgressSlider_OnPointerPressed"/>
     </Grid>
 </Window>
