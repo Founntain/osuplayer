@@ -1,4 +1,6 @@
-﻿namespace OsuPlayer.IO;
+﻿using Microsoft.EntityFrameworkCore.Diagnostics.Internal;
+
+namespace OsuPlayer.IO;
 
 public sealed class SongEntry
 {
@@ -16,7 +18,7 @@ public sealed class SongEntry
         FolderName = folderName;
         AudioFileName = audioFileName;
         Fullpath = !isCustomSong
-            ? $"{OsuPlayerConfig.OsuSongsPath}\\{FolderName}\\{AudioFileName}"
+            ? $"{Config.GetConfigInstance()?.OsuSongsPath}\\{FolderName}\\{AudioFileName}"
             : AudioFileName;
         //Background = !isCustomSong
         //    ? FindBackground()
@@ -58,7 +60,7 @@ public sealed class SongEntry
     {
         if (IsCustomSong) return string.Empty;
 
-        var path = $"{OsuPlayerConfig.OsuSongsPath}\\{FolderName}";
+        var path = $"{Config.GetConfigInstance()?.OsuSongsPath}\\{FolderName}";
 
         var eventCount = 0;
 
@@ -105,21 +107,21 @@ public sealed class SongEntry
 
     public string GetArtist()
     {
-        if (!OsuPlayerConfig.UseSongnameUnicode) return Artist;
+        if (!Config.GetConfigInstance().UseSongnameUnicode) return Artist;
     
         return !string.IsNullOrWhiteSpace(ArtistUnicode) ? ArtistUnicode : Artist;
     }
     
     public string GetTitle()
     {
-        if (!OsuPlayerConfig.UseSongnameUnicode) return Title;
+        if (!Config.GetConfigInstance().UseSongnameUnicode) return Title;
     
         return !string.IsNullOrWhiteSpace(TitleUnicode) ? TitleUnicode : Title;
     }
     
     public string GetSongName()
     {
-        if (!OsuPlayerConfig.UseSongnameUnicode) return $"{Artist} - {Title}";
+        if (!Config.GetConfigInstance().UseSongnameUnicode) return $"{Artist} - {Title}";
     
         if (!string.IsNullOrWhiteSpace(ArtistUnicode) && !string.IsNullOrWhiteSpace(TitleUnicode))
             return $"{ArtistUnicode} - {TitleUnicode}";

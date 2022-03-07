@@ -17,6 +17,7 @@ public class MainWindowBaseViewModel : BaseViewModel, IScreen
     public readonly HomeViewModel HomeView;
     public readonly UserViewModel UserView;
     public readonly PartyViewModel PartyView;
+    public readonly SettingsViewModel SettingsView;
     
     public RoutingState Router { get; } = new();
     
@@ -49,6 +50,7 @@ public class MainWindowBaseViewModel : BaseViewModel, IScreen
         HomeView = new HomeViewModel();
         UserView = new UserViewModel();
         PartyView = new PartyViewModel();
+        SettingsView = new SettingsViewModel();
 
         mainView = HomeView;
         //Generate new ViewModels here

@@ -1,5 +1,4 @@
 using System;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
@@ -22,27 +21,27 @@ public partial class PlayerControlView : ReactiveUserControl<PlayerControlViewMo
 
     private void Volume_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     private void PlaybackSpeedBtn_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     private void FavoriteBtn_OnMouseLeftButtonUp(object? sender, PointerReleasedEventArgs e)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     private void BlacklistBtn_OnMouseLeftButtonUp(object? sender, PointerReleasedEventArgs e)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     private void NavigationSettingsBtn_OnMouseLeftButtonUp(object? sender, PointerReleasedEventArgs e)
     {
-        throw new System.NotImplementedException();
+        Core.MainWindow.ViewModel!.MainView = Core.MainWindow.ViewModel.SettingsView;
     }
 
     private void SongControl(object? sender, PointerReleasedEventArgs e)

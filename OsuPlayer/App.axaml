@@ -7,12 +7,13 @@
     </Application.DataTemplates>
 
     <Application.Resources>
-        <Color x:Key="BaseColor">#FF282C34</Color>
-        <Color x:Key="SecondaryColor">#FF21252B</Color>
-        <Color x:Key="SpacerColor">#FFFFCC22</Color>
+        <Color x:Key="BaseColor">#FA282C34</Color>
+        <Color x:Key="AcrylicBaseColor">#7F000000</Color>
+        <Color x:Key="SecondaryColor">#FA21252B</Color>
+        <Color x:Key="AcrylicSecondaryColor">#7F000000</Color>
+        <Color x:Key="AccentColor">#FFFFCC22</Color>
         <Color x:Key="ControlsButtonColor">#FF21252B</Color>
         <Color x:Key="SidemenuButtonsGlow">#FFFFE48A</Color>
-        <Color x:Key="ProgressbarColor">#FFFFCC22</Color>
         <Color x:Key="SliderThumbColor">#FFFFFFFF</Color>
         <Color x:Key="ButtonBackgroundColor">#7F000000</Color>
 

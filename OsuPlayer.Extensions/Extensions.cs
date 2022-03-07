@@ -4,17 +4,14 @@ public static class Extensions
 {
     public static string FormatTime(this TimeSpan time)
     {
-        string timeStr = "";
-        if (time.Hours > 0)
-        {
-            timeStr += time.ToString(@"%h\:mm\:");
-        }
-        else
-        {
-            timeStr += time.ToString(@"%m\:");
-        }
+        var timeStr = string.Empty;
+
+        timeStr += time.Hours > 0 
+            ? time.ToString(@"%h\:mm\:") 
+            : time.ToString(@"%m\:");
 
         timeStr += time.ToString(@"ss");
+        
         return timeStr;
     }
 }

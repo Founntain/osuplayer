@@ -81,4 +81,9 @@ partial class TopBarView : ReactiveUserControl<TopBarViewModel>
     {
         throw new System.NotImplementedException();
     }
+    
+    private void TopBarGrid_PointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        Core.MainWindow.BeginMoveDrag(e);
+    }
 }

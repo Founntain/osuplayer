@@ -360,7 +360,7 @@ namespace OsuPlayer.Audio
                     Difference = 44100 - SampleFrequency;
                     //SetEqBands();
 
-                    SetDeviceInfo(OsuPlayerConfig.SelectedOutputDevice);
+                    SetDeviceInfo(Core.Config.SelectedOutputDevice);
 
 
                     // Set the stream to call Stop() when it ends.
@@ -415,7 +415,7 @@ namespace OsuPlayer.Audio
         /// <returns></returns>
         public void SetAllEq(double[] gain)
         {
-            if (!OsuPlayerConfig.IsEqEnabled || _paramEq == null) return;
+            if (!Core.Config.IsEqEnabled || _paramEq == null) return;
             for (var i = 0; i < gain.Length; i++)
             {
                 SetValue(i, gain[i]);
@@ -453,7 +453,7 @@ namespace OsuPlayer.Audio
 
             var result = Bass.ChannelSetDevice(FxStream, index + 1);
 
-            OsuPlayerConfig.SelectedOutputDevice = index;
+            Core.Config.SelectedOutputDevice = index;
 
             Console.WriteLine($"SET: {index} | {result} | {Bass.LastError}");
         }

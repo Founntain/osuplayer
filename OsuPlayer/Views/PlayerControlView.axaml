@@ -10,7 +10,7 @@
 
     <Grid>
         <Grid.Background>
-            <SolidColorBrush Color="{DynamicResource BaseColor}" />
+            <SolidColorBrush Color="{DynamicResource AcrylicBaseColor}" />
         </Grid.Background>
 
         <Grid ColumnDefinitions="200, *, 200">
@@ -69,53 +69,72 @@
                 <TextBlock x:Name="CurrentSongTimeText" Text="{Binding CurrentSongTime}" VerticalAlignment="Center" Margin="5"
                            FontFamily="{DynamicResource NovaMono}" />
 
-                <Border Name="Repeat" Height="32" Width="32" CornerRadius="50" Cursor="Hand"
-                        BorderThickness="2"
+                <ExperimentalAcrylicBorder Name="Repeat" Height="32" Width="32" CornerRadius="50" Cursor="Hand"
                         PointerReleased="SongControl">
-                    <Border.Background>
-                        <SolidColorBrush Color="{DynamicResource SecondaryColor}" />
-                    </Border.Background>
+                    <ExperimentalAcrylicBorder.Material>
+                        <ExperimentalAcrylicMaterial
+                            BackgroundSource="Digger"
+                            TintColor="Black"
+                            TintOpacity="1"
+                            MaterialOpacity="0.25" />
+                    </ExperimentalAcrylicBorder.Material>
 
                     <Image Width="16" Height="16"
                            Source="../Resources/Icons/Controls/Light/repeat.png" />
-                </Border>
+                </ExperimentalAcrylicBorder>
 
-                <Border Name="Previous" Height="32" Width="32" Margin="2 0" CornerRadius="50" Cursor="Hand"
+                <ExperimentalAcrylicBorder Name="Previous" Height="32" Width="32" Margin="2 0" CornerRadius="50" Cursor="Hand"
                         PointerReleased="SongControl">
-                    <Border.Background>
-                        <SolidColorBrush Color="{DynamicResource SecondaryColor}" />
-                    </Border.Background>
+                    <ExperimentalAcrylicBorder.Material>
+                        <ExperimentalAcrylicMaterial
+                            BackgroundSource="Digger"
+                            TintColor="Black"
+                            TintOpacity="1"
+                            MaterialOpacity="0.25" />
+                    </ExperimentalAcrylicBorder.Material>
 
                     <Image Width="16" Height="16" Source="../Resources/Icons/Controls/Light/backwards.png" />
-                </Border>
+                </ExperimentalAcrylicBorder>
 
-                <Border Name="PlayPause" Height="42" Width="42" CornerRadius="50" Cursor="Hand"
+                <ExperimentalAcrylicBorder Name="PlayPause" Height="42" Width="42" CornerRadius="50" Cursor="Hand"
                         PointerReleased="SongControl">
-                    <Border.Background>
-                        <SolidColorBrush Color="{DynamicResource SecondaryColor}" />
-                    </Border.Background>
+                    <ExperimentalAcrylicBorder.Material>
+                        <ExperimentalAcrylicMaterial
+                            BackgroundSource="Digger"
+                            TintColor="Black"
+                            TintOpacity="1"
+                            MaterialOpacity="0.25" />
+                    </ExperimentalAcrylicBorder.Material>
 
                     <Image Source="../Resources/Icons/Controls/Light/play.png" />
-                </Border>
+                </ExperimentalAcrylicBorder>
 
-                <Border Name="Next" Height="32" Width="32" Margin="2 0" CornerRadius="50" Cursor="Hand"
+                <ExperimentalAcrylicBorder Name="Next" Height="32" Width="32" Margin="2 0" CornerRadius="50" Cursor="Hand"
                         PointerReleased="SongControl">
-                    <Border.Background>
-                        <SolidColorBrush Color="{DynamicResource SecondaryColor}" />
-                    </Border.Background>
+                    <ExperimentalAcrylicBorder.Material>
+                        <ExperimentalAcrylicMaterial
+                            BackgroundSource="Digger"
+                            TintColor="Black"
+                            TintOpacity="1"
+                            MaterialOpacity="0.25" />
+                    </ExperimentalAcrylicBorder.Material>
 
                     <Image Width="16" Height="16"
                            Source="../Resources/Icons/Controls/Light/forward.png" />
-                </Border>
+                </ExperimentalAcrylicBorder>
 
-                <Border Name="Shuffle" Height="32" Width="32" CornerRadius="50" Cursor="Hand"
-                        BorderThickness="2"
-                        PointerReleased="SongControl">
-                    <Border.Background>
-                        <SolidColorBrush Color="{DynamicResource SecondaryColor}" />
-                    </Border.Background>
+                <ExperimentalAcrylicBorder Name="Shuffle" Height="32" Width="32" CornerRadius="50" Cursor="Hand"
+                                           PointerReleased="SongControl">
+                    <ExperimentalAcrylicBorder.Material>
+                        <ExperimentalAcrylicMaterial
+                            BackgroundSource="Digger"
+                            TintColor="Black"
+                            TintOpacity="1"
+                            MaterialOpacity="0.25" />
+                    </ExperimentalAcrylicBorder.Material>
+                    
                     <Image Width="16" Height="16" Source="../Resources/Icons/Controls/Light/shuffle.png" />
-                </Border>
+                </ExperimentalAcrylicBorder>
 
                 <TextBlock Name="CurrentSongTimeLeft" Text="{Binding CurrentSongLength}" VerticalAlignment="Center"
                            HorizontalAlignment="Left" FontFamily="{DynamicResource NovaMono}" Margin="5 0" />

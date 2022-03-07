@@ -7,9 +7,9 @@
              x:Class="OsuPlayer.Views.TopBarView">
     <Grid Name="TopBarGrid">
         <Grid.Background>
-            <SolidColorBrush Color="{DynamicResource BaseColor}" />
+            <SolidColorBrush Color="{StaticResource AcrylicBaseColor}" />
         </Grid.Background>
-
+        
         <Grid>
             <Border Background="Transparent" />
 
@@ -67,20 +67,20 @@
             </DockPanel>
             
             <!--Window Buttons-->
-            <DockPanel HorizontalAlignment="Right">
-                <TextBlock Name="StatusText" VerticalAlignment="Center" 
-                           HorizontalAlignment="Right" Margin="10 0" />
-                
-                <Image Name="Minimize" Cursor="Hand" Source="../Resources/Icons/minimize.png"
-                       PointerReleased="WindowButtonPressed"
-                       HorizontalAlignment="Left" Width="24" Height="24" Margin="0 0 5 0"/>
-                <Image x:Name="Miniplayer" Cursor="Hand" Source="../Resources/Icons/miniPlayer.png"
-                       PointerReleased="WindowButtonPressed"
-                       HorizontalAlignment="Left" Width="24" Height="24" />
-                <Image x:Name="Close" Cursor="Hand" Source="../Resources/Icons/close.png"
-                       PointerReleased="WindowButtonPressed"
-                       HorizontalAlignment="Left" Width="32" Height="32" Margin="0 0 10 0" />
-            </DockPanel>
+            <!-- <DockPanel HorizontalAlignment="Right"> -->
+            <!--     <TextBlock Name="StatusText" VerticalAlignment="Center"  -->
+            <!--                HorizontalAlignment="Right" Margin="10 0" /> -->
+            <!--      -->
+            <!--     <Image Name="Minimize" Cursor="Hand" Source="../Resources/Icons/minimize.png" -->
+            <!--            PointerReleased="WindowButtonPressed" -->
+            <!--            HorizontalAlignment="Left" Width="24" Height="24" Margin="0 0 5 0"/> -->
+            <!--     <Image x:Name="Miniplayer" Cursor="Hand" Source="../Resources/Icons/miniPlayer.png" -->
+            <!--            PointerReleased="WindowButtonPressed" -->
+            <!--            HorizontalAlignment="Left" Width="24" Height="24" /> -->
+            <!--     <Image x:Name="Close" Cursor="Hand" Source="../Resources/Icons/close.png" -->
+            <!--            PointerReleased="WindowButtonPressed" -->
+            <!--            HorizontalAlignment="Left" Width="32" Height="32" Margin="0 0 10 0" /> -->
+            <!-- </DockPanel> -->
         </Grid>
 
     </Grid>

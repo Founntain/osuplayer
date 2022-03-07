@@ -4,16 +4,35 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="OsuPlayer.Views.MainWindow"
-        Title="OsuPlayer" Width="1280" Height="720" 
-        WindowStartupLocation="CenterScreen"
+        Title="osu!player" Width="1280" Height="720" 
+        WindowStartupLocation="CenterScreen" CanResize="True"
         Foreground="White"
-        FontFamily="avares://OsuPlayer/Resources/Fonts/Torus-Regular.ttf#Torus"
-        FontSize="16"
-        CanResize="True">
+        FontFamily="avares://OsuPlayer/Resources/Fonts/Torus-Regular.ttf#Torus" FontSize="16"
+       
+        Background="Transparent"
+        TransparencyLevelHint="Mica"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="PreferSystemChrome"
+        
+        Icon="avares://OsuPlayer/Resources/x96.ico">
+    
     <Window.Styles>
         <StyleInclude Source="/Styles/SliderStyle.axaml"/>
     </Window.Styles>
+    
     <Grid Name="MainGrid" RowDefinitions="50, *, 50">
+        <Panel Grid.Row="0" Grid.RowSpan="3">
+            <ExperimentalAcrylicBorder IsHitTestVisible="False">
+                <ExperimentalAcrylicBorder.Material>
+                    <ExperimentalAcrylicMaterial
+                        BackgroundSource="Digger"
+                        TintColor="Black"
+                        TintOpacity="1"
+                        MaterialOpacity="0.25" />
+                </ExperimentalAcrylicBorder.Material>
+            </ExperimentalAcrylicBorder>
+        </Panel>
+        
         <ContentControl Name="TopBarPanel" Grid.Row="0" Content="{Binding TopBar}" />
         <ContentControl Name="MainViewPanel" Grid.Row="1" Content="{Binding MainView}" />
         <ContentControl Name="PlayerControlPanel" Grid.Row="2" Content="{Binding PlayerControl}" />
