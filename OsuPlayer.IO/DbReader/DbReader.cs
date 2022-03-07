@@ -26,14 +26,16 @@ namespace OsuPlayer.IO.DbReader
                 return null;
             }
 
-            using (DbReader reader = new(File.OpenRead(dbLoc)))
+            using (var reader = new DbReader(File.OpenRead(dbLoc)))
             {
                 var ver = reader.ReadInt32();
                 var flag = ver >= 20160408 && ver < 20191107;
+                
                 reader.ReadInt32();
                 reader.ReadBoolean();
                 reader.ReadInt64();
                 reader.ReadString();
+                
                 var beatmapcount = reader.ReadInt32();
 
                 for (var i = 1; i < beatmapcount; i++)
@@ -42,6 +44,7 @@ namespace OsuPlayer.IO.DbReader
 
                     if (flag)
                         reader.ReadInt32(); //btlen
+                    
                     beatmaps.Add(MapEntry.ReadFromReader(reader, ver));
                 }
 

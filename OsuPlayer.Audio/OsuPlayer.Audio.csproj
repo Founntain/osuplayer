@@ -6,4 +6,15 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Avalonia" Version="0.10.13" />
+      <PackageReference Include="ManagedBass" Version="3.1.0" />
+      <PackageReference Include="ManagedBass.Fx" Version="3.1.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\OsuPlayer.Extensions\OsuPlayer.Extensions.csproj" />
+      <ProjectReference Include="..\OsuPlayer.IO\OsuPlayer.IO.csproj" />
+    </ItemGroup>
+
 </Project>

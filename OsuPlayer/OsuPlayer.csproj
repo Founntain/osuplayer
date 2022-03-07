@@ -32,6 +32,7 @@
         <PackageReference Include="XamlNameReferenceGenerator" Version="1.3.4" />
     </ItemGroup>
     <ItemGroup>
+      <ProjectReference Include="..\OsuPlayer.IO\OsuPlayer.IO.csproj" />
       <ProjectReference Include="..\OsuPlayer.Network\OsuPlayer.Network.csproj" />
     </ItemGroup>
 </Project>

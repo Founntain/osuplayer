@@ -5,5 +5,5 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="OsuPlayer.MainWindow"
         Title="OsuPlayer">
-        XD
+        <Button Click="Button_OnClick" Content="Import Songs"/>
 </Window>
