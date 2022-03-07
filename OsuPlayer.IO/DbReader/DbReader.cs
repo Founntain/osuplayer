@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Text;
 
-namespace OsuPlayer.DbReader
+namespace OsuPlayer.IO.DbReader
 {
     public class DbReader : BinaryReader
     {

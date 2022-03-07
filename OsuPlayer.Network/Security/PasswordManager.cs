@@ -1,4 +1,4 @@
-﻿namespace OsuPlayerPlus.Classes.Security;
+﻿namespace OsuPlayer.Network.Security;
 
 public static class PasswordManager
 {

@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
+﻿using System.Diagnostics;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Api = OsuPlayerPlus.Classes.API.ApiEndpoints.ApiAsync;
+using Api = OsuPlayer.Network.API.ApiEndpoints.ApiAsync;
 
-namespace OsuPlayerPlus.Classes.API;
+namespace OsuPlayer.Network.API;
 
 public static class LanguageServiceApi
 {
