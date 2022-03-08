@@ -7,7 +7,7 @@ public sealed class SongEntry
 {
     public SongEntry(int beatmapSetId, int beatmapId, string checksum, string artist, string artistUnicode,
         string title, string titleUnicode,
-        string folderName, string audioFileName, bool isCustomSong = false)
+        string folderName, string audioFileName, string osuPath, bool isCustomSong = false)
     {
         BeatmapSetId = beatmapSetId;
         BeatmapId = beatmapId;
@@ -19,7 +19,7 @@ public sealed class SongEntry
         FolderName = folderName;
         AudioFileName = audioFileName;
         Fullpath = !isCustomSong
-            ? $"{Config.GetConfigInstance()?.OsuSongsPath}\\{FolderName}\\{AudioFileName}"
+            ? $"{osuPath}\\{FolderName}\\{AudioFileName}"
             : AudioFileName;
         //Background = !isCustomSong
         //    ? FindBackground()

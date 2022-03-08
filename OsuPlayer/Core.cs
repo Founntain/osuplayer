@@ -6,14 +6,18 @@ namespace OsuPlayer;
 
 public class Core
 {
-    public static Core Instance { get; protected set; } = new();
+    public static Core Instance { get; protected set; }
     
     public MainWindow MainWindow;
     public Config Config;
     public Player Player; 
 
-    protected internal Core()
+    protected internal Core(MainWindow window)
     {
-        Config = new Config();
+        Instance = this;
+        MainWindow = window;
+        Config = Config.LoadConfig();
+        Player = new Player();
+        Player.ImportSongs();
     }
 }

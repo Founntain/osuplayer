@@ -1,14 +1,17 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using Avalonia.Threading;
 using ManagedBass;
 using ManagedBass.DirectX8;
 using ManagedBass.Fx;
+using OsuPlayer.Audio;
 using OsuPlayer.Extensions.Equalizer;
-using OsuPlayer.IO;
 
-namespace OsuPlayer.Audio
+namespace OsuPlayer
 {
     /// <summary>
     /// Audioengine for the osu!player using ManagedBass

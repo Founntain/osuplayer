@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using Avalonia.ReactiveUI;
 using OsuPlayer.Audio;
 using OsuPlayer.Extensions;
+using OsuPlayer.IO;
 using ReactiveUI;
 
 namespace OsuPlayer.ViewModels;
@@ -39,6 +40,12 @@ public class MainWindowViewModel : BaseViewModel, IScreen
     }
 
     public ObservableCollection<AudioDevice> OutputDeviceComboboxItems { get; set; }
+
+    public ReadOnlyObservableCollection<SongEntry> SongEntries
+    {
+        get => Core.Instance.Player.FilteredSongEntries;
+        set => Core.Instance.Player.FilteredSongEntries = value;
+    }
 
     public MainWindowViewModel()
     {

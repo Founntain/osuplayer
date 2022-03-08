@@ -5,25 +5,26 @@ namespace OsuPlayer.IO;
 
 public sealed class SongImporter
 {
-    public async Task<List<SongEntry>> ImportSongs(string path)
+    public async Task<ICollection<SongEntry>> ImportSongs(string path)
     {
-        var maps = ReadonSongsFromDb(path);
+        var maps = ReadSongsFromDb(path).ToArray();
 
-        if (maps == null || maps.Count == 0) return default;
+        if (!maps.Any()) return default;
 
-        return await ConvertMapEntriesToSongs(maps.ToArray()); ;
+        return ConvertMapEntriesToSongs(maps, path);
     }
 
-    private ICollection<MapEntry>? ReadonSongsFromDb(string path)
+    private IEnumerable<MapEntry> ReadSongsFromDb(string path)
     {
-        return DbReader.DbReader.ReadOsuDb(path)?.DistinctBy(x => $"{x.FolderName}\\{x.AudioFileName}").ToList();
+        return DbReader.DbReader.ReadOsuDb(path)?.DistinctBy(x => x.BeatmapSetId).DistinctBy(x => x.Title)
+            .Where(x => !string.IsNullOrEmpty(x.Title));
     }
 
-    private async Task<List<SongEntry>> ConvertMapEntriesToSongs(IReadOnlyCollection<MapEntry> beatmapEntries)
+    private ICollection<SongEntry> ConvertMapEntriesToSongs(IEnumerable<MapEntry> beatmapEntries, string path)
     {
         var songs = new ConcurrentBag<SongEntry>();
 
-        await Parallel.ForEachAsync(beatmapEntries, (entry, token) =>
+        Parallel.ForEach(beatmapEntries, (entry, token) =>
         {
             var song = new SongEntry(
                 entry.BeatmapSetId,
@@ -34,15 +35,14 @@ public sealed class SongImporter
                 entry.Title,
                 entry.TitleUnicode,
                 entry.FolderName,
-                entry.AudioFileName);
+                entry.AudioFileName,
+                $"{path}\\Songs");
 
             song.TotalTime = entry.TotalTime;
             
             songs.Add(song);
-            
-            return default;
         });
 
-        return songs.OrderBy(x => x.SongName).ToList();
+        return songs.OrderBy(x => x.SongName).ToArray();
     }
 }

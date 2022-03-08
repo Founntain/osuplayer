@@ -41,8 +41,6 @@ public partial class HomeView : ReactiveUserControl<HomeViewModel>
             return;
         }
 
-        var songs = await new SongImporter().ImportSongs(osuPath);
-
-        ViewModel!.Songs = new ObservableCollection<SongEntry>(songs);
+        //ViewModel!.Songs = new ObservableCollection<SongEntry>(songs);
     }
 }

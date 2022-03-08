@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Reactive.Linq;
 using Avalonia.Threading;
 using DynamicData;
@@ -6,17 +7,18 @@ using DynamicData.Binding;
 using OsuPlayer.IO;
 using ReactiveUI;
 
-namespace OsuPlayer.Audio;
+namespace OsuPlayer;
 
 public class Player
 {
     private SongImporter Importer => new SongImporter();
 
     public ReadOnlyObservableCollection<SongEntry> FilteredSongEntries;
-    private SourceList<SongEntry> SongSource => new SourceList<SongEntry>();
+    private SourceList<SongEntry> SongSource;
     
     public Player()
     {
+        SongSource = new SourceList<SongEntry>();
         IObservable<Func<SongEntry, bool>> filter = Core.Instance.MainWindow.ViewModel!.SearchView
             .WhenAnyValue(x => x.FilterText)
             .Throttle(TimeSpan.FromMilliseconds(20))
@@ -38,7 +40,8 @@ public class Player
 
     public async void ImportSongs()
     {
-        foreach (var songEntry in await Importer.ImportSongs(Core.Instance.Config.OsuPath!))
+        var songEntries = await Importer.ImportSongs(Core.Instance.Config.OsuPath!);
+        foreach (var songEntry in songEntries)
         {
             SongSource.Add(songEntry);
         }

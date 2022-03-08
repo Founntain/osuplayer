@@ -68,6 +68,7 @@ public class SettingsViewModel : BaseViewModel, IActivatableViewModel
 
         Core.Instance.Config.OsuPath = osuFolder!;
         OsuLocation = osuFolder!;
+        Core.Instance.Player.ImportSongs();
         
         Core.Instance.Config.SaveConfig();
     }
