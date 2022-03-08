@@ -7,7 +7,7 @@ using ReactiveUI;
 
 namespace OsuPlayer.ViewModels;
 
-public class MainWindowBaseViewModel : BaseViewModel, IScreen
+public class MainWindowViewModel : BaseViewModel, IScreen
 {
     private BaseViewModel mainView;
     
@@ -40,7 +40,7 @@ public class MainWindowBaseViewModel : BaseViewModel, IScreen
 
     public ObservableCollection<AudioDevice> OutputDeviceComboboxItems { get; set; }
 
-    public MainWindowBaseViewModel()
+    public MainWindowViewModel()
     {
         TopBar = new TopBarViewModel();
         PlayerControl = new PlayerControlViewModel();
@@ -51,8 +51,6 @@ public class MainWindowBaseViewModel : BaseViewModel, IScreen
         UserView = new UserViewModel();
         PartyView = new PartyViewModel();
         SettingsView = new SettingsViewModel();
-
-        mainView = HomeView;
         //Generate new ViewModels here
     }
 }

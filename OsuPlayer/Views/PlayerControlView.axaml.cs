@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
+using OsuPlayer.Data;
 using OsuPlayer.ViewModels;
 
 namespace OsuPlayer.Views;
@@ -41,7 +42,7 @@ public partial class PlayerControlView : ReactiveUserControl<PlayerControlViewMo
 
     private void NavigationSettingsBtn_OnMouseLeftButtonUp(object? sender, PointerReleasedEventArgs e)
     {
-        Core.MainWindow.ViewModel!.MainView = Core.MainWindow.ViewModel.SettingsView;
+        Core.Instance.MainWindow.ViewModel!.MainView = Core.Instance.MainWindow.ViewModel.SettingsView;
     }
 
     private void SongControl(object? sender, PointerReleasedEventArgs e)

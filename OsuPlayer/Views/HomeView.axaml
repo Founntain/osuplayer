@@ -4,8 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:io="clr-namespace:OsuPlayer.IO;assembly=OsuPlayer.IO"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="OsuPlayer.Views.HomeView"
-             Initialized="HomeView_OnInitialized">
+             x:Class="OsuPlayer.Views.HomeView">
 
     <Grid RowDefinitions="Auto, 50*" ColumnDefinitions="50*, 50*" Background="Transparent">
         <!--User Grid-->
@@ -26,8 +25,6 @@
                     CornerRadius="50" Width="100" Height="100" BorderThickness="2" BorderBrush="White"
                     HorizontalAlignment="Left" VerticalAlignment="Center">
                 <Border.Background>
-                    <ImageBrush Source="Y:\\Alles\\Founntain\\Profilbilder\\Sakura_Small.jpg"
-                                RenderOptions.BitmapInterpolationMode="HighQuality" />
                 </Border.Background>
             </Border>
 

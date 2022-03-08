@@ -10,7 +10,7 @@
         FontFamily="avares://OsuPlayer/Resources/Fonts/Torus-Regular.ttf#Torus" FontSize="16"
        
         Background="Transparent"
-        TransparencyLevelHint="Mica"
+        TransparencyLevelHint="AcrylicBlur"
         ExtendClientAreaToDecorationsHint="True"
         ExtendClientAreaChromeHints="PreferSystemChrome"
         

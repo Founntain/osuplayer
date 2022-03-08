@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using Avalonia.Controls;
-using OsuPlayer.IO;
+using OsuPlayer.Data;
 using OsuPlayer.UI_Extensions;
 using ReactiveUI;
 
@@ -48,11 +48,11 @@ public class SettingsViewModel : BaseViewModel, IActivatableViewModel
             }
         };
 
-        var result = await dialog.ShowAsync(Core.MainWindow);
+        var result = await dialog.ShowAsync(Core.Instance.MainWindow);
 
         if (result == default)
         {
-            await MessageBox.ShowDialogAsync(Core.MainWindow, "Did you even selected a file?!");
+            await MessageBox.ShowDialogAsync(Core.Instance.MainWindow, "Did you even selected a file?!");
             return;
         }
         
@@ -60,15 +60,15 @@ public class SettingsViewModel : BaseViewModel, IActivatableViewModel
 
         if (Path.GetFileName(path) != "osu!.db")
         {
-            await MessageBox.ShowDialogAsync(Core.MainWindow, "You had one job! Just one. Select your osu!.db! Not anything else!");
+            await MessageBox.ShowDialogAsync(Core.Instance.MainWindow, "You had one job! Just one. Select your osu!.db! Not anything else!");
             return;
         }
         
         var osuFolder = Path.GetDirectoryName(path);
 
-        Core.Config.OsuPath = osuFolder!;
+        Core.Instance.Config.OsuPath = osuFolder!;
         OsuLocation = osuFolder!;
         
-        Core.Config.SaveConfig();
+        Core.Instance.Config.SaveConfig();
     }
 }

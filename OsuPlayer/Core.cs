@@ -1,16 +1,19 @@
+using OsuPlayer.Audio;
 using OsuPlayer.IO;
 using OsuPlayer.Views;
 
 namespace OsuPlayer;
 
-public static class Core
+public class Core
 {
-    public static MainWindow MainWindow;
-    public static Config Config;
+    public static Core Instance { get; protected set; } = new();
+    
+    public MainWindow MainWindow;
+    public Config Config;
+    public Player Player; 
 
-    public static void Init(MainWindow mainWindow)
+    protected internal Core()
     {
-        MainWindow = mainWindow;
-        Config = Config.LoadConfig();
+        Config = new Config();
     }
 }
