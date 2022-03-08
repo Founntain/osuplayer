@@ -80,13 +80,17 @@ public static partial class ApiAsync
         {
             using (var client = new HttpClient())
             {
-                client.DefaultRequestHeaders.Add("Content-Type", "application/json");
-
                 var url = new Uri($"{Url}{controller}/{action}");
 
-                var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8);
+                var req = new HttpRequestMessage(HttpMethod.Post, url);
 
-                var result = await client.PostAsync(url, content);
+                // req.Headers.Add("ContentType", "application/json");
+
+                var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+
+                req.Content = content;
+
+                var result = await client.SendAsync(req);
 
                 return JsonConvert.DeserializeObject<T>(await result.Content.ReadAsStringAsync());
             }

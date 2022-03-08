@@ -7,7 +7,7 @@ using Avalonia.ReactiveUI;
 using OsuPlayer.ViewModels;
 using ReactiveUI;
 
-namespace OsuPlayer.Views;
+namespace OsuPlayer.Windows;
 
 public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 {
@@ -31,6 +31,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
             ProgressSlider.AddHandler(PointerReleasedEvent, SongProgressSlider_OnPointerReleased,
                 RoutingStrategies.Tunnel);
         });
+        
         AvaloniaXamlLoader.Load(this);
     }
 

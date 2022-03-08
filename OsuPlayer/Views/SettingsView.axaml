@@ -5,9 +5,9 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.SettingsView"
              Initialized="SettingsView_OnInitialized">
-    <Grid ColumnDefinitions="50*, 50*" Margin="10">
+    <Grid ColumnDefinitions="50*, 50*">
         
-        <Grid Column="0" RowDefinitions="Auto, Auto">
+        <Grid Column="0" RowDefinitions="Auto, Auto" Margin="10">
             <Panel Grid.Row="0" Grid.RowSpan="2">
                 <ExperimentalAcrylicBorder IsHitTestVisible="False">
                     <ExperimentalAcrylicBorder.Material>
@@ -25,7 +25,7 @@
             <StackPanel Grid.Row="1" Spacing="10" Margin="10">
                 <StackPanel Spacing="5">
                     <TextBlock Text="{Binding OsuLocation}" />
-                    <Button Content="ImportSongs" Command="{Binding ImportSongsClick}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                    <Button Content="import osu! songs" Command="{Binding ImportSongsClick}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
                 </StackPanel>
         
                 <StackPanel Spacing="5">
@@ -34,5 +34,29 @@
                 </StackPanel>
             </StackPanel>
         </Grid>
+        
+        <Grid Column="1" RowDefinitions="Auto, Auto" Margin="10">
+            <Panel Grid.Row="0" Grid.RowSpan="2">
+                <ExperimentalAcrylicBorder IsHitTestVisible="False">
+                    <ExperimentalAcrylicBorder.Material>
+                        <ExperimentalAcrylicMaterial
+                            BackgroundSource="Digger"
+                            TintColor="Black"
+                            TintOpacity="1"
+                            MaterialOpacity="0.75" />
+                    </ExperimentalAcrylicBorder.Material>
+                </ExperimentalAcrylicBorder>
+            </Panel>
+            
+            <TextBlock Grid.Row="0" Margin="10" Text="User Settings" FontSize="32" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+        
+            <StackPanel Grid.Row="1" Spacing="10" Margin="10">
+                <StackPanel Spacing="5">
+                    <TextBlock Text="{Binding CurrentUser}" />
+                    <Button Content="log in" Command="{Binding Login}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+        
     </Grid>
 </UserControl>

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using OsuPlayer.Modules.IO;
 using OsuPlayer.UI_Extensions;
+using OsuPlayer.Windows;
 using ReactiveUI;
 
 namespace OsuPlayer.ViewModels;
@@ -89,5 +90,15 @@ public class SettingsViewModel : BaseViewModel, IActivatableViewModel
         Core.Instance.Player.ImportSongs();
 
         Core.Instance.Config.SaveConfig();
+    }
+
+    public async Task Login()
+    {
+        var loginWindow = new LoginWindow()
+        {
+            ViewModel = new LoginWindowViewModel()
+        };
+
+        await loginWindow.ShowDialog(Core.Instance.MainWindow);
     }
 }
