@@ -7,7 +7,6 @@ using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using OsuPlayer.Data;
-using OsuPlayer.IO;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.ViewModels;
 using ReactiveUI;

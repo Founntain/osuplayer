@@ -43,6 +43,8 @@
       </Compile>
     </ItemGroup>
     <ItemGroup>
+        <Folder Include="Modules\Audio" />
+        <Folder Include="Modules\Extensions\ValueConverter" />
         <Folder Include="Resources" />
         <AvaloniaResource Include="Resources\**" />
     </ItemGroup>

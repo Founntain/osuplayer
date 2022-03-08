@@ -1,9 +1,8 @@
 using System;
 using System.Collections.ObjectModel;
 using Avalonia.ReactiveUI;
-using OsuPlayer.Audio;
-using OsuPlayer.Extensions;
-using OsuPlayer.IO;
+using OsuPlayer.Data.OsuPlayer.Classes;
+using OsuPlayer.Modules.IO;
 using ReactiveUI;
 
 namespace OsuPlayer.ViewModels;

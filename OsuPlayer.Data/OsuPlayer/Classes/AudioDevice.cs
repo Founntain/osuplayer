@@ -1,6 +1,6 @@
 ﻿using ManagedBass;
 
-namespace OsuPlayer.Audio
+namespace OsuPlayer.Data.OsuPlayer.Classes
 {
     /// <summary>
     /// Wrapper class for <see cref="ManagedBass.DeviceInfo"/>

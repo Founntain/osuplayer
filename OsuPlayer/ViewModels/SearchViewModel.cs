@@ -1,6 +1,5 @@
 using System;
 using System.Reactive.Disposables;
-using OsuPlayer.IO;
 using ReactiveUI;
 
 namespace OsuPlayer.ViewModels;

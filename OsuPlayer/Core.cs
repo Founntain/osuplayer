@@ -1,5 +1,4 @@
-using OsuPlayer.Audio;
-using OsuPlayer.IO;
+using OsuPlayer.Modules.IO;
 using OsuPlayer.Views;
 
 namespace OsuPlayer;

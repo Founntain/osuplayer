@@ -4,7 +4,7 @@ using System.Reactive.Linq;
 using Avalonia.Threading;
 using DynamicData;
 using DynamicData.Binding;
-using OsuPlayer.IO;
+using OsuPlayer.Modules.IO;
 using ReactiveUI;
 
 namespace OsuPlayer;

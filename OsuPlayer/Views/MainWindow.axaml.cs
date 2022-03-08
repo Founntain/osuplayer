@@ -1,7 +1,6 @@
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using OsuPlayer.Audio;
 using OsuPlayer.Data;
 using OsuPlayer.ViewModels;
 using ReactiveUI;

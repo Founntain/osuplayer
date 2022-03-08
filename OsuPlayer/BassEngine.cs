@@ -8,8 +8,8 @@ using Avalonia.Threading;
 using ManagedBass;
 using ManagedBass.DirectX8;
 using ManagedBass.Fx;
-using OsuPlayer.Audio;
-using OsuPlayer.Extensions.Equalizer;
+using OsuPlayer.Data.OsuPlayer.Classes;
+using OsuPlayer.Modules.Extensions.Equalizer;
 
 namespace OsuPlayer
 {
