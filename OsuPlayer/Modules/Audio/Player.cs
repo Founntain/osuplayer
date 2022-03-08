@@ -7,7 +7,7 @@ using DynamicData.Binding;
 using OsuPlayer.Modules.IO;
 using ReactiveUI;
 
-namespace OsuPlayer;
+namespace OsuPlayer.Modules.Audio;
 
 public class Player
 {

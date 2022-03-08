@@ -11,7 +11,7 @@ using ManagedBass.Fx;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Modules.Extensions.Equalizer;
 
-namespace OsuPlayer
+namespace OsuPlayer.Modules.Audio
 {
     /// <summary>
     /// Audioengine for the osu!player using ManagedBass
