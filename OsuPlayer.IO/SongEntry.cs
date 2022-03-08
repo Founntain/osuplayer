@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Diagnostics.Internal;
+using OsuPlayer.Extensions;
 
 namespace OsuPlayer.IO;
 
@@ -49,6 +50,7 @@ public sealed class SongEntry
     public string Fullpath { get; set; }
 
     public int TotalTime { get; set; }
+    public string TotalTimeString => TimeSpan.FromMilliseconds(TotalTime).FormatTime();
 
     public string Background { get; set; }
     public bool IsCustomSong { get; set; }

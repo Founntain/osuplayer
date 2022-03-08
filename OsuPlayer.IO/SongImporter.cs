@@ -11,7 +11,7 @@ public sealed class SongImporter
 
         if (maps == null || maps.Count == 0) return default;
 
-        return await ConvertMapEntriesToSongs(maps.ToArray());
+        return await ConvertMapEntriesToSongs(maps.ToArray()); ;
     }
 
     private ICollection<MapEntry>? ReadonSongsFromDb(string path)
@@ -36,13 +36,13 @@ public sealed class SongImporter
                 entry.FolderName,
                 entry.AudioFileName);
 
-            entry.TotalTime = song.TotalTime;
+            song.TotalTime = entry.TotalTime;
             
             songs.Add(song);
             
             return default;
         });
 
-        return songs.ToList();
+        return songs.OrderBy(x => x.SongName).ToList();
     }
 }

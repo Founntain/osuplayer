@@ -1,0 +1,97 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:io="clr-namespace:OsuPlayer.IO;assembly=OsuPlayer.IO"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="OsuPlayer.Views.HomeView"
+             Initialized="HomeView_OnInitialized">
+
+    <Grid RowDefinitions="Auto, 50*" ColumnDefinitions="50*, 50*" Background="Transparent">
+        <!--User Grid-->
+        <Grid Row="0" Column="0" ColumnDefinitions="Auto, *" Margin="10">
+            <Panel Grid.ColumnSpan="2">
+                <ExperimentalAcrylicBorder IsHitTestVisible="False">
+                    <ExperimentalAcrylicBorder.Material>
+                        <ExperimentalAcrylicMaterial
+                            BackgroundSource="Digger"
+                            TintColor="Black"
+                            TintOpacity="1"
+                            MaterialOpacity="0.75" />
+                    </ExperimentalAcrylicBorder.Material>
+                </ExperimentalAcrylicBorder>
+            </Panel>
+
+            <Border Grid.Column="0" Margin="10"
+                    CornerRadius="50" Width="100" Height="100" BorderThickness="2" BorderBrush="White"
+                    HorizontalAlignment="Left" VerticalAlignment="Center">
+                <Border.Background>
+                    <ImageBrush Source="Y:\\Alles\\Founntain\\Profilbilder\\Sakura_Small.jpg"
+                                RenderOptions.BitmapInterpolationMode="HighQuality" />
+                </Border.Background>
+            </Border>
+
+            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                <TextBlock Text="Founntain" FontSize="28" />
+                <TextBlock Text="6,302 songs played" />
+                <TextBlock Text="Level 22 | Total XP: 6096" />
+                <TextBlock Text="851 XP / 857 XP" />
+            </StackPanel>
+        </Grid>
+
+        <!--Stats Grid-->
+        <Grid Row="0" Column="1" ColumnDefinitions="50*, 50*" Margin="10">
+            <Panel Grid.ColumnSpan="2">
+                <ExperimentalAcrylicBorder IsHitTestVisible="False">
+                    <ExperimentalAcrylicBorder.Material>
+                        <ExperimentalAcrylicMaterial
+                            BackgroundSource="Digger"
+                            TintColor="Black"
+                            TintOpacity="1"
+                            MaterialOpacity="0.75" />
+                    </ExperimentalAcrylicBorder.Material>
+                </ExperimentalAcrylicBorder>
+            </Panel>
+
+            <TextBlock Grid.Column="0" Text="Placeholder" FontSize="28" VerticalAlignment="Center"
+                       HorizontalAlignment="Center" />
+            <TextBlock Grid.Column="1" Text="Placeholder" FontSize="28" VerticalAlignment="Center"
+                       HorizontalAlignment="Center" />
+        </Grid>
+
+        <!--Test Grid-->
+        <!-- <Grid Row="1" Column="0"> -->
+        <!-- </Grid> -->
+        
+        <!--Songs Grid-->
+        <Grid Row="1" Column="0" ColumnSpan="2" RowDefinitions="40, *" Margin="10">
+            <Panel Grid.Row="0" Grid.RowSpan="2">
+                <ExperimentalAcrylicBorder IsHitTestVisible="False">
+                    <ExperimentalAcrylicBorder.Material>
+                        <ExperimentalAcrylicMaterial
+                            BackgroundSource="Digger"
+                            TintColor="Black"
+                            TintOpacity="1"
+                            MaterialOpacity="0.75" />
+                    </ExperimentalAcrylicBorder.Material>
+                </ExperimentalAcrylicBorder>
+            </Panel>
+
+            <Border Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#7F000000">
+                <TextBlock Text="Your songs" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </Border>
+
+            <ListBox Grid.Row="1" Items="{Binding Songs}" Background="Transparent">
+                <ListBox.DataTemplates>
+                    <DataTemplate DataType="io:SongEntry">
+                        <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto">
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding TitleString}" FontSize="20" />
+                            <TextBlock Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Text="{Binding TotalTimeString}" FontSize="20" VerticalAlignment="Center" />
+                            <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding ArtistString}" FontSize="14" Foreground="#FFCCCCCC" />
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.DataTemplates>
+            </ListBox>
+        </Grid>
+    </Grid>
+</UserControl>
