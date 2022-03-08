@@ -1,14 +1,17 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using Avalonia.Threading;
 using ManagedBass;
 using ManagedBass.DirectX8;
 using ManagedBass.Fx;
+using OsuPlayer.Audio;
 using OsuPlayer.Extensions.Equalizer;
-using OsuPlayer.IO;
 
-namespace OsuPlayer.Audio
+namespace OsuPlayer
 {
     /// <summary>
     /// Audioengine for the osu!player using ManagedBass
@@ -218,7 +221,7 @@ namespace OsuPlayer.Audio
                 if (oldValue != _channelLengthD)
                 {
                     NotifyPropertyChanged("ChannelLength");
-                    Core.MainWindow.ViewModel!.PlayerControl.SongLength = value;
+                    Core.Instance.MainWindow.ViewModel!.PlayerControl.SongLength = value;
                 }
             }
         }
@@ -237,7 +240,7 @@ namespace OsuPlayer.Audio
                 if (Math.Abs(_currentChannelPosition - value) > 0.1)
                 {
                     NotifyPropertyChanged("ChannelPosition");
-                    Core.MainWindow.ViewModel!.PlayerControl.SongTime = value;
+                    Core.Instance.MainWindow.ViewModel!.PlayerControl.SongTime = value;
                     _currentChannelPosition = value;
                 }
                 _inChannelSet = false;
@@ -360,7 +363,7 @@ namespace OsuPlayer.Audio
                     Difference = 44100 - SampleFrequency;
                     //SetEqBands();
 
-                    SetDeviceInfo(Core.Config.SelectedOutputDevice);
+                    SetDeviceInfo(Core.Instance.Config.SelectedOutputDevice);
 
 
                     // Set the stream to call Stop() when it ends.
@@ -415,7 +418,7 @@ namespace OsuPlayer.Audio
         /// <returns></returns>
         public void SetAllEq(double[] gain)
         {
-            if (!Core.Config.IsEqEnabled || _paramEq == null) return;
+            if (!Core.Instance.Config.IsEqEnabled || _paramEq == null) return;
             for (var i = 0; i < gain.Length; i++)
             {
                 SetValue(i, gain[i]);
@@ -453,7 +456,7 @@ namespace OsuPlayer.Audio
 
             var result = Bass.ChannelSetDevice(FxStream, index + 1);
 
-            Core.Config.SelectedOutputDevice = index;
+            Core.Instance.Config.SelectedOutputDevice = index;
 
             Console.WriteLine($"SET: {index} | {result} | {Bass.LastError}");
         }
@@ -479,7 +482,7 @@ namespace OsuPlayer.Audio
             _positionTimer.Start();
             AvailableAudioDevices = new Collection<AudioDevice>();
 
-            var mainWindow = Core.MainWindow;
+            var mainWindow = Core.Instance.MainWindow;
             if (mainWindow == null) return;
 
             //var interopHelper = new Interop(mainWindow);
@@ -506,7 +509,7 @@ namespace OsuPlayer.Audio
                 counter++;
             }
 
-            Core.MainWindow.ViewModel.OutputDeviceComboboxItems = new ObservableCollection<AudioDevice>(GetAudioDevices());
+            Core.Instance.MainWindow.ViewModel!.OutputDeviceComboboxItems = new ObservableCollection<AudioDevice>(GetAudioDevices());
 
             //SetDeviceInfo(OsuPlayer.Config.ConfigStorage.SelectedOutputDevice);
         }

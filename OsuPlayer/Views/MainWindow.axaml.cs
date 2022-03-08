@@ -1,13 +1,14 @@
-using System;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
+using OsuPlayer.Audio;
+using OsuPlayer.Data;
 using OsuPlayer.ViewModels;
 using ReactiveUI;
 
 namespace OsuPlayer.Views;
 
-public partial class MainWindow : ReactiveWindow<MainWindowBaseViewModel>
+public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 {
     public MainWindow()
     {
@@ -18,7 +19,8 @@ public partial class MainWindow : ReactiveWindow<MainWindowBaseViewModel>
     {
         this.WhenActivated(disposables =>
         {
-            Core.Init(this);
+            new Core(this);
+            Core.Instance.MainWindow.ViewModel!.MainView = Core.Instance.MainWindow.ViewModel.HomeView;
         });
         AvaloniaXamlLoader.Load(this);
     }

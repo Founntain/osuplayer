@@ -1,4 +1,6 @@
+using System;
 using System.Reactive.Disposables;
+using OsuPlayer.IO;
 using ReactiveUI;
 
 namespace OsuPlayer.ViewModels;
@@ -6,6 +8,7 @@ namespace OsuPlayer.ViewModels;
 public class SearchViewModel : BaseViewModel, IActivatableViewModel
 {
     public ViewModelActivator Activator { get; }
+    public string FilterText { get; set; }
 
     public SearchViewModel()
     {
