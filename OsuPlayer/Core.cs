@@ -23,7 +23,10 @@ public class Core
     protected internal void SetMainWindow(MainWindow window)
     {
         MainWindow = window;
+        MainWindow.TransparencyLevelHint = Config.TransparencyLevelHint;
+        
         Engine = BassEngine.Instance;
+        
         Player = new Player();
         Player.ImportSongs();
     }
