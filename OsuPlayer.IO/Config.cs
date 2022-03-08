@@ -4,7 +4,7 @@ namespace OsuPlayer.IO;
 
 public class Config
 {
-    public string OsuPath { get; set; }
+    public string? OsuPath { get; set; }
     public string OsuSongsPath => $"{OsuPath}\\Songs";
 
     public bool UseSongnameUnicode { get; set; } = false;
@@ -37,5 +37,10 @@ public class Config
     public static Config GetConfigInstance()
     {
         return LoadConfig();
+    }
+
+    public void SaveConfig()
+    {
+        File.WriteAllText("data/config.json", JsonConvert.SerializeObject(this));
     }
 }
