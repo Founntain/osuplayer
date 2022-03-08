@@ -15,7 +15,7 @@
         <DockPanel>
             <Image Source="../Resources/Icons/music.png" HorizontalAlignment="Left" Width="24" Height="24"
                    Margin="10 0 " />
-            <TextBlock Name="CurrentSongText" Text="{Binding $parent[Window].DataContext.CurrentSongText}"
+            <TextBlock Name="CurrentSongText" Text="{Binding CurrentSongText}"
                        VerticalAlignment="Center" HorizontalAlignment="Left" Width="475"
                        TextTrimming="CharacterEllipsis" />
         </DockPanel>

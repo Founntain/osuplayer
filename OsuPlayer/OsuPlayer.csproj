@@ -39,6 +39,7 @@
       </Compile>
     </ItemGroup>
     <ItemGroup>
+        <Folder Include="lib" />
         <Folder Include="Modules\Extensions\ValueConverter" />
         <Folder Include="Resources" />
         <AvaloniaResource Include="Resources\**" />
@@ -46,4 +47,7 @@
     <ItemGroup>
       <ProjectReference Include="..\OsuPlayer.Data\OsuPlayer.Data.csproj" />
     </ItemGroup>
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <Exec Command="copy &quot;$(ProjectDir)lib\*&quot; &quot;$(TargetDir)&quot;" />
+    </Target>
 </Project>

@@ -21,7 +21,7 @@ public sealed class SongEntry
         FolderName = folderName;
         AudioFileName = audioFileName;
         Fullpath = !isCustomSong
-            ? $"{osuPath}\\{FolderName}\\{AudioFileName}"
+            ? $"{Core.Instance.Config.OsuSongsPath}\\{FolderName}\\{AudioFileName}"
             : AudioFileName;
         //Background = !isCustomSong
         //    ? FindBackground()

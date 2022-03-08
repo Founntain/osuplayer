@@ -17,6 +17,7 @@ namespace OsuPlayer
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
+                new Core();
                 desktop.MainWindow = new MainWindow
                 {
                     ViewModel = new MainWindowViewModel()

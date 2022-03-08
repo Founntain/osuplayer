@@ -22,7 +22,8 @@ namespace OsuPlayer.Modules.Audio
         private static BassEngine _engine = null!;
         private readonly SyncProcedure _endTrackSyncProc;
         private readonly int[] _frq = { 80, 125, 200, 300, 500, 1000, 2000, 4000, 8000, 16000 };
-        private readonly DispatcherTimer _positionTimer = new DispatcherTimer(DispatcherPriority.DataBind);
+        private readonly DispatcherTimer _positionTimer = new DispatcherTimer(DispatcherPriority.ApplicationIdle);
+        private readonly DispatcherTimer _songTimer = new DispatcherTimer(DispatcherPriority.Layout);
         private readonly SyncProcedure _repeatSyncProc;
         private int _activeStream;
         private double _channelLengthD;
@@ -102,6 +103,13 @@ namespace OsuPlayer.Modules.Audio
                 ChannelPosition = Bass.ChannelBytes2Seconds(FxStream, Bass.ChannelGetPosition(FxStream, 0));
                 _inChannelTimerUpdate = false;
             }
+        }
+        
+        private void _songTimerOnTick(object? sender, EventArgs e)
+        {
+            if (!_isPlaying || FxStream == 0) return;
+            Core.Instance.MainWindow.ViewModel!.PlayerControl.SongTime =
+                Bass.ChannelBytes2Seconds(FxStream, Bass.ChannelGetPosition(FxStream, 0));
         }
 
         private int GetIndex(int frq)
@@ -253,8 +261,7 @@ namespace OsuPlayer.Modules.Audio
 
         private void EndTrack(int handle, int channel, int data, IntPtr user)
         {
-            //TODO: add next song method
-            //Dispatcher.UIThread.Post(OsuPlayer.NextSong);
+            Dispatcher.UIThread.Post(Core.Instance.Player.NextSong);
         }
 
         private void RepeatCallback(int handle, int channel, int data, IntPtr user) =>
@@ -429,9 +436,9 @@ namespace OsuPlayer.Modules.Audio
         public List<DeviceInfo> GetDeviceInfos()
         {
             var list = new List<DeviceInfo>();
-            for (var i = 0; Bass.GetDeviceInfo(i, out var info); i++)
+            for (var i = 0; i < Bass.DeviceCount; i++)
             {
-                list.Add(info);
+                list.Add(Bass.GetDeviceInfo(i));
             }
             list.RemoveAt(0);
             return list;
@@ -477,9 +484,12 @@ namespace OsuPlayer.Modules.Audio
 
         private void Initialize()
         {
-            _positionTimer.Interval = TimeSpan.FromMilliseconds(200);
+            _positionTimer.Interval = TimeSpan.FromMilliseconds(500);
             _positionTimer.Tick += PositionTimer_Tick;
             _positionTimer.Start();
+            _songTimer.Interval = TimeSpan.FromMilliseconds(1000 / 60);
+            _songTimer.Tick += _songTimerOnTick;
+            _songTimer.Start();
             AvailableAudioDevices = new Collection<AudioDevice>();
 
             var mainWindow = Core.Instance.MainWindow;

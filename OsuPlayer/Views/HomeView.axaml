@@ -78,7 +78,7 @@
                 <TextBlock Text="Your songs" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Center" />
             </Border>
 
-            <ListBox Grid.Row="1" Items="{Binding $parent[Window].DataContext.SongEntries}" Background="Transparent">
+            <ListBox Grid.Row="1" Items="{Binding $parent[Window].DataContext.SongEntries}" Background="Transparent" DoubleTapped="InputElement_OnDoubleTapped">
                 <ListBox.DataTemplates>
                     <DataTemplate DataType="io:SongEntry">
                         <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto">

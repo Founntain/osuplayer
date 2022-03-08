@@ -9,11 +9,22 @@ public class PlayerControlViewModel : BaseViewModel, IActivatableViewModel
 {
     public ViewModelActivator Activator { get; }
 
-    private double volume;
     public double Volume
     {
-        get => volume;
-        set => this.RaiseAndSetIfChanged(ref volume, value);
+        get => Core.Instance.Config.Volume;
+        set
+        {
+            Core.Instance.Config.Volume = value;
+            Core.Instance.Engine.SetVolume((float) value / 100);
+            this.RaisePropertyChanged();
+        }
+    }
+
+    private bool isShuffle;
+    public bool IsShuffle
+    {
+        get => isShuffle;
+        set => this.RaiseAndSetIfChanged(ref isShuffle, value);
     }
 
     private double playbackSpeed;
@@ -57,6 +68,13 @@ public class PlayerControlViewModel : BaseViewModel, IActivatableViewModel
     {
         get => currentSongLength;
         set => this.RaiseAndSetIfChanged(ref currentSongLength, value);
+    }
+
+    private bool isPlaying = false;
+    public bool IsPlaying
+    {
+        get => isPlaying;
+        set => this.RaiseAndSetIfChanged(ref isPlaying, value);
     }
     
     public PlayerControlViewModel()

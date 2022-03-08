@@ -7,6 +7,8 @@ public class Config
 {
     public string? OsuPath { get; set; }
     public string OsuSongsPath => $"{OsuPath}\\Songs";
+    
+    public double Volume { get; set; }
 
     public bool UseSongnameUnicode { get; set; } = false;
 

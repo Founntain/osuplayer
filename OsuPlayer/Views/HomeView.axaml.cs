@@ -1,5 +1,14 @@
-﻿using Avalonia.Markup.Xaml;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Interactivity;
+using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using OsuPlayer.Data;
+using OsuPlayer.Modules.IO;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.ViewModels;
 using ReactiveUI;
@@ -34,5 +43,12 @@ public partial class HomeView : ReactiveUserControl<HomeViewModel>
         }
 
         //ViewModel!.Songs = new ObservableCollection<SongEntry>(songs);
+    }
+
+    private void InputElement_OnDoubleTapped(object? sender, RoutedEventArgs e)
+    {
+        var list = sender as ListBox;
+        var song = list.SelectedItem as SongEntry;
+        Core.Instance.Player.Play(song);
     }
 }

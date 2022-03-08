@@ -29,13 +29,6 @@ public class MainWindowViewModel : BaseViewModel, IScreen
         set => this.RaiseAndSetIfChanged(ref mainView, value);
     }
 
-    private string currentSongText = "currently playing nothing";
-    public string CurrentSongText
-    {
-        get => currentSongText;
-        set => this.RaiseAndSetIfChanged(ref currentSongText, value);
-    }
-
     public ObservableCollection<AudioDevice> OutputDeviceComboboxItems { get; set; }
 
     public ReadOnlyObservableCollection<SongEntry> SongEntries
