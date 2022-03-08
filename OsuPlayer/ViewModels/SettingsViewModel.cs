@@ -1,10 +1,13 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using OsuPlayer.Modules.IO;
 using OsuPlayer.UI_Extensions;
+using OsuPlayer.Windows;
 using ReactiveUI;
 
 namespace OsuPlayer.ViewModels;
@@ -12,17 +15,38 @@ namespace OsuPlayer.ViewModels;
 public class SettingsViewModel : BaseViewModel, IActivatableViewModel
 {
     private string _osuLocation;
+    private WindowTransparencyLevel _selectedTransparencyLevel;
 
     public SettingsViewModel()
     {
         Activator = new ViewModelActivator();
         this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
+
+        SelectedTransparencyLevel = Core.Instance.Config.TransparencyLevelHint;
     }
 
     public string OsuLocation
     {
         get => $"osu! location: {_osuLocation}";
         set => this.RaiseAndSetIfChanged(ref _osuLocation, value);
+    }
+
+    public IEnumerable<WindowTransparencyLevel> WindowTransparencyLevels => Enum.GetValues<WindowTransparencyLevel>();
+
+    public WindowTransparencyLevel SelectedTransparencyLevel
+    {
+        get => _selectedTransparencyLevel;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _selectedTransparencyLevel, value);
+
+            if (Core.Instance.MainWindow == null) return;
+            
+            Core.Instance.MainWindow.TransparencyLevelHint = value;
+            Core.Instance.Config.TransparencyLevelHint = value;
+            
+            Core.Instance.Config.SaveConfig();
+        }
     }
 
     public ViewModelActivator Activator { get; }
@@ -66,5 +90,15 @@ public class SettingsViewModel : BaseViewModel, IActivatableViewModel
         Core.Instance.Player.ImportSongs();
 
         Core.Instance.Config.SaveConfig();
+    }
+
+    public async Task Login()
+    {
+        var loginWindow = new LoginWindow()
+        {
+            ViewModel = new LoginWindowViewModel()
+        };
+
+        await loginWindow.ShowDialog(Core.Instance.MainWindow);
     }
 }

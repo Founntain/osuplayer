@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using Avalonia.Controls;
 using Newtonsoft.Json;
 
 namespace OsuPlayer.Modules.IO;
@@ -14,6 +15,7 @@ public class Config
 
     public int SelectedOutputDevice { get; set; } = 0;
     public bool IsEqEnabled { get; set; } = false;
+    public WindowTransparencyLevel TransparencyLevelHint { get; set; } = WindowTransparencyLevel.AcrylicBlur;
 
     /// <summary>
     ///     Load config, if none was found create a new one

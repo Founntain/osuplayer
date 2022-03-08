@@ -1,6 +1,7 @@
 using OsuPlayer.Modules.Audio;
 using OsuPlayer.Modules.IO;
 using OsuPlayer.Views;
+using MainWindow = OsuPlayer.Windows.MainWindow;
 
 namespace OsuPlayer;
 
@@ -23,7 +24,10 @@ public class Core
     protected internal void SetMainWindow(MainWindow window)
     {
         MainWindow = window;
+        MainWindow.TransparencyLevelHint = Config.TransparencyLevelHint;
+        
         Engine = BassEngine.Instance;
+        
         Player = new Player();
         Player.ImportSongs();
     }

@@ -80,13 +80,12 @@ public static partial class ApiAsync
         {
             using (var client = new HttpClient())
             {
-                client.DefaultRequestHeaders.Add("Content-Type", "application/json");
-
                 var url = new Uri($"{Url}{controller}/{action}");
 
-                var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8);
+                var req = new HttpRequestMessage(HttpMethod.Post, url);
+                req.Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
 
-                var result = await client.PostAsync(url, content);
+                var result = await client.SendAsync(req);
 
                 return JsonConvert.DeserializeObject<T>(await result.Content.ReadAsStringAsync());
             }
@@ -117,50 +116,6 @@ public static partial class ApiAsync
             using (var client = new HttpClient())
             {
                 var data = await client.GetByteArrayAsync(new Uri($"{Url}{controller}/{action}?{parameters}"));
-
-                return JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(data));
-            }
-        }
-        catch (Exception ex)
-        {
-            ParseWebException(ex);
-
-            return default;
-        }
-    }
-
-    public static async Task<T?> GetRequestWithIdAsync<T>(string controller, string action, string id)
-    {
-        if (Constants.OfflineMode)
-            return default;
-
-        try
-        {
-            using (var client = new HttpClient())
-            {
-                var data = await client.GetByteArrayAsync(new Uri($"{Url}{controller}/{action}?id={id}"));
-
-                return JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(data));
-            }
-        }
-        catch (Exception ex)
-        {
-            ParseWebException(ex);
-
-            return default;
-        }
-    }
-
-    public static async Task<T?> GetRequestWithNameAsync<T>(string controller, string action, string name)
-    {
-        if (Constants.OfflineMode)
-            return default;
-
-        try
-        {
-            using (var client = new HttpClient())
-            {
-                var data = await client.GetByteArrayAsync(new Uri($"{Url}{controller}/{action}?name={name}"));
 
                 return JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(data));
             }
