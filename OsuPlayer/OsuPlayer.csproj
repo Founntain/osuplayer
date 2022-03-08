@@ -33,10 +33,10 @@
         <PackageReference Include="XamlNameReferenceGenerator" Version="1.3.4" />
     </ItemGroup>
     <ItemGroup>
-      <Compile Update="Views\MainWindow.axaml.cs">
-        <DependentUpon>MainWindow.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
+        <Compile Update="Views\MainWindow.axaml.cs">
+            <DependentUpon>MainWindow.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
     </ItemGroup>
     <ItemGroup>
         <Folder Include="Modules\Extensions\ValueConverter" />
@@ -44,6 +44,16 @@
         <AvaloniaResource Include="Resources\**" />
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\OsuPlayer.Data\OsuPlayer.Data.csproj" />
+        <ProjectReference Include="..\OsuPlayer.Data\OsuPlayer.Data.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <Content Include="bass.dll">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="bass_fx.dll">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="lib\bass.dll" />
+      <None Remove="lib\bass_fx.dll" />
     </ItemGroup>
 </Project>

@@ -59,7 +59,7 @@
         <!--Test Grid-->
         <!-- <Grid Row="1" Column="0"> -->
         <!-- </Grid> -->
-        
+
         <!--Songs Grid-->
         <Grid Row="1" Column="0" ColumnSpan="2" RowDefinitions="40, *" Margin="10">
             <Panel Grid.Row="0" Grid.RowSpan="2">
@@ -78,13 +78,16 @@
                 <TextBlock Text="Your songs" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Center" />
             </Border>
 
-            <ListBox Grid.Row="1" Items="{Binding $parent[Window].DataContext.SongEntries}" Background="Transparent">
+            <ListBox Grid.Row="1" Items="{Binding $parent[Window].DataContext.SongEntries}" Background="Transparent"
+                     DoubleTapped="InputElement_OnDoubleTapped">
                 <ListBox.DataTemplates>
                     <DataTemplate DataType="io:SongEntry">
                         <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto">
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding TitleString}" FontSize="20" />
-                            <TextBlock Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Text="{Binding TotalTimeString}" FontSize="20" VerticalAlignment="Center" />
-                            <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding ArtistString}" FontSize="14" Foreground="#FFCCCCCC" />
+                            <TextBlock Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Text="{Binding TotalTimeString}"
+                                       FontSize="20" VerticalAlignment="Center" />
+                            <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding ArtistString}"
+                                       FontSize="14" Foreground="#FFCCCCCC" />
                         </Grid>
                     </DataTemplate>
                 </ListBox.DataTemplates>

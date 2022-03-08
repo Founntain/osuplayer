@@ -7,23 +7,49 @@ namespace OsuPlayer.ViewModels;
 
 public class PlayerControlViewModel : BaseViewModel, IActivatableViewModel
 {
-    public ViewModelActivator Activator { get; }
+    private string currentSongLength = "00:00";
 
-    private double volume;
-    public double Volume
-    {
-        get => volume;
-        set => this.RaiseAndSetIfChanged(ref volume, value);
-    }
+    private string currentSongTime = "00:00";
+
+    private bool isPlaying;
+
+    private bool isShuffle;
 
     private double playbackSpeed;
+
+    private double songLength;
+
+    private double songTime;
+
+    public PlayerControlViewModel()
+    {
+        Activator = new ViewModelActivator();
+        this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
+    }
+
+    public double Volume
+    {
+        get => Core.Instance.Config.Volume;
+        set
+        {
+            Core.Instance.Config.Volume = value;
+            Core.Instance.Engine.SetVolume((float) value / 100);
+            this.RaisePropertyChanged();
+        }
+    }
+
+    public bool IsShuffle
+    {
+        get => isShuffle;
+        set => this.RaiseAndSetIfChanged(ref isShuffle, value);
+    }
+
     public double PlaybackSpeed
     {
         get => playbackSpeed;
         set => this.RaiseAndSetIfChanged(ref playbackSpeed, value);
     }
-    
-    private double songTime;
+
     public double SongTime
     {
         get => songTime;
@@ -34,14 +60,12 @@ public class PlayerControlViewModel : BaseViewModel, IActivatableViewModel
         }
     }
 
-    private string currentSongTime = "00:00";
     public string CurrentSongTime
     {
         get => currentSongTime;
         set => this.RaiseAndSetIfChanged(ref currentSongTime, value);
     }
 
-    private double songLength;
     public double SongLength
     {
         get => songLength;
@@ -52,22 +76,17 @@ public class PlayerControlViewModel : BaseViewModel, IActivatableViewModel
         }
     }
 
-    private string currentSongLength = "00:00";
     public string CurrentSongLength
     {
         get => currentSongLength;
         set => this.RaiseAndSetIfChanged(ref currentSongLength, value);
     }
-    
-    public PlayerControlViewModel()
-    {
-        Activator = new ViewModelActivator();
-        this.WhenActivated(disposables =>
-        {
-            Disposable.Create(() =>
-            {
 
-            }).DisposeWith(disposables);
-        });
+    public bool IsPlaying
+    {
+        get => isPlaying;
+        set => this.RaiseAndSetIfChanged(ref isPlaying, value);
     }
+
+    public ViewModelActivator Activator { get; }
 }

@@ -6,17 +6,24 @@ namespace OsuPlayer;
 
 public class Core
 {
-    public static Core Instance { get; protected set; }
-    
-    public MainWindow MainWindow;
     public Config Config;
-    public Player Player; 
+    public BassEngine Engine;
 
-    protected internal Core(MainWindow window)
+    public MainWindow MainWindow;
+    public Player Player;
+
+    protected internal Core()
     {
         Instance = this;
-        MainWindow = window;
         Config = Config.LoadConfig();
+    }
+
+    public static Core Instance { get; protected set; }
+
+    protected internal void SetMainWindow(MainWindow window)
+    {
+        MainWindow = window;
+        Engine = BassEngine.Instance;
         Player = new Player();
         Player.ImportSongs();
     }

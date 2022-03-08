@@ -4,26 +4,26 @@ using Avalonia.Markup.Xaml;
 using OsuPlayer.ViewModels;
 using OsuPlayer.Views;
 
-namespace OsuPlayer
+namespace OsuPlayer;
+
+public class App : Application
 {
-    public class App : Application
+    public override void Initialize()
     {
-        public override void Initialize()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
+        AvaloniaXamlLoader.Load(this);
+    }
 
-        public override void OnFrameworkInitializationCompleted()
+    public override void OnFrameworkInitializationCompleted()
+    {
+        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            new Core();
+            desktop.MainWindow = new MainWindow
             {
-                desktop.MainWindow = new MainWindow
-                {
-                    ViewModel = new MainWindowViewModel()
-                };
-            }
-
-            base.OnFrameworkInitializationCompleted();
+                ViewModel = new MainWindowViewModel()
+            };
         }
+
+        base.OnFrameworkInitializationCompleted();
     }
 }

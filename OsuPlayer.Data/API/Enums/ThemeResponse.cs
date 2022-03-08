@@ -1,10 +1,9 @@
-﻿namespace OsuPlayer.Data.API.Enums
+﻿namespace OsuPlayer.Data.API.Enums;
+
+public enum ThemeResponse
 {
-    public enum ThemeResponse
-    {
-        UserNotFound,
-        NameExists,
-        Success,
-        Error
-    }
+    UserNotFound,
+    NameExists,
+    Success,
+    Error
 }

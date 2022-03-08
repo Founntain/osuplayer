@@ -1,7 +1,6 @@
-﻿namespace OsuPlayer.Data.OsuPlayer.Interfaces
+﻿namespace OsuPlayer.Data.OsuPlayer.Interfaces;
+
+public interface IActivateable
 {
-    public interface IActivateable
-    {
-        void EnableActivate();
-    }
+    void EnableActivate();
 }

@@ -46,17 +46,22 @@ public partial class PlayerControlView : ReactiveUserControl<PlayerControlViewMo
 
     private void SongControl(object? sender, PointerReleasedEventArgs e)
     {
-        switch ((sender as Border)?.Name)
+        switch ((sender as Control)?.Name)
         {
             case "Repeat":
+                Core.Instance.Player.Repeat = !Core.Instance.Player.Repeat;
                 break;
             case "Previous":
+                Core.Instance.Player.PreviousSong();
                 break;
             case "PlayPause":
+                Core.Instance.Player.PlayPause();
                 break;
             case "Next":
+                Core.Instance.Player.NextSong();
                 break;
             case "Shuffle":
+                Core.Instance.Player.Shuffle = !Core.Instance.Player.Shuffle;
                 break;
         }
     }

@@ -9,8 +9,8 @@ namespace OsuPlayer.Modules.Network.API.ApiEndpoints;
 
 public static partial class ApiAsync
 {
-    public static string Url => Constants.Localhost 
-        ? "http://localhost:5000/api/" 
+    public static string Url => Constants.Localhost
+        ? "http://localhost:5000/api/"
         : "https://osuplayer.founntain.dev/api/";
 
     private static void OfflineModeMessage()
@@ -34,7 +34,7 @@ public static partial class ApiAsync
     }
 
     /// <summary>
-    /// Creates a GET request to the osu!player API return T.
+    ///     Creates a GET request to the osu!player API return T.
     /// </summary>
     /// <param name="controller">The controller to call</param>
     /// <param name="action">The route of the controller</param>
@@ -63,9 +63,10 @@ public static partial class ApiAsync
     }
 
     /// <summary>
-    /// Creates a POST request to the osu!player API returning T.
+    ///     Creates a POST request to the osu!player API returning T.
     /// </summary>
-    /// /// <param name="controller">The controller to call</param>
+    /// ///
+    /// <param name="controller">The controller to call</param>
     /// <param name="action">The route of the controller</param>
     /// <param name="data">Date to send</param>
     /// <typeparam name="T"></typeparam>
@@ -82,9 +83,9 @@ public static partial class ApiAsync
                 client.DefaultRequestHeaders.Add("Content-Type", "application/json");
 
                 var url = new Uri($"{Url}{controller}/{action}");
-                
+
                 var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8);
-                
+
                 var result = await client.PostAsync(url, content);
 
                 return JsonConvert.DeserializeObject<T>(await result.Content.ReadAsStringAsync());
@@ -99,7 +100,7 @@ public static partial class ApiAsync
     }
 
     /// <summary>
-    /// Creates a GET request to the osu!player api with parameters returning T.
+    ///     Creates a GET request to the osu!player api with parameters returning T.
     /// </summary>
     /// <param name="controller">The controller to call</param>
     /// <param name="action">The route of the controller</param>
@@ -160,7 +161,7 @@ public static partial class ApiAsync
             using (var client = new HttpClient())
             {
                 var data = await client.GetByteArrayAsync(new Uri($"{Url}{controller}/{action}?name={name}"));
-                
+
                 return JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(data));
             }
         }

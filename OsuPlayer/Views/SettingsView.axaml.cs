@@ -21,7 +21,7 @@ public partial class SettingsView : ReactiveUserControl<SettingsViewModel>
     private void SettingsView_OnInitialized(object? sender, EventArgs e)
     {
         var config = Config.GetConfigInstance();
-        
+
         ViewModel!.OsuLocation = config.OsuPath;
     }
 }

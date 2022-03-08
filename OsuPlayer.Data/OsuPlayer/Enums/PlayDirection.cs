@@ -1,9 +1,8 @@
-﻿namespace OsuPlayer.Data.OsuPlayer.Enums
+﻿namespace OsuPlayer.Data.OsuPlayer.Enums;
+
+public enum PlayDirection
 {
-    public enum PlayDirection
-    {
-        Normal,
-        Backwards,
-        Forward
-    }
+    Normal,
+    Backwards,
+    Forward
 }

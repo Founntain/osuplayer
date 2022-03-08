@@ -1,17 +1,16 @@
-﻿namespace OsuPlayer.Data.API.Enums
+﻿namespace OsuPlayer.Data.API.Enums;
+
+public enum EventType
 {
-    public enum EventType
-    {
-        Unknown = -1,
-        Other,
-        UserJoined,
-        UsernameChanged,
-        UserDeleted,
-        UserLevelUp,
-        UserEdited,
-        LanguageCreated,
-        LanguageUpdated,
-        NewsReleased,
-        UpdateReleased
-    }
+    Unknown = -1,
+    Other,
+    UserJoined,
+    UsernameChanged,
+    UserDeleted,
+    UserLevelUp,
+    UserEdited,
+    LanguageCreated,
+    LanguageUpdated,
+    NewsReleased,
+    UpdateReleased
 }

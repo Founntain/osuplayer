@@ -21,7 +21,7 @@ public sealed class SongEntry
         FolderName = folderName;
         AudioFileName = audioFileName;
         Fullpath = !isCustomSong
-            ? $"{osuPath}\\{FolderName}\\{AudioFileName}"
+            ? $"{Core.Instance.Config.OsuSongsPath}\\{FolderName}\\{AudioFileName}"
             : AudioFileName;
         //Background = !isCustomSong
         //    ? FindBackground()
@@ -112,24 +112,24 @@ public sealed class SongEntry
     public string GetArtist()
     {
         if (!Config.GetConfigInstance().UseSongnameUnicode) return Artist;
-    
+
         return !string.IsNullOrWhiteSpace(ArtistUnicode) ? ArtistUnicode : Artist;
     }
-    
+
     public string GetTitle()
     {
         if (!Config.GetConfigInstance().UseSongnameUnicode) return Title;
-    
+
         return !string.IsNullOrWhiteSpace(TitleUnicode) ? TitleUnicode : Title;
     }
-    
+
     public string GetSongName()
     {
         if (!Config.GetConfigInstance().UseSongnameUnicode) return $"{Artist} - {Title}";
-    
+
         if (!string.IsNullOrWhiteSpace(ArtistUnicode) && !string.IsNullOrWhiteSpace(TitleUnicode))
             return $"{ArtistUnicode} - {TitleUnicode}";
-    
+
         return $"{Artist} - {Title}";
     }
 

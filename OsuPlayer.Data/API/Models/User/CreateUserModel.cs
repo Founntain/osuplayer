@@ -1,8 +1,7 @@
-﻿namespace OsuPlayer.Data.API.Models.User
+﻿namespace OsuPlayer.Data.API.Models.User;
+
+public class CreateUserModel
 {
-    public class CreateUserModel
-    {
-        public UserModel UserModel { get; set; }
-        public string Password { get; set; }
-    }
+    public UserModel UserModel { get; set; }
+    public string Password { get; set; }
 }

@@ -1,9 +1,8 @@
-﻿namespace OsuPlayer.Data.OsuPlayer.Enums
+﻿namespace OsuPlayer.Data.OsuPlayer.Enums;
+
+public enum StartupSong
 {
-    public enum StartupSong
-    {
-        FirstSong = 0,
-        LastPlayed = 1,
-        RandomSong = 2
-    }
+    FirstSong = 0,
+    LastPlayed = 1,
+    RandomSong = 2
 }

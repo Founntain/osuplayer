@@ -5,17 +5,11 @@ namespace OsuPlayer.ViewModels;
 
 public class UserViewModel : BaseViewModel, IActivatableViewModel
 {
-    public ViewModelActivator Activator { get; }
-
     public UserViewModel()
     {
         Activator = new ViewModelActivator();
-        this.WhenActivated(disposables =>
-        {
-            Disposable.Create(() =>
-            {
-
-            }).DisposeWith(disposables);
-        });
+        this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
     }
+
+    public ViewModelActivator Activator { get; }
 }

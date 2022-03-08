@@ -1,7 +1,6 @@
-﻿namespace OsuPlayer.Data.API.Models.Statistic
+﻿namespace OsuPlayer.Data.API.Models.Statistic;
+
+public sealed class ActivityModel
 {
-    public sealed class ActivityModel
-    {
-        public int Value { get; set; }
-    }
+    public int Value { get; set; }
 }
