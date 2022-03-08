@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using Avalonia.Controls;
-using OsuPlayer.Data;
 using OsuPlayer.UI_Extensions;
 using ReactiveUI;
 

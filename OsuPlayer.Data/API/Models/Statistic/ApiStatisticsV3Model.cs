@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace OsuPlayer.Data.API.Models.Statistic
+﻿namespace OsuPlayer.Data.API.Models.Statistic
 {
     public class ApiStatisticsV3Model
     {

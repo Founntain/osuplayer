@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace OsuPlayer.Data.API.Models.User
+﻿namespace OsuPlayer.Data.API.Models.User
 {
     public class ClientModel
     {

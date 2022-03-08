@@ -1,7 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Drawing;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using ReactiveUI;
 
 namespace OsuPlayer.ViewModels;

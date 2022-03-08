@@ -1,6 +1,4 @@
-using System;
 using System.Collections.ObjectModel;
-using Avalonia.ReactiveUI;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Modules.IO;
 using ReactiveUI;

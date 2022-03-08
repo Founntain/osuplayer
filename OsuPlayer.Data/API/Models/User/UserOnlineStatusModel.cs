@@ -1,4 +1,3 @@
-using System;
 using OsuPlayer.Data.API.Enums;
 
 namespace OsuPlayer.Data.API.Models.User

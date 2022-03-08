@@ -1,12 +1,8 @@
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.LogicalTree;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using OsuPlayer.Data;
 using OsuPlayer.ViewModels;
 using ReactiveUI;
 

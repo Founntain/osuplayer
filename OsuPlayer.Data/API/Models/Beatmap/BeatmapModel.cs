@@ -1,5 +1,3 @@
-using System;
-
 namespace OsuPlayer.Data.API.Models.Beatmap
 {
     public sealed class BeatmapModel

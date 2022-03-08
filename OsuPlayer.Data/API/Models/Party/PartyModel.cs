@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using OsuPlayer.Data.API.Models.User;
+﻿using OsuPlayer.Data.API.Models.User;
 
 namespace OsuPlayer.Data.API.Models.Party
 {

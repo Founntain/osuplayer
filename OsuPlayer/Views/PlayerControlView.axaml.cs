@@ -3,7 +3,6 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using OsuPlayer.Data;
 using OsuPlayer.ViewModels;
 
 namespace OsuPlayer.Views;

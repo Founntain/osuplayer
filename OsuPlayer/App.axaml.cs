@@ -3,7 +3,6 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using OsuPlayer.ViewModels;
 using OsuPlayer.Views;
-using Splat;
 
 namespace OsuPlayer
 {

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace OsuPlayer.Data.API.Models.Util
+﻿namespace OsuPlayer.Data.API.Models.Util
 {
     public sealed class UpdateModel
     {

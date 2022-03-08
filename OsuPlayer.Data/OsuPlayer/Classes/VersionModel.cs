@@ -1,5 +1,3 @@
-using System;
-
 namespace OsuPlayer.Data.OsuPlayer.Classes
 {
     public sealed class VersionModel

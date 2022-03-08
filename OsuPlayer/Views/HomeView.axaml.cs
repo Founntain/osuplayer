@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
+﻿using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using OsuPlayer.Data;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.ViewModels;
 using ReactiveUI;
