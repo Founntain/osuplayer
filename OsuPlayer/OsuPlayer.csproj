@@ -49,10 +49,10 @@
     </ItemGroup>
     <ItemGroup>
       <Content Include="bass.dll">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
       <Content Include="bass_fx.dll">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
       <None Remove="lib\bass.dll" />
       <None Remove="lib\bass_fx.dll" />
