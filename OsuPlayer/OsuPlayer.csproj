@@ -39,7 +39,6 @@
         </Compile>
     </ItemGroup>
     <ItemGroup>
-        <Folder Include="lib" />
         <Folder Include="Modules\Extensions\ValueConverter" />
         <Folder Include="Resources" />
         <AvaloniaResource Include="Resources\**" />
@@ -48,10 +47,10 @@
         <ProjectReference Include="..\OsuPlayer.Data\OsuPlayer.Data.csproj" />
     </ItemGroup>
     <ItemGroup>
-      <Content Include="bass.dll">
+      <Content Include="lib\bass.dll">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
-      <Content Include="bass_fx.dll">
+      <Content Include="lib\bass_fx.dll">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
       <None Remove="lib\bass.dll" />
