@@ -47,16 +47,13 @@
         <ProjectReference Include="..\OsuPlayer.Data\OsuPlayer.Data.csproj" />
     </ItemGroup>
     <ItemGroup>
-      <Content Include="lib\bass.dll">
+      <Content Include="bass.dll">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
-      <Content Include="lib\bass_fx.dll">
+      <Content Include="bass_fx.dll">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
       <None Remove="lib\bass.dll" />
       <None Remove="lib\bass_fx.dll" />
     </ItemGroup>
-    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-        <Exec Command="copy &quot;$(ProjectDir)lib\*&quot; &quot;$(TargetDir)&quot;" />
-    </Target>
 </Project>
