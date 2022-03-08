@@ -12,10 +12,6 @@ namespace OsuPlayer.Controls;
 
 public class SkiaImage : Control
 {
-    private SKPaint skPaint;
-    private RenderTargetBitmap renderTarget;
-    private ISkiaDrawingContextImpl skiaContext;
-
     public static readonly StyledProperty<SKBitmap> SourceProperty =
         AvaloniaProperty.Register<Image, SKBitmap>(nameof(Source));
 
@@ -26,10 +22,18 @@ public class SkiaImage : Control
         AvaloniaProperty.Register<Image, Stretch>(nameof(Stretch), Stretch.UniformToFill);
 
     public static readonly StyledProperty<float> BlurStrengthProperty =
-        AvaloniaProperty.Register<Image, float>(nameof(BlurStrength), 0F);
+        AvaloniaProperty.Register<Image, float>(nameof(BlurStrength));
 
     public static readonly StyledProperty<BitmapInterpolationMode> BitMapInterpolationModeProperty =
         AvaloniaProperty.Register<Image, BitmapInterpolationMode>(nameof(BitmapInterpolationMode));
+
+    private RenderTargetBitmap renderTarget;
+    private ISkiaDrawingContextImpl skiaContext;
+    private SKPaint skPaint;
+
+    static SkiaImage()
+    {
+    }
 
     public SKBitmap Source
     {
@@ -69,10 +73,6 @@ public class SkiaImage : Control
     {
         get => GetValue(BitMapInterpolationModeProperty);
         set => SetValue(BitMapInterpolationModeProperty, value);
-    }
-    
-    static SkiaImage()
-    {
     }
 
     public override void EndInit()

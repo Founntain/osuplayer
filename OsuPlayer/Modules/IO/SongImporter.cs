@@ -1,6 +1,5 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using OsuPlayer.Modules.IO.DbReader;
@@ -14,7 +13,7 @@ public sealed class SongImporter
         var maps = ReadSongsFromDb(path).ToArray();
 
         if (!maps.Any()) return default;
-        
+
         var songs = new ConcurrentBag<SongEntry>();
 
         Parallel.ForEach(maps, (entry, token) =>
@@ -32,7 +31,7 @@ public sealed class SongImporter
                 $"{path}\\Songs");
 
             song.TotalTime = entry.TotalTime;
-            
+
             songs.Add(song);
         });
 
@@ -64,7 +63,7 @@ public sealed class SongImporter
                 $"{path}\\Songs");
 
             song.TotalTime = entry.TotalTime;
-            
+
             songs.Add(song);
         });
 

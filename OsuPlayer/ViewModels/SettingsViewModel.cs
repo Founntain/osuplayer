@@ -12,18 +12,11 @@ namespace OsuPlayer.ViewModels;
 public class SettingsViewModel : BaseViewModel, IActivatableViewModel
 {
     private string _osuLocation;
-    public ViewModelActivator Activator { get; }
 
     public SettingsViewModel()
     {
         Activator = new ViewModelActivator();
-        this.WhenActivated(disposables =>
-        {
-            Disposable.Create(() =>
-            {
-
-            }).DisposeWith(disposables);
-        });
+        this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
     }
 
     public string OsuLocation
@@ -31,6 +24,8 @@ public class SettingsViewModel : BaseViewModel, IActivatableViewModel
         get => $"osu! location: {_osuLocation}";
         set => this.RaiseAndSetIfChanged(ref _osuLocation, value);
     }
+
+    public ViewModelActivator Activator { get; }
 
     public async Task ImportSongsClick()
     {
@@ -40,7 +35,7 @@ public class SettingsViewModel : BaseViewModel, IActivatableViewModel
             AllowMultiple = false,
             Filters = new List<FileDialogFilter>
             {
-                new FileDialogFilter
+                new()
                 {
                     Extensions = new List<string> {"db"}
                 }
@@ -54,21 +49,22 @@ public class SettingsViewModel : BaseViewModel, IActivatableViewModel
             await MessageBox.ShowDialogAsync(Core.Instance.MainWindow, "Did you even selected a file?!");
             return;
         }
-        
+
         var path = result.FirstOrDefault();
 
         if (Path.GetFileName(path) != "osu!.db")
         {
-            await MessageBox.ShowDialogAsync(Core.Instance.MainWindow, "You had one job! Just one. Select your osu!.db! Not anything else!");
+            await MessageBox.ShowDialogAsync(Core.Instance.MainWindow,
+                "You had one job! Just one. Select your osu!.db! Not anything else!");
             return;
         }
-        
+
         var osuFolder = Path.GetDirectoryName(path);
 
         Core.Instance.Config.OsuPath = osuFolder!;
         OsuLocation = osuFolder!;
         Core.Instance.Player.ImportSongs();
-        
+
         Core.Instance.Config.SaveConfig();
     }
 }

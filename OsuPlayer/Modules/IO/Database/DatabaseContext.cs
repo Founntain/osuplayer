@@ -4,11 +4,11 @@ namespace OsuPlayer.Modules.IO.Database;
 
 public class DatabaseContext : DbContext
 {
-    public DatabaseContext() : base()
+    public DatabaseContext()
     {
         Database.EnsureCreated();
     }
-    
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlite("Data Source=osuplayer.db");

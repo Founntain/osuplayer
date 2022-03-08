@@ -8,8 +8,8 @@
     <Grid VerticalAlignment="Top" HorizontalAlignment="Left">
         <StackPanel>
             <TextBlock Text="{Binding OsuLocation}" />
-            <Button Content="ImportSongs" Command="{Binding ImportSongsClick}"/>
+            <Button Content="ImportSongs" Command="{Binding ImportSongsClick}" />
         </StackPanel>
-        
+
     </Grid>
 </UserControl>

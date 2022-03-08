@@ -16,7 +16,7 @@ public partial class MessageBoxWindow : Window
         this.AttachDevTools();
 #endif
     }
-    
+
     public MessageBoxWindow(string text, string? title)
     {
         InitializeComponent();
@@ -26,7 +26,7 @@ public partial class MessageBoxWindow : Window
         this.AttachDevTools();
 #endif
     }
-    
+
 
     private void InitializeComponent()
     {

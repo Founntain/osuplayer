@@ -7,20 +7,32 @@ namespace OsuPlayer.ViewModels;
 
 public class MainWindowViewModel : BaseViewModel, IScreen
 {
-    private BaseViewModel mainView;
-    
+    public readonly HomeViewModel HomeView;
+    public readonly PartyViewModel PartyView;
+    public readonly PlaylistViewModel PlaylistView;
+
     // internal ViewModels
     public readonly SearchViewModel SearchView;
-    public readonly PlaylistViewModel PlaylistView;
-    public readonly HomeViewModel HomeView;
-    public readonly UserViewModel UserView;
-    public readonly PartyViewModel PartyView;
     public readonly SettingsViewModel SettingsView;
-    
-    public RoutingState Router { get; } = new();
-    
+    public readonly UserViewModel UserView;
+    private BaseViewModel mainView;
+
+    public MainWindowViewModel()
+    {
+        TopBar = new TopBarViewModel();
+        PlayerControl = new PlayerControlViewModel();
+
+        SearchView = new SearchViewModel();
+        PlaylistView = new PlaylistViewModel();
+        HomeView = new HomeViewModel();
+        UserView = new UserViewModel();
+        PartyView = new PartyViewModel();
+        SettingsView = new SettingsViewModel();
+        //Generate new ViewModels here
+    }
+
     public TopBarViewModel TopBar { get; }
-    
+
     public PlayerControlViewModel PlayerControl { get; }
 
     public BaseViewModel MainView
@@ -37,17 +49,5 @@ public class MainWindowViewModel : BaseViewModel, IScreen
         set => Core.Instance.Player.FilteredSongEntries = value;
     }
 
-    public MainWindowViewModel()
-    {
-        TopBar = new TopBarViewModel();
-        PlayerControl = new PlayerControlViewModel();
-        
-        SearchView = new SearchViewModel();
-        PlaylistView = new PlaylistViewModel();
-        HomeView = new HomeViewModel();
-        UserView = new UserViewModel();
-        PartyView = new PartyViewModel();
-        SettingsView = new SettingsViewModel();
-        //Generate new ViewModels here
-    }
+    public RoutingState Router { get; } = new();
 }

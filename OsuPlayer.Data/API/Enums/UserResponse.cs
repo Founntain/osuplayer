@@ -1,22 +1,21 @@
-﻿namespace OsuPlayer.Data.API.Enums
+﻿namespace OsuPlayer.Data.API.Enums;
+
+public enum UserResponse
 {
-    public enum UserResponse
-    {
-        UserDeleted,
-        UserNotDeleted,
-        UserCantBeDeleted,
-        UserAlreadyExists,
-        ThemeIdNotMatching,
-        ThemeSaved,
-        ThemeNotSaved,
-        UserEdited,
-        CantEditUser,
-        UserNotFound,
-        NoNewProfilePicture,
-        ProfilePictureSaved,
-        CantSaveProfilePicture,
-        PasswordIncorrect,
-        UserEditedAndPasswordChanged,
-        UserEditedAndPasswordNotChanged
-    }
+    UserDeleted,
+    UserNotDeleted,
+    UserCantBeDeleted,
+    UserAlreadyExists,
+    ThemeIdNotMatching,
+    ThemeSaved,
+    ThemeNotSaved,
+    UserEdited,
+    CantEditUser,
+    UserNotFound,
+    NoNewProfilePicture,
+    ProfilePictureSaved,
+    CantSaveProfilePicture,
+    PasswordIncorrect,
+    UserEditedAndPasswordChanged,
+    UserEditedAndPasswordNotChanged
 }

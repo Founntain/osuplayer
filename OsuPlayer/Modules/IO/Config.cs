@@ -7,7 +7,7 @@ public class Config
 {
     public string? OsuPath { get; set; }
     public string OsuSongsPath => $"{OsuPath}\\Songs";
-    
+
     public double Volume { get; set; }
 
     public bool UseSongnameUnicode { get; set; } = false;
@@ -16,9 +16,9 @@ public class Config
     public bool IsEqEnabled { get; set; } = false;
 
     /// <summary>
-    /// Load config, if none was found create a new one
+    ///     Load config, if none was found create a new one
     /// </summary>
-    /// <returns>Returns a <see cref="Config"/> object</returns>
+    /// <returns>Returns a <see cref="Config" /> object</returns>
     public static Config LoadConfig()
     {
         DirectoryManager.GenerateMissingDirectories();
@@ -27,13 +27,13 @@ public class Config
         {
             var data = File.ReadAllText("data/config.json");
 
-            return (string.IsNullOrWhiteSpace(data) 
-                ? new Config() 
+            return (string.IsNullOrWhiteSpace(data)
+                ? new Config()
                 : JsonConvert.DeserializeObject<Config>(data))!;
         }
 
         File.WriteAllText("data/config.json", JsonConvert.SerializeObject(new Config()));
-        
+
         return new Config();
     }
 

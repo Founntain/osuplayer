@@ -1,9 +1,8 @@
-namespace OsuPlayer.Data.API.Enums
+namespace OsuPlayer.Data.API.Enums;
+
+public enum UserOnlineStatusType
 {
-    public enum UserOnlineStatusType
-    {
-        Idle,
-        Listening,
-        InParty
-    }
+    Idle,
+    Listening,
+    InParty
 }

@@ -1,3 +1,4 @@
+using System;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -8,7 +9,7 @@ using ReactiveUI;
 
 namespace OsuPlayer.Views;
 
-partial class TopBarView : ReactiveUserControl<TopBarViewModel>
+internal partial class TopBarView : ReactiveUserControl<TopBarViewModel>
 {
     public TopBarView()
     {
@@ -17,10 +18,7 @@ partial class TopBarView : ReactiveUserControl<TopBarViewModel>
 
     private void InitializeComponent()
     {
-        this.WhenActivated(disposables =>
-        {
-            
-        });
+        this.WhenActivated(disposables => { });
         AvaloniaXamlLoader.Load(this);
     }
 
@@ -43,8 +41,6 @@ partial class TopBarView : ReactiveUserControl<TopBarViewModel>
             case "PartyNavigation":
                 Core.Instance.MainWindow.ViewModel!.MainView = Core.Instance.MainWindow.ViewModel.PartyView;
                 break;
-            default:
-                break;
         }
     }
 
@@ -66,24 +62,24 @@ partial class TopBarView : ReactiveUserControl<TopBarViewModel>
 
     private void OpenFullscreenMenuItem_OnClick(object? sender, RoutedEventArgs e)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     private void OpenMiniplayerMenuItem_OnClick(object? sender, RoutedEventArgs e)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     private void OpenEqualizerMenuItem_OnClick(object? sender, RoutedEventArgs e)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     private void OpenContributersMenuItem_OnClick(object? sender, RoutedEventArgs e)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
-    
+
     private void TopBarGrid_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
         Core.Instance.MainWindow.BeginMoveDrag(e);

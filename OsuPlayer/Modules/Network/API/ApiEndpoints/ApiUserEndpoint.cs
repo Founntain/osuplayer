@@ -19,7 +19,7 @@ public partial class ApiAsync
 
         return await GetRequestWithParameterAsync<User>("users", "getUserByName", $"name={username}");
     }
-    
+
     public static async Task<User?> GetProfileByNameAsync(string username)
     {
         return await GetRequestWithParameterAsync<User>("users", "getUserByName", $"name={username}");
@@ -41,10 +41,11 @@ public partial class ApiAsync
 
     public static async Task<User?> UpdateSongsPlayedForCurrentUserAsync(int amount, int beatmapSetId = -1)
     {
-        if (string.IsNullOrWhiteSpace(ProfileManager.User?.Name)) 
+        if (string.IsNullOrWhiteSpace(ProfileManager.User?.Name))
             return default;
 
-        return await GetRequestWithParameterAsync<User>("users", "updateSongsPlayed", $"amount={amount}&beatmapSetId={beatmapSetId}");
+        return await GetRequestWithParameterAsync<User>("users", "updateSongsPlayed",
+            $"amount={amount}&beatmapSetId={beatmapSetId}");
     }
 
     public static async Task<User?> LoadUserWithCredentialsAsync(string username, string password)

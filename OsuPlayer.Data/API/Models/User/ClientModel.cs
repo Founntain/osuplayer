@@ -1,8 +1,7 @@
-﻿namespace OsuPlayer.Data.API.Models.User
+﻿namespace OsuPlayer.Data.API.Models.User;
+
+public class ClientModel
 {
-    public class ClientModel
-    {
-        public Guid ClientId { get; set; }
-        public string Username { get; set; }
-    }
+    public Guid ClientId { get; set; }
+    public string Username { get; set; }
 }

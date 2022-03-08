@@ -5,26 +5,26 @@
         xmlns:vm="using:OsuPlayer.ViewModels"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="OsuPlayer.Views.MainWindow"
-        Title="osu!player" Width="1280" Height="720" 
+        Title="osu!player" Width="1280" Height="720"
         WindowStartupLocation="CenterScreen" CanResize="True"
         Foreground="White"
         FontFamily="avares://OsuPlayer/Resources/Fonts/Torus-Regular.ttf#Torus" FontSize="16"
-       
+
         Background="Transparent"
         TransparencyLevelHint="AcrylicBlur"
         ExtendClientAreaToDecorationsHint="True"
         ExtendClientAreaChromeHints="PreferSystemChrome"
-        
+
         Icon="avares://OsuPlayer/Resources/x96.ico">
-    
+
     <Window.Styles>
-        <StyleInclude Source="/Styles/SliderStyle.axaml"/>
+        <StyleInclude Source="/Styles/SliderStyle.axaml" />
     </Window.Styles>
-    
+
     <Design.DataContext>
-        <vm:MainWindowViewModel/>
+        <vm:MainWindowViewModel />
     </Design.DataContext>
-    
+
     <Grid Name="MainGrid" RowDefinitions="50, *, 50">
         <Panel Grid.Row="0" Grid.RowSpan="3">
             <ExperimentalAcrylicBorder IsHitTestVisible="False">
@@ -37,11 +37,13 @@
                 </ExperimentalAcrylicBorder.Material>
             </ExperimentalAcrylicBorder>
         </Panel>
-        
+
         <ContentControl Name="TopBarPanel" Grid.Row="0" Content="{Binding TopBar}" />
         <ContentControl Name="MainViewPanel" Grid.Row="1" Content="{Binding MainView}" />
         <ContentControl Name="PlayerControlPanel" Grid.Row="2" Content="{Binding PlayerControl}" />
-        <Slider Grid.Row="2" Name="SongProgressSlider" VerticalAlignment="Top" Value="{Binding $self.DataContext.PlayerControl.SongTime}" Maximum="{Binding $self.DataContext.PlayerControl.SongLength}"
-                Margin="0 -4 0 0" UseLayoutRounding="False"/>
+        <Slider Grid.Row="2" Name="SongProgressSlider" VerticalAlignment="Top"
+                Value="{Binding $self.DataContext.PlayerControl.SongTime}"
+                Maximum="{Binding $self.DataContext.PlayerControl.SongLength}"
+                Margin="0 -4 0 0" UseLayoutRounding="False" />
     </Grid>
 </Window>

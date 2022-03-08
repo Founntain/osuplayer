@@ -1,14 +1,13 @@
-﻿namespace OsuPlayer.Data.API.Enums
+﻿namespace OsuPlayer.Data.API.Enums;
+
+public enum UserRole
 {
-    public enum UserRole
-    {
-        Developer = 0,
-        Tester,
-        Translator,
-        LegacyUser,
-        DefectrisUser,
-        User,
-        Donator,
-        Unknown
-    }
+    Developer = 0,
+    Tester,
+    Translator,
+    LegacyUser,
+    DefectrisUser,
+    User,
+    Donator,
+    Unknown
 }

@@ -8,12 +8,12 @@ public static class Extensions
     {
         var timeStr = string.Empty;
 
-        timeStr += time.Hours > 0 
-            ? time.ToString(@"%h\:mm\:") 
+        timeStr += time.Hours > 0
+            ? time.ToString(@"%h\:mm\:")
             : time.ToString(@"%m\:");
 
         timeStr += time.ToString(@"ss");
-        
+
         return timeStr;
     }
 }

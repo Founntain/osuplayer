@@ -8,9 +8,9 @@
     <UserControl.Styles>
         <StyleInclude Source="/Styles/SliderStyle.axaml" />
     </UserControl.Styles>
-    
+
     <Design.DataContext>
-        <vm:PlayerControlViewModel/>
+        <vm:PlayerControlViewModel />
     </Design.DataContext>
 
     <Grid>
@@ -23,7 +23,7 @@
                 <DockPanel>
                     <Border Name="Volume" PointerReleased="Volume_OnPointerReleased" Cursor="Hand">
                         <ToolTip.Tip>
-                            <TextBlock Text="Click to toggle mute"></TextBlock>
+                            <TextBlock Text="Click to toggle mute" />
                         </ToolTip.Tip>
                         <Image Height="18" Width="18" Source="../Resources/Icons/max_vol.png" Margin="5 0" />
                     </Border>
@@ -71,11 +71,12 @@
             </DockPanel>
 
             <DockPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
-                <TextBlock x:Name="CurrentSongTimeText" Text="{Binding CurrentSongTime}" VerticalAlignment="Center" Margin="5"
+                <TextBlock x:Name="CurrentSongTimeText" Text="{Binding CurrentSongTime}" VerticalAlignment="Center"
+                           Margin="5"
                            FontFamily="{DynamicResource NovaMono}" />
 
                 <ExperimentalAcrylicBorder Name="Repeat" Height="32" Width="32" CornerRadius="50" Cursor="Hand"
-                        PointerReleased="SongControl">
+                                           PointerReleased="SongControl">
                     <ExperimentalAcrylicBorder.Material>
                         <ExperimentalAcrylicMaterial
                             BackgroundSource="Digger"
@@ -88,8 +89,9 @@
                            Source="../Resources/Icons/Controls/Light/repeat.png" />
                 </ExperimentalAcrylicBorder>
 
-                <ExperimentalAcrylicBorder Name="Previous" Height="32" Width="32" Margin="2 0" CornerRadius="50" Cursor="Hand"
-                        PointerReleased="SongControl">
+                <ExperimentalAcrylicBorder Name="Previous" Height="32" Width="32" Margin="2 0" CornerRadius="50"
+                                           Cursor="Hand"
+                                           PointerReleased="SongControl">
                     <ExperimentalAcrylicBorder.Material>
                         <ExperimentalAcrylicMaterial
                             BackgroundSource="Digger"
@@ -102,7 +104,7 @@
                 </ExperimentalAcrylicBorder>
 
                 <ExperimentalAcrylicBorder Name="PlayPause" Height="42" Width="42" CornerRadius="50" Cursor="Hand"
-                        PointerReleased="SongControl">
+                                           PointerReleased="SongControl">
                     <ExperimentalAcrylicBorder.Material>
                         <ExperimentalAcrylicMaterial
                             BackgroundSource="Digger"
@@ -112,13 +114,14 @@
                     </ExperimentalAcrylicBorder.Material>
 
                     <Panel>
-                        <Image Source="../Resources/Icons/Controls/Light/play.png" IsVisible="{Binding !IsPlaying}"/>
-                        <Image Source="../Resources/Icons/Controls/Light/pause.png" IsVisible="{Binding IsPlaying}"/>
+                        <Image Source="../Resources/Icons/Controls/Light/play.png" IsVisible="{Binding !IsPlaying}" />
+                        <Image Source="../Resources/Icons/Controls/Light/pause.png" IsVisible="{Binding IsPlaying}" />
                     </Panel>
                 </ExperimentalAcrylicBorder>
 
-                <ExperimentalAcrylicBorder Name="Next" Height="32" Width="32" Margin="2 0" CornerRadius="50" Cursor="Hand"
-                        PointerReleased="SongControl">
+                <ExperimentalAcrylicBorder Name="Next" Height="32" Width="32" Margin="2 0" CornerRadius="50"
+                                           Cursor="Hand"
+                                           PointerReleased="SongControl">
                     <ExperimentalAcrylicBorder.Material>
                         <ExperimentalAcrylicMaterial
                             BackgroundSource="Digger"
@@ -132,7 +135,7 @@
                 </ExperimentalAcrylicBorder>
 
                 <ExperimentalAcrylicBorder Name="Shuffle" Height="32" Width="32" CornerRadius="50" Cursor="Hand"
-                                           PointerReleased="SongControl" >
+                                           PointerReleased="SongControl">
                     <ExperimentalAcrylicBorder.Material>
                         <ExperimentalAcrylicMaterial
                             BackgroundSource="Digger"
@@ -140,8 +143,8 @@
                             TintOpacity="1"
                             MaterialOpacity="0.25" />
                     </ExperimentalAcrylicBorder.Material>
-                    
-                    <Image Width="16" Height="16" Source="../Resources/Icons/Controls/Light/shuffle.png"/>
+
+                    <Image Width="16" Height="16" Source="../Resources/Icons/Controls/Light/shuffle.png" />
                 </ExperimentalAcrylicBorder>
 
                 <TextBlock Name="CurrentSongTimeLeft" Text="{Binding CurrentSongLength}" VerticalAlignment="Center"

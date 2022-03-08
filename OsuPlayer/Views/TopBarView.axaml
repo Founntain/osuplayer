@@ -3,14 +3,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             xmlns:controls="clr-namespace:OsuPlayer.Controls"
              x:Class="OsuPlayer.Views.TopBarView">
     <Grid Name="TopBarGrid">
         <Grid.Background>
             <SolidColorBrush Color="{StaticResource AcrylicBaseColor}" />
         </Grid.Background>
 
-        <Border Background="Transparent" PointerPressed="TopBarGrid_PointerPressed"/>
+        <Border Background="Transparent" PointerPressed="TopBarGrid_PointerPressed" />
 
         <DockPanel>
             <Image Source="../Resources/Icons/music.png" HorizontalAlignment="Left" Width="24" Height="24"
