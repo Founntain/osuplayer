@@ -1,6 +1,6 @@
 using System.Collections.ObjectModel;
 using OsuPlayer.Data.OsuPlayer.Classes;
-using OsuPlayer.Modules.IO;
+using OsuPlayer.IO;
 using ReactiveUI;
 
 namespace OsuPlayer.ViewModels;
@@ -15,7 +15,7 @@ public class MainWindowViewModel : BaseViewModel, IScreen
     public readonly SearchViewModel SearchView;
     public readonly SettingsViewModel SettingsView;
     public readonly UserViewModel UserView;
-    private BaseViewModel mainView;
+    private BaseViewModel _mainView;
 
     public MainWindowViewModel()
     {
@@ -37,8 +37,8 @@ public class MainWindowViewModel : BaseViewModel, IScreen
 
     public BaseViewModel MainView
     {
-        get => mainView;
-        set => this.RaiseAndSetIfChanged(ref mainView, value);
+        get => _mainView;
+        set => this.RaiseAndSetIfChanged(ref _mainView, value);
     }
 
     public ObservableCollection<AudioDevice> OutputDeviceComboboxItems { get; set; }

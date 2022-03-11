@@ -9,7 +9,7 @@ using ManagedBass;
 using ManagedBass.DirectX8;
 using ManagedBass.Fx;
 using OsuPlayer.Data.OsuPlayer.Classes;
-using OsuPlayer.Modules.Extensions.Equalizer;
+using OsuPlayer.Extensions.Equalizer;
 
 namespace OsuPlayer.Modules.Audio;
 

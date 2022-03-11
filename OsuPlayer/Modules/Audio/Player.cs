@@ -8,30 +8,30 @@ using Avalonia.Threading;
 using DynamicData;
 using DynamicData.Binding;
 using OsuPlayer.Data.OsuPlayer.Enums;
-using OsuPlayer.Modules.IO;
+using OsuPlayer.IO;
 using ReactiveUI;
 
 namespace OsuPlayer.Modules.Audio;
 
 public class Player
 {
-    private readonly int?[] shuffleHistory = new int?[10];
+    private readonly int?[] _shuffleHistory = new int?[10];
 
     public SongEntry CurrentSong;
-    private readonly IObservable<Func<SongEntry, bool>> filter;
+    private readonly IObservable<Func<SongEntry, bool>> _filter;
 
     public ReadOnlyObservableCollection<SongEntry> FilteredSongEntries;
 
-    private Playstate playstate;
+    private Playstate _playstate;
 
-    private bool shuffle;
-    private int shuffleHistoryIndex;
-    private readonly SourceList<SongEntry> SongSource;
+    private bool _shuffle;
+    private int _shuffleHistoryIndex;
+    private readonly SourceList<SongEntry> _songSource;
 
     public Player()
     {
-        SongSource = new SourceList<SongEntry>();
-        filter = Core.Instance.MainWindow.ViewModel!.SearchView
+        _songSource = new SourceList<SongEntry>();
+        _filter = Core.Instance.MainWindow.ViewModel!.SearchView
             .WhenAnyValue(x => x.FilterText)
             .Throttle(TimeSpan.FromMilliseconds(20))
             .Select(BuildFilter);
@@ -42,11 +42,11 @@ public class Player
 
     public Playstate Playstate
     {
-        get => playstate;
+        get => _playstate;
         set
         {
             Core.Instance.MainWindow.ViewModel!.PlayerControl.IsPlaying = value == Playstate.Playing;
-            playstate = value;
+            _playstate = value;
         }
     }
 
@@ -54,10 +54,10 @@ public class Player
 
     public bool Shuffle
     {
-        get => shuffle;
+        get => _shuffle;
         set
         {
-            shuffle = value;
+            _shuffle = value;
             Core.Instance.MainWindow.ViewModel!.PlayerControl.IsShuffle = value;
         }
     }
@@ -76,10 +76,10 @@ public class Player
     public async void ImportSongs()
     {
         var songEntries = Importer.ImportSongs(Core.Instance.Config.OsuPath!);
-        foreach (var songEntry in songEntries) SongSource.Add(songEntry);
+        foreach (var songEntry in songEntries) _songSource.Add(songEntry);
 
-        SongSource.Connect().Sort(SortExpressionComparer<SongEntry>.Ascending(x => x.Title))
-            .Filter(filter, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
+        _songSource.Connect().Sort(SortExpressionComparer<SongEntry>.Ascending(x => x.Title))
+            .Filter(_filter, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
             .Bind(out FilteredSongEntries).Subscribe();
     }
 

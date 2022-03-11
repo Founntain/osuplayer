@@ -1,6 +1,5 @@
+using OsuPlayer.IO;
 using OsuPlayer.Modules.Audio;
-using OsuPlayer.Modules.IO;
-using OsuPlayer.Views;
 using MainWindow = OsuPlayer.Windows.MainWindow;
 
 namespace OsuPlayer;

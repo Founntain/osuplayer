@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using OsuPlayer.ViewModels;
-using OsuPlayer.Views;
 using MainWindow = OsuPlayer.Windows.MainWindow;
 
 namespace OsuPlayer;
