@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:OsuPlayer.ViewModels"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.PlayerControlView">
     <UserControl.Styles>
@@ -75,77 +76,25 @@
                            Margin="5"
                            FontFamily="{DynamicResource NovaMono}" />
 
-                <ExperimentalAcrylicBorder Name="Repeat" Height="32" Width="32" CornerRadius="50" Cursor="Hand"
-                                           PointerReleased="SongControl">
-                    <ExperimentalAcrylicBorder.Material>
-                        <ExperimentalAcrylicMaterial
-                            BackgroundSource="Digger"
-                            TintColor="Black"
-                            TintOpacity="1"
-                            MaterialOpacity="0.25" />
-                    </ExperimentalAcrylicBorder.Material>
+                <Button Width="32" Height="32" CornerRadius="50">
+                    <avalonia:MaterialIcon Kind="RepeatOff" Height="16" Width="16"/>
+                </Button>
+                
+                <Button Width="32" Height="32" CornerRadius="50">
+                    <avalonia:MaterialIcon Kind="SkipBackward" Height="16" Width="16"/>
+                </Button>
 
-                    <Image Width="16" Height="16"
-                           Source="../Resources/Icons/Controls/Light/repeat.png" />
-                </ExperimentalAcrylicBorder>
+                <Button Width="42" Height="42" CornerRadius="50">
+                    <avalonia:MaterialIcon Kind="PlayArrow" Height="32" Width="32"/>
+                </Button>
 
-                <ExperimentalAcrylicBorder Name="Previous" Height="32" Width="32" Margin="2 0" CornerRadius="50"
-                                           Cursor="Hand"
-                                           PointerReleased="SongControl">
-                    <ExperimentalAcrylicBorder.Material>
-                        <ExperimentalAcrylicMaterial
-                            BackgroundSource="Digger"
-                            TintColor="Black"
-                            TintOpacity="1"
-                            MaterialOpacity="0.25" />
-                    </ExperimentalAcrylicBorder.Material>
+                <Button Width="32" Height="32" CornerRadius="50">
+                    <avalonia:MaterialIcon Kind="SkipForward" Height="16" Width="16"/>
+                </Button>
 
-                    <Image Width="16" Height="16" Source="../Resources/Icons/Controls/Light/backwards.png" />
-                </ExperimentalAcrylicBorder>
-
-                <ExperimentalAcrylicBorder Name="PlayPause" Height="42" Width="42" CornerRadius="50" Cursor="Hand"
-                                           PointerReleased="SongControl">
-                    <ExperimentalAcrylicBorder.Material>
-                        <ExperimentalAcrylicMaterial
-                            BackgroundSource="Digger"
-                            TintColor="Black"
-                            TintOpacity="1"
-                            MaterialOpacity="0.25" />
-                    </ExperimentalAcrylicBorder.Material>
-
-                    <Panel>
-                        <Image Source="../Resources/Icons/Controls/Light/play.png" IsVisible="{Binding !IsPlaying}" />
-                        <Image Source="../Resources/Icons/Controls/Light/pause.png" IsVisible="{Binding IsPlaying}" />
-                    </Panel>
-                </ExperimentalAcrylicBorder>
-
-                <ExperimentalAcrylicBorder Name="Next" Height="32" Width="32" Margin="2 0" CornerRadius="50"
-                                           Cursor="Hand"
-                                           PointerReleased="SongControl">
-                    <ExperimentalAcrylicBorder.Material>
-                        <ExperimentalAcrylicMaterial
-                            BackgroundSource="Digger"
-                            TintColor="Black"
-                            TintOpacity="1"
-                            MaterialOpacity="0.25" />
-                    </ExperimentalAcrylicBorder.Material>
-
-                    <Image Width="16" Height="16"
-                           Source="../Resources/Icons/Controls/Light/forward.png" />
-                </ExperimentalAcrylicBorder>
-
-                <ExperimentalAcrylicBorder Name="Shuffle" Height="32" Width="32" CornerRadius="50" Cursor="Hand"
-                                           PointerReleased="SongControl">
-                    <ExperimentalAcrylicBorder.Material>
-                        <ExperimentalAcrylicMaterial
-                            BackgroundSource="Digger"
-                            TintColor="Black"
-                            TintOpacity="1"
-                            MaterialOpacity="0.25" />
-                    </ExperimentalAcrylicBorder.Material>
-
-                    <Image Width="16" Height="16" Source="../Resources/Icons/Controls/Light/shuffle.png" />
-                </ExperimentalAcrylicBorder>
+                <Button Width="32" Height="32" CornerRadius="50">
+                    <avalonia:MaterialIcon Kind="ShuffleDisabled" Height="16" Width="16"/>
+                </Button>
 
                 <TextBlock Name="CurrentSongTimeLeft" Text="{Binding CurrentSongLength}" VerticalAlignment="Center"
                            HorizontalAlignment="Left" FontFamily="{DynamicResource NovaMono}" Margin="5 0" />
