@@ -1,3 +1,5 @@
+using System;
+using System.Diagnostics;
 using OsuPlayer.IO;
 using OsuPlayer.Modules.Audio;
 using MainWindow = OsuPlayer.Windows.MainWindow;
@@ -16,18 +18,19 @@ public class Core
     {
         Instance = this;
         Config = Config.LoadConfig();
+        Config.Instance = Config;
+        Player = new Player();
     }
 
-    public static Core Instance { get; protected set; }
+    public static Core Instance { get; private set; }
 
-    protected internal void SetMainWindow(MainWindow window)
+    protected internal async void SetupCore(MainWindow window)
     {
         MainWindow = window;
         MainWindow.TransparencyLevelHint = Config.TransparencyLevelHint;
         
         Engine = BassEngine.Instance;
-        
-        Player = new Player();
-        Player.ImportSongs();
+
+        await Player.ImportSongs();
     }
 }

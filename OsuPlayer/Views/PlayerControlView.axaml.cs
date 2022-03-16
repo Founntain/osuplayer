@@ -4,6 +4,7 @@ using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using OsuPlayer.ViewModels;
+using ReactiveUI;
 
 namespace OsuPlayer.Views;
 
@@ -16,12 +17,13 @@ public partial class PlayerControlView : ReactiveUserControl<PlayerControlViewMo
 
     private void InitializeComponent()
     {
+        this.WhenActivated(disposables => { });
         AvaloniaXamlLoader.Load(this);
     }
 
     private void Volume_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        throw new NotImplementedException();
+        Core.Instance.Player.Mute();
     }
 
     private void PlaybackSpeedBtn_OnPointerReleased(object? sender, PointerReleasedEventArgs e)

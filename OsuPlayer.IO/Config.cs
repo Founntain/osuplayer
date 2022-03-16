@@ -5,14 +5,16 @@ namespace OsuPlayer.IO;
 
 public class Config
 {
+    public static Config? Instance { get; set; }
+    
     public string? OsuPath { get; set; }
     public string OsuSongsPath => $"{OsuPath}\\Songs";
 
     public double Volume { get; set; }
 
-    public bool UseSongnameUnicode { get; set; } = false;
+    public bool UseSongNameUnicode { get; set; } = false;
 
-    public int SelectedOutputDevice { get; set; } = 0;
+    public int SelectedOutputDevice { get; set; }
     public bool IsEqEnabled { get; set; } = false;
     public WindowTransparencyLevel TransparencyLevelHint { get; set; } = WindowTransparencyLevel.AcrylicBlur;
 
@@ -40,7 +42,7 @@ public class Config
 
     public static Config GetConfigInstance()
     {
-        return LoadConfig();
+        return Instance ?? LoadConfig();
     }
 
     public void SaveConfig()

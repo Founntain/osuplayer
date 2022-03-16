@@ -1,6 +1,9 @@
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using DynamicData;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.IO;
+using OsuPlayer.IO.DbReader;
 using ReactiveUI;
 
 namespace OsuPlayer.ViewModels;
@@ -43,11 +46,13 @@ public class MainWindowViewModel : BaseViewModel, IScreen
 
     public ObservableCollection<AudioDevice> OutputDeviceComboboxItems { get; set; }
 
-    public ReadOnlyObservableCollection<SongEntry> SongEntries
+    public ReadOnlyObservableCollection<MapEntry> FilteredSongEntries
     {
-        get => Core.Instance.Player.FilteredSongEntries;
+        get => Core.Instance.Player.FilteredSongEntries!;
         set => Core.Instance.Player.FilteredSongEntries = value;
     }
+
+    public IEnumerable<MapEntry> SongEntries => Core.Instance.Player.SongSource.Items;
 
     public RoutingState Router { get; } = new();
 }

@@ -1,113 +1,55 @@
-﻿namespace OsuPlayer.IO.DbReader;
+﻿using OsuPlayer.Extensions;
+
+namespace OsuPlayer.IO.DbReader;
 
 public class MapEntry
 {
     public string Artist;
+    public string ArtistString => GetArtist();
     public string ArtistUnicode;
     public string AudioFileName;
     public string BeatmapChecksum;
     public int BeatmapId;
     public int BeatmapSetId;
     public string Creator;
-    private string _difficultyName;
+    public string DifficultyName;
     public string FolderName;
     public string Title;
+    public string TitleString => GetTitle();
     public string TitleUnicode;
+    public string Fullpath;
+    
+    public string SongName => GetSongName();
 
     public int TotalTime;
+    public string TotalTimeString => TimeSpan.FromMilliseconds(TotalTime).FormatTime();
 
-    private int _ver;
+    public int Ver;
 
-    public static MapEntry ReadFromReader(DbReader r, int version)
+    private string GetArtist()
     {
-        MapEntry beatmapEntry = new();
-        beatmapEntry.ReadFromStream(r, version);
-        return beatmapEntry;
+        if (!Config.GetConfigInstance().UseSongNameUnicode) return Artist;
+
+        return !string.IsNullOrWhiteSpace(ArtistUnicode) ? ArtistUnicode : Artist;
     }
 
-    private void ReadFromStream(DbReader r, int version)
+    private string GetTitle()
     {
-        _ver = version;
-        Artist = r.ReadString();
-        if (_ver >= 20121008)
-            ArtistUnicode = r.ReadString();
-        Title = r.ReadString();
-        if (_ver >= 20121008)
-            TitleUnicode = r.ReadString();
-        Creator = r.ReadString();
-        _difficultyName = r.ReadString(); //Difficulty
-        AudioFileName = r.ReadString();
-        BeatmapChecksum = r.ReadString();
-        r.ReadString(); //BeatmapFileName
-        r.ReadByte(); //RankedStatus
-        r.ReadUInt16(); //CountHitCircles
-        r.ReadUInt16(); //CountSliders
-        r.ReadUInt16(); //CountSpinners
-        r.ReadDateTime(); //LastModifiedTime
-        if (_ver >= 20140609)
-        {
-            r.ReadSingle(); //ApproachRate
-            r.ReadSingle(); //CircleSize
-            r.ReadSingle(); //HPDrainRate
-            r.ReadSingle(); //OveralDifficulty
-        }
-        else
-        {
-            //Float
-            r.ReadByte(); //ApproachRate
-            r.ReadByte(); //CircleSize
-            r.ReadByte(); //HPDrainRate
-            r.ReadByte(); //OveralDifficulty
-        }
+        if (!Config.GetConfigInstance().UseSongNameUnicode) return Title;
 
-        r.ReadDouble(); //SliderVelocity
-        if (_ver >= 20140609)
-        {
-            r.ReadStarRating();
-            r.ReadStarRating();
-            r.ReadStarRating();
-            r.ReadStarRating();
-        }
-
-        r.ReadInt32(); //DrainTimeSeconds
-        TotalTime = r.ReadInt32();
-        r.ReadInt32(); //AudioPreviewTime
-        var timingCnt = r.ReadInt32();
-        //for (int i = 0; i < timingCnt; i++)
-        //{
-        r.ReadBytes(17 * timingCnt);
-        //r.ReadBytes(17*timingCnt);
-        //}
-        BeatmapId = r.ReadInt32();
-        BeatmapSetId = r.ReadInt32();
-        r.ReadInt32(); //ThreadId
-        r.ReadByte(); //GradeStandard
-        r.ReadByte(); //GradeTaiko
-        r.ReadByte(); //GradeCtB
-        r.ReadByte(); //GradeMania
-        r.ReadInt16(); //OffsetLocal
-        r.ReadSingle(); //StackLeniency
-        r.ReadByte(); //GameMode
-        r.ReadString(); //SongSource
-        r.ReadString(); //SongTags
-        r.ReadInt16(); //OffsetOnline
-        r.ReadString(); //TitleFont
-        r.ReadBoolean(); //Unplayed
-        r.ReadDateTime(); //LastPlayed
-        r.ReadBoolean(); //IsOsz2
-        FolderName = r.ReadString();
-        r.ReadDateTime(); //LastCheckAgainstOsuRepo
-        r.ReadBoolean(); //IgnoreBeatmapSounds
-        r.ReadBoolean(); //IgnoreBeatmapSkin
-        r.ReadBoolean(); //DisableStoryBoard
-        r.ReadBoolean(); //DisableVideo
-        r.ReadBoolean(); //VisualOverride
-        if (_ver < 20140609)
-            r.ReadInt16(); //OldUnknown1
-        r.ReadInt32(); //LastEditTime
-        r.ReadByte(); //ManiaScrollSpeed
+        return !string.IsNullOrWhiteSpace(TitleUnicode) ? TitleUnicode : Title;
     }
 
+    private string GetSongName()
+    {
+        if (!Config.GetConfigInstance().UseSongNameUnicode) return $"{Artist} - {Title}";
+
+        if (!string.IsNullOrWhiteSpace(ArtistUnicode) && !string.IsNullOrWhiteSpace(TitleUnicode))
+            return $"{ArtistUnicode} - {TitleUnicode}";
+
+        return $"{Artist} - {Title}";
+    }
+    
     public override string ToString()
     {
         return Artist + " - " + Title;

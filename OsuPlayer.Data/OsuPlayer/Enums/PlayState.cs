@@ -1,6 +1,6 @@
 ﻿namespace OsuPlayer.Data.OsuPlayer.Enums;
 
-public enum Playstate
+public enum PlayState
 {
     Playing,
     Paused

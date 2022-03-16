@@ -1,13 +1,14 @@
 using System.Collections.ObjectModel;
 using System.Reactive.Disposables;
 using OsuPlayer.IO;
+using OsuPlayer.IO.DbReader;
 using ReactiveUI;
 
 namespace OsuPlayer.ViewModels;
 
 public class HomeViewModel : BaseViewModel, IActivatableViewModel
 {
-    private ObservableCollection<SongEntry> _songs;
+    private ObservableCollection<MapEntry> _songs;
 
     public HomeViewModel()
     {
@@ -15,7 +16,7 @@ public class HomeViewModel : BaseViewModel, IActivatableViewModel
         this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
     }
 
-    public ObservableCollection<SongEntry> Songs
+    public ObservableCollection<MapEntry> Songs
     {
         get => _songs;
         set => this.RaiseAndSetIfChanged(ref _songs, value);

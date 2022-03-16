@@ -22,7 +22,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
     {
         this.WhenActivated(disposables =>
         {
-            Core.Instance.SetMainWindow(this);
+            Core.Instance.SetupCore(this);
             
             
             Core.Instance.MainWindow.ViewModel!.MainView = Core.Instance.MainWindow.ViewModel.HomeView;
@@ -30,9 +30,43 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
                 RoutingStrategies.Tunnel);
             ProgressSlider.AddHandler(PointerReleasedEvent, SongProgressSlider_OnPointerReleased,
                 RoutingStrategies.Tunnel);
+            ProgressSlider.AddHandler(KeyDownEvent, KeyDownHandler, RoutingStrategies.Tunnel);
+            ProgressSlider.AddHandler(KeyUpEvent, KeyUpHandler, RoutingStrategies.Tunnel);
         });
         
         AvaloniaXamlLoader.Load(this);
+    }
+
+    private void KeyDownHandler(object? sender, KeyEventArgs e)
+    {
+        switch (e.Key)
+        {
+            case Key.Right:
+                //Core.Instance.Player.Pause();
+                break;
+            case Key.Left:
+                //Core.Instance.Player.Pause();
+                break;
+            case Key.Space:
+                Core.Instance.Player.PlayPause();
+                break;
+        }
+        e.Handled = true;
+    }
+    private void KeyUpHandler(object? sender, KeyEventArgs e)
+    {
+        switch (e.Key)
+        {
+            case Key.Right:
+                //Core.Instance.Player.Play();
+                break;
+            case Key.Left:
+                //Core.Instance.Player.Play();
+                break;
+            case Key.Space:
+                break;
+        }
+        e.Handled = true;
     }
 
     private void SongProgressSlider_OnPointerReleased(object? sender, PointerReleasedEventArgs e)

@@ -29,12 +29,10 @@ public class PlayerControlViewModel : BaseViewModel, IActivatableViewModel
 
     public double Volume
     {
-        get => Core.Instance.Config.Volume;
+        get => Core.Instance.Player.Volume;
         set
         {
-            Core.Instance.Config.Volume = value;
-            Core.Instance.Engine.SetVolume((float) value / 100);
-            this.RaisePropertyChanged();
+            Core.Instance.Player.Volume = value;
         }
     }
 

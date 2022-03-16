@@ -322,31 +322,34 @@ public sealed class BassEngine
         }
     }
 
-    public float GetVolume(ref float value)
+    public float Volume
     {
-        try
+        get
         {
-            //if(FXStream != 0)
-            Bass.ChannelGetAttribute(FxStream, ChannelAttribute.Volume, out value);
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine(ex.ToString());
-        }
+            float value = 0;
+            try
+            {
+                //if(FXStream != 0)
+                Bass.ChannelGetAttribute(FxStream, ChannelAttribute.Volume, out value);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
 
-        return value;
-    }
-
-    public void SetVolume(float volume)
-    {
-        try
-        {
-            //if(FXStream != 0)
-            Bass.ChannelSetAttribute(FxStream, ChannelAttribute.Volume, volume);
+            return value;
         }
-        catch (Exception ex)
+        set
         {
-            Debug.WriteLine(ex.ToString());
+            try
+            {
+                //if(FXStream != 0)
+                Bass.ChannelSetAttribute(FxStream, ChannelAttribute.Volume, value);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
         }
     }
 
@@ -396,7 +399,7 @@ public sealed class BassEngine
             FxStream = 0;
         }
 
-        return false;
+        throw new FileNotFoundException("file does not exist", path);
     }
 
     public void ToggleEq(bool on)

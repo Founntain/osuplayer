@@ -6,7 +6,7 @@ public sealed class SongEntry
 {
     public SongEntry(int beatmapSetId, int beatmapId, string checksum, string artist, string artistUnicode,
         string title, string titleUnicode,
-        string folderName, string audioFileName, string osuPath, bool isCustomSong = false)
+        string folderName, string audioFileName, string osuPath, int totalTime, bool isCustomSong = false)
     {
         BeatmapSetId = beatmapSetId;
         BeatmapId = beatmapId;
@@ -25,6 +25,7 @@ public sealed class SongEntry
         //    : string.Empty;
         Background = string.Empty;
         IsCustomSong = isCustomSong;
+        TotalTime = totalTime;
 
         if (artist.Length == 0)
             Artist = "Unkown Artist";
@@ -108,21 +109,21 @@ public sealed class SongEntry
 
     public string GetArtist()
     {
-        if (!Config.GetConfigInstance().UseSongnameUnicode) return Artist;
+        if (!Config.GetConfigInstance().UseSongNameUnicode) return Artist;
 
         return !string.IsNullOrWhiteSpace(ArtistUnicode) ? ArtistUnicode : Artist;
     }
 
     public string GetTitle()
     {
-        if (!Config.GetConfigInstance().UseSongnameUnicode) return Title;
+        if (!Config.GetConfigInstance().UseSongNameUnicode) return Title;
 
         return !string.IsNullOrWhiteSpace(TitleUnicode) ? TitleUnicode : Title;
     }
 
     public string GetSongName()
     {
-        if (!Config.GetConfigInstance().UseSongnameUnicode) return $"{Artist} - {Title}";
+        if (!Config.GetConfigInstance().UseSongNameUnicode) return $"{Artist} - {Title}";
 
         if (!string.IsNullOrWhiteSpace(ArtistUnicode) && !string.IsNullOrWhiteSpace(TitleUnicode))
             return $"{ArtistUnicode} - {TitleUnicode}";

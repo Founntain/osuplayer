@@ -11,6 +11,13 @@ public class SearchViewModel : BaseViewModel, IActivatableViewModel
         this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
     }
 
-    public string FilterText { get; set; }
+    private string _filterText;
+
+    public string FilterText
+    {
+        get => _filterText;
+        set => this.RaiseAndSetIfChanged(ref _filterText, value);
+    }
+
     public ViewModelActivator Activator { get; }
 }

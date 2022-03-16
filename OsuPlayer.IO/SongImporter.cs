@@ -1,69 +1,20 @@
 ﻿using System.Collections.Concurrent;
+using System.Diagnostics;
 using OsuPlayer.IO.DbReader;
 
 namespace OsuPlayer.IO;
 
 public sealed class SongImporter
 {
-    public ICollection<SongEntry> ImportSongs(string path)
+    public Task<ICollection<MapEntry>>? ImportSongs(string path)
     {
-        var maps = ReadSongsFromDb(path).ToArray();
+        if (string.IsNullOrEmpty(path)) return Task.FromResult<ICollection<MapEntry>>(default);
 
-        if (!maps.Any()) return default;
+        var maps = DbReader.DbReader.ReadOsuDb(path)?.DistinctBy(x => x.BeatmapSetId)
+            .DistinctBy(x => x.Title).Where(x => !string.IsNullOrEmpty(x.Title)).ToArray();
 
-        var songs = new ConcurrentBag<SongEntry>();
+        if (!maps.Any()) return Task.FromResult<ICollection<MapEntry>>(default);
 
-        Parallel.ForEach(maps, (entry, token) =>
-        {
-            var song = new SongEntry(
-                entry.BeatmapSetId,
-                entry.BeatmapId,
-                entry.BeatmapChecksum,
-                entry.Artist,
-                entry.ArtistUnicode,
-                entry.Title,
-                entry.TitleUnicode,
-                entry.FolderName,
-                entry.AudioFileName,
-                $"{path}\\Songs");
-
-            song.TotalTime = entry.TotalTime;
-
-            songs.Add(song);
-        });
-
-        return songs.OrderBy(x => x.SongName).ToArray();
-    }
-
-    private IEnumerable<MapEntry> ReadSongsFromDb(string path)
-    {
-        return DbReader.DbReader.ReadOsuDb(path)?.DistinctBy(x => x.BeatmapSetId).DistinctBy(x => x.Title)
-            .Where(x => !string.IsNullOrEmpty(x.Title));
-    }
-
-    private ICollection<SongEntry> ConvertMapEntriesToSongs(IEnumerable<MapEntry> beatmapEntries, string path)
-    {
-        var songs = new ConcurrentBag<SongEntry>();
-
-        Parallel.ForEach(beatmapEntries, (entry, token) =>
-        {
-            var song = new SongEntry(
-                entry.BeatmapSetId,
-                entry.BeatmapId,
-                entry.BeatmapChecksum,
-                entry.Artist,
-                entry.ArtistUnicode,
-                entry.Title,
-                entry.TitleUnicode,
-                entry.FolderName,
-                entry.AudioFileName,
-                $"{path}\\Songs");
-
-            song.TotalTime = entry.TotalTime;
-
-            songs.Add(song);
-        });
-
-        return songs.OrderBy(x => x.SongName).ToArray();
+        return Task.FromResult<ICollection<MapEntry>>(maps.OrderBy(x => x.Title).ToArray());
     }
 }
