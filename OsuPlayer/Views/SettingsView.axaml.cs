@@ -1,8 +1,9 @@
 ﻿using System;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using OsuPlayer.Modules.IO;
+using OsuPlayer.IO;
 using OsuPlayer.ViewModels;
+using ReactiveUI;
 
 namespace OsuPlayer.Views;
 
@@ -15,6 +16,7 @@ public partial class SettingsView : ReactiveUserControl<SettingsViewModel>
 
     private void InitializeComponent()
     {
+        this.WhenActivated(disposables => { });
         AvaloniaXamlLoader.Load(this);
     }
 

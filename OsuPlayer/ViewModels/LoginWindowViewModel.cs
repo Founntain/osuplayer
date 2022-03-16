@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
-using OsuPlayer.Modules.Network.API.ApiEndpoints;
-using OsuPlayer.Modules.Network.Online;
+using OsuPlayer.Network.API.ApiEndpoints;
+using OsuPlayer.Network.Online;
 using ReactiveUI;
 
 namespace OsuPlayer.ViewModels;

@@ -5,7 +5,7 @@ namespace OsuPlayer.ViewModels;
 
 public class TopBarViewModel : BaseViewModel, IActivatableViewModel
 {
-    private string currentSongText = "currently playing nothing";
+    private string _currentSongText = "currently playing nothing";
 
     public TopBarViewModel()
     {
@@ -15,8 +15,8 @@ public class TopBarViewModel : BaseViewModel, IActivatableViewModel
 
     public string CurrentSongText
     {
-        get => currentSongText;
-        set => this.RaiseAndSetIfChanged(ref currentSongText, value);
+        get => _currentSongText;
+        set => this.RaiseAndSetIfChanged(ref _currentSongText, value);
     }
 
     public ViewModelActivator Activator { get; }

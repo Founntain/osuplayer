@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using Avalonia.Controls;
-using OsuPlayer.Modules.IO;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
 using ReactiveUI;
@@ -87,7 +86,7 @@ public class SettingsViewModel : BaseViewModel, IActivatableViewModel
 
         Core.Instance.Config.OsuPath = osuFolder!;
         OsuLocation = osuFolder!;
-        Core.Instance.Player.ImportSongs();
+        await Core.Instance.Player.ImportSongs();
 
         Core.Instance.Config.SaveConfig();
     }

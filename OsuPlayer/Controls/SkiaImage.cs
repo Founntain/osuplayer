@@ -27,9 +27,9 @@ public class SkiaImage : Control
     public static readonly StyledProperty<BitmapInterpolationMode> BitMapInterpolationModeProperty =
         AvaloniaProperty.Register<Image, BitmapInterpolationMode>(nameof(BitmapInterpolationMode));
 
-    private RenderTargetBitmap renderTarget;
-    private ISkiaDrawingContextImpl skiaContext;
-    private SKPaint skPaint;
+    private RenderTargetBitmap _renderTarget;
+    private ISkiaDrawingContextImpl _skiaContext;
+    private SKPaint _skPaint;
 
     static SkiaImage()
     {
@@ -86,25 +86,25 @@ public class SkiaImage : Control
         {
             if (change.Property == SourceProperty)
             {
-                skPaint = new SKPaint();
-                skPaint.FilterQuality = SKFilterQuality.High;
-                skPaint.IsAntialias = true;
-                skPaint.ImageFilter = SKImageFilter.CreateBlur(BlurStrength, BlurStrength);
+                _skPaint = new SKPaint();
+                _skPaint.FilterQuality = SKFilterQuality.High;
+                _skPaint.IsAntialias = true;
+                _skPaint.ImageFilter = SKImageFilter.CreateBlur(BlurStrength, BlurStrength);
 
-                renderTarget = new RenderTargetBitmap(new PixelSize(Source.Width, Source.Height),
+                _renderTarget = new RenderTargetBitmap(new PixelSize(Source.Width, Source.Height),
                     new Vector(96, 96));
 
-                var skContext = renderTarget.CreateDrawingContext(null);
-                skiaContext = (ISkiaDrawingContextImpl) skContext;
-                skiaContext.SkCanvas.Clear(new SKColor(255, 255, 255, 0));
-                skiaContext.SkCanvas.DrawBitmap(Source, 0, 0, skPaint);
+                var skContext = _renderTarget.CreateDrawingContext(null);
+                _skiaContext = (ISkiaDrawingContextImpl) skContext;
+                _skiaContext.SkCanvas.Clear(new SKColor(255, 255, 255, 0));
+                _skiaContext.SkCanvas.DrawBitmap(Source, 0, 0, _skPaint);
                 InvalidateVisual();
             }
             else if (change.Property == BlurStrengthProperty)
             {
-                skPaint.ImageFilter = SKImageFilter.CreateBlur(BlurStrength, BlurStrength);
-                skiaContext.SkCanvas.Clear(new SKColor(255, 255, 255));
-                skiaContext.SkCanvas.DrawBitmap(Source, 0, 0, skPaint);
+                _skPaint.ImageFilter = SKImageFilter.CreateBlur(BlurStrength, BlurStrength);
+                _skiaContext.SkCanvas.Clear(new SKColor(255, 255, 255));
+                _skiaContext.SkCanvas.DrawBitmap(Source, 0, 0, _skPaint);
                 InvalidateVisual();
             }
         }
@@ -121,7 +121,7 @@ public class SkiaImage : Control
             var scaledSize = srcSize * scale;
             var destRect = new Rect(Bounds.Size).CenterRect(new Rect(scaledSize)).Intersect(new Rect(Bounds.Size));
             var sourceRect = new Rect(srcSize).CenterRect(new Rect(destRect.Size / scale));
-            context.DrawImage(renderTarget, sourceRect, destRect, BitmapInterpolationMode);
+            context.DrawImage(_renderTarget, sourceRect, destRect, BitmapInterpolationMode);
         }
     }
 }

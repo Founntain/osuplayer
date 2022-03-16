@@ -8,45 +8,44 @@ using Avalonia.Threading;
 using DynamicData;
 using DynamicData.Binding;
 using OsuPlayer.Data.OsuPlayer.Enums;
-using OsuPlayer.Modules.IO;
+using OsuPlayer.IO;
+using OsuPlayer.IO.DbReader;
 using ReactiveUI;
+using SQLitePCL;
 
 namespace OsuPlayer.Modules.Audio;
 
 public class Player
 {
-    private readonly int?[] shuffleHistory = new int?[10];
+    private readonly int?[] _shuffleHistory = new int?[10];
 
-    public SongEntry CurrentSong;
-    private readonly IObservable<Func<SongEntry, bool>> filter;
+    private MapEntry? _currentSong;
+    private IObservable<Func<MapEntry, bool>>? _filter;
 
-    public ReadOnlyObservableCollection<SongEntry> FilteredSongEntries;
+    public ReadOnlyObservableCollection<MapEntry>? FilteredSongEntries;
 
-    private Playstate playstate;
+    private PlayState _playState;
 
-    private bool shuffle;
-    private int shuffleHistoryIndex;
-    private readonly SourceList<SongEntry> SongSource;
+    private bool _shuffle;
+    private bool _isMuted;
+    private double _oldVolume;
+    private int _shuffleHistoryIndex;
+    public readonly SourceList<MapEntry> SongSource;
 
     public Player()
     {
-        SongSource = new SourceList<SongEntry>();
-        filter = Core.Instance.MainWindow.ViewModel!.SearchView
-            .WhenAnyValue(x => x.FilterText)
-            .Throttle(TimeSpan.FromMilliseconds(20))
-            .Select(BuildFilter);
-        Core.Instance.MainWindow.ViewModel.PlayerControl.Volume = Core.Instance.Config.Volume;
+        SongSource = new SourceList<MapEntry>();
     }
 
     private SongImporter Importer => new();
 
-    public Playstate Playstate
+    private PlayState PlayState
     {
-        get => playstate;
+        get => _playState;
         set
         {
-            Core.Instance.MainWindow.ViewModel!.PlayerControl.IsPlaying = value == Playstate.Playing;
-            playstate = value;
+            Core.Instance.MainWindow.ViewModel!.PlayerControl.IsPlaying = value == PlayState.Playing;
+            _playState = value;
         }
     }
 
@@ -54,57 +53,80 @@ public class Player
 
     public bool Shuffle
     {
-        get => shuffle;
+        get => _shuffle;
         set
         {
-            shuffle = value;
+            _shuffle = value;
             Core.Instance.MainWindow.ViewModel!.PlayerControl.IsShuffle = value;
         }
     }
 
     public bool Repeat { get; set; }
-
-    private Func<SongEntry, bool> BuildFilter(string searchText)
+    
+    public double Volume
     {
-        if (string.IsNullOrEmpty(searchText))
-            return song => true;
-
-        return song => song.Title.Contains(searchText, StringComparison.OrdinalIgnoreCase) ||
-                       song.Artist.Contains(searchText, StringComparison.OrdinalIgnoreCase);
+        get => Core.Instance.Config.Volume;
+        set
+        {
+            Core.Instance.Config.Volume = value;
+            Core.Instance.Engine.Volume = (float) value / 100;
+            Core.Instance.MainWindow.ViewModel!.PlayerControl.RaisePropertyChanged();
+            if (value > 0)
+                Mute(true);
+        }
     }
 
-    public async void ImportSongs()
+    private Func<MapEntry, bool> BuildFilter(string searchText)
     {
-        var songEntries = Importer.ImportSongs(Core.Instance.Config.OsuPath!);
-        foreach (var songEntry in songEntries) SongSource.Add(songEntry);
+        if (string.IsNullOrEmpty(searchText))
+            return _ => true;
 
-        SongSource.Connect().Sort(SortExpressionComparer<SongEntry>.Ascending(x => x.Title))
-            .Filter(filter, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
+        var searchQs = searchText.Split(' ');
+
+        return song =>
+        {
+            return searchQs.All(x => song.SongName.Contains(x, StringComparison.OrdinalIgnoreCase));
+        };
+    }
+
+    public async Task ImportSongs()
+    {
+        _filter = Core.Instance.MainWindow.ViewModel!.SearchView
+            .WhenAnyValue(x => x.FilterText)
+            .Throttle(TimeSpan.FromMilliseconds(20))
+            .Select(BuildFilter);
+        
+        var songEntries = await Importer.ImportSongs(Core.Instance.Config.OsuPath!)!;
+        if (songEntries == null) return;
+        SongSource.AddRange(songEntries);
+            
+        SongSource.Connect().Sort(SortExpressionComparer<MapEntry>.Ascending(x => x.Title))
+            .Filter(_filter, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
             .Bind(out FilteredSongEntries).Subscribe();
     }
 
-    public async Task Play(SongEntry song, PlayDirection playDirection = PlayDirection.Forward)
+    public async Task Play(MapEntry? song, PlayDirection playDirection = PlayDirection.Forward)
     {
         if (!FilteredSongEntries.Any())
             return;
 
         if (song == null)
         {
-            await EnqueueSong(FilteredSongEntries[^1]);
+            await TryEnqueueSong(FilteredSongEntries[^1]);
             return;
         }
 
-        if (CurrentSong != null && !Repeat && //Core.Instance.Config.IgnoreSongsWithSameNameCheckBox &&
-            CurrentSong.SongName == song.SongName)
+        if (_currentSong != null && !Repeat && //Core.Instance.Config.IgnoreSongsWithSameNameCheckBox &&
+            _currentSong.SongName == song.SongName)
             switch (playDirection)
             {
                 case PlayDirection.Backwards:
                 {
                     for (var i = CurrentIndex - 1; i < FilteredSongEntries.Count; i--)
                     {
-                        if (FilteredSongEntries[i].SongName == CurrentSong.SongName) continue;
+                        if (FilteredSongEntries[i].SongName == _currentSong.SongName) continue;
 
-                        await EnqueueSong(FilteredSongEntries[i]);
+                        await TryEnqueueSong(FilteredSongEntries[i]);
                         return;
                     }
 
@@ -114,9 +136,9 @@ public class Player
                 {
                     for (var i = CurrentIndex + 1; i < FilteredSongEntries.Count; i++)
                     {
-                        if (FilteredSongEntries[i].SongName == CurrentSong.SongName) continue;
+                        if (FilteredSongEntries[i].SongName == _currentSong.SongName) continue;
 
-                        await EnqueueSong(FilteredSongEntries[i]);
+                        await TryEnqueueSong(FilteredSongEntries[i]);
                         return;
                     }
 
@@ -124,57 +146,78 @@ public class Player
                 }
             }
 
-        await EnqueueSong(song);
+        await TryEnqueueSong(song);
     }
 
-    private Task EnqueueSong(SongEntry song)
+    private Task TryEnqueueSong(MapEntry song)
     {
         try
         {
             Core.Instance.Engine.OpenFile(song.Fullpath);
             //Core.Instance.Engine.SetAllEq(Core.Instance.Config.Eq);
-            Core.Instance.Engine.SetVolume((float) Core.Instance.MainWindow.ViewModel!.PlayerControl.Volume / 100);
+            Core.Instance.Engine.Volume = (float) Core.Instance.MainWindow.ViewModel!.PlayerControl.Volume / 100;
             Core.Instance.Engine.Play();
-            Playstate = Playstate.Playing;
+            PlayState = PlayState.Playing;
             Core.Instance.MainWindow.ViewModel.TopBar.CurrentSongText = $"{song.Artist} - {song.Title}";
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex.ToString());
+            return Task.FromException(ex);
         }
 
         CurrentIndex = FilteredSongEntries.IndexOf(song);
 
-        CurrentSong = song;
+        _currentSong = song;
         return Task.CompletedTask;
     }
 
+    public void Mute(bool force = false)
+    {
+        if (force)
+        {
+            _isMuted = false;
+            return;
+        }
+
+        if (!_isMuted)
+        {
+            _oldVolume = Volume;
+            Volume = 0;
+            _isMuted = true;
+        }
+        else
+        {
+            Volume = _oldVolume;
+        }
+    }
+    
     public void PlayPause()
     {
-        if (Playstate == Playstate.Paused)
+        if (PlayState == PlayState.Paused)
         {
             Core.Instance.Engine.Play();
             //songTimeStamp.Start();
-            Playstate = Playstate.Playing;
+            PlayState = PlayState.Playing;
         }
         else
         {
             Core.Instance.Engine.Pause();
             //songTimeStamp.Stop();
-            Playstate = Playstate.Paused;
+            PlayState = PlayState.Paused;
         }
     }
 
     public void Play()
     {
         Core.Instance.Engine.Play();
-        Playstate = Playstate.Playing;
+        PlayState = PlayState.Playing;
     }
 
     public void Pause()
     {
         Core.Instance.Engine.Pause();
-        Playstate = Playstate.Paused;
+        PlayState = PlayState.Paused;
     }
 
     public async void NextSong()
@@ -197,7 +240,7 @@ public class Player
                 // await Play(song, PlayDirection.Forward);
             }
 
-            await Play(DoShuffle(ShuffleDirection.Forward));
+            await Play(await DoShuffle(ShuffleDirection.Forward));
 
             return;
         }
@@ -242,7 +285,7 @@ public class Player
     {
         if (Core.Instance.Engine.ChannelPosition > 3)
         {
-            await EnqueueSong(FilteredSongEntries[CurrentIndex]);
+            await TryEnqueueSong(FilteredSongEntries[CurrentIndex]);
             return;
         }
 
@@ -250,12 +293,12 @@ public class Player
         {
             if (false) //OsuPlayer.PlaylistManager.IsPlaylistmode)
             {
-                var song = DoShuffle(ShuffleDirection.Backwards);
+                var song = await DoShuffle(ShuffleDirection.Backwards);
 
                 await Play(song);
             }
 
-            await Play(DoShuffle(ShuffleDirection.Backwards), PlayDirection.Backwards);
+            await Play(await DoShuffle(ShuffleDirection.Backwards), PlayDirection.Backwards);
 
             return;
         }
@@ -292,8 +335,10 @@ public class Player
             PlayDirection.Backwards);
     }
 
-    public SongEntry DoShuffle(ShuffleDirection direction)
+    private Task<MapEntry> DoShuffle(ShuffleDirection direction)
     {
-        return FilteredSongEntries[new Random().Next(FilteredSongEntries.Count)];
+        if (FilteredSongEntries == null) return Task.FromException<MapEntry>(new ArgumentNullException(nameof(FilteredSongEntries)));
+        
+        return Task.FromResult(FilteredSongEntries[new Random().Next(FilteredSongEntries.Count)]);
     }
 }
