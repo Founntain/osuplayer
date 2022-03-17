@@ -24,6 +24,7 @@
         <FontFamily x:Key="Exo2">/Resources/Fonts/#Exo2</FontFamily>
         <FontFamily x:Key="Torus">/Resources/Fonts/#Torus</FontFamily>
         <FontFamily x:Key="NovaMono">/Resources/Fonts/#NovaMono</FontFamily>
+        <FontFamily x:Key="DroidMono">/Resources/Fonts/#Droid Sans Mono</FontFamily>
     </Application.Resources>
 
     <Application.Styles>
