@@ -1,6 +1,7 @@
 using System;
 using System.Reactive.Disposables;
 using OsuPlayer.Extensions;
+using OsuPlayer.IO.DbReader;
 using ReactiveUI;
 
 namespace OsuPlayer.ViewModels;
@@ -21,6 +22,7 @@ public class PlayerControlViewModel : BaseViewModel, IActivatableViewModel
 
     private double _songTime;
     private bool _isRepeating;
+    private MapEntry? _currentSong;
 
     public PlayerControlViewModel()
     {
@@ -92,6 +94,24 @@ public class PlayerControlViewModel : BaseViewModel, IActivatableViewModel
     public bool IsRepeating
     {
         get => _isRepeating;
-        set => _isRepeating = this.RaiseAndSetIfChanged(ref _isRepeating, value);
+        set => this.RaiseAndSetIfChanged(ref _isRepeating, value);
     }
+
+    public MapEntry? CurrentSong
+    {
+        get => _currentSong;
+        set
+        {
+            _currentSong = value;
+            this.RaisePropertyChanged(nameof(TitleText));
+            this.RaisePropertyChanged(nameof(ArtistText));
+            this.RaisePropertyChanged(nameof(SongText));
+        }
+    }
+
+    public string TitleText => _currentSong?.Title ?? "No song is playing";
+    
+    public string ArtistText => _currentSong?.Artist ?? "please select from song list";
+
+    public string SongText => $"{ArtistText} - {TitleText}";
 }

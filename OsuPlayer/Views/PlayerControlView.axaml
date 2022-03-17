@@ -21,14 +21,39 @@
         <vm:PlayerControlViewModel />
     </Design.DataContext>
 
-    <Grid>
+    <Grid RowDefinitions="30, *">
         <Grid.Background>
             <SolidColorBrush Color="{DynamicResource AcrylicBaseColor}" />
         </Grid.Background>
 
-        <Grid ColumnDefinitions="200, *, 200">
-            <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                <DockPanel>
+
+        <Grid Grid.Row="0" ColumnDefinitions="60, *, 60">
+
+            <TextBlock x:Name="CurrentSongTimeText" Text="{Binding CurrentSongTime}" VerticalAlignment="Center"
+                       Margin="8 0" Grid.Column="0" FontSize="12" HorizontalAlignment="Center" />
+
+            <Slider Name="SongProgressSlider" VerticalAlignment="Center"
+                    Value="{Binding SongTime}"
+                    Maximum="{Binding SongLength}"
+                    Margin="4 0 " UseLayoutRounding="False" Grid.Column="1"/>
+
+            <TextBlock Name="CurrentSongTimeLeft" Text="{Binding CurrentSongLength}" VerticalAlignment="Center"
+                       Grid.Column="2" Margin="8 0" FontSize="12" HorizontalAlignment="Center" />
+
+        </Grid>
+
+        <Grid Grid.Row="1" ColumnDefinitions="*, Auto, *">
+            <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="8 0 0 0">
+                <ToolTip.Tip>
+                    <TextBlock Text="{Binding SongText}"/>
+                </ToolTip.Tip>
+                
+                <TextBlock Name="TitleText" Text="{Binding TitleText}" FontSize="20"
+                           Foreground="White" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                <TextBlock Name="ArtistText" Text="{Binding ArtistText}" FontSize="16"
+                           Foreground="#FFCCCCCC" FontWeight="Medium" TextTrimming="CharacterEllipsis" />
+                
+                <!-- <DockPanel>
                     <Border Name="Volume" PointerReleased="Volume_OnPointerReleased" Cursor="Hand">
                         <ToolTip.Tip>
                             <TextBlock Text="Click to toggle mute" />
@@ -51,7 +76,7 @@
                     </Border>
                     <Slider x:Name="PlaybackSpeedSlider" VerticalAlignment="Center"
                             Minimum="32100" Maximum="56100" Value="{Binding PlaybackSpeed}" />
-                </DockPanel>
+                </DockPanel> -->
             </StackPanel>
 
             <DockPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
@@ -79,16 +104,14 @@
             </DockPanel>
 
             <DockPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
-                <TextBlock x:Name="CurrentSongTimeText" Text="{Binding CurrentSongTime}" VerticalAlignment="Center"
-                           Margin="5"
-                           FontFamily="{DynamicResource DroidMono}" />
-
-                <Button Name="Repeat" Width="38" Height="38" CornerRadius="50" Click="SongControl" Background="Transparent">
+                <Button Name="Repeat" Width="38" Height="38" CornerRadius="50" Click="SongControl"
+                        Background="Transparent">
                     <avalonia:MaterialIcon Kind="{Binding IsRepeating, Converter={StaticResource RepeatConverter}}"
                                            Height="19" Width="19" />
                 </Button>
 
-                <Button Name="Previous" Width="38" Height="38" CornerRadius="50" Click="SongControl" Background="Transparent">
+                <Button Name="Previous" Width="38" Height="38" CornerRadius="50" Click="SongControl"
+                        Background="Transparent">
                     <avalonia:MaterialIcon Kind="SkipBackward" Height="19" Width="19" />
                 </Button>
 
@@ -97,17 +120,16 @@
                                            Height="40" Width="40" />
                 </Button>
 
-                <Button Name="Next" Width="38" Height="38" CornerRadius="50" Click="SongControl" Background="Transparent">
+                <Button Name="Next" Width="38" Height="38" CornerRadius="50" Click="SongControl"
+                        Background="Transparent">
                     <avalonia:MaterialIcon Kind="SkipForward" Height="19" Width="19" />
                 </Button>
 
-                <Button Name="Shuffle" Width="38" Height="38" CornerRadius="50" Click="SongControl" Background="Transparent">
+                <Button Name="Shuffle" Width="38" Height="38" CornerRadius="50" Click="SongControl"
+                        Background="Transparent">
                     <avalonia:MaterialIcon Kind="{Binding IsShuffle, Converter={StaticResource ShuffleConverter}}"
                                            Height="19" Width="19" />
                 </Button>
-
-                <TextBlock Name="CurrentSongTimeLeft" Text="{Binding CurrentSongLength}" VerticalAlignment="Center"
-                           HorizontalAlignment="Left" FontFamily="{DynamicResource DroidMono}" Margin="5 0" />
             </DockPanel>
         </Grid>
     </Grid>

@@ -172,7 +172,7 @@ public class Player
             Core.Instance.Engine.Volume = (float) Core.Instance.MainWindow.ViewModel!.PlayerControl.Volume / 100;
             Core.Instance.Engine.Play();
             PlayState = PlayState.Playing;
-            Core.Instance.MainWindow.ViewModel.TopBar.CurrentSongText = $"{song.Artist} - {song.Title}";
+            Core.Instance.MainWindow.ViewModel.PlayerControl.CurrentSong = song;
         }
         catch (Exception ex)
         {

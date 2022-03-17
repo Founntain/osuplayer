@@ -15,13 +15,32 @@ public partial class PlayerControlView : ReactiveUserControl<PlayerControlViewMo
     {
         InitializeComponent();
     }
-
+    
+    private Slider ProgressSlider => this.FindControl<Slider>("SongProgressSlider");
+    
     private void InitializeComponent()
     {
-        this.WhenActivated(disposables => { });
+        this.WhenActivated(disposables =>
+        {
+            ProgressSlider.AddHandler(PointerPressedEvent, SongProgressSlider_OnPointerPressed,
+                RoutingStrategies.Tunnel);
+            ProgressSlider.AddHandler(PointerReleasedEvent, SongProgressSlider_OnPointerReleased,
+                RoutingStrategies.Tunnel);
+        });
         AvaloniaXamlLoader.Load(this);
     }
 
+    private void SongProgressSlider_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
+    {
+        Core.Instance.Engine.ChannelPosition = Core.Instance.MainWindow.ViewModel!.PlayerControl.SongTime;
+        Core.Instance.Player.Play();
+    }
+
+    private void SongProgressSlider_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        Core.Instance.Player.Pause();
+    }
+    
     private void Volume_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
         Core.Instance.Player.Mute();
