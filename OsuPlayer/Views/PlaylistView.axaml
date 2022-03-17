@@ -1,0 +1,52 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="OsuPlayer.Views.PlaylistView">
+    <Grid ColumnDefinitions="25*, 75*">
+        <Grid Column="0" Margin="5" RowDefinitions="50, *, 50">
+            <Panel Grid.RowSpan="3">
+                <ExperimentalAcrylicBorder IsHitTestVisible="False">
+                    <ExperimentalAcrylicBorder.Material>
+                        <ExperimentalAcrylicMaterial
+                            BackgroundSource="Digger"
+                            TintColor="Black"
+                            TintOpacity="1"
+                            MaterialOpacity="0.75" />
+                    </ExperimentalAcrylicBorder.Material>
+                </ExperimentalAcrylicBorder>
+            </Panel>
+            
+            <Border Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#7F000000">
+                <TextBlock Text="your playlists" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </Border>
+            
+            <ListBox Grid.Row="1" Items="{Binding Playlists}" Background="Transparent">
+                
+            </ListBox>
+            
+            <Button Grid.Row="2" Content="playlist editor"  Margin="10 0"
+                    VerticalContentAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                    Command="{Binding OpenPlaylistEditor}"/>
+        </Grid>
+        
+        <Grid Column="1" Margin="5">
+            <Panel Grid.ColumnSpan="2">
+                <ExperimentalAcrylicBorder IsHitTestVisible="False">
+                    <ExperimentalAcrylicBorder.Material>
+                        <ExperimentalAcrylicMaterial
+                            BackgroundSource="Digger"
+                            TintColor="Black"
+                            TintOpacity="1"
+                            MaterialOpacity="0.75" />
+                    </ExperimentalAcrylicBorder.Material>
+                </ExperimentalAcrylicBorder>
+            </Panel>
+            
+            <ListBox Background="Transparent">
+                
+            </ListBox>
+        </Grid>
+    </Grid>
+</UserControl>

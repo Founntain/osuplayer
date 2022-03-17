@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:io="clr-namespace:OsuPlayer.IO.DbReader;assembly=OsuPlayer.IO"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.HomeView">
 
@@ -82,13 +83,23 @@
                      DoubleTapped="InputElement_OnDoubleTapped">
                 <ListBox.DataTemplates>
                     <DataTemplate DataType="io:MapEntry">
-                        <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto">
+                        <Grid ColumnDefinitions="*, 100" RowDefinitions="Auto, Auto">
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding TitleString}" FontSize="20" 
                                        FontWeight="SemiBold" />
-                            <TextBlock Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Text="{Binding TotalTimeString}"
-                                       FontSize="20" VerticalAlignment="Center" FontWeight="Light" />
                             <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding ArtistString}"
                                        FontSize="14" Foreground="#FFCCCCCC" FontWeight="Medium" />
+                            
+                            <Grid Row="0" RowSpan="2" Column="1" ColumnDefinitions="50*, 50*">
+                                <Button Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                        Name="Favorite" Width="32" Height="32" CornerRadius="50" Background="Transparent">
+                                    <avalonia:MaterialIcon Kind="HeartOutline" Height="19" Width="19" />
+                                </Button>
+                            
+                                <TextBlock Grid.Column="1" Text="{Binding TotalTimeString}"
+                                            FontSize="20" FontWeight="Light" 
+                                            VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </Grid>
+                            
                         </Grid>
                     </DataTemplate>
                 </ListBox.DataTemplates>

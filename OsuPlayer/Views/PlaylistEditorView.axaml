@@ -1,0 +1,117 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:dbReader="clr-namespace:OsuPlayer.IO.DbReader;assembly=OsuPlayer.IO"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="OsuPlayer.Views.PlaylistEditorView">
+    <Grid RowDefinitions="60, *">
+        <Grid Row="0" Margin="0 0 0 10" ColumnDefinitions="*, Auto">
+            <Panel Grid.ColumnSpan="2">
+                <ExperimentalAcrylicBorder IsHitTestVisible="False">
+                    <ExperimentalAcrylicBorder.Material>
+                        <ExperimentalAcrylicMaterial
+                            BackgroundSource="Digger"
+                            TintColor="Black"
+                            TintOpacity="1"
+                            MaterialOpacity="0.75" />
+                    </ExperimentalAcrylicBorder.Material>
+                </ExperimentalAcrylicBorder>
+            </Panel>
+            
+            <DockPanel Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10">
+                <TextBlock Text="Playlist Editor" FontSize="22" VerticalAlignment="Center" />
+            </DockPanel>
+            
+            <DockPanel Grid.Column="1" VerticalAlignment="Center" Margin="10">
+                <Button Name="CreatePlaylist" Width="38" Height="38" CornerRadius="50"
+                        Background="Transparent">
+                    <avalonia:MaterialIcon Kind="PlaylistAdd" Height="28" Width="28" />
+                </Button>
+                
+                <Button Name="RenamePlaylist" Width="38" Height="38" CornerRadius="50"
+                        Background="Transparent">
+                    <avalonia:MaterialIcon Kind="PlaylistEdit" Height="28" Width="28" />
+                </Button>
+                
+                <Button Name="DeletePlaylist" Width="38" Height="38" CornerRadius="50"
+                        Background="Transparent">
+                    <avalonia:MaterialIcon Kind="PlaylistRemove" Height="28" Width="28" />
+                </Button>
+            </DockPanel>
+        </Grid>
+        
+        <Grid Row="1" ColumnDefinitions="*, 50, *">
+            <Grid Column="1">
+                <StackPanel Spacing="10" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Button Name="AddToPlaylist" Width="38" Height="38" CornerRadius="50" Click="AddToPlaylist_OnClick">
+                        <avalonia:MaterialIcon Kind="ArrowRightThick" Height="28" Width="28" />
+                    </Button>
+                    
+                    <Button Name="RemoveFromPlaylist" Width="38" Height="38" CornerRadius="50" Click="RemoveFromPlaylist_OnClick">
+                        <avalonia:MaterialIcon Kind="ArrowLeftThick" Height="28" Width="28" />
+                    </Button>
+                </StackPanel>
+            </Grid>
+            
+            <Grid Column="0" Margin="10" RowDefinitions="50, *">
+                <Panel Grid.Row="0" Grid.RowSpan="2">
+                    <ExperimentalAcrylicBorder IsHitTestVisible="False">
+                        <ExperimentalAcrylicBorder.Material>
+                            <ExperimentalAcrylicMaterial
+                                BackgroundSource="Digger"
+                                TintColor="Black"
+                                TintOpacity="1"
+                                MaterialOpacity="0.75" />
+                        </ExperimentalAcrylicBorder.Material>
+                    </ExperimentalAcrylicBorder>
+                </Panel>
+                
+                <Border Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#7F000000">
+                    <TextBlock Text="Your songs" FontSize="22" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                </Border>
+                
+                <ListBox Grid.Row="1" Background="Transparent" SelectionMode="Multiple"
+                         Items="{Binding Songlist}" SelectionChanged="Songlist_OnSelectionChanged">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="dbReader:MapEntry">
+                            <Grid>
+                                <TextBlock Text="{Binding SongName}" FontWeight="SemiBold"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+            
+            <Grid Column="2" Margin="10" RowDefinitions="50, *">
+                <Panel Grid.Row="0" Grid.RowSpan="2">
+                    <ExperimentalAcrylicBorder IsHitTestVisible="False">
+                        <ExperimentalAcrylicBorder.Material>
+                            <ExperimentalAcrylicMaterial
+                                BackgroundSource="Digger"
+                                TintColor="Black"
+                                TintOpacity="1"
+                                MaterialOpacity="0.75" />
+                        </ExperimentalAcrylicBorder.Material>
+                    </ExperimentalAcrylicBorder>
+                </Panel>
+                
+                <Border Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#7F000000">
+                    <TextBlock Text="playlist songs" FontSize="22" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                </Border>
+                
+                <ListBox Grid.Row="1" Background="Transparent" SelectionMode="Multiple"
+                         Items="{Binding Playlist}" SelectionChanged="Playlist_OnSelectionChanged">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="dbReader:MapEntry">
+                            <Grid>
+                                <TextBlock Text="{Binding SongName}" FontWeight="SemiBold" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

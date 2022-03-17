@@ -11,11 +11,13 @@ public class MainWindowViewModel : BaseViewModel, IScreen
     public readonly HomeViewModel HomeView;
     public readonly PartyViewModel PartyView;
     public readonly PlaylistViewModel PlaylistView;
-
+    public readonly PlaylistEditorViewModel PlaylistEditorViewModel;
+    
     // internal ViewModels
     public readonly SearchViewModel SearchView;
     public readonly SettingsViewModel SettingsView;
     public readonly UserViewModel UserView;
+
     private BaseViewModel _mainView;
 
     public MainWindowViewModel()
@@ -25,6 +27,7 @@ public class MainWindowViewModel : BaseViewModel, IScreen
 
         SearchView = new SearchViewModel();
         PlaylistView = new PlaylistViewModel();
+        PlaylistEditorViewModel = new PlaylistEditorViewModel();
         HomeView = new HomeViewModel();
         UserView = new UserViewModel();
         PartyView = new PartyViewModel();
