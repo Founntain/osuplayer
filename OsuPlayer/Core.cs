@@ -1,5 +1,3 @@
-using System;
-using System.Diagnostics;
 using OsuPlayer.IO;
 using OsuPlayer.Modules.Audio;
 using MainWindow = OsuPlayer.Windows.MainWindow;
@@ -10,7 +8,7 @@ public class Core
 {
     public Config Config;
     public BassEngine Engine;
-
+    
     public MainWindow MainWindow;
     public Player Player;
 

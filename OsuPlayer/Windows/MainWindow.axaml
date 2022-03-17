@@ -25,7 +25,7 @@
         <vm:MainWindowViewModel />
     </Design.DataContext>
 
-    <Grid Name="MainGrid" RowDefinitions="50, *, 50">
+    <Grid Name="MainGrid" RowDefinitions="50, *, 100">
         <Panel Grid.Row="0" Grid.RowSpan="3">
             <ExperimentalAcrylicBorder IsHitTestVisible="False">
                 <ExperimentalAcrylicBorder.Material>

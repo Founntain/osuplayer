@@ -20,6 +20,7 @@ public class PlayerControlViewModel : BaseViewModel, IActivatableViewModel
     private double _songLength;
 
     private double _songTime;
+    private bool _isRepeating;
 
     public PlayerControlViewModel()
     {
@@ -87,4 +88,10 @@ public class PlayerControlViewModel : BaseViewModel, IActivatableViewModel
     }
 
     public ViewModelActivator Activator { get; }
+
+    public bool IsRepeating
+    {
+        get => _isRepeating;
+        set => _isRepeating = this.RaiseAndSetIfChanged(ref _isRepeating, value);
+    }
 }

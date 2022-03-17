@@ -24,8 +24,8 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         {
             Core.Instance.SetupCore(this);
             
-            
-            Core.Instance.MainWindow.ViewModel!.MainView = Core.Instance.MainWindow.ViewModel.HomeView;
+            if (Core.Instance.MainWindow.ViewModel != null)
+                Core.Instance.MainWindow.ViewModel.MainView = Core.Instance.MainWindow.ViewModel.HomeView;
             ProgressSlider.AddHandler(PointerPressedEvent, SongProgressSlider_OnPointerPressed,
                 RoutingStrategies.Tunnel);
             ProgressSlider.AddHandler(PointerReleasedEvent, SongProgressSlider_OnPointerReleased,

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
@@ -11,7 +12,6 @@ using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.IO;
 using OsuPlayer.IO.DbReader;
 using ReactiveUI;
-using SQLitePCL;
 
 namespace OsuPlayer.Modules.Audio;
 
@@ -30,11 +30,12 @@ public class Player
     private bool _isMuted;
     private double _oldVolume;
     private int _shuffleHistoryIndex;
-    public readonly SourceList<MapEntry> SongSource;
+    private readonly SourceList<MapEntry> _songSource;
+    public List<MapEntry>? SongSource => _songSource.Items.ToList();
 
     public Player()
     {
-        SongSource = new SourceList<MapEntry>();
+        _songSource = new SourceList<MapEntry>();
     }
 
     private SongImporter Importer => new();
@@ -61,8 +62,18 @@ public class Player
         }
     }
 
-    public bool Repeat { get; set; }
-    
+    private bool _repeat;
+
+    public bool Repeat
+    {
+        get => _repeat;
+        set
+        {
+            _repeat = value;
+            Core.Instance.MainWindow.ViewModel!.PlayerControl.IsRepeating = value;
+        }
+    }
+
     public double Volume
     {
         get => Core.Instance.Config.Volume;
@@ -98,21 +109,21 @@ public class Player
         
         var songEntries = await Importer.ImportSongs(Core.Instance.Config.OsuPath!)!;
         if (songEntries == null) return;
-        SongSource.AddRange(songEntries);
-            
-        SongSource.Connect().Sort(SortExpressionComparer<MapEntry>.Ascending(x => x.Title))
+        _songSource.AddRange(songEntries);
+        
+        _songSource.Connect().Sort(SortExpressionComparer<MapEntry>.Ascending(x => x.Title))
             .Filter(_filter, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
             .Bind(out FilteredSongEntries).Subscribe();
     }
 
     public async Task Play(MapEntry? song, PlayDirection playDirection = PlayDirection.Forward)
     {
-        if (!FilteredSongEntries.Any())
+        if (SongSource == null || !SongSource.Any())
             return;
 
         if (song == null)
         {
-            await TryEnqueueSong(FilteredSongEntries[^1]);
+            await TryEnqueueSong(SongSource[^1]);
             return;
         }
 
@@ -122,11 +133,11 @@ public class Player
             {
                 case PlayDirection.Backwards:
                 {
-                    for (var i = CurrentIndex - 1; i < FilteredSongEntries.Count; i--)
+                    for (var i = CurrentIndex - 1; i < SongSource.Count; i--)
                     {
-                        if (FilteredSongEntries[i].SongName == _currentSong.SongName) continue;
+                        if (SongSource[i].SongName == _currentSong.SongName) continue;
 
-                        await TryEnqueueSong(FilteredSongEntries[i]);
+                        await TryEnqueueSong(SongSource[i]);
                         return;
                     }
 
@@ -134,11 +145,11 @@ public class Player
                 }
                 case PlayDirection.Forward:
                 {
-                    for (var i = CurrentIndex + 1; i < FilteredSongEntries.Count; i++)
+                    for (var i = CurrentIndex + 1; i < SongSource.Count; i++)
                     {
-                        if (FilteredSongEntries[i].SongName == _currentSong.SongName) continue;
+                        if (SongSource[i].SongName == _currentSong.SongName) continue;
 
-                        await TryEnqueueSong(FilteredSongEntries[i]);
+                        await TryEnqueueSong(SongSource[i]);
                         return;
                     }
 
@@ -151,6 +162,9 @@ public class Player
 
     private Task TryEnqueueSong(MapEntry song)
     {
+        if (SongSource == null || !SongSource.Any())
+            return Task.FromException(new NullReferenceException($"{nameof(SongSource)} can't be null or empty"));
+        
         try
         {
             Core.Instance.Engine.OpenFile(song.Fullpath);
@@ -166,7 +180,7 @@ public class Player
             return Task.FromException(ex);
         }
 
-        CurrentIndex = FilteredSongEntries.IndexOf(song);
+        CurrentIndex = SongSource.IndexOf(song);
 
         _currentSong = song;
         return Task.CompletedTask;
@@ -222,12 +236,12 @@ public class Player
 
     public async void NextSong()
     {
-        if (!FilteredSongEntries.Any())
+        if (SongSource == null || !SongSource.Any())
             return;
 
         if (Repeat)
         {
-            await Play(FilteredSongEntries[CurrentIndex]);
+            await Play(SongSource[CurrentIndex]);
             return;
         }
 
@@ -245,7 +259,7 @@ public class Player
             return;
         }
 
-        if (CurrentIndex + 1 == FilteredSongEntries.Count)
+        if (CurrentIndex + 1 == SongSource.Count)
         {
             // if (OsuPlayer.Blacklist.IsSongInBlacklist(Songs[0]))
             // {
@@ -276,16 +290,19 @@ public class Player
             //         OsuPlayer.PlaylistManager.CurrentPlaylist.GetPlayistIndexOfSong(CurrentSong) + 1]);
         }
 
-        await Play(CurrentIndex == FilteredSongEntries.Count - 1
-            ? FilteredSongEntries[0]
-            : FilteredSongEntries[CurrentIndex + 1]);
+        await Play(CurrentIndex == SongSource.Count - 1
+            ? SongSource[0]
+            : SongSource[CurrentIndex + 1]);
     }
 
     public async void PreviousSong()
     {
+        if (SongSource == null || !SongSource.Any())
+            return;
+        
         if (Core.Instance.Engine.ChannelPosition > 3)
         {
-            await TryEnqueueSong(FilteredSongEntries[CurrentIndex]);
+            await TryEnqueueSong(SongSource[CurrentIndex]);
             return;
         }
 
@@ -331,14 +348,15 @@ public class Player
             //         OsuPlayer.PlaylistManager.CurrentPlaylist.GetPlayistIndexOfSong(CurrentSong) - 1]);
         }
 
-        await Play(CurrentIndex == 0 ? FilteredSongEntries.Last() : FilteredSongEntries[CurrentIndex - 1],
+        if (SongSource == null) return;
+        await Play(CurrentIndex == 0 ? SongSource.Last() : SongSource[CurrentIndex - 1],
             PlayDirection.Backwards);
     }
 
     private Task<MapEntry> DoShuffle(ShuffleDirection direction)
     {
-        if (FilteredSongEntries == null) return Task.FromException<MapEntry>(new ArgumentNullException(nameof(FilteredSongEntries)));
+        if (SongSource == null) return Task.FromException<MapEntry>(new ArgumentNullException(nameof(FilteredSongEntries)));
         
-        return Task.FromResult(FilteredSongEntries[new Random().Next(FilteredSongEntries.Count)]);
+        return Task.FromResult(SongSource[new Random().Next(SongSource.Count)]);
     }
 }

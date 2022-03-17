@@ -6,4 +6,9 @@
         <Nullable>annotations</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Avalonia" Version="0.10.13" />
+      <PackageReference Include="Material.Icons.Avalonia" Version="1.0.2" />
+    </ItemGroup>
+
 </Project>

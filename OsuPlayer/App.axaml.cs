@@ -17,7 +17,7 @@ public class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            new Core();
+            var _ = new Core();
             desktop.MainWindow = new MainWindow
             {
                 ViewModel = new MainWindowViewModel()
