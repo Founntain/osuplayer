@@ -11,13 +11,6 @@
 
         <Border Background="Transparent" PointerPressed="TopBarGrid_PointerPressed" />
 
-        <DockPanel>
-            <Image Source="../Resources/Icons/music.png" HorizontalAlignment="Left" Width="24" Height="24"
-                   Margin="10 0 " />
-            <TextBlock Name="CurrentSongText" Text="{Binding CurrentSongText}"
-                       VerticalAlignment="Center" HorizontalAlignment="Left" Width="475"
-                       TextTrimming="CharacterEllipsis" />
-        </DockPanel>
         <DockPanel HorizontalAlignment="Center">
             <!--Search Button-->
             <Border Name="SearchNavigation" BorderThickness="2" Height="40" Width="40"

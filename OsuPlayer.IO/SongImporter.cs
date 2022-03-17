@@ -1,6 +1,4 @@
-﻿using System.Collections.Concurrent;
-using System.Diagnostics;
-using OsuPlayer.IO.DbReader;
+﻿using OsuPlayer.IO.DbReader;
 
 namespace OsuPlayer.IO;
 

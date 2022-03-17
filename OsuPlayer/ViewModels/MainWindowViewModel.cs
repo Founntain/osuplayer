@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using DynamicData;
 using OsuPlayer.Data.OsuPlayer.Classes;
-using OsuPlayer.IO;
 using OsuPlayer.IO.DbReader;
 using ReactiveUI;
 
@@ -52,7 +50,7 @@ public class MainWindowViewModel : BaseViewModel, IScreen
         set => Core.Instance.Player.FilteredSongEntries = value;
     }
 
-    public IEnumerable<MapEntry> SongEntries => Core.Instance.Player.SongSource.Items;
+    public IEnumerable<MapEntry> SongEntries => Core.Instance.Player.SongSource!;
 
     public RoutingState Router { get; } = new();
 }

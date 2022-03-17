@@ -13,11 +13,5 @@ public class TopBarViewModel : BaseViewModel, IActivatableViewModel
         this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
     }
 
-    public string CurrentSongText
-    {
-        get => _currentSongText;
-        set => this.RaiseAndSetIfChanged(ref _currentSongText, value);
-    }
-
     public ViewModelActivator Activator { get; }
 }
