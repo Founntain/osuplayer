@@ -15,6 +15,9 @@
         <cv:PlayPauseConverter x:Key="PlayPauseConverter" />
         <cv:ShuffleConverter x:Key="ShuffleConverter" />
         <cv:RepeatConverter x:Key="RepeatConverter" />
+        <cv:VolumeConverter x:Key="VolumeConverter" />
+        <Color x:Key="PopupBase">#FF2B2B2B</Color>
+        <Color x:Key="PopupBorder">#FF1D1D1D</Color>
     </UserControl.Resources>
 
     <Design.DataContext>
@@ -35,7 +38,7 @@
             <Slider Name="SongProgressSlider" VerticalAlignment="Center"
                     Value="{Binding SongTime}"
                     Maximum="{Binding SongLength}"
-                    Margin="4 0 " UseLayoutRounding="False" Grid.Column="1"/>
+                    Margin="4 0 " UseLayoutRounding="False" Grid.Column="1" />
 
             <TextBlock Name="CurrentSongTimeLeft" Text="{Binding CurrentSongLength}" VerticalAlignment="Center"
                        Grid.Column="2" Margin="8 0" FontSize="12" HorizontalAlignment="Center" />
@@ -43,63 +46,68 @@
         </Grid>
 
         <Grid Grid.Row="1" ColumnDefinitions="*, Auto, *">
-            <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="8 0 0 0">
-                <ToolTip.Tip>
-                    <TextBlock Text="{Binding SongText}"/>
-                </ToolTip.Tip>
-                
-                <TextBlock Name="TitleText" Text="{Binding TitleText}" FontSize="20"
-                           Foreground="White" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
-                <TextBlock Name="ArtistText" Text="{Binding ArtistText}" FontSize="16"
-                           Foreground="#FFCCCCCC" FontWeight="Medium" TextTrimming="CharacterEllipsis" />
-                
-                <!-- <DockPanel>
-                    <Border Name="Volume" PointerReleased="Volume_OnPointerReleased" Cursor="Hand">
-                        <ToolTip.Tip>
-                            <TextBlock Text="Click to toggle mute" />
-                        </ToolTip.Tip>
-                        <Image Height="18" Width="18" Source="../Resources/Icons/max_vol.png" Margin="5 0" />
-                    </Border>
+            <Grid Grid.Column="0" ColumnDefinitions="Auto, *">
+                <Image Grid.Column="0" Stretch="UniformToFill" Source="{Binding CurrentSongImage}" Margin="6"
+                       VerticalAlignment="Center" Width="80" Height="58" />
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="8 0 0 0">
+                    <ToolTip.Tip>
+                        <TextBlock Text="{Binding SongText}" />
+                    </ToolTip.Tip>
 
-                    <Slider Name="VolumeSlider"
-                            VerticalAlignment="Center" Minimum="0" Maximum="100" Value="{Binding Volume}" />
-                </DockPanel>
-
-                <DockPanel>
-                    <Border x:Name="PlaybackSpeed"
-                            PointerReleased="PlaybackSpeedBtn_OnPointerReleased" Cursor="Hand">
-                        <ToolTip.Tip>
-                            <TextBlock Text="Click to reset playback speed" />
-                        </ToolTip.Tip>
-                        <Image Height="18" Width="18"
-                               Source="../Resources/Icons/speed.png" Margin="5 0 5 0" />
-                    </Border>
-                    <Slider x:Name="PlaybackSpeedSlider" VerticalAlignment="Center"
-                            Minimum="32100" Maximum="56100" Value="{Binding PlaybackSpeed}" />
-                </DockPanel> -->
-            </StackPanel>
+                    <TextBlock Name="TitleText" Text="{Binding TitleText}" FontSize="20"
+                               Foreground="White" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                    <TextBlock Name="ArtistText" Text="{Binding ArtistText}" FontSize="16"
+                               Foreground="#FFCCCCCC" FontWeight="Medium" TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+            </Grid>
 
             <DockPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5">
-                <Button Name="Volume" Width="38" Height="38" CornerRadius="50" Click="Favorite_OnClick"
-                        Background="Transparent">
-                    <avalonia:MaterialIcon Kind="VolumeSource" Height="19" Width="19" />
-                </Button>
-                
-                <Button Name="PlaybackSpeed" Width="38" Height="38" CornerRadius="50" Click="Favorite_OnClick"
-                        Background="Transparent">
-                    <avalonia:MaterialIcon Kind="PlaySpeed" Height="19" Width="19" />
-                </Button>
-                
+                <Panel>
+                    <Button Name="Volume" Width="38" Height="38" CornerRadius="50" Click="Volume_OnClick"
+                            Background="Transparent" PointerLeave="VolumePopupHandler"
+                            PointerEnter="VolumePopupHandler" IsPointerOver="{Binding VolumePointerOver, Mode=OneWayToSource}">
+                        <avalonia:MaterialIcon Kind="{Binding Volume, Converter={StaticResource VolumeConverter}}" Height="19" Width="19" />
+                    </Button>
+                    <Popup IsOpen="{Binding IsVolumeVisible}" PlacementMode="AnchorAndGravity"
+                           VerticalOffset="-76">
+                        <Border Name="VolumePopup" Background="{DynamicResource PopupBase}" CornerRadius="5"
+                                PointerLeave="VolumePopup_OnPointerLeave" BorderBrush="{DynamicResource PopupBorder}" BorderThickness="1"
+                                IsPointerOver="{Binding VolumePopupPointerOver, Mode=OneWayToSource}">
+                            <Slider VerticalAlignment="Center" HorizontalAlignment="Center"
+                                    Minimum="0" Maximum="100" Value="{Binding Volume}" Orientation="Vertical"
+                                    Height="100" Margin="6" />
+                        </Border>
+                    </Popup>
+                </Panel>
+
+                <Panel>
+                    <Button Name="PlaybackSpeed" Width="38" Height="38" CornerRadius="50" Click="PlaybackSpeed_OnClick"
+                            Background="Transparent" ToolTip.IsOpen="{Binding IsSpeedVisible}"
+                            PointerEnter="SpeedPopupHandler" PointerLeave="SpeedPopupHandler" IsPointerOver="{Binding SpeedPointerOver, Mode=OneWayToSource}">
+                        <avalonia:MaterialIcon Kind="PlaySpeed" Height="19" Width="19" />
+                    </Button>
+                    <Popup IsOpen="{Binding IsSpeedVisible}" PlacementMode="AnchorAndGravity"
+                           VerticalOffset="-76">
+                        <Border Name="PlaybackSpeedPopup" Background="{DynamicResource PopupBase}" CornerRadius="5"
+                                PointerLeave="PlaybackSpeedPopup_OnPointerLeave" BorderBrush="{DynamicResource PopupBorder}" BorderThickness="1"
+                                IsPointerOver="{Binding SpeedPopupPointerOver, Mode=OneWayToSource}">
+                            <Slider VerticalAlignment="Center" HorizontalAlignment="Center" Minimum="32100" Maximum="56100"
+                                    Value="{Binding PlaybackSpeed}"
+                                    Orientation="Vertical" Height="100" Margin="6" />
+                        </Border>
+                    </Popup>
+                </Panel>
+
                 <Button Name="Favorite" Width="38" Height="38" CornerRadius="50" Click="Favorite_OnClick"
                         Background="Transparent">
                     <avalonia:MaterialIcon Kind="HeartOutline" Height="19" Width="19" />
                 </Button>
-                
+
                 <Button Name="Blacklist" Width="38" Height="38" CornerRadius="50" Click="Blacklist_OnClick"
                         Background="Transparent">
                     <avalonia:MaterialIcon Kind="HeartBrokenOutline" Height="19" Width="19" />
                 </Button>
-                
+
                 <Button Name="Settings" Width="42" Height="42" CornerRadius="50" Click="Settings_OnClick"
                         Background="Transparent">
                     <avalonia:MaterialIcon Kind="Settings" Height="32" Width="32" />

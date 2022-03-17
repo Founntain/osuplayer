@@ -3,6 +3,7 @@ using System.Reactive.Disposables;
 using OsuPlayer.Extensions;
 using OsuPlayer.IO.DbReader;
 using ReactiveUI;
+using Avalonia.Media.Imaging;
 
 namespace OsuPlayer.ViewModels;
 
@@ -23,6 +24,10 @@ public class PlayerControlViewModel : BaseViewModel, IActivatableViewModel
     private double _songTime;
     private bool _isRepeating;
     private MapEntry? _currentSong;
+    private bool _isVolumeVisible;
+    private bool _isSpeedVisible;
+    private bool _volumePointerOver;
+    private Bitmap? _currentSongImage;
 
     public PlayerControlViewModel()
     {
@@ -33,10 +38,7 @@ public class PlayerControlViewModel : BaseViewModel, IActivatableViewModel
     public double Volume
     {
         get => Core.Instance.Player.Volume;
-        set
-        {
-            Core.Instance.Player.Volume = value;
-        }
+        set { Core.Instance.Player.Volume = value; }
     }
 
     public bool IsShuffle
@@ -110,8 +112,35 @@ public class PlayerControlViewModel : BaseViewModel, IActivatableViewModel
     }
 
     public string TitleText => _currentSong?.Title ?? "No song is playing";
-    
+
     public string ArtistText => _currentSong?.Artist ?? "please select from song list";
 
     public string SongText => $"{ArtistText} - {TitleText}";
+
+    public bool IsVolumeVisible
+    {
+        get => _isVolumeVisible;
+        set => this.RaiseAndSetIfChanged(ref _isVolumeVisible, value);
+    }
+
+    public bool IsSpeedVisible
+    {
+        get => _isSpeedVisible;
+        set => this.RaiseAndSetIfChanged(ref _isSpeedVisible, value);
+    }
+
+    public bool VolumePointerOver { get; set; }
+    public bool VolumePopupPointerOver { get; set; }
+    public bool SpeedPointerOver { get; set; }
+    public bool SpeedPopupPointerOver { get; set; }
+
+    public Bitmap? CurrentSongImage
+    {
+        get => _currentSongImage;
+        set
+        {
+            _currentSongImage?.Dispose();
+            this.RaiseAndSetIfChanged(ref _currentSongImage, value);
+        }
+    }
 }
