@@ -44,6 +44,7 @@
     <ItemGroup>
         <Folder Include="Resources" />
         <AvaloniaResource Include="Resources\**" />
+        <Folder Include="runtimes\win-x64\native" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\OsuPlayer.Data\OsuPlayer.Data.csproj" />
@@ -52,14 +53,38 @@
         <ProjectReference Include="..\OsuPlayer.Network\OsuPlayer.Network.csproj" />
     </ItemGroup>
     <ItemGroup>
-      <Content Include="bass.dll">
+      <Content Include="runtimes\win-x86\native\bass.dll">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
-      <Content Include="bass_fx.dll">
+      <Content Include="runtimes\win-x86\native\bass_fx.dll">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
       <None Remove="lib\bass.dll" />
       <None Remove="lib\bass_fx.dll" />
+      <None Remove="runtimes\win-x64\native\bass.dll" />
+      <Content Include="runtimes\win-x64\native\bass.dll">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="runtimes\win-x64\native\bass_fx.dll" />
+      <Content Include="runtimes\win-x64\native\bass_fx.dll">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="runtimes\linux-x86\native\libbass.so" />
+      <Content Include="runtimes\linux-x86\native\libbass.so">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="runtimes\linux-x86\native\libbass_fx.so" />
+      <Content Include="runtimes\linux-x86\native\libbass_fx.so">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="runtimes\linux-x64\native\libbass.so" />
+      <Content Include="runtimes\linux-x64\native\libbass.so">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="runtimes\linux-x64\native\libbass_fx.so" />
+      <Content Include="runtimes\linux-x64\native\libbass_fx.so">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
     <ItemGroup>
       <Compile Update="Windows\MainWindow.axaml.cs">
