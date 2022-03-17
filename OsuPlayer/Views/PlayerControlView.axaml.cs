@@ -1,6 +1,7 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using OsuPlayer.ViewModels;
@@ -45,8 +46,8 @@ public partial class PlayerControlView : ReactiveUserControl<PlayerControlViewMo
     {
         Core.Instance.MainWindow.ViewModel!.MainView = Core.Instance.MainWindow.ViewModel.SettingsView;
     }
-
-    private void SongControl(object? sender, PointerReleasedEventArgs e)
+    
+    private void SongControl(object? sender, RoutedEventArgs e)
     {
         switch ((sender as Control)?.Name)
         {

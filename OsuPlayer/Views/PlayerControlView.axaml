@@ -83,25 +83,25 @@
                            Margin="5"
                            FontFamily="{DynamicResource DroidMono}" />
 
-                <Button Width="32" Height="32" CornerRadius="50">
+                <Button Name="Repeat" Width="38" Height="38" CornerRadius="50" Click="SongControl" Background="Transparent">
                     <avalonia:MaterialIcon Kind="{Binding IsRepeating, Converter={StaticResource RepeatConverter}}"
                                            Height="19" Width="19" />
                 </Button>
 
-                <Button Width="32" Height="32" CornerRadius="50">
+                <Button Name="Previous" Width="38" Height="38" CornerRadius="50" Click="SongControl" Background="Transparent">
                     <avalonia:MaterialIcon Kind="SkipBackward" Height="19" Width="19" />
                 </Button>
 
-                <Button Width="42" Height="42" CornerRadius="50">
+                <Button Name="PlayPause" Width="50" Height="50" CornerRadius="50" Click="SongControl">
                     <avalonia:MaterialIcon Kind="{Binding IsPlaying, Converter={StaticResource PlayPauseConverter}}"
                                            Height="40" Width="40" />
                 </Button>
 
-                <Button Width="32" Height="32" CornerRadius="50">
+                <Button Name="Next" Width="38" Height="38" CornerRadius="50" Click="SongControl" Background="Transparent">
                     <avalonia:MaterialIcon Kind="SkipForward" Height="19" Width="19" />
                 </Button>
 
-                <Button Width="32" Height="32" CornerRadius="50">
+                <Button Name="Shuffle" Width="38" Height="38" CornerRadius="50" Click="SongControl" Background="Transparent">
                     <avalonia:MaterialIcon Kind="{Binding IsShuffle, Converter={StaticResource ShuffleConverter}}"
                                            Height="19" Width="19" />
                 </Button>
