@@ -79,28 +79,31 @@
                 </DockPanel> -->
             </StackPanel>
 
-            <DockPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
-                <Border x:Name="Favorite" PointerReleased="FavoriteBtn_OnMouseLeftButtonUp">
-                    <ToolTip.Tip>
-                        <TextBlock Text="Add/Remove song from your current selected playlist." />
-                    </ToolTip.Tip>
-                    <Image Cursor="Hand" Height="26" Width="26"
-                           Source="../Resources/Icons/heart_off.png" Margin="5 0" />
-                </Border>
-
-                <Border x:Name="Blacklist" PointerReleased="BlacklistBtn_OnMouseLeftButtonUp">
-                    <ToolTip.Tip>
-                        <TextBlock Text="Add/Remove song from your blacklist." />
-                    </ToolTip.Tip>
-                    <Image Cursor="Hand" Height="26" Width="26"
-                           Source="../Resources/Icons/blacklist_heart_off.png" />
-                </Border>
-
-                <Border x:Name="NavigationSettings" Margin="10 0"
-                        PointerReleased="NavigationSettingsBtn_OnMouseLeftButtonUp" Cursor="Hand">
-                    <Image Height="32" Width="32"
-                           Source="../Resources/Icons/cog.png" />
-                </Border>
+            <DockPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5">
+                <Button Name="Volume" Width="38" Height="38" CornerRadius="50" Click="Favorite_OnClick"
+                        Background="Transparent">
+                    <avalonia:MaterialIcon Kind="VolumeSource" Height="19" Width="19" />
+                </Button>
+                
+                <Button Name="PlaybackSpeed" Width="38" Height="38" CornerRadius="50" Click="Favorite_OnClick"
+                        Background="Transparent">
+                    <avalonia:MaterialIcon Kind="PlaySpeed" Height="19" Width="19" />
+                </Button>
+                
+                <Button Name="Favorite" Width="38" Height="38" CornerRadius="50" Click="Favorite_OnClick"
+                        Background="Transparent">
+                    <avalonia:MaterialIcon Kind="HeartOutline" Height="19" Width="19" />
+                </Button>
+                
+                <Button Name="Blacklist" Width="38" Height="38" CornerRadius="50" Click="Blacklist_OnClick"
+                        Background="Transparent">
+                    <avalonia:MaterialIcon Kind="HeartBrokenOutline" Height="19" Width="19" />
+                </Button>
+                
+                <Button Name="Settings" Width="42" Height="42" CornerRadius="50" Click="Settings_OnClick"
+                        Background="Transparent">
+                    <avalonia:MaterialIcon Kind="Settings" Height="32" Width="32" />
+                </Button>
             </DockPanel>
 
             <DockPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">

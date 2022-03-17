@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.TopBarView">
     <Grid Name="TopBarGrid">
@@ -13,48 +14,30 @@
 
         <DockPanel HorizontalAlignment="Center">
             <!--Search Button-->
-            <Border Name="SearchNavigation" BorderThickness="2" Height="40" Width="40"
-                    Background="#7F000000" CornerRadius="50" Cursor="Hand"
-                    PointerReleased="NavigationPressed">
-                <Image Width="24" Height="24" Source="../Resources/Icons/search.png" />
-            </Border>
+            <Button Name="SearchNavigation" Width="32" Height="32" CornerRadius="50" Click="Navigation_Clicked"
+                    Background="Transparent">
+                <avalonia:MaterialIcon Kind="Search" Height="24" Width="24" />
+            </Button>
             <!--Playlist Button-->
-            <Border Name="PlaylistNavigation" BorderThickness="2" Height="40" Width="40"
-                    Background="#7F000000" CornerRadius="50" Cursor="Hand"
-                    PointerReleased="NavigationPressed">
-                <Image Width="24" Height="24" Source="../Resources/Icons/menu.png" />
-            </Border>
+            <Button Name="PlaylistNavigation" Width="32" Height="32" CornerRadius="50" Click="Navigation_Clicked"
+                    Background="Transparent">
+                <avalonia:MaterialIcon Kind="Menu" Height="24" Width="24" />
+            </Button>
             <!--Home Button-->
-            <Border x:Name="HomeNavigation" BorderThickness="2" Height="40" Width="40" CornerRadius="50"
-                    Cursor="Hand" PointerReleased="NavigationPressed">
-                <Image Width="32" Height="32"
-                       Source="../Resources/logo_outline.png" />
-                <Border.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem x:Name="OpenFullscreenMenuItem" Header="Open Fullscreen-Mode"
-                                  Click="OpenFullscreenMenuItem_OnClick" />
-                        <MenuItem x:Name="OpenMiniplayerMenuItem" Header="Open Miniplayer"
-                                  Click="OpenMiniplayerMenuItem_OnClick" />
-                        <MenuItem x:Name="OpenEqualizerMenuItem" Header="Open Equalizer"
-                                  Click="OpenEqualizerMenuItem_OnClick" />
-                        <Separator />
-                        <MenuItem x:Name="OpenContributersMenuItem" Header="Creators of the osu!player"
-                                  Click="OpenContributersMenuItem_OnClick" />
-                    </ContextMenu>
-                </Border.ContextMenu>
-            </Border>
+            <Button Name="HomeNavigation" Width="42" Height="42" CornerRadius="50" Click="Navigation_Clicked"
+                    Background="Transparent">
+                <avalonia:MaterialIcon Kind="Home" Height="32" Width="32" />
+            </Button>
             <!--User Button-->
-            <Border x:Name="UserNavigation" BorderThickness="2" Height="40" Width="40"
-                    Background="#7F000000" CornerRadius="50" Cursor="Hand"
-                    PointerReleased="NavigationPressed">
-                <Image Width="24" Height="24" Source="../Resources/Icons/user.png" />
-            </Border>
+            <Button Name="UserNavigation" Width="32" Height="32" CornerRadius="50" Click="Navigation_Clicked"
+                    Background="Transparent">
+                <avalonia:MaterialIcon Kind="Users" Height="24" Width="24" />
+            </Button>
             <!--Party Button-->
-            <Border x:Name="PartyNavigation" BorderThickness="2" Height="40" Width="40"
-                    Background="#7F000000" CornerRadius="50" Cursor="Hand"
-                    PointerReleased="NavigationPressed">
-                <Image Width="24" Height="24" Source="../Resources/Icons/party.png" />
-            </Border>
+            <Button Name="PartyNavigation" Width="32" Height="32" CornerRadius="50" Click="Navigation_Clicked"
+                    Background="Transparent">
+                <avalonia:MaterialIcon Kind="PartyPopper" Height="24" Width="24" />
+            </Button>
         </DockPanel>
 
         <!--Window Buttons-->

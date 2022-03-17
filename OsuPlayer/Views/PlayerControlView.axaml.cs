@@ -51,19 +51,19 @@ public partial class PlayerControlView : ReactiveUserControl<PlayerControlViewMo
         throw new NotImplementedException();
     }
 
-    private void FavoriteBtn_OnMouseLeftButtonUp(object? sender, PointerReleasedEventArgs e)
-    {
-        throw new NotImplementedException();
-    }
-
-    private void BlacklistBtn_OnMouseLeftButtonUp(object? sender, PointerReleasedEventArgs e)
-    {
-        throw new NotImplementedException();
-    }
-
-    private void NavigationSettingsBtn_OnMouseLeftButtonUp(object? sender, PointerReleasedEventArgs e)
+    private void Settings_OnClick(object? sender, RoutedEventArgs e)
     {
         Core.Instance.MainWindow.ViewModel!.MainView = Core.Instance.MainWindow.ViewModel.SettingsView;
+    }
+
+    private void Blacklist_OnClick(object? sender, RoutedEventArgs e)
+    {
+        // throw new NotImplementedException();
+    }
+
+    private void Favorite_OnClick(object? sender, RoutedEventArgs e)
+    {
+        // throw new NotImplementedException();
     }
     
     private void SongControl(object? sender, RoutedEventArgs e)
