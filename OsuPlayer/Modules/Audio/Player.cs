@@ -127,7 +127,7 @@ public class Player
             return;
         }
 
-        if (_currentSong != null && !Repeat && //Core.Instance.Config.IgnoreSongsWithSameNameCheckBox &&
+        if (_currentSong != null && !Repeat && false && //Core.Instance.Config.IgnoreSongsWithSameNameCheckBox &&
             _currentSong.SongName == song.SongName)
             switch (playDirection)
             {
@@ -160,7 +160,7 @@ public class Player
         await TryEnqueueSong(song);
     }
 
-    private Task TryEnqueueSong(MapEntry song)
+    private async Task<Task> TryEnqueueSong(MapEntry song)
     {
         if (SongSource == null || !SongSource.Any())
             return Task.FromException(new NullReferenceException($"{nameof(SongSource)} can't be null or empty"));
@@ -173,6 +173,7 @@ public class Player
             Core.Instance.Engine.Play();
             PlayState = PlayState.Playing;
             Core.Instance.MainWindow.ViewModel.PlayerControl.CurrentSong = song;
+            Core.Instance.MainWindow.ViewModel.PlayerControl.CurrentSongImage = await song.FindBackground();
         }
         catch (Exception ex)
         {
