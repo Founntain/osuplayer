@@ -3,12 +3,19 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:OsuPlayer.ViewModels"
+             xmlns:cv="using:OsuPlayer.Extensions.ValueConverters"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.PlayerControlView">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/SliderStyle.axaml" />
     </UserControl.Styles>
+
+    <UserControl.Resources>
+        <cv:PlayPauseConverter x:Key="PlayPauseConverter" />
+        <cv:ShuffleConverter x:Key="ShuffleConverter" />
+        <cv:RepeatConverter x:Key="RepeatConverter" />
+    </UserControl.Resources>
 
     <Design.DataContext>
         <vm:PlayerControlViewModel />
@@ -74,30 +81,33 @@
             <DockPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock x:Name="CurrentSongTimeText" Text="{Binding CurrentSongTime}" VerticalAlignment="Center"
                            Margin="5"
-                           FontFamily="{DynamicResource NovaMono}" />
+                           FontFamily="{DynamicResource DroidMono}" />
 
                 <Button Width="32" Height="32" CornerRadius="50">
-                    <avalonia:MaterialIcon Kind="RepeatOff" Height="16" Width="16"/>
+                    <avalonia:MaterialIcon Kind="{Binding IsRepeating, Converter={StaticResource RepeatConverter}}"
+                                           Height="19" Width="19" />
                 </Button>
-                
+
                 <Button Width="32" Height="32" CornerRadius="50">
-                    <avalonia:MaterialIcon Kind="SkipBackward" Height="16" Width="16"/>
+                    <avalonia:MaterialIcon Kind="SkipBackward" Height="19" Width="19" />
                 </Button>
 
                 <Button Width="42" Height="42" CornerRadius="50">
-                    <avalonia:MaterialIcon Kind="PlayArrow" Height="32" Width="32"/>
+                    <avalonia:MaterialIcon Kind="{Binding IsPlaying, Converter={StaticResource PlayPauseConverter}}"
+                                           Height="40" Width="40" />
                 </Button>
 
                 <Button Width="32" Height="32" CornerRadius="50">
-                    <avalonia:MaterialIcon Kind="SkipForward" Height="16" Width="16"/>
+                    <avalonia:MaterialIcon Kind="SkipForward" Height="19" Width="19" />
                 </Button>
 
                 <Button Width="32" Height="32" CornerRadius="50">
-                    <avalonia:MaterialIcon Kind="ShuffleDisabled" Height="16" Width="16"/>
+                    <avalonia:MaterialIcon Kind="{Binding IsShuffle, Converter={StaticResource ShuffleConverter}}"
+                                           Height="19" Width="19" />
                 </Button>
 
                 <TextBlock Name="CurrentSongTimeLeft" Text="{Binding CurrentSongLength}" VerticalAlignment="Center"
-                           HorizontalAlignment="Left" FontFamily="{DynamicResource NovaMono}" Margin="5 0" />
+                           HorizontalAlignment="Left" FontFamily="{DynamicResource DroidMono}" Margin="5 0" />
             </DockPanel>
         </Grid>
     </Grid>
