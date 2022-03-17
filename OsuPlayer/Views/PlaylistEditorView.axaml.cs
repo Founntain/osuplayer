@@ -75,7 +75,10 @@ public partial class PlaylistEditorView : UserControl
     {
         var listBox = (ListBox) sender!;
         
-        var vm = (PlaylistEditorViewModel) DataContext!;
+        var vm = (PlaylistEditorViewModel) DataContext;
+
+        if (vm == default) 
+            return;
 
         var songs = listBox.SelectedItems.Cast<MapEntry>().ToList();
         
@@ -86,7 +89,10 @@ public partial class PlaylistEditorView : UserControl
     {
         var listBox = (ListBox) sender!;
         
-        var vm = (PlaylistEditorViewModel) DataContext!;
+        var vm = (PlaylistEditorViewModel) DataContext;
+        
+        if (vm == default) 
+            return;
 
         var songs = listBox.SelectedItems.Cast<MapEntry>().ToList();
         

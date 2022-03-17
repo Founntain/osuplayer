@@ -10,4 +10,8 @@
         <PackageReference Include="ManagedBass" Version="3.1.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="OsuPlayer\Database" />
+    </ItemGroup>
+
 </Project>

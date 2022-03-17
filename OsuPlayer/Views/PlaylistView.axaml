@@ -2,8 +2,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:valueConverters="clr-namespace:OsuPlayer.Extensions.ValueConverters;assembly=OsuPlayer.Extensions"
+             xmlns:entities="clr-namespace:OsuPlayer.IO.Database.Entities;assembly=OsuPlayer.Data"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.PlaylistView">
+    
     <Grid ColumnDefinitions="25*, 75*">
         <Grid Column="0" Margin="5" RowDefinitions="50, *, 50">
             <Panel Grid.RowSpan="3">
@@ -23,12 +26,17 @@
             </Border>
             
             <ListBox Grid.Row="1" Items="{Binding Playlists}" Background="Transparent">
-                
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="entities:Playlist">
+                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
             </ListBox>
             
             <Button Grid.Row="2" Content="playlist editor"  Margin="10 0"
                     VerticalContentAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Stretch"
-                    Command="{Binding OpenPlaylistEditor}"/>
+                    Command="{Binding OpenPlaylistEditor}"
+                    FontWeight="SemiBold"/>
         </Grid>
         
         <Grid Column="1" Margin="5">
