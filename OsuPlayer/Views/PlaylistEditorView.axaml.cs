@@ -6,8 +6,6 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using DynamicData;
-using OsuPlayer.Data.OsuPlayer.Database.Entities;
-using OsuPlayer.IO.Database;
 using OsuPlayer.IO.DbReader;
 using OsuPlayer.ViewModels;
 

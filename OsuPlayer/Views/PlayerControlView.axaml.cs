@@ -4,8 +4,6 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using Avalonia.VisualTree;
-using OsuPlayer.IO;
 using OsuPlayer.ViewModels;
 using ReactiveUI;
 
