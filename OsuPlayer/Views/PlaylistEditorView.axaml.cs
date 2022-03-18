@@ -27,19 +27,7 @@ public partial class PlaylistEditorView : ReactiveUserControl<PlaylistEditorView
 
     private async Task AddSongChecksumToDatabaseIfNotExists(string checksum)
     {
-        await using var ctx = new DatabaseContext();
-        
-        if (ctx.Songs.Any(x => x.Songchecksum == checksum))
-            return;
-
-        var song = new Song
-        {
-            Songchecksum = checksum
-        };
-        
-        await ctx.Songs.AddAsync(song);
-
-        await ctx.SaveChangesAsync();
+        //TODO ADD TO REALM
     }
 
     private async void AddToPlaylist_OnClick(object? sender, RoutedEventArgs e)

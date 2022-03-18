@@ -13,9 +13,6 @@
 
     <ItemGroup>
       <PackageReference Include="Avalonia" Version="0.10.13" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.2" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="6.0.2" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.2" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
       <PackageReference Include="Realm" Version="10.10.0" />
     </ItemGroup>

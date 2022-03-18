@@ -2,7 +2,7 @@
 
 namespace OsuPlayer.IO.Database;
 
-public static class RealmDatabase
+public static partial class RealmDatabase
 {
     private static async Task<Realm> GetRealm()
     {
