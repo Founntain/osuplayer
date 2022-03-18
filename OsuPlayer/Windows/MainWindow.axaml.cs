@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
+using OsuPlayer.IO;
+using OsuPlayer.IO.Storage;
 using OsuPlayer.ViewModels;
 using ReactiveUI;
 
@@ -28,7 +30,9 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
     protected override void OnClosing(CancelEventArgs e)
     {
-        Core.Instance.Config.SaveConfig();
         base.OnClosing(e);
+        using var config = new Config();
+        var configContainer = config.Read();
+        configContainer.Volume = Core.Instance.Player.Volume;
     }
 }

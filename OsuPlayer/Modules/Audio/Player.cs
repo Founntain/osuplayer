@@ -5,12 +5,14 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using System.Timers;
 using Avalonia.Threading;
 using DynamicData;
 using DynamicData.Binding;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.IO;
 using OsuPlayer.IO.DbReader;
+using OsuPlayer.IO.Storage;
 using ReactiveUI;
 
 namespace OsuPlayer.Modules.Audio;
@@ -27,6 +29,8 @@ public class Player
         {
             _currentSong = value;
             CurrentIndex = SongSource!.IndexOf(value);
+            using var config = new Config();
+            config.Read().LastPlayedSong = CurrentIndex;
             Core.Instance.MainWindow.ViewModel!.PlayerControl.CurrentSong = value;
             Core.Instance.MainWindow.ViewModel!.PlayerControl.CurrentSongImage = Task.Run(value!.FindBackground).Result;
         }
@@ -84,12 +88,13 @@ public class Player
         }
     }
 
+    private double _volume = new Config().Read().Volume;
     public double Volume
     {
-        get => Core.Instance.Config.Volume;
+        get => _volume;
         set
         {
-            Core.Instance.Config.Volume = value;
+            _volume = value;
             Core.Instance.Engine.Volume = (float) value / 100;
             Core.Instance.MainWindow.ViewModel!.PlayerControl.RaisePropertyChanged();
             if (value > 0)
@@ -118,8 +123,9 @@ public class Player
             .WhenAnyValue(x => x.FilterText)
             .Throttle(TimeSpan.FromMilliseconds(20))
             .Select(BuildFilter);
-        
-        var songEntries = await SongImporter.ImportSongs(Core.Instance.Config.OsuPath!)!;
+
+        using var config = new Config();
+        var songEntries = await SongImporter.ImportSongs((await config.ReadAsync()).OsuPath!)!;
         if (songEntries == null) return;
         _songSource.AddRange(songEntries);
         
@@ -129,6 +135,26 @@ public class Player
 
         Core.Instance.MainWindow.ViewModel.HomeView.RaisePropertyChanged(nameof(Core.Instance.MainWindow.ViewModel.HomeView.SongEntries));
         Core.Instance.MainWindow.ViewModel!.HomeView.SongsLoading = false;
+
+        if (SongSource == null || !SongSource.Any()) return;
+        
+        using var cfg = new Config();
+        var configContainer = await cfg.ReadAsync();
+        switch (configContainer.StartupSong)
+        {
+            case StartupSong.FirstSong:
+                await Play(SongSource[0]);
+                break;
+            case StartupSong.LastPlayed:
+                if (configContainer.LastPlayedSong < SongSource.Count)
+                    await Play(SongSource[configContainer.LastPlayedSong]);
+                else
+                    await Play(SongSource[0]);
+                break;
+            case StartupSong.RandomSong:
+                await Play(SongSource[new Random().Next(SongSource.Count)]);
+                break;
+        }
     }
 
     public async Task Play(MapEntry? song, PlayDirection playDirection = PlayDirection.Forward)

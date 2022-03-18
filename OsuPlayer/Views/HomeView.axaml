@@ -109,7 +109,11 @@
                     </DataTemplate>
                 </ListBox.DataTemplates>
             </ListBox>
-            <TextBlock Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Text="Songs loading please wait" IsVisible="{Binding SongsLoading}"/>
+            <StackPanel Grid.Row="1" IsVisible="{Binding SongsLoading}" IsEnabled="{Binding SongsLoading}"
+                        VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="10">
+                <TextBlock Text="Songs loading... please wait"/>
+                <ProgressBar IsIndeterminate="True"/>
+            </StackPanel>
         </Grid>
     </Grid>
 </UserControl>

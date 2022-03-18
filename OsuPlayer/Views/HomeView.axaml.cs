@@ -2,7 +2,9 @@
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
+using OsuPlayer.IO;
 using OsuPlayer.IO.DbReader;
+using OsuPlayer.IO.Storage;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.ViewModels;
 using ReactiveUI;
@@ -24,7 +26,8 @@ public partial class HomeView : ReactiveUserControl<HomeViewModel>
 
     private async void HomeViewInitialized()
     {
-        var osuPath = Core.Instance.Config.OsuPath;
+        using var config = new Config();
+        var osuPath = (await config.ReadAsync()).OsuPath;
 
         if (string.IsNullOrWhiteSpace(osuPath))
         {

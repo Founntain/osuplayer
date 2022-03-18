@@ -3,6 +3,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:classes="clr-namespace:OsuPlayer.Data.OsuPlayer.Classes;assembly=OsuPlayer.Extensions"
+             xmlns:extensions="clr-namespace:OsuPlayer.Extensions;assembly=OsuPlayer.Extensions"
+             xmlns:storage="clr-namespace:OsuPlayer.IO.Storage;assembly=OsuPlayer.IO"
+             xmlns:playlists="clr-namespace:OsuPlayer.IO.Playlists;assembly=OsuPlayer.IO"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.PlaylistView">
     
@@ -26,7 +29,7 @@
             
             <ListBox Grid.Row="1" Items="{Binding Playlists}" Background="Transparent">
                 <ListBox.ItemTemplate>
-                    <DataTemplate DataType="classes:Playlist">
+                    <DataTemplate DataType="playlists:Playlist">
                         <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>

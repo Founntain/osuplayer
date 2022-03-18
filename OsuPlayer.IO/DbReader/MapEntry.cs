@@ -21,6 +21,9 @@ public class MapEntry
     public string TitleString => GetTitle();
     public string TitleUnicode;
     public string Fullpath;
+    public string FolderPath;
+
+    public bool UseUnicode;
     
     public string SongName => GetSongName();
 
@@ -31,21 +34,21 @@ public class MapEntry
 
     private string GetArtist()
     {
-        if (!Config.GetConfigInstance().UseSongNameUnicode) return Artist;
+        if (!UseUnicode) return Artist;
 
         return !string.IsNullOrWhiteSpace(ArtistUnicode) ? ArtistUnicode : Artist;
     }
 
     private string GetTitle()
     {
-        if (!Config.GetConfigInstance().UseSongNameUnicode) return Title;
+        if (!UseUnicode) return Title;
 
         return !string.IsNullOrWhiteSpace(TitleUnicode) ? TitleUnicode : Title;
     }
 
     private string GetSongName()
     {
-        if (!Config.GetConfigInstance().UseSongNameUnicode) return $"{Artist} - {Title}";
+        if (!UseUnicode) return $"{Artist} - {Title}";
 
         if (!string.IsNullOrWhiteSpace(ArtistUnicode) && !string.IsNullOrWhiteSpace(TitleUnicode))
             return $"{ArtistUnicode} - {TitleUnicode}";
@@ -60,13 +63,11 @@ public class MapEntry
     
     public async Task<Bitmap?> FindBackground()
     {
-        var path = $"{Config.GetConfigInstance().OsuSongsPath}\\{FolderName}";
-
         var eventCount = 0;
 
         // ReSharper disable once AssignNullToNotNullAttribute
 
-        var files = Directory.GetFiles(path, "*.osu");
+        var files = Directory.GetFiles(FolderPath, "*.osu");
 
         if (files.Length == 0)
             return null;
@@ -100,9 +101,9 @@ public class MapEntry
 
         var fileName = background.Split(',')[2].Replace("\"", string.Empty);
 
-        if (File.Exists(Path.Combine(path, fileName)))
+        if (File.Exists(Path.Combine(FolderPath, fileName)))
         {
-            await using var stream = File.OpenRead(Path.Combine(path, fileName));
+            await using var stream = File.OpenRead(Path.Combine(FolderPath, fileName));
             return await Task.Run(() => new Bitmap(stream));
         }
         else

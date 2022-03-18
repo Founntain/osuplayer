@@ -40,7 +40,7 @@ public class PlayerControlViewModel : BaseViewModel, IActivatableViewModel
     public double Volume
     {
         get => Core.Instance.Player.Volume;
-        set { Core.Instance.Player.Volume = value; }
+        set => Core.Instance.Player.Volume = value;
     }
 
     public bool IsShuffle

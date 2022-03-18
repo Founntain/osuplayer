@@ -1,3 +1,5 @@
+using OsuPlayer.IO.Storage;
+
 namespace OsuPlayer.IO.DbReader;
 
 public class DbReader : BinaryReader
@@ -13,6 +15,9 @@ public class DbReader : BinaryReader
 
         if (!File.Exists(dbLoc)) return null;
 
+        using var config = new Config();
+        var unicode = (await config.ReadAsync()).UseSongNameUnicode;
+        
         await using var file = File.OpenRead(dbLoc);
         using var reader = new DbReader(file);
         var ver = reader.ReadInt32();
@@ -34,6 +39,7 @@ public class DbReader : BinaryReader
 
             MapEntry mapEntry = null;
             await Task.Run(() => ReadFromStream(reader, ver, osuPath, out mapEntry));
+            mapEntry.UseUnicode = unicode;
             beatmaps.Add(mapEntry);
         }
 
@@ -134,6 +140,7 @@ public class DbReader : BinaryReader
         r.ReadInt32(); //LastEditTime
         r.ReadByte(); //ManiaScrollSpeed
         mapEntry.Fullpath = $"{osuPath}\\Songs\\{mapEntry.FolderName}\\{mapEntry.AudioFileName}";
+        mapEntry.FolderPath = $"{osuPath}\\Songs\\{mapEntry.FolderName}";
     }
 
     public static List<Collection>? ReadCollections(string osuPath)

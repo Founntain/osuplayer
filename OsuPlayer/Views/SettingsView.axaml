@@ -2,9 +2,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:OsuPlayer.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.SettingsView"
              Initialized="SettingsView_OnInitialized">
+    <Design.DataContext>
+        <vm:SettingsViewModel/>
+    </Design.DataContext>
+    
     <Grid ColumnDefinitions="50*, 50*">
         
         <Grid Column="0" RowDefinitions="Auto, Auto" Margin="10">
@@ -31,6 +36,11 @@
                 <StackPanel Spacing="5">
                     <TextBlock Text="Window Blur Method" />
                     <ComboBox SelectedItem="{Binding SelectedTransparencyLevel}" Items="{Binding WindowTransparencyLevels}" HorizontalAlignment="Stretch" />
+                </StackPanel>
+                
+                <StackPanel Spacing="5">
+                    <TextBlock Text="Startup song" />
+                    <ComboBox SelectedItem="{Binding SelectedStartupSong}" Items="{Binding StartupSongs}" HorizontalAlignment="Stretch" />
                 </StackPanel>
             </StackPanel>
         </Grid>

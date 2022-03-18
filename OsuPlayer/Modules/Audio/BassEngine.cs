@@ -10,6 +10,8 @@ using ManagedBass.DirectX8;
 using ManagedBass.Fx;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Extensions.Equalizer;
+using OsuPlayer.IO;
+using OsuPlayer.IO.Storage;
 
 namespace OsuPlayer.Modules.Audio;
 
@@ -378,8 +380,9 @@ public sealed class BassEngine
                 SampleFrequency = info.Frequency;
                 Difference = 44100 - SampleFrequency;
                 //SetEqBands();
-
-                SetDeviceInfo(Core.Instance.Config.SelectedOutputDevice);
+                
+                using var config = new Config();
+                SetDeviceInfo(config.Read().SelectedOutputDevice);
 
 
                 // Set the stream to call Stop() when it ends.
@@ -436,7 +439,8 @@ public sealed class BassEngine
     /// <returns></returns>
     public void SetAllEq(double[] gain)
     {
-        if (!Core.Instance.Config.IsEqEnabled || _paramEq == null) return;
+        using var config = new Config();
+        if (!config.Read().IsEqEnabled || _paramEq == null) return;
         for (var i = 0; i < gain.Length; i++)
             SetValue(i, gain[i]);
         //Bass.BASS_FXSetParameters(EQStream[i], ParamEq);
@@ -470,7 +474,8 @@ public sealed class BassEngine
 
         var result = Bass.ChannelSetDevice(FxStream, index + 1);
 
-        Core.Instance.Config.SelectedOutputDevice = index;
+        using var config = new Config();
+        config.Read().SelectedOutputDevice = index;
 
         Console.WriteLine($"SET: {index} | {result} | {Bass.LastError}");
     }

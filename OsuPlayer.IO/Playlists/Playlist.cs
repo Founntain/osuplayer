@@ -1,4 +1,4 @@
-﻿namespace OsuPlayer.Data.OsuPlayer.Classes;
+﻿namespace OsuPlayer.IO.Playlists;
 
 public class Playlist
 {

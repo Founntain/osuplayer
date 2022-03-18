@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reactive.Disposables;
+using OsuPlayer.IO;
 using OsuPlayer.IO.DbReader;
+using OsuPlayer.IO.Storage;
 using ReactiveUI;
 
 namespace OsuPlayer.ViewModels;
@@ -21,7 +23,7 @@ public class HomeViewModel : BaseViewModel, IActivatableViewModel
     private bool _songsLoading;
     public bool SongsLoading
     {
-        get => Core.Instance.Config.OsuPath != null && _songsLoading;
+        get => new Config().Read().OsuPath != null && _songsLoading;
         set => this.RaiseAndSetIfChanged(ref _songsLoading, value);
     }
 }
