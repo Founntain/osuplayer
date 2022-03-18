@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.ReactiveUI;
 using DynamicData;
 using OsuPlayer.Data.OsuPlayer.Database.Entities;
 using OsuPlayer.IO.Database;
@@ -12,7 +13,7 @@ using OsuPlayer.ViewModels;
 
 namespace OsuPlayer.Views;
 
-public partial class PlaylistEditorView : UserControl
+public partial class PlaylistEditorView : ReactiveUserControl<PlaylistEditorViewModel>
 {
     public PlaylistEditorView()
     {
@@ -43,11 +44,9 @@ public partial class PlaylistEditorView : UserControl
 
     private async void AddToPlaylist_OnClick(object? sender, RoutedEventArgs e)
     {
-        var vm = (PlaylistEditorViewModel) DataContext!;
+        var playlist = ViewModel!.Playlist;
 
-        var playlist = vm.Playlist;
-
-        foreach (var song in vm.SelectedSonglistItems)
+        foreach (var song in ViewModel!.SelectedSonglistItems)
         {
             if (playlist.Contains(song))
                 continue;
@@ -57,18 +56,16 @@ public partial class PlaylistEditorView : UserControl
             await AddSongChecksumToDatabaseIfNotExists(song.BeatmapChecksum);
         }
 
-        vm.Playlist = new ObservableCollection<MapEntry>(playlist);
+        ViewModel!.Playlist = new ObservableCollection<MapEntry>(playlist);
     }
     
     private async void RemoveFromPlaylist_OnClick(object? sender, RoutedEventArgs e)
     {
-        var vm = (PlaylistEditorViewModel) DataContext!;
+        var playlist = ViewModel!.Playlist;
 
-        var playlist = vm.Playlist;
+        playlist.RemoveMany(ViewModel.SelectedPlaylistItems);
 
-        playlist.RemoveMany(vm.SelectedPlaylistItems);
-
-        vm.Playlist = new ObservableCollection<MapEntry>(playlist);
+        ViewModel.Playlist = new ObservableCollection<MapEntry>(playlist);
     }
 
     private void Songlist_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -82,20 +79,15 @@ public partial class PlaylistEditorView : UserControl
 
         var songs = listBox.SelectedItems.Cast<MapEntry>().ToList();
         
-        vm.SelectedSonglistItems = songs;
+        ViewModel!.SelectedSonglistItems = songs;
     }
 
     private void Playlist_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         var listBox = (ListBox) sender!;
-        
-        var vm = (PlaylistEditorViewModel) DataContext;
-        
-        if (vm == default) 
-            return;
 
         var songs = listBox.SelectedItems.Cast<MapEntry>().ToList();
         
-        vm.SelectedPlaylistItems = songs;
+        ViewModel!.SelectedPlaylistItems = songs;
     }
 }
