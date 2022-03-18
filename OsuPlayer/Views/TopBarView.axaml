@@ -21,7 +21,7 @@
             <!--Playlist Button-->
             <Button Name="PlaylistNavigation" Width="32" Height="32" CornerRadius="50" Click="Navigation_Clicked"
                     Background="Transparent">
-                <avalonia:MaterialIcon Kind="Menu" Height="24" Width="24" />
+                <avalonia:MaterialIcon Kind="PlaylistNote" Height="24" Width="24" />
             </Button>
             <!--Home Button-->
             <Button Name="HomeNavigation" Width="42" Height="42" CornerRadius="50" Click="Navigation_Clicked"

@@ -1,4 +1,6 @@
-﻿namespace OsuPlayer.Extensions;
+﻿using System.Collections.ObjectModel;
+
+namespace OsuPlayer.Extensions;
 
 public static class Extensions
 {
@@ -13,5 +15,10 @@ public static class Extensions
         timeStr += time.ToString(@"ss");
 
         return timeStr;
+    }
+
+    public static ObservableCollection<T> ToObservableCollection<T>(this ICollection<T> source)
+    {
+        return new ObservableCollection<T>(source);
     }
 }

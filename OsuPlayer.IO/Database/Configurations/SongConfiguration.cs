@@ -4,12 +4,12 @@ using OsuPlayer.Data.OsuPlayer.Database.Entities;
 
 namespace OsuPlayer.IO.Database.Configurations;
 
-public class PlaylistConfiguration : IEntityTypeConfiguration<Playlist>
+public class SongConfiguration : IEntityTypeConfiguration<Song>
 {
-    public void Configure(EntityTypeBuilder<Playlist> builder)
+    public void Configure(EntityTypeBuilder<Song> builder)
     {
         builder.HasKey(x => x.Id);
 
-        builder.HasMany(x => x.Songs).WithMany(x => x.Playlists);
+        builder.HasMany(x => x.Playlists).WithMany(x => x.Songs);
     }
 }
