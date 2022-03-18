@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using OsuPlayer.IO.Database.Entities;
+using OsuPlayer.Data.OsuPlayer.Database.Entities;
 
 namespace OsuPlayer.IO.Database.Configurations;
 

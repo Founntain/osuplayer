@@ -3,9 +3,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:valueConverters="clr-namespace:OsuPlayer.Extensions.ValueConverters;assembly=OsuPlayer.Extensions"
-             xmlns:entities="clr-namespace:OsuPlayer.IO.Database.Entities;assembly=OsuPlayer.Data"
+             xmlns:entities="clr-namespace:OsuPlayer.Data.OsuPlayer.Database.Entities;assembly=OsuPlayer.Data"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="OsuPlayer.Views.PlaylistView">
+             x:Class="OsuPlayer.Views.PlaylistView"
+             Initialized="PlaylistView_OnInitialized">
     
     <Grid ColumnDefinitions="25*, 75*">
         <Grid Column="0" Margin="5" RowDefinitions="50, *, 50">

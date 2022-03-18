@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OsuPlayer.IO.Database.Entities;
+using OsuPlayer.Data.OsuPlayer.Database.Entities;
 
 namespace OsuPlayer.IO.Database;
 
@@ -11,7 +11,6 @@ public static class ModelBuilderExtensions
         {
             new Playlist
             {
-                Id = 1,
                 Name = "Favorites"
             }
         });

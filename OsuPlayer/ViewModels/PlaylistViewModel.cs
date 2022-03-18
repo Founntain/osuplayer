@@ -1,8 +1,8 @@
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Reactive.Disposables;
+using OsuPlayer.Data.OsuPlayer.Database.Entities;
 using OsuPlayer.IO.Database;
-using OsuPlayer.IO.Database.Entities;
 using ReactiveUI;
 
 namespace OsuPlayer.ViewModels;
@@ -28,13 +28,6 @@ public class PlaylistViewModel : BaseViewModel, IActivatableViewModel
     {
         Activator = new ViewModelActivator();
         this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
-
-        using (var context = new DatabaseContext())
-        {
-            var playlists = context.Playlist.ToArray();
-
-            Playlists = new ObservableCollection<Playlist>(playlists);
-        }
     }
 
     public ViewModelActivator Activator { get; }
