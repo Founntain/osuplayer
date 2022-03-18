@@ -51,7 +51,7 @@ Best practice is, that we discuss (new) features and if they are needed. So don'
 |--------------------------------------------------------------|---------------------------------------------------|
 | [AvaloniaUI](https://github.com/AvaloniaUI/Avalonia)         | The UI-Framework                                  |
 | [ManagedBass](https://github.com/ManagedBass/ManagedBass)    | The Audio-Engine                                  |
-| [EntityFramework](https://docs.microsoft.com/de-de/ef/core/) | Used for our local database                       |
+| [Realm](https://realm.io)                                    | Used for our local database                       |
 | [Newtonsoft.Json](https://www.newtonsoft.com/json)           | Used for reading and editing various config files |
 
 ## osu!player todo list
