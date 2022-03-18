@@ -47,13 +47,5 @@ public class MainWindowViewModel : BaseViewModel, IScreen
 
     public ObservableCollection<AudioDevice> OutputDeviceComboboxItems { get; set; }
 
-    public ReadOnlyObservableCollection<MapEntry> FilteredSongEntries
-    {
-        get => Core.Instance.Player.FilteredSongEntries!;
-        set => Core.Instance.Player.FilteredSongEntries = value;
-    }
-
-    public IEnumerable<MapEntry> SongEntries => Core.Instance.Player.SongSource!;
-
     public RoutingState Router { get; } = new();
 }

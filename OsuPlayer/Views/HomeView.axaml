@@ -2,11 +2,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:OsuPlayer.ViewModels"
              xmlns:io="clr-namespace:OsuPlayer.IO.DbReader;assembly=OsuPlayer.IO"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.HomeView">
 
+    <Design.DataContext>
+        <vm:HomeViewModel/>
+    </Design.DataContext>
+    
     <Grid RowDefinitions="Auto, 50*" ColumnDefinitions="50*, 50*" Background="Transparent">
         <!--User Grid-->
         <Grid Row="0" Column="0" ColumnDefinitions="Auto, *" Margin="10">
@@ -79,7 +84,7 @@
                 <TextBlock Text="Your songs" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Center" />
             </Border>
 
-            <ListBox Grid.Row="1" Items="{Binding $parent[Window].DataContext.SongEntries}" Background="Transparent"
+            <ListBox Grid.Row="1" Items="{Binding SongEntries}" Background="Transparent"
                      DoubleTapped="InputElement_OnDoubleTapped">
                 <ListBox.DataTemplates>
                     <DataTemplate DataType="io:MapEntry">
@@ -104,6 +109,7 @@
                     </DataTemplate>
                 </ListBox.DataTemplates>
             </ListBox>
+            <TextBlock Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Text="Songs loading please wait" IsVisible="{Binding SongsLoading}"/>
         </Grid>
     </Grid>
 </UserControl>
