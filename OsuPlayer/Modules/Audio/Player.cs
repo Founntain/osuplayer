@@ -5,15 +5,13 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using System.Timers;
 using Avalonia.Threading;
 using DynamicData;
 using DynamicData.Binding;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.IO;
 using OsuPlayer.IO.DbReader;
-using OsuPlayer.IO.Playlists;
-using OsuPlayer.IO.Storage;
+using OsuPlayer.IO.Storage.Config;
 using ReactiveUI;
 
 namespace OsuPlayer.Modules.Audio;

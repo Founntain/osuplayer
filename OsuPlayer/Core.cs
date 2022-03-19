@@ -1,6 +1,4 @@
-using OsuPlayer.Extensions;
-using OsuPlayer.IO;
-using OsuPlayer.IO.Storage;
+using OsuPlayer.IO.Storage.Config;
 using OsuPlayer.Modules.Audio;
 using MainWindow = OsuPlayer.Windows.MainWindow;
 

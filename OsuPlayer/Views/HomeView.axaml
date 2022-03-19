@@ -2,20 +2,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="using:OsuPlayer.ViewModels"
              xmlns:io="clr-namespace:OsuPlayer.IO.DbReader;assembly=OsuPlayer.IO"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:views="clr-namespace:OsuPlayer.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.HomeView">
-
+    
     <Design.DataContext>
-        <vm:HomeViewModel/>
+        <views:HomeViewModel/>
     </Design.DataContext>
     
     <Grid RowDefinitions="Auto, 50*" ColumnDefinitions="50*, 50*" Background="Transparent">
         <!--User Grid-->
-        <Grid Row="0" Column="0" ColumnDefinitions="Auto, *" Margin="10">
-            <Panel Grid.ColumnSpan="2">
+        <Grid Row="0" Column="0" ColumnDefinitions="Auto, Auto, *" Margin="10">
+            <Panel Grid.ColumnSpan="3">
                 <ExperimentalAcrylicBorder IsHitTestVisible="False">
                     <ExperimentalAcrylicBorder.Material>
                         <ExperimentalAcrylicMaterial
@@ -31,14 +31,21 @@
                     CornerRadius="50" Width="100" Height="100" BorderThickness="2" BorderBrush="White"
                     HorizontalAlignment="Left" VerticalAlignment="Center">
                 <Border.Background>
+                    <ImageBrush Source="{Binding ProfilePicture}" RenderOptions.BitmapInterpolationMode="HighQuality" />
                 </Border.Background>
             </Border>
 
             <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                <TextBlock Text="Founntain" FontSize="28" />
-                <TextBlock Text="6,302 songs played" />
-                <TextBlock Text="Level 22 | Total XP: 6096" />
-                <TextBlock Text="851 XP / 857 XP" />
+                <TextBlock Text="{Binding CurrentUser.Name}" Foreground="{Binding CurrentUser.RoleColor}" FontSize="28" />
+                <TextBlock Text="{Binding CurrentUser.SongsPlayedString}" FontStyle="Italic" />
+                <TextBlock Text="{Binding CurrentUser.LevelAndTotalXpString}" FontStyle="Italic" />
+                <TextBlock Text="{Binding CurrentUser.LevelProgressString}" FontStyle="Italic" />
+            </StackPanel>
+            
+            <StackPanel Grid.Column="2" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                <Button Name="HomeNavigation" Width="42" Height="42" CornerRadius="50" Background="Transparent" Click="LoginBtn_OnClick">
+                    <avalonia:MaterialIcon Kind="Login" Height="28" Width="28" />
+                </Button>
             </StackPanel>
         </Grid>
 
@@ -81,7 +88,7 @@
             </Panel>
 
             <Border Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#7F000000">
-                <TextBlock Text="Your songs" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                <TextBlock Text="your songs" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Center" />
             </Border>
 
             <ListBox Grid.Row="1" Items="{Binding SongEntries}" Background="Transparent"
@@ -92,7 +99,7 @@
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding TitleString}" FontSize="20" 
                                        FontWeight="SemiBold" />
                             <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding ArtistString}"
-                                       FontSize="14" Foreground="#FFCCCCCC" FontWeight="Medium" />
+                                       FontSize="14" Foreground="#FFCCCCCC" FontWeight="SemiBold" />
                             
                             <Grid Row="0" RowSpan="2" Column="1" ColumnDefinitions="50*, 50*">
                                 <Button Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"

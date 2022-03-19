@@ -4,10 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:OsuPlayer.ViewModels"
              xmlns:io="clr-namespace:OsuPlayer.IO.DbReader;assembly=OsuPlayer.IO"
+             xmlns:views="clr-namespace:OsuPlayer.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.SearchView">
     <Design.DataContext>
-        <vm:SearchViewModel/>
+        <views:SearchViewModel/>
     </Design.DataContext>
     
     <Grid RowDefinitions="Auto, *">
