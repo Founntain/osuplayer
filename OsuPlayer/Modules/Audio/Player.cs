@@ -94,10 +94,10 @@ public class Player
     private double _volume = new Config().Read().Volume;
     public double Volume
     {
-        get => Core.Instance.Config.Volume;
+        get => _volume;
         set
         {
-            Core.Instance.Config.Volume = value;
+            _volume = value;
             Core.Instance.Engine.Volume = (float) value / 100;
             Core.Instance.MainWindow.ViewModel!.PlayerControl.RaisePropertyChanged();
             if (value > 0)
