@@ -2,13 +2,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:classes="clr-namespace:OsuPlayer.Data.OsuPlayer.Classes;assembly=OsuPlayer.Extensions"
-             xmlns:extensions="clr-namespace:OsuPlayer.Extensions;assembly=OsuPlayer.Extensions"
-             xmlns:storage="clr-namespace:OsuPlayer.IO.Storage;assembly=OsuPlayer.IO"
              xmlns:playlists="clr-namespace:OsuPlayer.IO.Playlists;assembly=OsuPlayer.IO"
+             xmlns:dbReader="clr-namespace:OsuPlayer.IO.DbReader;assembly=OsuPlayer.IO"
+             xmlns:valueConverters="clr-namespace:OsuPlayer.ValueConverters"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="OsuPlayer.Views.PlaylistView">
-    
+             x:Class="OsuPlayer.Views.PlaylistView"
+             Initialized="PlaylistView_OnInitialized">
+
+    <UserControl.Resources>
+        <valueConverters:PlaylistValueConverter x:Key="PlaylistValueConverter" />
+    </UserControl.Resources>
     <Grid ColumnDefinitions="25*, 75*">
         <Grid Column="0" Margin="5" RowDefinitions="50, *, 50">
             <Panel Grid.RowSpan="3">
@@ -27,7 +31,7 @@
                 <TextBlock Text="your playlists" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Center" />
             </Border>
             
-            <ListBox Grid.Row="1" Items="{Binding Playlists}" Background="Transparent">
+            <ListBox Grid.Row="1" SelectedItem="{Binding SelectedPlaylist}" Items="{Binding Playlists}" Background="Transparent">
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="playlists:Playlist">
                         <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
@@ -54,8 +58,22 @@
                 </ExperimentalAcrylicBorder>
             </Panel>
             
-            <ListBox Background="Transparent">
-                
+            <ListBox Background="Transparent" Items="{Binding SelectedPlaylist.Songs, Converter={StaticResource PlaylistValueConverter}}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="dbReader:MapEntry">
+                        <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto">
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding TitleString}" FontSize="20" 
+                                       FontWeight="SemiBold" />
+                            <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding ArtistString}"
+                                       FontSize="14" Foreground="#FFCCCCCC" FontWeight="Medium" />
+                            
+                            <TextBlock Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Text="{Binding TotalTimeString}"
+                                       FontSize="20" FontWeight="Light" 
+                                       VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
             </ListBox>
         </Grid>
     </Grid>
