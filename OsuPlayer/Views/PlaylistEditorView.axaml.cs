@@ -3,8 +3,6 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using Microsoft.CodeAnalysis.Operations;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using OsuPlayer.Extensions;
 using OsuPlayer.IO.DbReader;
 using OsuPlayer.IO.Playlists;
@@ -31,7 +29,7 @@ public partial class PlaylistEditorView : ReactiveUserControl<PlaylistEditorView
         {
             if (ViewModel.Playlists.Count > 0)
             {
-                ViewModel.CurrentSelectedPlaylist = ViewModel.Playlists[0];
+                ViewModel.CurrentSelectedPlaylist = ViewModel.Playlists.Items.ElementAt(0);
             }
             else
             {
@@ -49,15 +47,11 @@ public partial class PlaylistEditorView : ReactiveUserControl<PlaylistEditorView
             playlist.Add(song.BeatmapChecksum);
         }
 
-        var x = new Playlist
+        ViewModel.CurrentSelectedPlaylist = new()
         {
             Name = ViewModel.CurrentSelectedPlaylist.Name,
             Songs = playlist
         };
-
-        if (x == null) return;
-        
-        ViewModel.CurrentSelectedPlaylist = x;
         
         await PlaylistManager.ReplacePlaylistAsync(ViewModel.CurrentSelectedPlaylist);
 
@@ -70,15 +64,15 @@ public partial class PlaylistEditorView : ReactiveUserControl<PlaylistEditorView
         {
             if (ViewModel.Playlists.Count > 0)
             {
-                ViewModel.CurrentSelectedPlaylist = ViewModel.Playlists[0];
+                ViewModel.CurrentSelectedPlaylist = ViewModel.Playlists.Items.ElementAt(0);
             }
             else
             {
                 return;
             }
         }
-        
-        var playlist = ViewModel!.Playlist;
+
+        var playlist = ViewModel!.CurrentSelectedPlaylist.Songs;
 
         foreach (var song in ViewModel.SelectedPlaylistItems)
         {
@@ -88,15 +82,15 @@ public partial class PlaylistEditorView : ReactiveUserControl<PlaylistEditorView
             playlist.Remove(song.BeatmapChecksum);
         }
 
-        var name = ViewModel.CurrentSelectedPlaylist.Name;
-        
-        ViewModel.CurrentSelectedPlaylist = new Playlist
+        ViewModel.CurrentSelectedPlaylist = new()
         {
-            Name = name,
-            Songs = playlist.ToObservableCollection()
+            Name = ViewModel.CurrentSelectedPlaylist.Name,
+            Songs = playlist
         };
         
         await PlaylistManager.ReplacePlaylistAsync(ViewModel.CurrentSelectedPlaylist);
+
+        ViewModel.RaisePropertyChanged(nameof(ViewModel.CurrentSelectedPlaylist));
     }
 
     private void Songlist_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -125,10 +119,5 @@ public partial class PlaylistEditorView : ReactiveUserControl<PlaylistEditorView
         var songs = listBox.SelectedItems.Cast<MapEntry>().ToList();
         
         vm.SelectedPlaylistItems = songs;
-    }
-
-    private void SelectingItemsControl_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        var x = 0;
     }
 }

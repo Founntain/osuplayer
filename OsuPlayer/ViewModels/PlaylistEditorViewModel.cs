@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reactive.Disposables;
+using DynamicData;
 using OsuPlayer.IO.DbReader;
 using OsuPlayer.IO.Playlists;
 using ReactiveUI;
@@ -11,7 +13,7 @@ public class PlaylistEditorViewModel : BaseViewModel, IActivatableViewModel
 {
     private Playlist _currentSelectedPlaylist;
     private ObservableCollection<string> _playlist;
-    private ObservableCollection<Playlist> _playlists;
+    private SourceList<Playlist> _playlists;
     
     private List<MapEntry> _selectedSonglistItems;
     private List<MapEntry> _selectedPlaylistItems;
@@ -26,7 +28,7 @@ public class PlaylistEditorViewModel : BaseViewModel, IActivatableViewModel
         }
     }
 
-    public ObservableCollection<Playlist> Playlists
+    public SourceList<Playlist> Playlists
     {
         get => _playlists;
         set => this.RaiseAndSetIfChanged(ref _playlists, value);
@@ -35,13 +37,14 @@ public class PlaylistEditorViewModel : BaseViewModel, IActivatableViewModel
     public PlaylistEditorViewModel()
     {
         Activator = new ViewModelActivator();
+        
         this.WhenActivated(disposables =>
         {
             Disposable.Create(() => { }).DisposeWith(disposables);
 
             if (Playlists.Count > 0 && CurrentSelectedPlaylist == default)
             {
-                CurrentSelectedPlaylist = Playlists[0];
+                CurrentSelectedPlaylist = Playlists.Items.ElementAt(0);
             }
         });
 

@@ -4,6 +4,13 @@ namespace OsuPlayer.IO.Playlists;
 
 public static class PlaylistManager
 {
+    public static IList<Playlist> GetAllPlaylists()
+    {
+        var ps = GetPlaylistStorage();
+
+        return ps.Playlists;
+    }
+    
     public static async Task<IList<Playlist>> GetAllPlaylistsAsync()
     {
         var ps = await GetPlaylistStorageAsync();
@@ -18,6 +25,22 @@ public static class PlaylistManager
         await File.WriteAllTextAsync("data/playlists.json", data);
     }
 
+    public static PlaylistStorage GetPlaylistStorage()
+    {
+        if (!File.Exists("data/playlists.json")) return new(true);
+        
+        var data = File.ReadAllText("data/playlists.json");
+
+        try
+        {
+            return JsonConvert.DeserializeObject<PlaylistStorage>(data) ?? new(true);
+        }
+        catch (Exception)
+        {
+            return new(true);
+        }
+    }
+    
     public static async Task<PlaylistStorage> GetPlaylistStorageAsync()
     {
         if (!File.Exists("data/playlists.json")) return new(true);

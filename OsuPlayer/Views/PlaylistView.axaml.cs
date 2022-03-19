@@ -21,6 +21,6 @@ public partial class PlaylistView : ReactiveUserControl<PlaylistViewModel>
 
     private async void PlaylistView_OnInitialized(object? sender, EventArgs e)
     {
-        ViewModel.Playlists = (await PlaylistManager.GetAllPlaylistsAsync()).ToObservableCollection();
+       
     }
 }

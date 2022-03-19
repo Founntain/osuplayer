@@ -35,7 +35,7 @@
             </DockPanel>
             
             <DockPanel Grid.Column="1" VerticalAlignment="Center" Margin="10">
-                <ComboBox Items="{Binding Playlists}" SelectedItem="{Binding CurrentSelectedPlaylist}" Margin="0 0 10 0" SelectionChanged="SelectingItemsControl_OnSelectionChanged"/>
+                <ComboBox Items="{Binding Playlists}" SelectedItem="{Binding CurrentSelectedPlaylist}" Margin="0 0 10 0"/>
                 
                 <Button Name="CreatePlaylist" Width="38" Height="38" CornerRadius="50"
                         Background="Transparent">

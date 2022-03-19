@@ -26,7 +26,17 @@ public class PlaylistViewModel : BaseViewModel, IActivatableViewModel
     public PlaylistViewModel()
     {
         Activator = new ViewModelActivator();
-        this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
+        this.WhenActivated(disposables =>
+        {
+            Disposable.Create(() => { }).DisposeWith(disposables);
+
+            Playlists = PlaylistManager.GetAllPlaylists().ToObservableCollection();
+            
+            if (Playlists.Count > 0 && SelectedPlaylist == default)
+            {
+                SelectedPlaylist = Playlists[0];
+            }
+        });
         
         
     }
@@ -37,7 +47,7 @@ public class PlaylistViewModel : BaseViewModel, IActivatableViewModel
     {
         var ps = await PlaylistManager.GetPlaylistStorageAsync();
 
-        Core.Instance.MainWindow.ViewModel!.PlaylistEditorViewModel.Playlists = ps.Playlists.ToObservableCollection();
+        Core.Instance.MainWindow.ViewModel!.PlaylistEditorViewModel.Playlists = ps.Playlists.ToSourceList();
         
         Core.Instance.MainWindow.ViewModel!.MainView = Core.Instance.MainWindow.ViewModel.PlaylistEditorViewModel;
     }
