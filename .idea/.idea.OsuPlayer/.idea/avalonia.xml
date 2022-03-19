@@ -4,8 +4,11 @@
     <option name="projectPerEditor">
       <map>
         <entry key="OsuPlayer/App.axaml" value="OsuPlayer/OsuPlayer.csproj" />
-        <entry key="OsuPlayer/Styles/Slider/HorizontalSlider/OsuPlayerHorizontalSliderBgStyle.axaml" value="OsuPlayer/OsuPlayer.csproj" />
-        <entry key="OsuPlayer/Styles/Slider/HorizontalSlider/OsuPlayerHorizontalSliderBgStyle.xaml" value="OsuPlayer/OsuPlayer.csproj" />
+        <entry key="OsuPlayer/Styles/Accents/AccentColors.axaml" value="OsuPlayer/OsuPlayer.csproj" />
+        <entry key="OsuPlayer/Styles/Accents/Base.axaml" value="OsuPlayer/OsuPlayer.csproj" />
+        <entry key="OsuPlayer/Styles/Accents/BaseDark.axaml" value="OsuPlayer/OsuPlayer.csproj" />
+        <entry key="OsuPlayer/Styles/Accents/FluentControlResourcesDark.axaml" value="OsuPlayer/OsuPlayer.csproj" />
+        <entry key="OsuPlayer/Styles/FluentDark.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/Styles/SliderStyle.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/UI Extensions/AcrylicPanel.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/UI Extensions/MessageBoxWindow.axaml" value="OsuPlayer/OsuPlayer.csproj" />
