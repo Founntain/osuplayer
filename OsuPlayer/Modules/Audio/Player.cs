@@ -160,8 +160,7 @@ public class Player
 
     public void SetPlaybackSpeed(double speed)
     {
-        var calc = 44100 + Core.Instance.Engine.Difference;
-        Bass.ChannelSetAttribute(Core.Instance.Engine.FxStream, ChannelAttribute.TempoFrequency, calc * (1 + speed));
+        Bass.ChannelSetAttribute(Core.Instance.Engine.FxStream, ChannelAttribute.TempoFrequency, Core.Instance.Engine.SampleFrequency * (1 + speed));
     }
     
     public async Task Play(MapEntry? song, PlayDirection playDirection = PlayDirection.Forward)
