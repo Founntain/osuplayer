@@ -2,20 +2,48 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reactive.Disposables;
 using OsuPlayer.IO.DbReader;
+using OsuPlayer.IO.Playlists;
 using ReactiveUI;
 
 namespace OsuPlayer.ViewModels;
 
 public class PlaylistEditorViewModel : BaseViewModel, IActivatableViewModel
 {
-    private ObservableCollection<MapEntry> _playlist;
+    private Playlist _currentSelectedPlaylist;
+    private ObservableCollection<string> _playlist;
+    private ObservableCollection<Playlist> _playlists;
+    
     private List<MapEntry> _selectedSonglistItems;
     private List<MapEntry> _selectedPlaylistItems;
+
+    public Playlist CurrentSelectedPlaylist
+    {
+        get => _currentSelectedPlaylist;
+        set
+        {
+            _currentSelectedPlaylist = value;
+            this.RaisePropertyChanged();
+        }
+    }
+
+    public ObservableCollection<Playlist> Playlists
+    {
+        get => _playlists;
+        set => this.RaiseAndSetIfChanged(ref _playlists, value);
+    }
 
     public PlaylistEditorViewModel()
     {
         Activator = new ViewModelActivator();
-        this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
+        this.WhenActivated(disposables =>
+        {
+            Disposable.Create(() => { }).DisposeWith(disposables);
+
+            if (Playlists.Count > 0 && CurrentSelectedPlaylist == default)
+            {
+                CurrentSelectedPlaylist = Playlists[0];
+            }
+        });
 
         SelectedPlaylistItems = new();
         SelectedSonglistItems = new();
@@ -27,7 +55,7 @@ public class PlaylistEditorViewModel : BaseViewModel, IActivatableViewModel
 
     public List<MapEntry> Songlist => Core.Instance.Player.SongSource!;
 
-    public ObservableCollection<MapEntry> Playlist
+    public ObservableCollection<string> Playlist
     {
         get => _playlist;
         set => this.RaiseAndSetIfChanged(ref _playlist, value);

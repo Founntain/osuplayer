@@ -2,11 +2,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:OsuPlayer.ViewModels"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:dbReader="clr-namespace:OsuPlayer.IO.DbReader;assembly=OsuPlayer.IO"
-             xmlns:valueConverters="clr-namespace:OsuPlayer.Extensions.ValueConverters;assembly=OsuPlayer.Extensions"
+             xmlns:valueConverters="clr-namespace:OsuPlayer.ValueConverters"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.PlaylistEditorView">
+    <UserControl.Resources>
+        <valueConverters:PlaylistValueConverter x:Key="PlaylistValueConverter" />
+    </UserControl.Resources>
+    
+    <Design.DataContext>
+        <vm:PlaylistEditorViewModel />
+    </Design.DataContext>
+    
     <Grid RowDefinitions="60, *">
         <Grid Row="0" Margin="0 0 0 10" ColumnDefinitions="*, Auto">
             <Panel Grid.ColumnSpan="2">
@@ -26,6 +35,8 @@
             </DockPanel>
             
             <DockPanel Grid.Column="1" VerticalAlignment="Center" Margin="10">
+                <ComboBox Items="{Binding Playlists}" SelectedItem="{Binding CurrentSelectedPlaylist}" Margin="0 0 10 0" SelectionChanged="SelectingItemsControl_OnSelectionChanged"/>
+                
                 <Button Name="CreatePlaylist" Width="38" Height="38" CornerRadius="50"
                         Background="Transparent">
                     <avalonia:MaterialIcon Kind="PlaylistAdd" Height="28" Width="28" />
@@ -103,7 +114,7 @@
                 </Border>
                 
                 <ListBox Grid.Row="1" Background="Transparent" SelectionMode="Multiple"
-                         Items="{Binding Playlist}" SelectionChanged="Playlist_OnSelectionChanged">
+                         Items="{Binding CurrentSelectedPlaylist.Songs, Converter={StaticResource PlaylistValueConverter}}" SelectionChanged="Playlist_OnSelectionChanged">
                     <ListBox.ItemTemplate>
                         <DataTemplate DataType="dbReader:MapEntry">
                             <Grid>

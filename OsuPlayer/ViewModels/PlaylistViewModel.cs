@@ -1,22 +1,15 @@
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reactive.Disposables;
-using OsuPlayer.Data.OsuPlayer.Database.Entities;
-using OsuPlayer.IO.Database;
+using OsuPlayer.Extensions;
+using OsuPlayer.IO.Playlists;
 using ReactiveUI;
 
 namespace OsuPlayer.ViewModels;
 
 public class PlaylistViewModel : BaseViewModel, IActivatableViewModel
 {
-    private Playlist _selectedPlaylist;
     private ObservableCollection<Playlist> _playlists;
-
-    public Playlist SelectedPlaylist
-    {
-        get => _selectedPlaylist;
-        set => this.RaiseAndSetIfChanged(ref _selectedPlaylist, value);
-    }
+    private Playlist _selectedPlaylist;
 
     public ObservableCollection<Playlist> Playlists
     {
@@ -24,16 +17,28 @@ public class PlaylistViewModel : BaseViewModel, IActivatableViewModel
         set => this.RaiseAndSetIfChanged(ref _playlists, value);
     }
 
+    public Playlist SelectedPlaylist
+    {
+        get => _selectedPlaylist;
+        set => this.RaiseAndSetIfChanged(ref _selectedPlaylist, value);
+    }
+
     public PlaylistViewModel()
     {
         Activator = new ViewModelActivator();
         this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
+        
+        
     }
 
     public ViewModelActivator Activator { get; }
 
-    public void OpenPlaylistEditor()
+    public async void OpenPlaylistEditor()
     {
+        var ps = await PlaylistManager.GetPlaylistStorageAsync();
+
+        Core.Instance.MainWindow.ViewModel!.PlaylistEditorViewModel.Playlists = ps.Playlists.ToObservableCollection();
+        
         Core.Instance.MainWindow.ViewModel!.MainView = Core.Instance.MainWindow.ViewModel.PlaylistEditorViewModel;
     }
 }

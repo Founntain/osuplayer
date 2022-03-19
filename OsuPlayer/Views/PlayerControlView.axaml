@@ -52,31 +52,6 @@
                            Foreground="White" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
                 <TextBlock Name="ArtistText" Text="{Binding ArtistText}" FontSize="16"
                            Foreground="#FFCCCCCC" FontWeight="Medium" TextTrimming="CharacterEllipsis" />
-                
-                <!-- <DockPanel>
-                    <Border Name="Volume" PointerReleased="Volume_OnPointerReleased" Cursor="Hand">
-                        <ToolTip.Tip>
-                            <TextBlock Text="Click to toggle mute" />
-                        </ToolTip.Tip>
-                        <Image Height="18" Width="18" Source="../Resources/Icons/max_vol.png" Margin="5 0" />
-                    </Border>
-
-                    <Slider Name="VolumeSlider"
-                            VerticalAlignment="Center" Minimum="0" Maximum="100" Value="{Binding Volume}" />
-                </DockPanel>
-
-                <DockPanel>
-                    <Border x:Name="PlaybackSpeed"
-                            PointerReleased="PlaybackSpeedBtn_OnPointerReleased" Cursor="Hand">
-                        <ToolTip.Tip>
-                            <TextBlock Text="Click to reset playback speed" />
-                        </ToolTip.Tip>
-                        <Image Height="18" Width="18"
-                               Source="../Resources/Icons/speed.png" Margin="5 0 5 0" />
-                    </Border>
-                    <Slider x:Name="PlaybackSpeedSlider" VerticalAlignment="Center"
-                            Minimum="32100" Maximum="56100" Value="{Binding PlaybackSpeed}" />
-                </DockPanel> -->
             </StackPanel>
 
             <DockPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5">

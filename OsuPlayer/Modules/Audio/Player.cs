@@ -11,6 +11,7 @@ using DynamicData.Binding;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.IO;
 using OsuPlayer.IO.DbReader;
+using OsuPlayer.IO.Playlists;
 using ReactiveUI;
 
 namespace OsuPlayer.Modules.Audio;
@@ -32,6 +33,12 @@ public class Player
     private int _shuffleHistoryIndex;
     private readonly SourceList<MapEntry> _songSource;
     public List<MapEntry>? SongSource => _songSource.Items.ToList();
+
+    public Playlist CurrentPlaylist
+    {
+        get => _currentPlaylist;
+        set => _currentPlaylist = value;
+    }
 
     public Player()
     {
@@ -63,6 +70,7 @@ public class Player
     }
 
     private bool _repeat;
+    private Playlist _currentPlaylist;
 
     public bool Repeat
     {
@@ -358,5 +366,15 @@ public class Player
         if (SongSource == null) return Task.FromException<MapEntry>(new ArgumentNullException(nameof(FilteredSongEntries)));
         
         return Task.FromResult(SongSource[new Random().Next(SongSource.Count)]);
+    }
+
+    public MapEntry? GetMapEntryFromChecksum(string checksum)
+    {
+        return SongSource!.FirstOrDefault(x => x.BeatmapChecksum == checksum);
+    }
+    
+    public List<MapEntry> GetMapEntriesFromChecksums(ICollection<string> checksums)
+    {
+        return SongSource!.Where(x => checksums.Contains(x.BeatmapChecksum)).ToList();
     }
 }

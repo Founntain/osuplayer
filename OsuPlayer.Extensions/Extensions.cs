@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using DynamicData;
 
 namespace OsuPlayer.Extensions;
 
@@ -17,8 +18,23 @@ public static class Extensions
         return timeStr;
     }
 
-    public static ObservableCollection<T> ToObservableCollection<T>(this ICollection<T> source)
+    public static ObservableCollection<T> ToObservableCollection<T>(this ICollection<T>? source)
     {
+        if (source == default)
+            return new ObservableCollection<T>();
+        
         return new ObservableCollection<T>(source);
+    }
+
+    public static SourceList<T> ToSourceList<T>(this ICollection<T>? source)
+    {
+        if (source == default) 
+            return new SourceList<T>();
+        
+        var sl = new SourceList<T>();
+        
+        sl.AddRange(source);
+        
+        return sl;
     }
 }
