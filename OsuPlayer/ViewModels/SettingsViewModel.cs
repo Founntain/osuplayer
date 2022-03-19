@@ -98,9 +98,12 @@ public class SettingsViewModel : BaseViewModel, IActivatableViewModel
 
         var osuFolder = Path.GetDirectoryName(path);
 
-        using var config = new Config();
-        (await config.ReadAsync()).OsuPath = osuFolder!;
-        OsuLocation = osuFolder!;
+        using (var config = new Config())
+        {
+            (await config.ReadAsync()).OsuPath = osuFolder!;
+            OsuLocation = osuFolder!;
+        }
+
         await Core.Instance.Player.ImportSongs();
     }
 
