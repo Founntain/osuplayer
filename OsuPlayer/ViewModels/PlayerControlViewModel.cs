@@ -52,7 +52,12 @@ public class PlayerControlViewModel : BaseViewModel, IActivatableViewModel
     public double PlaybackSpeed
     {
         get => _playbackSpeed;
-        set => this.RaiseAndSetIfChanged(ref _playbackSpeed, value);
+        set
+        {
+            Core.Instance.Player.SetPlaybackSpeed(value);
+            this.RaiseAndSetIfChanged(ref _playbackSpeed, value);
+            SongLength = _songLength;
+        }
     }
 
     public double SongTime
@@ -61,7 +66,7 @@ public class PlayerControlViewModel : BaseViewModel, IActivatableViewModel
         set
         {
             this.RaiseAndSetIfChanged(ref _songTime, value);
-            CurrentSongTime = TimeSpan.FromSeconds(value).FormatTime();
+            CurrentSongTime = TimeSpan.FromSeconds(value * (1 - PlaybackSpeed)).FormatTime();
         }
     }
 
@@ -77,7 +82,7 @@ public class PlayerControlViewModel : BaseViewModel, IActivatableViewModel
         set
         {
             this.RaiseAndSetIfChanged(ref _songLength, value);
-            CurrentSongLength = TimeSpan.FromSeconds(value).FormatTime();
+            CurrentSongLength = TimeSpan.FromSeconds(value * (1 - PlaybackSpeed)).FormatTime();
         }
     }
 
