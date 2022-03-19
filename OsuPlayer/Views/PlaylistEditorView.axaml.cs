@@ -1,4 +1,5 @@
-﻿using System.Linq;
+using System.Collections.Generic;
+using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
@@ -20,6 +21,11 @@ public partial class PlaylistEditorView : ReactiveUserControl<PlaylistEditorView
 
     private void InitializeComponent()
     {
+        this.WhenActivated(disposables =>
+        {
+            if (ViewModel.CurrentSelectedPlaylist == default)
+                return;
+        });
         AvaloniaXamlLoader.Load(this);
     }
 
@@ -39,25 +45,19 @@ public partial class PlaylistEditorView : ReactiveUserControl<PlaylistEditorView
 
         var playlist = ViewModel!.CurrentSelectedPlaylist.Songs;
 
-        foreach (var song in ViewModel.SelectedSonglistItems)
+        foreach (var song in ViewModel.SelectedSongListItems)
         {
             if (playlist.Contains(song.BeatmapChecksum))
                 continue;
             
             playlist.Add(song.BeatmapChecksum);
         }
-
-        var updatePlaylist = new Playlist()
-        {
-            Name = ViewModel.CurrentSelectedPlaylist.Name,
-            Songs = playlist
-        };
-
-        ViewModel.CurrentSelectedPlaylist = updatePlaylist;
+        
+        ViewModel!.SelectedSongListItems = new List<MapEntry>();
         
         await PlaylistManager.ReplacePlaylistAsync(ViewModel.CurrentSelectedPlaylist);
 
-        ViewModel.RaisePropertyChanged(nameof(ViewModel.CurrentSelectedPlaylist));
+        ViewModel.RaisePropertyChanged(nameof(ViewModel.Playlists));
     }
     
     private async void RemoveFromPlaylist_OnClick(object? sender, RoutedEventArgs e)
@@ -76,7 +76,7 @@ public partial class PlaylistEditorView : ReactiveUserControl<PlaylistEditorView
 
         var playlist = ViewModel!.CurrentSelectedPlaylist.Songs;
 
-        foreach (var song in ViewModel.SelectedPlaylistItems)
+        foreach (var song in ViewModel!.SelectedPlaylistItems!)
         {
             if (!playlist.Contains(song.BeatmapChecksum))
                 continue;
@@ -84,42 +84,28 @@ public partial class PlaylistEditorView : ReactiveUserControl<PlaylistEditorView
             playlist.Remove(song.BeatmapChecksum);
         }
 
-        ViewModel.CurrentSelectedPlaylist = new()
-        {
-            Name = ViewModel.CurrentSelectedPlaylist.Name,
-            Songs = playlist
-        };
+        ViewModel!.SelectedPlaylistItems = new List<MapEntry>();
         
         await PlaylistManager.ReplacePlaylistAsync(ViewModel.CurrentSelectedPlaylist);
 
-        ViewModel.RaisePropertyChanged(nameof(ViewModel.CurrentSelectedPlaylist));
+        ViewModel.RaisePropertyChanged(nameof(ViewModel.Playlists));
     }
 
-    private void Songlist_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    private void SongList_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         var listBox = (ListBox) sender!;
-        
-        var vm = (PlaylistEditorViewModel) DataContext;
-
-        if (vm == default) 
-            return;
 
         var songs = listBox.SelectedItems.Cast<MapEntry>().ToList();
         
-        vm.SelectedSonglistItems = songs;
+        ViewModel!.SelectedSongListItems = songs;
     }
 
     private void Playlist_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         var listBox = (ListBox) sender!;
-        
-        var vm = (PlaylistEditorViewModel) DataContext;
-        
-        if (vm == default) 
-            return;
 
         var songs = listBox.SelectedItems.Cast<MapEntry>().ToList();
         
-        vm.SelectedPlaylistItems = songs;
+        ViewModel!.SelectedPlaylistItems = songs;
     }
 }

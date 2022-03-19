@@ -16,7 +16,7 @@ public class PlaylistEditorViewModel : BaseViewModel, IActivatableViewModel
     private ObservableCollection<string> _playlist;
     private SourceList<Playlist> _playlists;
     
-    private List<MapEntry> _selectedSonglistItems;
+    private List<MapEntry> _selectedSongListItems;
     private List<MapEntry> _selectedPlaylistItems;
 
     public Playlist CurrentSelectedPlaylist
@@ -26,6 +26,7 @@ public class PlaylistEditorViewModel : BaseViewModel, IActivatableViewModel
         {
             _currentSelectedPlaylist = value;
             this.RaisePropertyChanged();
+            this.RaisePropertyChanged(nameof(Playlists));
         }
     }
 
@@ -50,25 +51,17 @@ public class PlaylistEditorViewModel : BaseViewModel, IActivatableViewModel
         });
 
         SelectedPlaylistItems = new();
-        SelectedSonglistItems = new();
-        
-        Playlist = new();
+        SelectedSongListItems = new();
     }
 
     public ViewModelActivator Activator { get; }
 
-    public List<MapEntry> Songlist => Core.Instance.Player.SongSource!;
+    public List<MapEntry> SongList => Core.Instance.Player.SongSource!;
 
-    public ObservableCollection<string> Playlist
+    public List<MapEntry> SelectedSongListItems
     {
-        get => _playlist;
-        set => this.RaiseAndSetIfChanged(ref _playlist, value);
-    }
-
-    public List<MapEntry> SelectedSonglistItems
-    {
-        get => _selectedSonglistItems;
-        set => this.RaiseAndSetIfChanged(ref _selectedSonglistItems, value);
+        get => _selectedSongListItems;
+        set => this.RaiseAndSetIfChanged(ref _selectedSongListItems, value);
     }
 
     public List<MapEntry> SelectedPlaylistItems

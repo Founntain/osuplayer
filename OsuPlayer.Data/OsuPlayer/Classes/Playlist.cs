@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Xml.Xsl;
 
 namespace OsuPlayer.Data.OsuPlayer.Classes;
@@ -6,7 +7,7 @@ namespace OsuPlayer.Data.OsuPlayer.Classes;
 public class Playlist
 {
     public string Name { get; set; }
-    public ObservableCollection<string> Songs { get; set; } = new ();
+    public BindingList<string> Songs { get; set; } = new ();
 
     public override string ToString() => Name;
     
