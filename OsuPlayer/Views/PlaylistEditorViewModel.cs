@@ -10,7 +10,7 @@ using ReactiveUI;
 
 namespace OsuPlayer.Views;
 
-public class PlaylistEditorViewModel : BaseViewModel, IActivatableViewModel
+public class PlaylistEditorViewModel : BaseViewModel
 {
     private Playlist _currentSelectedPlaylist;
     private ObservableCollection<string> _playlist;
@@ -53,8 +53,6 @@ public class PlaylistEditorViewModel : BaseViewModel, IActivatableViewModel
         SelectedPlaylistItems = new();
         SelectedSongListItems = new();
     }
-
-    public ViewModelActivator Activator { get; }
 
     public List<MapEntry> SongList => Core.Instance.Player.SongSource!;
 

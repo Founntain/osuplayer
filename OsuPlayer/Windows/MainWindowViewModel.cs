@@ -6,7 +6,7 @@ using ReactiveUI;
 
 namespace OsuPlayer.Windows;
 
-public class MainWindowViewModel : BaseViewModel, IScreen
+public class MainWindowViewModel : BaseWindowViewModel
 {
     public readonly HomeViewModel HomeView;
     public readonly PartyViewModel PartyView;
@@ -46,6 +46,4 @@ public class MainWindowViewModel : BaseViewModel, IScreen
     }
 
     public ObservableCollection<AudioDevice> OutputDeviceComboboxItems { get; set; }
-
-    public RoutingState Router { get; } = new();
 }

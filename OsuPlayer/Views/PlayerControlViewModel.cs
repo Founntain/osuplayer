@@ -8,7 +8,7 @@ using ReactiveUI;
 
 namespace OsuPlayer.Views;
 
-public class PlayerControlViewModel : BaseViewModel, IActivatableViewModel
+public class PlayerControlViewModel : BaseViewModel
 {
     private string _currentSongLength = "00:00";
 
@@ -91,8 +91,6 @@ public class PlayerControlViewModel : BaseViewModel, IActivatableViewModel
         get => _isPlaying;
         set => this.RaiseAndSetIfChanged(ref _isPlaying, value);
     }
-
-    public ViewModelActivator Activator { get; }
 
     public bool IsRepeating
     {

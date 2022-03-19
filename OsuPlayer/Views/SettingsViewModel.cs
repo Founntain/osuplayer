@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.IO.Storage.Config;
+using OsuPlayer.Network.Online;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.ViewModels;
 using OsuPlayer.Windows;
@@ -14,12 +15,14 @@ using ReactiveUI;
 
 namespace OsuPlayer.Views;
 
-public class SettingsViewModel : BaseViewModel, IActivatableViewModel
+public class SettingsViewModel : BaseViewModel
 {
     private string _osuLocation;
     private WindowTransparencyLevel _selectedTransparencyLevel = new Config().Read().TransparencyLevelHint;
     private StartupSong _selectedStartupSong = new Config().Read().StartupSong;
 
+    public User? CurrentUser => ProfileManager.User;
+    
     public SettingsViewModel()
     {
         Activator = new ViewModelActivator();
@@ -48,8 +51,6 @@ public class SettingsViewModel : BaseViewModel, IActivatableViewModel
             config.Read().TransparencyLevelHint = value;
         }
     }
-
-    public ViewModelActivator Activator { get; }
 
     public IEnumerable<StartupSong> StartupSongs => Enum.GetValues<StartupSong>();
     public StartupSong SelectedStartupSong
@@ -109,7 +110,7 @@ public class SettingsViewModel : BaseViewModel, IActivatableViewModel
 
     public async Task Login()
     {
-        var loginWindow = new LoginWindow()
+        var loginWindow = new LoginWindow
         {
             ViewModel = new LoginWindowViewModel()
         };

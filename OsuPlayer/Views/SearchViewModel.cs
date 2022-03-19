@@ -6,7 +6,7 @@ using ReactiveUI;
 
 namespace OsuPlayer.Views;
 
-public class SearchViewModel : BaseViewModel, IActivatableViewModel
+public class SearchViewModel : BaseViewModel
 {
     public SearchViewModel()
     {
@@ -21,8 +21,6 @@ public class SearchViewModel : BaseViewModel, IActivatableViewModel
         get => _filterText;
         set => this.RaiseAndSetIfChanged(ref _filterText, value);
     }
-
-    public ViewModelActivator Activator { get; }
 
     public ReadOnlyObservableCollection<MapEntry> FilteredSongEntries => Core.Instance.Player.FilteredSongEntries!;
 }

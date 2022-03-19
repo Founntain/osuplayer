@@ -401,7 +401,7 @@ public sealed class BassEngine
             FxStream = 0;
         }
 
-        throw new FileNotFoundException("file does not exist", path);
+        return false;
     }
 
     public void ToggleEq(bool on)

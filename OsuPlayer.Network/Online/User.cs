@@ -1,4 +1,5 @@
-﻿using Avalonia.Media;
+﻿using System.Globalization;
+using Avalonia.Media;
 using OsuPlayer.Data.API.Enums;
 using OsuPlayer.Data.API.Models.User;
 
@@ -10,6 +11,14 @@ public sealed class User : UserModel
     {
         Role = UserRole.Unknown;
     }
+
+    public string SongsPlayedString => $"{SongsPlayed.ToString("##,###", CultureInfo.InvariantCulture)} songs played";
+
+    public string LevelAndTotalXpString =>
+        $"Level {Level.ToString("##,###", CultureInfo.InvariantCulture)} | Total XP: {TotalXp.ToString("##,###", CultureInfo.InvariantCulture)}";
+
+    public string LevelProgressString =>
+        $"{Xp.ToString("##,###", CultureInfo.InvariantCulture)} XP / {GetXpNeededForNextLevel().ToString("##,###", CultureInfo.InvariantCulture)} XP";
 
     public Brush RoleColor => GetRoleColorBrush();
     public string RoleString => GetRoleString();

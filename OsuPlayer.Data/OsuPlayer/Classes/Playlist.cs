@@ -7,6 +7,7 @@ namespace OsuPlayer.Data.OsuPlayer.Classes;
 public class Playlist
 {
     public string Name { get; set; }
+    public DateTime CreationTime { get; } = DateTime.UtcNow;
     public BindingList<string> Songs { get; set; } = new ();
 
     public override string ToString() => Name;

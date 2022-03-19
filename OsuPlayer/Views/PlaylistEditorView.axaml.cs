@@ -93,19 +93,23 @@ public partial class PlaylistEditorView : ReactiveUserControl<PlaylistEditorView
 
     private void SongList_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
+        if (ViewModel == default) return;
+        
         var listBox = (ListBox) sender!;
 
         var songs = listBox.SelectedItems.Cast<MapEntry>().ToList();
         
-        ViewModel!.SelectedSongListItems = songs;
+        ViewModel.SelectedSongListItems = songs;
     }
 
     private void Playlist_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
+        if (ViewModel == default) return;
+        
         var listBox = (ListBox) sender!;
 
         var songs = listBox.SelectedItems.Cast<MapEntry>().ToList();
         
-        ViewModel!.SelectedPlaylistItems = songs;
+        ViewModel.SelectedPlaylistItems = songs;
     }
 }

@@ -8,7 +8,7 @@ using ReactiveUI;
 
 namespace OsuPlayer.Views;
 
-public class PlaylistViewModel : BaseViewModel, IActivatableViewModel
+public class PlaylistViewModel : BaseViewModel
 {
     private ObservableCollection<Playlist> _playlists;
     private Playlist _selectedPlaylist;
@@ -43,7 +43,6 @@ public class PlaylistViewModel : BaseViewModel, IActivatableViewModel
         
     }
 
-    public ViewModelActivator Activator { get; }
 
     public async void OpenPlaylistEditor()
     {

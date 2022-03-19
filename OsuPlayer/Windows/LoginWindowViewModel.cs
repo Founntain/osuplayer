@@ -6,7 +6,7 @@ using ReactiveUI;
 
 namespace OsuPlayer.Windows;
 
-public class LoginWindowViewModel : BaseViewModel
+public class LoginWindowViewModel : BaseWindowViewModel
 {
     private string _username;
     private string _password;
@@ -23,14 +23,5 @@ public class LoginWindowViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _password, value);
     }
 
-    public async Task Login()
-    {
-        var user = await ApiAsync.LoadUserWithCredentialsAsync(Username, Password);
-
-        if (user == default) return;
-
-        if (user.Name != Username) return;
-
-        ProfileManager.User = user;
-    }
+    
 }

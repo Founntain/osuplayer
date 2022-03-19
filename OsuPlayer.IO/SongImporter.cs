@@ -8,7 +8,7 @@ public sealed class SongImporter
     {
         if (string.IsNullOrEmpty(path)) return null!;
 
-        var maps = (await DbReader.DbReader.ReadOsuDb(path))?.DistinctBy(x => x.BeatmapSetId)
+        var maps = (await DbReader.DbReader.ReadOsuDb(path))?.DistinctBy(x => x.BeatmapChecksum)
             .DistinctBy(x => x.Title).Where(x => !string.IsNullOrEmpty(x.Title)).ToArray();
 
         if (maps == null || !maps.Any()) return null!;
