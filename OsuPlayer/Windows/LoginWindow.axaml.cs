@@ -2,7 +2,6 @@
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using OsuPlayer.IO.Storage.Config;
 using OsuPlayer.Network.API.ApiEndpoints;
 using OsuPlayer.Network.Online;

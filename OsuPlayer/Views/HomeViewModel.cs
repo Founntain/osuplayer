@@ -46,7 +46,7 @@ public class HomeViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _profilePicture, value);
     }
 
-    private async Task<Bitmap?> LoadProfilePicture()
+    internal async Task<Bitmap?> LoadProfilePicture()
     {
         if (CurrentUser == default) return default;
 
