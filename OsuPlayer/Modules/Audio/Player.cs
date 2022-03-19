@@ -13,6 +13,7 @@ using ManagedBass;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.IO;
 using OsuPlayer.IO.DbReader;
+using OsuPlayer.IO.Playlists;
 using OsuPlayer.IO.Storage;
 using ReactiveUI;
 
@@ -54,6 +55,8 @@ public class Player
     {
         _songSource = new SourceList<MapEntry>();
     }
+
+    private SongImporter Importer => new();
 
     private PlayState PlayState
     {
@@ -174,7 +177,7 @@ public class Player
             return;
         }
 
-        if (CurrentSong != null && !Repeat && false && //Core.Instance.Config.IgnoreSongsWithSameNameCheckBox &&
+        if (CurrentSong != null && !Repeat && (await new Config().ReadAsync()).IgnoreSongsWithSameNameCheckBox &&
             CurrentSong.SongName == song.SongName)
             switch (playDirection)
             {
@@ -182,7 +185,7 @@ public class Player
                 {
                     for (var i = CurrentIndex - 1; i < SongSource.Count; i--)
                     {
-                        if (SongSource[i].SongName == CurrentSong.SongName) continue;
+                        if (SongSource[i].SongName == _currentSong.SongName) continue;
 
                         await TryEnqueueSong(SongSource[i]);
                         return;
@@ -194,7 +197,7 @@ public class Player
                 {
                     for (var i = CurrentIndex + 1; i < SongSource.Count; i++)
                     {
-                        if (SongSource[i].SongName == CurrentSong.SongName) continue;
+                        if (SongSource[i].SongName == _currentSong.SongName) continue;
 
                         await TryEnqueueSong(SongSource[i]);
                         return;
@@ -207,7 +210,7 @@ public class Player
         await TryEnqueueSong(song);
     }
 
-    private async Task<Task> TryEnqueueSong(MapEntry song)
+    private Task TryEnqueueSong(MapEntry song)
     {
         if (SongSource == null || !SongSource.Any())
             return Task.FromException(new NullReferenceException($"{nameof(SongSource)} can't be null or empty"));
@@ -219,6 +222,7 @@ public class Player
             Core.Instance.Engine.Volume = (float) Core.Instance.MainWindow.ViewModel!.PlayerControl.Volume / 100;
             Core.Instance.Engine.Play();
             PlayState = PlayState.Playing;
+            Core.Instance.MainWindow.ViewModel.PlayerControl.CurrentSong = song;
         }
         catch (Exception ex)
         {
@@ -403,5 +407,15 @@ public class Player
         if (SongSource == null) return Task.FromException<MapEntry>(new ArgumentNullException(nameof(FilteredSongEntries)));
         
         return Task.FromResult(SongSource[new Random().Next(SongSource.Count)]);
+    }
+
+    public MapEntry? GetMapEntryFromChecksum(string checksum)
+    {
+        return SongSource!.FirstOrDefault(x => x.BeatmapChecksum == checksum);
+    }
+    
+    public List<MapEntry> GetMapEntriesFromChecksums(ICollection<string> checksums)
+    {
+        return SongSource!.Where(x => checksums.Contains(x.BeatmapChecksum)).ToList();
     }
 }

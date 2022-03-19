@@ -40,7 +40,7 @@
             <Slider Name="SongProgressSlider" VerticalAlignment="Center"
                     Value="{Binding SongTime}"
                     Maximum="{Binding SongLength}"
-                    Margin="4 0 " UseLayoutRounding="False" Grid.Column="1" />
+                    Margin="4 0 " UseLayoutRounding="False" Grid.Column="1"/>
 
             <TextBlock Name="CurrentSongTimeLeft" Text="{Binding CurrentSongLength}" VerticalAlignment="Center"
                        Grid.Column="2" Margin="8 0" FontSize="12" HorizontalAlignment="Center" />
@@ -109,12 +109,12 @@
                         Background="Transparent">
                     <avalonia:MaterialIcon Kind="HeartOutline" Height="19" Width="19" />
                 </Button>
-
+                
                 <Button Name="Blacklist" Width="38" Height="38" CornerRadius="50" Click="Blacklist_OnClick"
                         Background="Transparent">
                     <avalonia:MaterialIcon Kind="HeartBrokenOutline" Height="19" Width="19" />
                 </Button>
-
+                
                 <Button Name="Settings" Width="42" Height="42" CornerRadius="50" Click="Settings_OnClick"
                         Background="Transparent">
                     <avalonia:MaterialIcon Kind="Settings" Height="32" Width="32" />
