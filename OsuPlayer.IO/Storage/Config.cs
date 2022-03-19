@@ -42,6 +42,8 @@ public class Config : IStorable<ConfigContainer>
 
     public void Save(ConfigContainer config)
     {
+        Directory.CreateDirectory("data");
+        
         File.WriteAllText(Path, JsonConvert.SerializeObject(config));
     }
 
