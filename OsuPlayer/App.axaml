@@ -24,8 +24,7 @@
     </Application.Resources>
 
     <Application.Styles>
-        <FluentTheme Mode="Dark" />
-        
+        <StyleInclude Source="avares://OsuPlayer/Styles/FluentDark.axaml"/>
         <StyleInclude Source="avares://Material.Icons.Avalonia/App.xaml"/>
     </Application.Styles>
 </Application>
