@@ -169,8 +169,8 @@ public class Player
             return;
         }
 
-        if (_currentSong != null && !Repeat && //Core.Instance.Config.IgnoreSongsWithSameNameCheckBox &&
-            _currentSong.SongName == song.SongName)
+        if (CurrentSong != null && !Repeat && (await new Config().ReadAsync()).IgnoreSongsWithSameNameCheckBox &&
+            CurrentSong.SongName == song.SongName)
             switch (playDirection)
             {
                 case PlayDirection.Backwards:

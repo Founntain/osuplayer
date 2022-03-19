@@ -13,4 +13,5 @@ public class ConfigContainer : IStorableContainer
     public WindowTransparencyLevel TransparencyLevelHint { get; set; } = WindowTransparencyLevel.AcrylicBlur;
     public StartupSong StartupSong { get; set; } = StartupSong.FirstSong;
     public int LastPlayedSong { get; set; }
+    public bool IgnoreSongsWithSameNameCheckBox { get; set; }
 }
