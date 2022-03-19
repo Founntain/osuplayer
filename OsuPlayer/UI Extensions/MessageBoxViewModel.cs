@@ -1,7 +1,8 @@
 ﻿using Avalonia.Controls;
+using OsuPlayer.ViewModels;
 using ReactiveUI;
 
-namespace OsuPlayer.ViewModels;
+namespace OsuPlayer.UI_Extensions;
 
 public class MessageBoxViewModel : BaseViewModel
 {

@@ -1,12 +1,11 @@
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Reactive.Disposables;
-using OsuPlayer.IO;
 using OsuPlayer.IO.DbReader;
-using OsuPlayer.IO.Storage;
+using OsuPlayer.IO.Storage.Config;
+using OsuPlayer.ViewModels;
 using ReactiveUI;
 
-namespace OsuPlayer.ViewModels;
+namespace OsuPlayer.Views;
 
 public class HomeViewModel : BaseViewModel, IActivatableViewModel
 {

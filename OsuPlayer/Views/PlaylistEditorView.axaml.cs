@@ -3,11 +3,9 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using OsuPlayer.Extensions;
-using Avalonia.ReactiveUI;
-using DynamicData;
+using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.IO.DbReader;
-using OsuPlayer.IO.Playlists;
+using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.ViewModels;
 using ReactiveUI;
 
@@ -49,11 +47,13 @@ public partial class PlaylistEditorView : ReactiveUserControl<PlaylistEditorView
             playlist.Add(song.BeatmapChecksum);
         }
 
-        ViewModel.CurrentSelectedPlaylist = new()
+        var updatePlaylist = new Playlist()
         {
             Name = ViewModel.CurrentSelectedPlaylist.Name,
             Songs = playlist
         };
+
+        ViewModel.CurrentSelectedPlaylist = updatePlaylist;
         
         await PlaylistManager.ReplacePlaylistAsync(ViewModel.CurrentSelectedPlaylist);
 

@@ -6,14 +6,17 @@
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:dbReader="clr-namespace:OsuPlayer.IO.DbReader;assembly=OsuPlayer.IO"
              xmlns:valueConverters="clr-namespace:OsuPlayer.ValueConverters"
+             xmlns:extensions="clr-namespace:OsuPlayer.Extensions.ValueConverters;assembly=OsuPlayer.Extensions"
+             xmlns:views="clr-namespace:OsuPlayer.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.PlaylistEditorView">
     <UserControl.Resources>
         <valueConverters:PlaylistValueConverter x:Key="PlaylistValueConverter" />
+        <extensions:SourceListValueConverter x:Key="SourceListValueConverter" />
     </UserControl.Resources>
     
     <Design.DataContext>
-        <vm:PlaylistEditorViewModel />
+        <views:PlaylistEditorViewModel />
     </Design.DataContext>
     
     <Grid RowDefinitions="60, *">
@@ -35,7 +38,7 @@
             </DockPanel>
             
             <DockPanel Grid.Column="1" VerticalAlignment="Center" Margin="10">
-                <ComboBox Items="{Binding Playlists}" SelectedItem="{Binding CurrentSelectedPlaylist}" Margin="0 0 10 0"/>
+                <ComboBox Items="{Binding Playlists, Converter={StaticResource SourceListValueConverter}}" SelectedItem="{Binding CurrentSelectedPlaylist}" Margin="0 0 10 0"/>
                 
                 <Button Name="CreatePlaylist" Width="38" Height="38" CornerRadius="50"
                         Background="Transparent">

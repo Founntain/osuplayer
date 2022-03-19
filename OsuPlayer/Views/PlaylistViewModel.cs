@@ -1,10 +1,12 @@
 using System.Collections.ObjectModel;
 using System.Reactive.Disposables;
+using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Extensions;
-using OsuPlayer.IO.Playlists;
+using OsuPlayer.IO.Storage.Playlists;
+using OsuPlayer.ViewModels;
 using ReactiveUI;
 
-namespace OsuPlayer.ViewModels;
+namespace OsuPlayer.Views;
 
 public class PlaylistViewModel : BaseViewModel, IActivatableViewModel
 {
@@ -45,9 +47,9 @@ public class PlaylistViewModel : BaseViewModel, IActivatableViewModel
 
     public async void OpenPlaylistEditor()
     {
-        var ps = await PlaylistManager.GetPlaylistStorageAsync();
+        var playlists = await PlaylistManager.GetAllPlaylistsAsync();
 
-        Core.Instance.MainWindow.ViewModel!.PlaylistEditorViewModel.Playlists = ps.Playlists.ToSourceList();
+        Core.Instance.MainWindow.ViewModel!.PlaylistEditorViewModel.Playlists = playlists.ToSourceList();
         
         Core.Instance.MainWindow.ViewModel!.MainView = Core.Instance.MainWindow.ViewModel.PlaylistEditorViewModel;
     }

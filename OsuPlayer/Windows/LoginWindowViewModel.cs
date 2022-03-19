@@ -1,9 +1,10 @@
 using System.Threading.Tasks;
 using OsuPlayer.Network.API.ApiEndpoints;
 using OsuPlayer.Network.Online;
+using OsuPlayer.ViewModels;
 using ReactiveUI;
 
-namespace OsuPlayer.ViewModels;
+namespace OsuPlayer.Windows;
 
 public class LoginWindowViewModel : BaseViewModel
 {

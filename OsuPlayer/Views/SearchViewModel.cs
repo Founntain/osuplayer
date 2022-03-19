@@ -1,9 +1,10 @@
 using System.Collections.ObjectModel;
 using System.Reactive.Disposables;
 using OsuPlayer.IO.DbReader;
+using OsuPlayer.ViewModels;
 using ReactiveUI;
 
-namespace OsuPlayer.ViewModels;
+namespace OsuPlayer.Views;
 
 public class SearchViewModel : BaseViewModel, IActivatableViewModel
 {

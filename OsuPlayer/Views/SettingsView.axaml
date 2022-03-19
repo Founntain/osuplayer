@@ -3,11 +3,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:OsuPlayer.ViewModels"
+             xmlns:views="clr-namespace:OsuPlayer.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.SettingsView"
              Initialized="SettingsView_OnInitialized">
     <Design.DataContext>
-        <vm:SettingsViewModel/>
+        <views:SettingsViewModel/>
     </Design.DataContext>
     
     <Grid ColumnDefinitions="50*, 50*">

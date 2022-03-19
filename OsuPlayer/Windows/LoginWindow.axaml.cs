@@ -1,8 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using OsuPlayer.IO;
-using OsuPlayer.IO.Storage;
+using OsuPlayer.IO.Storage.Config;
 using OsuPlayer.ViewModels;
 
 namespace OsuPlayer.Windows;

@@ -1,13 +1,12 @@
 using System;
 using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
+using Avalonia.Media.Imaging;
 using OsuPlayer.Extensions;
 using OsuPlayer.IO.DbReader;
+using OsuPlayer.ViewModels;
 using ReactiveUI;
-using Avalonia.Media.Imaging;
 
-namespace OsuPlayer.ViewModels;
+namespace OsuPlayer.Views;
 
 public class PlayerControlViewModel : BaseViewModel, IActivatableViewModel
 {

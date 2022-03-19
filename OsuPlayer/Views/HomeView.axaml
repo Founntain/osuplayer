@@ -5,11 +5,12 @@
              xmlns:vm="using:OsuPlayer.ViewModels"
              xmlns:io="clr-namespace:OsuPlayer.IO.DbReader;assembly=OsuPlayer.IO"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:views="clr-namespace:OsuPlayer.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.HomeView">
 
     <Design.DataContext>
-        <vm:HomeViewModel/>
+        <views:HomeViewModel/>
     </Design.DataContext>
     
     <Grid RowDefinitions="Auto, 50*" ColumnDefinitions="50*, 50*" Background="Transparent">

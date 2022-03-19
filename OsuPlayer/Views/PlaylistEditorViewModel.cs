@@ -3,11 +3,12 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Disposables;
 using DynamicData;
+using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.IO.DbReader;
-using OsuPlayer.IO.Playlists;
+using OsuPlayer.ViewModels;
 using ReactiveUI;
 
-namespace OsuPlayer.ViewModels;
+namespace OsuPlayer.Views;
 
 public class PlaylistEditorViewModel : BaseViewModel, IActivatableViewModel
 {

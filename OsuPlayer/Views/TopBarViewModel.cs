@@ -1,7 +1,8 @@
 using System.Reactive.Disposables;
+using OsuPlayer.ViewModels;
 using ReactiveUI;
 
-namespace OsuPlayer.ViewModels;
+namespace OsuPlayer.Views;
 
 public class TopBarViewModel : BaseViewModel, IActivatableViewModel
 {

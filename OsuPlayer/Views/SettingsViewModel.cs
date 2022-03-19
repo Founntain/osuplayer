@@ -6,13 +6,13 @@ using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using OsuPlayer.Data.OsuPlayer.Enums;
-using OsuPlayer.IO;
-using OsuPlayer.IO.Storage;
+using OsuPlayer.IO.Storage.Config;
 using OsuPlayer.UI_Extensions;
+using OsuPlayer.ViewModels;
 using OsuPlayer.Windows;
 using ReactiveUI;
 
-namespace OsuPlayer.ViewModels;
+namespace OsuPlayer.Views;
 
 public class SettingsViewModel : BaseViewModel, IActivatableViewModel
 {

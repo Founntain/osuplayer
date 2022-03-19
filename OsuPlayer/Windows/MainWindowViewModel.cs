@@ -1,10 +1,10 @@
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using OsuPlayer.Data.OsuPlayer.Classes;
-using OsuPlayer.IO.DbReader;
+using OsuPlayer.ViewModels;
+using OsuPlayer.Views;
 using ReactiveUI;
 
-namespace OsuPlayer.ViewModels;
+namespace OsuPlayer.Windows;
 
 public class MainWindowViewModel : BaseViewModel, IScreen
 {
