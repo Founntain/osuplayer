@@ -35,15 +35,13 @@
         <PackageReference Include="ManagedBass" Version="3.1.0" />
         <PackageReference Include="ManagedBass.Fx" Version="3.1.0" />
         <PackageReference Include="Material.Icons.Avalonia" Version="1.0.2" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.2" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="6.0.2" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="6.0.2" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
         <PackageReference Include="XamlNameReferenceGenerator" Version="1.3.4" />
     </ItemGroup>
     <ItemGroup>
         <Folder Include="Resources" />
         <AvaloniaResource Include="Resources\**" />
+        <Folder Include="runtimes\win-x64\native" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\OsuPlayer.Data\OsuPlayer.Data.csproj" />
@@ -52,14 +50,38 @@
         <ProjectReference Include="..\OsuPlayer.Network\OsuPlayer.Network.csproj" />
     </ItemGroup>
     <ItemGroup>
-      <Content Include="bass.dll">
+      <Content Include="runtimes\win-x86\native\bass.dll">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
-      <Content Include="bass_fx.dll">
+      <Content Include="runtimes\win-x86\native\bass_fx.dll">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
       <None Remove="lib\bass.dll" />
       <None Remove="lib\bass_fx.dll" />
+      <None Remove="runtimes\win-x64\native\bass.dll" />
+      <Content Include="runtimes\win-x64\native\bass.dll">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="runtimes\win-x64\native\bass_fx.dll" />
+      <Content Include="runtimes\win-x64\native\bass_fx.dll">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="runtimes\linux-x86\native\libbass.so" />
+      <Content Include="runtimes\linux-x86\native\libbass.so">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="runtimes\linux-x86\native\libbass_fx.so" />
+      <Content Include="runtimes\linux-x86\native\libbass_fx.so">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="runtimes\linux-x64\native\libbass.so" />
+      <Content Include="runtimes\linux-x64\native\libbass.so">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="runtimes\linux-x64\native\libbass_fx.so" />
+      <Content Include="runtimes\linux-x64\native\libbass_fx.so">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
     <ItemGroup>
       <Compile Update="Windows\MainWindow.axaml.cs">

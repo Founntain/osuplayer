@@ -1,6 +1,8 @@
 ﻿using Avalonia;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
+using OsuPlayer.IO;
+using OsuPlayer.IO.Storage;
 using OsuPlayer.ViewModels;
 
 namespace OsuPlayer.Windows;
@@ -11,7 +13,8 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
     {
         InitializeComponent();
 
-        TransparencyLevelHint = Core.Instance.Config.TransparencyLevelHint;
+        using var config = new Config();
+        TransparencyLevelHint = config.Read().TransparencyLevelHint;
 #if DEBUG
         this.AttachDevTools();
 #endif

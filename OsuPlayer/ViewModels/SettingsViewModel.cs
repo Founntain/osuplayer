@@ -5,6 +5,9 @@ using System.Linq;
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using OsuPlayer.Data.OsuPlayer.Enums;
+using OsuPlayer.IO;
+using OsuPlayer.IO.Storage;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
 using ReactiveUI;
@@ -14,14 +17,13 @@ namespace OsuPlayer.ViewModels;
 public class SettingsViewModel : BaseViewModel, IActivatableViewModel
 {
     private string _osuLocation;
-    private WindowTransparencyLevel _selectedTransparencyLevel;
+    private WindowTransparencyLevel _selectedTransparencyLevel = new Config().Read().TransparencyLevelHint;
+    private StartupSong _selectedStartupSong = new Config().Read().StartupSong;
 
     public SettingsViewModel()
     {
         Activator = new ViewModelActivator();
         this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
-
-        SelectedTransparencyLevel = Core.Instance.Config.TransparencyLevelHint;
     }
 
     public string OsuLocation
@@ -42,13 +44,25 @@ public class SettingsViewModel : BaseViewModel, IActivatableViewModel
             if (Core.Instance.MainWindow == null) return;
             
             Core.Instance.MainWindow.TransparencyLevelHint = value;
-            Core.Instance.Config.TransparencyLevelHint = value;
-            
-            Core.Instance.Config.SaveConfig();
+            using var config = new Config();
+            config.Read().TransparencyLevelHint = value;
         }
     }
 
     public ViewModelActivator Activator { get; }
+
+    public IEnumerable<StartupSong> StartupSongs => Enum.GetValues<StartupSong>();
+    public StartupSong SelectedStartupSong
+    {
+        get => _selectedStartupSong;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _selectedStartupSong, value);
+
+            using var config = new Config();
+            config.Read().StartupSong = value;
+        }
+    }
 
     public async Task ImportSongsClick()
     {
@@ -84,11 +98,10 @@ public class SettingsViewModel : BaseViewModel, IActivatableViewModel
 
         var osuFolder = Path.GetDirectoryName(path);
 
-        Core.Instance.Config.OsuPath = osuFolder!;
+        using var config = new Config();
+        (await config.ReadAsync()).OsuPath = osuFolder!;
         OsuLocation = osuFolder!;
         await Core.Instance.Player.ImportSongs();
-
-        Core.Instance.Config.SaveConfig();
     }
 
     public async Task Login()

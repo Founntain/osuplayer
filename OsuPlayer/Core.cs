@@ -1,4 +1,6 @@
+using OsuPlayer.Extensions;
 using OsuPlayer.IO;
+using OsuPlayer.IO.Storage;
 using OsuPlayer.Modules.Audio;
 using MainWindow = OsuPlayer.Windows.MainWindow;
 
@@ -6,7 +8,6 @@ namespace OsuPlayer;
 
 public class Core
 {
-    public Config Config;
     public BassEngine Engine;
     
     public MainWindow MainWindow;
@@ -15,8 +16,6 @@ public class Core
     protected internal Core()
     {
         Instance = this;
-        Config = Config.LoadConfig();
-        Config.Instance = Config;
         Player = new Player();
     }
 
@@ -25,7 +24,11 @@ public class Core
     protected internal async void SetupCore(MainWindow window)
     {
         MainWindow = window;
-        MainWindow.TransparencyLevelHint = Config.TransparencyLevelHint;
+        using (var config = new Config())
+        {
+            await config.ReadAsync();
+            MainWindow.TransparencyLevelHint = config.Container.TransparencyLevelHint;
+        }
         
         Engine = BassEngine.Instance;
 

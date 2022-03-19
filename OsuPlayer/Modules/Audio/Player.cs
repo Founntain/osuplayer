@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using System.Timers;
 using Avalonia.Threading;
 using DynamicData;
 using DynamicData.Binding;
@@ -12,6 +13,7 @@ using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.IO;
 using OsuPlayer.IO.DbReader;
 using OsuPlayer.IO.Playlists;
+using OsuPlayer.IO.Storage;
 using ReactiveUI;
 
 namespace OsuPlayer.Modules.Audio;
@@ -21,6 +23,20 @@ public class Player
     private readonly int?[] _shuffleHistory = new int?[10];
 
     private MapEntry? _currentSong;
+    private MapEntry? CurrentSong
+    {
+        get => _currentSong;
+        set
+        {
+            _currentSong = value;
+            CurrentIndex = SongSource!.IndexOf(value);
+            using var config = new Config();
+            config.Read().LastPlayedSong = CurrentIndex;
+            Core.Instance.MainWindow.ViewModel!.PlayerControl.CurrentSong = value;
+            Core.Instance.MainWindow.ViewModel!.PlayerControl.CurrentSongImage = Task.Run(value!.FindBackground).Result;
+        }
+    }
+
     private IObservable<Func<MapEntry, bool>>? _filter;
 
     public ReadOnlyObservableCollection<MapEntry>? FilteredSongEntries;
@@ -33,12 +49,6 @@ public class Player
     private int _shuffleHistoryIndex;
     private readonly SourceList<MapEntry> _songSource;
     public List<MapEntry>? SongSource => _songSource.Items.ToList();
-
-    public Playlist CurrentPlaylist
-    {
-        get => _currentPlaylist;
-        set => _currentPlaylist = value;
-    }
 
     public Player()
     {
@@ -70,7 +80,6 @@ public class Player
     }
 
     private bool _repeat;
-    private Playlist _currentPlaylist;
 
     public bool Repeat
     {
@@ -82,6 +91,7 @@ public class Player
         }
     }
 
+    private double _volume = new Config().Read().Volume;
     public double Volume
     {
         get => Core.Instance.Config.Volume;
@@ -110,18 +120,44 @@ public class Player
 
     public async Task ImportSongs()
     {
+        Core.Instance.MainWindow.ViewModel!.HomeView.SongsLoading = true;
+        
         _filter = Core.Instance.MainWindow.ViewModel!.SearchView
             .WhenAnyValue(x => x.FilterText)
             .Throttle(TimeSpan.FromMilliseconds(20))
             .Select(BuildFilter);
-        
-        var songEntries = await Importer.ImportSongs(Core.Instance.Config.OsuPath!)!;
+
+        using var config = new Config();
+        var songEntries = await SongImporter.ImportSongs((await config.ReadAsync()).OsuPath!)!;
         if (songEntries == null) return;
         _songSource.AddRange(songEntries);
         
         _songSource.Connect().Sort(SortExpressionComparer<MapEntry>.Ascending(x => x.Title))
             .Filter(_filter, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
             .Bind(out FilteredSongEntries).Subscribe();
+
+        Core.Instance.MainWindow.ViewModel.HomeView.RaisePropertyChanged(nameof(Core.Instance.MainWindow.ViewModel.HomeView.SongEntries));
+        Core.Instance.MainWindow.ViewModel!.HomeView.SongsLoading = false;
+
+        if (SongSource == null || !SongSource.Any()) return;
+        
+        using var cfg = new Config();
+        var configContainer = await cfg.ReadAsync();
+        switch (configContainer.StartupSong)
+        {
+            case StartupSong.FirstSong:
+                await Play(SongSource[0]);
+                break;
+            case StartupSong.LastPlayed:
+                if (configContainer.LastPlayedSong < SongSource.Count)
+                    await Play(SongSource[configContainer.LastPlayedSong]);
+                else
+                    await Play(SongSource[0]);
+                break;
+            case StartupSong.RandomSong:
+                await Play(SongSource[new Random().Next(SongSource.Count)]);
+                break;
+        }
     }
 
     public async Task Play(MapEntry? song, PlayDirection playDirection = PlayDirection.Forward)
@@ -188,9 +224,8 @@ public class Player
             return Task.FromException(ex);
         }
 
-        CurrentIndex = SongSource.IndexOf(song);
-
-        _currentSong = song;
+        CurrentSong = song;
+        //Core.Instance.MainWindow.ViewModel.PlayerControl.CurrentSongImage = await song.FindBackground();
         return Task.CompletedTask;
     }
 

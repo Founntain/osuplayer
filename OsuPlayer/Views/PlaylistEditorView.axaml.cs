@@ -4,6 +4,8 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using OsuPlayer.Extensions;
+using Avalonia.ReactiveUI;
+using DynamicData;
 using OsuPlayer.IO.DbReader;
 using OsuPlayer.IO.Playlists;
 using OsuPlayer.ViewModels;
