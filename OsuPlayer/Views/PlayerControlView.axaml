@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:OsuPlayer.ViewModels"
              xmlns:cv="using:OsuPlayer.Extensions.ValueConverters"
+             xmlns:map="using:OsuPlayer.IO.DbReader"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.PlayerControlView">
@@ -13,6 +14,7 @@
 
     <UserControl.Resources>
         <cv:PlayPauseConverter x:Key="PlayPauseConverter" />
+        <map:MapEntry x:Key="Entry" />
         <cv:ShuffleConverter x:Key="ShuffleConverter" />
         <cv:RepeatConverter x:Key="RepeatConverter" />
         <cv:VolumeConverter x:Key="VolumeConverter" />
@@ -53,7 +55,6 @@
                     <ToolTip.Tip>
                         <TextBlock Text="{Binding SongText}" />
                     </ToolTip.Tip>
-
                     <TextBlock Name="TitleText" Text="{Binding TitleText}" FontSize="20"
                                Foreground="White" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
                     <TextBlock Name="ArtistText" Text="{Binding ArtistText}" FontSize="16"
@@ -65,13 +66,16 @@
                 <Panel>
                     <Button Name="Volume" Width="38" Height="38" CornerRadius="50" Click="Volume_OnClick"
                             Background="Transparent" PointerLeave="VolumePopupHandler"
-                            PointerEnter="VolumePopupHandler" IsPointerOver="{Binding VolumePointerOver, Mode=OneWayToSource}">
-                        <avalonia:MaterialIcon Kind="{Binding Volume, Converter={StaticResource VolumeConverter}}" Height="19" Width="19" />
+                            PointerEnter="VolumePopupHandler"
+                            IsPointerOver="{Binding VolumePointerOver, Mode=OneWayToSource}">
+                        <avalonia:MaterialIcon Kind="{Binding Volume, Converter={StaticResource VolumeConverter}}"
+                                               Height="19" Width="19" />
                     </Button>
                     <Popup IsOpen="{Binding IsVolumeVisible}" PlacementMode="AnchorAndGravity"
                            VerticalOffset="-76">
                         <Border Name="VolumePopup" Background="{DynamicResource PopupBase}" CornerRadius="5"
-                                PointerLeave="VolumePopup_OnPointerLeave" BorderBrush="{DynamicResource PopupBorder}" BorderThickness="1"
+                                PointerLeave="VolumePopup_OnPointerLeave" BorderBrush="{DynamicResource PopupBorder}"
+                                BorderThickness="1"
                                 IsPointerOver="{Binding VolumePopupPointerOver, Mode=OneWayToSource}">
                             <Slider VerticalAlignment="Center" HorizontalAlignment="Center"
                                     Minimum="0" Maximum="100" Value="{Binding Volume}" Orientation="Vertical"
@@ -83,15 +87,18 @@
                 <Panel>
                     <Button Name="PlaybackSpeed" Width="38" Height="38" CornerRadius="50" Click="PlaybackSpeed_OnClick"
                             Background="Transparent" ToolTip.IsOpen="{Binding IsSpeedVisible}"
-                            PointerEnter="SpeedPopupHandler" PointerLeave="SpeedPopupHandler" IsPointerOver="{Binding SpeedPointerOver, Mode=OneWayToSource}">
+                            PointerEnter="SpeedPopupHandler" PointerLeave="SpeedPopupHandler"
+                            IsPointerOver="{Binding SpeedPointerOver, Mode=OneWayToSource}">
                         <avalonia:MaterialIcon Kind="PlaySpeed" Height="19" Width="19" />
                     </Button>
                     <Popup IsOpen="{Binding IsSpeedVisible}" PlacementMode="AnchorAndGravity"
                            VerticalOffset="-76">
                         <Border Name="PlaybackSpeedPopup" Background="{DynamicResource PopupBase}" CornerRadius="5"
-                                PointerLeave="PlaybackSpeedPopup_OnPointerLeave" BorderBrush="{DynamicResource PopupBorder}" BorderThickness="1"
+                                PointerLeave="PlaybackSpeedPopup_OnPointerLeave"
+                                BorderBrush="{DynamicResource PopupBorder}" BorderThickness="1"
                                 IsPointerOver="{Binding SpeedPopupPointerOver, Mode=OneWayToSource}">
-                            <Slider VerticalAlignment="Center" HorizontalAlignment="Center" Minimum="32100" Maximum="56100"
+                            <Slider VerticalAlignment="Center" HorizontalAlignment="Center" Minimum="32100"
+                                    Maximum="56100"
                                     Value="{Binding PlaybackSpeed}"
                                     Orientation="Vertical" Height="100" Margin="6" />
                         </Border>

@@ -4,15 +4,15 @@ namespace OsuPlayer.IO;
 
 public sealed class SongImporter
 {
-    public Task<ICollection<MapEntry>>? ImportSongs(string path)
+    public static async Task<ICollection<MapEntry>>? ImportSongs(string path)
     {
-        if (string.IsNullOrEmpty(path)) return Task.FromResult<ICollection<MapEntry>>(default);
+        if (string.IsNullOrEmpty(path)) return null!;
 
-        var maps = DbReader.DbReader.ReadOsuDb(path)?.DistinctBy(x => x.BeatmapSetId)
+        var maps = (await DbReader.DbReader.ReadOsuDb(path))?.DistinctBy(x => x.BeatmapSetId)
             .DistinctBy(x => x.Title).Where(x => !string.IsNullOrEmpty(x.Title)).ToArray();
 
-        if (!maps.Any()) return Task.FromResult<ICollection<MapEntry>>(default);
+        if (maps == null || !maps.Any()) return null!;
 
-        return Task.FromResult<ICollection<MapEntry>>(maps.OrderBy(x => x.Title).ToArray());
+        return maps.OrderBy(x => x.Title).ToArray();
     }
 }

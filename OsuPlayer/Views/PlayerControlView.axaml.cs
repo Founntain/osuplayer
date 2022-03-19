@@ -4,6 +4,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
+using OsuPlayer.IO;
 using OsuPlayer.ViewModels;
 using ReactiveUI;
 
@@ -86,16 +87,6 @@ public partial class PlayerControlView : ReactiveUserControl<PlayerControlViewMo
                 Core.Instance.Player.Shuffle = !Core.Instance.Player.Shuffle;
                 break;
         }
-    }
-
-    private void SongProgressSlider_PreviewMouseLeftButtonUp(object? sender, PointerPressedEventArgs e)
-    {
-        //throw new System.NotImplementedException();
-    }
-
-    private void SongProgressSlider_PreviewMouseLeftButtonDown(object? sender, PointerReleasedEventArgs e)
-    {
-        //throw new System.NotImplementedException();
     }
 
     private void Volume_OnClick(object? sender, RoutedEventArgs e)

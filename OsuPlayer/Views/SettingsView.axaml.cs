@@ -2,6 +2,7 @@
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using OsuPlayer.IO;
+using OsuPlayer.IO.Storage;
 using OsuPlayer.ViewModels;
 using ReactiveUI;
 
@@ -22,8 +23,7 @@ public partial class SettingsView : ReactiveUserControl<SettingsViewModel>
 
     private void SettingsView_OnInitialized(object? sender, EventArgs e)
     {
-        var config = Config.GetConfigInstance();
-
-        ViewModel!.OsuLocation = config.OsuPath;
+        using var config = new Config();
+        ViewModel!.OsuLocation = config.Read().OsuPath!;
     }
 }
