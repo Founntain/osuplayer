@@ -1,22 +1,20 @@
 name: .NET Publish
 
 on:
-  workflow_dispatch:
+  push:
+    tags:
+      - '*'
 
 jobs:
   build:
     strategy:
       matrix:
-        os:
-          - { name: windows-latest, arch: win }
-          - { name: ubuntu-latest, arch: linux }
-        arch: [x64, x86]
+        release:
+          - { os: windows-latest, arch: win-x86 }
+          - { os: windows-latest, arch: win-x64 }
+          - { os: ubuntu-latest, arch: linux-x64 }
         
-    runs-on: ${{ matrix.os.name }}  # For a list of available runner types, refer to
-                             # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
-                             
-    env:
-      Solution_Name: OsuPlayer.sln                         # Replace with your solution name, i.e. MyWpfApp.sln.
+    runs-on: ${{ matrix.release.os }}
 
     steps:
     - name: Checkout
@@ -24,26 +22,32 @@ jobs:
       with:
         fetch-depth: 0
 
-    # Install the .NET Core workload
     - name: Install .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
 
-    # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
-    - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v1.0.2
-
-    # Execute all unit tests in the solution
     - name: Execute unit tests
       run: dotnet test
 
-    # Restore the application to populate the obj folder with RuntimeIdentifiers
     - name: Restore the application
       run: dotnet restore
       
     - name: Build
       run: |
         cd OsuPlayer
-        dotnet build -c Release --no-restore
-        dotnet publish -c Release -o ../releases/${{ matrix.os.arch }}-${{ matrix.arch }} -r ${{ matrix.os.arch }}-${{ matrix.arch }}
+        dotnet publish -c Release -o ../releases/${{ matrix.release.arch }} -r ${{ matrix.release.arch }}
+    
+    - name: Generate artifact
+      uses: TheDoctor0/zip-release@0.6.1
+      with:
+        type: 'zip'
+        filename: '${{ matrix.release.arch }}.zip'
+        directory: 'releases/${{ matrix.release.arch }}' 
+    
+    - name: Publish Artifact
+      uses: ncipollo/release-action@v1
+      with:
+        allowUpdates: true
+        artifacts: 'releases/${{ matrix.release.arch }}/${{ matrix.release.arch }}.zip'
+        token: ${{ secrets.GITHUB_TOKEN }}
