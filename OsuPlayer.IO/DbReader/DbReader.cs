@@ -1,4 +1,4 @@
-using OsuPlayer.IO.Storage;
+using OsuPlayer.IO.Storage.Config;
 
 namespace OsuPlayer.IO.DbReader;
 

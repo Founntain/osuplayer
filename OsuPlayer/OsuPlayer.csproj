@@ -88,5 +88,41 @@
         <DependentUpon>MainWindow.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
+      <Compile Update="Views\PlaylistEditorViewModel.cs">
+        <DependentUpon>PlaylistEditorView.axaml</DependentUpon>
+      </Compile>
+      <Compile Update="Views\HomeViewModel.cs">
+        <DependentUpon>HomeView.axaml</DependentUpon>
+      </Compile>
+      <Compile Update="Views\PlayerControlViewModel.cs">
+        <DependentUpon>PlayerControlView.axaml</DependentUpon>
+      </Compile>
+      <Compile Update="Views\PlaylistViewModel.cs">
+        <DependentUpon>PlaylistView.axaml</DependentUpon>
+      </Compile>
+      <Compile Update="Views\TopBarViewModel.cs">
+        <DependentUpon>TopBarView.axaml</DependentUpon>
+      </Compile>
+      <Compile Update="Views\SettingsViewModel.cs">
+        <DependentUpon>SettingsView.axaml</DependentUpon>
+      </Compile>
+      <Compile Update="Views\SearchViewModel.cs">
+        <DependentUpon>SearchView.axaml</DependentUpon>
+      </Compile>
+      <Compile Update="Windows\MainWindowViewModel.cs">
+        <DependentUpon>MainWindow.axaml</DependentUpon>
+      </Compile>
+      <Compile Update="Windows\LoginWindowViewModel.cs">
+        <DependentUpon>LoginWindow.axaml</DependentUpon>
+      </Compile>
+      <Compile Update="UI Extensions\MessageBoxViewModel.cs">
+        <DependentUpon>MessageBoxWindow.axaml</DependentUpon>
+      </Compile>
+      <Compile Update="Views\PartyViewModel.cs">
+        <DependentUpon>PartyView.axaml</DependentUpon>
+      </Compile>
+      <Compile Update="Views\UserViewModel.cs">
+        <DependentUpon>UserView.axaml</DependentUpon>
+      </Compile>
     </ItemGroup>
 </Project>

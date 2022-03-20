@@ -5,7 +5,8 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="OsuPlayer.Windows.LoginWindow"
         Title="login to osu!player community"
-        FontFamily="avares://OsuPlayer/Resources/Fonts/Torus-Regular.ttf#Torus" FontSize="16"
+        FontFamily="{DynamicResource Montserrat}" 
+        FontSize="16"
         
         WindowStartupLocation="CenterScreen"
         MaxWidth="300" MinWidth="300"
@@ -27,14 +28,15 @@
                 </ExperimentalAcrylicBorder.Material>
             </ExperimentalAcrylicBorder>
         </Panel>
-        <TextBlock Text="login to osu!player" Margin="10" FontSize="18" />
+        <TextBlock Text="login to osu!player" Margin="10" FontSize="18" FontWeight="SemiBold" />
         
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="10" Spacing="10">
-            <TextBox Text="{Binding Username}" Watermark="username..." HorizontalAlignment="Stretch"/>
-            <TextBox Text="{Binding Password}" Watermark="password..." PasswordChar="•" HorizontalAlignment="Stretch"/>
+            <TextBox Text="{Binding Username}" Watermark="username..." FontWeight="SemiBold" HorizontalAlignment="Stretch"/>
+            <TextBox Text="{Binding Password}" Watermark="password..." FontWeight="SemiBold" PasswordChar="•" HorizontalAlignment="Stretch"/>
         </StackPanel>
         
-        <Button Margin="10" Content="login" Command="{Binding Login}"
-                VerticalAlignment="Bottom" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+        <Button Margin="10" Content="login"
+                VerticalAlignment="Bottom" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" 
+                Click="LoginBtn_OnClick"/>
     </Grid>
 </Window>

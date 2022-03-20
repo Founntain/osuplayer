@@ -1,9 +1,10 @@
 using System.Reactive.Disposables;
+using OsuPlayer.ViewModels;
 using ReactiveUI;
 
-namespace OsuPlayer.ViewModels;
+namespace OsuPlayer.Views;
 
-public class TopBarViewModel : BaseViewModel, IActivatableViewModel
+public class TopBarViewModel : BaseViewModel
 {
     private string _currentSongText = "currently playing nothing";
 
@@ -12,6 +13,4 @@ public class TopBarViewModel : BaseViewModel, IActivatableViewModel
         Activator = new ViewModelActivator();
         this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
     }
-
-    public ViewModelActivator Activator { get; }
 }

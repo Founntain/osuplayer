@@ -2,11 +2,10 @@
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using OsuPlayer.IO;
 using OsuPlayer.IO.DbReader;
-using OsuPlayer.IO.Storage;
+using OsuPlayer.IO.Storage.Config;
 using OsuPlayer.UI_Extensions;
-using OsuPlayer.ViewModels;
+using OsuPlayer.Windows;
 using ReactiveUI;
 
 namespace OsuPlayer.Views;
@@ -43,5 +42,21 @@ public partial class HomeView : ReactiveUserControl<HomeViewModel>
         var list = sender as ListBox;
         var song = list!.SelectedItem as MapEntry;
         await Core.Instance.Player.Play(song);
+    }
+
+    private async void LoginBtn_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (ViewModel == default) return;
+        
+        var loginWindow = new LoginWindow
+        {
+            ViewModel = new LoginWindowViewModel()
+        };
+
+        await loginWindow.ShowDialog(Core.Instance.MainWindow);
+        
+        ViewModel.RaisePropertyChanged(nameof(ViewModel.CurrentUser));
+        
+        ViewModel.ProfilePicture = await ViewModel.LoadProfilePicture();
     }
 }

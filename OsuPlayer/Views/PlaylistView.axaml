@@ -2,19 +2,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:playlists="clr-namespace:OsuPlayer.IO.Playlists;assembly=OsuPlayer.IO"
              xmlns:dbReader="clr-namespace:OsuPlayer.IO.DbReader;assembly=OsuPlayer.IO"
              xmlns:valueConverters="clr-namespace:OsuPlayer.ValueConverters"
-             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:playlists="clr-namespace:OsuPlayer.IO.Storage.Playlists;assembly=OsuPlayer.IO"
+             xmlns:classes="clr-namespace:OsuPlayer.Data.OsuPlayer.Classes;assembly=OsuPlayer.Data"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="OsuPlayer.Views.PlaylistView"
-             Initialized="PlaylistView_OnInitialized">
+             x:Class="OsuPlayer.Views.PlaylistView">
 
     <UserControl.Resources>
         <valueConverters:PlaylistValueConverter x:Key="PlaylistValueConverter" />
     </UserControl.Resources>
     <Grid ColumnDefinitions="25*, 75*">
-        <Grid Column="0" Margin="5" RowDefinitions="50, *, 50">
+        <Grid Column="0" Margin="10" RowDefinitions="50, *, 50">
             <Panel Grid.RowSpan="3">
                 <ExperimentalAcrylicBorder IsHitTestVisible="False">
                     <ExperimentalAcrylicBorder.Material>
@@ -33,7 +32,7 @@
             
             <ListBox Grid.Row="1" SelectedItem="{Binding SelectedPlaylist}" Items="{Binding Playlists}" Background="Transparent">
                 <ListBox.ItemTemplate>
-                    <DataTemplate DataType="playlists:Playlist">
+                    <DataTemplate DataType="classes:Playlist">
                         <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
@@ -45,7 +44,7 @@
                     FontWeight="SemiBold"/>
         </Grid>
         
-        <Grid Column="1" Margin="5">
+        <Grid Column="1" Margin="10">
             <Panel Grid.ColumnSpan="2">
                 <ExperimentalAcrylicBorder IsHitTestVisible="False">
                     <ExperimentalAcrylicBorder.Material>

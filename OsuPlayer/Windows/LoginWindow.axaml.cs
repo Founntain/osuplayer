@@ -1,9 +1,10 @@
 ﻿using Avalonia;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using OsuPlayer.IO;
-using OsuPlayer.IO.Storage;
-using OsuPlayer.ViewModels;
+using OsuPlayer.IO.Storage.Config;
+using OsuPlayer.Network.API.ApiEndpoints;
+using OsuPlayer.Network.Online;
 
 namespace OsuPlayer.Windows;
 
@@ -23,5 +24,20 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
     private void InitializeComponent()
     {
         AvaloniaXamlLoader.Load(this);
+    }
+
+    private async void LoginBtn_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (ViewModel == default) return;
+        
+        var user = await ApiAsync.LoadUserWithCredentialsAsync(ViewModel.Username, ViewModel.Password);
+
+        if (user == default) return;
+
+        if (user.Name != ViewModel.Username) return;
+
+        ProfileManager.User = user;
+        
+        Close();
     }
 }

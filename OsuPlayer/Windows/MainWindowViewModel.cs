@@ -1,12 +1,12 @@
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using OsuPlayer.Data.OsuPlayer.Classes;
-using OsuPlayer.IO.DbReader;
+using OsuPlayer.ViewModels;
+using OsuPlayer.Views;
 using ReactiveUI;
 
-namespace OsuPlayer.ViewModels;
+namespace OsuPlayer.Windows;
 
-public class MainWindowViewModel : BaseViewModel, IScreen
+public class MainWindowViewModel : BaseWindowViewModel
 {
     public readonly HomeViewModel HomeView;
     public readonly PartyViewModel PartyView;
@@ -46,6 +46,4 @@ public class MainWindowViewModel : BaseViewModel, IScreen
     }
 
     public ObservableCollection<AudioDevice> OutputDeviceComboboxItems { get; set; }
-
-    public RoutingState Router { get; } = new();
 }

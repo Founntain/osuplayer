@@ -1,8 +1,7 @@
 ﻿using Avalonia.Controls;
 using OsuPlayer.Data.OsuPlayer.Enums;
-using OsuPlayer.IO.Storage;
 
-namespace OsuPlayer.Extensions.Storage;
+namespace OsuPlayer.IO.Storage.Config;
 
 public class ConfigContainer : IStorableContainer
 {

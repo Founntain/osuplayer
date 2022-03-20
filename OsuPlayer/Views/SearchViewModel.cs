@@ -1,11 +1,12 @@
 using System.Collections.ObjectModel;
 using System.Reactive.Disposables;
 using OsuPlayer.IO.DbReader;
+using OsuPlayer.ViewModels;
 using ReactiveUI;
 
-namespace OsuPlayer.ViewModels;
+namespace OsuPlayer.Views;
 
-public class SearchViewModel : BaseViewModel, IActivatableViewModel
+public class SearchViewModel : BaseViewModel
 {
     public SearchViewModel()
     {
@@ -20,8 +21,6 @@ public class SearchViewModel : BaseViewModel, IActivatableViewModel
         get => _filterText;
         set => this.RaiseAndSetIfChanged(ref _filterText, value);
     }
-
-    public ViewModelActivator Activator { get; }
 
     public ReadOnlyObservableCollection<MapEntry> FilteredSongEntries => Core.Instance.Player.FilteredSongEntries!;
 }
