@@ -31,7 +31,7 @@
         <PackageReference Include="Avalonia.Diagnostics" Version="0.10.13" />
         <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.13" />
         <PackageReference Include="Avalonia.Skia" Version="0.10.13" />
-        <PackageReference Include="founntain.OsuPlayer.NativeLibs" Version="1.0.2" />
+        <PackageReference Include="Founntain.OsuPlayer.NativeLibs" Version="1.0.3" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Include="ManagedBass" Version="3.1.0" />
         <PackageReference Include="ManagedBass.Fx" Version="3.1.0" />
