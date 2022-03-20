@@ -98,8 +98,8 @@
                                 PointerLeave="PlaybackSpeedPopup_OnPointerLeave"
                                 BorderBrush="{DynamicResource PopupBorder}" BorderThickness="1"
                                 IsPointerOver="{Binding SpeedPopupPointerOver, Mode=OneWayToSource}">
-                            <Slider VerticalAlignment="Center" HorizontalAlignment="Center" Minimum="32100"
-                                    Maximum="56100"
+                            <Slider VerticalAlignment="Center" HorizontalAlignment="Center" Minimum="-0.25"
+                                    Maximum="0.25"
                                     Value="{Binding PlaybackSpeed}"
                                     Orientation="Vertical" Height="100" Margin="6" />
                         </Border>

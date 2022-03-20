@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Avalonia.Threading;
 using DynamicData;
 using DynamicData.Binding;
+using ManagedBass;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.IO;
 using OsuPlayer.IO.DbReader;
@@ -158,6 +159,11 @@ public class Player
         }
     }
 
+    public void SetPlaybackSpeed(double speed)
+    {
+        Bass.ChannelSetAttribute(Core.Instance.Engine.FxStream, ChannelAttribute.TempoFrequency, Core.Instance.Engine.SampleFrequency * (1 + speed));
+    }
+    
     public async Task Play(MapEntry? song, PlayDirection playDirection = PlayDirection.Forward)
     {
         if (SongSource == null || !SongSource.Any())

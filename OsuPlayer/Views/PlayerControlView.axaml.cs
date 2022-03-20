@@ -94,7 +94,7 @@ public partial class PlayerControlView : ReactiveUserControl<PlayerControlViewMo
     
     private void PlaybackSpeed_OnClick(object? sender, RoutedEventArgs e)
     {
-        
+        ViewModel!.PlaybackSpeed = 0;
     }
 
     private void VolumePopupHandler(object? sender, PointerEventArgs e)

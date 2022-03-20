@@ -377,8 +377,10 @@ public sealed class BassEngine
                 // Obtain the sample rate of the stream
                 var info = Bass.ChannelGetInfo(FxStream);
                 SampleFrequency = info.Frequency;
-                Difference = 44100 - SampleFrequency;
+                Difference = 44100 - SampleFrequency; 
                 //SetEqBands();
+                var speed = SampleFrequency * (1 + Core.Instance.MainWindow.ViewModel!.PlayerControl.PlaybackSpeed);
+                Bass.ChannelSetAttribute(FxStream, ChannelAttribute.TempoFrequency, speed);
                 
                 using var config = new Config();
                 SetDeviceInfo(config.Read().SelectedOutputDevice);
