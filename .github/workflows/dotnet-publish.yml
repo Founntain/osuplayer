@@ -21,6 +21,8 @@ jobs:
         omitPrereleaseDuringUpdate: true
 
   build:
+    needs: setup
+    name: Publish ${{ matrix.release.arch }}
     strategy:
       matrix:
         release:
