@@ -6,6 +6,20 @@ on:
       - '*'
 
 jobs:
+  setup:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+    - name: Create Release
+      uses: ncipollo/release-action@v1
+      with:
+        allowUpdates: true
+        token: ${{ secrets.GITHUB_TOKEN }}
+        generateReleaseNotes: true
+        omitBodyDuringUpdate: true
+        omitNameDuringUpdate: true
+        omitPrereleaseDuringUpdate: true
+
   build:
     strategy:
       matrix:
@@ -49,5 +63,8 @@ jobs:
       uses: ncipollo/release-action@v1
       with:
         allowUpdates: true
+        omitBodyDuringUpdate: true
+        omitNameDuringUpdate: true
+        omitPrereleaseDuringUpdate: true
         artifacts: 'releases/${{ matrix.release.arch }}/${{ matrix.release.arch }}.zip'
         token: ${{ secrets.GITHUB_TOKEN }}
