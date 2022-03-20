@@ -1,8 +1,7 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="using:OsuPlayer.ViewModels"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:dbReader="clr-namespace:OsuPlayer.IO.DbReader;assembly=OsuPlayer.IO"
              xmlns:valueConverters="clr-namespace:OsuPlayer.ValueConverters"
@@ -13,6 +12,8 @@
     <UserControl.Resources>
         <valueConverters:PlaylistValueConverter x:Key="PlaylistValueConverter" />
         <extensions:SourceListValueConverter x:Key="SourceListValueConverter" />
+
+        <Color x:Key="PopupBase">#FF2B2B2B</Color>
     </UserControl.Resources>
 
     <Design.DataContext>
@@ -41,20 +42,91 @@
                 <ComboBox Items="{Binding Playlists, Converter={StaticResource SourceListValueConverter}}"
                           SelectedItem="{Binding CurrentSelectedPlaylist}" Margin="0 0 10 0" />
 
-                <Button Name="CreatePlaylist" Width="38" Height="38" CornerRadius="50"
-                        Background="Transparent">
-                    <avalonia:MaterialIcon Kind="PlaylistAdd" Height="28" Width="28" />
-                </Button>
+                <Panel>
+                    <Button Name="CreatePlaylist" Width="38" Height="38" CornerRadius="50"
+                            Background="Transparent" Click="CreatePlaylist_OnClick">
+                        <avalonia:MaterialIcon Kind="PlaylistAdd" Height="28" Width="28" />
+                    </Button>
+                    <Popup PlacementMode="AnchorAndGravity" Width="250" MaxWidth="250"
+                           HorizontalOffset="-150" IsOpen="{Binding IsNewPlaylistPopupOpen}">
 
-                <Button Name="RenamePlaylist" Width="38" Height="38" CornerRadius="50"
-                        Background="Transparent">
-                    <avalonia:MaterialIcon Kind="PlaylistEdit" Height="28" Width="28" />
-                </Button>
+                        <Border Background="{DynamicResource PopupBase}" CornerRadius="5"
+                                BorderBrush="{DynamicResource SystemAccentColor}" BorderThickness="1">
+                            <Grid ColumnDefinitions="*, Auto">
+                                <TextBox Grid.Column="0" Text="{Binding NewPlaylistnameText}"
+                                         Watermark="enter playlistname"
+                                         VerticalContentAlignment="Center" HorizontalAlignment="Stretch"
+                                         BorderThickness="0" />
 
-                <Button Name="DeletePlaylist" Width="38" Height="38" CornerRadius="50"
-                        Background="Transparent">
-                    <avalonia:MaterialIcon Kind="PlaylistRemove" Height="28" Width="28" />
-                </Button>
+                                <Button Grid.Column="1" Name="ConfirmNewPlaylist" Width="38" Height="38"
+                                        HorizontalAlignment="Right"
+                                        Background="Transparent"
+                                        Click="ConfirmNewPlaylist_OnClick">
+                                    <avalonia:MaterialIcon Kind="Check" Height="28" Width="28" />
+                                </Button>
+                            </Grid>
+                        </Border>
+                    </Popup>
+                </Panel>
+
+                <Panel>
+                    <Button Name="RenamePlaylist" Width="38" Height="38" CornerRadius="50"
+                            Background="Transparent" Click="RenamePlaylist_OnClick">
+                        <avalonia:MaterialIcon Kind="PlaylistEdit" Height="28" Width="28" />
+                    </Button>
+                    <Popup PlacementMode="AnchorAndGravity" Width="250" MaxWidth="250"
+                           HorizontalOffset="-150" IsOpen="{Binding IsRenamePlaylistPopupOpen}">
+
+                        <Border Background="{DynamicResource PopupBase}" CornerRadius="5"
+                                BorderBrush="{DynamicResource SystemAccentColor}" BorderThickness="1">
+                            <Grid ColumnDefinitions="*, Auto">
+                                <TextBox Grid.Column="0" Text="{Binding CurrentSelectedPlaylist.Name}"
+                                         Watermark="new playlistname"
+                                         VerticalContentAlignment="Center" HorizontalAlignment="Stretch"
+                                         BorderThickness="0" />
+
+                                <Button Grid.Column="1" Name="ConfirmRenamePlaylist" Width="38" Height="38"
+                                        HorizontalAlignment="Right"
+                                        Background="Transparent"
+                                        Click="ConfirmRenamePlaylist_OnClick">
+                                    <avalonia:MaterialIcon Kind="Check" Height="28" Width="28" />
+                                </Button>
+                            </Grid>
+                        </Border>
+                    </Popup>
+                </Panel>
+
+                <Panel>
+                    <Button Name="DeletePlaylist" Width="38" Height="38" CornerRadius="50"
+                            Background="Transparent" Click="DeletePlaylist_OnClick">
+                        <avalonia:MaterialIcon Kind="PlaylistRemove" Height="28" Width="28" />
+                    </Button>
+                    <Popup PlacementMode="AnchorAndGravity" Width="250" MaxWidth="250"
+                           HorizontalOffset="-150" IsOpen="{Binding IsDeletePlaylistPopupOpen}">
+
+                        <Border Background="{DynamicResource PopupBase}" CornerRadius="5"
+                                BorderBrush="{DynamicResource SystemAccentColor}" BorderThickness="1">
+                            <Grid ColumnDefinitions="*, Auto, Auto">
+                                <TextBlock Grid.Column="0" Text="sure?" VerticalAlignment="Center"
+                                           HorizontalAlignment="Stretch" />
+
+                                <Button Grid.Column="1" Name="ConfirmDeletePlaylist" Width="38" Height="38"
+                                        HorizontalAlignment="Right"
+                                        Background="Transparent"
+                                        Click="ConfirmDeletePlaylist_OnClick">
+                                    <avalonia:MaterialIcon Kind="Delete" Height="28" Width="28" />
+                                </Button>
+
+                                <Button Grid.Column="2" Name="CancelDeletePlaylist" Width="38" Height="38"
+                                        HorizontalAlignment="Right"
+                                        Background="Transparent"
+                                        Click="CancelDeletePlaylist_OnClick">
+                                    <avalonia:MaterialIcon Kind="Remove" Height="28" Width="28" />
+                                </Button>
+                            </Grid>
+                        </Border>
+                    </Popup>
+                </Panel>
             </DockPanel>
         </Grid>
 
@@ -84,23 +156,24 @@
                         </ExperimentalAcrylicBorder.Material>
                     </ExperimentalAcrylicBorder>
                 </Panel>
-                
+
                 <Border Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#7F000000">
                     <TextBlock Text="Your songs" FontSize="22" VerticalAlignment="Center" HorizontalAlignment="Center" />
                 </Border>
-                
+
                 <ListBox Grid.Row="1" Background="Transparent" SelectionMode="Multiple, Toggle"
-                         Items="{Binding SongList}" SelectedItems="{Binding SelectedSongListItems}" SelectionChanged="SongList_OnSelectionChanged">
+                         Items="{Binding SongList}" SelectedItems="{Binding SelectedSongListItems}"
+                         SelectionChanged="SongList_OnSelectionChanged">
                     <ListBox.ItemTemplate>
                         <DataTemplate DataType="dbReader:MapEntry">
                             <Grid>
-                                <TextBlock Text="{Binding SongName}" FontWeight="SemiBold"/>
+                                <TextBlock Text="{Binding SongName}" FontWeight="SemiBold" />
                             </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
             </Grid>
-            
+
             <Grid Column="2" Margin="10" RowDefinitions="50, *">
                 <Panel Grid.Row="0" Grid.RowSpan="2">
                     <ExperimentalAcrylicBorder IsHitTestVisible="False">
@@ -113,13 +186,15 @@
                         </ExperimentalAcrylicBorder.Material>
                     </ExperimentalAcrylicBorder>
                 </Panel>
-                
+
                 <Border Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#7F000000">
-                    <TextBlock Text="playlist songs" FontSize="22" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    <TextBlock Text="playlist songs" FontSize="22" VerticalAlignment="Center"
+                               HorizontalAlignment="Center" />
                 </Border>
-                
+
                 <ListBox Grid.Row="1" Background="Transparent" SelectionMode="Multiple, Toggle"
-                         Items="{Binding CurrentSelectedPlaylist.Songs, Converter={StaticResource PlaylistValueConverter}}" SelectionChanged="Playlist_OnSelectionChanged">
+                         Items="{Binding CurrentSelectedPlaylist.Songs, Converter={StaticResource PlaylistValueConverter}}"
+                         SelectionChanged="Playlist_OnSelectionChanged">
                     <ListBox.ItemTemplate>
                         <DataTemplate DataType="dbReader:MapEntry">
                             <Grid>

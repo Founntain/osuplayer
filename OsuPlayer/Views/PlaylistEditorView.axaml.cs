@@ -1,11 +1,14 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
+using OsuPlayer.Data.OsuPlayer.Classes;
+using OsuPlayer.Extensions;
 using OsuPlayer.IO.DbReader;
 using OsuPlayer.IO.Storage.Playlists;
+using OsuPlayer.UI_Extensions;
 using ReactiveUI;
 
 namespace OsuPlayer.Views;
@@ -109,5 +112,87 @@ public partial class PlaylistEditorView : ReactiveUserControl<PlaylistEditorView
         var songs = listBox.SelectedItems.Cast<MapEntry>().ToList();
         
         ViewModel.SelectedPlaylistItems = songs;
+    }
+
+    private void CreatePlaylist_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (ViewModel == default) return;
+
+        ViewModel.IsNewPlaylistPopupOpen = !ViewModel.IsNewPlaylistPopupOpen;
+    }
+
+    private void RenamePlaylist_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (ViewModel == default) return;
+
+        ViewModel.IsRenamePlaylistPopupOpen = !ViewModel.IsRenamePlaylistPopupOpen;
+    }
+
+    private async void ConfirmNewPlaylist_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (ViewModel == default) return;
+
+        if (string.IsNullOrWhiteSpace(ViewModel.NewPlaylistnameText)) return;
+
+        var playlist = new Playlist
+        {
+            Name = ViewModel.NewPlaylistnameText
+        };
+
+        var playlists = await PlaylistManager.AddPlaylistAsync(playlist);
+
+        ViewModel.IsNewPlaylistPopupOpen = false;
+
+        ViewModel.Playlists = playlists.ToSourceList();
+
+        ViewModel.CurrentSelectedPlaylist = ViewModel.Playlists.Items.Last();
+    }
+
+    private async void ConfirmRenamePlaylist_OnClick(object? sender, RoutedEventArgs e)
+    {
+        await PlaylistManager.RenamePlaylist(ViewModel.CurrentSelectedPlaylist);
+
+        await PlaylistManager.SavePlaylistsAsync();
+
+        var playlists = await PlaylistManager.GetAllPlaylistsAsync();
+
+        ViewModel.IsRenamePlaylistPopupOpen = false;
+
+        ViewModel.Playlists = playlists.ToSourceList();
+
+        ViewModel.CurrentSelectedPlaylist = ViewModel.Playlists.Items.Last();
+    }
+
+    private void DeletePlaylist_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (ViewModel == default) return;
+
+        ViewModel.IsDeletePlaylistPopupOpen = !ViewModel.IsDeletePlaylistPopupOpen;
+    }
+
+    private async void ConfirmDeletePlaylist_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (ViewModel == default) return;
+
+        if (ViewModel.CurrentSelectedPlaylist.Name == "Favorites")
+        {
+            await MessageBox.ShowDialogAsync(Core.Instance.MainWindow, "No you can't delete your favorites! Sorry :(");
+            return;
+        }
+
+        var playlists = await PlaylistManager.DeletePlaylistAsync(ViewModel.CurrentSelectedPlaylist);
+
+        ViewModel.IsDeletePlaylistPopupOpen = false;
+
+        ViewModel.Playlists = playlists.ToSourceList();
+
+        ViewModel.CurrentSelectedPlaylist = ViewModel.Playlists.Items.First();
+    }
+
+    private void CancelDeletePlaylist_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (ViewModel == default) return;
+
+        ViewModel.IsDeletePlaylistPopupOpen = false;
     }
 }
