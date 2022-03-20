@@ -13,8 +13,8 @@ public class PlaylistManager
             return storage.Container.Playlists;
         }
     }
-    
-    public async static Task<IList<Playlist>> GetAllPlaylistsAsync()
+
+    public static async Task<IList<Playlist>> GetAllPlaylistsAsync()
     {
         await using (var storage = new PlaylistStorage())
         {
@@ -24,16 +24,18 @@ public class PlaylistManager
         }
     }
 
-    public static async void AddPlaylistAsync(Playlist playlist)
+    public static async Task<IList<Playlist>?> AddPlaylistAsync(Playlist playlist)
     {
         await using (var storage = new PlaylistStorage())
         {
             await storage.ReadAsync();
             
             if (storage.Container.Playlists.Any(x => x == playlist))
-                return;
+                return default;
 
             storage.Container.Playlists.Add(playlist);
+
+            return storage.Container.Playlists;
         }
     }
 
@@ -54,13 +56,51 @@ public class PlaylistManager
         }
     }
 
-    public static async void ReplacePlaylistsAsync(IList<Playlist> playlists)
+    public static async Task ReplacePlaylistsAsync(IList<Playlist> playlists)
     {
         await using (var storage = new PlaylistStorage())
         {
             await storage.ReadAsync();
             
             storage.Container.Playlists = playlists;
+        }
+    }
+
+    public static async Task RenamePlaylist(Playlist playlist)
+    {
+        await using (var storage = new PlaylistStorage())
+        {
+            await storage.ReadAsync();
+
+            var p = storage.Container.Playlists.FirstOrDefault(x => x == playlist);
+
+            storage.Container.Playlists.Remove(p);
+
+            p.Name = playlist.Name;
+
+            storage.Container.Playlists.Add(p);
+        }
+    }
+
+    public static async Task SavePlaylistsAsync()
+    {
+        await using (var storage = new PlaylistStorage())
+        {
+            await storage.ReadAsync();
+        }
+    }
+
+    public static async Task<IList<Playlist>?> DeletePlaylistAsync(Playlist playlist)
+    {
+        await using (var storage = new PlaylistStorage())
+        {
+            await storage.ReadAsync();
+
+            var p = storage.Container.Playlists.First(x => x == playlist);
+
+            storage.Container.Playlists.Remove(p);
+
+            return storage.Container.Playlists;
         }
     }
 }

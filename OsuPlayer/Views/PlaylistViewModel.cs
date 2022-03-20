@@ -39,17 +39,16 @@ public class PlaylistViewModel : BaseViewModel
                 SelectedPlaylist = Playlists[0];
             }
         });
-        
-        
     }
-
-
+    
     public async void OpenPlaylistEditor()
     {
         var playlists = await PlaylistManager.GetAllPlaylistsAsync();
 
         Core.Instance.MainWindow.ViewModel!.PlaylistEditorViewModel.Playlists = playlists.ToSourceList();
-        
+
         Core.Instance.MainWindow.ViewModel!.MainView = Core.Instance.MainWindow.ViewModel.PlaylistEditorViewModel;
+        
+        
     }
 }

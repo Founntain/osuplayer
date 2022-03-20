@@ -18,6 +18,34 @@ public class PlaylistEditorViewModel : BaseViewModel
     
     private List<MapEntry> _selectedSongListItems;
     private List<MapEntry> _selectedPlaylistItems;
+    private string _newPlaylistnameText;
+    private bool _isNewPlaylistPopupOpen;
+    private bool _isRenamePlaylistPopupOpen;
+    private bool _isDeletePlaylistPopupOpen;
+
+    public bool IsDeletePlaylistPopupOpen
+    {
+        get => _isDeletePlaylistPopupOpen;
+        set => this.RaiseAndSetIfChanged(ref _isDeletePlaylistPopupOpen, value);
+    }
+
+    public bool IsRenamePlaylistPopupOpen
+    {
+        get => _isRenamePlaylistPopupOpen;
+        set => this.RaiseAndSetIfChanged(ref _isRenamePlaylistPopupOpen, value);
+    }
+
+    public bool IsNewPlaylistPopupOpen
+    {
+        get => _isNewPlaylistPopupOpen;
+        set => this.RaiseAndSetIfChanged(ref _isNewPlaylistPopupOpen, value);
+    }
+
+    public string NewPlaylistnameText
+    {
+        get => _newPlaylistnameText;
+        set => this.RaiseAndSetIfChanged(ref _newPlaylistnameText, value);
+    }
 
     public Playlist CurrentSelectedPlaylist
     {
