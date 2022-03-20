@@ -14,7 +14,7 @@
         <IsPackable>true</IsPackable>
         <Title>osu!player Libraries</Title>
         <Description>Native libraries for osu!player</Description>
-        <PackageId>founntain.OsuPlayer.NativeLibs</PackageId>
+        <PackageId>Founntain.OsuPlayer.NativeLibs</PackageId>
         <PackageTags>osuplayer libraries</PackageTags>
         <IncludeBuildOutput>false</IncludeBuildOutput>
         <PackageIcon>icon.png</PackageIcon>
