@@ -19,8 +19,8 @@ If you want to contribute, feel free to fork this repository, read the [contribu
 ✔️ An internet connection for the first start, to get language files etc.
 
 #### Download osu!player
-No official downloads yet, if you want to try it out.  
-You have to build the project for yourself, see the section below
+If you want to try out our current pre-releases head to our [release](https://github.com/Founntain/osuplayer/releases) section to download the latest pre-release
+Or build the project for yourself, see the section below
 
 ## ⚒️Building the project
  - Clone / Download the source
