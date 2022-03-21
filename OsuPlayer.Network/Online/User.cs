@@ -23,6 +23,13 @@ public sealed class User : UserModel
     public Brush RoleColor => GetRoleColorBrush();
     public string RoleString => GetRoleString();
 
+    public string DescriptionTitleString => $"{Name}'s Description";
+    public string LevelString => $"Level {Level}";
+    public string JoinDateString => JoinDate.ToString("D", new CultureInfo("en-us"));
+
+    public string TotalXpString =>
+        TotalXp == 0 ? "0 XP" : $"{TotalXp.ToString("##,###", CultureInfo.InvariantCulture)} XP";
+
     public override string ToString()
     {
         return Name;

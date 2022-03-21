@@ -1,10 +1,13 @@
-﻿using Avalonia.Controls;
+﻿using System.Threading;
 using Avalonia.Markup.Xaml;
+using Avalonia.ReactiveUI;
 
 namespace OsuPlayer.Views;
 
-public partial class UserView : UserControl
+public partial class UserView : ReactiveUserControl<UserViewModel>
 {
+    private CancellationTokenSource? CancellationTokenSource;
+    
     public UserView()
     {
         InitializeComponent();
