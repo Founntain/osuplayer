@@ -33,7 +33,7 @@
                              Watermark="type to search..." />
 
             <ListBox Grid.Row="1" Background="Transparent" Items="{Binding Users}"
-                     SelectedItem="{Binding SelectedUser}">
+                     SelectedItem="{Binding SelectedUser}" SelectionChanged="SelectingItemsControl_OnSelectionChanged">
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="online:User">
                         <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Foreground="{Binding RoleColor}" />
@@ -111,13 +111,9 @@
                                     HorizontalContentAlignment="Center" />
                         </StackPanel>
 
-                        <!-- <ScrollViewer Grid.Row="2" Margin="10 0"> -->
-                        <!--     <ItemsRepeater Items="{Binding Badges}" HorizontalAlignment="Center" VerticalAlignment="Top" > -->
-                        <!--         <ItemsRepeater.Layout> -->
-                        <!--             <WrapLayout Orientation="Horizontal" /> -->
-                        <!--         </ItemsRepeater.Layout> -->
-                        <!--     </ItemsRepeater> -->
-                        <!-- </ScrollViewer> -->
+                        <ScrollViewer Name="BadgeViewer" Grid.Row="2" Margin="10 0">
+                            <ContentPresenter Name="BadgeItems"/>
+                        </ScrollViewer>
                     </Grid>
 
                 </Grid>

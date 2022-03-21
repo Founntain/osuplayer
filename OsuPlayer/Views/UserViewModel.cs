@@ -72,7 +72,6 @@ public class UserViewModel : BaseViewModel
             LoadTopSongs();
             LoadProfilePicture();
             LoadProfileBanner();
-            LoadBadges();
         }
     }
 
@@ -196,7 +195,10 @@ public class UserViewModel : BaseViewModel
                 cancellationToken.ThrowIfCancellationRequested();
 
             var banner = await ApiAsync.GetProfileBannerAsync(SelectedUser.CustomWebBackground);
-
+            
+            if (cancellationToken.IsCancellationRequested)
+                cancellationToken.ThrowIfCancellationRequested();
+            
             if (banner == default)
             {
                 CurrentProfileBanner = default;
@@ -213,15 +215,15 @@ public class UserViewModel : BaseViewModel
         }
     }
 
-    private void LoadBadges()
+    public IEnumerable<IControl> LoadBadges(User currentUser)
     {
-        if (SelectedUser == default) return;
+        if (currentUser == default) return default!;
 
-        var badges = new List<IControl>();
+        var badges = new List<MaterialIcon>();
 
         var size = 32;
 
-        if (SelectedUser.Role == UserRole.Developer)
+        if (currentUser.Role == UserRole.Developer)
             badges.Add(new MaterialIcon
             {
                 Kind = MaterialIconKind.Xml,
@@ -229,7 +231,7 @@ public class UserViewModel : BaseViewModel
                 Width = size
             });
 
-        if (SelectedUser.IsDonator)
+        if (currentUser.IsDonator)
             badges.Add(new MaterialIcon
             {
                 Kind = MaterialIconKind.Heart,
@@ -237,7 +239,7 @@ public class UserViewModel : BaseViewModel
                 Width = size
             });
 
-        if (SelectedUser.Role == UserRole.Tester)
+        if (currentUser.Role == UserRole.Tester)
             badges.Add(new MaterialIcon
             {
                 Kind = MaterialIconKind.TestTube,
@@ -245,7 +247,7 @@ public class UserViewModel : BaseViewModel
                 Width = size
             });
 
-        if (SelectedUser.JoinDate < new DateTime(2019, 1, 1))
+        if (currentUser.JoinDate < new DateTime(2019, 1, 1))
             badges.Add(new MaterialIcon
             {
                 Kind = MaterialIconKind.Creation,
@@ -253,6 +255,6 @@ public class UserViewModel : BaseViewModel
                 Width = size
             });
 
-        Badges = badges.ToObservableCollection();
+        return badges;
     }
 }
