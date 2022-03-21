@@ -1,4 +1,6 @@
-﻿using OsuPlayer.Data.API.Models.User;
+﻿using Avalonia.Media.Imaging;
+using OsuPlayer.Data.API.Models.Beatmap;
+using OsuPlayer.Data.API.Models.User;
 using OsuPlayer.Network.Online;
 
 namespace OsuPlayer.Network.API.ApiEndpoints;
@@ -10,6 +12,28 @@ public partial class ApiAsync
         if (string.IsNullOrWhiteSpace(username)) return default;
 
         return await GetRequestWithParameterAsync<string>("users", "getProfilePictureByName", $"name={username}");
+    }
+
+    public static async Task<Bitmap?> GetProfileBannerAsync(string? bannerUrl = null)
+    {
+        if (string.IsNullOrWhiteSpace(bannerUrl)) return default;
+
+        using (var client = new HttpClient())
+        {
+            try
+            {
+                var data = await client.GetByteArrayAsync(bannerUrl);
+
+                await using (var stream = new MemoryStream(data))
+                {
+                    return new Bitmap(stream);
+                }
+            }
+            catch (Exception)
+            {
+                return default;
+            }
+        }
     }
 
     public static async Task<User?> GetUserByName(string username)
@@ -54,5 +78,11 @@ public partial class ApiAsync
             Username = username,
             Password = password
         });
+    }
+
+    public static async Task<List<BeatmapUserValidityModel>?> GetBeatmapsPlayedByUser(string username, int amount = 10)
+    {
+        return await GetRequestWithParameterAsync<List<BeatmapUserValidityModel>>("beatmaps", "getBeatmapsPlayedByUser",
+            $"username={username}&amount={amount}");
     }
 }
