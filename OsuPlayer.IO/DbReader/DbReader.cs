@@ -11,7 +11,7 @@ public class DbReader : BinaryReader
     public static async Task<List<MapEntry>?> ReadOsuDb(string osuPath)
     {
         var beatmaps = new List<MapEntry>();
-        var dbLoc = $"{osuPath}\\osu!.db";
+        var dbLoc = Path.Combine(osuPath, "osu!.db");
 
         if (!File.Exists(dbLoc)) return null;
 
@@ -139,14 +139,14 @@ public class DbReader : BinaryReader
             r.ReadInt16(); //OldUnknown1
         r.ReadInt32(); //LastEditTime
         r.ReadByte(); //ManiaScrollSpeed
-        mapEntry.Fullpath = $"{osuPath}\\Songs\\{mapEntry.FolderName}\\{mapEntry.AudioFileName}";
-        mapEntry.FolderPath = $"{osuPath}\\Songs\\{mapEntry.FolderName}";
+        mapEntry.Fullpath = Path.Combine(osuPath, "Songs", mapEntry.FolderName, mapEntry.AudioFileName);
+        mapEntry.FolderPath = Path.Combine(osuPath, "Songs", mapEntry.FolderName);
     }
 
     public static List<Collection>? ReadCollections(string osuPath)
     {
         var collections = new List<Collection>();
-        var colLoc = $"{osuPath}\\collection.db";
+        var colLoc = Path.Combine(osuPath, "collection.db");
 
         if (!File.Exists(colLoc)) return null;
 
