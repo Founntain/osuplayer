@@ -206,12 +206,14 @@
                                 <Button Grid.Column="1" Name="BannerPreviewBtn" Width="38" Height="38"
                                         HorizontalAlignment="Right"
                                         Background="Transparent"
+                                        IsEnabled="{Binding CurrentUser.IsDonator}"
                                         Click="PreviewBanner_OnClick">
                                     <avalonia:MaterialIcon Kind="Eye" Height="28" Width="28" />
                                 </Button>
                                 <Button Grid.Column="2" Name="ResetBtn" Width="38" Height="38"
                                         HorizontalAlignment="Right"
                                         Background="Transparent"
+                                        IsEnabled="{Binding CurrentUser.IsDonator}"
                                         Click="ResetBanner_OnClick">
                                     <avalonia:MaterialIcon Kind="Refresh" Height="28" Width="28" />
                                 </Button>
@@ -229,7 +231,8 @@
 
                     <Button Grid.Row="2" Content="get donator perks" Margin="5"
                             VerticalAlignment="Bottom" HorizontalAlignment="Stretch"
-                            HorizontalContentAlignment="Center" />
+                            HorizontalContentAlignment="Center"
+                            IsVisible="{Binding !CurrentUser.IsDonator}" />
                 </Grid>
             </Grid>
         </Grid>
