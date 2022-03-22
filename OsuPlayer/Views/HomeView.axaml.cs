@@ -56,7 +56,14 @@ public partial class HomeView : ReactiveUserControl<HomeViewModel>
         await loginWindow.ShowDialog(Core.Instance.MainWindow);
         
         ViewModel.RaisePropertyChanged(nameof(ViewModel.CurrentUser));
+        ViewModel.RaisePropertyChanged(nameof(ViewModel.IsUserLoggedIn));
+        ViewModel.RaisePropertyChanged(nameof(ViewModel.IsUserNotLoggedIn));
         
         ViewModel.ProfilePicture = await ViewModel.LoadProfilePicture();
+    }
+
+    private void EditBtn_OnClick(object? sender, RoutedEventArgs e)
+    {
+        Core.Instance.MainWindow.ViewModel.MainView = Core.Instance.MainWindow.ViewModel.EditUserView;
     }
 }

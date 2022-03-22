@@ -17,6 +17,7 @@ public class MainWindowViewModel : BaseWindowViewModel
     public readonly SearchViewModel SearchView;
     public readonly SettingsViewModel SettingsView;
     public readonly UserViewModel UserView;
+    public readonly EditUserViewModel EditUserView;
 
     private BaseViewModel _mainView;
 
@@ -30,6 +31,7 @@ public class MainWindowViewModel : BaseWindowViewModel
         PlaylistEditorViewModel = new PlaylistEditorViewModel();
         HomeView = new HomeViewModel();
         UserView = new UserViewModel();
+        EditUserView = new EditUserViewModel();
         PartyView = new PartyViewModel();
         SettingsView = new SettingsViewModel();
         //Generate new ViewModels here

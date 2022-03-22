@@ -25,7 +25,7 @@ public sealed class User : UserModel
 
     public string DescriptionTitleString => $"{Name}'s Description";
     public string LevelString => $"Level {Level}";
-    public string JoinDateString => JoinDate.ToString("D", new CultureInfo("en-us"));
+    public string JoinDateString => $"joined {JoinDate.ToString("D", new CultureInfo("en-us"))}";
 
     public string TotalXpString =>
         TotalXp == 0 ? "0 XP" : $"{TotalXp.ToString("##,###", CultureInfo.InvariantCulture)} XP";

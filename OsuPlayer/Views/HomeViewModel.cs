@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reactive.Disposables;
@@ -32,6 +33,9 @@ public class HomeViewModel : BaseViewModel
     private bool _songsLoading;
     private Bitmap? _profilePicture;
 
+    public bool IsUserNotLoggedIn => CurrentUser == default;
+    public bool IsUserLoggedIn => CurrentUser != default;
+
     public bool SongsLoading
     {
         get => new Config().Read().OsuPath != null && _songsLoading;
@@ -54,7 +58,7 @@ public class HomeViewModel : BaseViewModel
 
         if (profilePicture == default) return default;
 
-        await using (var stream = new MemoryStream(System.Convert.FromBase64String(profilePicture)))
+        await using (var stream = new MemoryStream(Convert.FromBase64String(profilePicture)))
         {
             return await Task.Run(() => new Bitmap(stream));
         }
