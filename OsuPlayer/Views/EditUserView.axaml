@@ -1,0 +1,198 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:OsuPlayer.Views"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="OsuPlayer.Views.EditUserView">
+
+    <Design.DataContext>
+        <views:EditUserViewModel />
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto, *">
+        <!-- Profile Picture  -->
+        <Grid Row="0" ColumnSpan="3">
+            <!-- <Panel Grid.ColumnSpan="3" Grid.RowSpan="2"> -->
+            <!--     <ExperimentalAcrylicBorder IsHitTestVisible="False"> -->
+            <!--         <ExperimentalAcrylicBorder.Material> -->
+            <!--             <ExperimentalAcrylicMaterial -->
+            <!--                 BackgroundSource="Digger" -->
+            <!--                 TintColor="Black" -->
+            <!--                 TintOpacity="1" -->
+            <!--                 MaterialOpacity="0.75" /> -->
+            <!--         </ExperimentalAcrylicBorder.Material> -->
+            <!--     </ExperimentalAcrylicBorder> -->
+            <!-- </Panel> -->
+
+            <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                <StackPanel.Background>
+                    <ImageBrush Source="{Binding CurrentProfileBanner}"
+                                RenderOptions.BitmapInterpolationMode="HighQuality" Opacity="0.5"
+                                Stretch="UniformToFill" />
+                </StackPanel.Background>
+
+                <Border Margin="10" CornerRadius="1000" Height="150" Width="150" MaxHeight="150" MaxWidth="150"
+                        BorderBrush="White" BorderThickness="3" HorizontalAlignment="Center">
+                    <Border.Background>
+                        <ImageBrush Source="{Binding CurrentProfilePicture}"
+                                    RenderOptions.BitmapInterpolationMode="HighQuality" Stretch="UniformToFill" />
+                    </Border.Background>
+                </Border>
+
+                <StackPanel HorizontalAlignment="Stretch" Margin="0 0 0 10">
+                    <TextBlock Text="{Binding CurrentUser.Name}" FontSize="26" FontWeight="SemiBold"
+                               HorizontalAlignment="Center" />
+                    <TextBlock Text="{Binding CurrentUser.JoinDateString}" FontSize="14" FontStyle="Italic"
+                               FontWeight="SemiBold" HorizontalAlignment="Center" />
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Margin="10" Orientation="Horizontal">
+                <StackPanel>
+                    <Button Name="EditBannerPicture" Width="38" Height="38" CornerRadius="50"
+                            IsVisible="{Binding CurrentUser.IsDonator}"
+                            Background="Transparent" Click="EditBannerPicture_OnClick">
+                        <avalonia:MaterialIcon Kind="Panorama" Height="28" Width="28" />
+                    </Button>
+
+                    <Button Name="ResetBannerPicture" Width="38" Height="38" CornerRadius="50"
+                            IsVisible="{Binding IsNewBannerSelected}"
+                            Background="Transparent" Click="ResetBannerPicture_OnClick">
+                        <avalonia:MaterialIcon Kind="Refresh" Height="28" Width="28" />
+                    </Button>
+                </StackPanel>
+
+                <StackPanel>
+                    <Button Name="EditProfilePicture" Width="38" Height="38" CornerRadius="50"
+                            Background="Transparent" Click="EditProfilePicture_OnClick">
+                        <avalonia:MaterialIcon Kind="Camera" Height="28" Width="28" />
+                    </Button>
+
+                    <Button Name="ResetProfilePicture" Width="38" Height="38" CornerRadius="50"
+                            IsVisible="{Binding IsNewProfilePictureSelected}"
+                            Background="Transparent" Click="ResetProfilePicture_OnClick">
+                        <avalonia:MaterialIcon Kind="Refresh" Height="28" Width="28" />
+                    </Button>
+                </StackPanel>
+
+
+            </StackPanel>
+
+            <Button Name="DeleteProfile" Width="38" Height="38" CornerRadius="50" Margin="10"
+                    VerticalAlignment="Bottom" HorizontalAlignment="Right"
+                    Background="Transparent" Click="DeleteProfile_OnClick">
+                <avalonia:MaterialIcon Kind="AccountRemove" Height="28" Width="28" />
+            </Button>
+        </Grid>
+
+        <!-- UserData -->
+        <Grid Row="1" ColumnDefinitions="25*, 50*, 25*">
+            <Grid Column="0">
+                <Panel Grid.ColumnSpan="3" Grid.RowSpan="2">
+                    <ExperimentalAcrylicBorder IsHitTestVisible="False">
+                        <ExperimentalAcrylicBorder.Material>
+                            <ExperimentalAcrylicMaterial
+                                BackgroundSource="Digger"
+                                TintColor="Black"
+                                TintOpacity="1"
+                                MaterialOpacity="0.75" />
+                        </ExperimentalAcrylicBorder.Material>
+                    </ExperimentalAcrylicBorder>
+                </Panel>
+
+                <Grid RowDefinitions="50, *, Auto">
+                    <Border Grid.Row="0" Background="#7F000000" HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch">
+                        <TextBlock Text="customize" FontSize="24"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <StackPanel Grid.Row="1" Spacing="5" Margin="10" VerticalAlignment="Stretch"
+                                HorizontalAlignment="Stretch">
+                        <TextBlock Text="osu!profile ID (NOT URL)" />
+                        <TextBox Watermark="osu!profile ID" Text="{Binding CurrentUser.OsuProfile}"
+                                 FontWeight="SemiBold" HorizontalAlignment="Stretch"
+                                 HorizontalContentAlignment="Center" />
+                        <TextBlock Text="New password" />
+                        <TextBox Watermark="new password" PasswordChar="•" FontWeight="SemiBold"
+                                 HorizontalAlignment="Stretch"
+                                 HorizontalContentAlignment="Center" Text="{Binding NewPassword}" />
+                    </StackPanel>
+
+                    <Border Grid.Row="2" Margin="5 10" VerticalAlignment="Bottom" HorizontalAlignment="Stretch"
+                            Background="{DynamicResource PopupBase}" BorderBrush="{DynamicResource SystemAccentColor}"
+                            CornerRadius="5" BorderThickness="0">
+                        <Grid ColumnDefinitions="*, Auto">
+                            <TextBox Grid.Column="0" Watermark="enter password to save"
+                                     VerticalContentAlignment="Center" HorizontalAlignment="Stretch"
+                                     TextAlignment="Center"
+                                     BorderThickness="0" Text="{Binding Password}" PasswordChar="•" />
+
+                            <Button Grid.Column="1" Name="ConfirmNewPlaylist" Width="38" Height="38"
+                                    HorizontalAlignment="Right"
+                                    Background="Transparent"
+                                    Click="SaveChanges_OnClick">
+                                <avalonia:MaterialIcon Kind="ContentSave" Height="28" Width="28" />
+                            </Button>
+                        </Grid>
+                    </Border>
+                </Grid>
+
+            </Grid>
+
+            <Grid Column="1" Margin="1 0">
+                <Panel Grid.ColumnSpan="3" Grid.RowSpan="2">
+                    <ExperimentalAcrylicBorder IsHitTestVisible="False">
+                        <ExperimentalAcrylicBorder.Material>
+                            <ExperimentalAcrylicMaterial
+                                BackgroundSource="Digger"
+                                TintColor="Black"
+                                TintOpacity="1"
+                                MaterialOpacity="0.75" />
+                        </ExperimentalAcrylicBorder.Material>
+                    </ExperimentalAcrylicBorder>
+                </Panel>
+
+                <Grid RowDefinitions="50, Auto, *">
+                    <Border Grid.Row="0" Background="#7F000000" HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch">
+                        <TextBlock Text="{Binding CurrentUser.RoleString}"
+                                   Foreground="{Binding CurrentUser.RoleColor}" FontSize="28"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+
+                    <TextBlock Grid.Row="1" Margin="0 10 0 0" Text="Your Description" VerticalAlignment="Center"
+                               HorizontalAlignment="Center" TextAlignment="Center" />
+
+                    <TextBox Grid.Row="2" Text="{Binding CurrentUser.Description}" Margin="10"
+                             VerticalAlignment="Stretch" HorizontalAlignment="Stretch" FontWeight="Light"
+                             AcceptsReturn="True" TextAlignment="Center" TextWrapping="Wrap" />
+                </Grid>
+            </Grid>
+
+            <Grid Column="2">
+                <Panel Grid.ColumnSpan="3" Grid.RowSpan="2">
+                    <ExperimentalAcrylicBorder IsHitTestVisible="False">
+                        <ExperimentalAcrylicBorder.Material>
+                            <ExperimentalAcrylicMaterial
+                                BackgroundSource="Digger"
+                                TintColor="Black"
+                                TintOpacity="1"
+                                MaterialOpacity="0.75" />
+                        </ExperimentalAcrylicBorder.Material>
+                    </ExperimentalAcrylicBorder>
+                </Panel>
+
+                <Grid RowDefinitions="50, *">
+                    <Border Grid.Row="0" Background="#7F000000" HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch">
+                        <TextBlock Text="donator stuff" FontSize="24"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

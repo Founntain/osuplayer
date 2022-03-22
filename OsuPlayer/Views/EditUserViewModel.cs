@@ -1,15 +1,10 @@
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Reactive.Disposables;
 using System.Threading;
-using Avalonia.Controls;
 using Avalonia.Media.Imaging;
-using Material.Icons;
-using Material.Icons.Avalonia;
-using OsuPlayer.Data.API.Enums;
 using OsuPlayer.Data.API.Models.Beatmap;
 using OsuPlayer.Extensions;
 using OsuPlayer.Network.API.ApiEndpoints;
@@ -19,35 +14,54 @@ using ReactiveUI;
 
 namespace OsuPlayer.Views;
 
-public class UserViewModel : BaseViewModel
+public class EditUserViewModel : BaseViewModel
 {
-    private CancellationTokenSource? _profilePictureCancellationTokenSource;
     private CancellationTokenSource? _bannerCancellationTokenSource;
-    private CancellationTokenSource? _topSongsCancellationTokenSource;
-
-    private ObservableCollection<User> _users;
-    private User? _selectedUser;
-    private Bitmap? _currentProfilePicture;
     private Bitmap? _currentProfileBanner;
-    private ObservableCollection<IControl> _badges;
-    private ObservableCollection<BeatmapUserValidityModel> _topSongsOfCurrentUser;
+    private Bitmap? _currentProfilePicture;
 
-    public ObservableCollection<BeatmapUserValidityModel> TopSongsOfCurrentUser
+    private User? _currentUser;
+    private bool _isNewBannerSelected;
+    private bool _isNewProfilePictureSelected;
+    private string _newPassword;
+    private string _password;
+    private CancellationTokenSource? _profilePictureCancellationTokenSource;
+    private CancellationTokenSource? _topSongsCancellationTokenSource;
+    private ObservableCollection<BeatmapUserValidityModel>? _topSongsOfCurrentUser;
+
+    public EditUserViewModel()
+    {
+        Activator = new ViewModelActivator();
+        this.WhenActivated(disposables =>
+        {
+            Disposable.Create(() => { }).DisposeWith(disposables);
+
+            CurrentUser = ProfileManager.User;
+        });
+    }
+
+    public string Password
+    {
+        get => _password;
+        set => this.RaiseAndSetIfChanged(ref _password, value);
+    }
+
+    public bool IsNewBannerSelected
+    {
+        get => _isNewBannerSelected;
+        set => this.RaiseAndSetIfChanged(ref _isNewBannerSelected, value);
+    }
+
+    public bool IsNewProfilePictureSelected
+    {
+        get => _isNewProfilePictureSelected;
+        set => this.RaiseAndSetIfChanged(ref _isNewProfilePictureSelected, value);
+    }
+
+    public ObservableCollection<BeatmapUserValidityModel>? TopSongsOfCurrentUser
     {
         get => _topSongsOfCurrentUser;
         set => this.RaiseAndSetIfChanged(ref _topSongsOfCurrentUser, value);
-    }
-
-    public ObservableCollection<IControl> Badges
-    {
-        get => _badges;
-        set => this.RaiseAndSetIfChanged(ref _badges, value);
-    }
-
-    public Bitmap? CurrentProfileBanner
-    {
-        get => _currentProfileBanner;
-        set => this.RaiseAndSetIfChanged(ref _currentProfileBanner, value);
     }
 
     public Bitmap? CurrentProfilePicture
@@ -56,18 +70,18 @@ public class UserViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _currentProfilePicture, value);
     }
 
-    public ObservableCollection<User> Users
+    public Bitmap? CurrentProfileBanner
     {
-        get => _users;
-        set => this.RaiseAndSetIfChanged(ref _users, value);
+        get => _currentProfileBanner;
+        set => this.RaiseAndSetIfChanged(ref _currentProfileBanner, value);
     }
 
-    public User? SelectedUser
+    public User? CurrentUser
     {
-        get => _selectedUser;
+        get => _currentUser;
         set
         {
-            this.RaiseAndSetIfChanged(ref _selectedUser, value);
+            this.RaiseAndSetIfChanged(ref _currentUser, value);
 
             LoadTopSongs();
             LoadProfilePicture();
@@ -75,25 +89,15 @@ public class UserViewModel : BaseViewModel
         }
     }
 
-    public UserViewModel()
+    public string NewPassword
     {
-        Activator = new ViewModelActivator();
-
-        Badges = new();
-
-        this.WhenActivated(Block);
-    }
-
-    private async void Block(CompositeDisposable disposables)
-    {
-        Disposable.Create(() => { }).DisposeWith(disposables);
-
-        Users = (await ApiAsync.GetRequestAsync<List<User>>("users", "getUsersWithData")).ToObservableCollection();
+        get => _newPassword;
+        set => this.RaiseAndSetIfChanged(ref _newPassword, value);
     }
 
     private async void LoadTopSongs()
     {
-        if (SelectedUser == default)
+        if (CurrentUser == default)
         {
             TopSongsOfCurrentUser = default;
             return;
@@ -109,7 +113,7 @@ public class UserViewModel : BaseViewModel
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            var songs = await ApiAsync.GetBeatmapsPlayedByUser(SelectedUser.Name);
+            var songs = await ApiAsync.GetBeatmapsPlayedByUser(CurrentUser.Name);
 
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
@@ -123,9 +127,9 @@ public class UserViewModel : BaseViewModel
         }
     }
 
-    private async void LoadProfilePicture()
+    public async void LoadProfilePicture()
     {
-        if (SelectedUser == default)
+        if (CurrentUser == default)
         {
             CurrentProfilePicture = default;
             return;
@@ -141,7 +145,7 @@ public class UserViewModel : BaseViewModel
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            var profilePicture = await ApiAsync.GetProfilePictureAsync(SelectedUser.Name);
+            var profilePicture = await ApiAsync.GetProfilePictureAsync(CurrentUser.Name);
 
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
@@ -176,9 +180,9 @@ public class UserViewModel : BaseViewModel
         }
     }
 
-    private async void LoadProfileBanner()
+    public async void LoadProfileBanner()
     {
-        if (SelectedUser == default)
+        if (CurrentUser == default)
         {
             CurrentProfileBanner = default;
             return;
@@ -194,11 +198,11 @@ public class UserViewModel : BaseViewModel
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            var banner = await ApiAsync.GetProfileBannerAsync(SelectedUser.CustomWebBackground);
-            
+            var banner = await ApiAsync.GetProfileBannerAsync(CurrentUser.CustomWebBackground);
+
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
-            
+
             if (banner == default)
             {
                 CurrentProfileBanner = default;
@@ -213,48 +217,5 @@ public class UserViewModel : BaseViewModel
 
             CurrentProfileBanner = default;
         }
-    }
-
-    public IEnumerable<IControl> LoadBadges(User currentUser)
-    {
-        if (currentUser == default) return default!;
-
-        var badges = new List<MaterialIcon>();
-
-        var size = 32;
-
-        if (currentUser.Role == UserRole.Developer)
-            badges.Add(new MaterialIcon
-            {
-                Kind = MaterialIconKind.Xml,
-                Height = size,
-                Width = size
-            });
-
-        if (currentUser.IsDonator)
-            badges.Add(new MaterialIcon
-            {
-                Kind = MaterialIconKind.Heart,
-                Height = size,
-                Width = size
-            });
-
-        if (currentUser.Role == UserRole.Tester)
-            badges.Add(new MaterialIcon
-            {
-                Kind = MaterialIconKind.TestTube,
-                Height = size,
-                Width = size
-            });
-
-        if (currentUser.JoinDate < new DateTime(2019, 1, 1))
-            badges.Add(new MaterialIcon
-            {
-                Kind = MaterialIconKind.Creation,
-                Height = size,
-                Width = size
-            });
-
-        return badges;
     }
 }

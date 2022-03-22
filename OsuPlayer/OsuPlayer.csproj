@@ -93,14 +93,17 @@
       <Compile Update="Windows\LoginWindowViewModel.cs">
         <DependentUpon>LoginWindow.axaml</DependentUpon>
       </Compile>
-      <Compile Update="UI Extensions\MessageBoxViewModel.cs">
-        <DependentUpon>MessageBoxWindow.axaml</DependentUpon>
-      </Compile>
-      <Compile Update="Views\PartyViewModel.cs">
-        <DependentUpon>PartyView.axaml</DependentUpon>
-      </Compile>
-      <Compile Update="Views\UserViewModel.cs">
-        <DependentUpon>UserView.axaml</DependentUpon>
-      </Compile>
+        <Compile Update="UI Extensions\MessageBoxViewModel.cs">
+            <DependentUpon>MessageBoxWindow.axaml</DependentUpon>
+        </Compile>
+        <Compile Update="Views\PartyViewModel.cs">
+            <DependentUpon>PartyView.axaml</DependentUpon>
+        </Compile>
+        <Compile Update="Views\UserViewModel.cs">
+            <DependentUpon>UserView.axaml</DependentUpon>
+        </Compile>
+        <Compile Update="Views\EditUserViewModel.cs">
+            <DependentUpon>EditUserView.axaml</DependentUpon>
+        </Compile>
     </ItemGroup>
 </Project>

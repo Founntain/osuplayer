@@ -37,4 +37,13 @@ public static class Extensions
         
         return sl;
     }
+
+    public static bool IsDigitsOnly(this string str)
+    {
+        foreach (var c in str)
+            if (c < '0' || c > '9')
+                return false;
+
+        return true;
+    }
 }
