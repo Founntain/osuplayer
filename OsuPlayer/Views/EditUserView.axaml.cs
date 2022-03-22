@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
@@ -174,8 +175,41 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
         }
 
         ProfileManager.User = ViewModel.CurrentUser;
+
+        if (ViewModel.IsNewProfilePictureSelected)
+            await UpdateProfilePicture();
     }
 
+    private async Task UpdateProfilePicture()
+    {
+        if (ViewModel?.CurrentUser == default || ViewModel?.CurrentProfilePicture == default) return;
+
+        await using (var stream = new MemoryStream())
+        {
+            ViewModel.CurrentProfilePicture.Save(stream);
+
+            var profilePicture = Convert.ToBase64String(stream.ToArray());
+
+            var response = await ApiAsync.ApiRequestAsync<UserResponse>("users", "saveProfilePicture", new
+            {
+                ViewModel.CurrentUser.Name,
+                Picture = profilePicture
+            });
+
+            if (response == UserResponse.CantSaveProfilePicture)
+            {
+                await MessageBox.ShowDialogAsync(Core.Instance.MainWindow, "Profile picture could not be saved!");
+
+                ViewModel.LoadProfilePicture();
+
+                return;
+            }
+
+            await MessageBox.ShowDialogAsync(Core.Instance.MainWindow, "Profile picture changed succesfully!");
+
+            ViewModel.IsNewProfilePictureSelected = false;
+        }
+    }
 
     private void ResetBannerPicture_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -228,5 +262,6 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
         }
 
         ViewModel.CurrentProfileBanner = banner;
+        ViewModel.IsNewBannerSelected = false;
     }
 }
