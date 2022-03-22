@@ -4,17 +4,42 @@ using System.IO;
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
 using OsuPlayer.IO.DbReader;
 using OsuPlayer.IO.Storage.Config;
 using OsuPlayer.Network.API.ApiEndpoints;
 using OsuPlayer.Network.Online;
 using OsuPlayer.ViewModels;
 using ReactiveUI;
+using SkiaSharp;
 
 namespace OsuPlayer.Views;
 
 public class HomeViewModel : BaseViewModel
 {
+    public ISeries[] Series { get; set; }
+        =
+        {
+            new ColumnSeries<double>
+            {
+                Values = new double[] {2, 1, 3, 5, 3, 4, 6},
+                Fill = new SolidColorPaint(SKColors.Purple)
+            }
+        };
+
+    public Axis[] XAxes { get; set; }
+        =
+        {
+            new()
+            {
+                Labels = null,
+
+                LabelsRotation = 15
+            }
+        };
+
     public HomeViewModel()
     {
         Activator = new ViewModelActivator();

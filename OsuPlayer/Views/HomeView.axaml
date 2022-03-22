@@ -5,6 +5,7 @@
              xmlns:io="clr-namespace:OsuPlayer.IO.DbReader;assembly=OsuPlayer.IO"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:views="clr-namespace:OsuPlayer.Views"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.HomeView">
     
@@ -71,10 +72,9 @@
                 </ExperimentalAcrylicBorder>
             </Panel>
 
-            <TextBlock Grid.Column="0" Text="Placeholder" FontSize="28" VerticalAlignment="Center"
-                       HorizontalAlignment="Center" />
-            <TextBlock Grid.Column="1" Text="Placeholder" FontSize="28" VerticalAlignment="Center"
-                       HorizontalAlignment="Center" />
+            <lvc:CartesianChart
+                XAxes="{Binding XAxes}"
+                Series="{Binding Series}" />
         </Grid>
 
         <!--Test Grid-->
