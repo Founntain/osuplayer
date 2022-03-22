@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reactive.Disposables;
 using System.Threading;
 using Avalonia.Controls;
@@ -89,6 +90,19 @@ public class UserViewModel : BaseViewModel
         Disposable.Create(() => { }).DisposeWith(disposables);
 
         Users = (await ApiAsync.GetRequestAsync<List<User>>("users", "getUsersWithData")).ToObservableCollection();
+
+        var user = ProfileManager.User;
+
+        if (user == default)
+        {
+            if (Users == default) return;
+
+            SelectedUser = Users.FirstOrDefault();
+
+            return;
+        }
+
+        SelectedUser = user;
     }
 
     private async void LoadTopSongs()

@@ -16,7 +16,7 @@ using OsuPlayer.UI_Extensions;
 
 namespace OsuPlayer.Views;
 
-public class EditUserView : ReactiveUserControl<EditUserViewModel>
+public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 {
     public EditUserView()
     {

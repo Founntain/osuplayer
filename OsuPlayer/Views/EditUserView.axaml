@@ -50,19 +50,19 @@
             </StackPanel>
 
             <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Margin="10" Orientation="Horizontal">
-                <StackPanel>
-                    <Button Name="EditBannerPicture" Width="38" Height="38" CornerRadius="50"
-                            IsVisible="{Binding CurrentUser.IsDonator}"
-                            Background="Transparent" Click="EditBannerPicture_OnClick">
-                        <avalonia:MaterialIcon Kind="Panorama" Height="28" Width="28" />
-                    </Button>
-
-                    <Button Name="ResetBannerPicture" Width="38" Height="38" CornerRadius="50"
-                            IsVisible="{Binding IsNewBannerSelected}"
-                            Background="Transparent" Click="ResetBannerPicture_OnClick">
-                        <avalonia:MaterialIcon Kind="Refresh" Height="28" Width="28" />
-                    </Button>
-                </StackPanel>
+                <!-- <StackPanel> -->
+                <!--     <Button Name="EditBannerPicture" Width="38" Height="38" CornerRadius="50" -->
+                <!--             IsVisible="{Binding CurrentUser.IsDonator}" -->
+                <!--             Background="Transparent" Click="EditBannerPicture_OnClick"> -->
+                <!--         <avalonia:MaterialIcon Kind="Panorama" Height="28" Width="28" /> -->
+                <!--     </Button> -->
+                <!-- -->
+                <!--     <Button Name="ResetBannerPicture" Width="38" Height="38" CornerRadius="50" -->
+                <!--             IsVisible="{Binding IsNewBannerSelected}" -->
+                <!--             Background="Transparent" Click="ResetBannerPicture_OnClick"> -->
+                <!--         <avalonia:MaterialIcon Kind="Refresh" Height="28" Width="28" /> -->
+                <!--     </Button> -->
+                <!-- </StackPanel> -->
 
                 <StackPanel>
                     <Button Name="EditProfilePicture" Width="38" Height="38" CornerRadius="50"
@@ -191,6 +191,16 @@
                                    HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Border>
 
+                    <StackPanel Grid.Row="1" Spacing="5" Margin="5">
+                        <TextBlock Text="Custom banner URL" />
+                        <TextBox Text="{Binding CurrentUser.CustomWebBackground}" />
+
+                        <TextBlock Text="Custom rolename" Margin="0 5 0 0" />
+                        <TextBox Text="{Binding CurrentUser.CustomRolename}" />
+
+                        <TextBlock Text="Custom rolecolor" Margin="0 5 0 0" />
+                        <TextBox Text="{Binding CurrentUser.CustomRoleColor}" />
+                    </StackPanel>
                 </Grid>
             </Grid>
         </Grid>
