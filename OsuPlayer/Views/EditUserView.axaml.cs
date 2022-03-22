@@ -262,9 +262,9 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
         if (user == default) return;
 
-        ViewModel.CurrentUser.CustomWebBackground = user.CustomWebBackground;
+        ViewModel.CurrentProfileBannerUrl = user.CustomWebBackground;
 
-        ViewModel.RaisePropertyChanged(nameof(ViewModel.CurrentUser));
+        ViewModel.RaisePropertyChanged(nameof(ViewModel.CurrentProfileBannerUrl));
         ViewModel.RaisePropertyChanged(nameof(ViewModel.CurrentUser.CustomWebBackground));
 
         if (ViewModel?.CurrentUser == default) return;

@@ -76,6 +76,12 @@ public class EditUserViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _currentProfileBanner, value);
     }
 
+    public string CurrentProfileBannerUrl
+    {
+        get => _currentUser?.CustomWebBackground ?? string.Empty;
+        set => _currentUser!.CustomWebBackground = value;
+    }
+
     public User? CurrentUser
     {
         get => _currentUser;
@@ -210,6 +216,8 @@ public class EditUserViewModel : BaseViewModel
             }
 
             CurrentProfileBanner = banner;
+            CurrentProfileBannerUrl = CurrentUser.CustomWebBackground;
+            this.RaisePropertyChanged(nameof(CurrentProfileBannerUrl));
         }
         catch (OperationCanceledException)
         {

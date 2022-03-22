@@ -201,7 +201,7 @@
                                          VerticalContentAlignment="Center" HorizontalAlignment="Stretch"
                                          TextAlignment="Center"
                                          BorderThickness="0"
-                                         Text="{Binding CurrentUser.CustomWebBackground, Mode=TwoWay}" />
+                                         Text="{Binding CurrentProfileBannerUrl}" />
 
                                 <Button Grid.Column="1" Name="BannerPreviewBtn" Width="38" Height="38"
                                         HorizontalAlignment="Right"
