@@ -13,6 +13,7 @@ using OsuPlayer.Extensions;
 using OsuPlayer.Network.API.ApiEndpoints;
 using OsuPlayer.Network.Online;
 using OsuPlayer.UI_Extensions;
+using ReactiveUI;
 
 namespace OsuPlayer.Views;
 
@@ -190,5 +191,42 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
         ViewModel.LoadProfilePicture();
         ViewModel.IsNewProfilePictureSelected = false;
+    }
+
+    private async void PreviewBanner_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (ViewModel?.CurrentUser == default) return;
+
+        var banner = await ApiAsync.GetProfileBannerAsync(ViewModel.CurrentUser.CustomWebBackground);
+
+        if (banner == default) return;
+
+        ViewModel.CurrentProfileBanner = banner;
+    }
+
+    private async void ResetBanner_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (ViewModel?.CurrentUser == default) return;
+
+        var user = await ApiAsync.GetUserByName(ViewModel.CurrentUser.Name);
+
+        if (user == default) return;
+
+        ViewModel.CurrentUser.CustomWebBackground = user.CustomWebBackground;
+
+        ViewModel.RaisePropertyChanged(nameof(ViewModel.CurrentUser));
+        ViewModel.RaisePropertyChanged(nameof(ViewModel.CurrentUser.CustomWebBackground));
+
+        if (ViewModel?.CurrentUser == default) return;
+
+        var banner = await ApiAsync.GetProfileBannerAsync(ViewModel.CurrentUser.CustomWebBackground);
+
+        if (banner == default)
+        {
+            ViewModel.CurrentProfileBanner = default;
+            return;
+        }
+
+        ViewModel.CurrentProfileBanner = banner;
     }
 }

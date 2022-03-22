@@ -121,7 +121,7 @@
                     </StackPanel>
 
                     <Border Grid.Row="2" Margin="5 10" VerticalAlignment="Bottom" HorizontalAlignment="Stretch"
-                            Background="{DynamicResource PopupBase}" BorderBrush="{DynamicResource SystemAccentColor}"
+                            Background="#7F000000" BorderBrush="{DynamicResource SystemAccentColor}"
                             CornerRadius="5" BorderThickness="0">
                         <Grid ColumnDefinitions="*, Auto">
                             <TextBox Grid.Column="0" Watermark="enter password to save"
@@ -129,7 +129,7 @@
                                      TextAlignment="Center"
                                      BorderThickness="0" Text="{Binding Password}" PasswordChar="•" />
 
-                            <Button Grid.Column="1" Name="ConfirmNewPlaylist" Width="38" Height="38"
+                            <Button Grid.Column="1" Name="SaveChanges" Width="38" Height="38"
                                     HorizontalAlignment="Right"
                                     Background="Transparent"
                                     Click="SaveChanges_OnClick">
@@ -184,7 +184,7 @@
                     </ExperimentalAcrylicBorder>
                 </Panel>
 
-                <Grid RowDefinitions="50, *">
+                <Grid RowDefinitions="50, *, Auto">
                     <Border Grid.Row="0" Background="#7F000000" HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch">
                         <TextBlock Text="donator stuff" FontSize="24"
@@ -193,14 +193,43 @@
 
                     <StackPanel Grid.Row="1" Spacing="5" Margin="5">
                         <TextBlock Text="Custom banner URL" />
-                        <TextBox Text="{Binding CurrentUser.CustomWebBackground}" />
+                        <Border VerticalAlignment="Bottom" HorizontalAlignment="Stretch"
+                                Background="#7F000000" BorderBrush="{DynamicResource SystemAccentColor}"
+                                CornerRadius="5" BorderThickness="0">
+                            <Grid ColumnDefinitions="*, Auto, Auto">
+                                <TextBox Grid.Column="0" Watermark="enter password to save"
+                                         VerticalContentAlignment="Center" HorizontalAlignment="Stretch"
+                                         TextAlignment="Center"
+                                         BorderThickness="0"
+                                         Text="{Binding CurrentUser.CustomWebBackground, Mode=TwoWay}" />
+
+                                <Button Grid.Column="1" Name="BannerPreviewBtn" Width="38" Height="38"
+                                        HorizontalAlignment="Right"
+                                        Background="Transparent"
+                                        Click="PreviewBanner_OnClick">
+                                    <avalonia:MaterialIcon Kind="Eye" Height="28" Width="28" />
+                                </Button>
+                                <Button Grid.Column="2" Name="ResetBtn" Width="38" Height="38"
+                                        HorizontalAlignment="Right"
+                                        Background="Transparent"
+                                        Click="ResetBanner_OnClick">
+                                    <avalonia:MaterialIcon Kind="Refresh" Height="28" Width="28" />
+                                </Button>
+                            </Grid>
+                        </Border>
 
                         <TextBlock Text="Custom rolename" Margin="0 5 0 0" />
-                        <TextBox Text="{Binding CurrentUser.CustomRolename}" />
+                        <TextBox Text="{Binding CurrentUser.CustomRolename}" TextAlignment="Center"
+                                 IsEnabled="{Binding CurrentUser.IsDonator}" />
 
                         <TextBlock Text="Custom rolecolor" Margin="0 5 0 0" />
-                        <TextBox Text="{Binding CurrentUser.CustomRoleColor}" />
+                        <TextBox Text="{Binding CurrentUser.CustomRoleColor}" TextAlignment="Center"
+                                 IsEnabled="{Binding CurrentUser.IsDonator}" />
                     </StackPanel>
+
+                    <Button Grid.Row="2" Content="get donator perks" Margin="5"
+                            VerticalAlignment="Bottom" HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center" />
                 </Grid>
             </Grid>
         </Grid>
