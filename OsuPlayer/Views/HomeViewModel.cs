@@ -19,26 +19,9 @@ namespace OsuPlayer.Views;
 
 public class HomeViewModel : BaseViewModel
 {
-    public ISeries[] Series { get; set; }
-        =
-        {
-            new ColumnSeries<double>
-            {
-                Values = new double[] {2, 1, 3, 5, 3, 4, 6},
-                Fill = new SolidColorPaint(SKColors.Purple)
-            }
-        };
+    private Bitmap? _profilePicture;
 
-    public Axis[] XAxes { get; set; }
-        =
-        {
-            new()
-            {
-                Labels = null,
-
-                LabelsRotation = 15
-            }
-        };
+    private bool _songsLoading;
 
     public HomeViewModel()
     {
@@ -46,17 +29,43 @@ public class HomeViewModel : BaseViewModel
         this.WhenActivated(Block);
     }
 
-    private async void Block(CompositeDisposable disposables)
-    {
-        Disposable.Create(() => { }).DisposeWith(disposables);
+    public ISeries[] Series { get; set; } =
+        {
+            new LineSeries<double>
+            {
+                Name = "XP gained",
+                Values = GetValues(),
+                Fill = new LinearGradientPaint(new[]
+                {
+                    new SKColor(128, 0, 128, 0),
+                    new SKColor(128, 0, 128, 25),
+                    new SKColor(128, 0, 128, 50),
+                    new SKColor(128, 0, 128, 75),
+                    new SKColor(128, 0, 128, 100),
+                    new SKColor(128, 0, 128, 125),
+                    new SKColor(128, 0, 128, 150),
+                    new SKColor(128, 0, 128, 175),
+                    new SKColor(128, 0, 128, 200),
+                    new SKColor(128, 0, 128, 225),
+                    SKColors.Purple
+                }, new SKPoint(.5f, 1f), new SKPoint(.5f, 0f)),
+                Stroke = new SolidColorPaint(SKColors.MediumPurple),
+                GeometrySize = 0,
+                GeometryFill = new SolidColorPaint(SKColors.MediumPurple),
+                GeometryStroke = new SolidColorPaint(SKColors.Purple)
+            }
+        };
 
-        ProfilePicture = await LoadProfilePicture();
-    }
+    public Axis[] Axes { get; set; } =
+        {
+            new()
+            {
+                IsVisible = false,
+                Labels = null
+            }
+        };
 
     public List<MapEntry> SongEntries => Core.Instance.Player.SongSource!;
-
-    private bool _songsLoading;
-    private Bitmap? _profilePicture;
 
     public bool IsUserNotLoggedIn => CurrentUser == default;
     public bool IsUserLoggedIn => CurrentUser != default;
@@ -73,6 +82,21 @@ public class HomeViewModel : BaseViewModel
     {
         get => _profilePicture;
         set => this.RaiseAndSetIfChanged(ref _profilePicture, value);
+    }
+
+    private static IEnumerable<double> GetValues()
+    {
+        var rdm = new Random();
+
+        for (var x = 0; x < 25; x++)
+            yield return rdm.Next(25, 50);
+    }
+
+    private async void Block(CompositeDisposable disposables)
+    {
+        Disposable.Create(() => { }).DisposeWith(disposables);
+
+        ProfilePicture = await LoadProfilePicture();
     }
 
     internal async Task<Bitmap?> LoadProfilePicture()

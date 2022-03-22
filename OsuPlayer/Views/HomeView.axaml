@@ -8,11 +8,11 @@
              xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.HomeView">
-    
+
     <Design.DataContext>
-        <views:HomeViewModel/>
+        <views:HomeViewModel />
     </Design.DataContext>
-    
+
     <Grid RowDefinitions="Auto, 50*" ColumnDefinitions="50*, 50*" Background="Transparent">
         <!--User Grid-->
         <Grid Row="0" Column="0" ColumnDefinitions="Auto, Auto, *" Margin="10">
@@ -59,8 +59,8 @@
         </Grid>
 
         <!--Stats Grid-->
-        <Grid Row="0" Column="1" ColumnDefinitions="50*, 50*" Margin="10">
-            <Panel Grid.ColumnSpan="2">
+        <Grid Row="0" Column="1" ColumnDefinitions="50*, 50*" RowDefinitions="Auto, *" Margin="10">
+            <Panel Grid.ColumnSpan="2" Grid.RowSpan="2">
                 <ExperimentalAcrylicBorder IsHitTestVisible="False">
                     <ExperimentalAcrylicBorder.Material>
                         <ExperimentalAcrylicMaterial
@@ -72,9 +72,12 @@
                 </ExperimentalAcrylicBorder>
             </Panel>
 
-            <lvc:CartesianChart
-                XAxes="{Binding XAxes}"
-                Series="{Binding Series}" />
+            <TextBlock Grid.Row="0" Margin="10" Text="your session" Grid.Column="0" Grid.ColumnSpan="2" />
+
+            <lvc:CartesianChart Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                                YAxes="{Binding Axes}"
+                                Series="{Binding Series}" />
         </Grid>
 
         <!--Test Grid-->
@@ -104,30 +107,31 @@
                 <ListBox.DataTemplates>
                     <DataTemplate DataType="io:MapEntry">
                         <Grid ColumnDefinitions="*, 100" RowDefinitions="Auto, Auto">
-                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding TitleString}" FontSize="20" 
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding TitleString}" FontSize="20"
                                        FontWeight="SemiBold" />
                             <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding ArtistString}"
                                        FontSize="14" Foreground="#FFCCCCCC" FontWeight="SemiBold" />
-                            
+
                             <Grid Row="0" RowSpan="2" Column="1" ColumnDefinitions="50*, 50*">
                                 <Button Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"
-                                        Name="Favorite" Width="32" Height="32" CornerRadius="50" Background="Transparent">
+                                        Name="Favorite" Width="32" Height="32" CornerRadius="50"
+                                        Background="Transparent">
                                     <avalonia:MaterialIcon Kind="HeartOutline" Height="19" Width="19" />
                                 </Button>
-                            
+
                                 <TextBlock Grid.Column="1" Text="{Binding TotalTimeString}"
-                                            FontSize="20" FontWeight="Light" 
-                                            VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                           FontSize="20" FontWeight="Light"
+                                           VerticalAlignment="Center" HorizontalAlignment="Center" />
                             </Grid>
-                            
+
                         </Grid>
                     </DataTemplate>
                 </ListBox.DataTemplates>
             </ListBox>
             <StackPanel Grid.Row="1" IsVisible="{Binding SongsLoading}" IsEnabled="{Binding SongsLoading}"
                         VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="10">
-                <TextBlock Text="Songs loading... please wait"/>
-                <ProgressBar IsIndeterminate="True"/>
+                <TextBlock Text="Songs loading... please wait" />
+                <ProgressBar IsIndeterminate="True" />
             </StackPanel>
         </Grid>
     </Grid>
