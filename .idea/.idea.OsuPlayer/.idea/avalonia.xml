@@ -9,6 +9,7 @@
         <entry key="OsuPlayer/Styles/Accents/BaseDark.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/Styles/Accents/FluentControlResourcesDark.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/Styles/FluentDark.axaml" value="OsuPlayer/OsuPlayer.csproj" />
+        <entry key="OsuPlayer/Styles/FlyoutStyle.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/Styles/SliderStyle.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/UI Extensions/AcrylicPanel.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/UI Extensions/MessageBoxWindow.axaml" value="OsuPlayer/OsuPlayer.csproj" />
