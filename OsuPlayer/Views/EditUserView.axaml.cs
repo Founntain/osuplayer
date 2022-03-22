@@ -32,7 +32,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
     private async void EditProfilePicture_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (ViewModel == default) return;
+        if (ViewModel?.CurrentUser == default) return;
 
         var dialog = new OpenFileDialog();
 
@@ -50,6 +50,20 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
         var file = result?.FirstOrDefault();
 
         if (file == default) return;
+
+        var fileInfo = new FileInfo(file);
+
+        if (!ViewModel.CurrentUser.IsDonator && fileInfo.Length / 1024 / 1024 >= 2)
+        {
+            await MessageBox.ShowDialogAsync(Core.Instance.MainWindow, "The file you selected is bigger than 4 MB");
+            return;
+        }
+
+        if (ViewModel.CurrentUser.IsDonator && fileInfo.Length / 1024 / 1024 >= 4)
+        {
+            await MessageBox.ShowDialogAsync(Core.Instance.MainWindow, "The file you selected is bigger than 4 MB");
+            return;
+        }
 
         var picture = await File.ReadAllBytesAsync(file);
 
@@ -82,6 +96,8 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
         if (file == default) return;
 
+        var fileInfo = new FileInfo(file);
+        
         var banner = await File.ReadAllBytesAsync(file);
 
         await using (var stream = new MemoryStream(banner))
