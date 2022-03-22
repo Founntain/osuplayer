@@ -53,16 +53,16 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
         var fileInfo = new FileInfo(file);
 
-        if (!ViewModel.CurrentUser.IsDonator && fileInfo.Length / 1024 / 1024 >= 2)
+        switch (ViewModel.CurrentUser.IsDonator)
         {
-            await MessageBox.ShowDialogAsync(Core.Instance.MainWindow, "The file you selected is bigger than 4 MB");
-            return;
-        }
-
-        if (ViewModel.CurrentUser.IsDonator && fileInfo.Length / 1024 / 1024 >= 4)
-        {
-            await MessageBox.ShowDialogAsync(Core.Instance.MainWindow, "The file you selected is bigger than 4 MB");
-            return;
+            case false when fileInfo.Length / 1024 / 1024 >= 2:
+                await MessageBox.ShowDialogAsync(Core.Instance.MainWindow,
+                    "The file you selected is bigger than 2 MB.\n\nIf you want to upload profile pictures up to 4 MB consider getting donator");
+                return;
+            case true when fileInfo.Length / 1024 / 1024 >= 4:
+                await MessageBox.ShowDialogAsync(Core.Instance.MainWindow,
+                    "The file you selected is bigger than 4 MB! Sorry :'(");
+                return;
         }
 
         var picture = await File.ReadAllBytesAsync(file);

@@ -229,7 +229,7 @@
                                  IsEnabled="{Binding CurrentUser.IsDonator}" />
                     </StackPanel>
 
-                    <Button Grid.Row="2" Content="get donator perks" Margin="5"
+                    <Button Grid.Row="2" Content="get donator perks ❤️" Margin="5"
                             VerticalAlignment="Bottom" HorizontalAlignment="Stretch"
                             HorizontalContentAlignment="Center"
                             IsVisible="{Binding !CurrentUser.IsDonator}" />
