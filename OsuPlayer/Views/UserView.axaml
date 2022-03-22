@@ -169,7 +169,8 @@
                             <TextBlock Text="{Binding SelectedUser.LevelString}" FontSize="24"
                                        HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
-                        <ListBox Grid.Row="1" Background="Transparent" Items="{Binding TopSongsOfCurrentUser}">
+                        <ListBox Grid.Row="1" Background="Transparent" Items="{Binding TopSongsOfCurrentUser}"
+                                 DoubleTapped="InputElement_OnDoubleTapped">
                             <ListBox.ItemTemplate>
                                 <DataTemplate DataType="beatmap:BeatmapUserValidityModel">
                                     <StackPanel>

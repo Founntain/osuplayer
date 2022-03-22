@@ -1,9 +1,12 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
+using OsuPlayer.Data.API.Models.Beatmap;
 using OsuPlayer.Network.Online;
 
 namespace OsuPlayer.Views;
@@ -40,5 +43,16 @@ public partial class UserView : ReactiveUserControl<UserViewModel>
         };
         
         viewer.UpdateChild();
+    }
+
+    private async void InputElement_OnDoubleTapped(object? sender, RoutedEventArgs e)
+    {
+        var listBox = (ListBox) sender;
+        if (listBox == default) return;
+        var beatmapModel = (BeatmapUserValidityModel)listBox.SelectedItem;
+        if (beatmapModel == default || Core.Instance.Player.SongSource == default) return;
+        var mapEntry = Core.Instance.Player.SongSource.FirstOrDefault(x => x.BeatmapSetId == beatmapModel.Beatmap.BeatmapSetId || x.BeatmapChecksum == beatmapModel.Beatmap.BeatmapChecksum);
+        if (mapEntry != default)
+            await Core.Instance.Player.Play(mapEntry);
     }
 }
