@@ -20,15 +20,12 @@ jobs:
 
   build:
     needs: setup
-    name: Publish ${{ matrix.release.arch }}
+    name: Publish ${{ matrix.release }}
     strategy:
       matrix:
-        release:
-          - { os: windows-latest, arch: win-x86 }
-          - { os: windows-latest, arch: win-x64 }
-          - { os: ubuntu-latest, arch: linux-x64 }
+        release: [win-x86, win-x64, linux-x64, osx-x64]
         
-    runs-on: ${{ matrix.release.os }}
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout
@@ -57,14 +54,14 @@ jobs:
         RELEASE_VERSION: ${{ steps.get_tag.outputs.TAG }}
       run: |
         cd OsuPlayer
-        dotnet publish -c Release -o ../releases/${{ matrix.release.arch }} -r ${{ matrix.release.arch }}
+        dotnet publish -c Release -o ../releases/${{ matrix.release }} -r ${{ matrix.release }}
     
     - name: Generate artifact
       uses: TheDoctor0/zip-release@0.6.1
       with:
         type: 'zip'
-        filename: '${{ matrix.release.arch }}.zip'
-        directory: 'releases/${{ matrix.release.arch }}' 
+        filename: '${{ matrix.release }}.zip'
+        directory: 'releases/${{ matrix.release }}' 
     
     - name: Publish Artifact
       uses: ncipollo/release-action@v1
@@ -73,5 +70,5 @@ jobs:
         omitBodyDuringUpdate: true
         omitNameDuringUpdate: true
         omitPrereleaseDuringUpdate: true
-        artifacts: 'releases/${{ matrix.release.arch }}/${{ matrix.release.arch }}.zip'
+        artifacts: 'releases/${{ matrix.release }}/${{ matrix.release }}.zip'
         token: ${{ secrets.GITHUB_TOKEN }}

@@ -7,7 +7,7 @@
         <PackageProjectUrl>https://github.com/Founntain/osuplayer</PackageProjectUrl>
         <RepositoryUrl>https://github.com/Founntain/osuplayer</RepositoryUrl>
         <Authors>Founntain</Authors>
-        <PackageVersion>1.0.3</PackageVersion>
+        <PackageVersion>1.0.4</PackageVersion>
     </PropertyGroup>
 
     <PropertyGroup Label="Nuget">
