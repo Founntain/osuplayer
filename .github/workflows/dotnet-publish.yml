@@ -24,7 +24,7 @@ jobs:
     strategy:
       matrix:
         release: [win-x86, win-x64, linux-x64, osx-x64]
-        
+
     runs-on: ubuntu-latest
 
     steps:
@@ -32,7 +32,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
-     
+
     - name: Get tag name
       id: get_tag
       run: echo ::set-output name=TAG::${GITHUB_REF#refs/tags/}
@@ -48,21 +48,21 @@ jobs:
 
     - name: Restore the application
       run: dotnet restore
-      
+
     - name: Build
       env:
         RELEASE_VERSION: ${{ steps.get_tag.outputs.TAG }}
       run: |
         cd OsuPlayer
         dotnet publish -c Release -o ../releases/${{ matrix.release }} -r ${{ matrix.release }}
-    
+
     - name: Generate artifact
       uses: TheDoctor0/zip-release@0.6.1
       with:
         type: 'zip'
         filename: '${{ matrix.release }}.zip'
         directory: 'releases/${{ matrix.release }}' 
-    
+
     - name: Publish Artifact
       uses: ncipollo/release-action@v1
       with:
