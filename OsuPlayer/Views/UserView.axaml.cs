@@ -1,6 +1,4 @@
-﻿using Avalonia.Controls;
 ﻿using System.Linq;
-using System.Threading;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.Interactivity;
