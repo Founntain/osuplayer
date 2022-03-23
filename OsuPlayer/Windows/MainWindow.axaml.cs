@@ -18,11 +18,11 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         this.WhenActivated(disposables =>
         {
             Core.Instance.SetupCore(this);
-            
+
             if (Core.Instance.MainWindow.ViewModel != null)
                 Core.Instance.MainWindow.ViewModel.MainView = Core.Instance.MainWindow.ViewModel.HomeView;
         });
-        
+
         AvaloniaXamlLoader.Load(this);
     }
 

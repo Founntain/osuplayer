@@ -1,13 +1,13 @@
 using OsuPlayer.IO.Storage.Config;
 using OsuPlayer.Modules.Audio;
-using MainWindow = OsuPlayer.Windows.MainWindow;
+using OsuPlayer.Windows;
 
 namespace OsuPlayer;
 
 public class Core
 {
     public BassEngine Engine;
-    
+
     public MainWindow MainWindow;
     public Player Player;
 
@@ -27,7 +27,7 @@ public class Core
             await config.ReadAsync();
             MainWindow.TransparencyLevelHint = config.Container.TransparencyLevelHint;
         }
-        
+
         Engine = BassEngine.Instance;
 
         await Player.ImportSongs();

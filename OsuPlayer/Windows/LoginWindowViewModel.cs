@@ -5,8 +5,8 @@ namespace OsuPlayer.Windows;
 
 public class LoginWindowViewModel : BaseWindowViewModel
 {
-    private string _username;
     private string _password;
+    private string _username;
 
     public string Username
     {
@@ -19,6 +19,4 @@ public class LoginWindowViewModel : BaseWindowViewModel
         get => _password;
         set => this.RaiseAndSetIfChanged(ref _password, value);
     }
-
-    
 }

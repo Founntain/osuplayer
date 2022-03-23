@@ -97,7 +97,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
         if (file == default) return;
 
         var fileInfo = new FileInfo(file);
-        
+
         var banner = await File.ReadAllBytesAsync(file);
 
         await using (var stream = new MemoryStream(banner))

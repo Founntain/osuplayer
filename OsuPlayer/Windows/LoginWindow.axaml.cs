@@ -28,14 +28,14 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
     private void InitializeComponent()
     {
         this.WhenActivated(disposables => { });
-        
+
         AvaloniaXamlLoader.Load(this);
     }
 
     private async Task Login()
     {
         if (ViewModel == default) return;
-        
+
         var user = await ApiAsync.LoadUserWithCredentialsAsync(ViewModel.Username, ViewModel.Password);
 
         if (user == default) return;
@@ -43,7 +43,7 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
         if (user.Name != ViewModel.Username) return;
 
         ProfileManager.User = user;
-        
+
         Close();
     }
 

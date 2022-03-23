@@ -12,7 +12,7 @@ public class PlaylistValueConverter : IValueConverter
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value == default) return default;
-        
+
         return Core.Instance.Player.GetMapEntriesFromChecksums((ICollection<string>) value);
     }
 

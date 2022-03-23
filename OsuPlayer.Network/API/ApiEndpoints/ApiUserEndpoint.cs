@@ -52,7 +52,7 @@ public partial class ApiAsync
         double channellength)
     {
         if (ProfileManager.User?.Name == default) return default;
-        
+
         var updateXpModel = new UpdateXpModel
         {
             Username = ProfileManager.User.Name,

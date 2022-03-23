@@ -9,7 +9,7 @@ public class PlaylistManager
         using (var storage = new PlaylistStorage())
         {
             storage.Read();
-            
+
             return storage.Container.Playlists;
         }
     }
@@ -19,7 +19,7 @@ public class PlaylistManager
         await using (var storage = new PlaylistStorage())
         {
             await storage.ReadAsync();
-            
+
             return storage.Container.Playlists;
         }
     }
@@ -29,7 +29,7 @@ public class PlaylistManager
         await using (var storage = new PlaylistStorage())
         {
             await storage.ReadAsync();
-            
+
             if (storage.Container.Playlists.Any(x => x == playlist))
                 return default;
 
@@ -42,16 +42,16 @@ public class PlaylistManager
     public static async Task ReplacePlaylistAsync(Playlist? playlist)
     {
         if (playlist == default) return;
-     
+
         await using (var storage = new PlaylistStorage())
         {
             await storage.ReadAsync();
-            
+
             var playlistToRemove = storage.Container.Playlists
                 .FirstOrDefault(x => x.Name == playlist.Name);
 
             storage.Container.Playlists.Remove(playlistToRemove);
-            
+
             storage.Container.Playlists.Add(playlist);
         }
     }
@@ -61,7 +61,7 @@ public class PlaylistManager
         await using (var storage = new PlaylistStorage())
         {
             await storage.ReadAsync();
-            
+
             storage.Container.Playlists = playlists;
         }
     }

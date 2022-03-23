@@ -10,25 +10,24 @@ namespace OsuPlayer.Views;
 
 public class PlayerControlViewModel : BaseViewModel
 {
+    private MapEntry? _currentSong;
+    private Bitmap? _currentSongImage;
     private string _currentSongLength = "00:00";
 
     private string _currentSongTime = "00:00";
 
     private bool _isPlaying;
+    private bool _isRepeating;
 
     private bool _isShuffle;
+    private bool _isSpeedVisible;
+    private bool _isVolumeVisible;
 
     private double _playbackSpeed;
 
     private double _songLength;
 
     private double _songTime;
-    private bool _isRepeating;
-    private MapEntry? _currentSong;
-    private bool _isVolumeVisible;
-    private bool _isSpeedVisible;
-    private bool _volumePointerOver;
-    private Bitmap? _currentSongImage;
 
     public PlayerControlViewModel()
     {

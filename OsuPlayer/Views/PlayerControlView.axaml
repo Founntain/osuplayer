@@ -2,7 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="using:OsuPlayer.ViewModels"
              xmlns:cv="using:OsuPlayer.Extensions.ValueConverters"
              xmlns:map="using:OsuPlayer.IO.DbReader"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
@@ -15,7 +14,6 @@
 
     <UserControl.Resources>
         <cv:PlayPauseConverter x:Key="PlayPauseConverter" />
-        <map:MapEntry x:Key="Entry" />
         <cv:ShuffleConverter x:Key="ShuffleConverter" />
         <cv:RepeatConverter x:Key="RepeatConverter" />
         <cv:VolumeConverter x:Key="VolumeConverter" />
@@ -41,7 +39,7 @@
             <Slider Name="SongProgressSlider" VerticalAlignment="Center"
                     Value="{Binding SongTime}"
                     Maximum="{Binding SongLength}"
-                    Margin="4 0 " UseLayoutRounding="False" Grid.Column="1"/>
+                    Margin="4 0 " UseLayoutRounding="False" Grid.Column="1" />
 
             <TextBlock Name="CurrentSongTimeLeft" Text="{Binding CurrentSongLength}" VerticalAlignment="Center"
                        Grid.Column="2" Margin="8 0" FontSize="12" HorizontalAlignment="Center" />
@@ -110,12 +108,12 @@
                         Background="Transparent">
                     <avalonia:MaterialIcon Kind="HeartOutline" Height="19" Width="19" />
                 </Button>
-                
+
                 <Button Name="Blacklist" Width="38" Height="38" CornerRadius="50" Click="Blacklist_OnClick"
                         Background="Transparent">
                     <avalonia:MaterialIcon Kind="HeartBrokenOutline" Height="19" Width="19" />
                 </Button>
-                
+
                 <Button Name="Settings" Width="42" Height="42" CornerRadius="50" Click="Settings_OnClick"
                         Background="Transparent">
                     <avalonia:MaterialIcon Kind="Settings" Height="32" Width="32" />

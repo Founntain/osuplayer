@@ -18,16 +18,16 @@ namespace OsuPlayer.Views;
 public class SettingsViewModel : BaseViewModel
 {
     private string _osuLocation;
-    private WindowTransparencyLevel _selectedTransparencyLevel = new Config().Read().TransparencyLevelHint;
     private StartupSong _selectedStartupSong = new Config().Read().StartupSong;
+    private WindowTransparencyLevel _selectedTransparencyLevel = new Config().Read().TransparencyLevelHint;
 
-    public User? CurrentUser => ProfileManager.User;
-    
     public SettingsViewModel()
     {
         Activator = new ViewModelActivator();
         this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
     }
+
+    public User? CurrentUser => ProfileManager.User;
 
     public string OsuLocation
     {
@@ -45,7 +45,7 @@ public class SettingsViewModel : BaseViewModel
             this.RaiseAndSetIfChanged(ref _selectedTransparencyLevel, value);
 
             if (Core.Instance.MainWindow == null) return;
-            
+
             Core.Instance.MainWindow.TransparencyLevelHint = value;
             using var config = new Config();
             config.Read().TransparencyLevelHint = value;
@@ -53,6 +53,7 @@ public class SettingsViewModel : BaseViewModel
     }
 
     public IEnumerable<StartupSong> StartupSongs => Enum.GetValues<StartupSong>();
+
     public StartupSong SelectedStartupSong
     {
         get => _selectedStartupSong;

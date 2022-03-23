@@ -8,13 +8,13 @@ namespace OsuPlayer.Views;
 
 public class SearchViewModel : BaseViewModel
 {
+    private string _filterText;
+
     public SearchViewModel()
     {
         Activator = new ViewModelActivator();
         this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
     }
-
-    private string _filterText;
 
     public string FilterText
     {

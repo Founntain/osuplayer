@@ -41,9 +41,8 @@ internal partial class TopBarView : ReactiveUserControl<TopBarViewModel>
                 Core.Instance.MainWindow.ViewModel!.MainView = Core.Instance.MainWindow.ViewModel.PartyView;
                 break;
         }
-        
     }
-    
+
     private void Navigation_Clicked(object? sender, RoutedEventArgs e)
     {
         switch ((sender as Control)?.Name)

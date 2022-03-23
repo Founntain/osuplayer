@@ -8,16 +8,16 @@ namespace OsuPlayer.Windows;
 
 public class MainWindowViewModel : BaseWindowViewModel
 {
+    public readonly EditUserViewModel EditUserView;
     public readonly HomeViewModel HomeView;
     public readonly PartyViewModel PartyView;
-    public readonly PlaylistViewModel PlaylistView;
     public readonly PlaylistEditorViewModel PlaylistEditorViewModel;
-    
+    public readonly PlaylistViewModel PlaylistView;
+
     // internal ViewModels
     public readonly SearchViewModel SearchView;
     public readonly SettingsViewModel SettingsView;
     public readonly UserViewModel UserView;
-    public readonly EditUserViewModel EditUserView;
 
     private BaseViewModel _mainView;
 

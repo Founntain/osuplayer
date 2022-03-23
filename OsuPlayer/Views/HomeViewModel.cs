@@ -22,10 +22,10 @@ namespace OsuPlayer.Views;
 
 public class HomeViewModel : BaseViewModel
 {
+    private ObservableCollection<ObservableValue> _graphValues;
     private Bitmap? _profilePicture;
 
     private bool _songsLoading;
-    private ObservableCollection<ObservableValue> _graphValues;
 
     public HomeViewModel()
     {
@@ -53,13 +53,13 @@ public class HomeViewModel : BaseViewModel
     public ObservableCollection<ISeries> Series { get; set; }
 
     public Axis[] Axes { get; set; } =
+    {
+        new()
         {
-            new()
-            {
-                IsVisible = false,
-                Labels = null
-            }
-        };
+            IsVisible = false,
+            Labels = null
+        }
+    };
 
     public List<MapEntry> SongEntries => Core.Instance.Player.SongSource!;
 

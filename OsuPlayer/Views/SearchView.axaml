@@ -2,25 +2,25 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="using:OsuPlayer.ViewModels"
              xmlns:io="clr-namespace:OsuPlayer.IO.DbReader;assembly=OsuPlayer.IO"
              xmlns:views="clr-namespace:OsuPlayer.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.SearchView">
     <Design.DataContext>
-        <views:SearchViewModel/>
+        <views:SearchViewModel />
     </Design.DataContext>
-    
+
     <Grid RowDefinitions="Auto, *">
-        <TextBox Margin="0 2 " Grid.Row="0" Text="{Binding FilterText}" Watermark="type to search..."/>
+        <TextBox Margin="0 2 " Grid.Row="0" Text="{Binding FilterText}" Watermark="type to search..." />
         <!-- <AutoCompleteBox Margin="0 2" Grid.Row="0" Text="{Binding FilterText}" Items="{Binding $parent[Window].DataContext.FilteredSongEntries}"/> -->
-        
+
         <ListBox Grid.Row="1" Items="{Binding FilteredSongEntries}" Background="Transparent"
                  DoubleTapped="InputElement_OnDoubleTapped">
             <ListBox.DataTemplates>
                 <DataTemplate DataType="io:MapEntry">
                     <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto">
-                        <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding TitleString}" FontSize="20" FontWeight="SemiBold" />
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding TitleString}" FontSize="20"
+                                   FontWeight="SemiBold" />
                         <TextBlock Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Text="{Binding TotalTimeString}"
                                    FontSize="20" VerticalAlignment="Center" FontWeight="Light" />
                         <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding ArtistString}"
