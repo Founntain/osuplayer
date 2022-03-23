@@ -1,10 +1,14 @@
-﻿using Avalonia;
+﻿using System.Threading.Tasks;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using OsuPlayer.IO.Storage.Config;
 using OsuPlayer.Network.API.ApiEndpoints;
 using OsuPlayer.Network.Online;
+using ReactiveUI;
 
 namespace OsuPlayer.Windows;
 
@@ -23,10 +27,12 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
 
     private void InitializeComponent()
     {
+        this.WhenActivated(disposables => { });
+        
         AvaloniaXamlLoader.Load(this);
     }
 
-    private async void LoginBtn_OnClick(object? sender, RoutedEventArgs e)
+    private async Task Login()
     {
         if (ViewModel == default) return;
         
@@ -39,5 +45,23 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
         ProfileManager.User = user;
         
         Close();
+    }
+
+    private async void LoginBtn_OnClick(object? sender, RoutedEventArgs e)
+    {
+        await Login();
+    }
+
+    private void Visual_OnAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
+    {
+        var control = (Control) sender;
+
+        control?.Focus();
+    }
+
+    private async void InputElement_OnKeyUp(object? sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Return)
+            await Login();
     }
 }

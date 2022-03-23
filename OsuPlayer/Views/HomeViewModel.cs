@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using LiveChartsCore;
+using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using OsuPlayer.IO.DbReader;
@@ -22,39 +25,32 @@ public class HomeViewModel : BaseViewModel
     private Bitmap? _profilePicture;
 
     private bool _songsLoading;
+    private ObservableCollection<ObservableValue> _graphValues;
 
     public HomeViewModel()
     {
         Activator = new ViewModelActivator();
         this.WhenActivated(Block);
+
+        GraphValues = new();
     }
 
-    public ISeries[] Series { get; set; } =
+    public ObservableCollection<ObservableValue> GraphValues
+    {
+        get => _graphValues;
+        set
         {
-            new LineSeries<double>
+            if (Series != default)
             {
-                Name = "XP gained",
-                Values = GetValues(),
-                Fill = new LinearGradientPaint(new[]
-                {
-                    new SKColor(128, 0, 128, 0),
-                    new SKColor(128, 0, 128, 25),
-                    new SKColor(128, 0, 128, 50),
-                    new SKColor(128, 0, 128, 75),
-                    new SKColor(128, 0, 128, 100),
-                    new SKColor(128, 0, 128, 125),
-                    new SKColor(128, 0, 128, 150),
-                    new SKColor(128, 0, 128, 175),
-                    new SKColor(128, 0, 128, 200),
-                    new SKColor(128, 0, 128, 225),
-                    SKColors.Purple
-                }, new SKPoint(.5f, 1f), new SKPoint(.5f, 0f)),
-                Stroke = new SolidColorPaint(SKColors.MediumPurple),
-                GeometrySize = 0,
-                GeometryFill = new SolidColorPaint(SKColors.MediumPurple),
-                GeometryStroke = new SolidColorPaint(SKColors.Purple)
+                Series.First().Values = value;
+                this.RaisePropertyChanged(nameof(Series));
             }
-        };
+
+            this.RaiseAndSetIfChanged(ref _graphValues, value);
+        }
+    }
+
+    public ObservableCollection<ISeries> Series { get; set; }
 
     public Axis[] Axes { get; set; } =
         {
@@ -84,7 +80,7 @@ public class HomeViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _profilePicture, value);
     }
 
-    private static IEnumerable<double> GetValues()
+    private IEnumerable<double> GetValues()
     {
         var rdm = new Random();
 
@@ -97,6 +93,33 @@ public class HomeViewModel : BaseViewModel
         Disposable.Create(() => { }).DisposeWith(disposables);
 
         ProfilePicture = await LoadProfilePicture();
+
+        Series = new ObservableCollection<ISeries>
+        {
+            new LineSeries<ObservableValue>
+            {
+                Name = "XP gained",
+                Values = GraphValues,
+                Fill = new LinearGradientPaint(new[]
+                {
+                    new SKColor(128, 0, 128, 0),
+                    new SKColor(128, 0, 128, 25),
+                    new SKColor(128, 0, 128, 50),
+                    new SKColor(128, 0, 128, 75),
+                    new SKColor(128, 0, 128, 100),
+                    new SKColor(128, 0, 128, 125),
+                    new SKColor(128, 0, 128, 150),
+                    new SKColor(128, 0, 128, 175),
+                    new SKColor(128, 0, 128, 200),
+                    new SKColor(128, 0, 128, 225),
+                    SKColors.Purple
+                }, new SKPoint(.5f, 1f), new SKPoint(.5f, 0f)),
+                Stroke = new SolidColorPaint(SKColors.MediumPurple),
+                GeometrySize = 0,
+                GeometryFill = new SolidColorPaint(SKColors.MediumPurple),
+                GeometryStroke = new SolidColorPaint(SKColors.Purple)
+            }
+        };
     }
 
     internal async Task<Bitmap?> LoadProfilePicture()

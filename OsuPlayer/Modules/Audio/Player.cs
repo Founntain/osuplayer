@@ -10,9 +10,12 @@ using DynamicData;
 using DynamicData.Binding;
 using ManagedBass;
 using OsuPlayer.Data.OsuPlayer.Enums;
+using OsuPlayer.Extensions;
 using OsuPlayer.IO;
 using OsuPlayer.IO.DbReader;
 using OsuPlayer.IO.Storage.Config;
+using OsuPlayer.Network.API.ApiEndpoints;
+using OsuPlayer.Network.Online;
 using ReactiveUI;
 
 namespace OsuPlayer.Modules.Audio;
@@ -21,6 +24,8 @@ public class Player
 {
     private readonly int?[] _shuffleHistory = new int?[10];
 
+    private readonly Stopwatch _currentSongTimer;
+    
     private MapEntry? _currentSong;
     private MapEntry? CurrentSong
     {
@@ -32,7 +37,7 @@ public class Player
             using var config = new Config();
             config.Read().LastPlayedSong = CurrentIndex;
             Core.Instance.MainWindow.ViewModel!.PlayerControl.CurrentSong = value;
-            Core.Instance.MainWindow.ViewModel!.PlayerControl.CurrentSongImage = Task.Run(value!.FindBackground).Result;
+            // Core.Instance.MainWindow.ViewModel!.PlayerControl.CurrentSongImage = Task.Run(value!.FindBackground).Result;
         }
     }
 
@@ -52,6 +57,8 @@ public class Player
     public Player()
     {
         _songSource = new SourceList<MapEntry>();
+
+        _currentSongTimer = new();
     }
 
     private SongImporter Importer => new();
@@ -208,10 +215,22 @@ public class Player
         await TryEnqueueSong(song);
     }
 
-    private Task TryEnqueueSong(MapEntry song)
+    private async Task<Task> TryEnqueueSong(MapEntry song)
     {
         if (SongSource == null || !SongSource.Any())
             return Task.FromException(new NullReferenceException($"{nameof(SongSource)} can't be null or empty"));
+
+        //We put the XP update to an own try catch because if the API fails or is not avaible,
+        //that the whole TryEnqueue does not fail
+        try
+        {
+            if (CurrentSong != default)
+                await UpdateXp();
+        }
+        catch (Exception e)
+        {
+            Debug.WriteLine($"Could not update XP error => {e}");
+        }
         
         try
         {
@@ -220,7 +239,8 @@ public class Player
             Core.Instance.Engine.Volume = (float) Core.Instance.MainWindow.ViewModel!.PlayerControl.Volume / 100;
             Core.Instance.Engine.Play();
             PlayState = PlayState.Playing;
-            Core.Instance.MainWindow.ViewModel.PlayerControl.CurrentSong = song;
+
+            if (ProfileManager.User != default) _currentSongTimer.Restart();
         }
         catch (Exception ex)
         {
@@ -229,10 +249,72 @@ public class Player
         }
 
         CurrentSong = song;
-        //Core.Instance.MainWindow.ViewModel.PlayerControl.CurrentSongImage = await song.FindBackground();
+
+        //We put the XP update to an own try catch because if the API fails or is not avaible,
+        //that the whole TryEnqueue does not fail
+        try
+        {
+            if (CurrentSong != default)
+                await UpdateSongsPlayed(song.BeatmapSetId);
+        }
+        catch (Exception e)
+        {
+            Debug.WriteLine($"Could not update Songs Played error => {e}");
+        }
+
+        Core.Instance.MainWindow.ViewModel.PlayerControl.CurrentSongImage = await song.FindBackground();
         return Task.CompletedTask;
     }
 
+    private async Task UpdateXp()
+    {
+        if (ProfileManager.User == default) return;
+
+        var currentTotalXp = ProfileManager.User?.TotalXp ?? 0;
+
+        _currentSongTimer.Stop();
+
+        var time = (double) _currentSongTimer.ElapsedMilliseconds / 1000;
+
+        var response = await ApiAsync.UpdateXpFromCurrentUserAsync(
+            CurrentSong?.BeatmapChecksum ?? string.Empty,
+            time,
+            Core.Instance.Engine.ChannelLength);
+
+        if (response == default) return;
+
+        ProfileManager.User = response;
+
+        var xpEarned = response.TotalXp - currentTotalXp;
+
+        var values = Core.Instance.MainWindow.ViewModel!.HomeView.GraphValues.ToList();
+
+        values.Add(new(xpEarned));
+
+        Core.Instance.MainWindow.ViewModel!.HomeView.GraphValues = values.ToObservableCollection();
+
+        Core.Instance.MainWindow.ViewModel!.HomeView.RaisePropertyChanged(nameof(Core.Instance.MainWindow.ViewModel
+            .HomeView.CurrentUser));
+        Core.Instance.MainWindow.ViewModel!.HomeView.RaisePropertyChanged(nameof(Core.Instance.MainWindow.ViewModel
+            .HomeView.Series));
+        Core.Instance.MainWindow.ViewModel!.HomeView.RaisePropertyChanged(nameof(Core.Instance.MainWindow.ViewModel
+            .HomeView.GraphValues));
+    }
+
+    private async Task UpdateSongsPlayed(int beatmapSetId)
+    {
+        if (ProfileManager.User == default) return;
+
+        var response = await ApiAsync.UpdateSongsPlayedForCurrentUserAsync(1, beatmapSetId);
+
+        if (response == default) return;
+
+        ProfileManager.User = response;
+
+        Core.Instance.MainWindow.ViewModel!.HomeView.RaisePropertyChanged(nameof(Core.Instance.MainWindow.ViewModel
+            .HomeView.CurrentUser));
+    }
+    
     public void Mute(bool force = false)
     {
         if (force)
@@ -258,13 +340,13 @@ public class Player
         if (PlayState == PlayState.Paused)
         {
             Core.Instance.Engine.Play();
-            //songTimeStamp.Start();
+            _currentSongTimer.Start();
             PlayState = PlayState.Playing;
         }
         else
         {
             Core.Instance.Engine.Pause();
-            //songTimeStamp.Stop();
+            _currentSongTimer.Stop();
             PlayState = PlayState.Paused;
         }
     }
