@@ -7,20 +7,20 @@ namespace OsuPlayer.IO.DbReader;
 
 public class MapEntry
 {
-    public string Artist;
-    public string ArtistUnicode;
-    public string AudioFileName;
-    public string BeatmapChecksum;
     public int BeatmapId;
     public int BeatmapSetId;
-    public string Creator;
-    public string DifficultyName;
-    public string FolderName;
-    public string FolderPath;
-    public string Fullpath;
-    public string Title;
-    public string TitleUnicode;
-
+    public string Artist = null!;
+    public string? ArtistUnicode;
+    public string? AudioFileName;
+    public string? BeatmapChecksum;
+    public string? Creator;
+    public string? DifficultyName;
+    public string? FolderName;
+    public string? FolderPath;
+    public string? Fullpath;
+    public string Title = null!;
+    public string? TitleUnicode;
+    
     public int TotalTime;
 
     public bool UseUnicode;
@@ -110,5 +110,15 @@ public class MapEntry
         var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
         var asset = assets?.Open(new Uri("avares://OsuPlayer/Resources/defaultBg.jpg"));
         return new Bitmap(asset);
+    }
+
+    public static bool operator ==(MapEntry? left, MapEntry? right)
+    {
+        return left?.SongName == right?.SongName;
+    }
+
+    public static bool operator !=(MapEntry? left, MapEntry? right)
+    {
+        return left?.SongName != right?.SongName;
     }
 }

@@ -174,46 +174,52 @@ public class Player
 
     public async Task Play(MapEntry? song, PlayDirection playDirection = PlayDirection.Forward)
     {
-        if (SongSource == null || !SongSource.Any())
+        if (SongSource == default || !SongSource.Any())
             return;
 
-        if (song == null)
+        if (song == default)
         {
             await TryEnqueueSong(SongSource[^1]);
             return;
         }
 
-        if (CurrentSong != null && !Repeat && (await new Config().ReadAsync()).IgnoreSongsWithSameNameCheckBox &&
-            CurrentSong.SongName == song.SongName)
-            switch (playDirection)
-            {
-                case PlayDirection.Backwards:
-                {
-                    for (var i = CurrentIndex - 1; i < SongSource.Count; i--)
-                    {
-                        if (SongSource[i].SongName == _currentSong.SongName) continue;
-
-                        await TryEnqueueSong(SongSource[i]);
-                        return;
-                    }
-
-                    break;
-                }
-                case PlayDirection.Forward:
-                {
-                    for (var i = CurrentIndex + 1; i < SongSource.Count; i++)
-                    {
-                        if (SongSource[i].SongName == _currentSong.SongName) continue;
-
-                        await TryEnqueueSong(SongSource[i]);
-                        return;
-                    }
-
-                    break;
-                }
-            }
+        if (CurrentSong != null && !Repeat
+                                && (await new Config().ReadAsync()).IgnoreSongsWithSameNameCheckBox
+                                && CurrentSong == song)
+            await EnqueueSongFromDirection(playDirection);
 
         await TryEnqueueSong(song);
+    }
+
+    private async Task EnqueueSongFromDirection(PlayDirection direction)
+    {
+        switch (direction)
+        {
+            case PlayDirection.Backwards:
+            {
+                for (var i = CurrentIndex - 1; i < SongSource?.Count; i--)
+                {
+                    if (SongSource[i] == _currentSong) continue;
+
+                    await TryEnqueueSong(SongSource[i]);
+                    return;
+                }
+
+                break;
+            }
+            case PlayDirection.Forward:
+            {
+                for (var i = CurrentIndex + 1; i < SongSource?.Count; i++)
+                {
+                    if (SongSource[i] == _currentSong) continue;
+
+                    await TryEnqueueSong(SongSource[i]);
+                    return;
+                }
+
+                break;
+            }
+        }
     }
 
     private async Task<Task> TryEnqueueSong(MapEntry song)
