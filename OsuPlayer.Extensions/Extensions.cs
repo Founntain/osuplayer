@@ -22,19 +22,19 @@ public static class Extensions
     {
         if (source == default)
             return new ObservableCollection<T>();
-        
+
         return new ObservableCollection<T>(source);
     }
 
     public static SourceList<T> ToSourceList<T>(this ICollection<T>? source)
     {
-        if (source == default) 
+        if (source == default)
             return new SourceList<T>();
-        
+
         var sl = new SourceList<T>();
-        
+
         sl.AddRange(source);
-        
+
         return sl;
     }
 

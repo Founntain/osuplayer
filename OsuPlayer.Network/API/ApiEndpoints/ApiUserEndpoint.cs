@@ -51,6 +51,8 @@ public partial class ApiAsync
     public static async Task<User?> UpdateXpFromCurrentUserAsync(string songChecksum, double elapsedMilliseconds,
         double channellength)
     {
+        if (ProfileManager.User?.Name == default) return default;
+
         var updateXpModel = new UpdateXpModel
         {
             Username = ProfileManager.User.Name,
@@ -64,11 +66,10 @@ public partial class ApiAsync
 
     public static async Task<User?> UpdateSongsPlayedForCurrentUserAsync(int amount, int beatmapSetId = -1)
     {
-        if (string.IsNullOrWhiteSpace(ProfileManager.User?.Name))
-            return default;
+        if (ProfileManager.User?.Name == default) return default;
 
         return await GetRequestWithParameterAsync<User>("users", "updateSongsPlayed",
-            $"amount={amount}&beatmapSetId={beatmapSetId}");
+            $"username={ProfileManager.User.Name}&amount={amount}&beatmapSetId={beatmapSetId}");
     }
 
     public static async Task<User?> LoadUserWithCredentialsAsync(string username, string password)

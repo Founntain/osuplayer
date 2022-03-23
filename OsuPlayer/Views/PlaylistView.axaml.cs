@@ -12,6 +12,6 @@ public partial class PlaylistView : ReactiveUserControl<PlaylistViewModel>
 
     private void InitializeComponent()
     {
-        AvaloniaXamlLoader.Load(this);  
+        AvaloniaXamlLoader.Load(this);
     }
 }

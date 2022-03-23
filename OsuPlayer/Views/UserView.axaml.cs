@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Threading;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.Interactivity;
@@ -13,8 +12,6 @@ namespace OsuPlayer.Views;
 
 public partial class UserView : ReactiveUserControl<UserViewModel>
 {
-    private CancellationTokenSource? CancellationTokenSource;
-
     public UserView()
     {
         InitializeComponent();
@@ -29,9 +26,9 @@ public partial class UserView : ReactiveUserControl<UserViewModel>
     {
         var viewer = this.FindControl<ContentPresenter>("BadgeItems");
         var list = (ListBox) sender;
-        
+
         if (list?.SelectedItem == default) return;
-        
+
         var items = ViewModel!.LoadBadges((User) list.SelectedItem);
 
         viewer.Content = new ItemsRepeater
@@ -41,7 +38,7 @@ public partial class UserView : ReactiveUserControl<UserViewModel>
             VerticalAlignment = VerticalAlignment.Top,
             Layout = new WrapLayout {Orientation = Orientation.Horizontal}
         };
-        
+
         viewer.UpdateChild();
     }
 

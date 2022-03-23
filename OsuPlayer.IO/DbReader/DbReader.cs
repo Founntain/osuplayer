@@ -17,7 +17,7 @@ public class DbReader : BinaryReader
 
         using var config = new Config();
         var unicode = (await config.ReadAsync()).UseSongNameUnicode;
-        
+
         await using var file = File.OpenRead(dbLoc);
         using var reader = new DbReader(file);
         var ver = reader.ReadInt32();
@@ -49,7 +49,7 @@ public class DbReader : BinaryReader
         await file.DisposeAsync();
         return beatmaps;
     }
-    
+
     private static void ReadFromStream(DbReader r, int version, string osuPath, out MapEntry mapEntry)
     {
         mapEntry = new MapEntry

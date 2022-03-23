@@ -112,7 +112,7 @@
                         </StackPanel>
 
                         <ScrollViewer Name="BadgeViewer" Grid.Row="2" Margin="10 0">
-                            <ContentPresenter Name="BadgeItems"/>
+                            <ContentPresenter Name="BadgeItems" />
                         </ScrollViewer>
                     </Grid>
 

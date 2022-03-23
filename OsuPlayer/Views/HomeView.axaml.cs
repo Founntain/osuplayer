@@ -29,10 +29,8 @@ public partial class HomeView : ReactiveUserControl<HomeViewModel>
         var osuPath = (await config.ReadAsync()).OsuPath;
 
         if (string.IsNullOrWhiteSpace(osuPath))
-        {
             await MessageBox.ShowDialogAsync(Core.Instance.MainWindow,
                 "You have to select your osu!.db file, before you can start listening to your songs.\nPlease head to the settings to select your osu!.db.");
-        }
 
         //ViewModel!.Songs = new ObservableCollection<SongEntry>(songs);
     }
@@ -47,18 +45,18 @@ public partial class HomeView : ReactiveUserControl<HomeViewModel>
     private async void LoginBtn_OnClick(object? sender, RoutedEventArgs e)
     {
         if (ViewModel == default) return;
-        
+
         var loginWindow = new LoginWindow
         {
             ViewModel = new LoginWindowViewModel()
         };
 
         await loginWindow.ShowDialog(Core.Instance.MainWindow);
-        
+
         ViewModel.RaisePropertyChanged(nameof(ViewModel.CurrentUser));
         ViewModel.RaisePropertyChanged(nameof(ViewModel.IsUserLoggedIn));
         ViewModel.RaisePropertyChanged(nameof(ViewModel.IsUserNotLoggedIn));
-        
+
         ViewModel.ProfilePicture = await ViewModel.LoadProfilePicture();
     }
 

@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:dbReader="clr-namespace:OsuPlayer.IO.DbReader;assembly=OsuPlayer.IO"
              xmlns:valueConverters="clr-namespace:OsuPlayer.ValueConverters"
-             xmlns:playlists="clr-namespace:OsuPlayer.IO.Storage.Playlists;assembly=OsuPlayer.IO"
              xmlns:classes="clr-namespace:OsuPlayer.Data.OsuPlayer.Classes;assembly=OsuPlayer.Data"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.PlaylistView">
@@ -25,25 +24,27 @@
                     </ExperimentalAcrylicBorder.Material>
                 </ExperimentalAcrylicBorder>
             </Panel>
-            
+
             <Border Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#7F000000">
                 <TextBlock Text="your playlists" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Center" />
             </Border>
-            
-            <ListBox Grid.Row="1" SelectedItem="{Binding SelectedPlaylist}" Items="{Binding Playlists}" Background="Transparent">
+
+            <ListBox Grid.Row="1" SelectedItem="{Binding SelectedPlaylist}" Items="{Binding Playlists}"
+                     Background="Transparent">
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="classes:Playlist">
                         <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            
-            <Button Grid.Row="2" Content="playlist editor"  Margin="10 0"
-                    VerticalContentAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Stretch"
+
+            <Button Grid.Row="2" Content="playlist editor" Margin="10 0"
+                    VerticalContentAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center"
+                    HorizontalAlignment="Stretch"
                     Command="{Binding OpenPlaylistEditor}"
-                    FontWeight="SemiBold"/>
+                    FontWeight="SemiBold" />
         </Grid>
-        
+
         <Grid Column="1" Margin="10">
             <Panel Grid.ColumnSpan="2">
                 <ExperimentalAcrylicBorder IsHitTestVisible="False">
@@ -56,20 +57,21 @@
                     </ExperimentalAcrylicBorder.Material>
                 </ExperimentalAcrylicBorder>
             </Panel>
-            
-            <ListBox Background="Transparent" Items="{Binding SelectedPlaylist.Songs, Converter={StaticResource PlaylistValueConverter}}">
+
+            <ListBox Background="Transparent"
+                     Items="{Binding SelectedPlaylist.Songs, Converter={StaticResource PlaylistValueConverter}}">
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="dbReader:MapEntry">
                         <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto">
-                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding TitleString}" FontSize="20" 
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding TitleString}" FontSize="20"
                                        FontWeight="SemiBold" />
                             <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding ArtistString}"
                                        FontSize="14" Foreground="#FFCCCCCC" FontWeight="Medium" />
-                            
+
                             <TextBlock Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Text="{Binding TotalTimeString}"
-                                       FontSize="20" FontWeight="Light" 
-                                       VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            
+                                       FontSize="20" FontWeight="Light"
+                                       VerticalAlignment="Center" HorizontalAlignment="Center" />
+
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

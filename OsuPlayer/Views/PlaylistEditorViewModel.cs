@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Disposables;
 using DynamicData;
@@ -12,16 +11,31 @@ namespace OsuPlayer.Views;
 
 public class PlaylistEditorViewModel : BaseViewModel
 {
-    private Playlist _currentSelectedPlaylist;
-    private ObservableCollection<string> _playlist;
-    private SourceList<Playlist> _playlists;
-    
-    private List<MapEntry> _selectedSongListItems;
-    private List<MapEntry> _selectedPlaylistItems;
-    private string _newPlaylistnameText;
+    private Playlist? _currentSelectedPlaylist;
+    private bool _isDeletePlaylistPopupOpen;
     private bool _isNewPlaylistPopupOpen;
     private bool _isRenamePlaylistPopupOpen;
-    private bool _isDeletePlaylistPopupOpen;
+    private string? _newPlaylistnameText;
+    private SourceList<Playlist>? _playlists;
+    private List<MapEntry>? _selectedPlaylistItems;
+
+    private List<MapEntry>? _selectedSongListItems;
+
+    public PlaylistEditorViewModel()
+    {
+        Activator = new ViewModelActivator();
+
+        this.WhenActivated(disposables =>
+        {
+            Disposable.Create(() => { }).DisposeWith(disposables);
+
+            if (Playlists.Count > 0 && CurrentSelectedPlaylist == default)
+                CurrentSelectedPlaylist = Playlists.Items.ElementAt(0);
+        });
+
+        SelectedPlaylistItems = new();
+        SelectedSongListItems = new();
+    }
 
     public bool IsDeletePlaylistPopupOpen
     {
@@ -62,24 +76,6 @@ public class PlaylistEditorViewModel : BaseViewModel
     {
         get => _playlists;
         set => this.RaiseAndSetIfChanged(ref _playlists, value);
-    }
-
-    public PlaylistEditorViewModel()
-    {
-        Activator = new ViewModelActivator();
-        
-        this.WhenActivated(disposables =>
-        {
-            Disposable.Create(() => { }).DisposeWith(disposables);
-
-            if (Playlists.Count > 0 && CurrentSelectedPlaylist == default)
-            {
-                CurrentSelectedPlaylist = Playlists.Items.ElementAt(0);
-            }
-        });
-
-        SelectedPlaylistItems = new();
-        SelectedSongListItems = new();
     }
 
     public List<MapEntry> SongList => Core.Instance.Player.SongSource!;

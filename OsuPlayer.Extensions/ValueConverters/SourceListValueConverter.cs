@@ -14,7 +14,7 @@ public class SourceListValueConverter : IValueConverter
 
         if (value.GetType() == typeof(SourceList<>))
             return new List<Playlist>();
-        
+
         var list = (SourceList<Playlist>) value;
 
         return list.Items.ToList();

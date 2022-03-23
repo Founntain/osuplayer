@@ -22,16 +22,25 @@ namespace OsuPlayer.Views;
 
 public class UserViewModel : BaseViewModel
 {
-    private CancellationTokenSource? _profilePictureCancellationTokenSource;
+    private ObservableCollection<IControl> _badges;
     private CancellationTokenSource? _bannerCancellationTokenSource;
+    private Bitmap? _currentProfileBanner;
+    private Bitmap? _currentProfilePicture;
+    private CancellationTokenSource? _profilePictureCancellationTokenSource;
+    private User? _selectedUser;
     private CancellationTokenSource? _topSongsCancellationTokenSource;
+    private ObservableCollection<BeatmapUserValidityModel> _topSongsOfCurrentUser;
 
     private ObservableCollection<User> _users;
-    private User? _selectedUser;
-    private Bitmap? _currentProfilePicture;
-    private Bitmap? _currentProfileBanner;
-    private ObservableCollection<IControl> _badges;
-    private ObservableCollection<BeatmapUserValidityModel> _topSongsOfCurrentUser;
+
+    public UserViewModel()
+    {
+        Activator = new ViewModelActivator();
+
+        Badges = new();
+
+        this.WhenActivated(Block);
+    }
 
     public ObservableCollection<BeatmapUserValidityModel> TopSongsOfCurrentUser
     {
@@ -74,15 +83,6 @@ public class UserViewModel : BaseViewModel
             LoadProfilePicture();
             LoadProfileBanner();
         }
-    }
-
-    public UserViewModel()
-    {
-        Activator = new ViewModelActivator();
-
-        Badges = new();
-
-        this.WhenActivated(Block);
     }
 
     private async void Block(CompositeDisposable disposables)
@@ -209,10 +209,10 @@ public class UserViewModel : BaseViewModel
                 cancellationToken.ThrowIfCancellationRequested();
 
             var banner = await ApiAsync.GetProfileBannerAsync(SelectedUser.CustomWebBackground);
-            
+
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
-            
+
             if (banner == default)
             {
                 CurrentProfileBanner = default;

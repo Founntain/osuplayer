@@ -14,9 +14,9 @@ public partial class PlayerControlView : ReactiveUserControl<PlayerControlViewMo
     {
         InitializeComponent();
     }
-    
+
     private Slider ProgressSlider => this.FindControl<Slider>("SongProgressSlider");
-    
+
     private void InitializeComponent()
     {
         this.WhenActivated(disposables =>
@@ -39,7 +39,7 @@ public partial class PlayerControlView : ReactiveUserControl<PlayerControlViewMo
     {
         Core.Instance.Player.Pause();
     }
-    
+
     private void Volume_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
         Core.Instance.Player.Mute();
@@ -64,7 +64,7 @@ public partial class PlayerControlView : ReactiveUserControl<PlayerControlViewMo
     {
         // throw new NotImplementedException();
     }
-    
+
     private void SongControl(object? sender, RoutedEventArgs e)
     {
         switch ((sender as Control)?.Name)
@@ -91,7 +91,7 @@ public partial class PlayerControlView : ReactiveUserControl<PlayerControlViewMo
     {
         Core.Instance.Player.Mute();
     }
-    
+
     private void PlaybackSpeed_OnClick(object? sender, RoutedEventArgs e)
     {
         ViewModel!.PlaybackSpeed = 0;
@@ -109,9 +109,8 @@ public partial class PlayerControlView : ReactiveUserControl<PlayerControlViewMo
                 return;
             ViewModel!.IsVolumeVisible = false;
         }
-            
     }
-    
+
     private void SpeedPopupHandler(object? sender, PointerEventArgs e)
     {
         if (e.RoutedEvent!.Name == "PointerEnter")
@@ -124,7 +123,6 @@ public partial class PlayerControlView : ReactiveUserControl<PlayerControlViewMo
                 return;
             ViewModel!.IsSpeedVisible = false;
         }
-            
     }
 
     private void VolumePopup_OnPointerLeave(object? sender, PointerEventArgs e)

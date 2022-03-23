@@ -6,9 +6,8 @@ public class PlaylistContainer : IStorableContainer
 {
     public PlaylistContainer()
     {
-        
     }
-    
+
     public PlaylistContainer(bool _)
     {
         Playlists = new List<Playlist>

@@ -13,6 +13,19 @@ public class PlaylistViewModel : BaseViewModel
     private ObservableCollection<Playlist> _playlists;
     private Playlist _selectedPlaylist;
 
+    public PlaylistViewModel()
+    {
+        Activator = new ViewModelActivator();
+        this.WhenActivated(disposables =>
+        {
+            Disposable.Create(() => { }).DisposeWith(disposables);
+
+            Playlists = PlaylistManager.GetAllPlaylists().ToObservableCollection();
+
+            if (Playlists.Count > 0 && SelectedPlaylist == default) SelectedPlaylist = Playlists[0];
+        });
+    }
+
     public ObservableCollection<Playlist> Playlists
     {
         get => _playlists;
@@ -25,22 +38,6 @@ public class PlaylistViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _selectedPlaylist, value);
     }
 
-    public PlaylistViewModel()
-    {
-        Activator = new ViewModelActivator();
-        this.WhenActivated(disposables =>
-        {
-            Disposable.Create(() => { }).DisposeWith(disposables);
-
-            Playlists = PlaylistManager.GetAllPlaylists().ToObservableCollection();
-            
-            if (Playlists.Count > 0 && SelectedPlaylist == default)
-            {
-                SelectedPlaylist = Playlists[0];
-            }
-        });
-    }
-    
     public async void OpenPlaylistEditor()
     {
         var playlists = await PlaylistManager.GetAllPlaylistsAsync();
@@ -48,7 +45,5 @@ public class PlaylistViewModel : BaseViewModel
         Core.Instance.MainWindow.ViewModel!.PlaylistEditorViewModel.Playlists = playlists.ToSourceList();
 
         Core.Instance.MainWindow.ViewModel!.MainView = Core.Instance.MainWindow.ViewModel.PlaylistEditorViewModel;
-        
-        
     }
 }

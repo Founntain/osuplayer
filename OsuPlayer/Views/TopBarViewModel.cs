@@ -6,8 +6,6 @@ namespace OsuPlayer.Views;
 
 public class TopBarViewModel : BaseViewModel
 {
-    private string _currentSongText = "currently playing nothing";
-
     public TopBarViewModel()
     {
         Activator = new ViewModelActivator();

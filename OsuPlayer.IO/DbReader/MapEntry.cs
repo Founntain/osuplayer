@@ -8,7 +8,6 @@ namespace OsuPlayer.IO.DbReader;
 public class MapEntry
 {
     public string Artist;
-    public string ArtistString => GetArtist();
     public string ArtistUnicode;
     public string AudioFileName;
     public string BeatmapChecksum;
@@ -17,20 +16,21 @@ public class MapEntry
     public string Creator;
     public string DifficultyName;
     public string FolderName;
-    public string Title;
-    public string TitleString => GetTitle();
-    public string TitleUnicode;
-    public string Fullpath;
     public string FolderPath;
-
-    public bool UseUnicode;
-    
-    public string SongName => GetSongName();
+    public string Fullpath;
+    public string Title;
+    public string TitleUnicode;
 
     public int TotalTime;
-    public string TotalTimeString => TimeSpan.FromMilliseconds(TotalTime).FormatTime();
+
+    public bool UseUnicode;
 
     public int Ver;
+    public string ArtistString => GetArtist();
+    public string TitleString => GetTitle();
+
+    public string SongName => GetSongName();
+    public string TotalTimeString => TimeSpan.FromMilliseconds(TotalTime).FormatTime();
 
     private string GetArtist()
     {
@@ -55,12 +55,12 @@ public class MapEntry
 
         return $"{Artist} - {Title}";
     }
-    
+
     public override string ToString()
     {
         return Artist + " - " + Title;
     }
-    
+
     public async Task<Bitmap?> FindBackground()
     {
         var eventCount = 0;
@@ -106,11 +106,9 @@ public class MapEntry
             await using var stream = File.OpenRead(Path.Combine(FolderPath, fileName));
             return await Task.Run(() => new Bitmap(stream));
         }
-        else
-        {
-            var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
-            var asset = assets?.Open(new Uri("avares://OsuPlayer/Resources/defaultBg.jpg"));
-            return new Bitmap(asset);
-        }
+
+        var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
+        var asset = assets?.Open(new Uri("avares://OsuPlayer/Resources/defaultBg.jpg"));
+        return new Bitmap(asset);
     }
 }

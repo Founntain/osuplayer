@@ -35,13 +35,9 @@ public partial class PlaylistEditorView : ReactiveUserControl<PlaylistEditorView
         if (ViewModel.CurrentSelectedPlaylist == default)
         {
             if (ViewModel.Playlists.Count > 0)
-            {
                 ViewModel.CurrentSelectedPlaylist = ViewModel.Playlists.Items.ElementAt(0);
-            }
             else
-            {
                 return;
-            }
         }
 
         var playlist = ViewModel!.CurrentSelectedPlaylist.Songs;
@@ -50,29 +46,25 @@ public partial class PlaylistEditorView : ReactiveUserControl<PlaylistEditorView
         {
             if (playlist.Contains(song.BeatmapChecksum))
                 continue;
-            
+
             playlist.Add(song.BeatmapChecksum);
         }
-        
+
         ViewModel!.SelectedSongListItems = new List<MapEntry>();
-        
+
         await PlaylistManager.ReplacePlaylistAsync(ViewModel.CurrentSelectedPlaylist);
 
         ViewModel.RaisePropertyChanged(nameof(ViewModel.Playlists));
     }
-    
+
     private async void RemoveFromPlaylist_OnClick(object? sender, RoutedEventArgs e)
     {
         if (ViewModel.CurrentSelectedPlaylist == default)
         {
             if (ViewModel.Playlists.Count > 0)
-            {
                 ViewModel.CurrentSelectedPlaylist = ViewModel.Playlists.Items.ElementAt(0);
-            }
             else
-            {
                 return;
-            }
         }
 
         var playlist = ViewModel!.CurrentSelectedPlaylist.Songs;
@@ -81,12 +73,12 @@ public partial class PlaylistEditorView : ReactiveUserControl<PlaylistEditorView
         {
             if (!playlist.Contains(song.BeatmapChecksum))
                 continue;
-            
+
             playlist.Remove(song.BeatmapChecksum);
         }
 
         ViewModel!.SelectedPlaylistItems = new List<MapEntry>();
-        
+
         await PlaylistManager.ReplacePlaylistAsync(ViewModel.CurrentSelectedPlaylist);
 
         ViewModel.RaisePropertyChanged(nameof(ViewModel.Playlists));
@@ -95,22 +87,22 @@ public partial class PlaylistEditorView : ReactiveUserControl<PlaylistEditorView
     private void SongList_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (ViewModel == default) return;
-        
+
         var listBox = (ListBox) sender!;
 
         var songs = listBox.SelectedItems.Cast<MapEntry>().ToList();
-        
+
         ViewModel.SelectedSongListItems = songs;
     }
 
     private void Playlist_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (ViewModel == default) return;
-        
+
         var listBox = (ListBox) sender!;
 
         var songs = listBox.SelectedItems.Cast<MapEntry>().ToList();
-        
+
         ViewModel.SelectedPlaylistItems = songs;
     }
 
