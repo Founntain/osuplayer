@@ -7,7 +7,9 @@
 [![GitHub release](https://img.shields.io/github/release-pre/founntain/osuplayer.svg)](https://github.com/founntain/osuplayer/releases/latest)
 ![](https://img.shields.io/github/languages/code-size/founntain/osuplayer)
 ![](https://img.shields.io/github/repo-size/founntain/osuplayer)
-![](https://img.shields.io/github/contributors/founntain/osuplayer)
+![](https://img.shields.io/tokei/lines/github/founntain/osuplayer)
+![](https://img.shields.io/github/contributors/founntain/osuplayer?color=blueviolet)
+
 
 This is the *official* **osu!player** (Avalonia) repository and is mainly developed by [@Founntain](https://github.com/Founntain), with help of [@Cesan](https://github.com/Cesan).  
 This repository will be a complete rewrite of osu!player plus, so keep in mind this is all *work in progress*, with the *ultimate goal to go cross-platform*.  
@@ -59,6 +61,9 @@ Best practice is, that we discuss (new) features and if they are needed. So don'
 | [AvaloniaUI](https://github.com/AvaloniaUI/Avalonia)         | The UI-Framework                                  |
 | [ManagedBass](https://github.com/ManagedBass/ManagedBass)    | The Audio-Engine                                  |
 | [Newtonsoft.Json](https://www.newtonsoft.com/json)           | Used for reading and editing various config files |
+
+## ✨ Special thanks
+- ***SourRaindrop***: for creating a lot of custom images and assets like our logo
 
 ## osu!player todo list
 
