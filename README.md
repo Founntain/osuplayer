@@ -2,6 +2,13 @@
     <img src="https://7.founntain.dev/IY26BPcE.png" />
 </P>
 
+# osu!player
+[![CodeFactor](https://www.codefactor.io/repository/github/founntain/osuplayer/badge)](https://www.codefactor.io/repository/github/founntain/osuplayer)
+[![GitHub release](https://img.shields.io/github/release-pre/founntain/osuplayer.svg)](https://github.com/founntain/osuplayer/releases/latest)
+![](https://img.shields.io/github/languages/code-size/founntain/osuplayer)
+![](https://img.shields.io/github/repo-size/founntain/osuplayer)
+![](https://img.shields.io/github/contributors/founntain/osuplayer)
+
 This is the *official* **osu!player** (Avalonia) repository and is mainly developed by [@Founntain](https://github.com/Founntain), with help of [@Cesan](https://github.com/Cesan).  
 This repository will be a complete rewrite of osu!player plus, so keep in mind this is all *work in progress*, with the *ultimate goal to go cross-platform*.  
 So if we speak osu!player in this repository we mean the Avalonia (this) version. If you want to refer to other versions of the osu!player mention them by their name, either *osu!player **plus*** or *osu!player **legacy*** (osu!player versions before the plus).  
