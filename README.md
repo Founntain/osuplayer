@@ -61,8 +61,8 @@ Best practice is, that we discuss (new) features and if they are needed. So don'
 - [x] Favorise songs and create custom playlists  
 - [ ] Create playlists from collection.db   
 - [x] Nightcore and daycore function  
-- [ ] User profiles, for stats, uploading themes, languages and other stuff  
-- [ ] XP and Levelsystem  
+- [x] User profiles, for stats, uploading themes, languages and other stuff  
+- [x] XP and Levelsystem  
 - [ ] Patchnotes inside the client  
 
 #### 🔧 Features with lower priority
