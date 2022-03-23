@@ -61,7 +61,7 @@ jobs:
       with:
         type: 'zip'
         filename: '${{ matrix.release }}.zip'
-        directory: 'releases/${{ matrix.release }}' 
+        directory: 'releases/${{ matrix.release }}'
 
     - name: Publish Artifact
       uses: ncipollo/release-action@v1
