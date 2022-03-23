@@ -2,6 +2,7 @@
 
 namespace OsuPlayer.IO.Storage.Playlists;
 
+
 public class PlaylistContainer : IStorableContainer
 {
     public PlaylistContainer()
@@ -19,5 +20,5 @@ public class PlaylistContainer : IStorableContainer
         };
     }
 
-    public IList<Playlist> Playlists { get; set; }
+    public IList<Playlist>? Playlists { get; set; }
 }

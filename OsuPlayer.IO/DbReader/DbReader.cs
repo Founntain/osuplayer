@@ -2,6 +2,9 @@ using OsuPlayer.IO.Storage.Config;
 
 namespace OsuPlayer.IO.DbReader;
 
+/// <summary>
+///     A <see cref="BinaryReader" /> to read the osu!.db to extract their beatmap data or to read from the collection.db
+/// </summary>
 public class DbReader : BinaryReader
 {
     private DbReader(Stream input) : base(input)

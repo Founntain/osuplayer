@@ -15,7 +15,7 @@ using OsuPlayer.IO.Storage.Config;
 namespace OsuPlayer.Modules.Audio;
 
 /// <summary>
-///     Audioengine for the osu!player using ManagedBass
+///     Audioengine for the osu!player using <see cref="ManagedBass"/>
 /// </summary>
 public sealed class BassEngine
 {

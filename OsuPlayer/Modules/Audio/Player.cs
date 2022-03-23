@@ -20,6 +20,10 @@ using ReactiveUI;
 
 namespace OsuPlayer.Modules.Audio;
 
+/// <summary>
+///     This class is a wrapper for our <see cref="BassEngine" />.
+///     You can play, pause, stop and etc. from this class. Custom logic should also be implemented here
+/// </summary>
 public class Player
 {
     private readonly Stopwatch _currentSongTimer;

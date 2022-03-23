@@ -5,6 +5,9 @@ using OsuPlayer.Extensions;
 
 namespace OsuPlayer.IO.DbReader;
 
+/// <summary>
+///     Represets a Beatmap from osu! in our own structure
+/// </summary>
 public class MapEntry
 {
     public int BeatmapId;
