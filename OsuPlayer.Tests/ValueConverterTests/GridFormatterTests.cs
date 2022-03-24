@@ -10,7 +10,7 @@ public class GridFormatterTests
 {
     private GridFormatter _gridFormatter;
     private Type _expectedInput = typeof(double);
-    private Type _expectedParameter = typeof(double);
+    private Type _expectedParameter = typeof(string);
     private Type _expectedOutput = typeof(int);
 
     [SetUp]
@@ -36,8 +36,8 @@ public class GridFormatterTests
             () => _gridFormatter.Convert(null, _expectedOutput, null, CultureInfo.InvariantCulture));
     }
 
-    [TestCase(new object[] {100.0, 100.0, 1})]
-    [TestCase(new object[] {100.0, 99.0, 2})]
+    [TestCase(new object[] {100.0, "100", 1})]
+    [TestCase(new object[] {100.0, "99", 2})]
     public void TestCorrectUsage(object[] input)
     {
         var width = input[0];
@@ -57,8 +57,8 @@ public class GridFormatterTests
     }
 
     [TestCase(new object[] {"test", 100})]
-    [TestCase(new object[] {true, "abc"})]
-    [TestCase(new object[] {100.0, 0.0})]
+    [TestCase(new object[] {10, true})]
+    [TestCase(new object[] {"abc", 0.0})]
     public void TestOutputOnIncorrectInput(object[] input)
     {
         var width = input[0];

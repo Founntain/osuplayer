@@ -10,7 +10,7 @@ public class GridFormatter : IValueConverter
         if (value is not double or int) return 0;
         var width = System.Convert.ToDouble(value);
 
-        if (parameter is not double or int) return 0;
+        if (parameter is not string) return 0;
         var targetWidth = System.Convert.ToDouble(parameter);
 
         if (targetWidth <= 0) return 0;
