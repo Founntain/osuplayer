@@ -87,7 +87,7 @@ jobs:
           # FIXME: Suppress warnings from templates project
           exit_code=0
           while read -r line; do
-            if [[ ! -z "$line" ]]; then
+            if [[ ! -z "$line" && "$line" != *"xaml.cs"* ]]; then
               echo "::error::$line"
               exit_code=1
             fi
