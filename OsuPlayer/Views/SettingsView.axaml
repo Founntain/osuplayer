@@ -9,14 +9,14 @@
              Initialized="SettingsView_OnInitialized">
     <UserControl.Resources>
         <valueConverters:SettingsUserConverter x:Key="SettingsUserConverter" />
+        <valueConverters:GridFormatter x:Key="GridFormatter" />
     </UserControl.Resources>
     <Design.DataContext>
         <views:SettingsViewModel />
     </Design.DataContext>
 
-    <Grid ColumnDefinitions="50*, 50*">
-
-        <Grid Column="0" RowDefinitions="Auto, Auto" Margin="10">
+    <UniformGrid Columns="{Binding RelativeSource={RelativeSource Self}, Path=Bounds.Width, Converter={StaticResource GridFormatter}, ConverterParameter=600}">
+        <Grid RowDefinitions="Auto, Auto" Margin="10">
             <Panel Grid.Row="0" Grid.RowSpan="2">
                 <ExperimentalAcrylicBorder IsHitTestVisible="False">
                     <ExperimentalAcrylicBorder.Material>
@@ -53,7 +53,7 @@
             </StackPanel>
         </Grid>
 
-        <Grid Column="1" RowDefinitions="Auto, Auto" Margin="10">
+        <Grid RowDefinitions="Auto, Auto" Margin="10">
             <Panel Grid.Row="0" Grid.RowSpan="2">
                 <ExperimentalAcrylicBorder IsHitTestVisible="False">
                     <ExperimentalAcrylicBorder.Material>
@@ -78,5 +78,5 @@
             </StackPanel>
         </Grid>
 
-    </Grid>
+    </UniformGrid>
 </UserControl>
