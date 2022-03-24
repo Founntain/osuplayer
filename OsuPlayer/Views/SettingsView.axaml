@@ -15,12 +15,12 @@
         <views:SettingsViewModel />
     </Design.DataContext>
 
-    <StackPanel>
-        <TextBox Name="SettingsSearch" Text="{Binding SettingsSearchQ}" />
+    <Grid RowDefinitions="Auto, *">
+        <TextBox Grid.Row="0" Name="SettingsSearch" Text="{Binding SettingsSearchQ}" />
 
-        <ScrollViewer>
-            <UniformGrid
-                Columns="{Binding RelativeSource={RelativeSource Self}, Path=Bounds.Width, Converter={StaticResource GridFormatter}, ConverterParameter=700}"
+        <ScrollViewer Grid.Row="1">
+            <WrapPanel
+                ItemWidth="{Binding RelativeSource={RelativeSource Self}, Path=Bounds.Width, Converter={StaticResource GridFormatter}, ConverterParameter=700}"
                 Name="SettingsGrid">
 
                 <Grid RowDefinitions="Auto" Margin="10" Name="GeneralSettings">
@@ -85,7 +85,7 @@
                         </StackPanel>
                     </StackPanel>
                 </Grid>
-            </UniformGrid>
+            </WrapPanel>
         </ScrollViewer>
-    </StackPanel>
+    </Grid>
 </UserControl>

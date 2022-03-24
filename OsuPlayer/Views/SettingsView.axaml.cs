@@ -20,7 +20,7 @@ public partial class SettingsView : ReactiveUserControl<SettingsViewModel>
         this.WhenActivated(disposables => { });
         AvaloniaXamlLoader.Load(this);
         Core.Instance.MainWindow.ViewModel!.SettingsView.SettingsCategories =
-            this.FindControl<UniformGrid>("SettingsGrid").Children;
+            this.FindControl<WrapPanel>("SettingsGrid").Children;
     }
 
     private void SettingsView_OnInitialized(object? sender, EventArgs e)
