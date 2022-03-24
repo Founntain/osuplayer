@@ -24,9 +24,9 @@ public class ConfigTests
     }
 
     [Test]
-    public void TestContainerNullOnInit()
+    public void TestContainerNotNullOnInit()
     {
-        Assert.IsNull(_config.Container);
+        Assert.IsNotNull(_config.Container);
     }
 
     [Test]
@@ -61,6 +61,13 @@ public class ConfigTests
         var container = _config.Read();
         container.Volume = 10;
         _config.Save(container);
+        Assert.AreEqual(10, _config.Read().Volume);
+    }
+
+    [Test]
+    public void TestAccessNoRead()
+    {
+        Assert.DoesNotThrow(() => _config.Container.Volume = 10);
         Assert.AreEqual(10, _config.Read().Volume);
     }
 }

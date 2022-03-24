@@ -6,28 +6,34 @@ public class Config : IStorable<ConfigContainer>
 {
     public string Path => "data/config.json";
 
-    public ConfigContainer? Container { get; set; }
+    private ConfigContainer? _configContainer;
+
+    public ConfigContainer Container
+    {
+        get => _configContainer ?? Read();
+        set => _configContainer = value;
+    }
 
     public ConfigContainer Read()
     {
-        if (!File.Exists(Path) || Container != null)
-            return Container ??= new ConfigContainer();
+        if (!File.Exists(Path) || _configContainer != null)
+            return _configContainer ??= new ConfigContainer();
 
         var data = File.ReadAllText(Path);
 
-        return Container ??= (string.IsNullOrWhiteSpace(data)
+        return _configContainer ??= (string.IsNullOrWhiteSpace(data)
             ? new ConfigContainer()
             : JsonConvert.DeserializeObject<ConfigContainer>(data))!;
     }
 
     public async Task<ConfigContainer> ReadAsync()
     {
-        if (!File.Exists(Path) || Container != null)
-            return Container ??= new ConfigContainer();
+        if (!File.Exists(Path) || _configContainer != null)
+            return _configContainer ??= new ConfigContainer();
 
         var data = await File.ReadAllTextAsync(Path);
 
-        return Container ??= (string.IsNullOrWhiteSpace(data)
+        return _configContainer ??= (string.IsNullOrWhiteSpace(data)
             ? new ConfigContainer()
             : JsonConvert.DeserializeObject<ConfigContainer>(data))!;
     }
@@ -48,13 +54,13 @@ public class Config : IStorable<ConfigContainer>
 
     public void Dispose()
     {
-        if (Container != default)
-            Save(Container);
+        if (_configContainer != default)
+            Save(_configContainer);
     }
 
     public async ValueTask DisposeAsync()
     {
-        if (Container != default)
-            await SaveAsync(Container);
+        if (_configContainer != default)
+            await SaveAsync(_configContainer);
     }
 }
