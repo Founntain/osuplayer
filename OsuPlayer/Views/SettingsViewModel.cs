@@ -66,6 +66,8 @@ public class SettingsViewModel : BaseViewModel
         }
     }
 
+    public Avalonia.Controls.Controls SettingsCategories { get; set; }
+
     public async Task ImportSongsClick()
     {
         var dialog = new OpenFileDialog
