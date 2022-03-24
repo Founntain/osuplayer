@@ -42,7 +42,7 @@ public class Config : IStorable<ConfigContainer>
     public async Task SaveAsync(ConfigContainer container)
     {
         Directory.CreateDirectory("data");
-        
+
         await File.WriteAllTextAsync(Path, JsonConvert.SerializeObject(container));
     }
 

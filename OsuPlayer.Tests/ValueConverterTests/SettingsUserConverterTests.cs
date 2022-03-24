@@ -12,7 +12,7 @@ public class SettingsUserConverterTests
     private SettingsUserConverter _userConverter;
     private Type _expectedInput = typeof(User);
     private Type _expectedOutput = typeof(string);
-    
+
     [SetUp]
     public void Setup()
     {
@@ -32,7 +32,7 @@ public class SettingsUserConverterTests
     {
         Assert.DoesNotThrow(() => _userConverter.Convert(null, _expectedOutput, null, CultureInfo.InvariantCulture));
     }
-    
+
     [Test]
     public void TestOutputOnNullInput()
     {

@@ -5,7 +5,7 @@ using OsuPlayer.IO.Storage.Config;
 
 namespace OsuPlayer.Tests;
 
-public class ConfigTest
+public class ConfigTests
 {
     private Config _config;
 
@@ -35,7 +35,7 @@ public class ConfigTest
         _config.Read();
         Assert.IsNotNull(_config.Container);
     }
-    
+
     [Test]
     public async Task TestContainerNotNullOnAsyncRead()
     {
@@ -48,11 +48,11 @@ public class ConfigTest
     {
         _config.Save(_config.Read());
     }
-    
+
     [Test]
     public async Task TestAsyncSave()
     {
-       await _config.SaveAsync(await _config.ReadAsync());
+        await _config.SaveAsync(await _config.ReadAsync());
     }
 
     [Test]

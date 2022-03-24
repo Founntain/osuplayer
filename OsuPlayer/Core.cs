@@ -3,6 +3,7 @@ using OsuPlayer.Modules.Audio;
 using OsuPlayer.Windows;
 
 namespace OsuPlayer;
+
 public class Core
 {
     public BassEngine Engine;
@@ -22,7 +23,7 @@ public class Core
     {
         MainWindow = window;
         Engine = BassEngine.Instance;
-        
+
         await using (var config = new Config())
         {
             await config.ReadAsync();

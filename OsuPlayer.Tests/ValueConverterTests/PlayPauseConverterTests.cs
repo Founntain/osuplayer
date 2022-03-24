@@ -12,7 +12,7 @@ public class PlayPauseConverterTests
     private PlayPauseConverter _playPauseConverter;
     private Type _expectedInput = typeof(bool);
     private Type _expectedOutput = typeof(MaterialIconKind);
-    
+
     [SetUp]
     public void Setup()
     {
@@ -24,13 +24,15 @@ public class PlayPauseConverterTests
     public void TestWrongInputHandled(object input)
     {
         Assert.IsNotInstanceOf(_expectedInput, input.GetType());
-        Assert.DoesNotThrow(() => _playPauseConverter.Convert(input, _expectedOutput, null, CultureInfo.InvariantCulture));
+        Assert.DoesNotThrow(() =>
+            _playPauseConverter.Convert(input, _expectedOutput, null, CultureInfo.InvariantCulture));
     }
 
     [Test]
     public void TestNullInputHandled()
     {
-        Assert.DoesNotThrow(() => _playPauseConverter.Convert(null, _expectedOutput, null, CultureInfo.InvariantCulture));
+        Assert.DoesNotThrow(
+            () => _playPauseConverter.Convert(null, _expectedOutput, null, CultureInfo.InvariantCulture));
     }
 
     [Test]

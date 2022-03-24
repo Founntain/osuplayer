@@ -12,7 +12,7 @@ public class RepeatConverterTests
     private RepeatConverter _repeatConverter;
     private Type _expectedInput = typeof(bool);
     private Type _expectedOutput = typeof(MaterialIconKind);
-    
+
     [SetUp]
     public void Setup()
     {

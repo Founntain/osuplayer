@@ -299,7 +299,7 @@ public sealed class BassEngine
 
     public void Pause()
     {
-        if(Bass.ChannelPause(FxStream))
+        if (Bass.ChannelPause(FxStream))
             IsPlaying = false;
     }
 
@@ -312,7 +312,7 @@ public sealed class BassEngine
     {
         if (IsPlaying)
         {
-            if(Bass.ChannelPause(FxStream))
+            if (Bass.ChannelPause(FxStream))
                 IsPlaying = false;
         }
         else

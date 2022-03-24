@@ -23,7 +23,7 @@ public class MapEntry
     public string? Fullpath;
     public string Title = null!;
     public string? TitleUnicode;
-    
+
     public int TotalTime;
 
     public bool UseUnicode;
