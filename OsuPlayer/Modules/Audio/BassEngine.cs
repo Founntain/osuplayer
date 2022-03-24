@@ -299,27 +299,25 @@ public sealed class BassEngine
 
     public void Pause()
     {
-        Bass.ChannelPause(FxStream);
-        IsPlaying = false;
+        if (Bass.ChannelPause(FxStream))
+            IsPlaying = false;
     }
 
     public void Play()
     {
-        PlayCurrentStream();
-        IsPlaying = true;
+        IsPlaying = PlayCurrentStream();
     }
 
     public void PlayPause()
     {
         if (IsPlaying)
         {
-            Bass.ChannelPause(FxStream);
-            IsPlaying = false;
+            if (Bass.ChannelPause(FxStream))
+                IsPlaying = false;
         }
         else
         {
-            PlayCurrentStream();
-            IsPlaying = true;
+            IsPlaying = PlayCurrentStream();
         }
     }
 
@@ -583,13 +581,15 @@ public sealed class BassEngine
         _repeatSyncId = 0;
     }
 
-    private void PlayCurrentStream()
+    private bool PlayCurrentStream()
     {
         // Play Stream
         if (FxStream != 0 && Bass.ChannelPlay(FxStream))
         {
-            // Do nothing
+            return true;
         }
+
+        return false;
     }
 
     #endregion

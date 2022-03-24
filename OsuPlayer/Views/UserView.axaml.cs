@@ -46,9 +46,11 @@ public partial class UserView : ReactiveUserControl<UserViewModel>
     {
         var listBox = (ListBox) sender;
         if (listBox == default) return;
-        var beatmapModel = (BeatmapUserValidityModel)listBox.SelectedItem;
+        var beatmapModel = (BeatmapUserValidityModel) listBox.SelectedItem;
         if (beatmapModel == default || Core.Instance.Player.SongSource == default) return;
-        var mapEntry = Core.Instance.Player.SongSource.FirstOrDefault(x => x.BeatmapChecksum == beatmapModel.Beatmap.BeatmapChecksum || x.Artist == beatmapModel.Beatmap.Artist && x.Title == beatmapModel.Beatmap.Title);
+        var mapEntry = Core.Instance.Player.SongSource.FirstOrDefault(x =>
+            x.BeatmapChecksum == beatmapModel.Beatmap.BeatmapChecksum ||
+            x.Artist == beatmapModel.Beatmap.Artist && x.Title == beatmapModel.Beatmap.Title);
         if (mapEntry != default)
             await Core.Instance.Player.Play(mapEntry);
     }

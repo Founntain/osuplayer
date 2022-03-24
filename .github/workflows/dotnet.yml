@@ -1,25 +1,38 @@
-name: .NET
+name: CI
 
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+on: [push, pull_request]
 
 jobs:
-  build:
-
-    runs-on: ubuntu-latest
-
+  test:
+    name: Run Tests
+    runs-on: ${{ matrix.os.fullname}}
+    strategy:
+       fail-fast: false
+       matrix:
+          os:
+            - { prettyname: Windows, fullname: windows-latest }
+            - { prettyname: macOS, fullname: macos-latest }
+            - { prettyname: Linux, fullname: ubuntu-latest }
+    timeout-minutes: 60
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Install .NET 6.0.x
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
-    - name: Restore dependencies
-      run: dotnet restore
+
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build -c Debug
+
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test $pwd/*.Tests/bin/Debug/*/*.Tests.dll --logger "trx;LogFileName=TestResults-${{ matrix.os.prettyname }}.trx"
+      shell: pwsh
+
+    - name: Updload Test Results
+      uses: actions/upload-artifact@v2
+      if: ${{ always() }}
+      with:
+        name: osuplayer-test-results-${{ matrix.os.prettyname }}
+        path: ${{ github.workspace }}/TestResults/TestResults-${{ matrix.os.prettyname }}.trx

@@ -22,13 +22,13 @@ public class Core
     protected internal async void SetupCore(MainWindow window)
     {
         MainWindow = window;
-        using (var config = new Config())
+        Engine = BassEngine.Instance;
+
+        await using (var config = new Config())
         {
             await config.ReadAsync();
             MainWindow.TransparencyLevelHint = config.Container.TransparencyLevelHint;
         }
-
-        Engine = BassEngine.Instance;
 
         await Player.ImportSongs();
     }

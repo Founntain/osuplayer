@@ -40,8 +40,7 @@ public class DbReader : BinaryReader
             if (flag)
                 reader.ReadInt32(); //btlen
 
-            MapEntry mapEntry = null;
-            ReadFromStream(reader, ver, osuPath, out mapEntry);
+            ReadFromStream(reader, ver, osuPath, out var mapEntry);
             mapEntry.UseUnicode = unicode;
             beatmaps.Add(mapEntry);
         }

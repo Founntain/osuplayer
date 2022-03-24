@@ -9,28 +9,34 @@ public class PlaylistStorage : IStorable<PlaylistContainer>
 {
     public string Path => System.IO.Path.Combine("data", "playlists.json");
 
-    public PlaylistContainer? Container { get; set; }
+    private PlaylistContainer? _container;
+
+    public PlaylistContainer Container
+    {
+        get => _container ?? Read();
+        set => _container = value;
+    }
 
     public PlaylistContainer Read()
     {
-        if (!File.Exists(Path) || Container != null)
-            return Container ??= new(false);
+        if (!File.Exists(Path) || _container != null)
+            return _container ??= new(false);
 
         var data = File.ReadAllText(Path);
 
-        return Container ??= (string.IsNullOrWhiteSpace(data)
+        return _container ??= (string.IsNullOrWhiteSpace(data)
             ? new(false)
             : JsonConvert.DeserializeObject<PlaylistContainer>(data))!;
     }
 
     public async Task<PlaylistContainer> ReadAsync()
     {
-        if (!File.Exists(Path) || Container != null)
-            return Container ??= new(false);
+        if (!File.Exists(Path) || _container != null)
+            return _container ??= new(false);
 
         var data = await File.ReadAllTextAsync(Path);
 
-        return Container ??= (string.IsNullOrWhiteSpace(data)
+        return _container ??= (string.IsNullOrWhiteSpace(data)
             ? new(false)
             : JsonConvert.DeserializeObject<PlaylistContainer>(data))!;
     }
@@ -49,13 +55,13 @@ public class PlaylistStorage : IStorable<PlaylistContainer>
 
     public void Dispose()
     {
-        if (Container != null)
-            Save(Container);
+        if (_container != null)
+            Save(_container);
     }
 
     public async ValueTask DisposeAsync()
     {
-        if (Container != default)
-            await SaveAsync(Container);
+        if (_container != default)
+            await SaveAsync(_container);
     }
 }
