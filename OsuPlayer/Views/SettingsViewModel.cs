@@ -20,6 +20,7 @@ public class SettingsViewModel : BaseViewModel
     private string _osuLocation;
     private StartupSong _selectedStartupSong = new Config().Read().StartupSong;
     private WindowTransparencyLevel _selectedTransparencyLevel = new Config().Read().TransparencyLevelHint;
+    private string _settingsSearchQ;
 
     public SettingsViewModel()
     {
@@ -63,6 +64,55 @@ public class SettingsViewModel : BaseViewModel
 
             using var config = new Config();
             config.Read().StartupSong = value;
+        }
+    }
+
+    public string SettingsSearchQ
+    {
+        get => _settingsSearchQ;
+        set
+        {
+            var searchQs = value.Split(' ');
+
+            foreach (var category in SettingsCategories)
+            {
+                if (category is Grid settingsCat)
+                {
+                    var settingsPanel =
+                        settingsCat.Children.FirstOrDefault(x => x.Name?.Contains(category.Name) ?? false);
+
+                    if (settingsPanel is StackPanel stackPanel)
+                    {
+                        var settings = stackPanel.Children;
+
+                        var categoryFound = searchQs.All(x =>
+                            category.Name?.Contains(x, StringComparison.OrdinalIgnoreCase) ?? true);
+
+                        if (categoryFound)
+                        {
+                            category.IsVisible = true;
+                            foreach (var setting in settings)
+                            {
+                                setting.IsVisible = true;
+                            }
+
+                            continue;
+                        }
+
+                        var foundAnySettings = false;
+                        foreach (var setting in settings)
+                        {
+                            setting.IsVisible = searchQs.All(x =>
+                                setting.Name?.Contains(x, StringComparison.OrdinalIgnoreCase) ?? false);
+                            foundAnySettings = foundAnySettings || setting.IsVisible;
+                        }
+
+                        category.IsVisible = foundAnySettings;
+                    }
+                }
+            }
+
+            this.RaiseAndSetIfChanged(ref _settingsSearchQ, value);
         }
     }
 
