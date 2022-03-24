@@ -4,7 +4,7 @@ namespace OsuPlayer.IO.Storage.Config;
 
 public class Config : IStorable<ConfigContainer>
 {
-    public string Path => "data/config.json";
+    public string Path => System.IO.Path.Combine("data", "config.json");
 
     private ConfigContainer? _configContainer;
 

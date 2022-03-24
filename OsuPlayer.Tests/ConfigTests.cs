@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using OsuPlayer.IO.Storage.Config;
@@ -20,7 +21,7 @@ public class ConfigTests
     [Test]
     public void TestConfigPath()
     {
-        Assert.AreEqual("data/config.json", _config.Path);
+        Assert.IsTrue(Regex.IsMatch(_config.Path, @"^data[\/\\]{1,2}config\.json$"));
     }
 
     [Test]
@@ -32,27 +33,27 @@ public class ConfigTests
     [Test]
     public void TestContainerNotNullOnRead()
     {
-        _config.Read();
+        Assert.DoesNotThrow(() => _config.Read());
         Assert.IsNotNull(_config.Container);
     }
 
     [Test]
-    public async Task TestContainerNotNullOnAsyncRead()
+    public void TestContainerNotNullOnAsyncRead()
     {
-        await _config.ReadAsync();
+        Assert.DoesNotThrowAsync(async () => await _config.ReadAsync());
         Assert.IsNotNull(_config.Container);
     }
 
     [Test]
     public void TestSave()
     {
-        _config.Save(_config.Read());
+        Assert.DoesNotThrow(() => _config.Save(_config.Read()));
     }
 
     [Test]
-    public async Task TestAsyncSave()
+    public void TestAsyncSave()
     {
-        await _config.SaveAsync(await _config.ReadAsync());
+        Assert.DoesNotThrowAsync(async () => await _config.SaveAsync(await _config.ReadAsync()));
     }
 
     [Test]
@@ -61,6 +62,7 @@ public class ConfigTests
         var container = _config.Read();
         container.Volume = 10;
         _config.Save(container);
+        _config = new Config();
         Assert.AreEqual(10, _config.Read().Volume);
     }
 
