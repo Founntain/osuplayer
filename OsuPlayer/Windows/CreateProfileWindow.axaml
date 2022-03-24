@@ -1,0 +1,63 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:windows="clr-namespace:OsuPlayer.Windows"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="OsuPlayer.Windows.CreateProfileWindow"
+        Title="create new profile"
+        
+        FontFamily="{DynamicResource Montserrat}"
+        FontSize="16"
+
+        WindowStartupLocation="CenterScreen"
+        MaxWidth="450" Width="450"
+        MaxHeight="375"
+        
+        Background="Transparent"
+        TransparencyLevelHint="AcrylicBlur"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="PreferSystemChrome">
+    
+    <Design.DataContext>
+        <windows:CreateProfileWindowViewModel />
+    </Design.DataContext>
+    
+    <Grid RowDefinitions="Auto, Auto, Auto">
+        <Panel Grid.RowSpan="3">
+            <ExperimentalAcrylicBorder IsHitTestVisible="False">
+                <ExperimentalAcrylicBorder.Material>
+                    <ExperimentalAcrylicMaterial
+                        BackgroundSource="Digger"
+                        TintColor="Black"
+                        TintOpacity="1"
+                        MaterialOpacity="0.25" />
+                </ExperimentalAcrylicBorder.Material>
+            </ExperimentalAcrylicBorder>
+        </Panel>
+        
+        <TextBlock Text="create a new profile" Grid.Row="0" FontSize="22" HorizontalAlignment="Stretch" Margin="10" />
+        
+        <StackPanel Grid.Row="1" HorizontalAlignment="Stretch" Margin="10">
+            <StackPanel>
+                <TextBlock Text="Username" />
+                <TextBox Text="{Binding Username}" />
+            </StackPanel>
+            
+            <StackPanel Margin="0 10">
+                <TextBlock Text="Password" />
+                <TextBox Text="{Binding Password}" PasswordChar="•" />
+            </StackPanel>
+            
+            <TextBlock Text="you can choose a description, profile picture and other stuff after creating your profile" Margin="0 5" TextWrapping="Wrap" />
+            
+            <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Margin="0 10">
+                <Button Content="open terms of service" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                <CheckBox Content="I agree to the terms of service" IsChecked="{Binding IsTosChecked}" />
+            </StackPanel>
+        </StackPanel>
+        
+        <Button Grid.Row="2" Margin="10" Content="create profile" IsEnabled="{Binding IsTosChecked}" 
+                VerticalAlignment="Top" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+    </Grid>
+</Window>
