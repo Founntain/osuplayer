@@ -16,7 +16,8 @@
     </Design.DataContext>
 
     <Grid RowDefinitions="Auto, *">
-        <TextBox Grid.Row="0" Name="SettingsSearch" Text="{Binding SettingsSearchQ}" />
+        <TextBox Grid.Row="0" Name="SettingsSearch" Text="{Binding SettingsSearchQ}"
+                 Watermark="type to search for settings" Margin="10 10 10 0" />
 
         <ScrollViewer Grid.Row="1">
             <WrapPanel
