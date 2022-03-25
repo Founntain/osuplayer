@@ -7,6 +7,7 @@
              xmlns:valueConverters="clr-namespace:OsuPlayer.ValueConverters"
              xmlns:extensions="clr-namespace:OsuPlayer.Extensions.ValueConverters;assembly=OsuPlayer.Extensions"
              xmlns:views="clr-namespace:OsuPlayer.Views"
+             xmlns:dataModels="clr-namespace:OsuPlayer.IO.DbReader.DataModels;assembly=OsuPlayer.IO"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.PlaylistEditorView">
     <UserControl.Resources>
@@ -165,7 +166,7 @@
                          Items="{Binding SongList}" SelectedItems="{Binding SelectedSongListItems}"
                          SelectionChanged="SongList_OnSelectionChanged">
                     <ListBox.ItemTemplate>
-                        <DataTemplate DataType="dbReader:MinimalMapEntry">
+                        <DataTemplate DataType="dataModels:MinimalMapEntry">
                             <Grid>
                                 <TextBlock Text="{Binding SongName}" FontWeight="SemiBold" />
                             </Grid>
@@ -196,7 +197,7 @@
                          Items="{Binding CurrentSelectedPlaylist.Songs, Converter={StaticResource PlaylistValueConverter}}"
                          SelectionChanged="Playlist_OnSelectionChanged">
                     <ListBox.ItemTemplate>
-                        <DataTemplate DataType="dbReader:MinimalMapEntry">
+                        <DataTemplate DataType="dataModels:MinimalMapEntry">
                             <Grid>
                                 <TextBlock Text="{Binding SongName}" FontWeight="SemiBold" />
                             </Grid>

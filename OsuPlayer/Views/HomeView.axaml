@@ -6,6 +6,7 @@
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:views="clr-namespace:OsuPlayer.Views"
              xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             xmlns:dataModels="clr-namespace:OsuPlayer.IO.DbReader.DataModels;assembly=OsuPlayer.IO"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.HomeView">
 
@@ -109,7 +110,7 @@
             <ListBox Grid.Row="1" Items="{Binding SongEntries}" Background="Transparent"
                      DoubleTapped="InputElement_OnDoubleTapped">
                 <ListBox.DataTemplates>
-                    <DataTemplate DataType="io:MinimalMapEntry">
+                    <DataTemplate DataType="dataModels:MinimalMapEntry">
                         <Grid ColumnDefinitions="*, 100" RowDefinitions="Auto, Auto">
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding TitleString}" FontSize="20"
                                        FontWeight="SemiBold" />

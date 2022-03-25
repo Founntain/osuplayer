@@ -1,11 +1,13 @@
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using OsuPlayer.IO.DbReader.DataModels;
 using OsuPlayer.IO.Storage.Config;
 
 namespace OsuPlayer.IO.DbReader;
 
 /// <summary>
-///     A <see cref="BinaryReader" /> to read the osu!.db to extract their beatmap data or to read from the collection.db
+/// A <see cref="BinaryReader" /> to read the osu!.db to extract their beatmap data or to read from the collection.db
 /// </summary>
 public partial class DbReader : BinaryReader
 {
@@ -17,6 +19,11 @@ public partial class DbReader : BinaryReader
 
     private byte[] _buf = new byte[512];
 
+    /// <summary>
+    /// Reads the osu!.db and skips duplicate beatmaps of one beatmap set
+    /// </summary>
+    /// <param name="osuPath">the osu full path</param>
+    /// <returns> a <see cref="MinimalMapEntry"/> list</returns>
     public static async Task<List<MinimalMapEntry>?> ReadOsuDb(string osuPath)
     {
         var minBeatMaps = new List<MinimalMapEntry>();
@@ -50,7 +57,7 @@ public partial class DbReader : BinaryReader
 
             if (prevId != -1)
             {
-                var length = CalculateMapLength(reader, OsuDbVersion, out var newSetId);
+                var length = CalculateMapLength(reader, out var newSetId);
                 if (prevId == newSetId)
                 {
                     prevId = newSetId;
@@ -65,7 +72,7 @@ public partial class DbReader : BinaryReader
                 DbOffset = reader.BaseStream.Position
             };
 
-            ReadFromStreamMinimal(reader, ver, osuPath, ref minBeatMap, out var curSetId);
+            ReadFromStreamMinimal(reader, osuPath, ref minBeatMap, out var curSetId);
             prevId = curSetId;
             minBeatMaps.Add(minBeatMap);
         }
@@ -77,18 +84,24 @@ public partial class DbReader : BinaryReader
         return minBeatMaps;
     }
 
-    private static long CalculateMapLength(DbReader r, int version, out int setId)
+    /// <summary>
+    /// Reads a osu!.db map entry and calculates the map length in bytes
+    /// </summary>
+    /// <param name="r">the current <see cref="DbReader"/> instance of the stream</param>
+    /// <param name="setId">outputs a <see cref="int"/> of the beatmap set id</param>
+    /// <returns>a <see cref="long"/> from the byte length of the current map</returns>
+    private static long CalculateMapLength(DbReader r, out int setId)
     {
         var initOffset = r.BaseStream.Position;
 
         r.GetStringLen();
-        if (version >= 20121008)
+        if (OsuDbVersion >= 20121008)
         {
             r.GetStringLen();
         }
 
         r.GetStringLen();
-        if (version >= 20121008)
+        if (OsuDbVersion >= 20121008)
         {
             r.GetStringLen();
         }
@@ -99,7 +112,7 @@ public partial class DbReader : BinaryReader
         r.GetStringLen();
         r.GetStringLen();
         r.BaseStream.Seek(15, SeekOrigin.Current);
-        if (version >= 20140609)
+        if (OsuDbVersion >= 20140609)
             r.BaseStream.Seek(16, SeekOrigin.Current);
         else
             r.BaseStream.Seek(4, SeekOrigin.Current);
@@ -125,7 +138,7 @@ public partial class DbReader : BinaryReader
         r.GetStringLen();
         r.BaseStream.Seek(10, SeekOrigin.Current);
         r.GetStringLen();
-        if (version < 20140609)
+        if (OsuDbVersion < 20140609)
             r.BaseStream.Seek(20, SeekOrigin.Current);
         else
             r.BaseStream.Seek(18, SeekOrigin.Current);
@@ -133,6 +146,11 @@ public partial class DbReader : BinaryReader
         return r.BaseStream.Position - initOffset;
     }
 
+    /// <summary>
+    /// Reads the collection from the collection.db
+    /// </summary>
+    /// <param name="osuPath">the osu full path</param>
+    /// <returns>a <see cref="Collection"/> list</returns>
     public static List<Collection>? ReadCollections(string osuPath)
     {
         var collections = new List<Collection>();
@@ -151,6 +169,12 @@ public partial class DbReader : BinaryReader
         return collections;
     }
 
+    /// <summary>
+    /// Returns a ULEB128 length encoded string from the base stream
+    /// </summary>
+    /// <param name="ignore">the string will not be read and the base stream will skip it</param>
+    /// <returns>a <see cref="string"/> containing the read string if string mark byte was 11 or an empty string if <paramref name="ignore"/> is true or the string mark byte was 0</returns>
+    /// <exception cref="Exception">throws if the string mark byte is neither 0 nor 11</exception>
     public string ReadString(bool ignore = false)
     {
         switch (ReadByte())
@@ -161,7 +185,7 @@ public partial class DbReader : BinaryReader
                 var strLen = Read7BitEncodedInt();
                 if (!ignore)
                 {
-                    BaseStream.Read(_buf, 0, strLen); // ReadBytes(strLen);
+                    BaseStream.Read(_buf, 0, strLen);
                     return Encoding.UTF8.GetString(_buf, 0, strLen);
                 }
 
@@ -172,6 +196,11 @@ public partial class DbReader : BinaryReader
         }
     }
 
+    /// <summary>
+    /// Reads the length of a ULEB128 length encoded string
+    /// </summary>
+    /// <returns>an <see cref="int"/> representing the length of the string</returns>
+    /// <exception cref="Exception">throws if the string mark byte is neither 0 nor 11</exception>
     private int GetStringLen()
     {
         switch (ReadByte())
@@ -187,12 +216,19 @@ public partial class DbReader : BinaryReader
         }
     }
 
+    /// <summary>
+    /// Reads the star rating count and moves the base stream accordingly effectively skipping it
+    /// </summary>
     public void ReadStarRating()
     {
         var count = ReadInt32();
         BaseStream.Seek(14 * count, SeekOrigin.Current);
     }
 
+    /// <summary>
+    /// Reads a <see cref="Int64"/> and converts it to UTC based time
+    /// </summary>
+    /// <returns>a <see cref="DateTime"/> converted from the read data</returns>
     public DateTime ReadDateTime()
     {
         return new DateTime(ReadInt64(), DateTimeKind.Utc);

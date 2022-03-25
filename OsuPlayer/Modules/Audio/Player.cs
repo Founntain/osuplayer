@@ -13,6 +13,7 @@ using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Extensions;
 using OsuPlayer.IO;
 using OsuPlayer.IO.DbReader;
+using OsuPlayer.IO.DbReader.DataModels;
 using OsuPlayer.IO.Storage.Config;
 using OsuPlayer.Network.API.ApiEndpoints;
 using OsuPlayer.Network.Online;

@@ -2,12 +2,12 @@
 using Avalonia;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
-using OsuPlayer.Extensions;
 
-namespace OsuPlayer.IO.DbReader;
+namespace OsuPlayer.IO.DbReader.DataModels;
 
 /// <summary>
-///     Represets a Beatmap from osu! in our own structure
+/// a full beatmap entry with optionally used data
+/// <remarks>only created on a <see cref="DbReader.ReadFullMapEntry"/> call</remarks>
 /// </summary>
 public class MapEntry : MinimalMapEntry
 {

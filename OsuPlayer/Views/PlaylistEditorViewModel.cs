@@ -4,6 +4,7 @@ using System.Reactive.Disposables;
 using DynamicData;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.IO.DbReader;
+using OsuPlayer.IO.DbReader.DataModels;
 using OsuPlayer.ViewModels;
 using ReactiveUI;
 

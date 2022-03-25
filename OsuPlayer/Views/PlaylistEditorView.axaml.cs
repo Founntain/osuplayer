@@ -7,6 +7,7 @@ using Avalonia.ReactiveUI;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Extensions;
 using OsuPlayer.IO.DbReader;
+using OsuPlayer.IO.DbReader.DataModels;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.UI_Extensions;
 using ReactiveUI;

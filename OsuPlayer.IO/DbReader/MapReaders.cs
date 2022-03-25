@@ -1,30 +1,39 @@
-﻿namespace OsuPlayer.IO.DbReader;
+﻿using OsuPlayer.IO.DbReader.DataModels;
+
+namespace OsuPlayer.IO.DbReader;
 
 public partial class DbReader
 {
-    private static void ReadFromStreamMinimal(DbReader r, int version, string osuPath, ref MinimalMapEntry mapEntry, out int setId)
+    /// <summary>
+    /// Reads a osu!.db map entry and fills a <see cref="MinimalMapEntry"/> with needed data
+    /// </summary>
+    /// <param name="r">the <see cref="DbReader"/> instance of the stream</param>
+    /// <param name="osuPath">a <see cref="string"/> of the osu! path</param>
+    /// <param name="mapEntry">a reference of a <see cref="MinimalMapEntry"/> to read the data to</param>
+    /// <param name="setId">a out <see cref="int"/> of the beatmap set id</param>
+    private static void ReadFromStreamMinimal(DbReader r, string osuPath, ref MinimalMapEntry mapEntry, out int setId)
     {
         mapEntry.Artist = string.Intern(r.ReadString());
         if (mapEntry.Artist.Length == 0)
             mapEntry.Artist = "Unknown Artist";
-        if (version >= 20121008)
+        if (OsuDbVersion >= 20121008)
             r.ReadString(true);
         mapEntry.Title = r.ReadString();
         if (mapEntry.Title.Length == 0)
             mapEntry.Title = "Unknown Title";
-        if (version >= 20121008)
+        if (OsuDbVersion >= 20121008)
             r.ReadString(true);
         r.ReadString(true);
         r.ReadString(true); //Difficulty
         r.ReadString(true);
         mapEntry.BeatmapChecksum = r.ReadString();
         r.ReadString(true); //BeatmapFileName
-        if (version >= 20140609)
+        if (OsuDbVersion >= 20140609)
             r.BaseStream.Seek(39, SeekOrigin.Current);
         else
             r.BaseStream.Seek(27, SeekOrigin.Current);
         
-        if (version >= 20140609)
+        if (OsuDbVersion >= 20140609)
         {
             r.ReadStarRating();
             r.ReadStarRating();
@@ -50,12 +59,18 @@ public partial class DbReader
         r.ReadDateTime(); //LastPlayed
         r.ReadBoolean(); //IsOsz2
         r.ReadString(true);
-        if (version < 20140609)
+        if (OsuDbVersion < 20140609)
             r.BaseStream.Seek(20, SeekOrigin.Current);
         else
             r.BaseStream.Seek(18, SeekOrigin.Current);
     }
     
+    /// <summary>
+    /// Reads a osu!.db map entry and fills a full <see cref="MapEntry"/> with data
+    /// </summary>
+    /// <param name="osuPath">a <see cref="string"/> of the osu! path</param>
+    /// <param name="readOffset">a <see cref="long"/> offset <see cref="MinimalMapEntry.DbOffset"/> for the newly generated <see cref="DbReader"/> to read the <see cref="MapEntry"/> from</param>
+    /// <returns>a new <see cref="MapEntry"/> generated from osu!.db data</returns>
     public static async Task<MapEntry?> ReadFullMapEntry(string osuPath, long readOffset)
     {
         var dbLoc = Path.Combine(osuPath, "osu!.db");

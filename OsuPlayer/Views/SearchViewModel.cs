@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Reactive.Disposables;
 using OsuPlayer.IO.DbReader;
+using OsuPlayer.IO.DbReader.DataModels;
 using OsuPlayer.ViewModels;
 using ReactiveUI;
 
