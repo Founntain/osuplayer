@@ -22,8 +22,8 @@ using ReactiveUI;
 namespace OsuPlayer.Modules.Audio;
 
 /// <summary>
-///     This class is a wrapper for our <see cref="BassEngine" />.
-///     You can play, pause, stop and etc. from this class. Custom logic should also be implemented here
+/// This class is a wrapper for our <see cref="BassEngine" />.
+/// You can play, pause, stop and etc. from this class. Custom logic should also be implemented here
 /// </summary>
 public class Player
 {
@@ -61,10 +61,15 @@ public class Player
         set
         {
             _currentSong = value;
+
             CurrentIndex = SongSource!.FindIndex(x => x.BeatmapChecksum == value!.BeatmapChecksum);
+
             using var config = new Config();
+
             config.Read().LastPlayedSong = CurrentIndex;
+
             Core.Instance.MainWindow.ViewModel!.PlayerControl.CurrentSong = value;
+
             // Core.Instance.MainWindow.ViewModel!.PlayerControl.CurrentSongImage = Task.Run(value!.FindBackground).Result;
         }
     }
@@ -212,6 +217,7 @@ public class Player
                     if (SongSource[i].BeatmapChecksum == _currentSong!.BeatmapChecksum) continue;
 
                     await TryEnqueueSong(SongSource[i]);
+
                     return;
                 }
 
@@ -224,6 +230,7 @@ public class Player
                     if (SongSource[i].BeatmapChecksum == _currentSong!.BeatmapChecksum) continue;
 
                     await TryEnqueueSong(SongSource[i]);
+
                     return;
                 }
 
@@ -238,11 +245,16 @@ public class Player
             return Task.FromException(new NullReferenceException($"{nameof(SongSource)} can't be null or empty"));
 
         MapEntry fullMapEntry;
+
         await using (var config = new Config())
         {
             await config.ReadAsync();
+
             fullMapEntry = await DbReader.ReadFullMapEntry(config.Container.OsuPath!, song.DbOffset);
-            if (fullMapEntry == default) return Task.FromException(new NullReferenceException());
+
+            if (fullMapEntry == default)
+                return Task.FromException(new NullReferenceException());
+
             fullMapEntry.UseUnicode = config.Container.UseSongNameUnicode;
         }
 
@@ -477,15 +489,6 @@ public class Player
         if (CurrentIndex - 1 == -1)
         {
             // if (false) //OsuPlayer.Blacklist.IsSongInBlacklist(Songs[Songs.Count - 1]))
-            // {
-            //     CurrentIndex--;
-            //     PreviousSong();
-            //     return;
-            // }
-        }
-        else
-        {
-            // if (false) //OsuPlayer.Blacklist.IsSongInBlacklist(Songs[CurrentIndex - 1]))
             // {
             //     CurrentIndex--;
             //     PreviousSong();
