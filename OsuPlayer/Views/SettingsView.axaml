@@ -15,72 +15,78 @@
         <views:SettingsViewModel />
     </Design.DataContext>
 
-    <ScrollViewer>
-        <UniformGrid
-            Columns="{Binding RelativeSource={RelativeSource Self}, Path=Bounds.Width, Converter={StaticResource GridFormatter}, ConverterParameter=700}">
+    <Grid RowDefinitions="Auto, *">
+        <TextBox Grid.Row="0" Name="SettingsSearch" Text="{Binding SettingsSearchQ}"
+                 Watermark="type to search for settings" Margin="10 10 10 0" />
 
-            <Grid RowDefinitions="Auto" Margin="10">
-                <Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                    <ExperimentalAcrylicBorder IsHitTestVisible="False">
-                        <ExperimentalAcrylicBorder.Material>
-                            <ExperimentalAcrylicMaterial
-                                BackgroundSource="Digger"
-                                TintColor="Black"
-                                TintOpacity="1"
-                                MaterialOpacity="0.75" />
-                        </ExperimentalAcrylicBorder.Material>
-                    </ExperimentalAcrylicBorder>
-                </Panel>
+        <ScrollViewer Grid.Row="1">
+            <WrapPanel
+                ItemWidth="{Binding RelativeSource={RelativeSource Self}, Path=Bounds.Width, Converter={StaticResource GridFormatter}, ConverterParameter=700}"
+                Name="SettingsGrid">
 
-                <StackPanel Spacing="10" Margin="10">
-                    <TextBlock Text="General Settings" FontSize="32"
-                               VerticalAlignment="Center"
-                               HorizontalAlignment="Stretch" />
+                <Grid RowDefinitions="Auto" Margin="10" Name="GeneralSettings">
+                    <Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+                            <ExperimentalAcrylicBorder.Material>
+                                <ExperimentalAcrylicMaterial
+                                    BackgroundSource="Digger"
+                                    TintColor="Black"
+                                    TintOpacity="1"
+                                    MaterialOpacity="0.75" />
+                            </ExperimentalAcrylicBorder.Material>
+                        </ExperimentalAcrylicBorder>
+                    </Panel>
 
-                    <StackPanel Spacing="5">
-                        <TextBlock Text="{Binding OsuLocation}" />
-                        <Button Content="import osu! songs" Command="{Binding ImportSongsClick}"
-                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                    <StackPanel Spacing="10" Margin="10" Name="GeneralSettingsPanel">
+                        <TextBlock Text="General Settings" FontSize="32"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Stretch" />
+
+                        <StackPanel Spacing="5" Name="ImportOsuSongs">
+                            <TextBlock Text="{Binding OsuLocation}" />
+                            <Button Content="import osu! songs" Command="{Binding ImportSongsClick}"
+                                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                        </StackPanel>
+
+                        <StackPanel Spacing="5" Name="WindowBlurMethod">
+                            <TextBlock Text="Window Blur Method" />
+                            <ComboBox SelectedItem="{Binding SelectedTransparencyLevel}"
+                                      Items="{Binding WindowTransparencyLevels}" HorizontalAlignment="Stretch" />
+                        </StackPanel>
+
+                        <StackPanel Spacing="5" Name="StartupSong">
+                            <TextBlock Text="Startup song" />
+                            <ComboBox SelectedItem="{Binding SelectedStartupSong}" Items="{Binding StartupSongs}"
+                                      HorizontalAlignment="Stretch" />
+                        </StackPanel>
                     </StackPanel>
+                </Grid>
 
-                    <StackPanel Spacing="5">
-                        <TextBlock Text="Window Blur Method" />
-                        <ComboBox SelectedItem="{Binding SelectedTransparencyLevel}"
-                                  Items="{Binding WindowTransparencyLevels}" HorizontalAlignment="Stretch" />
+                <Grid RowDefinitions="Auto" Margin="10" Name="UserSettings">
+                    <Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+                            <ExperimentalAcrylicBorder.Material>
+                                <ExperimentalAcrylicMaterial
+                                    BackgroundSource="Digger"
+                                    TintColor="Black"
+                                    TintOpacity="1"
+                                    MaterialOpacity="0.75" />
+                            </ExperimentalAcrylicBorder.Material>
+                        </ExperimentalAcrylicBorder>
+                    </Panel>
+
+                    <StackPanel Margin="10" Spacing="10" Name="UserSettingsPanel">
+                        <TextBlock Text="User Settings" FontSize="32" VerticalAlignment="Center"
+                                   HorizontalAlignment="Stretch" />
+
+                        <StackPanel Spacing="5" Name="Login">
+                            <TextBlock Text="{Binding CurrentUser, Converter={StaticResource SettingsUserConverter}}" />
+                            <Button Content="log in" Command="{Binding Login}" HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Center" />
+                        </StackPanel>
                     </StackPanel>
-
-                    <StackPanel Spacing="5">
-                        <TextBlock Text="Startup song" />
-                        <ComboBox SelectedItem="{Binding SelectedStartupSong}" Items="{Binding StartupSongs}"
-                                  HorizontalAlignment="Stretch" />
-                    </StackPanel>
-                </StackPanel>
-            </Grid>
-
-            <Grid RowDefinitions="Auto" Margin="10">
-                <Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                    <ExperimentalAcrylicBorder IsHitTestVisible="False">
-                        <ExperimentalAcrylicBorder.Material>
-                            <ExperimentalAcrylicMaterial
-                                BackgroundSource="Digger"
-                                TintColor="Black"
-                                TintOpacity="1"
-                                MaterialOpacity="0.75" />
-                        </ExperimentalAcrylicBorder.Material>
-                    </ExperimentalAcrylicBorder>
-                </Panel>
-
-                <StackPanel Margin="10" Spacing="10">
-                    <TextBlock Text="User Settings" FontSize="32" VerticalAlignment="Center"
-                               HorizontalAlignment="Stretch" />
-                    
-                    <StackPanel Spacing="5">
-                        <TextBlock Text="{Binding CurrentUser, Converter={StaticResource SettingsUserConverter}}" />
-                        <Button Content="log in" Command="{Binding Login}" HorizontalAlignment="Stretch"
-                                HorizontalContentAlignment="Center" />
-                    </StackPanel>
-                </StackPanel>
-            </Grid>
-        </UniformGrid>
-    </ScrollViewer>
+                </Grid>
+            </WrapPanel>
+        </ScrollViewer>
+    </Grid>
 </UserControl>

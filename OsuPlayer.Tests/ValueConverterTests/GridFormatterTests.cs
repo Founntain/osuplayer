@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using Material.Icons;
 using NUnit.Framework;
 using OsuPlayer.Extensions.ValueConverters;
 
@@ -11,7 +10,7 @@ public class GridFormatterTests
     private GridFormatter _gridFormatter;
     private Type _expectedInput = typeof(double);
     private Type _expectedParameter = typeof(string);
-    private Type _expectedOutput = typeof(int);
+    private Type _expectedOutput = typeof(double);
 
     [SetUp]
     public void Setup()
@@ -36,8 +35,8 @@ public class GridFormatterTests
             () => _gridFormatter.Convert(null, _expectedOutput, null, CultureInfo.InvariantCulture));
     }
 
-    [TestCase(new object[] {100.0, "100", 1})]
-    [TestCase(new object[] {100.0, "99", 2})]
+    [TestCase(new object[] {100.0, "100", 100.0})]
+    [TestCase(new object[] {150.0, "100", 75.0})]
     public void TestCorrectUsage(object[] input)
     {
         var width = input[0];
@@ -67,6 +66,6 @@ public class GridFormatterTests
         Assert.DoesNotThrow(() =>
             output = _gridFormatter.Convert(width, _expectedOutput, param, CultureInfo.InvariantCulture));
         Assert.IsInstanceOf(_expectedOutput, output);
-        Assert.AreEqual(output, 0);
+        Assert.AreEqual(output, 0.0);
     }
 }
