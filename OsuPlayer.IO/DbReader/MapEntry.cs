@@ -1,4 +1,5 @@
-﻿using Avalonia;
+﻿using System.Text;
+using Avalonia;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using OsuPlayer.Extensions;
@@ -8,67 +9,25 @@ namespace OsuPlayer.IO.DbReader;
 /// <summary>
 ///     Represets a Beatmap from osu! in our own structure
 /// </summary>
-public class MapEntry
+public class MapEntry : MinimalMapEntry
 {
     public int BeatmapId;
     public int BeatmapSetId;
-    public string Artist = null!;
     public string? ArtistUnicode;
     public string? AudioFileName;
-    public string? BeatmapChecksum;
-    public string? Creator;
-    public string? DifficultyName;
     public string? FolderName;
     public string? FolderPath;
-    public string? Fullpath;
-    public string Title = null!;
+    public string? FullPath;
     public string? TitleUnicode;
 
-    public int TotalTime;
-
     public bool UseUnicode;
-
-    public int Ver;
-    public string ArtistString => GetArtist();
-    public string TitleString => GetTitle();
-
-    public string SongName => GetSongName();
-    public string TotalTimeString => TimeSpan.FromMilliseconds(TotalTime).FormatTime();
-
-    private string GetArtist()
-    {
-        if (!UseUnicode) return Artist;
-
-        return !string.IsNullOrWhiteSpace(ArtistUnicode) ? ArtistUnicode : Artist;
-    }
-
-    private string GetTitle()
-    {
-        if (!UseUnicode) return Title;
-
-        return !string.IsNullOrWhiteSpace(TitleUnicode) ? TitleUnicode : Title;
-    }
-
-    private string GetSongName()
-    {
-        if (!UseUnicode) return $"{Artist} - {Title}";
-
-        if (!string.IsNullOrWhiteSpace(ArtistUnicode) && !string.IsNullOrWhiteSpace(TitleUnicode))
-            return $"{ArtistUnicode} - {TitleUnicode}";
-
-        return $"{Artist} - {Title}";
-    }
-
-    public override string ToString()
-    {
-        return Artist + " - " + Title;
-    }
 
     public async Task<Bitmap?> FindBackground()
     {
         var eventCount = 0;
 
-        // ReSharper disable once AssignNullToNotNullAttribute
+        if (string.IsNullOrEmpty(FolderPath))
+            return null;
 
         var files = Directory.GetFiles(FolderPath, "*.osu");
 
@@ -115,6 +74,32 @@ public class MapEntry
         return new Bitmap(asset);
     }
 
+    protected override string GetArtist()
+    {
+        if (UseUnicode)
+            return string.IsNullOrEmpty(ArtistUnicode) ? Artist : ArtistUnicode;
+        return Artist;
+    }
+
+    protected override string GetTitle()
+    {
+        if (UseUnicode)
+            return string.IsNullOrEmpty(TitleUnicode) ? Artist : TitleUnicode;
+        return Title;
+    }
+
+    protected override string GetSongName()
+    {
+        if (UseUnicode && !string.IsNullOrEmpty(ArtistUnicode) && !string.IsNullOrEmpty(TitleUnicode))
+            return $"{ArtistUnicode} - {TitleUnicode}";
+        return $"{Artist} - {Title}";
+    }
+    
+    public override string ToString()
+    {
+        return GetSongName();
+    }
+    
     public static bool operator ==(MapEntry? left, MapEntry? right)
     {
         return left?.SongName == right?.SongName;
@@ -123,5 +108,20 @@ public class MapEntry
     public static bool operator !=(MapEntry? left, MapEntry? right)
     {
         return left?.SongName != right?.SongName;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is MapEntry other)
+        {
+            return BeatmapChecksum == other.BeatmapChecksum;
+        }
+
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return BitConverter.ToInt32(Encoding.UTF8.GetBytes(BeatmapChecksum));
     }
 }
