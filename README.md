@@ -25,7 +25,7 @@ If you want to contribute, feel free to fork this repository, read the [contribu
 ✔️ A working computer  
 ✔️ .NET 6 or later installed  
 ✔️ osu! installed with an **osu!.db file** *(Beatmaps imported in osu!)*  
-✔️ An internet connection for the first start, to get language files etc.
+✔️ An internet connection if you want to use your osu!player plus profile
 
 #### Download osu!player
 If you want to try out our current pre-releases head to our [release](https://github.com/Founntain/osuplayer/releases) section to download the latest pre-release
