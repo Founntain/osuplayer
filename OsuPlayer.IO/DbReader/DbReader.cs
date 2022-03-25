@@ -1,3 +1,5 @@
+using System.Diagnostics;
+using System.Text;
 using OsuPlayer.IO.Storage.Config;
 
 namespace OsuPlayer.IO.DbReader;
@@ -5,97 +7,105 @@ namespace OsuPlayer.IO.DbReader;
 /// <summary>
 ///     A <see cref="BinaryReader" /> to read the osu!.db to extract their beatmap data or to read from the collection.db
 /// </summary>
-public class DbReader : BinaryReader
+public partial class DbReader : BinaryReader
 {
     private DbReader(Stream input) : base(input)
     {
     }
 
-    public static async Task<List<MapEntry>?> ReadOsuDb(string osuPath)
+    public static int OsuDbVersion;
+
+    private byte[] _buf = new byte[512];
+
+    public static async Task<List<MinimalMapEntry>?> ReadOsuDb(string osuPath)
     {
-        var beatmaps = new List<MapEntry>();
+        var minBeatMaps = new List<MinimalMapEntry>();
         var dbLoc = Path.Combine(osuPath, "osu!.db");
 
         if (!File.Exists(dbLoc)) return null;
 
-        using var config = new Config();
+        await using var config = new Config();
         var unicode = (await config.ReadAsync()).UseSongNameUnicode;
 
         await using var file = File.OpenRead(dbLoc);
         using var reader = new DbReader(file);
         var ver = reader.ReadInt32();
-        var flag = ver >= 20160408 && ver < 20191107;
+        OsuDbVersion = ver;
+        var flag = ver is >= 20160408 and < 20191107;
 
         reader.ReadInt32();
         reader.ReadBoolean();
         reader.ReadInt64();
         reader.ReadString();
 
-        var beatmapcount = reader.ReadInt32();
+        var mapCount = reader.ReadInt32();
 
-        for (var i = 1; i < beatmapcount; i++)
+        minBeatMaps.Capacity = mapCount;
+        var prevId = -1;
+
+        for (var i = 1; i < mapCount; i++)
         {
-            //var _ = reader.BaseStream.Position; //position
-
             if (flag)
                 reader.ReadInt32(); //btlen
 
-            ReadFromStream(reader, ver, osuPath, out var mapEntry);
-            mapEntry.UseUnicode = unicode;
-            beatmaps.Add(mapEntry);
+            if (prevId != -1)
+            {
+                var length = CalculateMapLength(reader, OsuDbVersion, out var newSetId);
+                if (prevId == newSetId)
+                {
+                    prevId = newSetId;
+                    continue;
+                }
+
+                reader.BaseStream.Seek(-length, SeekOrigin.Current);
+            }
+
+            var minBeatMap = new MinimalMapEntry
+            {
+                DbOffset = reader.BaseStream.Position
+            };
+
+            ReadFromStreamMinimal(reader, ver, osuPath, ref minBeatMap, out var curSetId);
+            prevId = curSetId;
+            minBeatMaps.Add(minBeatMap);
         }
 
         reader.ReadInt32(); //account rank
 
-        await reader.BaseStream.DisposeAsync();
-        await file.DisposeAsync();
-        return beatmaps;
+        await file.FlushAsync();
+        reader.Dispose();
+        return minBeatMaps;
     }
 
-    private static void ReadFromStream(DbReader r, int version, string osuPath, out MapEntry mapEntry)
+    private static long CalculateMapLength(DbReader r, int version, out int setId)
     {
-        mapEntry = new MapEntry
+        var initOffset = r.BaseStream.Position;
+
+        r.GetStringLen();
+        if (version >= 20121008)
         {
-            Ver = version,
-            Artist = r.ReadString()
-        };
-        if (mapEntry.Artist.Length == 0)
-            mapEntry.Artist = "Unkown Artist";
-        if (mapEntry.Ver >= 20121008)
-            mapEntry.ArtistUnicode = r.ReadString();
-        mapEntry.Title = r.ReadString();
-        if (mapEntry.Title.Length == 0)
-            mapEntry.Title = "Unkown Title";
-        if (mapEntry.Ver >= 20121008)
-            mapEntry.TitleUnicode = r.ReadString();
-        mapEntry.Creator = r.ReadString();
-        mapEntry.DifficultyName = r.ReadString(); //Difficulty
-        mapEntry.AudioFileName = r.ReadString();
-        mapEntry.BeatmapChecksum = r.ReadString();
-        r.ReadString(); //BeatmapFileName
-        r.ReadByte(); //RankedStatus
-        r.ReadUInt16(); //CountHitCircles
-        r.ReadUInt16(); //CountSliders
-        r.ReadUInt16(); //CountSpinners
-        r.ReadDateTime(); //LastModifiedTime
-        if (mapEntry.Ver >= 20140609)
-        {
-            r.ReadSingle(); //ApproachRate
-            r.ReadSingle(); //CircleSize
-            r.ReadSingle(); //HPDrainRate
-            r.ReadSingle(); //OveralDifficulty
+            r.GetStringLen();
         }
+
+        r.GetStringLen();
+        if (version >= 20121008)
+        {
+            r.GetStringLen();
+        }
+
+        r.GetStringLen();
+        r.GetStringLen();
+        r.GetStringLen();
+        r.GetStringLen();
+        r.GetStringLen();
+        r.BaseStream.Seek(15, SeekOrigin.Current);
+        if (version >= 20140609)
+            r.BaseStream.Seek(16, SeekOrigin.Current);
         else
-        {
-            //Float
-            r.ReadByte(); //ApproachRate
-            r.ReadByte(); //CircleSize
-            r.ReadByte(); //HPDrainRate
-            r.ReadByte(); //OveralDifficulty
-        }
+            r.BaseStream.Seek(4, SeekOrigin.Current);
 
-        r.ReadDouble(); //SliderVelocity
-        if (mapEntry.Ver >= 20140609)
+        r.BaseStream.Seek(8, SeekOrigin.Current);
+        if (OsuDbVersion >= 20140609)
         {
             r.ReadStarRating();
             r.ReadStarRating();
@@ -103,46 +113,24 @@ public class DbReader : BinaryReader
             r.ReadStarRating();
         }
 
-        r.ReadInt32(); //DrainTimeSeconds
-        mapEntry.TotalTime = r.ReadInt32();
-        r.ReadInt32(); //AudioPreviewTime
+        r.BaseStream.Seek(12, SeekOrigin.Current);
         var timingCnt = r.ReadInt32();
-        //for (int i = 0; i < timingCnt; i++)
-        //{
-        r.BaseStream.Position += 17 * timingCnt;
-        //r.ReadBytes(17 * timingCnt);
-        //r.ReadBytes(17*timingCnt);
-        //}
-        mapEntry.BeatmapId = r.ReadInt32();
-        mapEntry.BeatmapSetId = r.ReadInt32();
-        r.ReadInt32(); //ThreadId
-        r.ReadByte(); //GradeStandard
-        r.ReadByte(); //GradeTaiko
-        r.ReadByte(); //GradeCtB
-        r.ReadByte(); //GradeMania
-        r.ReadInt16(); //OffsetLocal
-        r.ReadSingle(); //StackLeniency
-        r.ReadByte(); //GameMode
-        r.ReadString(); //SongSource
-        r.ReadString(); //SongTags
-        r.ReadInt16(); //OffsetOnline
-        r.ReadString(); //TitleFont
-        r.ReadBoolean(); //Unplayed
-        r.ReadDateTime(); //LastPlayed
-        r.ReadBoolean(); //IsOsz2
-        mapEntry.FolderName = r.ReadString();
-        r.ReadDateTime(); //LastCheckAgainstOsuRepo
-        r.ReadBoolean(); //IgnoreBeatmapSounds
-        r.ReadBoolean(); //IgnoreBeatmapSkin
-        r.ReadBoolean(); //DisableStoryBoard
-        r.ReadBoolean(); //DisableVideo
-        r.ReadBoolean(); //VisualOverride
-        if (mapEntry.Ver < 20140609)
-            r.ReadInt16(); //OldUnknown1
-        r.ReadInt32(); //LastEditTime
-        r.ReadByte(); //ManiaScrollSpeed
-        mapEntry.Fullpath = Path.Combine(osuPath, "Songs", mapEntry.FolderName, mapEntry.AudioFileName);
-        mapEntry.FolderPath = Path.Combine(osuPath, "Songs", mapEntry.FolderName);
+        r.BaseStream.Seek(timingCnt * 17, SeekOrigin.Current);
+        r.BaseStream.Seek(4, SeekOrigin.Current);
+        setId = r.ReadInt32();
+        r.BaseStream.Seek(15, SeekOrigin.Current);
+        r.GetStringLen();
+        r.GetStringLen();
+        r.BaseStream.Seek(2, SeekOrigin.Current);
+        r.GetStringLen();
+        r.BaseStream.Seek(10, SeekOrigin.Current);
+        r.GetStringLen();
+        if (version < 20140609)
+            r.BaseStream.Seek(20, SeekOrigin.Current);
+        else
+            r.BaseStream.Seek(18, SeekOrigin.Current);
+
+        return r.BaseStream.Position - initOffset;
     }
 
     public static List<Collection>? ReadCollections(string osuPath)
@@ -163,14 +151,37 @@ public class DbReader : BinaryReader
         return collections;
     }
 
-    public override string ReadString()
+    public string ReadString(bool ignore = false)
     {
         switch (ReadByte())
         {
             case 0:
                 return string.Empty;
             case 11:
-                return base.ReadString();
+                var strLen = Read7BitEncodedInt();
+                if (!ignore)
+                {
+                    BaseStream.Read(_buf, 0, strLen); // ReadBytes(strLen);
+                    return Encoding.UTF8.GetString(_buf, 0, strLen);
+                }
+
+                BaseStream.Seek(strLen, SeekOrigin.Current);
+                return string.Empty;
+            default:
+                throw new Exception();
+        }
+    }
+
+    private int GetStringLen()
+    {
+        switch (ReadByte())
+        {
+            case 0:
+                return 0;
+            case 11:
+                var strLen = Read7BitEncodedInt();
+                BaseStream.Seek(strLen, SeekOrigin.Current);
+                return strLen;
             default:
                 throw new Exception();
         }
@@ -179,8 +190,7 @@ public class DbReader : BinaryReader
     public void ReadStarRating()
     {
         var count = ReadInt32();
-        BaseStream.Position += 14 * count;
-        //ReadBytes(14 * count);
+        BaseStream.Seek(14 * count, SeekOrigin.Current);
     }
 
     public DateTime ReadDateTime()
