@@ -110,7 +110,9 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
     private void DeleteProfile_OnClick(object? sender, RoutedEventArgs e)
     {
-        throw new NotImplementedException();
+        if (ViewModel == default) return;
+
+        ViewModel.IsDeleteProfilePopupOpen = !ViewModel.IsDeleteProfilePopupOpen;
     }
 
     private async void SaveChanges_OnClick(object? sender, RoutedEventArgs e)
@@ -279,5 +281,25 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
         ViewModel.CurrentProfileBanner = banner;
         ViewModel.IsNewBannerSelected = false;
+    }
+
+    private async void ConfirmDeleteProfile_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (ProfileManager.User == default) return;
+
+        var response = await ApiAsync.ApiRequestWithParametersAsync<UserResponse>("users", "deleteUser", $"id={ProfileManager.User.Id}");
+
+        if (response != UserResponse.UserDeleted)
+        {
+            await MessageBox.ShowDialogAsync(Core.Instance.MainWindow, "Profile could not be deleted, due to an server error!");
+
+            return;
+        }
+
+        ProfileManager.User = default;
+
+        await MessageBox.ShowDialogAsync(Core.Instance.MainWindow, "Profile deleted!\n\nSee you next time!");
+
+        Core.Instance.MainWindow.ViewModel!.MainView = Core.Instance.MainWindow.ViewModel.HomeView;
     }
 }

@@ -3,7 +3,7 @@ using DynamicData;
 
 namespace OsuPlayer.Extensions;
 
-public static class Extensions
+public static class TypeExtensions
 {
     public static string FormatTime(this TimeSpan time)
     {

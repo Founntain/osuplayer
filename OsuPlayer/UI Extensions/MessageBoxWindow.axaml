@@ -10,9 +10,16 @@
         WindowStartupLocation="CenterScreen"
         SizeToContent="WidthAndHeight"
         Foreground="White"
-        Background="{StaticResource SecondaryColor}">
 
-    <Grid Margin="10 5">
+        FontFamily="{DynamicResource Montserrat}"
+        FontSize="16"
+
+        Background="Transparent"
+        TransparencyLevelHint="Mica"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="PreferSystemChrome">
+
+    <Grid Margin="10 25 10 5">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="50" />

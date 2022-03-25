@@ -124,4 +124,39 @@ public static partial class ApiAsync
             return default;
         }
     }
+
+    /// <summary>
+    /// Creates a POST request to the osu!player API returning T.
+    /// </summary>
+    /// ///
+    /// <param name="controller">The controller to call</param>
+    /// <param name="action">The route of the controller</param>
+    /// <param name="parameters">Parameters</param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns>Returns an object of type T</returns>
+    public static async Task<T?> ApiRequestWithParametersAsync<T>(string controller, string action, string parameters)
+    {
+        if (Constants.OfflineMode)
+            return default;
+
+        try
+        {
+            using (var client = new HttpClient())
+            {
+                var url = new Uri($"{Url}{controller}/{action}?{parameters}");
+
+                var req = new HttpRequestMessage(HttpMethod.Post, url);
+
+                var result = await client.SendAsync(req);
+
+                return JsonConvert.DeserializeObject<T>(await result.Content.ReadAsStringAsync());
+            }
+        }
+        catch (Exception ex)
+        {
+            ParseWebException(ex);
+
+            return default;
+        }
+    }
 }

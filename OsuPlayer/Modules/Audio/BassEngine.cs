@@ -417,12 +417,12 @@ public sealed class BassEngine
         }
     }
 
-    /// <summary>
-    ///     Set the gain of one specific frequency band (from 80 to 16000 Hz)
-    /// </summary>
-    /// <param name="center">Frequency to set</param>
-    /// <param name="gain">Gain to set</param>
-    /// <returns></returns>
+    // /// <summary>
+    // ///     Set the gain of one specific frequency band (from 80 to 16000 Hz)
+    // /// </summary>
+    // /// <param name="center">Frequency to set</param>
+    // /// <param name="gain">Gain to set</param>
+    // /// <returns></returns>
     //public void SetEQ(int center, double gain, EqualizerWindow window)
     //{
     //    if (window.PresetBox.SelectedIndex == 0) EqPreset.Custom.Gain[GetIndex(center)] = gain;
@@ -501,7 +501,8 @@ public sealed class BassEngine
         AvailableAudioDevices = new Collection<AudioDevice>();
 
         var mainWindow = Core.Instance.MainWindow;
-        if (mainWindow == null) return;
+
+        if (mainWindow == default) return;
 
         //var interopHelper = new Interop(mainWindow);
 
