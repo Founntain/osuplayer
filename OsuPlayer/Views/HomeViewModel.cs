@@ -11,6 +11,7 @@ using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using OsuPlayer.IO.DbReader;
+using OsuPlayer.IO.DbReader.DataModels;
 using OsuPlayer.IO.Storage.Config;
 using OsuPlayer.Network.API.ApiEndpoints;
 using OsuPlayer.Network.Online;
@@ -61,7 +62,7 @@ public class HomeViewModel : BaseViewModel
         }
     };
 
-    public List<MapEntry> SongEntries => Core.Instance.Player.SongSource!;
+    public List<MinimalMapEntry> SongEntries => Core.Instance.Player.SongSource!;
 
     public bool IsUserNotLoggedIn => CurrentUser == default;
     public bool IsUserLoggedIn => CurrentUser != default;

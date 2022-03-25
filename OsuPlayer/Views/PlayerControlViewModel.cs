@@ -3,6 +3,7 @@ using System.Reactive.Disposables;
 using Avalonia.Media.Imaging;
 using OsuPlayer.Extensions;
 using OsuPlayer.IO.DbReader;
+using OsuPlayer.IO.DbReader.DataModels;
 using OsuPlayer.ViewModels;
 using ReactiveUI;
 

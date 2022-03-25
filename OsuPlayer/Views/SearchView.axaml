@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:io="clr-namespace:OsuPlayer.IO.DbReader;assembly=OsuPlayer.IO"
              xmlns:views="clr-namespace:OsuPlayer.Views"
+             xmlns:dataModels="clr-namespace:OsuPlayer.IO.DbReader.DataModels;assembly=OsuPlayer.IO"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.SearchView">
     <Design.DataContext>
@@ -17,7 +18,7 @@
         <ListBox Grid.Row="1" Items="{Binding FilteredSongEntries}" Background="Transparent"
                  DoubleTapped="InputElement_OnDoubleTapped">
             <ListBox.DataTemplates>
-                <DataTemplate DataType="io:MapEntry">
+                <DataTemplate DataType="dataModels:MinimalMapEntry">
                     <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto">
                         <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding TitleString}" FontSize="20"
                                    FontWeight="SemiBold" />
