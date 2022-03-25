@@ -28,11 +28,11 @@ public class Player
 {
     private readonly Stopwatch _currentSongTimer;
     private readonly int?[] _shuffleHistory = new int?[10];
-    private readonly SourceList<MapEntry> _songSource;
+    private readonly SourceList<MinimalMapEntry> _songSource;
 
     private MapEntry? _currentSong;
 
-    private IObservable<Func<MapEntry, bool>>? _filter;
+    private IObservable<Func<MinimalMapEntry, bool>>? _filter;
     private bool _isMuted;
     private double _oldVolume;
 
@@ -45,11 +45,11 @@ public class Player
 
     private double _volume = new Config().Read().Volume;
 
-    public ReadOnlyObservableCollection<MapEntry>? FilteredSongEntries;
+    public ReadOnlyObservableCollection<MinimalMapEntry>? FilteredSongEntries;
 
     public Player()
     {
-        _songSource = new SourceList<MapEntry>();
+        _songSource = new SourceList<MinimalMapEntry>();
 
         _currentSongTimer = new();
     }
@@ -60,7 +60,7 @@ public class Player
         set
         {
             _currentSong = value;
-            CurrentIndex = SongSource!.IndexOf(value);
+            CurrentIndex = SongSource!.FindIndex(x => x.BeatmapChecksum == value!.BeatmapChecksum);
             using var config = new Config();
             config.Read().LastPlayedSong = CurrentIndex;
             Core.Instance.MainWindow.ViewModel!.PlayerControl.CurrentSong = value;
@@ -68,7 +68,7 @@ public class Player
         }
     }
 
-    public List<MapEntry>? SongSource => _songSource.Items.ToList();
+    public List<MinimalMapEntry>? SongSource => _songSource.Items.ToList();
 
     private SongImporter Importer => new();
 
@@ -117,14 +117,19 @@ public class Player
         }
     }
 
-    private Func<MapEntry, bool> BuildFilter(string searchText)
+    private Func<MinimalMapEntry, bool> BuildFilter(string searchText)
     {
         if (string.IsNullOrEmpty(searchText))
             return _ => true;
 
         var searchQs = searchText.Split(' ');
 
-        return song => { return searchQs.All(x => song.SongName.Contains(x, StringComparison.OrdinalIgnoreCase)); };
+        return song =>
+        {
+            return searchQs.All(x =>
+                song.Title.Contains(x, StringComparison.OrdinalIgnoreCase) ||
+                song.Artist.Contains(x, StringComparison.OrdinalIgnoreCase));
+        };
     }
 
     public async Task ImportSongs()
@@ -136,12 +141,12 @@ public class Player
             .Throttle(TimeSpan.FromMilliseconds(20))
             .Select(BuildFilter);
 
-        using var config = new Config();
+        await using var config = new Config();
         var songEntries = await SongImporter.ImportSongs((await config.ReadAsync()).OsuPath!)!;
         if (songEntries == null) return;
         _songSource.AddRange(songEntries);
 
-        _songSource.Connect().Sort(SortExpressionComparer<MapEntry>.Ascending(x => x.Title))
+        _songSource.Connect().Sort(SortExpressionComparer<MinimalMapEntry>.Ascending(x => x.Title))
             .Filter(_filter, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
             .Bind(out FilteredSongEntries).Subscribe();
 
@@ -151,7 +156,7 @@ public class Player
 
         if (SongSource == null || !SongSource.Any()) return;
 
-        using var cfg = new Config();
+        await using var cfg = new Config();
         var configContainer = await cfg.ReadAsync();
         switch (configContainer.StartupSong)
         {
@@ -159,7 +164,7 @@ public class Player
                 await Play(SongSource[0]);
                 break;
             case StartupSong.LastPlayed:
-                if (configContainer.LastPlayedSong < SongSource.Count)
+                if (configContainer.LastPlayedSong < SongSource.Count && configContainer.LastPlayedSong >= 0)
                     await Play(SongSource[configContainer.LastPlayedSong]);
                 else
                     await Play(SongSource[0]);
@@ -176,7 +181,7 @@ public class Player
             Core.Instance.Engine.SampleFrequency * (1 + speed));
     }
 
-    public async Task Play(MapEntry? song, PlayDirection playDirection = PlayDirection.Forward)
+    public async Task Play(MinimalMapEntry? song, PlayDirection playDirection = PlayDirection.Forward)
     {
         if (SongSource == default || !SongSource.Any())
             return;
@@ -189,7 +194,7 @@ public class Player
 
         if (CurrentSong != null && !Repeat
                                 && (await new Config().ReadAsync()).IgnoreSongsWithSameNameCheckBox
-                                && CurrentSong == song)
+                                && CurrentSong.BeatmapChecksum == song.BeatmapChecksum)
             await EnqueueSongFromDirection(playDirection);
 
         await TryEnqueueSong(song);
@@ -203,7 +208,7 @@ public class Player
             {
                 for (var i = CurrentIndex - 1; i < SongSource?.Count; i--)
                 {
-                    if (SongSource[i] == _currentSong) continue;
+                    if (SongSource[i].BeatmapChecksum == _currentSong!.BeatmapChecksum) continue;
 
                     await TryEnqueueSong(SongSource[i]);
                     return;
@@ -215,7 +220,7 @@ public class Player
             {
                 for (var i = CurrentIndex + 1; i < SongSource?.Count; i++)
                 {
-                    if (SongSource[i] == _currentSong) continue;
+                    if (SongSource[i].BeatmapChecksum == _currentSong!.BeatmapChecksum) continue;
 
                     await TryEnqueueSong(SongSource[i]);
                     return;
@@ -226,12 +231,21 @@ public class Player
         }
     }
 
-    private async Task<Task> TryEnqueueSong(MapEntry song)
+    private async Task<Task> TryEnqueueSong(MinimalMapEntry song)
     {
         if (SongSource == null || !SongSource.Any())
             return Task.FromException(new NullReferenceException($"{nameof(SongSource)} can't be null or empty"));
 
-        //We put the XP update to an own try catch because if the API fails or is not avaible,
+        MapEntry fullMapEntry;
+        await using (var config = new Config())
+        {
+            await config.ReadAsync();
+            fullMapEntry = await DbReader.ReadFullMapEntry(config.Container.OsuPath!, song.DbOffset);
+            if (fullMapEntry == default) return Task.FromException(new NullReferenceException());
+            fullMapEntry.UseUnicode = config.Container.UseSongNameUnicode;
+        }
+
+        //We put the XP update to an own try catch because if the API fails or is not available,
         //that the whole TryEnqueue does not fail
         try
         {
@@ -245,7 +259,7 @@ public class Player
 
         try
         {
-            Core.Instance.Engine.OpenFile(song.Fullpath);
+            Core.Instance.Engine.OpenFile(fullMapEntry.FullPath!);
             //Core.Instance.Engine.SetAllEq(Core.Instance.Config.Eq);
             Core.Instance.Engine.Volume = (float) Core.Instance.MainWindow.ViewModel!.PlayerControl.Volume / 100;
             Core.Instance.Engine.Play();
@@ -259,20 +273,20 @@ public class Player
             return Task.FromException(ex);
         }
 
-        CurrentSong = song;
+        CurrentSong = fullMapEntry;
 
         //Same as update XP mentioned Above
         try
         {
             if (CurrentSong != default)
-                await UpdateSongsPlayed(song.BeatmapSetId);
+                await UpdateSongsPlayed(fullMapEntry.BeatmapSetId);
         }
         catch (Exception e)
         {
             Debug.WriteLine($"Could not update Songs Played error => {e}");
         }
 
-        Core.Instance.MainWindow.ViewModel.PlayerControl.CurrentSongImage = await song.FindBackground();
+        Core.Instance.MainWindow.ViewModel.PlayerControl.CurrentSongImage = await fullMapEntry.FindBackground();
         return Task.CompletedTask;
     }
 
@@ -492,20 +506,20 @@ public class Player
             PlayDirection.Backwards);
     }
 
-    private Task<MapEntry> DoShuffle(ShuffleDirection direction)
+    private Task<MinimalMapEntry> DoShuffle(ShuffleDirection direction)
     {
         if (SongSource == null)
-            return Task.FromException<MapEntry>(new ArgumentNullException(nameof(FilteredSongEntries)));
+            return Task.FromException<MinimalMapEntry>(new ArgumentNullException(nameof(FilteredSongEntries)));
 
         return Task.FromResult(SongSource[new Random().Next(SongSource.Count)]);
     }
 
-    public MapEntry? GetMapEntryFromChecksum(string checksum)
+    public MinimalMapEntry? GetMapEntryFromChecksum(string checksum)
     {
         return SongSource!.FirstOrDefault(x => x.BeatmapChecksum == checksum);
     }
 
-    public List<MapEntry> GetMapEntriesFromChecksums(ICollection<string> checksums)
+    public List<MinimalMapEntry> GetMapEntriesFromChecksums(ICollection<string> checksums)
     {
         return SongSource!.Where(x => checksums.Contains(x.BeatmapChecksum)).ToList();
     }

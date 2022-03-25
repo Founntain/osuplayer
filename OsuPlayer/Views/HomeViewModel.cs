@@ -61,7 +61,7 @@ public class HomeViewModel : BaseViewModel
         }
     };
 
-    public List<MapEntry> SongEntries => Core.Instance.Player.SongSource!;
+    public List<MinimalMapEntry> SongEntries => Core.Instance.Player.SongSource!;
 
     public bool IsUserNotLoggedIn => CurrentUser == default;
     public bool IsUserLoggedIn => CurrentUser != default;

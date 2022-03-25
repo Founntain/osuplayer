@@ -20,7 +20,7 @@ namespace OsuPlayer.Modules.Audio;
 public sealed class BassEngine
 {
     private const int KRepeatThreshold = 200;
-    private static BassEngine _engine = null!;
+    private static BassEngine engine = null!;
     private readonly SyncProcedure _endTrackSyncProc;
     private readonly int[] _frq = {80, 125, 200, 300, 500, 1000, 2000, 4000, 8000, 16000};
     private readonly DispatcherTimer _positionTimer = new(DispatcherPriority.ApplicationIdle);
@@ -51,7 +51,7 @@ public sealed class BassEngine
 
     #region Singleton Instance
 
-    public static BassEngine Instance => _engine ??= new BassEngine();
+    public static BassEngine Instance => engine ??= new BassEngine();
 
     #endregion
 

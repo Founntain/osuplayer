@@ -17,9 +17,9 @@ public class PlaylistEditorViewModel : BaseViewModel
     private bool _isRenamePlaylistPopupOpen;
     private string? _newPlaylistnameText;
     private SourceList<Playlist>? _playlists;
-    private List<MapEntry>? _selectedPlaylistItems;
+    private List<MinimalMapEntry>? _selectedPlaylistItems;
 
-    private List<MapEntry>? _selectedSongListItems;
+    private List<MinimalMapEntry>? _selectedSongListItems;
 
     public PlaylistEditorViewModel()
     {
@@ -78,15 +78,15 @@ public class PlaylistEditorViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _playlists, value);
     }
 
-    public List<MapEntry> SongList => Core.Instance.Player.SongSource!;
+    public List<MinimalMapEntry> SongList => Core.Instance.Player.SongSource!;
 
-    public List<MapEntry> SelectedSongListItems
+    public List<MinimalMapEntry> SelectedSongListItems
     {
         get => _selectedSongListItems;
         set => this.RaiseAndSetIfChanged(ref _selectedSongListItems, value);
     }
 
-    public List<MapEntry> SelectedPlaylistItems
+    public List<MinimalMapEntry> SelectedPlaylistItems
     {
         get => _selectedPlaylistItems;
         set => this.RaiseAndSetIfChanged(ref _selectedPlaylistItems, value);

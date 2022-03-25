@@ -22,5 +22,5 @@ public class SearchViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _filterText, value);
     }
 
-    public ReadOnlyObservableCollection<MapEntry> FilteredSongEntries => Core.Instance.Player.FilteredSongEntries!;
+    public ReadOnlyObservableCollection<MinimalMapEntry> FilteredSongEntries => Core.Instance.Player.FilteredSongEntries!;
 }
