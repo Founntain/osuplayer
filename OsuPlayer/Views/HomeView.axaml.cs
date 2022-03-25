@@ -3,6 +3,7 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using OsuPlayer.IO.DbReader;
+using OsuPlayer.IO.DbReader.DataModels;
 using OsuPlayer.IO.Storage.Config;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
@@ -38,7 +39,7 @@ public partial class HomeView : ReactiveUserControl<HomeViewModel>
     private async void InputElement_OnDoubleTapped(object? sender, RoutedEventArgs e)
     {
         var list = sender as ListBox;
-        var song = list!.SelectedItem as MapEntry;
+        var song = list!.SelectedItem as MinimalMapEntry;
         await Core.Instance.Player.Play(song);
     }
 

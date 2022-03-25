@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsuPlayer.IO", "OsuPlayer.I
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsuPlayer.NativeLibs", "OsuPlayer.NativeLibs\OsuPlayer.NativeLibs.csproj", "{D428D0A2-A166-4522-98CF-6365261E2C8F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsuPlayer.Tests", "OsuPlayer.Tests\OsuPlayer.Tests.csproj", "{BA344BAD-2E55-4617-B2E0-926D67D8BBA8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +46,10 @@ Global
 		{D428D0A2-A166-4522-98CF-6365261E2C8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D428D0A2-A166-4522-98CF-6365261E2C8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D428D0A2-A166-4522-98CF-6365261E2C8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA344BAD-2E55-4617-B2E0-926D67D8BBA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA344BAD-2E55-4617-B2E0-926D67D8BBA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA344BAD-2E55-4617-B2E0-926D67D8BBA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA344BAD-2E55-4617-B2E0-926D67D8BBA8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{0034AEFA-ED66-47FA-AA37-1AB01F371AAF} = {AF8CA35D-63B3-4B8B-95B1-4717C57ED0E1}

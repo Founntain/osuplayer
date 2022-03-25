@@ -12,12 +12,12 @@ public class SourceListValueConverter : IValueConverter
         if (value == default)
             return new List<Playlist>();
 
-        if (value.GetType() == typeof(SourceList<>))
-            return new List<Playlist>();
+        if (value is SourceList<Playlist> val)
+        {
+            return val.Items.ToList();
+        }
 
-        var list = (SourceList<Playlist>) value;
-
-        return list.Items.ToList();
+        return new List<Playlist>();
     }
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

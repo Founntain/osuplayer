@@ -8,7 +8,9 @@
 ![](https://img.shields.io/github/languages/code-size/founntain/osuplayer)
 ![](https://img.shields.io/github/repo-size/founntain/osuplayer)
 ![](https://img.shields.io/tokei/lines/github/founntain/osuplayer)
-![](https://img.shields.io/github/contributors/founntain/osuplayer?color=blueviolet)
+![](https://img.shields.io/github/contributors/founntain/osuplayer?color=blueviolet)  
+[![CI](https://github.com/Founntain/osuplayer/actions/workflows/dotnet.yml/badge.svg?branch=master)](https://github.com/Founntain/osuplayer/actions/workflows/dotnet.yml)
+[![.NET Publish](https://github.com/Founntain/osuplayer/actions/workflows/dotnet-publish.yml/badge.svg)](https://github.com/Founntain/osuplayer/actions/workflows/dotnet-publish.yml)
 
 
 This is the *official* **osu!player** (Avalonia) repository and is mainly developed by [@Founntain](https://github.com/Founntain), with help of [@Cesan](https://github.com/Cesan).  
@@ -25,7 +27,7 @@ If you want to contribute, feel free to fork this repository, read the [contribu
 ✔️ A working computer  
 ✔️ .NET 6 or later installed  
 ✔️ osu! installed with an **osu!.db file** *(Beatmaps imported in osu!)*  
-✔️ An internet connection for the first start, to get language files etc.
+✔️ An internet connection if you want to use your osu!player plus profile
 
 #### Download osu!player
 If you want to try out our current pre-releases head to our [release](https://github.com/Founntain/osuplayer/releases) section to download the latest pre-release

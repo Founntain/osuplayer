@@ -15,7 +15,8 @@ jobs:
       with:
         allowUpdates: true
         token: ${{ secrets.GITHUB_TOKEN }}
-        generateReleaseNotes: true
+        omitBodyDuringUpdate: true
+        omitNameDuringUpdate: true
         omitPrereleaseDuringUpdate: true
 
   build:
