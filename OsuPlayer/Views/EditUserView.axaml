@@ -87,18 +87,21 @@
                 </Button>
 
                 <Popup PlacementMode="AnchorAndGravity"
-                       HorizontalOffset="-225" VerticalOffset="-50" IsOpen="{Binding IsDeleteProfilePopupOpen}">
+                       HorizontalOffset="-225" VerticalOffset="-60" IsOpen="{Binding IsDeleteProfilePopupOpen}">
 
                     <Border Background="#F7000000" CornerRadius="5"
                             BorderBrush="{DynamicResource SystemAccentColor}" BorderThickness="1">
-                        <Grid ColumnDefinitions="*, Auto">
-                            <TextBox Grid.Column="0"
-                                     Text="Are you sure you want to delete your profle? NO TURNING BACK!"
-                                     Watermark="enter playlistname"
-                                     VerticalContentAlignment="Center" HorizontalAlignment="Stretch"
-                                     BorderThickness="0" />
+                        <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto">
+                            <TextBlock Grid.Column="0" Grid.Row="0" Margin="10"
+                                       Text="Are you sure you want to delete your profle? NO TURNING BACK!"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" />
 
-                            <Button Grid.Column="1" Name="ConfirmNewPlaylist" Width="38" Height="38"
+                            <TextBox Grid.Column="0" Grid.Row="1" Text="{Binding ConfirmDeletionPassword}"
+                                     VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                                     HorizontalContentAlignment="Center" PasswordChar="•" Watermark="your password" />
+
+                            <Button Grid.Column="1" Grid.Row="1" Name="ConfirmNewPlaylist" Width="38" Height="38"
                                     HorizontalAlignment="Right"
                                     Background="Transparent"
                                     Click="ConfirmDeleteProfile_OnClick">

@@ -285,12 +285,30 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
     private async void ConfirmDeleteProfile_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (ProfileManager.User == default) return;
+        if (ProfileManager.User == default || ViewModel == default) return;
 
-        var response = await ApiAsync.ApiRequestWithParametersAsync<UserResponse>("users", "deleteUser", $"id={ProfileManager.User.Id}");
+        if (string.IsNullOrWhiteSpace(ViewModel.ConfirmDeletionPassword))
+        {
+            await MessageBox.ShowDialogAsync(Core.Instance.MainWindow, "Please enter your password, to confirm your deletion!");
+
+            return;
+        }
+
+        var response = await ApiAsync.ApiRequestAsync<UserResponse>("users", "deleteUser", new
+        {
+            Id = ProfileManager.User.Id.ToString(),
+            Password = ViewModel.ConfirmDeletionPassword
+        });
 
         if (response != UserResponse.UserDeleted)
         {
+            if (response == UserResponse.PasswordIncorrect)
+            {
+                await MessageBox.ShowDialogAsync(Core.Instance.MainWindow, "Profile could not be deleted, because you entered the wrong password!");
+
+                return;
+            }
+            
             await MessageBox.ShowDialogAsync(Core.Instance.MainWindow, "Profile could not be deleted, due to an server error!");
 
             return;
