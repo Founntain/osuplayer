@@ -3,13 +3,16 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
-using Avalonia.ReactiveUI;
+using Avalonia.VisualTree;
+using OsuPlayer.Windows;
 using ReactiveUI;
 
 namespace OsuPlayer.Views;
 
-internal partial class TopBarView : ReactiveUserControl<TopBarViewModel>
+internal partial class TopBarView : ReactivePlayerControl<TopBarViewModel>
 {
+    private MainWindow _mainWindow;
+    
     public TopBarView()
     {
         InitializeComponent();
@@ -17,30 +20,12 @@ internal partial class TopBarView : ReactiveUserControl<TopBarViewModel>
 
     private void InitializeComponent()
     {
-        this.WhenActivated(disposables => { });
-        AvaloniaXamlLoader.Load(this);
-    }
-
-    private void NavigationPressed(object? sender, PointerReleasedEventArgs e)
-    {
-        switch ((sender as Control)?.Name)
+        this.WhenActivated(disposables =>
         {
-            case "SearchNavigation":
-                Core.Instance.MainWindow.ViewModel!.MainView = Core.Instance.MainWindow.ViewModel.SearchView;
-                break;
-            case "PlaylistNavigation":
-                Core.Instance.MainWindow.ViewModel!.MainView = Core.Instance.MainWindow.ViewModel.PlaylistView;
-                break;
-            case "HomeNavigation":
-                Core.Instance.MainWindow.ViewModel!.MainView = Core.Instance.MainWindow.ViewModel.HomeView;
-                break;
-            case "UserNavigation":
-                Core.Instance.MainWindow.ViewModel!.MainView = Core.Instance.MainWindow.ViewModel.UserView;
-                break;
-            case "PartyNavigation":
-                Core.Instance.MainWindow.ViewModel!.MainView = Core.Instance.MainWindow.ViewModel.PartyView;
-                break;
-        }
+            if (this.GetVisualRoot() is MainWindow mainWindow)
+                _mainWindow = mainWindow;
+        });
+        AvaloniaXamlLoader.Load(this);
     }
 
     private void Navigation_Clicked(object? sender, RoutedEventArgs e)
@@ -48,19 +33,19 @@ internal partial class TopBarView : ReactiveUserControl<TopBarViewModel>
         switch ((sender as Control)?.Name)
         {
             case "SearchNavigation":
-                Core.Instance.MainWindow.ViewModel!.MainView = Core.Instance.MainWindow.ViewModel.SearchView;
+                _mainWindow.ViewModel!.MainView = _mainWindow.ViewModel.SearchView;
                 break;
             case "PlaylistNavigation":
-                Core.Instance.MainWindow.ViewModel!.MainView = Core.Instance.MainWindow.ViewModel.PlaylistView;
+                _mainWindow.ViewModel!.MainView = _mainWindow.ViewModel.PlaylistView;
                 break;
             case "HomeNavigation":
-                Core.Instance.MainWindow.ViewModel!.MainView = Core.Instance.MainWindow.ViewModel.HomeView;
+                _mainWindow.ViewModel!.MainView = _mainWindow.ViewModel.HomeView;
                 break;
             case "UserNavigation":
-                Core.Instance.MainWindow.ViewModel!.MainView = Core.Instance.MainWindow.ViewModel.UserView;
+                _mainWindow.ViewModel!.MainView = _mainWindow.ViewModel.UserView;
                 break;
             case "PartyNavigation":
-                Core.Instance.MainWindow.ViewModel!.MainView = Core.Instance.MainWindow.ViewModel.PartyView;
+                _mainWindow.ViewModel!.MainView = _mainWindow.ViewModel.PartyView;
                 break;
         }
     }
@@ -70,13 +55,13 @@ internal partial class TopBarView : ReactiveUserControl<TopBarViewModel>
         switch ((sender as Control)?.Name)
         {
             case "Minimize":
-                Core.Instance.MainWindow.WindowState = WindowState.Minimized;
+                _mainWindow.WindowState = WindowState.Minimized;
                 break;
             case "Miniplayer":
                 //TODO: open mini player
                 break;
             case "Close":
-                Core.Instance.MainWindow.Close();
+                _mainWindow.Close();
                 break;
         }
     }
@@ -103,7 +88,7 @@ internal partial class TopBarView : ReactiveUserControl<TopBarViewModel>
 
     private void TopBarGrid_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        Core.Instance.MainWindow.BeginMoveDrag(e);
+        _mainWindow.BeginMoveDrag(e);
         e.Handled = false;
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using JetBrains.Annotations;
 using Material.Icons;
 using NUnit.Framework;
 using OsuPlayer.Extensions.ValueConverters;

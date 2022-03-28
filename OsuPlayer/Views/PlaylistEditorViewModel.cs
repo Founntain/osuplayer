@@ -3,9 +3,10 @@ using System.Linq;
 using System.Reactive.Disposables;
 using DynamicData;
 using OsuPlayer.Data.OsuPlayer.Classes;
-using OsuPlayer.IO.DbReader;
 using OsuPlayer.IO.DbReader.DataModels;
+using OsuPlayer.Modules.Audio;
 using OsuPlayer.ViewModels;
+using OsuPlayer.Windows;
 using ReactiveUI;
 
 namespace OsuPlayer.Views;
@@ -22,8 +23,12 @@ public class PlaylistEditorViewModel : BaseViewModel
 
     private List<MinimalMapEntry>? _selectedSongListItems;
 
-    public PlaylistEditorViewModel()
+    private Player _player;
+    
+    public PlaylistEditorViewModel(Player player)
     {
+        _player = player;
+        
         Activator = new ViewModelActivator();
 
         this.WhenActivated(disposables =>
@@ -79,7 +84,7 @@ public class PlaylistEditorViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _playlists, value);
     }
 
-    public List<MinimalMapEntry> SongList => Core.Instance.Player.SongSource!;
+    public List<MinimalMapEntry> SongList => _player.SongSource!;
 
     public List<MinimalMapEntry> SelectedSongListItems
     {

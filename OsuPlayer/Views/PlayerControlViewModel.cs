@@ -2,9 +2,10 @@ using System;
 using System.Reactive.Disposables;
 using Avalonia.Media.Imaging;
 using OsuPlayer.Extensions;
-using OsuPlayer.IO.DbReader;
 using OsuPlayer.IO.DbReader.DataModels;
+using OsuPlayer.Modules.Audio;
 using OsuPlayer.ViewModels;
+using OsuPlayer.Windows;
 using ReactiveUI;
 
 namespace OsuPlayer.Views;
@@ -21,25 +22,44 @@ public class PlayerControlViewModel : BaseViewModel
     private bool _isRepeating;
 
     private bool _isShuffle;
-    private bool _isSpeedVisible;
-    private bool _isVolumeVisible;
 
     private double _playbackSpeed;
 
     private double _songLength;
-
     private double _songTime;
 
-    public PlayerControlViewModel()
+    public Player Player;
+    public BassEngine BassEngine;
+    
+    public PlayerControlViewModel(Player player, BassEngine bassEngine)
     {
+        Player = player;
+        BassEngine = bassEngine;
+        BassEngine.PropertyChanged += (sender, args) =>
+        {
+            if (args.PropertyName == "ChannelPosition")
+            {
+                _songTime = BassEngine.ChannelPosition;
+                this.RaisePropertyChanged(nameof(SongTime));
+                this.RaisePropertyChanged(nameof(CurrentSongTime));
+            }
+
+            if (args.PropertyName == "ChannelLength")
+            {
+                _songLength = BassEngine.ChannelLength;
+                this.RaisePropertyChanged(nameof(SongLength));
+                this.RaisePropertyChanged(nameof(CurrentSongLength));
+            }
+        };
+        
         Activator = new ViewModelActivator();
         this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
     }
 
     public double Volume
     {
-        get => Core.Instance.Player.Volume;
-        set => Core.Instance.Player.Volume = value;
+        get => Player.Volume;
+        set => Player.Volume = value;
     }
 
     public bool IsShuffle
@@ -53,41 +73,41 @@ public class PlayerControlViewModel : BaseViewModel
         get => _playbackSpeed;
         set
         {
-            Core.Instance.Player.SetPlaybackSpeed(value);
+            Player.SetPlaybackSpeed(value);
             this.RaiseAndSetIfChanged(ref _playbackSpeed, value);
-            SongLength = _songLength;
+            this.RaisePropertyChanged(nameof(CurrentSongLength));
         }
     }
 
     public double SongTime
     {
         get => _songTime;
-        set
-        {
-            this.RaiseAndSetIfChanged(ref _songTime, value);
-            CurrentSongTime = TimeSpan.FromSeconds(value * (1 - PlaybackSpeed)).FormatTime();
-        }
+        set => this.RaiseAndSetIfChanged(ref _songTime, value);
     }
 
     public string CurrentSongTime
     {
-        get => _currentSongTime;
+        get
+        {
+            _currentSongTime = TimeSpan.FromSeconds(_songTime * (1 - PlaybackSpeed)).FormatTime();
+            return _currentSongTime;
+        }
         set => this.RaiseAndSetIfChanged(ref _currentSongTime, value);
     }
 
     public double SongLength
     {
         get => _songLength;
-        set
-        {
-            this.RaiseAndSetIfChanged(ref _songLength, value);
-            CurrentSongLength = TimeSpan.FromSeconds(value * (1 - PlaybackSpeed)).FormatTime();
-        }
+        set => this.RaiseAndSetIfChanged(ref _songLength, value);
     }
 
     public string CurrentSongLength
     {
-        get => _currentSongLength;
+        get
+        {
+            _currentSongLength = TimeSpan.FromSeconds(_songLength * (1 - PlaybackSpeed)).FormatTime();
+            return _currentSongLength;
+        }
         set => this.RaiseAndSetIfChanged(ref _currentSongLength, value);
     }
 
@@ -120,23 +140,6 @@ public class PlayerControlViewModel : BaseViewModel
     public string ArtistText => _currentSong?.Artist ?? "please select from song list";
 
     public string SongText => $"{ArtistText} - {TitleText}";
-
-    public bool IsVolumeVisible
-    {
-        get => _isVolumeVisible;
-        set => this.RaiseAndSetIfChanged(ref _isVolumeVisible, value);
-    }
-
-    public bool IsSpeedVisible
-    {
-        get => _isSpeedVisible;
-        set => this.RaiseAndSetIfChanged(ref _isSpeedVisible, value);
-    }
-
-    public bool VolumePointerOver { get; set; }
-    public bool VolumePopupPointerOver { get; set; }
-    public bool SpeedPointerOver { get; set; }
-    public bool SpeedPopupPointerOver { get; set; }
 
     public Bitmap? CurrentSongImage
     {

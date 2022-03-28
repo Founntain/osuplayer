@@ -4,6 +4,7 @@ using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Extensions;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.ViewModels;
+using OsuPlayer.Windows;
 using ReactiveUI;
 
 namespace OsuPlayer.Views;
@@ -36,14 +37,5 @@ public class PlaylistViewModel : BaseViewModel
     {
         get => _selectedPlaylist;
         set => this.RaiseAndSetIfChanged(ref _selectedPlaylist, value);
-    }
-
-    public async void OpenPlaylistEditor()
-    {
-        var playlists = await PlaylistManager.GetAllPlaylistsAsync();
-
-        Core.Instance.MainWindow.ViewModel!.PlaylistEditorViewModel.Playlists = playlists.ToSourceList();
-
-        Core.Instance.MainWindow.ViewModel!.MainView = Core.Instance.MainWindow.ViewModel.PlaylistEditorViewModel;
     }
 }

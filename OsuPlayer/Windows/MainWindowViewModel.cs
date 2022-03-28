@@ -1,5 +1,4 @@
-using System.Collections.ObjectModel;
-using OsuPlayer.Data.OsuPlayer.Classes;
+using OsuPlayer.Modules.Audio;
 using OsuPlayer.ViewModels;
 using OsuPlayer.Views;
 using ReactiveUI;
@@ -8,44 +7,53 @@ namespace OsuPlayer.Windows;
 
 public class MainWindowViewModel : BaseWindowViewModel
 {
-    public readonly EditUserViewModel EditUserView;
-    public readonly HomeViewModel HomeView;
-    public readonly PartyViewModel PartyView;
-    public readonly PlaylistEditorViewModel PlaylistEditorViewModel;
-    public readonly PlaylistViewModel PlaylistView;
+    public EditUserViewModel EditUserView;
+    public HomeViewModel HomeView;
+    public PartyViewModel PartyView;
+    public PlaylistEditorViewModel PlaylistEditorViewModel;
+    public PlaylistViewModel PlaylistView;
 
     // internal ViewModels
-    public readonly SearchViewModel SearchView;
-    public readonly SettingsViewModel SettingsView;
-    public readonly UserViewModel UserView;
+    public SearchViewModel SearchView;
+    public SettingsViewModel SettingsView;
+    public UserViewModel UserView;
 
     private BaseViewModel _mainView;
 
-    public MainWindowViewModel()
-    {
-        TopBar = new TopBarViewModel();
-        PlayerControl = new PlayerControlViewModel();
+    private readonly BassEngine _bassEngine;
+    public readonly Player Player;
 
-        SearchView = new SearchViewModel();
-        PlaylistView = new PlaylistViewModel();
-        PlaylistEditorViewModel = new PlaylistEditorViewModel();
-        HomeView = new HomeViewModel();
-        UserView = new UserViewModel();
-        EditUserView = new EditUserViewModel();
-        PartyView = new PartyViewModel();
-        SettingsView = new SettingsViewModel();
-        //Generate new ViewModels here
+    public MainWindowViewModel(BassEngine engine, Player player)
+    {
+        _bassEngine = engine;
+        Player = player;
     }
 
-    public TopBarViewModel TopBar { get; }
+    public void SetUp(MainWindow mainWindow)
+    {
+        Player.MainWindow = mainWindow;
 
-    public PlayerControlViewModel PlayerControl { get; }
+        //Generate new ViewModels here
+        TopBar = new TopBarViewModel();
+        PlayerControl = new PlayerControlViewModel(Player, _bassEngine);
+
+        SearchView = new SearchViewModel(Player);
+        PlaylistView = new PlaylistViewModel();
+        PlaylistEditorViewModel = new PlaylistEditorViewModel(Player);
+        HomeView = new HomeViewModel(Player);
+        UserView = new UserViewModel(Player);
+        EditUserView = new EditUserViewModel();
+        PartyView = new PartyViewModel();
+        SettingsView = new SettingsViewModel(Player);
+    }
+
+    public TopBarViewModel TopBar { get; private set; }
+
+    public PlayerControlViewModel PlayerControl { get; private set; }
 
     public BaseViewModel MainView
     {
         get => _mainView;
         set => this.RaiseAndSetIfChanged(ref _mainView, value);
     }
-
-    public ObservableCollection<AudioDevice> OutputDeviceComboboxItems { get; set; }
 }

@@ -17,6 +17,7 @@ using OsuPlayer.IO.DbReader.DataModels;
 using OsuPlayer.IO.Storage.Config;
 using OsuPlayer.Network.API.ApiEndpoints;
 using OsuPlayer.Network.Online;
+using OsuPlayer.Windows;
 using ReactiveUI;
 
 namespace OsuPlayer.Modules.Audio;
@@ -46,13 +47,24 @@ public class Player
 
     private double _volume = new Config().Read().Volume;
 
+    public MainWindow MainWindow;
+    private BassEngine _bassEngine;
+
     public ReadOnlyObservableCollection<MinimalMapEntry>? FilteredSongEntries;
 
-    public Player()
+    public Player(BassEngine bassEngine)
     {
+        _bassEngine = bassEngine;
+
+        _bassEngine.PropertyChanged += (sender, args) =>
+        {
+            if (args.PropertyName == "SongEnd")
+                Dispatcher.UIThread.Post(NextSong);
+        };
+        
         _songSource = new SourceList<MinimalMapEntry>();
 
-        _currentSongTimer = new();
+        _currentSongTimer = new Stopwatch();
     }
 
     private MapEntry? CurrentSong
@@ -68,9 +80,9 @@ public class Player
 
             config.Read().LastPlayedSong = CurrentIndex;
 
-            Core.Instance.MainWindow.ViewModel!.PlayerControl.CurrentSong = value;
+            MainWindow.ViewModel!.PlayerControl.CurrentSong = value;
 
-            // Core.Instance.MainWindow.ViewModel!.PlayerControl.CurrentSongImage = Task.Run(value!.FindBackground).Result;
+            // _mainWindow.ViewModel!.PlayerControl.CurrentSongImage = Task.Run(value!.FindBackground).Result;
         }
     }
 
@@ -83,7 +95,7 @@ public class Player
         get => _playState;
         set
         {
-            Core.Instance.MainWindow.ViewModel!.PlayerControl.IsPlaying = value == PlayState.Playing;
+            MainWindow.ViewModel!.PlayerControl.IsPlaying = value == PlayState.Playing;
             _playState = value;
         }
     }
@@ -96,7 +108,7 @@ public class Player
         set
         {
             _shuffle = value;
-            Core.Instance.MainWindow.ViewModel!.PlayerControl.IsShuffle = value;
+            MainWindow.ViewModel!.PlayerControl.IsShuffle = value;
         }
     }
 
@@ -106,7 +118,7 @@ public class Player
         set
         {
             _repeat = value;
-            Core.Instance.MainWindow.ViewModel!.PlayerControl.IsRepeating = value;
+            MainWindow.ViewModel!.PlayerControl.IsRepeating = value;
         }
     }
 
@@ -116,8 +128,8 @@ public class Player
         set
         {
             _volume = value;
-            Core.Instance.Engine.Volume = (float) value / 100;
-            Core.Instance.MainWindow.ViewModel!.PlayerControl.RaisePropertyChanged();
+            _bassEngine.Volume = (float) value / 100;
+            MainWindow.ViewModel!.PlayerControl.RaisePropertyChanged();
             if (value > 0)
                 Mute(true);
         }
@@ -140,9 +152,9 @@ public class Player
 
     public async Task ImportSongs()
     {
-        Core.Instance.MainWindow.ViewModel!.HomeView.SongsLoading = true;
+        MainWindow.ViewModel!.HomeView.SongsLoading = true;
 
-        _filter = Core.Instance.MainWindow.ViewModel!.SearchView
+        _filter = MainWindow.ViewModel!.SearchView
             .WhenAnyValue(x => x.FilterText)
             .Throttle(TimeSpan.FromMilliseconds(20))
             .Select(BuildFilter);
@@ -156,9 +168,9 @@ public class Player
             .Filter(_filter, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
             .Bind(out FilteredSongEntries).Subscribe();
 
-        Core.Instance.MainWindow.ViewModel.HomeView.RaisePropertyChanged(nameof(Core.Instance.MainWindow.ViewModel
+        MainWindow.ViewModel.HomeView.RaisePropertyChanged(nameof(MainWindow.ViewModel
             .HomeView.SongEntries));
-        Core.Instance.MainWindow.ViewModel!.HomeView.SongsLoading = false;
+        MainWindow.ViewModel!.HomeView.SongsLoading = false;
 
         if (SongSource == null || !SongSource.Any()) return;
 
@@ -183,8 +195,7 @@ public class Player
 
     public void SetPlaybackSpeed(double speed)
     {
-        Bass.ChannelSetAttribute(Core.Instance.Engine.FxStream, ChannelAttribute.TempoFrequency,
-            Core.Instance.Engine.SampleFrequency * (1 + speed));
+        _bassEngine.SetSpeed(speed);
     }
 
     public async Task Play(MinimalMapEntry? song, PlayDirection playDirection = PlayDirection.Forward)
@@ -272,10 +283,10 @@ public class Player
 
         try
         {
-            Core.Instance.Engine.OpenFile(fullMapEntry.FullPath!);
-            //Core.Instance.Engine.SetAllEq(Core.Instance.Config.Eq);
-            Core.Instance.Engine.Volume = (float) Core.Instance.MainWindow.ViewModel!.PlayerControl.Volume / 100;
-            Core.Instance.Engine.Play();
+            _bassEngine.OpenFile(fullMapEntry.FullPath!);
+            //_bassEngine.SetAllEq(Core.Instance.Config.Eq);
+            _bassEngine.Volume = (float) MainWindow.ViewModel!.PlayerControl.Volume / 100;
+            _bassEngine.Play();
             PlayState = PlayState.Playing;
 
             _currentSongTimer.Restart();
@@ -299,7 +310,7 @@ public class Player
             Debug.WriteLine($"Could not update Songs Played error => {e}");
         }
 
-        Core.Instance.MainWindow.ViewModel.PlayerControl.CurrentSongImage = await fullMapEntry.FindBackground();
+        MainWindow.ViewModel.PlayerControl.CurrentSongImage = await fullMapEntry.FindBackground();
         return Task.CompletedTask;
     }
 
@@ -316,7 +327,7 @@ public class Player
         var response = await ApiAsync.UpdateXpFromCurrentUserAsync(
             CurrentSong?.BeatmapChecksum ?? string.Empty,
             time,
-            Core.Instance.Engine.ChannelLength);
+            _bassEngine.ChannelLength);
 
         if (response == default) return;
 
@@ -324,17 +335,17 @@ public class Player
 
         var xpEarned = response.TotalXp - currentTotalXp;
 
-        var values = Core.Instance.MainWindow.ViewModel!.HomeView.GraphValues.ToList();
+        var values = MainWindow.ViewModel!.HomeView.GraphValues.ToList();
 
         values.Add(new(xpEarned));
 
-        Core.Instance.MainWindow.ViewModel!.HomeView.GraphValues = values.ToObservableCollection();
+        MainWindow.ViewModel!.HomeView.GraphValues = values.ToObservableCollection();
 
-        Core.Instance.MainWindow.ViewModel!.HomeView.RaisePropertyChanged(nameof(Core.Instance.MainWindow.ViewModel
+        MainWindow.ViewModel!.HomeView.RaisePropertyChanged(nameof(MainWindow.ViewModel
             .HomeView.CurrentUser));
-        Core.Instance.MainWindow.ViewModel!.HomeView.RaisePropertyChanged(nameof(Core.Instance.MainWindow.ViewModel
+        MainWindow.ViewModel!.HomeView.RaisePropertyChanged(nameof(MainWindow.ViewModel
             .HomeView.Series));
-        Core.Instance.MainWindow.ViewModel!.HomeView.RaisePropertyChanged(nameof(Core.Instance.MainWindow.ViewModel
+        MainWindow.ViewModel!.HomeView.RaisePropertyChanged(nameof(MainWindow.ViewModel
             .HomeView.GraphValues));
     }
 
@@ -348,7 +359,7 @@ public class Player
 
         ProfileManager.User = response;
 
-        Core.Instance.MainWindow.ViewModel!.HomeView.RaisePropertyChanged(nameof(Core.Instance.MainWindow.ViewModel
+        MainWindow.ViewModel!.HomeView.RaisePropertyChanged(nameof(MainWindow.ViewModel
             .HomeView.CurrentUser));
     }
 
@@ -376,13 +387,13 @@ public class Player
     {
         if (PlayState == PlayState.Paused)
         {
-            Core.Instance.Engine.Play();
+            _bassEngine.Play();
             _currentSongTimer.Start();
             PlayState = PlayState.Playing;
         }
         else
         {
-            Core.Instance.Engine.Pause();
+            _bassEngine.Pause();
             _currentSongTimer.Stop();
             PlayState = PlayState.Paused;
         }
@@ -390,13 +401,13 @@ public class Player
 
     public void Play()
     {
-        Core.Instance.Engine.Play();
+        _bassEngine.Play();
         PlayState = PlayState.Playing;
     }
 
     public void Pause()
     {
-        Core.Instance.Engine.Pause();
+        _bassEngine.Pause();
         PlayState = PlayState.Paused;
     }
 
@@ -466,7 +477,7 @@ public class Player
         if (SongSource == null || !SongSource.Any())
             return;
 
-        if (Core.Instance.Engine.ChannelPosition > 3)
+        if (_bassEngine.ChannelPosition > 3)
         {
             await TryEnqueueSong(SongSource[CurrentIndex]);
             return;

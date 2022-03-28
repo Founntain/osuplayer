@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using DynamicData;
+using Splat;
 
 namespace OsuPlayer.Extensions;
 
@@ -45,5 +46,15 @@ public static class Extensions
                 return false;
 
         return true;
+    }
+
+    public static TService GetRequiredService<TService>(this IReadonlyDependencyResolver resolver)
+    {
+        var service = resolver.GetService<TService>();
+        
+        if (service is null)
+            throw new InvalidOperationException($"No service with type of {typeof(TService)}");
+        
+        return service;
     }
 }

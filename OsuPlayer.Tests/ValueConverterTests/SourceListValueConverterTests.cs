@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using DynamicData;
-using Material.Icons;
 using NUnit.Framework;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Extensions.ValueConverters;

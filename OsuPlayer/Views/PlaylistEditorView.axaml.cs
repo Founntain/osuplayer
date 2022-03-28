@@ -3,19 +3,21 @@ using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
-using Avalonia.ReactiveUI;
+using Avalonia.VisualTree;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Extensions;
-using OsuPlayer.IO.DbReader;
 using OsuPlayer.IO.DbReader.DataModels;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.UI_Extensions;
+using OsuPlayer.Windows;
 using ReactiveUI;
 
 namespace OsuPlayer.Views;
 
-public partial class PlaylistEditorView : ReactiveUserControl<PlaylistEditorViewModel>
+public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorViewModel>
 {
+    private MainWindow _mainWindow;
+    
     public PlaylistEditorView()
     {
         InitializeComponent();
@@ -25,6 +27,9 @@ public partial class PlaylistEditorView : ReactiveUserControl<PlaylistEditorView
     {
         this.WhenActivated(disposables =>
         {
+            if (this.GetVisualRoot() is MainWindow mainWindow)
+                _mainWindow = mainWindow;
+            
             if (ViewModel.CurrentSelectedPlaylist == default)
                 return;
         });
@@ -169,7 +174,7 @@ public partial class PlaylistEditorView : ReactiveUserControl<PlaylistEditorView
 
         if (ViewModel.CurrentSelectedPlaylist.Name == "Favorites")
         {
-            await MessageBox.ShowDialogAsync(Core.Instance.MainWindow, "No you can't delete your favorites! Sorry :(");
+            await MessageBox.ShowDialogAsync(_mainWindow, "No you can't delete your favorites! Sorry :(");
             return;
         }
 

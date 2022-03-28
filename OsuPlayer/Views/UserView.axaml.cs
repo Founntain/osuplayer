@@ -4,13 +4,12 @@ using Avalonia.Controls.Presenters;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Markup.Xaml;
-using Avalonia.ReactiveUI;
 using OsuPlayer.Data.API.Models.Beatmap;
 using OsuPlayer.Network.Online;
 
 namespace OsuPlayer.Views;
 
-public partial class UserView : ReactiveUserControl<UserViewModel>
+public partial class UserView : ReactivePlayerControl<UserViewModel>
 {
     public UserView()
     {
@@ -47,11 +46,11 @@ public partial class UserView : ReactiveUserControl<UserViewModel>
         var listBox = (ListBox) sender;
         if (listBox == default) return;
         var beatmapModel = (BeatmapUserValidityModel) listBox.SelectedItem;
-        if (beatmapModel == default || Core.Instance.Player.SongSource == default) return;
-        var mapEntry = Core.Instance.Player.SongSource.FirstOrDefault(x =>
+        if (beatmapModel == default || ViewModel.Player.SongSource == default) return;
+        var mapEntry = ViewModel.Player.SongSource.FirstOrDefault(x =>
             x.BeatmapChecksum == beatmapModel.Beatmap.BeatmapChecksum ||
             x.Artist == beatmapModel.Beatmap.Artist && x.Title == beatmapModel.Beatmap.Title);
         if (mapEntry != default)
-            await Core.Instance.Player.Play(mapEntry);
+            await ViewModel.Player.Play(mapEntry);
     }
 }

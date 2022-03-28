@@ -10,12 +10,13 @@ using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
-using OsuPlayer.IO.DbReader;
 using OsuPlayer.IO.DbReader.DataModels;
 using OsuPlayer.IO.Storage.Config;
+using OsuPlayer.Modules.Audio;
 using OsuPlayer.Network.API.ApiEndpoints;
 using OsuPlayer.Network.Online;
 using OsuPlayer.ViewModels;
+using OsuPlayer.Windows;
 using ReactiveUI;
 using SkiaSharp;
 
@@ -28,8 +29,12 @@ public class HomeViewModel : BaseViewModel
 
     private bool _songsLoading;
 
-    public HomeViewModel()
+    public Player Player;
+    
+    public HomeViewModel(Player player)
     {
+        Player = player;
+
         Activator = new ViewModelActivator();
         this.WhenActivated(Block);
 
@@ -62,7 +67,7 @@ public class HomeViewModel : BaseViewModel
         }
     };
 
-    public List<MinimalMapEntry> SongEntries => Core.Instance.Player.SongSource!;
+    public List<MinimalMapEntry> SongEntries => Player.SongSource!;
 
     public bool IsUserNotLoggedIn => CurrentUser == default;
     public bool IsUserLoggedIn => CurrentUser != default;

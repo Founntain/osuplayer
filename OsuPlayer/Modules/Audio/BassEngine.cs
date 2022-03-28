@@ -17,15 +17,13 @@ namespace OsuPlayer.Modules.Audio;
 /// <summary>
 ///     Audioengine for the osu!player using <see cref="ManagedBass"/>
 /// </summary>
-public sealed class BassEngine
+public sealed class BassEngine : INotifyPropertyChanged
 {
     private const int KRepeatThreshold = 200;
-    private static BassEngine engine = null!;
     private readonly SyncProcedure _endTrackSyncProc;
     private readonly int[] _frq = {80, 125, 200, 300, 500, 1000, 2000, 4000, 8000, 16000};
     private readonly DispatcherTimer _positionTimer = new(DispatcherPriority.ApplicationIdle);
     private readonly SyncProcedure _repeatSyncProc;
-    private readonly DispatcherTimer _songTimer = new(DispatcherPriority.Layout);
     private int _activeStream;
     private double _channelLengthD;
     private double _currentChannelPosition;
@@ -38,22 +36,15 @@ public sealed class BassEngine
     private TimeSpan _repeatStop;
     private int _repeatSyncId;
     private int _streamFx;
+    private double _playbackSpeed;
     public int SampleFrequency = 44100;
 
-    private BassEngine()
+    public BassEngine()
     {
         Initialize();
         _endTrackSyncProc = EndTrack;
         _repeatSyncProc = RepeatCallback;
     }
-
-    public double Difference { get; set; }
-
-    #region Singleton Instance
-
-    public static BassEngine Instance => engine ??= new BassEngine();
-
-    #endregion
 
     public int ActiveStreamHandle
     {
@@ -104,13 +95,6 @@ public sealed class BassEngine
             ChannelPosition = Bass.ChannelBytes2Seconds(FxStream, Bass.ChannelGetPosition(FxStream));
             _inChannelTimerUpdate = false;
         }
-    }
-
-    private void _songTimerOnTick(object? sender, EventArgs e)
-    {
-        if (!_isPlaying || FxStream == 0) return;
-        Core.Instance.MainWindow.ViewModel!.PlayerControl.SongTime =
-            Bass.ChannelBytes2Seconds(FxStream, Bass.ChannelGetPosition(FxStream));
     }
 
     private int GetIndex(int frq)
@@ -230,7 +214,6 @@ public sealed class BassEngine
             if (oldValue != _channelLengthD)
             {
                 NotifyPropertyChanged("ChannelLength");
-                Core.Instance.MainWindow.ViewModel!.PlayerControl.SongLength = value;
             }
         }
     }
@@ -246,11 +229,10 @@ public sealed class BassEngine
             //Math.Max(0, Math.Min(value, ChannelLength));
             if (!_inChannelTimerUpdate)
                 Bass.ChannelSetPosition(FxStream, Bass.ChannelSeconds2Bytes(FxStream, value));
-            if (Math.Abs(_currentChannelPosition - value) > 0.1)
+            if (Math.Abs(_currentChannelPosition - value) > 0.05)
             {
-                NotifyPropertyChanged("ChannelPosition");
-                Core.Instance.MainWindow.ViewModel!.PlayerControl.SongTime = value;
                 _currentChannelPosition = value;
+                NotifyPropertyChanged("ChannelPosition");
             }
 
             _inChannelSet = false;
@@ -263,7 +245,8 @@ public sealed class BassEngine
 
     private void EndTrack(int handle, int channel, int data, IntPtr user)
     {
-        Dispatcher.UIThread.Post(Core.Instance.Player.NextSong);
+        NotifyPropertyChanged("SongEnd");
+        //Dispatcher.UIThread.Post(Locator.Current.GetService<Player>().NextSong);
     }
 
     private void RepeatCallback(int handle, int channel, int data, IntPtr user)
@@ -375,9 +358,8 @@ public sealed class BassEngine
                 // Obtain the sample rate of the stream
                 var info = Bass.ChannelGetInfo(FxStream);
                 SampleFrequency = info.Frequency;
-                Difference = 44100 - SampleFrequency;
                 //SetEqBands();
-                var speed = SampleFrequency * (1 + Core.Instance.MainWindow.ViewModel!.PlayerControl.PlaybackSpeed);
+                var speed = SampleFrequency * (1 + _playbackSpeed);
                 Bass.ChannelSetAttribute(FxStream, ChannelAttribute.TempoFrequency, speed);
 
                 using var config = new Config();
@@ -492,18 +474,10 @@ public sealed class BassEngine
 
     private void Initialize()
     {
-        _positionTimer.Interval = TimeSpan.FromMilliseconds(500);
+        _positionTimer.Interval = TimeSpan.FromMilliseconds(1000 / 60);
         _positionTimer.Tick += PositionTimer_Tick;
         _positionTimer.Start();
-        _songTimer.Interval = TimeSpan.FromMilliseconds(1000 / 60);
-        _songTimer.Tick += _songTimerOnTick;
-        _songTimer.Start();
         AvailableAudioDevices = new Collection<AudioDevice>();
-
-        var mainWindow = Core.Instance.MainWindow;
-        if (mainWindow == null) return;
-
-        //var interopHelper = new Interop(mainWindow);
 
         var deviceInfos = GetDeviceInfos();
 
@@ -528,8 +502,7 @@ public sealed class BassEngine
             counter++;
         }
 
-        Core.Instance.MainWindow.ViewModel!.OutputDeviceComboboxItems =
-            new ObservableCollection<AudioDevice>(GetAudioDevices());
+        //_mainWindow.ViewModel!.SettingsView.OutputDeviceComboboxItems = new ObservableCollection<AudioDevice>(GetAudioDevices());
 
         //SetDeviceInfo(OsuPlayer.Config.ConfigStorage.SelectedOutputDevice);
     }
@@ -593,4 +566,11 @@ public sealed class BassEngine
     }
 
     #endregion
+
+    public void SetSpeed(double speed)
+    {
+        Bass.ChannelSetAttribute(FxStream, ChannelAttribute.TempoFrequency,
+            SampleFrequency * (1 + speed));
+        _playbackSpeed = speed;
+    }
 }

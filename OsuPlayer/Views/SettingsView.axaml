@@ -44,7 +44,7 @@
 
                         <StackPanel Spacing="5" Name="ImportOsuSongs">
                             <TextBlock Text="{Binding OsuLocation}" />
-                            <Button Content="import osu! songs" Command="{Binding ImportSongsClick}"
+                            <Button Content="import osu! songs" Click="ImportSongsClick"
                                     HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
                         </StackPanel>
 
@@ -81,7 +81,7 @@
 
                         <StackPanel Spacing="5" Name="Login">
                             <TextBlock Text="{Binding CurrentUser, Converter={StaticResource SettingsUserConverter}}" />
-                            <Button Content="log in" Command="{Binding Login}" HorizontalAlignment="Stretch"
+                            <Button Content="log in" Click="LoginClick" HorizontalAlignment="Stretch"
                                     HorizontalContentAlignment="Center" />
                         </StackPanel>
                     </StackPanel>

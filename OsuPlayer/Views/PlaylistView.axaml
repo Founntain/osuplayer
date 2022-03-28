@@ -42,6 +42,7 @@
             <Button Grid.Row="2" Content="playlist editor" Margin="10 0"
                     VerticalContentAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center"
                     HorizontalAlignment="Stretch"
+                    Click="Button_OnClick"
                     Command="{Binding OpenPlaylistEditor}"
                     FontWeight="SemiBold" />
         </Grid>

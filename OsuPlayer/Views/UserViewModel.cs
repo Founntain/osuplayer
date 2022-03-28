@@ -13,6 +13,7 @@ using Material.Icons.Avalonia;
 using OsuPlayer.Data.API.Enums;
 using OsuPlayer.Data.API.Models.Beatmap;
 using OsuPlayer.Extensions;
+using OsuPlayer.Modules.Audio;
 using OsuPlayer.Network.API.ApiEndpoints;
 using OsuPlayer.Network.Online;
 using OsuPlayer.ViewModels;
@@ -33,8 +34,12 @@ public class UserViewModel : BaseViewModel
 
     private ObservableCollection<User> _users;
 
-    public UserViewModel()
+    public Player Player;
+
+    public UserViewModel(Player player)
     {
+        Player = player;
+        
         Activator = new ViewModelActivator();
 
         Badges = new();
