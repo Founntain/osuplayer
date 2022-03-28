@@ -26,7 +26,7 @@ public partial class PlayerControlView : ReactivePlayerControl<PlayerControlView
         {
             if (this.GetVisualRoot() is MainWindow mainWindow)
                 _mainWindow = mainWindow;
-            
+
             ProgressSlider.AddHandler(PointerPressedEvent, SongProgressSlider_OnPointerPressed,
                 RoutingStrategies.Tunnel);
             ProgressSlider.AddHandler(PointerReleasedEvent, SongProgressSlider_OnPointerReleased,

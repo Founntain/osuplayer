@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
 using OsuPlayer.IO.Storage.Config;
-using OsuPlayer.Modules.Audio;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
 using ReactiveUI;
@@ -33,7 +31,7 @@ public partial class SettingsView : ReactivePlayerControl<SettingsViewModel>
                 _mainWindow = mainWindow;
                 ViewModel.MainWindow = mainWindow;
             }
-            
+
             ViewModel.SettingsCategories =
                 this.FindControl<WrapPanel>("SettingsGrid").Children;
         });
@@ -91,7 +89,7 @@ public partial class SettingsView : ReactivePlayerControl<SettingsViewModel>
 
         await ViewModel.Player.ImportSongs();
     }
-    
+
     public async void LoginClick(object? sender, RoutedEventArgs routedEventArgs)
     {
         var loginWindow = new LoginWindow

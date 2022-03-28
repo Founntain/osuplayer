@@ -16,7 +16,6 @@ using OsuPlayer.Modules.Audio;
 using OsuPlayer.Network.API.ApiEndpoints;
 using OsuPlayer.Network.Online;
 using OsuPlayer.ViewModels;
-using OsuPlayer.Windows;
 using ReactiveUI;
 using SkiaSharp;
 
@@ -30,7 +29,7 @@ public class HomeViewModel : BaseViewModel
     private bool _songsLoading;
 
     public Player Player;
-    
+
     public HomeViewModel(Player player)
     {
         Player = player;
@@ -38,7 +37,7 @@ public class HomeViewModel : BaseViewModel
         Activator = new ViewModelActivator();
         this.WhenActivated(Block);
 
-        GraphValues = new();
+        GraphValues = new ObservableCollection<ObservableValue>();
     }
 
     public ObservableCollection<ObservableValue> GraphValues

@@ -16,7 +16,7 @@ public class SearchViewModel : BaseViewModel
     public SearchViewModel(Player player)
     {
         Player = player;
-        
+
         Activator = new ViewModelActivator();
         this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
     }

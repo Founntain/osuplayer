@@ -54,7 +54,7 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
 
     private void Visual_OnAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
     {
-        var control = (Control) sender;
+        var control = (Control)sender;
 
         control?.Focus();
     }

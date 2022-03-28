@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Avalonia.Threading;
 using DynamicData;
 using DynamicData.Binding;
-using ManagedBass;
+using LiveChartsCore.Defaults;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Extensions;
 using OsuPlayer.IO;
@@ -31,6 +31,7 @@ public class Player
     private readonly Stopwatch _currentSongTimer;
     private readonly int?[] _shuffleHistory = new int?[10];
     private readonly SourceList<MinimalMapEntry> _songSource;
+    private BassEngine _bassEngine;
 
     private MapEntry? _currentSong;
 
@@ -47,10 +48,9 @@ public class Player
 
     private double _volume = new Config().Read().Volume;
 
-    public MainWindow MainWindow;
-    private BassEngine _bassEngine;
-
     public ReadOnlyObservableCollection<MinimalMapEntry>? FilteredSongEntries;
+
+    public MainWindow MainWindow;
 
     public Player(BassEngine bassEngine)
     {
@@ -61,7 +61,7 @@ public class Player
             if (args.PropertyName == "SongEnd")
                 Dispatcher.UIThread.Post(NextSong);
         };
-        
+
         _songSource = new SourceList<MinimalMapEntry>();
 
         _currentSongTimer = new Stopwatch();
@@ -128,7 +128,7 @@ public class Player
         set
         {
             _volume = value;
-            _bassEngine.Volume = (float) value / 100;
+            _bassEngine.Volume = (float)value / 100;
             MainWindow.ViewModel!.PlayerControl.RaisePropertyChanged();
             if (value > 0)
                 Mute(true);
@@ -285,7 +285,7 @@ public class Player
         {
             _bassEngine.OpenFile(fullMapEntry.FullPath!);
             //_bassEngine.SetAllEq(Core.Instance.Config.Eq);
-            _bassEngine.Volume = (float) MainWindow.ViewModel!.PlayerControl.Volume / 100;
+            _bassEngine.Volume = (float)MainWindow.ViewModel!.PlayerControl.Volume / 100;
             _bassEngine.Play();
             PlayState = PlayState.Playing;
 
@@ -322,7 +322,7 @@ public class Player
 
         _currentSongTimer.Stop();
 
-        var time = (double) _currentSongTimer.ElapsedMilliseconds / 1000;
+        var time = (double)_currentSongTimer.ElapsedMilliseconds / 1000;
 
         var response = await ApiAsync.UpdateXpFromCurrentUserAsync(
             CurrentSong?.BeatmapChecksum ?? string.Empty,
@@ -337,7 +337,7 @@ public class Player
 
         var values = MainWindow.ViewModel!.HomeView.GraphValues.ToList();
 
-        values.Add(new(xpEarned));
+        values.Add(new ObservableValue(xpEarned));
 
         MainWindow.ViewModel!.HomeView.GraphValues = values.ToObservableCollection();
 

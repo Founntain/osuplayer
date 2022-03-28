@@ -39,10 +39,10 @@ public class UserViewModel : BaseViewModel
     public UserViewModel(Player player)
     {
         Player = player;
-        
+
         Activator = new ViewModelActivator();
 
-        Badges = new();
+        Badges = new ObservableCollection<IControl>();
 
         this.WhenActivated(Block);
     }

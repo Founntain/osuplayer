@@ -7,14 +7,14 @@ namespace OsuPlayer.IO.DbReader.DataModels;
 
 /// <summary>
 /// a full beatmap entry with optionally used data
-/// <remarks>only created on a <see cref="DbReader.ReadFullMapEntry"/> call</remarks>
+/// <remarks>only created on a <see cref="DbReader.ReadFullMapEntry" /> call</remarks>
 /// </summary>
 public class MapEntry : MinimalMapEntry
 {
-    public int BeatmapId;
-    public int BeatmapSetId;
     public string? ArtistUnicode;
     public string? AudioFileName;
+    public int BeatmapId;
+    public int BeatmapSetId;
     public string? FolderName;
     public string? FolderPath;
     public string? FullPath;
@@ -94,12 +94,12 @@ public class MapEntry : MinimalMapEntry
             return $"{ArtistUnicode} - {TitleUnicode}";
         return $"{Artist} - {Title}";
     }
-    
+
     public override string ToString()
     {
         return GetSongName();
     }
-    
+
     public static bool operator ==(MapEntry? left, MapEntry? right)
     {
         return left?.SongName == right?.SongName;
@@ -112,10 +112,7 @@ public class MapEntry : MinimalMapEntry
 
     public override bool Equals(object? obj)
     {
-        if (obj is MapEntry other)
-        {
-            return BeatmapChecksum == other.BeatmapChecksum;
-        }
+        if (obj is MapEntry other) return BeatmapChecksum == other.BeatmapChecksum;
 
         return false;
     }

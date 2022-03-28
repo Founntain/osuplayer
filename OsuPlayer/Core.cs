@@ -10,6 +10,5 @@ public class Core
 
     public Core(MainWindow mainWindow, Player player, BassEngine engine, PlayerControlViewModel playerControlViewModel)
     {
-        
     }
 }

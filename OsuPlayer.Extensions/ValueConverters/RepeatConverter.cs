@@ -8,10 +8,7 @@ public class RepeatConverter : IValueConverter
 {
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is bool val)
-        {
-            return val ? MaterialIconKind.Repeat : MaterialIconKind.RepeatOff;
-        }
+        if (value is bool val) return val ? MaterialIconKind.Repeat : MaterialIconKind.RepeatOff;
 
         return MaterialIconKind.QuestionMark;
     }

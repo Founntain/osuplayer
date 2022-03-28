@@ -1,12 +1,12 @@
 ﻿namespace OsuPlayer.Network.Security;
 
 /// <summary>
-///     A static class with some helpful static methods to validate passwords
+/// A static class with some helpful static methods to validate passwords
 /// </summary>
 public static class PasswordManager
 {
     /// <summary>
-    ///     Checks if the given password meets our password requierements
+    /// Checks if the given password meets our password requierements
     /// </summary>
     /// <param name="password"></param>
     /// <returns></returns>

@@ -15,13 +15,18 @@ using OsuPlayer.IO.Storage.Config;
 namespace OsuPlayer.Modules.Audio;
 
 /// <summary>
-///     Audioengine for the osu!player using <see cref="ManagedBass"/>
+/// Audioengine for the osu!player using <see cref="ManagedBass" />
 /// </summary>
 public sealed class BassEngine : INotifyPropertyChanged
 {
     private const int KRepeatThreshold = 200;
     private readonly SyncProcedure _endTrackSyncProc;
-    private readonly int[] _frq = {80, 125, 200, 300, 500, 1000, 2000, 4000, 8000, 16000};
+
+    private readonly int[] _frq =
+    {
+        80, 125, 200, 300, 500, 1000, 2000, 4000, 8000, 16000
+    };
+
     private readonly DispatcherTimer _positionTimer = new(DispatcherPriority.ApplicationIdle);
     private readonly SyncProcedure _repeatSyncProc;
     private int _activeStream;
@@ -32,11 +37,11 @@ public sealed class BassEngine : INotifyPropertyChanged
     private bool _inRepeatSet;
     private bool _isPlaying;
     private DXParamEQ _paramEq;
+    private double _playbackSpeed;
     private TimeSpan _repeatStart;
     private TimeSpan _repeatStop;
     private int _repeatSyncId;
     private int _streamFx;
-    private double _playbackSpeed;
     public int SampleFrequency = 44100;
 
     public BassEngine()
@@ -164,6 +169,13 @@ public sealed class BassEngine : INotifyPropertyChanged
         }
     }
 
+    public void SetSpeed(double speed)
+    {
+        Bass.ChannelSetAttribute(FxStream, ChannelAttribute.TempoFrequency,
+            SampleFrequency * (1 + speed));
+        _playbackSpeed = speed;
+    }
+
 
     #region Player
 
@@ -211,10 +223,7 @@ public sealed class BassEngine : INotifyPropertyChanged
             var oldValue = _channelLengthD;
             _channelLengthD = value;
             // ReSharper disable once CompareOfFloatsByEqualityOperator
-            if (oldValue != _channelLengthD)
-            {
-                NotifyPropertyChanged("ChannelLength");
-            }
+            if (oldValue != _channelLengthD) NotifyPropertyChanged("ChannelLength");
         }
     }
 
@@ -271,11 +280,11 @@ public sealed class BassEngine : INotifyPropertyChanged
 
     public void Stop()
     {
-        ChannelPosition = (long) SelectionBegin.TotalSeconds;
+        ChannelPosition = (long)SelectionBegin.TotalSeconds;
         if (FxStream != 0)
         {
             Bass.ChannelStop(FxStream);
-            Bass.ChannelSetPosition(FxStream, (long) ChannelPosition);
+            Bass.ChannelSetPosition(FxStream, (long)ChannelPosition);
             IsPlaying = false;
         }
     }
@@ -414,7 +423,7 @@ public sealed class BassEngine : INotifyPropertyChanged
     //}
 
     /// <summary>
-    ///     Sets all bands according to the parameter
+    /// Sets all bands according to the parameter
     /// </summary>
     /// <param name="gain">10 double values from -15 to +15</param>
     /// <returns></returns>
@@ -532,13 +541,13 @@ public sealed class BassEngine : INotifyPropertyChanged
         {
             var channelLength = Bass.ChannelGetLength(FxStream);
             var repeatPos = endTime.TotalSeconds - 0.2;
-            var endPosition = (long) (repeatPos / ChannelLength * channelLength);
+            var endPosition = (long)(repeatPos / ChannelLength * channelLength);
             _repeatSyncId = Bass.ChannelSetSync(FxStream,
                 SyncFlags.Position,
                 endPosition,
                 _repeatSyncProc,
                 IntPtr.Zero);
-            ChannelPosition = (long) SelectionBegin.TotalSeconds;
+            ChannelPosition = (long)SelectionBegin.TotalSeconds;
         }
         else
         {
@@ -557,20 +566,10 @@ public sealed class BassEngine : INotifyPropertyChanged
     private bool PlayCurrentStream()
     {
         // Play Stream
-        if (FxStream != 0 && Bass.ChannelPlay(FxStream))
-        {
-            return true;
-        }
+        if (FxStream != 0 && Bass.ChannelPlay(FxStream)) return true;
 
         return false;
     }
 
     #endregion
-
-    public void SetSpeed(double speed)
-    {
-        Bass.ChannelSetAttribute(FxStream, ChannelAttribute.TempoFrequency,
-            SampleFrequency * (1 + speed));
-        _playbackSpeed = speed;
-    }
 }

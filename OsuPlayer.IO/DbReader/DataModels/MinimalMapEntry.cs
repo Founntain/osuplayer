@@ -4,7 +4,7 @@ namespace OsuPlayer.IO.DbReader.DataModels;
 
 /// <summary>
 /// a minimal beatmap entry with only frequently used data
-/// <remarks>created on call of <see cref="DbReader.ReadOsuDb"/></remarks>
+/// <remarks>created on call of <see cref="DbReader.ReadOsuDb" /></remarks>
 /// </summary>
 public class MinimalMapEntry
 {
@@ -20,35 +20,34 @@ public class MinimalMapEntry
 
     /// <summary>
     /// Gets the artist
-    /// <remarks>may be overridden for usage with <see cref="MapEntry.UseUnicode"/></remarks>
+    /// <remarks>may be overridden for usage with <see cref="MapEntry.UseUnicode" /></remarks>
     /// </summary>
     /// <returns>the artist</returns>
     protected virtual string GetArtist()
     {
         return Artist;
     }
-    
+
     /// <summary>
     /// Gets the title
-    /// <remarks>may be overridden for usage with <see cref="MapEntry.UseUnicode"/></remarks>
+    /// <remarks>may be overridden for usage with <see cref="MapEntry.UseUnicode" /></remarks>
     /// </summary>
     /// <returns>the title</returns>
     protected virtual string GetTitle()
     {
-
         return Title;
     }
-    
+
     /// <summary>
     /// Gets a formatted version of artist and title
-    /// <remarks>may be overridden for usage with <see cref="MapEntry.UseUnicode"/></remarks>
+    /// <remarks>may be overridden for usage with <see cref="MapEntry.UseUnicode" /></remarks>
     /// </summary>
     /// <returns>the formatted song name</returns>
     protected virtual string GetSongName()
     {
         return $"{Artist} - {Title}";
     }
-    
+
     public override string ToString()
     {
         return GetSongName();

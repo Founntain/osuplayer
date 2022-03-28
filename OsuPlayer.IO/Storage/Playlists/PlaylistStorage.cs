@@ -3,13 +3,12 @@
 namespace OsuPlayer.IO.Storage.Playlists;
 
 /// <summary>
-///     The PlaylistStorage reads and writes playlist data to the playlists.json file located in the data folder.
+/// The PlaylistStorage reads and writes playlist data to the playlists.json file located in the data folder.
 /// </summary>
 public class PlaylistStorage : IStorable<PlaylistContainer>
 {
-    public string Path => System.IO.Path.Combine("data", "playlists.json");
-
     private PlaylistContainer? _container;
+    public string Path => System.IO.Path.Combine("data", "playlists.json");
 
     public PlaylistContainer Container
     {
@@ -20,24 +19,24 @@ public class PlaylistStorage : IStorable<PlaylistContainer>
     public PlaylistContainer Read()
     {
         if (!File.Exists(Path) || _container != null)
-            return _container ??= new(false);
+            return _container ??= new PlaylistContainer(false);
 
         var data = File.ReadAllText(Path);
 
         return _container ??= (string.IsNullOrWhiteSpace(data)
-            ? new(false)
+            ? new PlaylistContainer(false)
             : JsonConvert.DeserializeObject<PlaylistContainer>(data))!;
     }
 
     public async Task<PlaylistContainer> ReadAsync()
     {
         if (!File.Exists(Path) || _container != null)
-            return _container ??= new(false);
+            return _container ??= new PlaylistContainer(false);
 
         var data = await File.ReadAllTextAsync(Path);
 
         return _container ??= (string.IsNullOrWhiteSpace(data)
-            ? new(false)
+            ? new PlaylistContainer(false)
             : JsonConvert.DeserializeObject<PlaylistContainer>(data))!;
     }
 

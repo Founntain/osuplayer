@@ -17,7 +17,7 @@ namespace OsuPlayer.Views;
 public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorViewModel>
 {
     private MainWindow _mainWindow;
-    
+
     public PlaylistEditorView()
     {
         InitializeComponent();
@@ -29,7 +29,7 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
         {
             if (this.GetVisualRoot() is MainWindow mainWindow)
                 _mainWindow = mainWindow;
-            
+
             if (ViewModel.CurrentSelectedPlaylist == default)
                 return;
         });
@@ -94,7 +94,7 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
     {
         if (ViewModel == default) return;
 
-        var listBox = (ListBox) sender!;
+        var listBox = (ListBox)sender!;
 
         var songs = listBox.SelectedItems.Cast<MinimalMapEntry>().ToList();
 
@@ -105,7 +105,7 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
     {
         if (ViewModel == default) return;
 
-        var listBox = (ListBox) sender!;
+        var listBox = (ListBox)sender!;
 
         var songs = listBox.SelectedItems.Cast<MinimalMapEntry>().ToList();
 

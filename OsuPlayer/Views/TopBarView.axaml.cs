@@ -12,7 +12,7 @@ namespace OsuPlayer.Views;
 internal partial class TopBarView : ReactivePlayerControl<TopBarViewModel>
 {
     private MainWindow _mainWindow;
-    
+
     public TopBarView()
     {
         InitializeComponent();

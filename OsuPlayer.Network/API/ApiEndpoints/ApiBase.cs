@@ -21,7 +21,7 @@ public static partial class ApiAsync
     {
         if (ex.GetType() != typeof(WebException)) return;
 
-        var webEx = (WebException) ex;
+        var webEx = (WebException)ex;
 
         if (webEx.Status != WebExceptionStatus.ConnectFailure && webEx.Status != WebExceptionStatus.Timeout) return;
         if (Constants.OfflineMode) return;
@@ -31,7 +31,7 @@ public static partial class ApiAsync
     }
 
     /// <summary>
-    ///     Creates a GET request to the osu!player API return T.
+    /// Creates a GET request to the osu!player API return T.
     /// </summary>
     /// <param name="controller">The controller to call</param>
     /// <param name="action">The route of the controller</param>
@@ -60,7 +60,7 @@ public static partial class ApiAsync
     }
 
     /// <summary>
-    ///     Creates a POST request to the osu!player API returning T.
+    /// Creates a POST request to the osu!player API returning T.
     /// </summary>
     /// ///
     /// <param name="controller">The controller to call</param>
@@ -96,7 +96,7 @@ public static partial class ApiAsync
     }
 
     /// <summary>
-    ///     Creates a GET request to the osu!player api with parameters returning T.
+    /// Creates a GET request to the osu!player api with parameters returning T.
     /// </summary>
     /// <param name="controller">The controller to call</param>
     /// <param name="action">The route of the controller</param>

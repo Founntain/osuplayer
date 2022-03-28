@@ -4,7 +4,6 @@ using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Extensions;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.ViewModels;
-using OsuPlayer.Windows;
 using ReactiveUI;
 
 namespace OsuPlayer.Views;

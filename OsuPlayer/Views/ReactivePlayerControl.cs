@@ -13,7 +13,7 @@ public class ReactivePlayerControl<TViewModel> : UserControl, IViewFor<TViewMode
     public ReactivePlayerControl()
     {
         this.WhenActivated(disposables => { });
-        IObservable<TViewModel> x = this.GetObservable(ViewModelProperty);
+        var x = this.GetObservable(ViewModelProperty);
         x.Subscribe(OnViewModelChanged);
     }
 
@@ -31,16 +31,11 @@ public class ReactivePlayerControl<TViewModel> : UserControl, IViewFor<TViewMode
         base.OnDataContextChanged(e);
         ViewModel = (DataContext as TViewModel)!;
     }
-    
+
     private void OnViewModelChanged(object? value)
     {
         if (value == null)
-        {
             ClearValue(DataContextProperty);
-        }
-        else if (DataContext != value)
-        {
-            DataContext = value;
-        }
+        else if (DataContext != value) DataContext = value;
     }
 }

@@ -15,10 +15,7 @@ public class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-        {
-            desktop.MainWindow = Locator.Current.GetService<MainWindow>();
-        }
+        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop) desktop.MainWindow = Locator.Current.GetService<MainWindow>();
 
         base.OnFrameworkInitializationCompleted();
     }

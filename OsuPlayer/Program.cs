@@ -2,7 +2,6 @@
 using Avalonia;
 using Avalonia.ReactiveUI;
 using OsuPlayer.Modules.Audio;
-using OsuPlayer.Views;
 using OsuPlayer.Windows;
 using Splat;
 
@@ -38,7 +37,7 @@ internal class Program
     private static void Register(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver)
     {
         services.RegisterLazySingleton(() => new BassEngine());
-        
+
         services.RegisterLazySingleton(() => new Player(
             resolver.GetService<BassEngine>()));
 

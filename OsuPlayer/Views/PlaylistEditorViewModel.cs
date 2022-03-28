@@ -6,7 +6,6 @@ using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.IO.DbReader.DataModels;
 using OsuPlayer.Modules.Audio;
 using OsuPlayer.ViewModels;
-using OsuPlayer.Windows;
 using ReactiveUI;
 
 namespace OsuPlayer.Views;
@@ -18,17 +17,17 @@ public class PlaylistEditorViewModel : BaseViewModel
     private bool _isNewPlaylistPopupOpen;
     private bool _isRenamePlaylistPopupOpen;
     private string? _newPlaylistnameText;
+
+    private Player _player;
     private SourceList<Playlist>? _playlists;
     private List<MinimalMapEntry>? _selectedPlaylistItems;
 
     private List<MinimalMapEntry>? _selectedSongListItems;
 
-    private Player _player;
-    
     public PlaylistEditorViewModel(Player player)
     {
         _player = player;
-        
+
         Activator = new ViewModelActivator();
 
         this.WhenActivated(disposables =>
@@ -39,8 +38,8 @@ public class PlaylistEditorViewModel : BaseViewModel
                 CurrentSelectedPlaylist = Playlists.Items.ElementAt(0);
         });
 
-        SelectedPlaylistItems = new();
-        SelectedSongListItems = new();
+        SelectedPlaylistItems = new List<MinimalMapEntry>();
+        SelectedSongListItems = new List<MinimalMapEntry>();
     }
 
     public bool IsDeletePlaylistPopupOpen

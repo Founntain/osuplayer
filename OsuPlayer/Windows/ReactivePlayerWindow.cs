@@ -23,7 +23,7 @@ public class ReactivePlayerWindow<TViewModel> : Window, IViewFor<TViewModel> whe
         get => ViewModel;
         set => ViewModel = (TViewModel)value;
     }
-    
+
     public TViewModel ViewModel
     {
         get => GetValue(ViewModelProperty);
@@ -33,24 +33,15 @@ public class ReactivePlayerWindow<TViewModel> : Window, IViewFor<TViewModel> whe
     private void OnDataContextChanged(object? value)
     {
         if (value is TViewModel viewModel)
-        {
             ViewModel = viewModel;
-        }
         else
-        {
             ViewModel = null;
-        }
     }
 
     private void OnViewModelChanged(object? value)
     {
         if (value == null)
-        {
             ClearValue(DataContextProperty);
-        }
-        else if (DataContext != value)
-        {
-            DataContext = value;
-        }
+        else if (DataContext != value) DataContext = value;
     }
 }

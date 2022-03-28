@@ -5,7 +5,6 @@ using OsuPlayer.Extensions;
 using OsuPlayer.IO.DbReader.DataModels;
 using OsuPlayer.Modules.Audio;
 using OsuPlayer.ViewModels;
-using OsuPlayer.Windows;
 using ReactiveUI;
 
 namespace OsuPlayer.Views;
@@ -27,10 +26,10 @@ public class PlayerControlViewModel : BaseViewModel
 
     private double _songLength;
     private double _songTime;
+    public BassEngine BassEngine;
 
     public Player Player;
-    public BassEngine BassEngine;
-    
+
     public PlayerControlViewModel(Player player, BassEngine bassEngine)
     {
         Player = player;
@@ -51,7 +50,7 @@ public class PlayerControlViewModel : BaseViewModel
                 this.RaisePropertyChanged(nameof(CurrentSongLength));
             }
         };
-        
+
         Activator = new ViewModelActivator();
         this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
     }

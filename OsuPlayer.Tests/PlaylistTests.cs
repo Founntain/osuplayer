@@ -59,7 +59,13 @@ public class PlaylistTests
     public void TestCorrectWriteRead()
     {
         var container = _playlist.Read();
-        var testPlaylist = new List<Playlist> {new() {Name = "Test"}};
+        var testPlaylist = new List<Playlist>
+        {
+            new()
+            {
+                Name = "Test"
+            }
+        };
         container.Playlists = testPlaylist;
         _playlist.Save(container);
         _playlist = new PlaylistStorage();
@@ -72,7 +78,10 @@ public class PlaylistTests
     [Test]
     public void TestAccessNoRead()
     {
-        var testPlaylist = new List<Playlist> {new()};
+        var testPlaylist = new List<Playlist>
+        {
+            new()
+        };
         Assert.DoesNotThrow(() => _playlist.Container.Playlists = testPlaylist);
         Assert.AreEqual(testPlaylist, _playlist.Read().Playlists);
     }

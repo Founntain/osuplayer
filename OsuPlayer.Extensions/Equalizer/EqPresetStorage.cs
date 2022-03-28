@@ -1,7 +1,7 @@
 ﻿namespace OsuPlayer.Extensions.Equalizer;
 
 /// <summary>
-///     Container for the <see cref="Equalizer.EqPreset" />
+/// Container for the <see cref="Equalizer.EqPreset" />
 /// </summary>
 public sealed class EqPresetStorage
 {
@@ -18,7 +18,10 @@ public sealed class EqPresetStorage
 
     public double[] CurrentPreset
     {
-        get => new[] {F80, F125, F200, F300, F500, F1000, F2000, F4000, F8000, F16000};
+        get => new[]
+        {
+            F80, F125, F200, F300, F500, F1000, F2000, F4000, F8000, F16000
+        };
         set
         {
             F80 = value[0];

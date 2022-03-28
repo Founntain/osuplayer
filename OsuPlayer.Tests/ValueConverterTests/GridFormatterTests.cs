@@ -7,10 +7,10 @@ namespace OsuPlayer.Tests.ValueConverterTests;
 
 public class GridFormatterTests
 {
-    private GridFormatter _gridFormatter;
     private Type _expectedInput = typeof(double);
-    private Type _expectedParameter = typeof(string);
     private Type _expectedOutput = typeof(double);
+    private Type _expectedParameter = typeof(string);
+    private GridFormatter _gridFormatter;
 
     [SetUp]
     public void Setup()
@@ -35,8 +35,14 @@ public class GridFormatterTests
             () => _gridFormatter.Convert(null, _expectedOutput, null, CultureInfo.InvariantCulture));
     }
 
-    [TestCase(new object[] {100.0, "100", 100.0})]
-    [TestCase(new object[] {150.0, "100", 75.0})]
+    [TestCase(new object[]
+    {
+        100.0, "100", 100.0
+    })]
+    [TestCase(new object[]
+    {
+        150.0, "100", 75.0
+    })]
     public void TestCorrectUsage(object[] input)
     {
         var width = input[0];
@@ -55,9 +61,18 @@ public class GridFormatterTests
         Assert.AreEqual(expected, output);
     }
 
-    [TestCase(new object[] {"test", 100})]
-    [TestCase(new object[] {10, true})]
-    [TestCase(new object[] {"abc", 0.0})]
+    [TestCase(new object[]
+    {
+        "test", 100
+    })]
+    [TestCase(new object[]
+    {
+        10, true
+    })]
+    [TestCase(new object[]
+    {
+        "abc", 0.0
+    })]
     public void TestOutputOnIncorrectInput(object[] input)
     {
         var width = input[0];

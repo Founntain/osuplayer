@@ -51,10 +51,10 @@ public static class Extensions
     public static TService GetRequiredService<TService>(this IReadonlyDependencyResolver resolver)
     {
         var service = resolver.GetService<TService>();
-        
+
         if (service is null)
             throw new InvalidOperationException($"No service with type of {typeof(TService)}");
-        
+
         return service;
     }
 }

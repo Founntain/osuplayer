@@ -8,9 +8,9 @@ namespace OsuPlayer.Tests.ValueConverterTests;
 
 public class PlayPauseConverterTests
 {
-    private PlayPauseConverter _playPauseConverter;
     private Type _expectedInput = typeof(bool);
     private Type _expectedOutput = typeof(MaterialIconKind);
+    private PlayPauseConverter _playPauseConverter;
 
     [SetUp]
     public void Setup()

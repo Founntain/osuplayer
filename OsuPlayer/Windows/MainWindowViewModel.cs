@@ -7,31 +7,15 @@ namespace OsuPlayer.Windows;
 
 public class MainWindowViewModel : BaseWindowViewModel
 {
-    public EditUserViewModel EditUserView;
-    public HomeViewModel HomeView;
-    public PartyViewModel PartyView;
-    public PlaylistEditorViewModel PlaylistEditorViewModel;
-    public PlaylistViewModel PlaylistView;
-
-    // internal ViewModels
-    public SearchViewModel SearchView;
-    public SettingsViewModel SettingsView;
-    public UserViewModel UserView;
-
-    private BaseViewModel _mainView;
-
     private readonly BassEngine _bassEngine;
     public readonly Player Player;
+
+    private BaseViewModel _mainView;
 
     public MainWindowViewModel(BassEngine engine, Player player)
     {
         _bassEngine = engine;
         Player = player;
-    }
-
-    public void SetUp(MainWindow mainWindow)
-    {
-        Player.MainWindow = mainWindow;
 
         //Generate new ViewModels here
         TopBar = new TopBarViewModel();
@@ -47,9 +31,16 @@ public class MainWindowViewModel : BaseWindowViewModel
         SettingsView = new SettingsViewModel(Player);
     }
 
-    public TopBarViewModel TopBar { get; private set; }
-
-    public PlayerControlViewModel PlayerControl { get; private set; }
+    public EditUserViewModel EditUserView { get; }
+    public HomeViewModel HomeView { get; }
+    public PartyViewModel PartyView { get; }
+    public PlaylistEditorViewModel PlaylistEditorViewModel { get; }
+    public PlaylistViewModel PlaylistView { get; }
+    public SearchViewModel SearchView { get; }
+    public SettingsViewModel SettingsView { get; }
+    public UserViewModel UserView { get; }
+    public TopBarViewModel TopBar { get; }
+    public PlayerControlViewModel PlayerControl { get; }
 
     public BaseViewModel MainView
     {

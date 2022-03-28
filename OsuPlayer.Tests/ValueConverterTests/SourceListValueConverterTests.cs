@@ -10,9 +10,9 @@ namespace OsuPlayer.Tests.ValueConverterTests;
 
 public class SourceListValueConverterTests
 {
-    private SourceListValueConverter _playPauseConverter;
     private Type _expectedInput = typeof(SourceList<Playlist>);
     private Type _expectedOutput = typeof(List<Playlist>);
+    private SourceListValueConverter _playPauseConverter;
 
     [SetUp]
     public void Setup()
@@ -45,7 +45,7 @@ public class SourceListValueConverterTests
         Assert.IsInstanceOf(_expectedInput, input);
         var output = _playPauseConverter.Convert(input, _expectedOutput, null, CultureInfo.InvariantCulture);
         Assert.IsInstanceOf(_expectedOutput, output);
-        Assert.AreEqual(initialItemCount, ((List<Playlist>) output)!.Count);
+        Assert.AreEqual(initialItemCount, ((List<Playlist>)output)!.Count);
     }
 
     [Test]

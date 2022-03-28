@@ -37,12 +37,12 @@ public sealed class User : UserModel
 
     public int GetXpNeededForNextLevel()
     {
-        return (int) Math.Round(0.04 * Math.Pow(Level, 3) + 0.8 * Math.Pow(Level, 2) + 2 * Level);
+        return (int)Math.Round(0.04 * Math.Pow(Level, 3) + 0.8 * Math.Pow(Level, 2) + 2 * Level);
     }
 
     public static int GetXpNeededForNextLevel(int level)
     {
-        return (int) Math.Round(0.04 * Math.Pow(level, 3) + 0.8 * Math.Pow(level, 2) + 2 * level);
+        return (int)Math.Round(0.04 * Math.Pow(level, 3) + 0.8 * Math.Pow(level, 2) + 2 * level);
     }
 
     public Brush GetRoleColorBrush()

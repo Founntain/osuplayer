@@ -24,18 +24,21 @@ public partial class UserView : ReactivePlayerControl<UserViewModel>
     private void SelectingItemsControl_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         var viewer = this.FindControl<ContentPresenter>("BadgeItems");
-        var list = (ListBox) sender;
+        var list = (ListBox)sender;
 
         if (list?.SelectedItem == default) return;
 
-        var items = ViewModel!.LoadBadges((User) list.SelectedItem);
+        var items = ViewModel!.LoadBadges((User)list.SelectedItem);
 
         viewer.Content = new ItemsRepeater
         {
             Items = items,
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Top,
-            Layout = new WrapLayout {Orientation = Orientation.Horizontal}
+            Layout = new WrapLayout
+            {
+                Orientation = Orientation.Horizontal
+            }
         };
 
         viewer.UpdateChild();
@@ -43,9 +46,9 @@ public partial class UserView : ReactivePlayerControl<UserViewModel>
 
     private async void InputElement_OnDoubleTapped(object? sender, RoutedEventArgs e)
     {
-        var listBox = (ListBox) sender;
+        var listBox = (ListBox)sender;
         if (listBox == default) return;
-        var beatmapModel = (BeatmapUserValidityModel) listBox.SelectedItem;
+        var beatmapModel = (BeatmapUserValidityModel)listBox.SelectedItem;
         if (beatmapModel == default || ViewModel.Player.SongSource == default) return;
         var mapEntry = ViewModel.Player.SongSource.FirstOrDefault(x =>
             x.BeatmapChecksum == beatmapModel.Beatmap.BeatmapChecksum ||
