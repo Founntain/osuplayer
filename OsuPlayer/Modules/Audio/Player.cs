@@ -327,7 +327,7 @@ public class Player
         var response = await ApiAsync.UpdateXpFromCurrentUserAsync(
             CurrentSong?.BeatmapChecksum ?? string.Empty,
             time,
-            _bassEngine.ChannelLength);
+            _bassEngine.ChannelLength.Value);
 
         if (response == default) return;
 
@@ -477,7 +477,7 @@ public class Player
         if (SongSource == null || !SongSource.Any())
             return;
 
-        if (_bassEngine.ChannelPosition > 3)
+        if (_bassEngine.ChannelPosition.Value > 3)
         {
             await TryEnqueueSong(SongSource[CurrentIndex]);
             return;

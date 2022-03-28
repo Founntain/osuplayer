@@ -34,22 +34,8 @@ public class PlayerControlViewModel : BaseViewModel
     {
         Player = player;
         BassEngine = bassEngine;
-        BassEngine.PropertyChanged += (sender, args) =>
-        {
-            if (args.PropertyName == "ChannelPosition")
-            {
-                _songTime = BassEngine.ChannelPosition;
-                this.RaisePropertyChanged(nameof(SongTime));
-                this.RaisePropertyChanged(nameof(CurrentSongTime));
-            }
-
-            if (args.PropertyName == "ChannelLength")
-            {
-                _songLength = BassEngine.ChannelLength;
-                this.RaisePropertyChanged(nameof(SongLength));
-                this.RaisePropertyChanged(nameof(CurrentSongLength));
-            }
-        };
+        BassEngine.ChannelPosition.BindValueChanged(d => SongTime = d.NewValue);
+        BassEngine.ChannelLength.BindValueChanged(d => SongLength = d.NewValue);
 
         Activator = new ViewModelActivator();
         this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
@@ -81,32 +67,32 @@ public class PlayerControlViewModel : BaseViewModel
     public double SongTime
     {
         get => _songTime;
-        set => this.RaiseAndSetIfChanged(ref _songTime, value);
+        set
+        {
+            CurrentSongTime = TimeSpan.FromSeconds(value * (1 - PlaybackSpeed)).FormatTime();
+            this.RaiseAndSetIfChanged(ref _songTime, value);
+        }
     }
 
     public string CurrentSongTime
     {
-        get
-        {
-            _currentSongTime = TimeSpan.FromSeconds(_songTime * (1 - PlaybackSpeed)).FormatTime();
-            return _currentSongTime;
-        }
+        get => _currentSongTime;
         set => this.RaiseAndSetIfChanged(ref _currentSongTime, value);
     }
 
     public double SongLength
     {
         get => _songLength;
-        set => this.RaiseAndSetIfChanged(ref _songLength, value);
+        set
+        {
+            CurrentSongLength = TimeSpan.FromSeconds(value * (1 - PlaybackSpeed)).FormatTime();
+            this.RaiseAndSetIfChanged(ref _songLength, value);
+        }
     }
 
     public string CurrentSongLength
     {
-        get
-        {
-            _currentSongLength = TimeSpan.FromSeconds(_songLength * (1 - PlaybackSpeed)).FormatTime();
-            return _currentSongLength;
-        }
+        get => _currentSongLength;
         set => this.RaiseAndSetIfChanged(ref _currentSongLength, value);
     }
 
