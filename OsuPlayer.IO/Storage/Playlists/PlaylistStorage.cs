@@ -49,6 +49,8 @@ public class PlaylistStorage : IStorable<PlaylistContainer>
 
     public async Task SaveAsync(PlaylistContainer container)
     {
+        Directory.CreateDirectory("data");
+
         await File.WriteAllTextAsync(Path, JsonConvert.SerializeObject(container));
     }
 
