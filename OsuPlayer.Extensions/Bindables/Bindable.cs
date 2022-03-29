@@ -1,4 +1,6 @@
-﻿namespace OsuPlayer.Extensions.Bindables;
+﻿using OsuPlayer.Extensions.Lists;
+
+namespace OsuPlayer.Extensions.Bindables;
 
 /// <summary>
 /// Generic implementation of <see cref="IBindable{T}" />
@@ -10,7 +12,11 @@ public class Bindable<T> : IBindable<T>
 
     private T _value;
 
-    protected List<Bindable<T>>? Bindings { get; private set; }
+    private WeakReference<Bindable<T>>? _weakReferenceInstance;
+
+    private WeakReference<Bindable<T>> WeakReference => _weakReferenceInstance ??= new WeakReference<Bindable<T>>(this);
+
+    protected LockedWeakList<Bindable<T>>? Bindings { get; private set; }
 
     /// <summary>
     /// An event raised when <see cref="Value" /> has changed
@@ -29,6 +35,14 @@ public class Bindable<T> : IBindable<T>
     }
 
     /// <summary>
+    /// Unbinds from all bindings on finalization
+    /// </summary>
+    ~Bindable()
+    {
+        UnbindAll();
+    }
+
+    /// <summary>
     /// Binds a <see cref="IBindable{T}" /> to this <see cref="Bindable{T}" /> if it's the same type
     /// </summary>
     /// <param name="other">other <see cref="IBindable{T}" /> to bind to</param>
@@ -36,20 +50,6 @@ public class Bindable<T> : IBindable<T>
     {
         if (other is Bindable<T> otherB)
             BindTo(otherB);
-    }
-
-    /// <summary>
-    /// Unbinds <paramref name="other" /> <see cref="IUnbindable" /> from this and removes references
-    /// </summary>
-    /// <param name="other">the <see cref="IUnbindable" /> to unbind from</param>
-    /// <exception cref="InvalidCastException">throws if types don't match</exception>
-    public virtual void UnbindFrom(IUnbindable other)
-    {
-        if (other is not Bindable<T> otherB)
-            throw new InvalidCastException($"Can't unbind type {other.GetType()} from type {GetType()}");
-
-        RemoveReference(otherB);
-        otherB.RemoveReference(this);
     }
 
     /// <summary>
@@ -77,14 +77,6 @@ public class Bindable<T> : IBindable<T>
     public void UnbindAll()
     {
         UnbindAllInternal();
-    }
-
-    /// <summary>
-    /// Unbinds from all bindings on finalization
-    /// </summary>
-    ~Bindable()
-    {
-        UnbindAll();
     }
 
     /// <summary>
@@ -136,8 +128,22 @@ public class Bindable<T> : IBindable<T>
 
         Value = other.Value;
 
-        AddReference(other);
-        other.AddReference(this);
+        AddReference(other.WeakReference);
+        other.AddReference(WeakReference);
+    }
+
+    /// <summary>
+    /// Unbinds <paramref name="other" /> <see cref="IUnbindable" /> from this and removes references
+    /// </summary>
+    /// <param name="other">the <see cref="IUnbindable" /> to unbind from</param>
+    /// <exception cref="InvalidCastException">throws if types don't match</exception>
+    public virtual void UnbindFrom(IUnbindable other)
+    {
+        if (other is not Bindable<T> otherB)
+            throw new InvalidCastException($"Can't unbind type {other.GetType()} from type {GetType()}");
+
+        RemoveReference(otherB.WeakReference);
+        otherB.RemoveReference(WeakReference);
     }
 
     /// <summary>
@@ -158,9 +164,9 @@ public class Bindable<T> : IBindable<T>
     /// Adds a reference to <see cref="Bindings" />
     /// </summary>
     /// <param name="reference">the <see cref="Bindable{T}" /> to add a reference to</param>
-    private void AddReference(Bindable<T> reference)
+    private void AddReference(WeakReference<Bindable<T>> reference)
     {
-        Bindings ??= new List<Bindable<T>>();
+        Bindings ??= new LockedWeakList<Bindable<T>>();
         Bindings.Add(reference);
     }
 
@@ -168,10 +174,7 @@ public class Bindable<T> : IBindable<T>
     /// Removes a reference from <see cref="Bindings" />
     /// </summary>
     /// <param name="reference">the <see cref="Bindable{T}" /> to remove a reference from</param>
-    private void RemoveReference(Bindable<T> reference)
-    {
-        Bindings?.Remove(reference);
-    }
+    private void RemoveReference(WeakReference<Bindable<T>> reference) => Bindings?.Remove(reference);
 
     /// <summary>
     /// Calls all unbinds
