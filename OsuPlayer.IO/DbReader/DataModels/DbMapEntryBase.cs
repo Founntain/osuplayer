@@ -8,11 +8,11 @@ namespace OsuPlayer.IO.DbReader.DataModels;
 /// </summary>
 public class DbMapEntryBase : IMapEntryBase
 {
+    public long DbOffset { get; set; }
     public string Artist { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
     public string BeatmapChecksum { get; set; } = string.Empty;
     public int TotalTime { get; set; }
-    public long DbOffset { get; set; }
     public string TotalTimeString => TimeSpan.FromMilliseconds(TotalTime).FormatTime();
     public string SongName => GetSongName();
     public string ArtistString => GetArtist();

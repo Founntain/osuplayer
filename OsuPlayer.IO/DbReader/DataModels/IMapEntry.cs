@@ -13,5 +13,5 @@ public interface IMapEntry : IMapEntryBase
     public string FullPath { get; set; }
     public bool UseUnicode { get; set; }
 
-    public Task<Bitmap?> FindBackground();
+    public Task<Bitmap?> FindBackground(string path = null!);
 }

@@ -6,7 +6,8 @@ namespace OsuPlayer.IO.Storage.LazerModels.Beatmaps;
 public class BeatmapDifficulty : EmbeddedObject, IBeatmapDifficultyInfo
 {
     /// <summary>
-    /// The default value used for all difficulty settings except <see cref="SliderMultiplier"/> and <see cref="SliderTickRate"/>.
+    /// The default value used for all difficulty settings except <see cref="SliderMultiplier" /> and
+    /// <see cref="SliderTickRate" />.
     /// </summary>
     public const float DEFAULT_DIFFICULTY = 5;
 

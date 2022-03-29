@@ -80,8 +80,8 @@ public partial class DbReader : BinaryReader
         reader.Dispose();
         return minBeatMaps;
     }
-    
-    
+
+
     /// <summary>
     /// Reads a osu!.db map entry and fills a <see cref="DbMapEntryBase" /> with needed data
     /// </summary>

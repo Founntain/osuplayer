@@ -5,15 +5,16 @@ public interface IMappingOperationOptions
     Func<Type, object> ServiceCtor { get; }
 
     /// <summary>
+    /// Add context items to be accessed at map time inside an <see cref="T:AutoMapper.IValueResolver`3" /> or
+    /// <see cref="T:AutoMapper.ITypeConverter`2" />
+    /// </summary>
+    IDictionary<string, object> Items { get; }
+
+    /// <summary>
     /// Construct services using this callback. Use this for child/nested containers
     /// </summary>
     /// <param name="constructor"></param>
     void ConstructServicesUsing(Func<Type, object> constructor);
-
-    /// <summary>
-    /// Add context items to be accessed at map time inside an <see cref="T:AutoMapper.IValueResolver`3" /> or <see cref="T:AutoMapper.ITypeConverter`2" />
-    /// </summary>
-    IDictionary<string, object> Items { get; }
 
     /// <summary>
     /// Execute a custom function to the source and/or destination types before member mapping

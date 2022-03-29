@@ -1,4 +1,5 @@
-﻿using OsuPlayer.IO.Storage.LazerModels.Interfaces;
+﻿using OsuPlayer.IO.Storage.LazerModels.Files;
+using OsuPlayer.IO.Storage.LazerModels.Interfaces;
 
 namespace OsuPlayer.IO.Storage.LazerModels.Beatmaps;
 

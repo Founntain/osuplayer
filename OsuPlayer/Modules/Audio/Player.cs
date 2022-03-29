@@ -15,7 +15,6 @@ using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Extensions;
 using OsuPlayer.Extensions.Bindables;
 using OsuPlayer.IO;
-using OsuPlayer.IO.DbReader;
 using OsuPlayer.IO.DbReader.DataModels;
 using OsuPlayer.IO.Storage.Config;
 using OsuPlayer.Network.API.ApiEndpoints;
@@ -219,18 +218,20 @@ public class Player
         if (SongSourceList == null || !SongSourceList.Any())
             return Task.FromException(new NullReferenceException($"{nameof(SongSourceList)} can't be null or empty"));
 
-        IMapEntry fullDbMapEntry;
+        IMapEntry fullMapEntry;
+        var path = string.Empty;
 
         await using (var config = new Config())
         {
             await config.ReadAsync();
 
-            fullDbMapEntry = await song.ReadFullEntry(config.Container.OsuPath!);
+            path = config.Container.OsuPath!;
+            fullMapEntry = await song.ReadFullEntry(config.Container.OsuPath!);
 
-            if (fullDbMapEntry == default)
+            if (fullMapEntry == default)
                 return Task.FromException(new NullReferenceException());
 
-            fullDbMapEntry.UseUnicode = config.Container.UseSongNameUnicode;
+            fullMapEntry.UseUnicode = config.Container.UseSongNameUnicode;
         }
 
         //We put the XP update to an own try catch because if the API fails or is not available,
@@ -247,7 +248,7 @@ public class Player
 
         try
         {
-            _bassEngine.OpenFile(fullDbMapEntry.FullPath!);
+            _bassEngine.OpenFile(fullMapEntry.FullPath!);
             //_bassEngine.SetAllEq(Core.Instance.Config.Eq);
             _bassEngine.Play();
             PlayState = PlayState.Playing;
@@ -260,20 +261,20 @@ public class Player
             return Task.FromException(ex);
         }
 
-        CurrentSong = fullDbMapEntry;
+        CurrentSong = fullMapEntry;
 
         //Same as update XP mentioned Above
         try
         {
             if (CurrentSongBinding.Value != default)
-                await UpdateSongsPlayed(fullDbMapEntry.BeatmapSetId);
+                await UpdateSongsPlayed(fullMapEntry.BeatmapSetId);
         }
         catch (Exception e)
         {
             Debug.WriteLine($"Could not update Songs Played error => {e}");
         }
 
-        CurrentSongImage.Value = await fullDbMapEntry.FindBackground();
+        CurrentSongImage.Value = await fullMapEntry.FindBackground(path);
         return Task.CompletedTask;
     }
 

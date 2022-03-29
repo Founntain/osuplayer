@@ -1,4 +1,4 @@
-﻿namespace OsuPlayer.IO.Storage.LazerModels.Beatmaps;
+﻿namespace OsuPlayer.IO.Storage.LazerModels.Extensions;
 
 public static class CollectionExtensions
 {
@@ -8,9 +8,7 @@ public static class CollectionExtensions
         if (collection is List<T> list)
             list.AddRange(items);
         else
-        {
-            foreach (T obj in items)
+            foreach (var obj in items)
                 collection.Add(obj);
-        }
     }
 }

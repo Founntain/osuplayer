@@ -16,11 +16,13 @@ public enum BeatmapOnlineStatus
 
     Qualified = 3,
 
-    Loved = 4,
+    Loved = 4
 }
 
 public static class BeatmapSetOnlineStatusExtensions
 {
     public static bool GrantsPerformancePoints(this BeatmapOnlineStatus status)
-        => status == BeatmapOnlineStatus.Ranked || status == BeatmapOnlineStatus.Approved;
+    {
+        return status == BeatmapOnlineStatus.Ranked || status == BeatmapOnlineStatus.Approved;
+    }
 }

@@ -6,16 +6,6 @@ namespace OsuPlayer.IO.Storage.LazerModels.Beatmaps;
 [MapTo("Ruleset")]
 public class RulesetInfo : RealmObject, IEquatable<RulesetInfo>, IComparable<RulesetInfo>, IRulesetInfo
 {
-    [PrimaryKey]
-    public string ShortName { get; set; } = string.Empty;
-
-    [Indexed]
-    public int OnlineID { get; set; } = -1;
-
-    public string Name { get; set; } = string.Empty;
-
-    public string InstantiationInfo { get; set; } = string.Empty;
-
     public RulesetInfo(string shortName, string name, string instantiationInfo, int onlineID)
     {
         ShortName = shortName;
@@ -31,16 +21,6 @@ public class RulesetInfo : RealmObject, IEquatable<RulesetInfo>, IComparable<Rul
 
     public bool Available { get; set; }
 
-    public bool Equals(RulesetInfo? other)
-    {
-        if (ReferenceEquals(this, other)) return true;
-        if (other == null) return false;
-
-        return ShortName == other.ShortName;
-    }
-
-    public bool Equals(IRulesetInfo? other) => other is RulesetInfo r && Equals(r);
-
     public int CompareTo(RulesetInfo other)
     {
         if (OnlineID >= 0 && other.OnlineID >= 0)
@@ -53,6 +33,27 @@ public class RulesetInfo : RealmObject, IEquatable<RulesetInfo>, IComparable<Rul
             return 1;
 
         return string.Compare(ShortName, other.ShortName, StringComparison.Ordinal);
+    }
+
+    public bool Equals(RulesetInfo? other)
+    {
+        if (ReferenceEquals(this, other)) return true;
+        if (other == null) return false;
+
+        return ShortName == other.ShortName;
+    }
+
+    [PrimaryKey] public string ShortName { get; set; } = string.Empty;
+
+    [Indexed] public int OnlineID { get; set; } = -1;
+
+    public string Name { get; set; } = string.Empty;
+
+    public string InstantiationInfo { get; set; } = string.Empty;
+
+    public bool Equals(IRulesetInfo? other)
+    {
+        return other is RulesetInfo r && Equals(r);
     }
 
     public int CompareTo(IRulesetInfo other)
@@ -72,5 +73,8 @@ public class RulesetInfo : RealmObject, IEquatable<RulesetInfo>, IComparable<Rul
         return hashCode.ToHashCode();
     }
 
-    public override string ToString() => Name;
+    public override string ToString()
+    {
+        return Name;
+    }
 }

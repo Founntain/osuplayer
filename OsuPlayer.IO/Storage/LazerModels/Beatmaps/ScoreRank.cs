@@ -4,27 +4,19 @@ namespace OsuPlayer.IO.Storage.LazerModels.Beatmaps;
 
 public enum ScoreRank
 {
-    [Description(@"D")]
-    D,
+    [Description(@"D")] D,
 
-    [Description(@"C")]
-    C,
+    [Description(@"C")] C,
 
-    [Description(@"B")]
-    B,
+    [Description(@"B")] B,
 
-    [Description(@"A")]
-    A,
+    [Description(@"A")] A,
 
-    [Description(@"S")]
-    S,
+    [Description(@"S")] S,
 
-    [Description(@"S+")]
-    SH,
+    [Description(@"S+")] SH,
 
-    [Description(@"SS")]
-    X,
+    [Description(@"SS")] X,
 
-    [Description(@"SS+")]
-    XH,
+    [Description(@"SS+")] XH
 }

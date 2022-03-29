@@ -1,4 +1,4 @@
-namespace OsuPlayer.IO.Storage.LazerModels.Beatmaps;
+namespace OsuPlayer.IO.Storage.LazerModels.Files;
 
 public interface IFileInfo
 {

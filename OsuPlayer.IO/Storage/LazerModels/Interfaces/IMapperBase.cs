@@ -40,7 +40,8 @@ public interface IMapperBase
     object Map(object source, Type sourceType, Type destinationType);
 
     /// <summary>
-    /// Execute a mapping from the source object to existing destination object with explicit <see cref="T:System.Type" /> objects
+    /// Execute a mapping from the source object to existing destination object with explicit <see cref="T:System.Type" />
+    /// objects
     /// </summary>
     /// <param name="source">Source object to map from</param>
     /// <param name="destination">Destination object to map into</param>

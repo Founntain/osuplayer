@@ -48,7 +48,7 @@ public partial class SettingsView : ReactivePlayerControl<SettingsViewModel>
     {
         var dialog = new OpenFileDialog
         {
-            Title = "Select your osu!.db file",
+            Title = "Select your osu!.db or client.realm file",
             AllowMultiple = false,
             Filters = new List<FileDialogFilter>
             {
@@ -56,7 +56,8 @@ public partial class SettingsView : ReactivePlayerControl<SettingsViewModel>
                 {
                     Extensions = new List<string>
                     {
-                        "db"
+                        "db",
+                        "realm"
                     }
                 }
             }
@@ -72,10 +73,10 @@ public partial class SettingsView : ReactivePlayerControl<SettingsViewModel>
 
         var path = result.FirstOrDefault();
 
-        if (Path.GetFileName(path) != "osu!.db")
+        if (Path.GetFileName(path) != "osu!.db" && Path.GetFileName(path) != "client.realm")
         {
             await MessageBox.ShowDialogAsync(_mainWindow,
-                "You had one job! Just one. Select your osu!.db! Not anything else!");
+                "You had one job! Just one. Select your osu!.db or client.realm! Not anything else!");
             return;
         }
 

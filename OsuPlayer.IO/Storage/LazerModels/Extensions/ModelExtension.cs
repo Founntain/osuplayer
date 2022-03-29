@@ -1,6 +1,8 @@
-﻿using OsuPlayer.IO.Storage.LazerModels.Interfaces;
+﻿using OsuPlayer.IO.Storage.LazerModels.Beatmaps;
+using OsuPlayer.IO.Storage.LazerModels.Files;
+using OsuPlayer.IO.Storage.LazerModels.Interfaces;
 
-namespace OsuPlayer.IO.Storage.LazerModels.Beatmaps;
+namespace OsuPlayer.IO.Storage.LazerModels.Extensions;
 
 public static class ModelExtension
 {
@@ -9,14 +11,17 @@ public static class ModelExtension
     /// </summary>
     /// <param name="fileInfo">The file info.</param>
     /// <returns>A relative file path.</returns>
-    public static string GetStoragePath(this IFileInfo fileInfo) => Path.Combine(fileInfo.Hash.Remove(1), fileInfo.Hash.Remove(2), fileInfo.Hash);
+    public static string GetStoragePath(this IFileInfo fileInfo)
+    {
+        return Path.Combine(fileInfo.Hash.Remove(1), fileInfo.Hash.Remove(2), fileInfo.Hash);
+    }
 
     /// <summary>
-    /// Returns a user-facing string representing the <paramref name="model"/>.
+    /// Returns a user-facing string representing the <paramref name="model" />.
     /// </summary>
     /// <remarks>
     /// <para>
-    /// Non-interface types without special handling will fall back to <see cref="object.ToString()"/>.
+    /// Non-interface types without special handling will fall back to <see cref="object.ToString()" />.
     /// </para>
     /// <para>
     /// Warning: This method is _purposefully_ not called <c>GetDisplayTitle()</c> like the others, because otherwise

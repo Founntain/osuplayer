@@ -3,7 +3,7 @@
 namespace OsuPlayer.Extensions.Lists;
 
 /// <summary>
-/// A <see cref="IWeakList{T}"/> which locks the list on operation
+/// A <see cref="IWeakList{T}" /> which locks the list on operation
 /// </summary>
 /// <typeparam name="T">type of the containing items</typeparam>
 public class LockedWeakList<T> : IWeakList<T>, IEnumerable<T> where T : class
@@ -86,7 +86,7 @@ public class LockedWeakList<T> : IWeakList<T>, IEnumerable<T> where T : class
 
     public Enumerator GetEnumerator()
     {
-        return new(_list);
+        return new Enumerator(_list);
     }
 
     public struct Enumerator : IEnumerator<T>

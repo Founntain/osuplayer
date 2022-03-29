@@ -14,9 +14,9 @@ public interface IMapEntryBase
     public string TitleString => GetTitle();
 
     public string GetArtist();
-    
+
     public string GetTitle();
-    
+
     public string GetSongName();
 
     public Task<IMapEntry> ReadFullEntry(string path);

@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using Newtonsoft.Json;
-using OsuPlayer.IO.Storage.LazerModels.Interfaces;
+using OsuPlayer.IO.Storage.LazerModels.Extensions;
+using OsuPlayer.IO.Storage.LazerModels.Files;
 using Realms;
 
 namespace OsuPlayer.IO.Storage.LazerModels.Beatmaps;
@@ -9,16 +10,6 @@ namespace OsuPlayer.IO.Storage.LazerModels.Beatmaps;
 [MapTo("Beatmap")]
 public class BeatmapInfo : RealmObject, IHasGuidPrimaryKey, IBeatmapInfo, IEquatable<BeatmapInfo>
 {
-    [PrimaryKey] public Guid ID { get; set; }
-
-    public string DifficultyName { get; set; } = string.Empty;
-
-    public RulesetInfo Ruleset { get; set; } = null!;
-
-    public BeatmapDifficulty Difficulty { get; set; } = null!;
-
-    public BeatmapMetadata Metadata { get; set; } = null!;
-
     public BeatmapInfo(RulesetInfo? ruleset = null, BeatmapDifficulty? difficulty = null, BeatmapMetadata? metadata = null)
     {
         ID = Guid.NewGuid();
@@ -38,6 +29,12 @@ public class BeatmapInfo : RealmObject, IHasGuidPrimaryKey, IBeatmapInfo, IEquat
     {
     }
 
+    public RulesetInfo Ruleset { get; set; } = null!;
+
+    public BeatmapDifficulty Difficulty { get; set; } = null!;
+
+    public BeatmapMetadata Metadata { get; set; } = null!;
+
     public BeatmapSetInfo? BeatmapSet { get; set; }
 
     [Ignored] public RealmNamedFileUsage? File => BeatmapSet?.Files.FirstOrDefault(f => f.File.Hash == Hash);
@@ -52,6 +49,10 @@ public class BeatmapInfo : RealmObject, IHasGuidPrimaryKey, IBeatmapInfo, IEquat
 
     [MapTo(nameof(Status))] public int StatusInt { get; set; } = (int)BeatmapOnlineStatus.None;
 
+    [JsonIgnore] public bool Hidden { get; set; }
+
+    public string DifficultyName { get; set; } = string.Empty;
+
     [Indexed] public int OnlineID { get; set; } = -1;
 
     public double Length { get; set; }
@@ -64,7 +65,30 @@ public class BeatmapInfo : RealmObject, IHasGuidPrimaryKey, IBeatmapInfo, IEquat
 
     public string MD5Hash { get; set; } = string.Empty;
 
-    [JsonIgnore] public bool Hidden { get; set; }
+    public bool Equals(IBeatmapInfo? other)
+    {
+        return other is BeatmapInfo b && Equals(b);
+    }
+
+    IBeatmapMetadataInfo IBeatmapInfo.Metadata => Metadata;
+    IBeatmapSetInfo? IBeatmapInfo.BeatmapSet => BeatmapSet;
+    IRulesetInfo IBeatmapInfo.Ruleset => Ruleset;
+    IBeatmapDifficultyInfo IBeatmapInfo.Difficulty => Difficulty;
+
+    public bool Equals(BeatmapInfo? other)
+    {
+        if (ReferenceEquals(this, other)) return true;
+        if (other == null) return false;
+
+        return ID == other.ID;
+    }
+
+    [PrimaryKey] public Guid ID { get; set; }
+
+    public override string ToString()
+    {
+        return this.GetDisplayTitle();
+    }
 
     #region Properties we may not want persisted (but also maybe no harm?)
 
@@ -96,21 +120,4 @@ public class BeatmapInfo : RealmObject, IHasGuidPrimaryKey, IBeatmapInfo, IEquat
     public int CountdownOffset { get; set; }
 
     #endregion
-
-    public bool Equals(BeatmapInfo? other)
-    {
-        if (ReferenceEquals(this, other)) return true;
-        if (other == null) return false;
-
-        return ID == other.ID;
-    }
-
-    public bool Equals(IBeatmapInfo? other) => other is BeatmapInfo b && Equals(b);
-
-    IBeatmapMetadataInfo IBeatmapInfo.Metadata => Metadata;
-    IBeatmapSetInfo? IBeatmapInfo.BeatmapSet => BeatmapSet;
-    IRulesetInfo IBeatmapInfo.Ruleset => Ruleset;
-    IBeatmapDifficultyInfo IBeatmapInfo.Difficulty => Difficulty;
-
-    public override string ToString() => this.GetDisplayTitle();
 }

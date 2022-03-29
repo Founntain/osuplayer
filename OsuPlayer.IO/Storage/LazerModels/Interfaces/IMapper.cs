@@ -5,6 +5,9 @@ namespace OsuPlayer.IO.Storage.LazerModels.Interfaces;
 
 public interface IMapper
 {
+    /// <summary>Configuration provider for performing maps</summary>
+    IConfigurationProvider ConfigurationProvider { get; }
+
     /// <summary>
     /// Execute a mapping from the source object to a new destination object with supplied mapping options.
     /// </summary>
@@ -13,8 +16,8 @@ public interface IMapper
     /// <param name="opts">Mapping options</param>
     /// <returns>Mapped destination object</returns>
     TDestination Map<TDestination>(
-      object source,
-      Action<IMappingOperationOptions<object, TDestination>> opts);
+        object source,
+        Action<IMappingOperationOptions<object, TDestination>> opts);
 
     /// <summary>
     /// Execute a mapping from the source object to a new destination object with supplied mapping options.
@@ -25,8 +28,8 @@ public interface IMapper
     /// <param name="opts">Mapping options</param>
     /// <returns>Mapped destination object</returns>
     TDestination Map<TSource, TDestination>(
-      TSource source,
-      Action<IMappingOperationOptions<TSource, TDestination>> opts);
+        TSource source,
+        Action<IMappingOperationOptions<TSource, TDestination>> opts);
 
     /// <summary>
     /// Execute a mapping from the source object to the existing destination object with supplied mapping options.
@@ -38,12 +41,13 @@ public interface IMapper
     /// <param name="opts">Mapping options</param>
     /// <returns>The mapped destination object, same instance as the <paramref name="destination" /> object</returns>
     TDestination Map<TSource, TDestination>(
-      TSource source,
-      TDestination destination,
-      Action<IMappingOperationOptions<TSource, TDestination>> opts);
+        TSource source,
+        TDestination destination,
+        Action<IMappingOperationOptions<TSource, TDestination>> opts);
 
     /// <summary>
-    /// Execute a mapping from the source object to a new destination object with explicit <see cref="T:System.Type" /> objects and supplied mapping options.
+    /// Execute a mapping from the source object to a new destination object with explicit <see cref="T:System.Type" /> objects
+    /// and supplied mapping options.
     /// </summary>
     /// <param name="source">Source object to map from</param>
     /// <param name="sourceType">Source type to use</param>
@@ -51,13 +55,14 @@ public interface IMapper
     /// <param name="opts">Mapping options</param>
     /// <returns>Mapped destination object</returns>
     object Map(
-      object source,
-      Type sourceType,
-      Type destinationType,
-      Action<IMappingOperationOptions<object, object>> opts);
+        object source,
+        Type sourceType,
+        Type destinationType,
+        Action<IMappingOperationOptions<object, object>> opts);
 
     /// <summary>
-    /// Execute a mapping from the source object to existing destination object with supplied mapping options and explicit <see cref="T:System.Type" /> objects
+    /// Execute a mapping from the source object to existing destination object with supplied mapping options and explicit
+    /// <see cref="T:System.Type" /> objects
     /// </summary>
     /// <param name="source">Source object to map from</param>
     /// <param name="destination">Destination object to map into</param>
@@ -66,14 +71,11 @@ public interface IMapper
     /// <param name="opts">Mapping options</param>
     /// <returns>Mapped destination object, same instance as the <paramref name="destination" /> object</returns>
     object Map(
-      object source,
-      object destination,
-      Type sourceType,
-      Type destinationType,
-      Action<IMappingOperationOptions<object, object>> opts);
-
-    /// <summary>Configuration provider for performing maps</summary>
-    IConfigurationProvider ConfigurationProvider { get; }
+        object source,
+        object destination,
+        Type sourceType,
+        Type destinationType,
+        Action<IMappingOperationOptions<object, object>> opts);
 
     /// <summary>Project the input queryable.</summary>
     /// <remarks>Projections are only calculated once and cached</remarks>
@@ -83,9 +85,9 @@ public interface IMapper
     /// <param name="membersToExpand">Explicit members to expand</param>
     /// <returns>Queryable result, use queryable extension methods to project and execute result</returns>
     IQueryable<TDestination> ProjectTo<TDestination>(
-      IQueryable source,
-      object parameters = null,
-      params Expression<Func<TDestination, object>>[] membersToExpand);
+        IQueryable source,
+        object parameters = null,
+        params Expression<Func<TDestination, object>>[] membersToExpand);
 
     /// <summary>Project the input queryable.</summary>
     /// <typeparam name="TDestination">Destination type to map to</typeparam>
@@ -94,9 +96,9 @@ public interface IMapper
     /// <param name="membersToExpand">Explicit members to expand</param>
     /// <returns>Queryable result, use queryable extension methods to project and execute result</returns>
     IQueryable<TDestination> ProjectTo<TDestination>(
-      IQueryable source,
-      IDictionary<string, object> parameters,
-      params string[] membersToExpand);
+        IQueryable source,
+        IDictionary<string, object> parameters,
+        params string[] membersToExpand);
 
     /// <summary>Project the input queryable.</summary>
     /// <param name="source">Queryable source</param>
@@ -105,8 +107,8 @@ public interface IMapper
     /// <param name="membersToExpand">Explicit members to expand</param>
     /// <returns>Queryable result, use queryable extension methods to project and execute result</returns>
     IQueryable ProjectTo(
-      IQueryable source,
-      Type destinationType,
-      IDictionary<string, object> parameters = null,
-      params string[] membersToExpand);
+        IQueryable source,
+        Type destinationType,
+        IDictionary<string, object> parameters = null,
+        params string[] membersToExpand);
 }

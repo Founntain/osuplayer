@@ -15,7 +15,8 @@ public interface IRulesetInfo : IHasOnlineID<int>, IEquatable<IRulesetInfo>, ICo
     string ShortName { get; }
 
     /// <summary>
-    /// A string representation of this ruleset, to be used with reflection to instantiate the ruleset represented by this metadata.
+    /// A string representation of this ruleset, to be used with reflection to instantiate the ruleset represented by this
+    /// metadata.
     /// </summary>
     string InstantiationInfo { get; }
 }
