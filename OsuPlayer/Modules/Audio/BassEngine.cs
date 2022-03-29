@@ -392,19 +392,19 @@ public sealed class BassEngine : INotifyPropertyChanged
         }
     }
 
-    /// <summary>
-    ///     Set the gain of one specific frequency band (from 80 to 16000 Hz)
-    /// </summary>
-    /// <param name="center">Frequency to set</param>
-    /// <param name="gain">Gain to set</param>
-    /// <returns></returns>
-    //public void SetEQ(int center, double gain, EqualizerWindow window)
-    //{
-    //    if (window.PresetBox.SelectedIndex == 0) EqPreset.Custom.Gain[GetIndex(center)] = gain;
-    //    if (!OsuPlayer.Config.ConfigStorage.IsEQEnabled || ParamEq == null) return;
-    //    SetValue(GetIndex(center), gain);
-    //    //return Bass.FXSetParameters(EQStream[GetIndex(center)], ParamEq);
-    //}
+    // /// <summary>
+    // ///     Set the gain of one specific frequency band (from 80 to 16000 Hz)
+    // /// </summary>
+    // /// <param name="center">Frequency to set</param>
+    // /// <param name="gain">Gain to set</param>
+    // /// <returns></returns>
+    // public void SetEQ(int center, double gain, EqualizerWindow window)
+    // {
+    //     if (window.PresetBox.SelectedIndex == 0) EqPreset.Custom.Gain[GetIndex(center)] = gain;
+    //     if (!OsuPlayer.Config.ConfigStorage.IsEQEnabled || ParamEq == null) return;
+    //     SetValue(GetIndex(center), gain);
+    //     //return Bass.FXSetParameters(EQStream[GetIndex(center)], ParamEq);
+    // }
 
     /// <summary>
     /// Sets all bands according to the parameter
@@ -467,7 +467,7 @@ public sealed class BassEngine : INotifyPropertyChanged
 
     private void Initialize()
     {
-        _positionTimer.Interval = TimeSpan.FromMilliseconds(1000 / 60);
+        _positionTimer.Interval = TimeSpan.FromMilliseconds((double)1000 / 60);
         _positionTimer.Tick += PositionTimer_Tick;
         _positionTimer.Start();
 

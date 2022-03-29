@@ -12,34 +12,31 @@ namespace OsuPlayer.Views;
 
 public class PlayerControlViewModel : BaseViewModel
 {
-    private Bindable<MapEntry?> _currentSong = new();
+    private readonly Bindable<MapEntry?> _currentSong = new();
+
+    private readonly Bindable<bool> _isPlaying = new();
+    private readonly Bindable<bool> _isRepeating = new();
+    private readonly Bindable<bool> _isShuffle = new();
+    private readonly Bindable<double> _songLength = new();
+    private readonly Bindable<double> _songTime = new();
+    private readonly Bindable<double> _volume = new();
+
+    public readonly Player Player;
     private Bitmap? _currentSongImage;
     private string _currentSongLength = "00:00";
 
     private string _currentSongTime = "00:00";
 
-    private Bindable<bool> _isPlaying = new();
-    private Bindable<bool> _isRepeating = new();
-    private Bindable<bool> _isShuffle = new();
-
     private double _playbackSpeed;
-    private Bindable<double> _songLength = new();
-    private Bindable<double> _songTime = new();
-    private Bindable<double> _volume = new();
-
-    public BassEngine BassEngine;
-
-    public Player Player;
 
     public PlayerControlViewModel(Player player, BassEngine bassEngine)
     {
         Player = player;
-        BassEngine = bassEngine;
 
-        _songTime.BindTo(BassEngine.ChannelPositionB);
+        _songTime.BindTo(bassEngine.ChannelPositionB);
         _songTime.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongTime)));
 
-        _songLength.BindTo(BassEngine.ChannelLengthB);
+        _songLength.BindTo(bassEngine.ChannelLengthB);
         _songLength.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongLength)));
 
         _currentSong.BindTo(Player.CurrentSongBinding);
@@ -50,7 +47,7 @@ public class PlayerControlViewModel : BaseViewModel
             this.RaisePropertyChanged(nameof(SongText));
         });
 
-        _volume.BindTo(BassEngine.VolumeB);
+        _volume.BindTo(bassEngine.VolumeB);
         _volume.BindValueChanged(d => this.RaisePropertyChanged(nameof(Volume)));
 
         _isPlaying.BindTo(Player.IsPlaying);

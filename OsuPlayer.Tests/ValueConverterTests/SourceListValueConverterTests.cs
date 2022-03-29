@@ -10,8 +10,8 @@ namespace OsuPlayer.Tests.ValueConverterTests;
 
 public class SourceListValueConverterTests
 {
-    private Type _expectedInput = typeof(SourceList<Playlist>);
-    private Type _expectedOutput = typeof(List<Playlist>);
+    private readonly Type _expectedInput = typeof(SourceList<Playlist>);
+    private readonly Type _expectedOutput = typeof(List<Playlist>);
     private SourceListValueConverter _playPauseConverter;
 
     [SetUp]

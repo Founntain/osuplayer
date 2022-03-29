@@ -8,8 +8,8 @@ namespace OsuPlayer.Tests.ValueConverterTests;
 
 public class RepeatConverterTests
 {
-    private Type _expectedInput = typeof(bool);
-    private Type _expectedOutput = typeof(MaterialIconKind);
+    private readonly Type _expectedInput = typeof(bool);
+    private readonly Type _expectedOutput = typeof(MaterialIconKind);
     private RepeatConverter _repeatConverter;
 
     [SetUp]

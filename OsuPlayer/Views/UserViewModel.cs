@@ -23,6 +23,7 @@ namespace OsuPlayer.Views;
 
 public class UserViewModel : BaseViewModel
 {
+    public readonly Player Player;
     private ObservableCollection<IControl> _badges;
     private CancellationTokenSource? _bannerCancellationTokenSource;
     private Bitmap? _currentProfileBanner;
@@ -33,8 +34,6 @@ public class UserViewModel : BaseViewModel
     private ObservableCollection<BeatmapUserValidityModel> _topSongsOfCurrentUser;
 
     private ObservableCollection<User> _users;
-
-    public Player Player;
 
     public UserViewModel(Player player)
     {

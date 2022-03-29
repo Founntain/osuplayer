@@ -68,7 +68,7 @@ public static partial class ApiAsync
     /// <param name="data">Date to send</param>
     /// <typeparam name="T"></typeparam>
     /// <returns>Returns an object of type T</returns>
-    public static async Task<T?> ApiRequestAsync<T>(string controller, string action, object data = null)
+    public static async Task<T?> ApiRequestAsync<T>(string controller, string action, object? data = null)
     {
         if (Constants.OfflineMode)
             return default;

@@ -23,6 +23,6 @@ public partial class SearchView : ReactivePlayerControl<SearchViewModel>
     {
         var list = sender as ListBox;
         var song = list!.SelectedItem as MinimalMapEntry;
-        await ViewModel.Player.Play(song);
+        await ViewModel.Player.PlayAsync(song);
     }
 }

@@ -11,7 +11,7 @@ public partial class DbReader : BinaryReader
 {
     public static int OsuDbVersion;
 
-    private byte[] _buf = new byte[512];
+    private readonly byte[] _buf = new byte[512];
 
     private DbReader(Stream input) : base(input)
     {
@@ -30,10 +30,9 @@ public partial class DbReader : BinaryReader
         if (!File.Exists(dbLoc)) return null;
 
         await using var config = new Config();
-        var unicode = (await config.ReadAsync()).UseSongNameUnicode;
-
         await using var file = File.OpenRead(dbLoc);
         using var reader = new DbReader(file);
+
         var ver = reader.ReadInt32();
         OsuDbVersion = ver;
         var flag = ver is >= 20160408 and < 20191107;
@@ -92,17 +91,17 @@ public partial class DbReader : BinaryReader
     {
         var initOffset = r.BaseStream.Position;
 
-        r.GetStringLen();
-        if (OsuDbVersion >= 20121008) r.GetStringLen();
+        r.ReadString(true);
+        if (OsuDbVersion >= 20121008) r.ReadString(true);
 
-        r.GetStringLen();
-        if (OsuDbVersion >= 20121008) r.GetStringLen();
+        r.ReadString(true);
+        if (OsuDbVersion >= 20121008) r.ReadString(true);
 
-        r.GetStringLen();
-        r.GetStringLen();
-        r.GetStringLen();
-        r.GetStringLen();
-        r.GetStringLen();
+        r.ReadString(true);
+        r.ReadString(true);
+        r.ReadString(true);
+        r.ReadString(true);
+        r.ReadString(true);
         r.BaseStream.Seek(15, SeekOrigin.Current);
         if (OsuDbVersion >= 20140609)
             r.BaseStream.Seek(16, SeekOrigin.Current);
@@ -124,12 +123,12 @@ public partial class DbReader : BinaryReader
         r.BaseStream.Seek(4, SeekOrigin.Current);
         setId = r.ReadInt32();
         r.BaseStream.Seek(15, SeekOrigin.Current);
-        r.GetStringLen();
-        r.GetStringLen();
+        r.ReadString(true);
+        r.ReadString(true);
         r.BaseStream.Seek(2, SeekOrigin.Current);
-        r.GetStringLen();
+        r.ReadString(true);
         r.BaseStream.Seek(10, SeekOrigin.Current);
-        r.GetStringLen();
+        r.ReadString(true);
         if (OsuDbVersion < 20140609)
             r.BaseStream.Seek(20, SeekOrigin.Current);
         else
@@ -186,26 +185,6 @@ public partial class DbReader : BinaryReader
 
                 BaseStream.Seek(strLen, SeekOrigin.Current);
                 return string.Empty;
-            default:
-                throw new Exception();
-        }
-    }
-
-    /// <summary>
-    /// Reads the length of a ULEB128 length encoded string
-    /// </summary>
-    /// <returns>an <see cref="int" /> representing the length of the string</returns>
-    /// <exception cref="Exception">throws if the string mark byte is neither 0 nor 11</exception>
-    private int GetStringLen()
-    {
-        switch (ReadByte())
-        {
-            case 0:
-                return 0;
-            case 11:
-                var strLen = Read7BitEncodedInt();
-                BaseStream.Seek(strLen, SeekOrigin.Current);
-                return strLen;
             default:
                 throw new Exception();
         }

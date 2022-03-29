@@ -130,11 +130,11 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
     {
         if (ViewModel == default) return;
 
-        if (string.IsNullOrWhiteSpace(ViewModel.NewPlaylistnameText)) return;
+        if (string.IsNullOrWhiteSpace(ViewModel.NewPlaylistNameText)) return;
 
         var playlist = new Playlist
         {
-            Name = ViewModel.NewPlaylistnameText
+            Name = ViewModel.NewPlaylistNameText
         };
 
         var playlists = await PlaylistManager.AddPlaylistAsync(playlist);

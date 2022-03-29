@@ -35,7 +35,7 @@ public class SkiaImage : Control
     {
     }
 
-    public SKBitmap Source
+    public SKBitmap? Source
     {
         get => GetValue(SourceProperty);
         set => SetValue(SourceProperty, value);
@@ -73,11 +73,6 @@ public class SkiaImage : Control
     {
         get => GetValue(BitMapInterpolationModeProperty);
         set => SetValue(BitMapInterpolationModeProperty, value);
-    }
-
-    public override void EndInit()
-    {
-        base.EndInit();
     }
 
     protected override void OnPropertyChanged<T>(AvaloniaPropertyChangedEventArgs<T> change)

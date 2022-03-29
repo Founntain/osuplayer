@@ -24,12 +24,11 @@ namespace OsuPlayer.Views;
 
 public class HomeViewModel : BaseViewModel
 {
+    private readonly Bindable<bool> _songsLoading = new();
+
+    public readonly Player Player;
     private List<ObservableValue> _graphValues;
     private Bitmap? _profilePicture;
-
-    private Bindable<bool> _songsLoading = new();
-
-    public Player Player;
 
     public HomeViewModel(Player player)
     {

@@ -54,6 +54,6 @@ public partial class UserView : ReactivePlayerControl<UserViewModel>
             x.BeatmapChecksum == beatmapModel.Beatmap.BeatmapChecksum ||
             x.Artist == beatmapModel.Beatmap.Artist && x.Title == beatmapModel.Beatmap.Title);
         if (mapEntry != default)
-            await ViewModel.Player.Play(mapEntry);
+            await ViewModel.Player.PlayAsync(mapEntry);
     }
 }

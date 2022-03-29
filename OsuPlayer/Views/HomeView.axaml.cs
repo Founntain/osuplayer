@@ -46,7 +46,7 @@ public partial class HomeView : ReactivePlayerControl<HomeViewModel>
     {
         var list = sender as ListBox;
         var song = list!.SelectedItem as MinimalMapEntry;
-        await ViewModel.Player.Play(song);
+        await ViewModel.Player.PlayAsync(song);
     }
 
     private async void LoginBtn_OnClick(object? sender, RoutedEventArgs e)

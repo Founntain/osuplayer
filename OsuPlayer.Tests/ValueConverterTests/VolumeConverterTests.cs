@@ -8,8 +8,8 @@ namespace OsuPlayer.Tests.ValueConverterTests;
 
 public class VolumeConverterTests
 {
-    private Type _expectedInput = typeof(double);
-    private Type _expectedOutput = typeof(MaterialIconKind);
+    private readonly Type _expectedInput = typeof(double);
+    private readonly Type _expectedOutput = typeof(MaterialIconKind);
     private VolumeConverter _playPauseConverter;
 
     [SetUp]

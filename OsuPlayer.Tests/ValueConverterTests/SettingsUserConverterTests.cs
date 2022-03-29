@@ -8,8 +8,8 @@ namespace OsuPlayer.Tests.ValueConverterTests;
 
 public class SettingsUserConverterTests
 {
-    private Type _expectedInput = typeof(User);
-    private Type _expectedOutput = typeof(string);
+    private readonly Type _expectedInput = typeof(User);
+    private readonly Type _expectedOutput = typeof(string);
     private SettingsUserConverter _userConverter;
 
     [SetUp]

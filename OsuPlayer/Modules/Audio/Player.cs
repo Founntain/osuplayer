@@ -29,35 +29,35 @@ namespace OsuPlayer.Modules.Audio;
 /// </summary>
 public class Player
 {
+    private readonly BassEngine _bassEngine;
     private readonly Stopwatch _currentSongTimer;
     private readonly int?[] _shuffleHistory = new int?[10];
+
+    public readonly Bindable<MapEntry?> CurrentSongBinding = new();
+
+    public readonly Bindable<Bitmap?> CurrentSongImage = new();
+
+    public readonly Bindable<IObservable<Func<MinimalMapEntry, bool>>?> Filter = new();
+
+    public readonly Bindable<List<ObservableValue>?> GraphValues = new();
+
+    public readonly Bindable<bool> IsPlaying = new();
+
+    public readonly Bindable<bool> IsRepeating = new();
+
+    public readonly Bindable<bool> Shuffle = new();
+
+    public readonly Bindable<bool> SongsLoading = new();
     public readonly Bindable<SourceList<MinimalMapEntry>> SongSource = new();
-    private BassEngine _bassEngine;
     private bool _isMuted;
     private double _oldVolume;
 
     private PlayState _playState;
 
     private bool _repeat;
-
-    public Bindable<MapEntry?> CurrentSongBinding = new();
-
-    public Bindable<Bitmap?> CurrentSongImage = new();
-
-    public Bindable<IObservable<Func<MinimalMapEntry, bool>>?> Filter = new();
     // private int _shuffleHistoryIndex;
 
     public ReadOnlyObservableCollection<MinimalMapEntry>? FilteredSongEntries;
-
-    public Bindable<List<ObservableValue>?> GraphValues = new();
-
-    public Bindable<bool> IsPlaying = new();
-
-    public Bindable<bool> IsRepeating = new();
-
-    public Bindable<bool> Shuffle = new();
-
-    public Bindable<bool> SongsLoading = new();
 
     public Player(BassEngine bassEngine)
     {
@@ -74,7 +74,7 @@ public class Player
         _currentSongTimer = new Stopwatch();
     }
 
-    private MapEntry? _currentSong
+    private MapEntry? CurrentSong
     {
         get => CurrentSongBinding.Value;
         set
@@ -140,16 +140,16 @@ public class Player
         switch (configContainer.StartupSong)
         {
             case StartupSong.FirstSong:
-                await Play(SongSourceList[0]);
+                await PlayAsync(SongSourceList[0]);
                 break;
             case StartupSong.LastPlayed:
                 if (configContainer.LastPlayedSong < SongSourceList.Count && configContainer.LastPlayedSong >= 0)
-                    await Play(SongSourceList[configContainer.LastPlayedSong]);
+                    await PlayAsync(SongSourceList[configContainer.LastPlayedSong]);
                 else
-                    await Play(SongSourceList[0]);
+                    await PlayAsync(SongSourceList[0]);
                 break;
             case StartupSong.RandomSong:
-                await Play(SongSourceList[new Random().Next(SongSourceList.Count)]);
+                await PlayAsync(SongSourceList[new Random().Next(SongSourceList.Count)]);
                 break;
         }
 
@@ -161,26 +161,29 @@ public class Player
         _bassEngine.SetSpeed(speed);
     }
 
-    public async Task Play(MinimalMapEntry? song, PlayDirection playDirection = PlayDirection.Forward)
+    public async Task PlayAsync(MinimalMapEntry? song, PlayDirection playDirection = PlayDirection.Forward)
     {
         if (SongSourceList == default || !SongSourceList.Any())
             return;
 
         if (song == default)
         {
-            await TryEnqueueSong(SongSourceList[^1]);
+            if ((await TryEnqueueSongAsync(SongSourceList[^1])).IsFaulted)
+                await TryEnqueueSongAsync(SongSourceList![0]);
             return;
         }
 
         if (CurrentSongBinding.Value != null && !Repeat
                                              && (await new Config().ReadAsync()).IgnoreSongsWithSameNameCheckBox
                                              && CurrentSongBinding.Value.BeatmapChecksum == song.BeatmapChecksum)
-            await EnqueueSongFromDirection(playDirection);
+            if ((await EnqueueSongFromDirectionAsync(playDirection)).IsFaulted)
+                await TryEnqueueSongAsync(SongSourceList![^1]);
 
-        await TryEnqueueSong(song);
+        if ((await TryEnqueueSongAsync(song)).IsFaulted)
+            await TryEnqueueSongAsync(SongSourceList![^1]);
     }
 
-    private async Task EnqueueSongFromDirection(PlayDirection direction)
+    private async Task<Task> EnqueueSongFromDirectionAsync(PlayDirection direction)
     {
         switch (direction)
         {
@@ -190,9 +193,7 @@ public class Player
                 {
                     if (SongSourceList[i].BeatmapChecksum == CurrentSongBinding.Value!.BeatmapChecksum) continue;
 
-                    await TryEnqueueSong(SongSourceList[i]);
-
-                    return;
+                    return await TryEnqueueSongAsync(SongSourceList[i]);
                 }
 
                 break;
@@ -203,17 +204,17 @@ public class Player
                 {
                     if (SongSourceList[i].BeatmapChecksum == CurrentSongBinding.Value!.BeatmapChecksum) continue;
 
-                    await TryEnqueueSong(SongSourceList[i]);
-
-                    return;
+                    return await TryEnqueueSongAsync(SongSourceList[i]);
                 }
 
                 break;
             }
         }
+
+        return Task.FromException(new InvalidOperationException($"Direction {direction} is not valid"));
     }
 
-    private async Task<Task> TryEnqueueSong(MinimalMapEntry song)
+    private async Task<Task> TryEnqueueSongAsync(MinimalMapEntry song)
     {
         if (SongSourceList == null || !SongSourceList.Any())
             return Task.FromException(new NullReferenceException($"{nameof(SongSourceList)} can't be null or empty"));
@@ -259,7 +260,7 @@ public class Player
             return Task.FromException(ex);
         }
 
-        _currentSong = fullMapEntry;
+        CurrentSong = fullMapEntry;
 
         //Same as update XP mentioned Above
         try
@@ -280,7 +281,7 @@ public class Player
     {
         if (ProfileManager.User == default) return;
 
-        var currentTotalXp = ProfileManager.User?.TotalXp ?? 0;
+        var currentTotalXp = ProfileManager.User.TotalXp;
 
         _currentSongTimer.Stop();
 
@@ -369,7 +370,7 @@ public class Player
 
         if (Repeat)
         {
-            await Play(SongSourceList[CurrentIndex]);
+            await PlayAsync(SongSourceList[CurrentIndex]);
             return;
         }
 
@@ -382,7 +383,7 @@ public class Player
                 // await Play(song, PlayDirection.Forward);
             }
 
-            await Play(await DoShuffle(ShuffleDirection.Forward));
+            await PlayAsync(await DoShuffle(ShuffleDirection.Forward));
 
             return;
         }
@@ -418,7 +419,7 @@ public class Player
             //         OsuPlayer.PlaylistManager.CurrentPlaylist.GetPlayistIndexOfSong(CurrentSong) + 1]);
         }
 
-        await Play(CurrentIndex == SongSourceList.Count - 1
+        await PlayAsync(CurrentIndex == SongSourceList.Count - 1
             ? SongSourceList[0]
             : SongSourceList[CurrentIndex + 1]);
     }
@@ -430,7 +431,7 @@ public class Player
 
         if (_bassEngine.ChannelPositionB.Value > 3)
         {
-            await TryEnqueueSong(SongSourceList[CurrentIndex]);
+            await TryEnqueueSongAsync(SongSourceList[CurrentIndex]);
             return;
         }
 
@@ -443,7 +444,7 @@ public class Player
             //     await Play(song);
             // }
 
-            await Play(await DoShuffle(ShuffleDirection.Backwards), PlayDirection.Backwards);
+            await PlayAsync(await DoShuffle(ShuffleDirection.Backwards), PlayDirection.Backwards);
 
             return;
         }
@@ -468,7 +469,7 @@ public class Player
         }
 
         if (SongSourceList == null) return;
-        await Play(CurrentIndex == 0 ? SongSourceList.Last() : SongSourceList[CurrentIndex - 1],
+        await PlayAsync(CurrentIndex == 0 ? SongSourceList.Last() : SongSourceList[CurrentIndex - 1],
             PlayDirection.Backwards);
     }
 

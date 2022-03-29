@@ -8,8 +8,8 @@ namespace OsuPlayer.Tests.ValueConverterTests;
 
 public class ShuffleConverterTests
 {
-    private Type _expectedInput = typeof(bool);
-    private Type _expectedOutput = typeof(MaterialIconKind);
+    private readonly Type _expectedInput = typeof(bool);
+    private readonly Type _expectedOutput = typeof(MaterialIconKind);
     private ShuffleConverter _repeatConverter;
 
     [SetUp]

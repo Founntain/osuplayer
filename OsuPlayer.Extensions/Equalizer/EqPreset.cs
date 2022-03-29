@@ -9,9 +9,13 @@ public class EqPreset
     public readonly string Name;
     public double[] Gain;
 
+    /// <summary>
+    /// Generates a new <see cref="EqPreset" />
+    /// </summary>
+    /// <param name="id">Id of the preset</param>
     /// <param name="name">Name of the preset</param>
     /// <param name="value">Gain values of the eq-bands in dB (10 double values, Range -15 to +15)</param>
-    public EqPreset(int id, string name, double[] value)
+    private EqPreset(int id, string name, double[] value)
     {
         Id = id;
         Name = name;

@@ -12,9 +12,8 @@ namespace OsuPlayer.Views;
 
 public class SearchViewModel : BaseViewModel
 {
+    public readonly Player Player;
     private string _filterText;
-
-    public Player Player;
 
     public SearchViewModel(Player player)
     {

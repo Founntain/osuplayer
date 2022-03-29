@@ -7,9 +7,9 @@ namespace OsuPlayer.Tests.ValueConverterTests;
 
 public class GridFormatterTests
 {
-    private Type _expectedInput = typeof(double);
-    private Type _expectedOutput = typeof(double);
-    private Type _expectedParameter = typeof(string);
+    private readonly Type _expectedInput = typeof(double);
+    private readonly Type _expectedOutput = typeof(double);
+    private readonly Type _expectedParameter = typeof(string);
     private GridFormatter _gridFormatter;
 
     [SetUp]

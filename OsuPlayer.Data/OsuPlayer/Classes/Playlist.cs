@@ -4,12 +4,12 @@ namespace OsuPlayer.Data.OsuPlayer.Classes;
 
 public class Playlist
 {
-    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid Id { get; } = Guid.NewGuid();
     public string Name { get; set; }
-    public DateTime CreationTime { get; } = DateTime.UtcNow;
+    private DateTime CreationTime { get; } = DateTime.UtcNow;
     public BindingList<string> Songs { get; set; } = new();
 
-    protected bool Equals(Playlist other)
+    private bool Equals(Playlist other)
     {
         return Id.Equals(other.Id) && Name == other.Name && CreationTime.Equals(other.CreationTime) &&
                Songs.Equals(other.Songs);
