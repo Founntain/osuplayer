@@ -37,7 +37,7 @@ public partial class PlayerControlView : ReactivePlayerControl<PlayerControlView
 
     private void SongProgressSlider_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        ViewModel.BassEngine.SetChannelPosition(ViewModel!.SongTime);
+        //ViewModel.BassEngine.SetChannelPosition(ViewModel!.SongTime);
         ViewModel.Player.Play();
     }
 

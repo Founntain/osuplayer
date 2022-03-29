@@ -2,6 +2,7 @@ using System;
 using System.Reactive.Disposables;
 using Avalonia.Media.Imaging;
 using OsuPlayer.Extensions;
+using OsuPlayer.Extensions.Bindings;
 using OsuPlayer.IO.DbReader.DataModels;
 using OsuPlayer.Modules.Audio;
 using OsuPlayer.ViewModels;
@@ -24,8 +25,9 @@ public class PlayerControlViewModel : BaseViewModel
 
     private double _playbackSpeed;
 
-    private double _songLength;
-    private double _songTime;
+    private Bindable<double> _songTime = new();
+    private Bindable<double> _songLength = new();
+    
     public BassEngine BassEngine;
 
     public Player Player;
@@ -34,8 +36,11 @@ public class PlayerControlViewModel : BaseViewModel
     {
         Player = player;
         BassEngine = bassEngine;
-        BassEngine.ChannelPosition.BindValueChanged(d => SongTime = d.NewValue);
-        BassEngine.ChannelLength.BindValueChanged(d => SongLength = d.NewValue);
+        
+        _songTime.BindTo(BassEngine.ChannelPosition);
+        _songTime.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongTime)));
+        _songLength.BindTo(BassEngine.ChannelLength);
+        _songLength.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongLength)));
 
         Activator = new ViewModelActivator();
         this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
@@ -66,33 +71,32 @@ public class PlayerControlViewModel : BaseViewModel
 
     public double SongTime
     {
-        get => _songTime;
-        set
+        get
         {
-            CurrentSongTime = TimeSpan.FromSeconds(value * (1 - PlaybackSpeed)).FormatTime();
-            this.RaiseAndSetIfChanged(ref _songTime, value);
+            this.RaisePropertyChanged(nameof(CurrentSongTime));
+            return _songTime.Value;
         }
+        set => _songTime.Value = value;
     }
 
     public string CurrentSongTime
     {
-        get => _currentSongTime;
+        get => TimeSpan.FromSeconds(_songTime.Value * (1 - PlaybackSpeed)).FormatTime();
         set => this.RaiseAndSetIfChanged(ref _currentSongTime, value);
     }
 
     public double SongLength
     {
-        get => _songLength;
-        set
+        get
         {
-            CurrentSongLength = TimeSpan.FromSeconds(value * (1 - PlaybackSpeed)).FormatTime();
-            this.RaiseAndSetIfChanged(ref _songLength, value);
+            this.RaisePropertyChanged(nameof(CurrentSongLength));
+            return _songLength.Value;
         }
     }
 
     public string CurrentSongLength
     {
-        get => _currentSongLength;
+        get => TimeSpan.FromSeconds(_songLength.Value * (1 - PlaybackSpeed)).FormatTime();
         set => this.RaiseAndSetIfChanged(ref _currentSongLength, value);
     }
 

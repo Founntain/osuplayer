@@ -476,6 +476,10 @@ public sealed class BassEngine : INotifyPropertyChanged
         _positionTimer.Interval = TimeSpan.FromMilliseconds(1000 / 60);
         _positionTimer.Tick += PositionTimer_Tick;
         _positionTimer.Start();
+        
+        ChannelPosition.BindValueChanged(d => SetChannelPosition(d.NewValue));
+        ChannelLength.BindValueChanged(d => SetChannelLength(d.NewValue));
+        
         AvailableAudioDevices = new Collection<AudioDevice>();
 
         var deviceInfos = GetDeviceInfos();

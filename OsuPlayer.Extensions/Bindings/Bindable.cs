@@ -27,15 +27,27 @@ public class Bindable<T> : IBindable<T> where T : IComparable<T>, IConvertible, 
 
     protected List<Bindable<T>>? Bindings { get; private set; }
 
-    internal void SetValue(T previous, T value, bool bypassChecks = false, Bindable<T> source = null)
+    internal void SetValue(T previous, T value, bool bypassChecks = false, Bindable<T>? source = null)
     {
         _value = value;
-        TriggerValueChanged(previous, source ?? this, bypassChecks);
+        TriggerValueChanged(previous, source ?? this, true, bypassChecks);
     }
 
-    protected void TriggerValueChanged(T previousValue, Bindable<T> source, bool bypassChecks = false)
+    protected void TriggerValueChanged(T previousValue, Bindable<T> source, bool propagateToBindings = true, bool bypassChecks = false)
     {
-        if (EqualityComparer<T>.Default.Equals(_value, _value))
+        T beforePropagation = _value;
+
+        if (propagateToBindings && Bindings != null)
+        {
+            foreach (var binding in Bindings)
+            {
+                if (binding == source) continue;
+                
+                binding.SetValue(previousValue, _value, bypassChecks, this);
+            }
+        }
+
+        if (EqualityComparer<T>.Default.Equals(beforePropagation, _value) && source != this)
             ValueChanged?.Invoke(new ValueChangedEvent<T>(previousValue, _value));
     }
 
