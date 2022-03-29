@@ -319,14 +319,8 @@ public class Player
         UserChanged.Invoke(this, new PropertyChangedEventArgs("SongsPlayed"));
     }
 
-    public void Mute(bool force = false)
+    public void ToggleMute()
     {
-        if (force)
-        {
-            _isMuted = false;
-            return;
-        }
-
         if (!_isMuted)
         {
             _oldVolume = _bassEngine.Volume;
@@ -336,6 +330,7 @@ public class Player
         else
         {
             _bassEngine.Volume = _oldVolume;
+            _isMuted = false;
         }
     }
 

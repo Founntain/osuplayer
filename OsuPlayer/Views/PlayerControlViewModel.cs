@@ -71,7 +71,11 @@ public class PlayerControlViewModel : BaseViewModel
     public double Volume
     {
         get => _volume.Value;
-        set => _volume.Value = value;
+        set
+        {
+            _volume.Value = value;
+            this.RaisePropertyChanged();
+        }
     }
 
     public bool IsShuffle

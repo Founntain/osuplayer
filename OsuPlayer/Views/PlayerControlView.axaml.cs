@@ -47,7 +47,7 @@ public partial class PlayerControlView : ReactivePlayerControl<PlayerControlView
 
     private void Volume_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        ViewModel.Player.Mute();
+        ViewModel.Player.ToggleMute();
     }
 
     private void PlaybackSpeedBtn_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
@@ -94,7 +94,7 @@ public partial class PlayerControlView : ReactivePlayerControl<PlayerControlView
 
     private void Volume_OnClick(object? sender, RoutedEventArgs e)
     {
-        ViewModel.Player.Mute();
+        ViewModel.Player.ToggleMute();
     }
 
     private void PlaybackSpeed_OnClick(object? sender, RoutedEventArgs e)
