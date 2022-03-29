@@ -1,4 +1,4 @@
-﻿namespace OsuPlayer.Extensions.Bindings;
+﻿namespace OsuPlayer.Extensions.Bindables;
 
 public interface IUnbindable
 {

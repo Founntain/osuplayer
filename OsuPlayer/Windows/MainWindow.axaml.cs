@@ -16,7 +16,6 @@ public partial class MainWindow : ReactivePlayerWindow<MainWindowViewModel>
     public MainWindow(MainWindowViewModel viewModel, Player player)
     {
         ViewModel = viewModel;
-        player.MainWindow = this;
         Import(player);
         InitializeComponent();
     }
@@ -42,6 +41,6 @@ public partial class MainWindow : ReactivePlayerWindow<MainWindowViewModel>
         base.OnClosing(e);
         using var config = new Config();
         var configContainer = config.Read();
-        configContainer.Volume = ViewModel.Player.Volume;
+        configContainer.Volume = ViewModel.BassEngine.Volume;
     }
 }

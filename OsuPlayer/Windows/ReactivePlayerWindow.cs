@@ -5,7 +5,7 @@ using ReactiveUI;
 
 namespace OsuPlayer.Windows;
 
-public class ReactivePlayerWindow<TViewModel> : Window, IViewFor<TViewModel> where TViewModel : class
+public class ReactivePlayerWindow<TViewModel> : Window, IViewFor<TViewModel> where TViewModel : ReactiveObject
 {
     public static readonly StyledProperty<TViewModel?> ViewModelProperty = AvaloniaProperty
         .Register<ReactivePlayerWindow<TViewModel>, TViewModel?>(nameof(ViewModel));

@@ -1,18 +1,19 @@
 ﻿using System;
 using Avalonia;
 using Avalonia.Controls;
+using OsuPlayer.ViewModels;
 using ReactiveUI;
 
 namespace OsuPlayer.Views;
 
-public class ReactivePlayerControl<TViewModel> : UserControl, IViewFor<TViewModel> where TViewModel : class
+public class ReactivePlayerControl<TViewModel> : UserControl, IViewFor<TViewModel> where TViewModel : BaseViewModel
 {
-    public static readonly StyledProperty<TViewModel?> ViewModelProperty = AvaloniaProperty
-        .Register<ReactivePlayerControl<TViewModel>, TViewModel?>(nameof(ViewModel));
+    public static readonly StyledProperty<TViewModel> ViewModelProperty = AvaloniaProperty
+        .Register<ReactivePlayerControl<TViewModel>, TViewModel>(nameof(ViewModel));
 
     public ReactivePlayerControl()
     {
-        this.WhenActivated(disposables => { });
+        this.WhenActivated(disposables => { ViewModel!.Activator.Activate(); });
         var x = this.GetObservable(ViewModelProperty);
         x.Subscribe(OnViewModelChanged);
     }

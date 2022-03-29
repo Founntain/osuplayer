@@ -83,7 +83,7 @@ public class PlaylistEditorViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _playlists, value);
     }
 
-    public List<MinimalMapEntry> SongList => _player.SongSource!;
+    public List<MinimalMapEntry> SongList => _player.SongSourceList!;
 
     public List<MinimalMapEntry> SelectedSongListItems
     {

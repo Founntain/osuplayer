@@ -2,7 +2,7 @@ using System;
 using System.Reactive.Disposables;
 using Avalonia.Media.Imaging;
 using OsuPlayer.Extensions;
-using OsuPlayer.Extensions.Bindings;
+using OsuPlayer.Extensions.Bindables;
 using OsuPlayer.IO.DbReader.DataModels;
 using OsuPlayer.Modules.Audio;
 using OsuPlayer.ViewModels;
@@ -12,22 +12,21 @@ namespace OsuPlayer.Views;
 
 public class PlayerControlViewModel : BaseViewModel
 {
-    private MapEntry? _currentSong;
+    private Bindable<MapEntry?> _currentSong = new();
     private Bitmap? _currentSongImage;
     private string _currentSongLength = "00:00";
 
     private string _currentSongTime = "00:00";
 
-    private bool _isPlaying;
-    private bool _isRepeating;
-
-    private bool _isShuffle;
+    private Bindable<bool> _isPlaying = new();
+    private Bindable<bool> _isRepeating = new();
+    private Bindable<bool> _isShuffle = new();
 
     private double _playbackSpeed;
-
-    private Bindable<double> _songTime = new();
     private Bindable<double> _songLength = new();
-    
+    private Bindable<double> _songTime = new();
+    private Bindable<double> _volume = new();
+
     public BassEngine BassEngine;
 
     public Player Player;
@@ -36,11 +35,34 @@ public class PlayerControlViewModel : BaseViewModel
     {
         Player = player;
         BassEngine = bassEngine;
-        
-        _songTime.BindTo(BassEngine.ChannelPosition);
+
+        _songTime.BindTo(BassEngine.ChannelPositionB);
         _songTime.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongTime)));
-        _songLength.BindTo(BassEngine.ChannelLength);
+
+        _songLength.BindTo(BassEngine.ChannelLengthB);
         _songLength.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongLength)));
+
+        _currentSong.BindTo(Player.CurrentSongBinding);
+        _currentSong.BindValueChanged(d =>
+        {
+            this.RaisePropertyChanged(nameof(TitleText));
+            this.RaisePropertyChanged(nameof(ArtistText));
+            this.RaisePropertyChanged(nameof(SongText));
+        });
+
+        _volume.BindTo(BassEngine.VolumeB);
+        _volume.BindValueChanged(d => this.RaisePropertyChanged(nameof(Volume)));
+
+        _isPlaying.BindTo(Player.IsPlaying);
+        _isPlaying.BindValueChanged(d => this.RaisePropertyChanged(nameof(IsPlaying)));
+
+        _isRepeating.BindTo(Player.IsRepeating);
+        _isRepeating.BindValueChanged(d => this.RaisePropertyChanged(nameof(IsRepeating)));
+
+        _isShuffle.BindTo(Player.Shuffle);
+        _isShuffle.BindValueChanged(d => this.RaisePropertyChanged(nameof(IsShuffle)));
+
+        Player.CurrentSongImage.BindValueChanged(d => CurrentSongImage = d.NewValue, true);
 
         Activator = new ViewModelActivator();
         this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
@@ -48,14 +70,18 @@ public class PlayerControlViewModel : BaseViewModel
 
     public double Volume
     {
-        get => Player.Volume;
-        set => Player.Volume = value;
+        get => _volume.Value;
+        set => _volume.Value = value;
     }
 
     public bool IsShuffle
     {
-        get => _isShuffle;
-        set => this.RaiseAndSetIfChanged(ref _isShuffle, value);
+        get => _isShuffle.Value;
+        set
+        {
+            _isShuffle.Value = value;
+            this.RaisePropertyChanged();
+        }
     }
 
     public double PlaybackSpeed
@@ -100,33 +126,13 @@ public class PlayerControlViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _currentSongLength, value);
     }
 
-    public bool IsPlaying
-    {
-        get => _isPlaying;
-        set => this.RaiseAndSetIfChanged(ref _isPlaying, value);
-    }
+    public bool IsPlaying => _isPlaying.Value;
 
-    public bool IsRepeating
-    {
-        get => _isRepeating;
-        set => this.RaiseAndSetIfChanged(ref _isRepeating, value);
-    }
+    public bool IsRepeating => _isRepeating.Value;
 
-    public MapEntry? CurrentSong
-    {
-        get => _currentSong;
-        set
-        {
-            _currentSong = value;
-            this.RaisePropertyChanged(nameof(TitleText));
-            this.RaisePropertyChanged(nameof(ArtistText));
-            this.RaisePropertyChanged(nameof(SongText));
-        }
-    }
+    public string TitleText => _currentSong.Value?.Title ?? "No song is playing";
 
-    public string TitleText => _currentSong?.Title ?? "No song is playing";
-
-    public string ArtistText => _currentSong?.Artist ?? "please select from song list";
+    public string ArtistText => _currentSong.Value?.Artist ?? "please select from song list";
 
     public string SongText => $"{ArtistText} - {TitleText}";
 

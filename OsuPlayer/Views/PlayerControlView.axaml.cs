@@ -37,7 +37,6 @@ public partial class PlayerControlView : ReactivePlayerControl<PlayerControlView
 
     private void SongProgressSlider_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        //ViewModel.BassEngine.SetChannelPosition(ViewModel!.SongTime);
         ViewModel.Player.Play();
     }
 
@@ -88,7 +87,7 @@ public partial class PlayerControlView : ReactivePlayerControl<PlayerControlView
                 ViewModel.Player.NextSong();
                 break;
             case "Shuffle":
-                ViewModel.Player.Shuffle = !ViewModel.Player.Shuffle;
+                ViewModel.IsShuffle = !ViewModel.IsShuffle;
                 break;
         }
     }

@@ -7,19 +7,19 @@ namespace OsuPlayer.Windows;
 
 public class MainWindowViewModel : BaseWindowViewModel
 {
-    private readonly BassEngine _bassEngine;
+    public readonly BassEngine BassEngine;
     public readonly Player Player;
 
     private BaseViewModel _mainView;
 
     public MainWindowViewModel(BassEngine engine, Player player)
     {
-        _bassEngine = engine;
+        BassEngine = engine;
         Player = player;
 
         //Generate new ViewModels here
         TopBar = new TopBarViewModel();
-        PlayerControl = new PlayerControlViewModel(Player, _bassEngine);
+        PlayerControl = new PlayerControlViewModel(Player, BassEngine);
 
         SearchView = new SearchViewModel(Player);
         PlaylistView = new PlaylistViewModel();
