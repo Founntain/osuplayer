@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Threading.Tasks;
 using Avalonia.Markup.Xaml;
 using OsuPlayer.IO.Storage.Config;
 using OsuPlayer.Modules.Audio;
@@ -16,13 +17,8 @@ public partial class MainWindow : ReactivePlayerWindow<MainWindowViewModel>
     public MainWindow(MainWindowViewModel viewModel, Player player)
     {
         ViewModel = viewModel;
-        Import(player);
+        Task.Run(player.ImportSongs);
         InitializeComponent();
-    }
-
-    private async void Import(Player player)
-    {
-        await player.ImportSongs();
     }
 
     private void InitializeComponent()
