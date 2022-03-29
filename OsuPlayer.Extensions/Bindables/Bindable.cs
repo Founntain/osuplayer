@@ -35,14 +35,6 @@ public class Bindable<T> : IBindable<T>
     }
 
     /// <summary>
-    /// Unbinds from all bindings on finalization
-    /// </summary>
-    ~Bindable()
-    {
-        UnbindAll();
-    }
-
-    /// <summary>
     /// Binds a <see cref="IBindable{T}" /> to this <see cref="Bindable{T}" /> if it's the same type
     /// </summary>
     /// <param name="other">other <see cref="IBindable{T}" /> to bind to</param>
@@ -77,6 +69,28 @@ public class Bindable<T> : IBindable<T>
     public void UnbindAll()
     {
         UnbindAllInternal();
+    }
+
+    /// <summary>
+    /// Unbinds <paramref name="other" /> <see cref="IUnbindable" /> from this and removes references
+    /// </summary>
+    /// <param name="other">the <see cref="IUnbindable" /> to unbind from</param>
+    /// <exception cref="InvalidCastException">throws if types don't match</exception>
+    public virtual void UnbindFrom(IUnbindable other)
+    {
+        if (other is not Bindable<T> otherB)
+            throw new InvalidCastException($"Can't unbind type {other.GetType()} from type {GetType()}");
+
+        RemoveReference(otherB.WeakReference);
+        otherB.RemoveReference(WeakReference);
+    }
+
+    /// <summary>
+    /// Unbinds from all bindings on finalization
+    /// </summary>
+    ~Bindable()
+    {
+        UnbindAll();
     }
 
     /// <summary>
@@ -133,20 +147,6 @@ public class Bindable<T> : IBindable<T>
     }
 
     /// <summary>
-    /// Unbinds <paramref name="other" /> <see cref="IUnbindable" /> from this and removes references
-    /// </summary>
-    /// <param name="other">the <see cref="IUnbindable" /> to unbind from</param>
-    /// <exception cref="InvalidCastException">throws if types don't match</exception>
-    public virtual void UnbindFrom(IUnbindable other)
-    {
-        if (other is not Bindable<T> otherB)
-            throw new InvalidCastException($"Can't unbind type {other.GetType()} from type {GetType()}");
-
-        RemoveReference(otherB.WeakReference);
-        otherB.RemoveReference(WeakReference);
-    }
-
-    /// <summary>
     /// Binds a <see cref="ValueChangedEvent{T}" /> to a <see cref="Bindable{T}" />
     /// </summary>
     /// <param name="onChange"></param>
@@ -174,7 +174,10 @@ public class Bindable<T> : IBindable<T>
     /// Removes a reference from <see cref="Bindings" />
     /// </summary>
     /// <param name="reference">the <see cref="Bindable{T}" /> to remove a reference from</param>
-    private void RemoveReference(WeakReference<Bindable<T>> reference) => Bindings?.Remove(reference);
+    private void RemoveReference(WeakReference<Bindable<T>> reference)
+    {
+        Bindings?.Remove(reference);
+    }
 
     /// <summary>
     /// Calls all unbinds
