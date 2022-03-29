@@ -9,18 +9,16 @@ namespace OsuPlayer.IO.DbReader.DataModels;
 /// a full beatmap entry with optionally used data
 /// <remarks>only created on a <see cref="DbReader.ReadFullMapEntry" /> call</remarks>
 /// </summary>
-public class MapEntry : MinimalMapEntry
+public class DbMapEntry : DbMapEntryBase, IMapEntry
 {
-    public string? ArtistUnicode;
-    public string? AudioFileName;
-    public int BeatmapId;
-    public int BeatmapSetId;
-    public string? FolderName;
-    public string? FolderPath;
-    public string? FullPath;
-    public string? TitleUnicode;
-
-    public bool UseUnicode;
+    public string ArtistUnicode { get; set; }
+    public string TitleUnicode { get; set; }
+    public string AudioFileName { get; set; }
+    public int BeatmapSetId { get; set; }
+    public string FolderName { get; set; }
+    public string FolderPath { get; set; }
+    public string FullPath { get; set; }
+    public bool UseUnicode { get; set; }
 
     public async Task<Bitmap?> FindBackground()
     {
@@ -74,21 +72,21 @@ public class MapEntry : MinimalMapEntry
         return new Bitmap(asset);
     }
 
-    protected override string GetArtist()
+    public override string GetArtist()
     {
         if (UseUnicode)
             return string.IsNullOrEmpty(ArtistUnicode) ? Artist : ArtistUnicode;
         return Artist;
     }
 
-    protected override string GetTitle()
+    public override string GetTitle()
     {
         if (UseUnicode)
             return string.IsNullOrEmpty(TitleUnicode) ? Artist : TitleUnicode;
         return Title;
     }
 
-    protected override string GetSongName()
+    public override string GetSongName()
     {
         if (UseUnicode && !string.IsNullOrEmpty(ArtistUnicode) && !string.IsNullOrEmpty(TitleUnicode))
             return $"{ArtistUnicode} - {TitleUnicode}";
@@ -100,19 +98,19 @@ public class MapEntry : MinimalMapEntry
         return GetSongName();
     }
 
-    public static bool operator ==(MapEntry? left, MapEntry? right)
+    public static bool operator ==(DbMapEntry? left, DbMapEntry? right)
     {
         return left?.SongName == right?.SongName;
     }
 
-    public static bool operator !=(MapEntry? left, MapEntry? right)
+    public static bool operator !=(DbMapEntry? left, DbMapEntry? right)
     {
         return left?.SongName != right?.SongName;
     }
 
     public override bool Equals(object? obj)
     {
-        if (obj is MapEntry other) return BeatmapChecksum == other.BeatmapChecksum;
+        if (obj is DbMapEntry other) return BeatmapChecksum == other.BeatmapChecksum;
 
         return false;
     }

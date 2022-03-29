@@ -1,10 +1,13 @@
-﻿using OsuPlayer.IO.DbReader.DataModels;
+﻿using OsuPlayer.IO.DbReader;
+using OsuPlayer.IO.DbReader.DataModels;
+using OsuPlayer.IO.Storage.LazerModels.Beatmaps;
+using Realms;
 
 namespace OsuPlayer.IO;
 
 public sealed class SongImporter
 {
-    public static async Task<ICollection<MinimalMapEntry>?> ImportSongs(string path)
+    public static async Task<ICollection<IMapEntryBase>?> ImportSongs(string path)
     {
         if (string.IsNullOrEmpty(path)) return null;
 

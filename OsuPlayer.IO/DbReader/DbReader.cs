@@ -13,7 +13,7 @@ public partial class DbReader : BinaryReader
 
     private readonly byte[] _buf = new byte[512];
 
-    private DbReader(Stream input) : base(input)
+    public DbReader(Stream input) : base(input)
     {
     }
 
@@ -21,10 +21,10 @@ public partial class DbReader : BinaryReader
     /// Reads the osu!.db and skips duplicate beatmaps of one beatmap set
     /// </summary>
     /// <param name="osuPath">the osu full path</param>
-    /// <returns> a <see cref="MinimalMapEntry" /> list</returns>
-    public static async Task<List<MinimalMapEntry>?> ReadOsuDb(string osuPath)
+    /// <returns> a <see cref="DbMapEntryBase" /> list</returns>
+    public static async Task<List<IMapEntryBase>?> ReadOsuDb(string osuPath)
     {
-        var minBeatMaps = new List<MinimalMapEntry>();
+        var minBeatMaps = new List<IMapEntryBase>();
         var dbLoc = Path.Combine(osuPath, "osu!.db");
 
         if (!File.Exists(dbLoc)) return null;
@@ -64,12 +64,12 @@ public partial class DbReader : BinaryReader
                 reader.BaseStream.Seek(-length, SeekOrigin.Current);
             }
 
-            var minBeatMap = new MinimalMapEntry
+            var minBeatMap = new DbMapEntryBase
             {
                 DbOffset = reader.BaseStream.Position
             };
 
-            ReadFromStreamMinimal(reader, osuPath, ref minBeatMap, out var curSetId);
+            ReadFromStream(reader, osuPath, ref minBeatMap, out var curSetId);
             prevId = curSetId;
             minBeatMaps.Add(minBeatMap);
         }
@@ -79,6 +79,81 @@ public partial class DbReader : BinaryReader
         await file.FlushAsync();
         reader.Dispose();
         return minBeatMaps;
+    }
+    
+    
+    /// <summary>
+    /// Reads a osu!.db map entry and fills a <see cref="DbMapEntryBase" /> with needed data
+    /// </summary>
+    /// <param name="r">the <see cref="DbReader" /> instance of the stream</param>
+    /// <param name="osuPath">a <see cref="string" /> of the osu! path</param>
+    /// <param name="dbMapEntryBase">a reference of a <see cref="DbMapEntryBase" /> to read the data to</param>
+    /// <param name="setId">a out <see cref="int" /> of the beatmap set id</param>
+    private static void ReadFromStream(DbReader r, string osuPath, ref DbMapEntryBase dbMapEntryBase, out int setId)
+    {
+        dbMapEntryBase.Artist = string.Intern(r.ReadString());
+
+        if (dbMapEntryBase.Artist.Length == 0)
+            dbMapEntryBase.Artist = "Unknown Artist";
+
+        if (OsuDbVersion >= 20121008)
+            r.ReadString(true);
+
+        dbMapEntryBase.Title = r.ReadString();
+
+        if (dbMapEntryBase.Title.Length == 0)
+            dbMapEntryBase.Title = "Unknown Title";
+
+        if (OsuDbVersion >= 20121008)
+            r.ReadString(true);
+
+        r.ReadString(true);
+        r.ReadString(true); //Difficulty
+        r.ReadString(true);
+
+        dbMapEntryBase.BeatmapChecksum = r.ReadString();
+
+        r.ReadString(true); //BeatmapFileName
+
+        if (OsuDbVersion >= 20140609)
+            r.BaseStream.Seek(39, SeekOrigin.Current);
+        else
+            r.BaseStream.Seek(27, SeekOrigin.Current);
+
+        if (OsuDbVersion >= 20140609)
+        {
+            r.ReadStarRating();
+            r.ReadStarRating();
+            r.ReadStarRating();
+            r.ReadStarRating();
+        }
+
+        r.ReadInt32(); //DrainTimeSeconds
+
+        dbMapEntryBase.TotalTime = r.ReadInt32();
+
+        r.ReadInt32(); //AudioPreviewTime
+
+        var timingCnt = r.ReadInt32();
+
+        r.BaseStream.Seek(17 * timingCnt, SeekOrigin.Current);
+        r.BaseStream.Seek(4, SeekOrigin.Current);
+        setId = r.ReadInt32();
+        r.BaseStream.Seek(15, SeekOrigin.Current);
+
+        r.ReadString(true); //SongSource
+        r.ReadString(true); //SongTags
+        r.ReadInt16(); //OffsetOnline
+        r.ReadString(true); //TitleFont
+        r.ReadBoolean(); //Unplayed
+        r.ReadDateTime(); //LastPlayed
+        r.ReadBoolean(); //IsOsz2
+        r.ReadString(true);
+
+        if (OsuDbVersion < 20140609)
+            r.BaseStream.Seek(20, SeekOrigin.Current);
+        else
+            r.BaseStream.Seek(18, SeekOrigin.Current);
     }
 
     /// <summary>

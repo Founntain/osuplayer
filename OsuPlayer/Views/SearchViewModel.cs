@@ -33,9 +33,9 @@ public class SearchViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _filterText, value);
     }
 
-    public ReadOnlyObservableCollection<MinimalMapEntry> FilteredSongEntries => Player.FilteredSongEntries!;
+    public ReadOnlyObservableCollection<IMapEntryBase> FilteredSongEntries => Player.FilteredSongEntries!;
 
-    private Func<MinimalMapEntry, bool> BuildFilter(string searchText)
+    private Func<IMapEntryBase, bool> BuildFilter(string searchText)
     {
         if (string.IsNullOrEmpty(searchText))
             return _ => true;

@@ -56,7 +56,7 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
             playlist.Add(song.BeatmapChecksum);
         }
 
-        ViewModel!.SelectedSongListItems = new List<MinimalMapEntry>();
+        ViewModel!.SelectedSongListItems = new List<IMapEntryBase>();
 
         await PlaylistManager.ReplacePlaylistAsync(ViewModel.CurrentSelectedPlaylist);
 
@@ -83,7 +83,7 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
             playlist.Remove(song.BeatmapChecksum);
         }
 
-        ViewModel!.SelectedPlaylistItems = new List<MinimalMapEntry>();
+        ViewModel!.SelectedPlaylistItems = new List<IMapEntryBase>();
 
         await PlaylistManager.ReplacePlaylistAsync(ViewModel.CurrentSelectedPlaylist);
 
@@ -96,7 +96,7 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
 
         var listBox = (ListBox)sender!;
 
-        var songs = listBox.SelectedItems.Cast<MinimalMapEntry>().ToList();
+        var songs = listBox.SelectedItems.Cast<IMapEntryBase>().ToList();
 
         ViewModel.SelectedSongListItems = songs;
     }
@@ -107,7 +107,7 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
 
         var listBox = (ListBox)sender!;
 
-        var songs = listBox.SelectedItems.Cast<MinimalMapEntry>().ToList();
+        var songs = listBox.SelectedItems.Cast<IMapEntryBase>().ToList();
 
         ViewModel.SelectedPlaylistItems = songs;
     }

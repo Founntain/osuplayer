@@ -62,7 +62,7 @@
             <ListBox Background="Transparent"
                      Items="{Binding SelectedPlaylist.Songs, Converter={StaticResource PlaylistValueConverter}}">
                 <ListBox.ItemTemplate>
-                    <DataTemplate DataType="dataModels:MinimalMapEntry">
+                    <DataTemplate DataType="dataModels:DbMapEntryBase">
                         <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto">
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding TitleString}" FontSize="20"
                                        FontWeight="SemiBold" />

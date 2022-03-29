@@ -12,7 +12,7 @@ namespace OsuPlayer.Views;
 
 public class PlayerControlViewModel : BaseViewModel
 {
-    private readonly Bindable<MapEntry?> _currentSong = new();
+    private readonly Bindable<IMapEntry?> _currentSong = new();
 
     private readonly Bindable<bool> _isPlaying = new();
     private readonly Bindable<bool> _isRepeating = new();
