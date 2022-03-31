@@ -9,6 +9,7 @@ public class RealmMapEntryBase : IMapEntryBase
     public string Artist { get; set; }
     public string Title { get; set; }
     public string BeatmapChecksum { get; set; }
+    public int BeatmapSetId { get; set; }
     public int TotalTime { get; set; }
     public string TotalTimeString => TimeSpan.FromMilliseconds(TotalTime).FormatTime();
     public string SongName => GetSongName();

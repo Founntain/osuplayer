@@ -18,6 +18,8 @@ public partial class PlaylistView : ReactivePlayerControl<PlaylistViewModel>
         {
             if (this.GetVisualRoot() is MainWindow mainWindow)
                 _mainWindow = mainWindow;
+
+            ViewModel.Playlists = PlaylistManager.GetAllPlaylists().ToObservableCollection();
         });
         InitializeComponent();
     }

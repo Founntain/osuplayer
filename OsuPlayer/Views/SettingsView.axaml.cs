@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
@@ -88,7 +89,7 @@ public partial class SettingsView : ReactivePlayerControl<SettingsViewModel>
             ViewModel.OsuLocation = osuFolder!;
         }
 
-        await ViewModel.Player.ImportSongs();
+        await Task.Run(ViewModel.Player.ImportSongs);
     }
 
     public async void LoginClick(object? sender, RoutedEventArgs routedEventArgs)

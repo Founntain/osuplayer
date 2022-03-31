@@ -69,8 +69,8 @@ public partial class DbReader : BinaryReader
                 DbOffset = reader.BaseStream.Position
             };
 
-            ReadFromStream(reader, osuPath, ref minBeatMap, out var curSetId);
-            prevId = curSetId;
+            ReadFromStream(reader, osuPath, ref minBeatMap);
+            prevId = minBeatMap.BeatmapSetId;
             minBeatMaps.Add(minBeatMap);
         }
 
@@ -88,8 +88,7 @@ public partial class DbReader : BinaryReader
     /// <param name="r">the <see cref="DbReader" /> instance of the stream</param>
     /// <param name="osuPath">a <see cref="string" /> of the osu! path</param>
     /// <param name="dbMapEntryBase">a reference of a <see cref="DbMapEntryBase" /> to read the data to</param>
-    /// <param name="setId">a out <see cref="int" /> of the beatmap set id</param>
-    private static void ReadFromStream(DbReader r, string osuPath, ref DbMapEntryBase dbMapEntryBase, out int setId)
+    private static void ReadFromStream(DbReader r, string osuPath, ref DbMapEntryBase dbMapEntryBase)
     {
         dbMapEntryBase.Artist = string.Intern(r.ReadString());
 
@@ -138,7 +137,7 @@ public partial class DbReader : BinaryReader
 
         r.BaseStream.Seek(17 * timingCnt, SeekOrigin.Current);
         r.BaseStream.Seek(4, SeekOrigin.Current);
-        setId = r.ReadInt32();
+        dbMapEntryBase.BeatmapSetId = r.ReadInt32();
         r.BaseStream.Seek(15, SeekOrigin.Current);
 
         r.ReadString(true); //SongSource

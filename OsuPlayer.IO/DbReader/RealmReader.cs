@@ -28,6 +28,7 @@ public class RealmReader
             {
                 Artist = beatmap.Metadata.Artist,
                 BeatmapChecksum = beatmap.Hash,
+                BeatmapSetId = beatmap.OnlineID,
                 Title = beatmap.Metadata.Title,
                 TotalTime = (int)beatmap.MaxLength
             });

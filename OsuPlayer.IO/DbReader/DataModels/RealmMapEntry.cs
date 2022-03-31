@@ -32,7 +32,7 @@ public class RealmMapEntry : RealmMapEntryBase, IMapEntry
 
         if (beatmap == default) throw new NullReferenceException();
 
-        var backgroundFile = beatmap.Files.FirstOrDefault(x => x.Filename == beatmap.Metadata.BackgroundFile);
+        var backgroundFile = beatmap.Files.FirstOrDefault(x => string.Equals(x.Filename, beatmap.Metadata.BackgroundFile, StringComparison.OrdinalIgnoreCase));
         var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
         
         if (backgroundFile == default)
