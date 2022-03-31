@@ -1,6 +1,9 @@
 ﻿using System;
 using Avalonia;
 using Avalonia.ReactiveUI;
+using OsuPlayer.Modules.Audio;
+using OsuPlayer.Windows;
+using Splat;
 
 namespace OsuPlayer;
 
@@ -12,6 +15,7 @@ internal class Program
     [STAThread]
     public static void Main(string[] args)
     {
+        Register(Locator.CurrentMutable, Locator.Current);
         BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime(args);
     }
@@ -24,6 +28,25 @@ internal class Program
             .LogToTrace()
             .UseSkia()
             .UseReactiveUI()
-            .With(new Win32PlatformOptions {AllowEglInitialization = true});
+            .With(new Win32PlatformOptions
+            {
+                AllowEglInitialization = true
+            });
+    }
+
+    private static void Register(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver)
+    {
+        services.RegisterLazySingleton(() => new BassEngine());
+
+        services.RegisterLazySingleton(() => new Player(
+            resolver.GetService<BassEngine>()));
+
+        services.Register(() => new MainWindowViewModel(
+            resolver.GetService<BassEngine>(),
+            resolver.GetService<Player>()));
+
+        services.RegisterLazySingleton(() => new MainWindow(
+            resolver.GetService<MainWindowViewModel>(),
+            resolver.GetService<Player>()));
     }
 }

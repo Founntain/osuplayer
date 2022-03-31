@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 using Avalonia.Data.Converters;
+using OsuPlayer.Modules.Audio;
+using Splat;
 
 namespace OsuPlayer.ValueConverters;
 
@@ -13,7 +15,7 @@ public class PlaylistValueConverter : IValueConverter
     {
         if (value == default) return default;
 
-        return Core.Instance.Player.GetMapEntriesFromChecksums((ICollection<string>) value);
+        return Locator.Current.GetService<Player>().GetMapEntriesFromChecksums((ICollection<string>)value);
     }
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

@@ -72,8 +72,10 @@
                                     <!-- <TickBar Name="HorizontalInlineTickBar" Placement="Top" Fill="{DynamicResource SliderInlineTickBarFill}" Height="{DynamicResource SliderTrackThemeHeight}" Grid.Row="1" Grid.ColumnSpan="3" /> -->
                                     <TickBar Name="BottomTickBar" Placement="Bottom"
                                              Height="{DynamicResource SliderOutsideTickBarThemeHeight}"
-                                             VerticalAlignment="Top" Margin="0,4,0,0" Grid.Row="2" Grid.ColumnSpan="3" />
-                                    <Track Name="PART_Track" Grid.Row="1" Grid.ColumnSpan="3" Orientation="Horizontal">
+                                             VerticalAlignment="Top" Margin="0,4,0,0" Grid.Row="2" Grid.ColumnSpan="3"
+                                             Grid.Column="0" />
+                                    <Track Name="PART_Track" Grid.Row="1" Grid.ColumnSpan="3" Grid.Column="0"
+                                           Orientation="Horizontal">
                                         <Track.DecreaseButton>
                                             <RepeatButton Name="PART_DecreaseButton"
                                                           Background="{TemplateBinding Foreground}"
@@ -161,8 +163,9 @@
                                     <TickBar Name="RightTickBar" Placement="Right"
                                              Width="{DynamicResource SliderOutsideTickBarThemeHeight}"
                                              HorizontalAlignment="Left" Margin="4,0,0,0" Grid.Column="2"
-                                             Grid.RowSpan="3" />
-                                    <Track Name="PART_Track" Grid.Column="1" Grid.RowSpan="3" Orientation="Vertical">
+                                             Grid.Row="0" Grid.RowSpan="3" />
+                                    <Track Name="PART_Track" Grid.Column="1" Grid.Row="0" Grid.RowSpan="3"
+                                           Orientation="Vertical">
                                         <Track.DecreaseButton>
                                             <RepeatButton Name="PART_DecreaseButton"
                                                           Background="{TemplateBinding Foreground}"

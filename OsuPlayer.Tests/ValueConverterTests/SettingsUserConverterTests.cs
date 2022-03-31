@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using Material.Icons;
 using NUnit.Framework;
 using OsuPlayer.Extensions.ValueConverters;
 using OsuPlayer.Network.Online;
@@ -9,9 +8,9 @@ namespace OsuPlayer.Tests.ValueConverterTests;
 
 public class SettingsUserConverterTests
 {
+    private readonly Type _expectedInput = typeof(User);
+    private readonly Type _expectedOutput = typeof(string);
     private SettingsUserConverter _userConverter;
-    private Type _expectedInput = typeof(User);
-    private Type _expectedOutput = typeof(string);
 
     [SetUp]
     public void Setup()

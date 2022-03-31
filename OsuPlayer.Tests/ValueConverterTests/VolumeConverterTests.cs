@@ -8,9 +8,9 @@ namespace OsuPlayer.Tests.ValueConverterTests;
 
 public class VolumeConverterTests
 {
+    private readonly Type _expectedInput = typeof(double);
+    private readonly Type _expectedOutput = typeof(MaterialIconKind);
     private VolumeConverter _playPauseConverter;
-    private Type _expectedInput = typeof(double);
-    private Type _expectedOutput = typeof(MaterialIconKind);
 
     [SetUp]
     public void Setup()
@@ -34,10 +34,22 @@ public class VolumeConverterTests
             () => _playPauseConverter.Convert(null, _expectedOutput, null, CultureInfo.InvariantCulture));
     }
 
-    [TestCase(new object?[] {0.0, MaterialIconKind.VolumeMute})]
-    [TestCase(new object?[] {10.0, MaterialIconKind.VolumeLow})]
-    [TestCase(new object?[] {50.0, MaterialIconKind.VolumeMedium})]
-    [TestCase(new object?[] {100.0, MaterialIconKind.VolumeHigh})]
+    [TestCase(new object?[]
+    {
+        0.0, MaterialIconKind.VolumeMute
+    })]
+    [TestCase(new object?[]
+    {
+        10.0, MaterialIconKind.VolumeLow
+    })]
+    [TestCase(new object?[]
+    {
+        50.0, MaterialIconKind.VolumeMedium
+    })]
+    [TestCase(new object?[]
+    {
+        100.0, MaterialIconKind.VolumeHigh
+    })]
     public void TestCorrectUsage(object[] input)
     {
         var volume = input[0];

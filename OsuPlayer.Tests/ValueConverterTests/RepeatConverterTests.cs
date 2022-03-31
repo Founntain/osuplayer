@@ -3,15 +3,14 @@ using System.Globalization;
 using Material.Icons;
 using NUnit.Framework;
 using OsuPlayer.Extensions.ValueConverters;
-using OsuPlayer.Network.Online;
 
 namespace OsuPlayer.Tests.ValueConverterTests;
 
 public class RepeatConverterTests
 {
+    private readonly Type _expectedInput = typeof(bool);
+    private readonly Type _expectedOutput = typeof(MaterialIconKind);
     private RepeatConverter _repeatConverter;
-    private Type _expectedInput = typeof(bool);
-    private Type _expectedOutput = typeof(MaterialIconKind);
 
     [SetUp]
     public void Setup()

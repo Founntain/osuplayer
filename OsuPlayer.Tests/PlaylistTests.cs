@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using NUnit.Framework;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.IO.Storage.Playlists;
@@ -16,6 +16,8 @@ public class PlaylistTests
     public void Setup()
     {
         _playlist = new PlaylistStorage();
+        if (Directory.Exists("data"))
+            Directory.Delete("data", true);
     }
 
     [Test]
@@ -60,7 +62,13 @@ public class PlaylistTests
     public void TestCorrectWriteRead()
     {
         var container = _playlist.Read();
-        var testPlaylist = new List<Playlist> {new() {Name = "Test"}};
+        var testPlaylist = new List<Playlist>
+        {
+            new()
+            {
+                Name = "Test"
+            }
+        };
         container.Playlists = testPlaylist;
         _playlist.Save(container);
         _playlist = new PlaylistStorage();
@@ -73,7 +81,10 @@ public class PlaylistTests
     [Test]
     public void TestAccessNoRead()
     {
-        var testPlaylist = new List<Playlist> {new()};
+        var testPlaylist = new List<Playlist>
+        {
+            new()
+        };
         Assert.DoesNotThrow(() => _playlist.Container.Playlists = testPlaylist);
         Assert.AreEqual(testPlaylist, _playlist.Read().Playlists);
     }

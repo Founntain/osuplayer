@@ -3,7 +3,7 @@
 namespace OsuPlayer.Data.OsuPlayer.Classes;
 
 /// <summary>
-///     Contains the values from the config.json
+/// Contains the values from the config.json
 /// </summary>
 public sealed class ConfigStorage
 {

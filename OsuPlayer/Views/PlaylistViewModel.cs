@@ -37,13 +37,4 @@ public class PlaylistViewModel : BaseViewModel
         get => _selectedPlaylist;
         set => this.RaiseAndSetIfChanged(ref _selectedPlaylist, value);
     }
-
-    public async void OpenPlaylistEditor()
-    {
-        var playlists = await PlaylistManager.GetAllPlaylistsAsync();
-
-        Core.Instance.MainWindow.ViewModel!.PlaylistEditorViewModel.Playlists = playlists.ToSourceList();
-
-        Core.Instance.MainWindow.ViewModel!.MainView = Core.Instance.MainWindow.ViewModel.PlaylistEditorViewModel;
-    }
 }

@@ -1,7 +1,7 @@
 namespace OsuPlayer.IO.DbReader;
 
 /// <summary>
-///     Represets a collection from osu!
+/// Represets a collection from osu!
 /// </summary>
 public class Collection
 {

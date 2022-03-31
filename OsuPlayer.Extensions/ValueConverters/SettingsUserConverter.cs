@@ -10,7 +10,7 @@ public class SettingsUserConverter : IValueConverter
     {
         if (value != null && value.GetType() != typeof(User))
             return "Wrong converter usage";
-        var user = (User) value;
+        var user = (User)value;
 
         return user?.Name ?? "Not logged in";
     }

@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using OsuPlayer.Windows;
+using Splat;
 
 namespace OsuPlayer;
 
@@ -14,14 +15,7 @@ public class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-        {
-            var _ = new Core();
-            desktop.MainWindow = new MainWindow
-            {
-                ViewModel = new MainWindowViewModel()
-            };
-        }
+        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop) desktop.MainWindow = Locator.Current.GetService<MainWindow>();
 
         base.OnFrameworkInitializationCompleted();
     }

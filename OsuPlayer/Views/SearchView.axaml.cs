@@ -1,14 +1,12 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
-using Avalonia.ReactiveUI;
-using OsuPlayer.IO.DbReader;
 using OsuPlayer.IO.DbReader.DataModels;
 using ReactiveUI;
 
 namespace OsuPlayer.Views;
 
-public partial class SearchView : ReactiveUserControl<SearchViewModel>
+public partial class SearchView : ReactivePlayerControl<SearchViewModel>
 {
     public SearchView()
     {
@@ -25,6 +23,6 @@ public partial class SearchView : ReactiveUserControl<SearchViewModel>
     {
         var list = sender as ListBox;
         var song = list!.SelectedItem as MinimalMapEntry;
-        await Core.Instance.Player.Play(song);
+        await ViewModel.Player.PlayAsync(song);
     }
 }

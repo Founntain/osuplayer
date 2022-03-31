@@ -3,7 +3,7 @@
 namespace OsuPlayer.Data.OsuPlayer.Classes;
 
 /// <summary>
-///     Wrapper class for <see cref="ManagedBass.DeviceInfo" />
+/// Wrapper class for <see cref="ManagedBass.DeviceInfo" />
 /// </summary>
 public sealed class AudioDevice
 {

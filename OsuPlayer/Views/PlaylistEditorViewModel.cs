@@ -3,8 +3,8 @@ using System.Linq;
 using System.Reactive.Disposables;
 using DynamicData;
 using OsuPlayer.Data.OsuPlayer.Classes;
-using OsuPlayer.IO.DbReader;
 using OsuPlayer.IO.DbReader.DataModels;
+using OsuPlayer.Modules.Audio;
 using OsuPlayer.ViewModels;
 using ReactiveUI;
 
@@ -12,18 +12,21 @@ namespace OsuPlayer.Views;
 
 public class PlaylistEditorViewModel : BaseViewModel
 {
+    private readonly Player _player;
     private Playlist? _currentSelectedPlaylist;
     private bool _isDeletePlaylistPopupOpen;
     private bool _isNewPlaylistPopupOpen;
     private bool _isRenamePlaylistPopupOpen;
-    private string? _newPlaylistnameText;
+    private string _newPlaylistNameText;
     private SourceList<Playlist>? _playlists;
     private List<MinimalMapEntry>? _selectedPlaylistItems;
 
     private List<MinimalMapEntry>? _selectedSongListItems;
 
-    public PlaylistEditorViewModel()
+    public PlaylistEditorViewModel(Player player)
     {
+        _player = player;
+
         Activator = new ViewModelActivator();
 
         this.WhenActivated(disposables =>
@@ -34,8 +37,8 @@ public class PlaylistEditorViewModel : BaseViewModel
                 CurrentSelectedPlaylist = Playlists.Items.ElementAt(0);
         });
 
-        SelectedPlaylistItems = new();
-        SelectedSongListItems = new();
+        SelectedPlaylistItems = new List<MinimalMapEntry>();
+        SelectedSongListItems = new List<MinimalMapEntry>();
     }
 
     public bool IsDeletePlaylistPopupOpen
@@ -56,13 +59,13 @@ public class PlaylistEditorViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _isNewPlaylistPopupOpen, value);
     }
 
-    public string NewPlaylistnameText
+    public string NewPlaylistNameText
     {
-        get => _newPlaylistnameText;
-        set => this.RaiseAndSetIfChanged(ref _newPlaylistnameText, value);
+        get => _newPlaylistNameText;
+        set => this.RaiseAndSetIfChanged(ref _newPlaylistNameText, value);
     }
 
-    public Playlist CurrentSelectedPlaylist
+    public Playlist? CurrentSelectedPlaylist
     {
         get => _currentSelectedPlaylist;
         set
@@ -79,15 +82,15 @@ public class PlaylistEditorViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _playlists, value);
     }
 
-    public List<MinimalMapEntry> SongList => Core.Instance.Player.SongSource!;
+    public List<MinimalMapEntry> SongList => _player.SongSourceList!;
 
-    public List<MinimalMapEntry> SelectedSongListItems
+    public List<MinimalMapEntry>? SelectedSongListItems
     {
         get => _selectedSongListItems;
         set => this.RaiseAndSetIfChanged(ref _selectedSongListItems, value);
     }
 
-    public List<MinimalMapEntry> SelectedPlaylistItems
+    public List<MinimalMapEntry>? SelectedPlaylistItems
     {
         get => _selectedPlaylistItems;
         set => this.RaiseAndSetIfChanged(ref _selectedPlaylistItems, value);

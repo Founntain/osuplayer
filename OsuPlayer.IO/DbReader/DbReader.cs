@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text;
 using OsuPlayer.IO.DbReader.DataModels;
 using OsuPlayer.IO.Storage.Config;
@@ -11,19 +9,19 @@ namespace OsuPlayer.IO.DbReader;
 /// </summary>
 public partial class DbReader : BinaryReader
 {
+    public static int OsuDbVersion;
+
+    private readonly byte[] _buf = new byte[512];
+
     private DbReader(Stream input) : base(input)
     {
     }
-
-    public static int OsuDbVersion;
-
-    private byte[] _buf = new byte[512];
 
     /// <summary>
     /// Reads the osu!.db and skips duplicate beatmaps of one beatmap set
     /// </summary>
     /// <param name="osuPath">the osu full path</param>
-    /// <returns> a <see cref="MinimalMapEntry"/> list</returns>
+    /// <returns> a <see cref="MinimalMapEntry" /> list</returns>
     public static async Task<List<MinimalMapEntry>?> ReadOsuDb(string osuPath)
     {
         var minBeatMaps = new List<MinimalMapEntry>();
@@ -32,10 +30,9 @@ public partial class DbReader : BinaryReader
         if (!File.Exists(dbLoc)) return null;
 
         await using var config = new Config();
-        var unicode = (await config.ReadAsync()).UseSongNameUnicode;
-
         await using var file = File.OpenRead(dbLoc);
         using var reader = new DbReader(file);
+
         var ver = reader.ReadInt32();
         OsuDbVersion = ver;
         var flag = ver is >= 20160408 and < 20191107;
@@ -87,30 +84,24 @@ public partial class DbReader : BinaryReader
     /// <summary>
     /// Reads a osu!.db map entry and calculates the map length in bytes
     /// </summary>
-    /// <param name="r">the current <see cref="DbReader"/> instance of the stream</param>
-    /// <param name="setId">outputs a <see cref="int"/> of the beatmap set id</param>
-    /// <returns>a <see cref="long"/> from the byte length of the current map</returns>
+    /// <param name="r">the current <see cref="DbReader" /> instance of the stream</param>
+    /// <param name="setId">outputs a <see cref="int" /> of the beatmap set id</param>
+    /// <returns>a <see cref="long" /> from the byte length of the current map</returns>
     private static long CalculateMapLength(DbReader r, out int setId)
     {
         var initOffset = r.BaseStream.Position;
 
-        r.GetStringLen();
-        if (OsuDbVersion >= 20121008)
-        {
-            r.GetStringLen();
-        }
+        r.ReadString(true);
+        if (OsuDbVersion >= 20121008) r.ReadString(true);
 
-        r.GetStringLen();
-        if (OsuDbVersion >= 20121008)
-        {
-            r.GetStringLen();
-        }
+        r.ReadString(true);
+        if (OsuDbVersion >= 20121008) r.ReadString(true);
 
-        r.GetStringLen();
-        r.GetStringLen();
-        r.GetStringLen();
-        r.GetStringLen();
-        r.GetStringLen();
+        r.ReadString(true);
+        r.ReadString(true);
+        r.ReadString(true);
+        r.ReadString(true);
+        r.ReadString(true);
         r.BaseStream.Seek(15, SeekOrigin.Current);
         if (OsuDbVersion >= 20140609)
             r.BaseStream.Seek(16, SeekOrigin.Current);
@@ -132,12 +123,12 @@ public partial class DbReader : BinaryReader
         r.BaseStream.Seek(4, SeekOrigin.Current);
         setId = r.ReadInt32();
         r.BaseStream.Seek(15, SeekOrigin.Current);
-        r.GetStringLen();
-        r.GetStringLen();
+        r.ReadString(true);
+        r.ReadString(true);
         r.BaseStream.Seek(2, SeekOrigin.Current);
-        r.GetStringLen();
+        r.ReadString(true);
         r.BaseStream.Seek(10, SeekOrigin.Current);
-        r.GetStringLen();
+        r.ReadString(true);
         if (OsuDbVersion < 20140609)
             r.BaseStream.Seek(20, SeekOrigin.Current);
         else
@@ -150,7 +141,7 @@ public partial class DbReader : BinaryReader
     /// Reads the collection from the collection.db
     /// </summary>
     /// <param name="osuPath">the osu full path</param>
-    /// <returns>a <see cref="Collection"/> list</returns>
+    /// <returns>a <see cref="Collection" /> list</returns>
     public static List<Collection>? ReadCollections(string osuPath)
     {
         var collections = new List<Collection>();
@@ -173,7 +164,10 @@ public partial class DbReader : BinaryReader
     /// Returns a ULEB128 length encoded string from the base stream
     /// </summary>
     /// <param name="ignore">the string will not be read and the base stream will skip it</param>
-    /// <returns>a <see cref="string"/> containing the read string if string mark byte was 11 or an empty string if <paramref name="ignore"/> is true or the string mark byte was 0</returns>
+    /// <returns>
+    /// a <see cref="string" /> containing the read string if string mark byte was 11 or an empty string if
+    /// <paramref name="ignore" /> is true or the string mark byte was 0
+    /// </returns>
     /// <exception cref="Exception">throws if the string mark byte is neither 0 nor 11</exception>
     public string ReadString(bool ignore = false)
     {
@@ -197,26 +191,6 @@ public partial class DbReader : BinaryReader
     }
 
     /// <summary>
-    /// Reads the length of a ULEB128 length encoded string
-    /// </summary>
-    /// <returns>an <see cref="int"/> representing the length of the string</returns>
-    /// <exception cref="Exception">throws if the string mark byte is neither 0 nor 11</exception>
-    private int GetStringLen()
-    {
-        switch (ReadByte())
-        {
-            case 0:
-                return 0;
-            case 11:
-                var strLen = Read7BitEncodedInt();
-                BaseStream.Seek(strLen, SeekOrigin.Current);
-                return strLen;
-            default:
-                throw new Exception();
-        }
-    }
-
-    /// <summary>
     /// Reads the star rating count and moves the base stream accordingly effectively skipping it
     /// </summary>
     public void ReadStarRating()
@@ -226,9 +200,9 @@ public partial class DbReader : BinaryReader
     }
 
     /// <summary>
-    /// Reads a <see cref="Int64"/> and converts it to UTC based time
+    /// Reads a <see cref="Int64" /> and converts it to UTC based time
     /// </summary>
-    /// <returns>a <see cref="DateTime"/> converted from the read data</returns>
+    /// <returns>a <see cref="DateTime" /> converted from the read data</returns>
     public DateTime ReadDateTime()
     {
         return new DateTime(ReadInt64(), DateTimeKind.Utc);

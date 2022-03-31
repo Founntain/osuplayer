@@ -2,7 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:dbReader="clr-namespace:OsuPlayer.IO.DbReader;assembly=OsuPlayer.IO"
              xmlns:valueConverters="clr-namespace:OsuPlayer.ValueConverters"
              xmlns:classes="clr-namespace:OsuPlayer.Data.OsuPlayer.Classes;assembly=OsuPlayer.Data"
              xmlns:dataModels="clr-namespace:OsuPlayer.IO.DbReader.DataModels;assembly=OsuPlayer.IO"
@@ -42,6 +41,7 @@
             <Button Grid.Row="2" Content="playlist editor" Margin="10 0"
                     VerticalContentAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center"
                     HorizontalAlignment="Stretch"
+                    Click="Button_OnClick"
                     Command="{Binding OpenPlaylistEditor}"
                     FontWeight="SemiBold" />
         </Grid>

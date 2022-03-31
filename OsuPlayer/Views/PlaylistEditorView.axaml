@@ -3,7 +3,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-             xmlns:dbReader="clr-namespace:OsuPlayer.IO.DbReader;assembly=OsuPlayer.IO"
              xmlns:valueConverters="clr-namespace:OsuPlayer.ValueConverters"
              xmlns:extensions="clr-namespace:OsuPlayer.Extensions.ValueConverters;assembly=OsuPlayer.Extensions"
              xmlns:views="clr-namespace:OsuPlayer.Views"
@@ -54,7 +53,7 @@
                         <Border Background="{DynamicResource PopupBase}" CornerRadius="5"
                                 BorderBrush="{DynamicResource SystemAccentColor}" BorderThickness="1">
                             <Grid ColumnDefinitions="*, Auto">
-                                <TextBox Grid.Column="0" Text="{Binding NewPlaylistnameText}"
+                                <TextBox Grid.Column="0" Text="{Binding NewPlaylistNameText}"
                                          Watermark="enter playlistname"
                                          VerticalContentAlignment="Center" HorizontalAlignment="Stretch"
                                          BorderThickness="0" />

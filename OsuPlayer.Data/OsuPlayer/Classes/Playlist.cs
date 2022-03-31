@@ -1,10 +1,16 @@
 ﻿using System.ComponentModel;
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 
 namespace OsuPlayer.Data.OsuPlayer.Classes;
 
 public class Playlist
 {
-    protected bool Equals(Playlist other)
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public string Name { get; set; }
+    public DateTime CreationTime { get; set; } = DateTime.UtcNow;
+    public BindingList<string> Songs { get; set; } = new();
+
+    private bool Equals(Playlist other)
     {
         return Id.Equals(other.Id) && Name == other.Name && CreationTime.Equals(other.CreationTime) &&
                Songs.Equals(other.Songs);
@@ -15,18 +21,13 @@ public class Playlist
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
         if (obj.GetType() != GetType()) return false;
-        return Equals((Playlist) obj);
+        return Equals((Playlist)obj);
     }
 
     public override int GetHashCode()
     {
         return HashCode.Combine(Id, Name, CreationTime, Songs);
     }
-
-    public Guid Id { get; set; } = Guid.NewGuid();
-    public string Name { get; set; }
-    public DateTime CreationTime { get; } = DateTime.UtcNow;
-    public BindingList<string> Songs { get; set; } = new();
 
     public override string ToString()
     {

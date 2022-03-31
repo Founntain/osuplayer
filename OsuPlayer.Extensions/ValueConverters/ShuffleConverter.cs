@@ -8,10 +8,7 @@ public class ShuffleConverter : IValueConverter
 {
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is bool val)
-        {
-            return val ? MaterialIconKind.Shuffle : MaterialIconKind.ShuffleDisabled;
-        }
+        if (value is bool val) return val ? MaterialIconKind.Shuffle : MaterialIconKind.ShuffleDisabled;
 
         return MaterialIconKind.QuestionMark;
     }
