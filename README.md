@@ -99,4 +99,5 @@ Best practice is, that we discuss (new) features and if they are needed. So don'
 
 ## Screenshots
 
-None yet
+![](https://7.founntain.dev/xR5yZCvY.png)
+![](https://7.founntain.dev/JZvjRNY4.png)
