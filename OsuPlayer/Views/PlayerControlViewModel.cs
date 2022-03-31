@@ -6,7 +6,9 @@ using OsuPlayer.Extensions.Bindables;
 using OsuPlayer.IO.DbReader.DataModels;
 using OsuPlayer.Modules.Audio;
 using OsuPlayer.ViewModels;
+using OsuPlayer.Windows;
 using ReactiveUI;
+using Splat;
 
 namespace OsuPlayer.Views;
 
@@ -56,7 +58,7 @@ public class PlayerControlViewModel : BaseViewModel
         _isRepeating.BindTo(Player.IsRepeating);
         _isRepeating.BindValueChanged(d => this.RaisePropertyChanged(nameof(IsRepeating)));
 
-        _isShuffle.BindTo(Player.Shuffle);
+        _isShuffle.BindTo(Player.IsShuffle);
         _isShuffle.BindValueChanged(d => this.RaisePropertyChanged(nameof(IsShuffle)));
 
         Player.CurrentSongImage.BindValueChanged(d => CurrentSongImage = d.NewValue, true);

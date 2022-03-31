@@ -45,7 +45,7 @@ public class Player
 
     public readonly Bindable<bool> IsRepeating = new();
 
-    public readonly Bindable<bool> Shuffle = new();
+    public readonly Bindable<bool> IsShuffle = new();
 
     public readonly Bindable<bool> SongsLoading = new();
     public readonly Bindable<SourceList<MinimalMapEntry>> SongSource = new();
@@ -374,7 +374,7 @@ public class Player
             return;
         }
 
-        if (Shuffle.Value)
+        if (IsShuffle.Value)
         {
             if (false) //OsuPlayer.PlaylistManager.IsPlaylistmode)
             {
@@ -435,7 +435,7 @@ public class Player
             return;
         }
 
-        if (Shuffle.Value)
+        if (IsShuffle.Value)
         {
             // if (false) //OsuPlayer.PlaylistManager.IsPlaylistmode)
             // {
