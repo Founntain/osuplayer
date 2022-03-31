@@ -165,7 +165,7 @@
                          Items="{Binding SongList}" SelectedItems="{Binding SelectedSongListItems}"
                          SelectionChanged="SongList_OnSelectionChanged">
                     <ListBox.ItemTemplate>
-                        <DataTemplate DataType="dataModels:DbMapEntryBase">
+                        <DataTemplate DataType="dataModels:IMapEntryBase">
                             <Grid>
                                 <TextBlock Text="{Binding SongName}" FontWeight="SemiBold" />
                             </Grid>
@@ -196,7 +196,7 @@
                          Items="{Binding CurrentSelectedPlaylist.Songs, Converter={StaticResource PlaylistValueConverter}}"
                          SelectionChanged="Playlist_OnSelectionChanged">
                     <ListBox.ItemTemplate>
-                        <DataTemplate DataType="dataModels:DbMapEntryBase">
+                        <DataTemplate DataType="dataModels:IMapEntryBase">
                             <Grid>
                                 <TextBlock Text="{Binding SongName}" FontWeight="SemiBold" />
                             </Grid>

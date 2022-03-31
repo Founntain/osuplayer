@@ -1,5 +1,7 @@
 namespace OsuPlayer.IO.Storage.LazerModels.Beatmaps;
 
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
+// See the LICENCE file in the repository root for full licence text.
 public enum BeatmapOnlineStatus
 {
     None = -3,
@@ -17,12 +19,4 @@ public enum BeatmapOnlineStatus
     Qualified = 3,
 
     Loved = 4
-}
-
-public static class BeatmapSetOnlineStatusExtensions
-{
-    public static bool GrantsPerformancePoints(this BeatmapOnlineStatus status)
-    {
-        return status == BeatmapOnlineStatus.Ranked || status == BeatmapOnlineStatus.Approved;
-    }
 }

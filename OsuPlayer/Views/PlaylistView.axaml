@@ -4,10 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:valueConverters="clr-namespace:OsuPlayer.ValueConverters"
              xmlns:classes="clr-namespace:OsuPlayer.Data.OsuPlayer.Classes;assembly=OsuPlayer.Data"
+             xmlns:views="clr-namespace:OsuPlayer.Views"
              xmlns:dataModels="clr-namespace:OsuPlayer.IO.DbReader.DataModels;assembly=OsuPlayer.IO"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.PlaylistView">
 
+    <Design.DataContext>
+        <views:PlaylistViewModel />
+    </Design.DataContext>
+    
     <UserControl.Resources>
         <valueConverters:PlaylistValueConverter x:Key="PlaylistValueConverter" />
     </UserControl.Resources>
@@ -42,7 +47,6 @@
                     VerticalContentAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center"
                     HorizontalAlignment="Stretch"
                     Click="Button_OnClick"
-                    Command="{Binding OpenPlaylistEditor}"
                     FontWeight="SemiBold" />
         </Grid>
 
@@ -62,7 +66,7 @@
             <ListBox Background="Transparent"
                      Items="{Binding SelectedPlaylist.Songs, Converter={StaticResource PlaylistValueConverter}}">
                 <ListBox.ItemTemplate>
-                    <DataTemplate DataType="dataModels:DbMapEntryBase">
+                    <DataTemplate DataType="dataModels:IMapEntryBase">
                         <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto">
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding TitleString}" FontSize="20"
                                        FontWeight="SemiBold" />
