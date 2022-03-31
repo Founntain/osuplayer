@@ -6,7 +6,7 @@ namespace OsuPlayer.IO.DbReader;
 
 public class RealmReader
 {
-    public static async Task<List<IMapEntryBase>> ReadRealm(string path)
+    public static async Task<List<IMapEntryBase>?> ReadRealm(string path)
     {
         var realmLoc = Path.Combine(path, "client.realm");
 
@@ -20,19 +20,18 @@ public class RealmReader
 
         var realm = await Realm.GetInstanceAsync(realmConfig);
         var beatmaps = realm.DynamicApi.All("BeatmapSet").ToList().OfType<BeatmapSetInfo>();
+
         foreach (var beatmap in beatmaps)
         {
-            var files = beatmap.Files.ToList();
-            var x = files.FirstOrDefault(x => x.Filename == beatmap.Metadata.AudioFile);
-            minBeatMaps.Add(new RealmMapEntryBase()
+            minBeatMaps.Add(new RealmMapEntryBase
             {
                 Artist = beatmap.Metadata.Artist,
                 BeatmapChecksum = beatmap.Hash,
                 BeatmapSetId = beatmap.OnlineID,
                 Title = beatmap.Metadata.Title,
-                TotalTime = (int)beatmap.MaxLength
+                TotalTime = (int)beatmap.MaxLength,
+                Id = beatmap.ID
             });
-            Console.WriteLine(x?.File);
         }
 
         realm.Dispose();

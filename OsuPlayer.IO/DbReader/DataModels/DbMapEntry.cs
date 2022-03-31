@@ -14,7 +14,6 @@ public class DbMapEntry : DbMapEntryBase, IMapEntry
     public string ArtistUnicode { get; set; }
     public string TitleUnicode { get; set; }
     public string AudioFileName { get; set; }
-    public int BeatmapSetId { get; set; }
     public string FolderName { get; set; }
     public string FolderPath { get; set; }
     public string FullPath { get; set; }
