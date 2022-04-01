@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Reactive.Disposables;
 using Avalonia.Media.Imaging;
+using OsuPlayer.Data.OsuPlayer.Classes;
+using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Extensions;
 using OsuPlayer.Extensions.Bindables;
 using OsuPlayer.IO.DbReader.DataModels;
@@ -134,6 +137,11 @@ public class PlayerControlViewModel : BaseViewModel
     public bool IsRepeating => _isRepeating.Value;
 
     public string TitleText => _currentSong.Value?.Title ?? "No song is playing";
+    public RepeatMode IsRepeating
+    {
+        get => _isRepeating;
+        set => this.RaiseAndSetIfChanged(ref _isRepeating, value);
+    }
 
     public string ArtistText => _currentSong.Value?.Artist ?? "please select from song list";
 
@@ -148,4 +156,8 @@ public class PlayerControlViewModel : BaseViewModel
             this.RaiseAndSetIfChanged(ref _currentSongImage, value);
         }
     }
+
+    public IList<Playlist> Playlists => PlaylistManager.GetAllPlaylists();
+
+    public string ActivePlaylist => $"Active playlist: {Core.Instance.Player.ActivePlaylist?.Name ?? "none"}";
 }

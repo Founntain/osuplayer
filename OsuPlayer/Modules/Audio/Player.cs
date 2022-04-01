@@ -10,7 +10,6 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using DynamicData;
 using DynamicData.Binding;
-using LiveChartsCore.Defaults;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Extensions;
 using OsuPlayer.Extensions.Bindables;
@@ -105,8 +104,9 @@ public class Player
     }
 
     private int CurrentIndex { get; set; }
+    private RepeatMode _repeat;
 
-    public bool Repeat
+    public RepeatMode Repeat
     {
         get => _repeat;
         set
@@ -369,7 +369,7 @@ public class Player
         if (SongSourceList == null || !SongSourceList.Any())
             return;
 
-        if (Repeat)
+        if (Repeat == RepeatMode.SingleSong)
         {
             await PlayAsync(SongSourceList[CurrentIndex]);
             return;
