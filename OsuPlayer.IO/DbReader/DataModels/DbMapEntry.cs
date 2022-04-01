@@ -19,7 +19,7 @@ public class DbMapEntry : DbMapEntryBase, IMapEntry
     public string FullPath { get; set; }
     public bool UseUnicode { get; set; }
 
-    public async Task<Bitmap?> FindBackground(string path = null)
+    public async Task<Bitmap?> FindBackground()
     {
         var eventCount = 0;
 

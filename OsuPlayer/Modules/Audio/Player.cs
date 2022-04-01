@@ -274,7 +274,7 @@ public class Player
             Debug.WriteLine($"Could not update Songs Played error => {e}");
         }
 
-        CurrentSongImage.Value = await fullMapEntry.FindBackground(path);
+        CurrentSongImage.Value = await fullMapEntry.FindBackground();
         return Task.CompletedTask;
     }
 

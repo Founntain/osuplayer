@@ -17,7 +17,7 @@ public class RealmMapEntry : RealmMapEntryBase, IMapEntry
     public string FullPath { get; set; }
     public bool UseUnicode { get; set; }
 
-    public async Task<Bitmap?> FindBackground(string path)
+    public async Task<Bitmap?> FindBackground()
     {
         if (File.Exists(BackgroundFileLocation))
         {
