@@ -50,10 +50,10 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
 
         foreach (var song in ViewModel.SelectedSongListItems)
         {
-            if (playlist.Contains(song.BeatmapChecksum))
+            if (playlist.Contains(song.BeatmapSetId))
                 continue;
 
-            playlist.Add(song.BeatmapChecksum);
+            playlist.Add(song.BeatmapSetId);
         }
 
         ViewModel!.SelectedSongListItems = new List<IMapEntryBase>();
@@ -77,10 +77,10 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
 
         foreach (var song in ViewModel!.SelectedPlaylistItems!)
         {
-            if (!playlist.Contains(song.BeatmapChecksum))
+            if (!playlist.Contains(song.BeatmapSetId))
                 continue;
 
-            playlist.Remove(song.BeatmapChecksum);
+            playlist.Remove(song.BeatmapSetId);
         }
 
         ViewModel!.SelectedPlaylistItems = new List<IMapEntryBase>();

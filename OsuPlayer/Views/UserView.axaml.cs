@@ -51,7 +51,7 @@ public partial class UserView : ReactivePlayerControl<UserViewModel>
         var beatmapModel = (BeatmapUserValidityModel)listBox.SelectedItem;
         if (beatmapModel == default || ViewModel.Player.SongSourceList == default) return;
         var mapEntry = ViewModel.Player.SongSourceList.FirstOrDefault(x =>
-            x.BeatmapChecksum == beatmapModel.Beatmap.BeatmapChecksum ||
+            x.BeatmapSetId == beatmapModel.Beatmap.BeatmapSetId ||
             x.Artist == beatmapModel.Beatmap.Artist && x.Title == beatmapModel.Beatmap.Title);
         if (mapEntry != default)
             await ViewModel.Player.PlayAsync(mapEntry);

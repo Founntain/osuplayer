@@ -7,7 +7,7 @@ public class Playlist
     public Guid Id { get; } = Guid.NewGuid();
     public string Name { get; set; }
     private DateTime CreationTime { get; } = DateTime.UtcNow;
-    public BindingList<string> Songs { get; set; } = new();
+    public BindingList<int> Songs { get; set; } = new();
 
     private bool Equals(Playlist other)
     {

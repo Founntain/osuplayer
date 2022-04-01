@@ -482,13 +482,13 @@ public class Player
         return Task.FromResult(SongSourceList[new Random().Next(SongSourceList.Count)]);
     }
 
-    public IMapEntryBase? GetMapEntryFromChecksum(string checksum)
+    public IMapEntryBase? GetMapEntryFromSetId(int setId)
     {
-        return SongSourceList!.FirstOrDefault(x => x.BeatmapChecksum == checksum);
+        return SongSourceList!.FirstOrDefault(x => x.BeatmapSetId == setId);
     }
 
-    public List<IMapEntryBase> GetMapEntriesFromChecksums(ICollection<string> checksums)
+    public List<IMapEntryBase> GetMapEntriesFromSetId(ICollection<int> setId)
     {
-        return SongSourceList!.Where(x => checksums.Contains(x.BeatmapChecksum)).ToList();
+        return SongSourceList!.Where(x => setId.Contains(x.BeatmapSetId)).ToList();
     }
 }
