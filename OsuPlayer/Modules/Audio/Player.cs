@@ -376,13 +376,6 @@ public class Player
 
         if (IsShuffle.Value)
         {
-            if (Repeat == RepeatMode.Playlist)
-            {
-                var song = await DoShuffle(ShuffleDirection.Forward);
-
-                await PlayAsync(song);
-            }
-
             await PlayAsync(await DoShuffle(ShuffleDirection.Forward));
 
             return;
@@ -446,13 +439,6 @@ public class Player
 
         if (IsShuffle.Value)
         {
-            // if (false) //OsuPlayer.PlaylistManager.IsPlaylistmode)
-            // {
-            //     var song = await DoShuffle(ShuffleDirection.Backwards);
-            //
-            //     await Play(song);
-            // }
-
             await PlayAsync(await DoShuffle(ShuffleDirection.Backwards), PlayDirection.Backwards);
 
             return;
@@ -496,9 +482,11 @@ public class Player
             PlayDirection.Backwards);
     }
 
+    #region Shuffle
+
     private Task<IMapEntryBase> DoShuffle(ShuffleDirection direction)
     {
-        if ((Repeat == RepeatMode.Playlist && ActivePlaylist == default) || CurrentSong == default)
+        if ((Repeat == RepeatMode.Playlist && ActivePlaylist == default) || CurrentSong == default || SongSourceList == default)
             return Task.FromException<IMapEntryBase>(new NullReferenceException());
 
         switch (direction)
@@ -507,33 +495,12 @@ public class Player
             {
                 // Next index if not at array end
                 if (_shuffleHistoryIndex < _shuffleHistory.Length - 1)
-                {
-                    // If there is no "next" song generate new shuffled index
-                    if (_shuffleHistory[_shuffleHistoryIndex + 1] == null)
-                    {
-                        _shuffleHistory[_shuffleHistoryIndex] = Repeat == RepeatMode.Playlist
-                            ? ActivePlaylist?.Songs.IndexOf(CurrentSong.BeatmapSetId)
-                            : CurrentIndex;
-                        _shuffleHistory[++_shuffleHistoryIndex] = GetShuffledIndex();
-                    }
-                    // There is a "next" song in the history
-                    else
-                    {
-                        // Check if next song index is in allowed boundary
-                        if (_shuffleHistory[_shuffleHistoryIndex + 1] < (Repeat == RepeatMode.Playlist
-                                ? ActivePlaylist?.Songs.Count
-                                : SongSourceList!.Count))
-                            _shuffleHistoryIndex++;
-                        // Generate new shuffled index when not
-                        else
-                            _shuffleHistory[++_shuffleHistoryIndex] = GetShuffledIndex();
-                    }
-                }
+                    GetNextShuffledIndex();
                 // Move array one down if at the top of the array
                 else
                 {
                     Array.Copy(_shuffleHistory, 1, _shuffleHistory, 0, _shuffleHistory.Length - 1);
-                    _shuffleHistory[_shuffleHistoryIndex] = GetShuffledIndex();
+                    _shuffleHistory[_shuffleHistoryIndex] = GenerateShuffledIndex();
                 }
 
                 break;
@@ -542,33 +509,12 @@ public class Player
             {
                 // Prev index if index greater than zero
                 if (_shuffleHistoryIndex > 0)
-                {
-                    // If there is no "prev" song generate new shuffled index
-                    if (_shuffleHistory[_shuffleHistoryIndex - 1] == null)
-                    {
-                        _shuffleHistory[_shuffleHistoryIndex] = Repeat == RepeatMode.Playlist
-                            ? ActivePlaylist?.Songs.IndexOf(CurrentSong.BeatmapSetId)
-                            : CurrentIndex;
-                        _shuffleHistory[--_shuffleHistoryIndex] = GetShuffledIndex();
-                    }
-                    // There is a "prev" song in history
-                    else
-                    {
-                        // Check if next song index is in allowed boundary
-                        if (_shuffleHistory[_shuffleHistoryIndex - 1] < (Repeat == RepeatMode.Playlist
-                                ? ActivePlaylist?.Songs.Count
-                                : SongSourceList!.Count))
-                            _shuffleHistoryIndex--;
-                        // Generate new shuffled index when not
-                        else
-                            _shuffleHistory[--_shuffleHistoryIndex] = GetShuffledIndex();
-                    }
-                }
+                    GetPreviousShuffledIndex();
                 // Move array one up if at the start of the array
                 else
                 {
                     Array.Copy(_shuffleHistory, 0, _shuffleHistory, 1, _shuffleHistory.Length - 1);
-                    _shuffleHistory[_shuffleHistoryIndex] = GetShuffledIndex();
+                    _shuffleHistory[_shuffleHistoryIndex] = GenerateShuffledIndex();
                 }
 
                 break;
@@ -582,10 +528,58 @@ public class Player
 
         return Task.FromResult(Repeat == RepeatMode.Playlist
             ? GetMapEntryFromSetId(ActivePlaylist!.Songs[shuffleIndex])
-            : SongSourceList[shuffleIndex]);
+            : SongSourceList![shuffleIndex]);
     }
 
-    private int GetShuffledIndex()
+    private void GetNextShuffledIndex()
+    {
+        // If there is no "next" song generate new shuffled index
+        if (_shuffleHistory[_shuffleHistoryIndex + 1] == null)
+        {
+            _shuffleHistory[_shuffleHistoryIndex] = Repeat == RepeatMode.Playlist
+                ? ActivePlaylist?.Songs.IndexOf(CurrentSong!.BeatmapSetId)
+                : CurrentIndex;
+            _shuffleHistory[++_shuffleHistoryIndex] = GenerateShuffledIndex();
+        }
+        // There is a "next" song in the history
+        else
+        {
+            // Check if next song index is in allowed boundary
+            if (_shuffleHistory[_shuffleHistoryIndex + 1] < (Repeat == RepeatMode.Playlist
+                    ? ActivePlaylist?.Songs.Count
+                    : SongSourceList!.Count))
+                _shuffleHistoryIndex++;
+            // Generate new shuffled index when not
+            else
+                _shuffleHistory[++_shuffleHistoryIndex] = GenerateShuffledIndex();
+        }
+    }
+
+    private void GetPreviousShuffledIndex()
+    {
+        // If there is no "prev" song generate new shuffled index
+        if (_shuffleHistory[_shuffleHistoryIndex - 1] == null)
+        {
+            _shuffleHistory[_shuffleHistoryIndex] = Repeat == RepeatMode.Playlist
+                ? ActivePlaylist?.Songs.IndexOf(CurrentSong!.BeatmapSetId)
+                : CurrentIndex;
+            _shuffleHistory[--_shuffleHistoryIndex] = GenerateShuffledIndex();
+        }
+        // There is a "prev" song in history
+        else
+        {
+            // Check if next song index is in allowed boundary
+            if (_shuffleHistory[_shuffleHistoryIndex - 1] < (Repeat == RepeatMode.Playlist
+                    ? ActivePlaylist?.Songs.Count
+                    : SongSourceList!.Count))
+                _shuffleHistoryIndex--;
+            // Generate new shuffled index when not
+            else
+                _shuffleHistory[--_shuffleHistoryIndex] = GenerateShuffledIndex();
+        }
+    }
+
+    private int GenerateShuffledIndex()
     {
         var rdm = new Random();
         var shuffleIndex = rdm.Next(0, Repeat == RepeatMode.Playlist
@@ -603,6 +597,8 @@ public class Player
 
         return shuffleIndex;
     }
+
+    #endregion
 
     public IMapEntryBase? GetMapEntryFromSetId(int setId)
     {
