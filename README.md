@@ -26,7 +26,7 @@ If you want to contribute, feel free to fork this repository, read the [contribu
 #### osu!player requirements
 ✔️ A working computer  
 ✔️ .NET 6 or later installed  
-✔️ osu! installed with an **osu!.db file** *(Beatmaps imported in osu!)*  
+✔️ osu! installed with an **osu!.db file** or **osu!lazer client.realm** *(Beatmaps imported in osu!)*  
 ✔️ An internet connection if you want to use your osu!player plus profile
 
 #### Download osu!player
@@ -70,7 +70,7 @@ Best practice is, that we discuss (new) features and if they are needed. So don'
 ## osu!player todo list
 
 #### 🛠️ Features with higher priority
-- [x] Import songs from osu! via osu!.db  
+- [x] Import songs from osu! via osu!.db or osu!lazer client.realm  
 - [x] Play songs
 - [x] Create custom playlists and put songs in there
 - [ ] Favorise songs via the heart button
