@@ -15,7 +15,6 @@ using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Extensions;
 using OsuPlayer.Extensions.Bindables;
 using OsuPlayer.IO;
-using OsuPlayer.IO.DbReader;
 using OsuPlayer.IO.DbReader.DataModels;
 using OsuPlayer.IO.Storage.Config;
 using OsuPlayer.Network.API.ApiEndpoints;
@@ -33,11 +32,11 @@ public class Player
     private readonly Stopwatch _currentSongTimer;
     private readonly int?[] _shuffleHistory = new int?[10];
 
-    public readonly Bindable<MapEntry?> CurrentSongBinding = new();
+    public readonly Bindable<IMapEntry?> CurrentSongBinding = new();
 
     public readonly Bindable<Bitmap?> CurrentSongImage = new();
 
-    public readonly Bindable<IObservable<Func<MinimalMapEntry, bool>>?> Filter = new();
+    public readonly Bindable<IObservable<Func<IMapEntryBase, bool>>?> Filter = new();
 
     public readonly Bindable<List<ObservableValue>?> GraphValues = new();
 
@@ -48,7 +47,7 @@ public class Player
     public readonly Bindable<bool> IsShuffle = new();
 
     public readonly Bindable<bool> SongsLoading = new();
-    public readonly Bindable<SourceList<MinimalMapEntry>> SongSource = new();
+    public readonly Bindable<SourceList<IMapEntryBase>> SongSource = new();
     private bool _isMuted;
     private double _oldVolume;
 
@@ -57,7 +56,7 @@ public class Player
     private bool _repeat;
     // private int _shuffleHistoryIndex;
 
-    public ReadOnlyObservableCollection<MinimalMapEntry>? FilteredSongEntries;
+    public ReadOnlyObservableCollection<IMapEntryBase>? FilteredSongEntries;
 
     public Player(BassEngine bassEngine)
     {
@@ -69,12 +68,12 @@ public class Player
                 Dispatcher.UIThread.Post(NextSong);
         };
 
-        SongSource.Value = new SourceList<MinimalMapEntry>();
+        SongSource.Value = new SourceList<IMapEntryBase>();
 
         _currentSongTimer = new Stopwatch();
     }
 
-    private MapEntry? CurrentSong
+    private IMapEntry? CurrentSong
     {
         get => CurrentSongBinding.Value;
         set
@@ -91,7 +90,7 @@ public class Player
         }
     }
 
-    public List<MinimalMapEntry>? SongSourceList => SongSource.Value.Items.ToList();
+    public List<IMapEntryBase>? SongSourceList => SongSource.Value.Items.ToList();
 
     private SongImporter Importer => new();
 
@@ -127,7 +126,7 @@ public class Player
         SongSource.Value = songEntries.ToSourceList();
 
         if (Filter.Value != null)
-            SongSource.Value.Connect().Sort(SortExpressionComparer<MinimalMapEntry>.Ascending(x => x.Title))
+            SongSource.Value.Connect().Sort(SortExpressionComparer<IMapEntryBase>.Ascending(x => x.Title))
                 .Filter(Filter.Value, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
                 .Bind(out FilteredSongEntries).Subscribe();
 
@@ -161,7 +160,7 @@ public class Player
         _bassEngine.SetSpeed(speed);
     }
 
-    public async Task PlayAsync(MinimalMapEntry? song, PlayDirection playDirection = PlayDirection.Forward)
+    public async Task PlayAsync(IMapEntryBase? song, PlayDirection playDirection = PlayDirection.Forward)
     {
         if (SongSourceList == default || !SongSourceList.Any())
             return;
@@ -214,18 +213,20 @@ public class Player
         return Task.FromException(new InvalidOperationException($"Direction {direction} is not valid"));
     }
 
-    private async Task<Task> TryEnqueueSongAsync(MinimalMapEntry song)
+    private async Task<Task> TryEnqueueSongAsync(IMapEntryBase song)
     {
         if (SongSourceList == null || !SongSourceList.Any())
             return Task.FromException(new NullReferenceException($"{nameof(SongSourceList)} can't be null or empty"));
 
-        MapEntry fullMapEntry;
+        IMapEntry fullMapEntry;
+        var path = string.Empty;
 
         await using (var config = new Config())
         {
             await config.ReadAsync();
 
-            fullMapEntry = await DbReader.ReadFullMapEntry(config.Container.OsuPath!, song.DbOffset);
+            path = config.Container.OsuPath!;
+            fullMapEntry = await song.ReadFullEntry(config.Container.OsuPath!);
 
             if (fullMapEntry == default)
                 return Task.FromException(new NullReferenceException());
@@ -473,21 +474,21 @@ public class Player
             PlayDirection.Backwards);
     }
 
-    private Task<MinimalMapEntry> DoShuffle(ShuffleDirection direction)
+    private Task<IMapEntryBase> DoShuffle(ShuffleDirection direction)
     {
         if (SongSourceList == null)
-            return Task.FromException<MinimalMapEntry>(new ArgumentNullException(nameof(FilteredSongEntries)));
+            return Task.FromException<IMapEntryBase>(new ArgumentNullException(nameof(FilteredSongEntries)));
 
         return Task.FromResult(SongSourceList[new Random().Next(SongSourceList.Count)]);
     }
 
-    public MinimalMapEntry? GetMapEntryFromChecksum(string checksum)
+    public IMapEntryBase? GetMapEntryFromSetId(int setId)
     {
-        return SongSourceList!.FirstOrDefault(x => x.BeatmapChecksum == checksum);
+        return SongSourceList!.FirstOrDefault(x => x.BeatmapSetId == setId);
     }
 
-    public List<MinimalMapEntry> GetMapEntriesFromChecksums(ICollection<string> checksums)
+    public List<IMapEntryBase> GetMapEntriesFromSetId(ICollection<int> setId)
     {
-        return SongSourceList!.Where(x => checksums.Contains(x.BeatmapChecksum)).ToList();
+        return SongSourceList!.Where(x => setId.Contains(x.BeatmapSetId)).ToList();
     }
 }

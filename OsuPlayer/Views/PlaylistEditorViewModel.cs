@@ -19,9 +19,9 @@ public class PlaylistEditorViewModel : BaseViewModel
     private bool _isRenamePlaylistPopupOpen;
     private string _newPlaylistNameText;
     private SourceList<Playlist>? _playlists;
-    private List<MinimalMapEntry>? _selectedPlaylistItems;
+    private List<IMapEntryBase>? _selectedPlaylistItems;
 
-    private List<MinimalMapEntry>? _selectedSongListItems;
+    private List<IMapEntryBase>? _selectedSongListItems;
 
     public PlaylistEditorViewModel(Player player)
     {
@@ -37,8 +37,8 @@ public class PlaylistEditorViewModel : BaseViewModel
                 CurrentSelectedPlaylist = Playlists.Items.ElementAt(0);
         });
 
-        SelectedPlaylistItems = new List<MinimalMapEntry>();
-        SelectedSongListItems = new List<MinimalMapEntry>();
+        SelectedPlaylistItems = new List<IMapEntryBase>();
+        SelectedSongListItems = new List<IMapEntryBase>();
     }
 
     public bool IsDeletePlaylistPopupOpen
@@ -82,15 +82,15 @@ public class PlaylistEditorViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _playlists, value);
     }
 
-    public List<MinimalMapEntry> SongList => _player.SongSourceList!;
+    public List<IMapEntryBase> SongList => _player.SongSourceList!;
 
-    public List<MinimalMapEntry>? SelectedSongListItems
+    public List<IMapEntryBase>? SelectedSongListItems
     {
         get => _selectedSongListItems;
         set => this.RaiseAndSetIfChanged(ref _selectedSongListItems, value);
     }
 
-    public List<MinimalMapEntry>? SelectedPlaylistItems
+    public List<IMapEntryBase>? SelectedPlaylistItems
     {
         get => _selectedPlaylistItems;
         set => this.RaiseAndSetIfChanged(ref _selectedPlaylistItems, value);

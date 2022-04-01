@@ -75,7 +75,7 @@ public class HomeViewModel : BaseViewModel
         }
     };
 
-    public List<MinimalMapEntry> SongEntries => Player.SongSourceList!;
+    public List<IMapEntryBase> SongEntries => Player.SongSourceList!;
 
     public bool IsUserNotLoggedIn => CurrentUser == default;
     public bool IsUserLoggedIn => CurrentUser != default;

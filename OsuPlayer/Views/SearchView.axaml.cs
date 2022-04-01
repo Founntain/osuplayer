@@ -22,7 +22,7 @@ public partial class SearchView : ReactivePlayerControl<SearchViewModel>
     private async void InputElement_OnDoubleTapped(object? sender, RoutedEventArgs e)
     {
         var list = sender as ListBox;
-        var song = list!.SelectedItem as MinimalMapEntry;
+        var song = list!.SelectedItem as IMapEntryBase;
         await ViewModel.Player.PlayAsync(song);
     }
 }

@@ -109,7 +109,7 @@
             <ListBox Grid.Row="1" Items="{Binding SongEntries}" Background="Transparent"
                      DoubleTapped="InputElement_OnDoubleTapped">
                 <ListBox.DataTemplates>
-                    <DataTemplate DataType="dataModels:MinimalMapEntry">
+                    <DataTemplate DataType="dataModels:IMapEntryBase">
                         <Grid ColumnDefinitions="*, 100" RowDefinitions="Auto, Auto">
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding TitleString}" FontSize="20"
                                        FontWeight="SemiBold" />

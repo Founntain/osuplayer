@@ -9,19 +9,31 @@ namespace OsuPlayer.Extensions.Lists;
 public class WeakList<T> : IWeakList<T>, IEnumerable<T> where T : class
 {
     /// <summary>
-    /// The number of items that can be added or removed from this <see cref="WeakList{T}"/> before the next <see cref="Add(T)"/> to cause the list to be trimmed.
+    /// The number of items that can be added or removed from this <see cref="WeakList{T}" /> before the next
+    /// <see cref="Add(T)" /> to cause the list to be trimmed.
     /// </summary>
     private const int OpportunisticTrimThreshold = 100;
 
     private readonly List<InvalidatableWeakReference> _list = new();
+
+    /// <summary>
+    /// The number of items that got added/removed from this <see cref="WeakList{T}" /> since last trimmed.
+    /// Reaching <see cref="OpportunisticTrimThreshold" /> will cause a trim on next <see cref="Add(T)" />
+    /// </summary>
+    private int _countChangesSinceTrim;
+
     private int _listEnd; // The exclusive ending index in the list.
     private int _listStart; // The inclusive starting index in the list.
 
-    /// <summary>
-    /// The number of items that got added/removed from this <see cref="WeakList{T}"/> since last trimmed.
-    /// Reaching <see cref="OpportunisticTrimThreshold"/> will cause a trim on next <see cref="Add(T)"/>
-    /// </summary>
-    private int _countChangesSinceTrim;
+    IEnumerator<T> IEnumerable<T>.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
 
     public void Add(T item)
     {
@@ -128,9 +140,10 @@ public class WeakList<T> : IWeakList<T>, IEnumerable<T> where T : class
     }
 
     /// <summary>
-    /// Adds an <paramref name="item"/> to the list and increases <see cref="_countChangesSinceTrim">change count</see> if the list is to be made bigger
+    /// Adds an <paramref name="item" /> to the list and increases <see cref="_countChangesSinceTrim">change count</see> if the
+    /// list is to be made bigger
     /// </summary>
-    /// <param name="item">a <see cref="InvalidatableWeakReference"/> to add to the list</param>
+    /// <param name="item">a <see cref="InvalidatableWeakReference" /> to add to the list</param>
     private void AddInternal(in InvalidatableWeakReference item)
     {
         if (_countChangesSinceTrim > OpportunisticTrimThreshold)
@@ -155,10 +168,6 @@ public class WeakList<T> : IWeakList<T>, IEnumerable<T> where T : class
         Trim();
         return new ValidItemsEnumerator(this);
     }
-
-    IEnumerator<T> IEnumerable<T>.GetEnumerator() => GetEnumerator();
-
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     /// <summary>
     /// Removes all list elements above <see cref="_listEnd">list end</see> and below <see cref="_listStart">list start</see>.

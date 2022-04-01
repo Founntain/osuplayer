@@ -50,13 +50,13 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
 
         foreach (var song in ViewModel.SelectedSongListItems)
         {
-            if (playlist.Contains(song.BeatmapChecksum))
+            if (playlist.Contains(song.BeatmapSetId))
                 continue;
 
-            playlist.Add(song.BeatmapChecksum);
+            playlist.Add(song.BeatmapSetId);
         }
 
-        ViewModel!.SelectedSongListItems = new List<MinimalMapEntry>();
+        ViewModel!.SelectedSongListItems = new List<IMapEntryBase>();
 
         await PlaylistManager.ReplacePlaylistAsync(ViewModel.CurrentSelectedPlaylist);
 
@@ -77,13 +77,13 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
 
         foreach (var song in ViewModel!.SelectedPlaylistItems!)
         {
-            if (!playlist.Contains(song.BeatmapChecksum))
+            if (!playlist.Contains(song.BeatmapSetId))
                 continue;
 
-            playlist.Remove(song.BeatmapChecksum);
+            playlist.Remove(song.BeatmapSetId);
         }
 
-        ViewModel!.SelectedPlaylistItems = new List<MinimalMapEntry>();
+        ViewModel!.SelectedPlaylistItems = new List<IMapEntryBase>();
 
         await PlaylistManager.ReplacePlaylistAsync(ViewModel.CurrentSelectedPlaylist);
 
@@ -96,7 +96,7 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
 
         var listBox = (ListBox)sender!;
 
-        var songs = listBox.SelectedItems.Cast<MinimalMapEntry>().ToList();
+        var songs = listBox.SelectedItems.Cast<IMapEntryBase>().ToList();
 
         ViewModel.SelectedSongListItems = songs;
     }
@@ -107,7 +107,7 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
 
         var listBox = (ListBox)sender!;
 
-        var songs = listBox.SelectedItems.Cast<MinimalMapEntry>().ToList();
+        var songs = listBox.SelectedItems.Cast<IMapEntryBase>().ToList();
 
         ViewModel.SelectedPlaylistItems = songs;
     }
