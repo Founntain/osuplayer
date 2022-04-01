@@ -3,10 +3,13 @@ using System.Linq;
 using System.Reactive.Disposables;
 using DynamicData;
 using OsuPlayer.Data.OsuPlayer.Classes;
+using OsuPlayer.Extensions;
 using OsuPlayer.IO.DbReader.DataModels;
 using OsuPlayer.Modules.Audio;
 using OsuPlayer.ViewModels;
+using OsuPlayer.Windows;
 using ReactiveUI;
+using Splat;
 
 namespace OsuPlayer.Views;
 
@@ -32,9 +35,6 @@ public class PlaylistEditorViewModel : BaseViewModel
         this.WhenActivated(disposables =>
         {
             Disposable.Create(() => { }).DisposeWith(disposables);
-
-            if (Playlists.Count > 0 && CurrentSelectedPlaylist == default)
-                CurrentSelectedPlaylist = Playlists.Items.ElementAt(0);
         });
 
         SelectedPlaylistItems = new List<IMapEntryBase>();
