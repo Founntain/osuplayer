@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
@@ -15,6 +16,8 @@ public class PlaylistTests
     public void Setup()
     {
         _playlist = new PlaylistStorage();
+        if (Directory.Exists("data"))
+            Directory.Delete("data", true);
     }
 
     [Test]

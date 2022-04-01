@@ -1,12 +1,13 @@
 ﻿using System.ComponentModel;
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 
 namespace OsuPlayer.Data.OsuPlayer.Classes;
 
 public class Playlist
 {
-    public Guid Id { get; } = Guid.NewGuid();
+    public Guid Id { get; set; } = Guid.NewGuid();
     public string Name { get; set; }
-    private DateTime CreationTime { get; } = DateTime.UtcNow;
+    public DateTime CreationTime { get; set; } = DateTime.UtcNow;
     public BindingList<int> Songs { get; set; } = new();
 
     private bool Equals(Playlist other)

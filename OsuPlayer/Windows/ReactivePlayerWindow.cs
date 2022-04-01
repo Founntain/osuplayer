@@ -7,8 +7,8 @@ namespace OsuPlayer.Windows;
 
 public class ReactivePlayerWindow<TViewModel> : Window, IViewFor<TViewModel> where TViewModel : ReactiveObject
 {
-    public static readonly StyledProperty<TViewModel?> ViewModelProperty = AvaloniaProperty
-        .Register<ReactivePlayerWindow<TViewModel>, TViewModel?>(nameof(ViewModel));
+    public static readonly StyledProperty<TViewModel> ViewModelProperty = AvaloniaProperty
+        .Register<ReactivePlayerWindow<TViewModel>, TViewModel>(nameof(ViewModel));
 
 
     public ReactivePlayerWindow()
@@ -18,7 +18,7 @@ public class ReactivePlayerWindow<TViewModel> : Window, IViewFor<TViewModel> whe
         this.GetObservable(ViewModelProperty).Subscribe(OnViewModelChanged);
     }
 
-    object? IViewFor.ViewModel
+    object IViewFor.ViewModel
     {
         get => ViewModel;
         set => ViewModel = (TViewModel)value;

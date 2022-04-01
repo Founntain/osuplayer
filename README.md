@@ -72,7 +72,8 @@ Best practice is, that we discuss (new) features and if they are needed. So don'
 #### 🛠️ Features with higher priority
 - [x] Import songs from osu! via osu!.db  
 - [x] Play songs
-- [x] Favorise songs and create custom playlists  
+- [x] Create custom playlists and put songs in there
+- [ ] Favorise songs via the heart button
 - [ ] Create playlists from collection.db   
 - [x] Nightcore and daycore function  
 - [x] User profiles, for stats, uploading themes, languages and other stuff  
@@ -98,4 +99,5 @@ Best practice is, that we discuss (new) features and if they are needed. So don'
 
 ## Screenshots
 
-None yet
+![](https://7.founntain.dev/xR5yZCvY.png)
+![](https://7.founntain.dev/JZvjRNY4.png)
