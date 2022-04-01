@@ -30,8 +30,11 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
             if (this.GetVisualRoot() is MainWindow mainWindow)
                 _mainWindow = mainWindow;
 
-            if (ViewModel.CurrentSelectedPlaylist == default)
-                return;
+            if (_mainWindow.ViewModel.PlaylistView.SelectedPlaylist != default)
+                ViewModel.CurrentSelectedPlaylist = ViewModel.Playlists.Items.First(x =>
+                    x.Name == _mainWindow.ViewModel.PlaylistView.SelectedPlaylist!.Name);
+            else if (ViewModel.Playlists.Count > 0)
+                ViewModel.CurrentSelectedPlaylist = ViewModel.Playlists.Items.ElementAt(0);
         });
         AvaloniaXamlLoader.Load(this);
     }
@@ -46,7 +49,7 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
                 return;
         }
 
-        var playlist = ViewModel!.CurrentSelectedPlaylist.Songs;
+        var playlist = ViewModel.CurrentSelectedPlaylist.Songs;
 
         foreach (var song in ViewModel.SelectedSongListItems)
         {
@@ -73,9 +76,9 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
                 return;
         }
 
-        var playlist = ViewModel!.CurrentSelectedPlaylist.Songs;
+        var playlist = ViewModel.CurrentSelectedPlaylist.Songs;
 
-        foreach (var song in ViewModel!.SelectedPlaylistItems!)
+        foreach (var song in ViewModel.SelectedPlaylistItems!)
         {
             if (!playlist.Contains(song.BeatmapSetId))
                 continue;

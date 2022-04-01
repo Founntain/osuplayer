@@ -1,9 +1,14 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reactive.Disposables;
 using Avalonia.Media.Imaging;
+using OsuPlayer.Data.OsuPlayer.Classes;
+using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Extensions;
 using OsuPlayer.Extensions.Bindables;
 using OsuPlayer.IO.DbReader.DataModels;
+using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules.Audio;
 using OsuPlayer.ViewModels;
 using OsuPlayer.Windows;
@@ -17,7 +22,7 @@ public class PlayerControlViewModel : BaseViewModel
     private readonly Bindable<IMapEntry?> _currentSong = new();
 
     private readonly Bindable<bool> _isPlaying = new();
-    private readonly Bindable<bool> _isRepeating = new();
+    private readonly Bindable<RepeatMode> _isRepeating = new();
     private readonly Bindable<bool> _isShuffle = new();
     private readonly Bindable<double> _songLength = new();
     private readonly Bindable<double> _songTime = new();
@@ -56,7 +61,7 @@ public class PlayerControlViewModel : BaseViewModel
         _isPlaying.BindValueChanged(d => this.RaisePropertyChanged(nameof(IsPlaying)));
 
         _isRepeating.BindTo(Player.IsRepeating);
-        _isRepeating.BindValueChanged(d => this.RaisePropertyChanged(nameof(IsRepeating)));
+        _isRepeating.BindValueChanged(d => { this.RaisePropertyChanged(nameof(IsRepeating)); });
 
         _isShuffle.BindTo(Player.IsShuffle);
         _isShuffle.BindValueChanged(d => this.RaisePropertyChanged(nameof(IsShuffle)));
@@ -131,9 +136,17 @@ public class PlayerControlViewModel : BaseViewModel
 
     public bool IsPlaying => _isPlaying.Value;
 
-    public bool IsRepeating => _isRepeating.Value;
-
     public string TitleText => _currentSong.Value?.Title ?? "No song is playing";
+
+    public RepeatMode IsRepeating
+    {
+        get => _isRepeating.Value;
+        set
+        {
+            _isRepeating.Value = value;
+            this.RaisePropertyChanged();
+        }
+    }
 
     public string ArtistText => _currentSong.Value?.Artist ?? "please select from song list";
 
@@ -148,4 +161,8 @@ public class PlayerControlViewModel : BaseViewModel
             this.RaiseAndSetIfChanged(ref _currentSongImage, value);
         }
     }
+
+    public IEnumerable<Playlist> Playlists => PlaylistManager.GetAllPlaylists().Where(x => x.Songs.Count > 0);
+
+    public string ActivePlaylist => $"Active playlist: {Player.ActivePlaylist?.Name ?? "none"}";
 }

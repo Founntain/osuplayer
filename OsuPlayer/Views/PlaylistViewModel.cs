@@ -32,7 +32,7 @@ public class PlaylistViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _playlists, value);
     }
 
-    public Playlist SelectedPlaylist
+    public Playlist? SelectedPlaylist
     {
         get => _selectedPlaylist;
         set => this.RaiseAndSetIfChanged(ref _selectedPlaylist, value);

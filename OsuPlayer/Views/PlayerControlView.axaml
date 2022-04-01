@@ -122,8 +122,18 @@
             <DockPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <Button Name="Repeat" Width="38" Height="38" CornerRadius="50" Click="SongControl"
                         Background="Transparent">
-                    <avalonia:MaterialIcon Kind="{Binding IsRepeating, Converter={StaticResource RepeatConverter}}"
-                                           Height="19" Width="19" />
+                    <Button.ContextMenu>
+                        <ContextMenu IsVisible="{Binding IsRepeating, Converter={StaticResource RepeatConverter}}" Items="{Binding Playlists}" PointerReleased="RepeatContextMenu_OnPointerReleased" />
+                    </Button.ContextMenu>
+                    <Panel>
+                        <avalonia:MaterialIcon Kind="{Binding IsRepeating, Converter={StaticResource RepeatConverter}}"
+                                               Height="19" Width="19" />
+                        <ToolTip IsVisible="{Binding IsRepeating, Converter={StaticResource RepeatConverter}}">
+                            <ToolTip.Tip>
+                                <TextBlock Text="{Binding ActivePlaylist}"/>
+                            </ToolTip.Tip>
+                        </ToolTip>
+                    </Panel>
                 </Button>
 
                 <Button Name="Previous" Width="38" Height="38" CornerRadius="50" Click="SongControl"
