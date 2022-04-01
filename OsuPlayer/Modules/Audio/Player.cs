@@ -21,7 +21,6 @@ using OsuPlayer.IO.Storage.Config;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Network.API.ApiEndpoints;
 using OsuPlayer.Network.Online;
-using ReactiveUI;
 
 namespace OsuPlayer.Modules.Audio;
 
@@ -121,7 +120,9 @@ public class Player
 
         await using var config = new Config();
         var songEntries = await SongImporter.ImportSongs((await config.ReadAsync()).OsuPath!)!;
+        
         if (songEntries == null) return;
+        
         SongSource.Value = songEntries.ToSourceList();
 
         if (Filter.Value != null)
@@ -135,6 +136,7 @@ public class Player
 
         await using var cfg = new Config();
         var configContainer = await cfg.ReadAsync();
+        
         switch (configContainer.StartupSong)
         {
             case StartupSong.FirstSong:
@@ -225,6 +227,7 @@ public class Player
             await config.ReadAsync();
 
             path = config.Container.OsuPath!;
+            
             fullMapEntry = await song.ReadFullEntry(config.Container.OsuPath!);
 
             if (fullMapEntry == default)
@@ -381,15 +384,15 @@ public class Player
             return;
         }
 
-        if (CurrentIndex + 1 == SongSourceList.Count)
-        {
-            // if (OsuPlayer.Blacklist.IsSongInBlacklist(Songs[0]))
-            // {
-            //     CurrentIndex++;
-            //     await NextSong();
-            //     return;
-            // }
-        }
+        // if (CurrentIndex + 1 == SongSourceList.Count)
+        // {
+        //     // if (OsuPlayer.Blacklist.IsSongInBlacklist(Songs[0]))
+        //     // {
+        //     //     CurrentIndex++;
+        //     //     await NextSong();
+        //     //     return;
+        //     // }
+        // }
 
         if (Repeat == RepeatMode.Playlist)
         {
@@ -444,15 +447,15 @@ public class Player
             return;
         }
 
-        if (CurrentIndex - 1 == -1)
-        {
-            // if (false) //OsuPlayer.Blacklist.IsSongInBlacklist(Songs[Songs.Count - 1]))
-            // {
-            //     CurrentIndex--;
-            //     PreviousSong();
-            //     return;
-            // }
-        }
+        // if (CurrentIndex - 1 == -1)
+        // {
+        //     // if (false) //OsuPlayer.Blacklist.IsSongInBlacklist(Songs[Songs.Count - 1]))
+        //     // {
+        //     //     CurrentIndex--;
+        //     //     PreviousSong();
+        //     //     return;
+        //     // }
+        // }
 
         if (Repeat == RepeatMode.Playlist)
         {
@@ -495,11 +498,14 @@ public class Player
             {
                 // Next index if not at array end
                 if (_shuffleHistoryIndex < _shuffleHistory.Length - 1)
+                {
                     GetNextShuffledIndex();
+                }
                 // Move array one down if at the top of the array
                 else
                 {
                     Array.Copy(_shuffleHistory, 1, _shuffleHistory, 0, _shuffleHistory.Length - 1);
+                    
                     _shuffleHistory[_shuffleHistoryIndex] = GenerateShuffledIndex();
                 }
 
@@ -509,11 +515,14 @@ public class Player
             {
                 // Prev index if index greater than zero
                 if (_shuffleHistoryIndex > 0)
+                {
                     GetPreviousShuffledIndex();
+                }
                 // Move array one up if at the start of the array
                 else
                 {
                     Array.Copy(_shuffleHistory, 0, _shuffleHistory, 1, _shuffleHistory.Length - 1);
+                    
                     _shuffleHistory[_shuffleHistoryIndex] = GenerateShuffledIndex();
                 }
 
