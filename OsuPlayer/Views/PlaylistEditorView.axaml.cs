@@ -46,7 +46,7 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
                 return;
         }
 
-        var playlist = ViewModel!.CurrentSelectedPlaylist.Songs;
+        var playlist = ViewModel.CurrentSelectedPlaylist.Songs;
 
         foreach (var song in ViewModel.SelectedSongListItems)
         {
@@ -73,9 +73,9 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
                 return;
         }
 
-        var playlist = ViewModel!.CurrentSelectedPlaylist.Songs;
+        var playlist = ViewModel.CurrentSelectedPlaylist.Songs;
 
-        foreach (var song in ViewModel!.SelectedPlaylistItems!)
+        foreach (var song in ViewModel.SelectedPlaylistItems!)
         {
             if (!playlist.Contains(song.BeatmapSetId))
                 continue;

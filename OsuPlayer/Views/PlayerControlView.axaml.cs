@@ -4,6 +4,8 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
+using OsuPlayer.Data.OsuPlayer.Classes;
+using OsuPlayer.Extensions;
 using OsuPlayer.Windows;
 using ReactiveUI;
 
@@ -19,6 +21,7 @@ public partial class PlayerControlView : ReactivePlayerControl<PlayerControlView
     }
 
     private Slider ProgressSlider => this.FindControl<Slider>("SongProgressSlider");
+    private Button RepeatButton => this.FindControl<Button>("Repeat");
 
     private void InitializeComponent()
     {
@@ -31,8 +34,15 @@ public partial class PlayerControlView : ReactivePlayerControl<PlayerControlView
                 RoutingStrategies.Tunnel);
             ProgressSlider.AddHandler(PointerReleasedEvent, SongProgressSlider_OnPointerReleased,
                 RoutingStrategies.Tunnel);
+            RepeatButton.AddHandler(PointerReleasedEvent, Repeat_OnPointerReleased, RoutingStrategies.Tunnel);
         });
         AvaloniaXamlLoader.Load(this);
+    }
+
+    private void Repeat_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
+    {
+        if (e.InitialPressMouseButton == MouseButton.Right)
+            ViewModel.RaisePropertyChanged(nameof(ViewModel.Playlists));
     }
 
     private void SongProgressSlider_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
@@ -75,7 +85,7 @@ public partial class PlayerControlView : ReactivePlayerControl<PlayerControlView
         switch ((sender as Control)?.Name)
         {
             case "Repeat":
-                Core.Instance.Player.Repeat = Core.Instance.Player.Repeat.Next();
+                ViewModel.Player.Repeat = ViewModel.Player.Repeat.Next();
                 break;
             case "Previous":
                 ViewModel.Player.PreviousSong();
@@ -100,5 +110,9 @@ public partial class PlayerControlView : ReactivePlayerControl<PlayerControlView
     private void PlaybackSpeed_OnClick(object? sender, RoutedEventArgs e)
     {
         ViewModel!.PlaybackSpeed = 0;
+    }
+    private void RepeatContextMenu_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
+    {
+        ViewModel.Player.ActivePlaylistName = ((Playlist)(sender as ContextMenu)?.SelectedItem)?.Name;
     }
 }
