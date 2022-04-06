@@ -36,6 +36,7 @@ public partial class SettingsView : ReactivePlayerControl<SettingsViewModel>
             ViewModel.SettingsCategories =
                 this.FindControl<WrapPanel>("SettingsGrid").Children;
         });
+        
         AvaloniaXamlLoader.Load(this);
     }
 

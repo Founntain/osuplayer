@@ -51,6 +51,9 @@ public class Player
 
     public readonly Bindable<bool> SongsLoading = new();
     public readonly Bindable<SourceList<IMapEntryBase>> SongSource = new();
+
+    public readonly Bindable<Playlist?> SelectedPlaylist = new();
+
     private bool _isMuted;
     private double _oldVolume;
 
@@ -277,6 +280,7 @@ public class Player
         }
 
         CurrentSongImage.Value = await fullMapEntry.FindBackground();
+
         return Task.CompletedTask;
     }
 

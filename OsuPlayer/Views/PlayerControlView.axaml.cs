@@ -6,6 +6,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Extensions;
+using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Windows;
 using ReactiveUI;
 
@@ -77,7 +78,10 @@ public partial class PlayerControlView : ReactivePlayerControl<PlayerControlView
 
     private void Favorite_OnClick(object? sender, RoutedEventArgs e)
     {
-        // throw new NotImplementedException();
+        if (ViewModel.Player.CurrentSongBinding.Value != null)
+            PlaylistManager.ToggleSongOfCurrentPlaylist(ViewModel.Player.CurrentSongBinding.Value);
+
+        ViewModel.RaisePropertyChanged(nameof(ViewModel.IsCurrentSongInPlaylist));
     }
 
     private void SongControl(object? sender, RoutedEventArgs e)

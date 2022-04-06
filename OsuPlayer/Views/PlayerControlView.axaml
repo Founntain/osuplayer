@@ -17,6 +17,7 @@
         <cv:ShuffleConverter x:Key="ShuffleConverter" />
         <cv:RepeatConverter x:Key="RepeatConverter" />
         <cv:VolumeConverter x:Key="VolumeConverter" />
+        <cv:IsCurrentSongInPlaylistConverter x:Key="IsCurrentSongInPlaylistConverter" />
     </UserControl.Resources>
 
     <Design.DataContext>
@@ -103,9 +104,13 @@
                     </Button>
                 </Panel>
 
-                <Button Name="Favorite" Width="38" Height="38" CornerRadius="50" Click="Favorite_OnClick"
+                <Button Name="Favorite" Width="38" Height="38" CornerRadius="50"
+                        IsEnabled="{Binding IsAPlaylistSelected}"
+                        Click="Favorite_OnClick"
                         Background="Transparent">
-                    <avalonia:MaterialIcon Kind="HeartOutline" Height="19" Width="19" />
+                    <avalonia:MaterialIcon
+                        Kind="{Binding IsCurrentSongInPlaylist, Converter={StaticResource IsCurrentSongInPlaylistConverter}}"
+                        Height="19" Width="19" />
                 </Button>
 
                 <Button Name="Blacklist" Width="38" Height="38" CornerRadius="50" Click="Blacklist_OnClick"

@@ -17,8 +17,13 @@ public partial class MainWindow : ReactivePlayerWindow<MainWindowViewModel>
     public MainWindow(MainWindowViewModel viewModel, Player player)
     {
         ViewModel = viewModel;
+        
         Task.Run(player.ImportSongs);
+        
         InitializeComponent();
+
+        using var config = new Config();
+        TransparencyLevelHint = config.Read().TransparencyLevelHint;
     }
 
     private void InitializeComponent()
