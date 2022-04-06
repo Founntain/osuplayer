@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -76,10 +77,13 @@ public partial class PlayerControlView : ReactivePlayerControl<PlayerControlView
         // throw new NotImplementedException();
     }
 
-    private void Favorite_OnClick(object? sender, RoutedEventArgs e)
+    private async void Favorite_OnClick(object? sender, RoutedEventArgs e)
     {
         if (ViewModel.Player.CurrentSongBinding.Value != null)
-            PlaylistManager.ToggleSongOfCurrentPlaylist(ViewModel.Player.CurrentSongBinding.Value);
+        {
+            await PlaylistManager.ToggleSongOfCurrentPlaylist(ViewModel.Player.CurrentSongBinding.Value);
+            ViewModel.Player.TriggerPlaylistChanged(new PropertyChangedEventArgs("Fav"));
+        }
 
         ViewModel.RaisePropertyChanged(nameof(ViewModel.IsCurrentSongInPlaylist));
     }
@@ -115,6 +119,7 @@ public partial class PlayerControlView : ReactivePlayerControl<PlayerControlView
     {
         ViewModel!.PlaybackSpeed = 0;
     }
+
     private void RepeatContextMenu_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
         ViewModel.Player.ActivePlaylistName = ((Playlist)(sender as ContextMenu)?.SelectedItem)?.Name;

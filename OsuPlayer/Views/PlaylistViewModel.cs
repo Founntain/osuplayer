@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reactive.Disposables;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Extensions;
@@ -21,7 +22,16 @@ public class PlaylistViewModel : BaseViewModel
         Activator = new ViewModelActivator();
 
         _player = player;
-        
+
+        _player.PlaylistChanged += (sender, args) =>
+        {
+            var selection = _player.SelectedPlaylist.Value;
+            Playlists = PlaylistManager.GetAllPlaylists().ToObservableCollection();
+            this.RaisePropertyChanged(nameof(Playlists));
+            _player.SelectedPlaylist.Value = Playlists.First(x => x.Id == selection!.Id);
+            this.RaisePropertyChanged(nameof(SelectedPlaylist));
+        };
+
         this.WhenActivated(disposables =>
         {
             Disposable.Create(() => { }).DisposeWith(disposables);
@@ -48,6 +58,7 @@ public class PlaylistViewModel : BaseViewModel
         get => _player.SelectedPlaylist.Value;
         set
         {
+            PlaylistManager.SetCurrentPlaylist(value);
             _player.SelectedPlaylist.Value = value;
             this.RaisePropertyChanged();
         }

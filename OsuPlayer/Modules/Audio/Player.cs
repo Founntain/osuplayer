@@ -123,9 +123,9 @@ public class Player
 
         await using var config = new Config();
         var songEntries = await SongImporter.ImportSongs((await config.ReadAsync()).OsuPath!)!;
-        
+
         if (songEntries == null) return;
-        
+
         SongSource.Value = songEntries.ToSourceList();
 
         if (Filter.Value != null)
@@ -139,7 +139,7 @@ public class Player
 
         await using var cfg = new Config();
         var configContainer = await cfg.ReadAsync();
-        
+
         switch (configContainer.StartupSong)
         {
             case StartupSong.FirstSong:
@@ -230,7 +230,7 @@ public class Player
             await config.ReadAsync();
 
             path = config.Container.OsuPath!;
-            
+
             fullMapEntry = await song.ReadFullEntry(config.Container.OsuPath!);
 
             if (fullMapEntry == default)
@@ -432,6 +432,7 @@ public class Player
         : default;
 
     public string? ActivePlaylistName { get; set; }
+    public event PropertyChangedEventHandler? PlaylistChanged;
 
     public async void PreviousSong()
     {
@@ -447,7 +448,6 @@ public class Player
         if (IsShuffle.Value)
         {
             await PlayAsync(await DoShuffle(ShuffleDirection.Backwards), PlayDirection.Backwards);
-
             return;
         }
 
@@ -509,7 +509,7 @@ public class Player
                 else
                 {
                     Array.Copy(_shuffleHistory, 1, _shuffleHistory, 0, _shuffleHistory.Length - 1);
-                    
+
                     _shuffleHistory[_shuffleHistoryIndex] = GenerateShuffledIndex();
                 }
 
@@ -526,7 +526,7 @@ public class Player
                 else
                 {
                     Array.Copy(_shuffleHistory, 0, _shuffleHistory, 1, _shuffleHistory.Length - 1);
-                    
+
                     _shuffleHistory[_shuffleHistoryIndex] = GenerateShuffledIndex();
                 }
 
@@ -621,5 +621,10 @@ public class Player
     public List<IMapEntryBase> GetMapEntriesFromSetId(ICollection<int> setId)
     {
         return SongSourceList!.Where(x => setId.Contains(x.BeatmapSetId)).ToList();
+    }
+
+    public void TriggerPlaylistChanged(PropertyChangedEventArgs e)
+    {
+        PlaylistChanged?.Invoke(this, e);
     }
 }
