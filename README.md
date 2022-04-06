@@ -44,7 +44,7 @@ Or build the project for yourself, see the section below
  - .NET 6 SDK
  - [Avalonia .NET Templates](https://github.com/AvaloniaUI/avalonia-dotnet-templates)
  - [Check out the Avalonia getting started](https://github.com/AvaloniaUI/Avalonia#-getting-started)
- - *Have a **decent understanding of the internal osu!** stucture and *have knownledge of osu! (the game) aswell.*
+ - *Have a **decent understanding of the internal osu!** stucture and have knownledge of osu! (the game) aswell.*
 
 #### 🚀 How to contribute
  - Make a fork of this repository
