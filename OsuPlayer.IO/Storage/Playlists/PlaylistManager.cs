@@ -142,4 +142,18 @@ public class PlaylistManager
 
         await ReplacePlaylistAsync(CurrentPlaylist);
     }
+
+    public static void SetLastKnownPlaylistAsCurrentPlaylist()
+    {
+        using (var storage = new PlaylistStorage())
+        {
+            var container = storage.Read();
+
+            var playlist = container.Playlists?.FirstOrDefault(x => x.Id == container.LastSelectedPlaylist);
+
+            if (playlist == default) return;
+
+            CurrentPlaylist = playlist;
+        }
+    }
 }

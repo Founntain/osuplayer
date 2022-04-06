@@ -34,9 +34,17 @@ public partial class PlayerControlView : ReactivePlayerControl<PlayerControlView
 
             ProgressSlider.AddHandler(PointerPressedEvent, SongProgressSlider_OnPointerPressed,
                 RoutingStrategies.Tunnel);
+            
             ProgressSlider.AddHandler(PointerReleasedEvent, SongProgressSlider_OnPointerReleased,
                 RoutingStrategies.Tunnel);
+            
             RepeatButton.AddHandler(PointerReleasedEvent, Repeat_OnPointerReleased, RoutingStrategies.Tunnel);
+
+            PlaylistManager.SetLastKnownPlaylistAsCurrentPlaylist();
+
+            ViewModel.RaisePropertyChanged(nameof(ViewModel.IsAPlaylistSelected));
+            ViewModel.RaisePropertyChanged(nameof(ViewModel.IsCurrentSongInPlaylist));
+            ViewModel.RaisePropertyChanged(nameof(ViewModel.IsCurrentSongOnBlacklist));
         });
         AvaloniaXamlLoader.Load(this);
     }
