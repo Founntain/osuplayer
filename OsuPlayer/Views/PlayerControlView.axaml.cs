@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -6,6 +7,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Extensions;
+using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Windows;
 using ReactiveUI;
 
@@ -32,9 +34,17 @@ public partial class PlayerControlView : ReactivePlayerControl<PlayerControlView
 
             ProgressSlider.AddHandler(PointerPressedEvent, SongProgressSlider_OnPointerPressed,
                 RoutingStrategies.Tunnel);
+            
             ProgressSlider.AddHandler(PointerReleasedEvent, SongProgressSlider_OnPointerReleased,
                 RoutingStrategies.Tunnel);
+            
             RepeatButton.AddHandler(PointerReleasedEvent, Repeat_OnPointerReleased, RoutingStrategies.Tunnel);
+
+            PlaylistManager.SetLastKnownPlaylistAsCurrentPlaylist();
+
+            ViewModel.RaisePropertyChanged(nameof(ViewModel.IsAPlaylistSelected));
+            ViewModel.RaisePropertyChanged(nameof(ViewModel.IsCurrentSongInPlaylist));
+            ViewModel.RaisePropertyChanged(nameof(ViewModel.IsCurrentSongOnBlacklist));
         });
         AvaloniaXamlLoader.Load(this);
     }
@@ -75,9 +85,15 @@ public partial class PlayerControlView : ReactivePlayerControl<PlayerControlView
         // throw new NotImplementedException();
     }
 
-    private void Favorite_OnClick(object? sender, RoutedEventArgs e)
+    private async void Favorite_OnClick(object? sender, RoutedEventArgs e)
     {
-        // throw new NotImplementedException();
+        if (ViewModel.Player.CurrentSongBinding.Value != null)
+        {
+            await PlaylistManager.ToggleSongOfCurrentPlaylist(ViewModel.Player.CurrentSongBinding.Value);
+            ViewModel.Player.TriggerPlaylistChanged(new PropertyChangedEventArgs("Fav"));
+        }
+
+        ViewModel.RaisePropertyChanged(nameof(ViewModel.IsCurrentSongInPlaylist));
     }
 
     private void SongControl(object? sender, RoutedEventArgs e)
@@ -111,6 +127,7 @@ public partial class PlayerControlView : ReactivePlayerControl<PlayerControlView
     {
         ViewModel!.PlaybackSpeed = 0;
     }
+
     private void RepeatContextMenu_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
         ViewModel.Player.ActivePlaylistName = ((Playlist)(sender as ContextMenu)?.SelectedItem)?.Name;

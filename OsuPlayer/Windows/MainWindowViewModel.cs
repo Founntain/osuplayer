@@ -22,7 +22,7 @@ public class MainWindowViewModel : BaseWindowViewModel
         PlayerControl = new PlayerControlViewModel(Player, BassEngine);
 
         SearchView = new SearchViewModel(Player);
-        PlaylistView = new PlaylistViewModel();
+        PlaylistView = new PlaylistViewModel(Player);
         PlaylistEditorViewModel = new PlaylistEditorViewModel(Player);
         HomeView = new HomeViewModel(Player);
         UserView = new UserViewModel(Player);

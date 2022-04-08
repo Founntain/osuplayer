@@ -19,5 +19,7 @@ public class PlaylistContainer : IStorableContainer
         };
     }
 
+    public Guid LastSelectedPlaylist { get; set; }
+    
     public IList<Playlist>? Playlists { get; set; }
 }

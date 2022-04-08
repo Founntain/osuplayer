@@ -11,9 +11,7 @@ using OsuPlayer.IO.DbReader.DataModels;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules.Audio;
 using OsuPlayer.ViewModels;
-using OsuPlayer.Windows;
 using ReactiveUI;
-using Splat;
 
 namespace OsuPlayer.Views;
 
@@ -35,6 +33,19 @@ public class PlayerControlViewModel : BaseViewModel
     private string _currentSongTime = "00:00";
 
     private double _playbackSpeed;
+    private bool _isCurrentSongOnBlacklist;
+
+    public bool IsCurrentSongInPlaylist => _currentSong.Value != null
+                                           && PlaylistManager.CurrentPlaylist != null
+                                           && PlaylistManager.CurrentPlaylist.Songs.Contains(_currentSong.Value.BeatmapSetId);
+
+    public bool IsAPlaylistSelected => PlaylistManager.CurrentPlaylist != default;
+
+    public bool IsCurrentSongOnBlacklist
+    {
+        get => _isCurrentSongOnBlacklist;
+        set => this.RaiseAndSetIfChanged(ref _isCurrentSongOnBlacklist, value);
+    }
 
     public PlayerControlViewModel(Player player, BassEngine bassEngine)
     {
@@ -52,6 +63,8 @@ public class PlayerControlViewModel : BaseViewModel
             this.RaisePropertyChanged(nameof(TitleText));
             this.RaisePropertyChanged(nameof(ArtistText));
             this.RaisePropertyChanged(nameof(SongText));
+            this.RaisePropertyChanged(nameof(IsCurrentSongInPlaylist));
+            this.RaisePropertyChanged(nameof(IsCurrentSongOnBlacklist));
         });
 
         _volume.BindTo(bassEngine.VolumeB);
@@ -68,6 +81,12 @@ public class PlayerControlViewModel : BaseViewModel
 
         Player.CurrentSongImage.BindValueChanged(d => CurrentSongImage = d.NewValue, true);
 
+        Player.SelectedPlaylist.BindValueChanged(_ =>
+        {
+            this.RaisePropertyChanged(nameof(IsAPlaylistSelected));
+            this.RaisePropertyChanged(nameof(IsCurrentSongInPlaylist));
+        }, true);
+        
         Activator = new ViewModelActivator();
         this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
     }

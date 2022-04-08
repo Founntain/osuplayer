@@ -1,4 +1,5 @@
-﻿using Avalonia.Interactivity;
+﻿using System.Linq;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
 using OsuPlayer.Extensions;
@@ -18,8 +19,6 @@ public partial class PlaylistView : ReactivePlayerControl<PlaylistViewModel>
         {
             if (this.GetVisualRoot() is MainWindow mainWindow)
                 _mainWindow = mainWindow;
-
-            ViewModel.Playlists = PlaylistManager.GetAllPlaylists().ToObservableCollection();
         });
         InitializeComponent();
     }

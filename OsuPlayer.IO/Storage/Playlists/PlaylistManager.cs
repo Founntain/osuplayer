@@ -1,9 +1,26 @@
 ﻿using OsuPlayer.Data.OsuPlayer.Classes;
+using OsuPlayer.IO.DbReader.DataModels;
 
 namespace OsuPlayer.IO.Storage.Playlists;
 
 public class PlaylistManager
 {
+    public static Playlist? CurrentPlaylist;
+
+    public static async Task SetCurrentPlaylist(Playlist? playlist)
+    {
+        if (playlist == default) return;
+
+        CurrentPlaylist = playlist;
+
+        await using (var storage = new PlaylistStorage())
+        {
+            await storage.ReadAsync();
+
+            storage.Container.LastSelectedPlaylist = CurrentPlaylist.Id;
+        }
+    }
+    
     public static IList<Playlist> GetAllPlaylists()
     {
         using (var storage = new PlaylistStorage())
@@ -101,6 +118,42 @@ public class PlaylistManager
             storage.Container.Playlists.Remove(p);
 
             return storage.Container.Playlists;
+        }
+    }
+
+    public static async Task ToggleSongOfCurrentPlaylist(IMapEntryBase mapEntry)
+    {
+        if (CurrentPlaylist.Songs.Contains(mapEntry.BeatmapSetId))
+            await RemoveSongToCurrentPlaylist(mapEntry);
+        else
+            await AddSongToCurrentPlaylist(mapEntry);
+    }
+
+    public static async Task AddSongToCurrentPlaylist(IMapEntryBase mapEntry)
+    {
+        CurrentPlaylist.Songs.Add(mapEntry.BeatmapSetId);
+
+        await ReplacePlaylistAsync(CurrentPlaylist);
+    }
+
+    public static async Task RemoveSongToCurrentPlaylist(IMapEntryBase mapEntry)
+    {
+        CurrentPlaylist.Songs.Remove(mapEntry.BeatmapSetId);
+
+        await ReplacePlaylistAsync(CurrentPlaylist);
+    }
+
+    public static void SetLastKnownPlaylistAsCurrentPlaylist()
+    {
+        using (var storage = new PlaylistStorage())
+        {
+            var container = storage.Read();
+
+            var playlist = container.Playlists?.FirstOrDefault(x => x.Id == container.LastSelectedPlaylist);
+
+            if (playlist == default) return;
+
+            CurrentPlaylist = playlist;
         }
     }
 }
