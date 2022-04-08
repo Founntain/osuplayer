@@ -26,9 +26,16 @@ public class PlaylistViewModel : BaseViewModel
         _player.PlaylistChanged += (sender, args) =>
         {
             var selection = _player.SelectedPlaylist.Value;
+
+            if (selection == default)
+                return;
+            
             Playlists = PlaylistManager.GetAllPlaylists().ToObservableCollection();
+            
             this.RaisePropertyChanged(nameof(Playlists));
+            
             _player.SelectedPlaylist.Value = Playlists.First(x => x.Id == selection!.Id);
+            
             this.RaisePropertyChanged(nameof(SelectedPlaylist));
         };
 
