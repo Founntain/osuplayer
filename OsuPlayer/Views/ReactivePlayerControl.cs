@@ -6,18 +6,17 @@ using ReactiveUI;
 
 namespace OsuPlayer.Views;
 
-public class ReactivePlayerControl<TViewModel> : UserControl, IViewFor<TViewModel> where TViewModel : BaseViewModel
+public class ReactivePlayerControl<TViewModel> : UserControl, IViewFor<TViewModel> where TViewModel : class
 {
     public static readonly StyledProperty<TViewModel> ViewModelProperty = AvaloniaProperty
         .Register<ReactivePlayerControl<TViewModel>, TViewModel>(nameof(ViewModel));
 
     public ReactivePlayerControl()
     {
-        this.WhenActivated(disposables => { ViewModel!.Activator.Activate(); });
+        this.WhenActivated(disposables => { });
         var x = this.GetObservable(ViewModelProperty);
         x.Subscribe(OnViewModelChanged);
     }
-
 
     object? IViewFor.ViewModel
     {
@@ -25,7 +24,11 @@ public class ReactivePlayerControl<TViewModel> : UserControl, IViewFor<TViewMode
         set => SetValue(ViewModelProperty, value);
     }
 
-    public TViewModel ViewModel { get; set; }
+    public TViewModel ViewModel
+    {
+        get => GetValue(ViewModelProperty);
+        set => SetValue(ViewModelProperty, value);
+    }
 
     protected override void OnDataContextChanged(EventArgs e)
     {
