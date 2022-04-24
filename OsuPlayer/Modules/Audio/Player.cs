@@ -175,23 +175,17 @@ public class Player
 
         if (config.LastPlayedSong == null)
         {
-            await PlayAsync(SongSourceList![0]);
+            await PlayAsync(null);
             return;
         }
 
         if (config.LastPlayedSong.SetId != -1)
         {
-            await PlayAsync(SongSourceList!.First(x => x.BeatmapSetId == config.LastPlayedSong.SetId));
+            await PlayAsync(GetMapEntryFromSetId(config.LastPlayedSong.SetId));
             return;
         }
 
-        if (SongSourceList?.FirstOrDefault(x => x.Title == config.LastPlayedSong.Title && x.Artist == config.LastPlayedSong.Artist) is { } map)
-        {
-            await PlayAsync(map);
-            return;
-        }
-
-        await PlayAsync(SongSourceList![0]);
+        await PlayAsync(SongSourceList?.FirstOrDefault(x => x.Title == config.LastPlayedSong.Title && x.Artist == config.LastPlayedSong.Artist));
     }
 
     private void UpdateSorting(SortingMode sortingMode = SortingMode.Title)
@@ -541,7 +535,7 @@ public class Player
             PlayDirection.Backwards);
     }
 
-    public IMapEntryBase? GetMapEntryFromSetId(int setId)
+    private IMapEntryBase? GetMapEntryFromSetId(int setId)
     {
         return SongSourceList!.FirstOrDefault(x => x.BeatmapSetId == setId);
     }
