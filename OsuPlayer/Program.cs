@@ -1,6 +1,7 @@
 ﻿using System;
 using Avalonia;
 using Avalonia.ReactiveUI;
+using OsuPlayer.Extensions;
 using OsuPlayer.Modules.Audio;
 using OsuPlayer.Windows;
 using Splat;
@@ -15,9 +16,16 @@ internal class Program
     [STAThread]
     public static void Main(string[] args)
     {
-        Register(Locator.CurrentMutable, Locator.Current);
-        BuildAvaloniaApp()
-            .StartWithClassicDesktopLifetime(args);
+        try
+        {
+            Register(Locator.CurrentMutable, Locator.Current);
+            BuildAvaloniaApp()
+                .StartWithClassicDesktopLifetime(args);
+        }
+        catch (Exception ex)
+        {
+            UnhandledExceptionHandler.HandleException(ex);
+        }
     }
 
     // Avalonia configuration, don't remove; also used by visual designer.

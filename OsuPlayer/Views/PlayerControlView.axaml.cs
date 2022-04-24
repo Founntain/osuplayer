@@ -82,7 +82,7 @@ public partial class PlayerControlView : ReactivePlayerControl<PlayerControlView
 
     private void Blacklist_OnClick(object? sender, RoutedEventArgs e)
     {
-        // throw new NotImplementedException();
+        throw new NotImplementedException();
     }
 
     private async void Favorite_OnClick(object? sender, RoutedEventArgs e)
