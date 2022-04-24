@@ -27,7 +27,7 @@ public static class Extensions
         return new ObservableCollection<T>(source);
     }
 
-    public static SourceList<T> ToSourceList<T>(this ICollection<T>? source)
+    public static SourceList<T> ToSourceList<T>(this IEnumerable<T>? source)
     {
         if (source == default)
             return new SourceList<T>();

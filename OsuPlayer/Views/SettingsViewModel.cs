@@ -24,7 +24,6 @@ public class SettingsViewModel : BaseViewModel
     private string _settingsSearchQ;
 
     public MainWindow? MainWindow;
-    private SortingMode _selectedSortingMode;
 
     public SettingsViewModel(Player player)
     {
@@ -76,10 +75,11 @@ public class SettingsViewModel : BaseViewModel
 
     public SortingMode SelectedSortingMode
     {
-        get => _selectedSortingMode;
+        get => Player.SortingModeBindable.Value;
         set
         {
-            this.RaiseAndSetIfChanged(ref _selectedSortingMode, value);
+            Player.SortingModeBindable.Value = value;
+            this.RaisePropertyChanged();
 
             using var config = new Config();
             config.Container.SortingMode = value;

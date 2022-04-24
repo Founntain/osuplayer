@@ -13,10 +13,10 @@ public sealed class SongImporter
 
         if (File.Exists(Path.Combine(path, "osu!.db")))
             maps = (await DbReader.DbReader.ReadOsuDb(path))?.DistinctBy(x => x.BeatmapChecksum).OrderBy(x => x.BeatmapSetId)
-                .DistinctBy(x => x.Title).Where(x => !string.IsNullOrEmpty(x.Title)).OrderBy(x => x.Title).ToArray();
+                .DistinctBy(x => x.Title).Where(x => !string.IsNullOrEmpty(x.Title)).ToArray();
         else if (File.Exists(Path.Combine(path, "client.realm")))
             maps = (await RealmReader.ReadRealm(path))?.DistinctBy(x => x.BeatmapChecksum).OrderBy(x => x.BeatmapSetId)
-                .DistinctBy(x => x.Title).Where(x => !string.IsNullOrEmpty(x.Title)).OrderBy(x => x.Title).ToArray();
+                .DistinctBy(x => x.Title).Where(x => !string.IsNullOrEmpty(x.Title)).ToArray();
 
         if (maps == null || !maps.Any()) return null;
 

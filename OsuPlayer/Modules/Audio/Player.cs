@@ -47,6 +47,8 @@ public class Player
 
     public readonly Bindable<RepeatMode> IsRepeating = new();
 
+    public readonly Bindable<SortingMode> SortingModeBindable = new();
+
     public readonly Bindable<bool> IsShuffle = new();
 
     public readonly Bindable<bool> SongsLoading = new();
@@ -72,6 +74,8 @@ public class Player
             if (args.PropertyName == "SongEnd")
                 Dispatcher.UIThread.Post(NextSong);
         };
+
+        SortingModeBindable.BindValueChanged(d => UpdateSorting(d.NewValue), true);
 
         SongSource.Value = new SourceList<IMapEntryBase>();
 
@@ -122,14 +126,14 @@ public class Player
         SongsLoading.Value = true;
 
         await using var config = new Config();
-        var songEntries = await SongImporter.ImportSongs((await config.ReadAsync()).OsuPath!)!;
+        var songEntries = await SongImporter.ImportSongs((await config.ReadAsync()).OsuPath!);
 
         if (songEntries == null) return;
 
-        SongSource.Value = songEntries.ToSourceList();
+        SongSource.Value = songEntries.OrderBy(x => CustomSorter(x, config.Container.SortingMode)).ToSourceList();
 
         if (Filter.Value != null)
-            SongSource.Value.Connect().Sort(SortExpressionComparer<IMapEntryBase>.Ascending(x => x.Title))
+            SongSource.Value.Connect().Sort(SortExpressionComparer<IMapEntryBase>.Ascending(x => CustomSorter(x, config.Container.SortingMode)))
                 .Filter(Filter.Value, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
                 .Bind(out FilteredSongEntries).Subscribe();
 
@@ -157,6 +161,31 @@ public class Player
         }
 
         _bassEngine.Volume = configContainer.Volume;
+    }
+
+    private void UpdateSorting(SortingMode sortingMode = SortingMode.Title)
+    {
+        SongSource.Value = SongSource.Value.Items.OrderBy(x => CustomSorter(x, sortingMode)).ToSourceList();
+
+        if (Filter.Value != null)
+            SongSource.Value.Connect().Sort(SortExpressionComparer<IMapEntryBase>.Ascending(x => CustomSorter(x, sortingMode)))
+                .Filter(Filter.Value, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
+                .Bind(out FilteredSongEntries).Subscribe();
+    }
+
+    private IComparable CustomSorter(IMapEntryBase map, SortingMode sortingMode)
+    {
+        switch (sortingMode)
+        {
+            case SortingMode.Title:
+                return map.Title;
+            case SortingMode.Artist:
+                return map.Artist;
+            case SortingMode.SetId:
+                return map.BeatmapSetId;
+            default:
+                return null!;
+        }
     }
 
     public void SetPlaybackSpeed(double speed)
@@ -292,7 +321,7 @@ public class Player
 
         _currentSongTimer.Stop();
 
-        var time = (double)_currentSongTimer.ElapsedMilliseconds / 1000;
+        var time = (double) _currentSongTimer.ElapsedMilliseconds / 1000;
 
         var response = await ApiAsync.UpdateXpFromCurrentUserAsync(
             CurrentSongBinding.Value?.BeatmapChecksum ?? string.Empty,
@@ -537,7 +566,7 @@ public class Player
         Debug.WriteLine("ShuffleHistory: " + _shuffleHistoryIndex);
 
         // ReSharper disable once PossibleInvalidOperationException
-        var shuffleIndex = (int)_shuffleHistory[_shuffleHistoryIndex];
+        var shuffleIndex = (int) _shuffleHistory[_shuffleHistoryIndex];
 
         return Task.FromResult(Repeat == RepeatMode.Playlist
             ? GetMapEntryFromSetId(ActivePlaylist!.Songs[shuffleIndex])
