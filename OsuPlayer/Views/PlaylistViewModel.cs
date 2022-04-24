@@ -13,9 +13,7 @@ namespace OsuPlayer.Views;
 public class PlaylistViewModel : BaseViewModel
 {
     private ObservableCollection<Playlist> _playlists;
-    private Playlist _selectedPlaylist;
     private readonly Player _player;
-
 
     public PlaylistViewModel(Player player)
     {
