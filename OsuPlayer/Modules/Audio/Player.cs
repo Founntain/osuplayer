@@ -128,7 +128,13 @@ public class Player
 
     public string? ActivePlaylistName { get; set; }
 
-    public async Task ImportSongs()
+    /// <summary>
+    /// Imports the songs from either the osu!.db or client.realm using the <see cref="SongImporter"/>. <br/>
+    /// Imported songs are saved into <see cref="SongSource"/> and <see cref="FilteredSongEntries"/> filtered from searching. <br/>
+    /// Also plays the first song depending on the <see cref="StartupSong"/> config.
+    /// <seealso cref="SongImporter.ImportSongsAsync"/>
+    /// </summary>
+    public async Task ImportSongsAsync()
     {
         SongsLoading.Value = true;
 
@@ -136,7 +142,7 @@ public class Player
 
         await using (var config = new Config())
         {
-            var songEntries = await SongImporter.ImportSongs((await config.ReadAsync()).OsuPath!);
+            var songEntries = await SongImporter.ImportSongsAsync((await config.ReadAsync()).OsuPath!);
 
             if (songEntries == null) return;
 
@@ -169,6 +175,11 @@ public class Player
         }
     }
 
+    /// <summary>
+    /// Plays the last played song read from the <see cref="ConfigContainer"/> and defaults to the
+    /// first song in the <see cref="SongSourceList"/> if null
+    /// </summary>
+    /// <param name="config">optional parameter defaults to null. Used to avoid duplications of config instances</param>
     private async Task PlayLastPlayedSongAsync(ConfigContainer? config = null)
     {
         config ??= new Config().Container;
@@ -188,6 +199,10 @@ public class Player
         await PlayAsync(SongSourceList?.FirstOrDefault(x => x.Title == config.LastPlayedSong.Title && x.Artist == config.LastPlayedSong.Artist));
     }
 
+    /// <summary>
+    /// Updates the <see cref="SongSource"/> and <see cref="FilteredSongEntries"/> according to the <paramref name="sortingMode"/>
+    /// </summary>
+    /// <param name="sortingMode">a <see cref="SortingMode"/> setting the sort mode of the song list</param>
     private void UpdateSorting(SortingMode sortingMode = SortingMode.Title)
     {
         SongSource.Value = SongSource.Value.Items.OrderBy(x => CustomSorter(x, sortingMode)).ToSourceList();
@@ -198,6 +213,12 @@ public class Player
                 .Bind(out FilteredSongEntries).Subscribe();
     }
 
+    /// <summary>
+    /// Picks the <see cref="IMapEntryBase"/> property to sort maps on
+    /// </summary>
+    /// <param name="map">the <see cref="IMapEntryBase"/> to be sorted</param>
+    /// <param name="sortingMode">the <see cref="SortingMode"/> to decide how to sort</param>
+    /// <returns>an <see cref="IComparable"/> containing the property to compare on</returns>
     private IComparable CustomSorter(IMapEntryBase map, SortingMode sortingMode)
     {
         switch (sortingMode)

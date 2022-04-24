@@ -19,7 +19,7 @@ public partial class MainWindow : ReactivePlayerWindow<MainWindowViewModel>
     {
         ViewModel = viewModel;
 
-        Task.Run(player.ImportSongs);
+        Task.Run(player.ImportSongsAsync);
 
         InitializeComponent();
 

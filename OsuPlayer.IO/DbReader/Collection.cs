@@ -8,14 +8,14 @@ public class Collection
     public List<string> BeatmapHashes;
     public string Name;
 
-    public static Collection ReadFromReader(DbReader r)
+    public static Collection ReadFromReader(OsuDbReader r)
     {
         Collection collection = new();
         collection.ReadFromStream(r);
         return collection;
     }
 
-    private void ReadFromStream(DbReader r)
+    private void ReadFromStream(OsuDbReader r)
     {
         Name = r.ReadString();
         BeatmapHashes = new List<string>();
