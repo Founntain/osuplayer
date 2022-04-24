@@ -18,9 +18,6 @@ public class PlaylistEditorViewModel : BaseViewModel
     private bool _isRenamePlaylistPopupOpen;
     private string _newPlaylistNameText;
     private SourceList<Playlist>? _playlists;
-    private List<IMapEntryBase>? _selectedPlaylistItems;
-
-    private List<IMapEntryBase>? _selectedSongListItems;
 
     public PlaylistEditorViewModel(Player player)
     {
@@ -77,15 +74,7 @@ public class PlaylistEditorViewModel : BaseViewModel
 
     public List<IMapEntryBase> SongList => _player.SongSourceList!;
 
-    public List<IMapEntryBase>? SelectedSongListItems
-    {
-        get => _selectedSongListItems;
-        set => this.RaiseAndSetIfChanged(ref _selectedSongListItems, value);
-    }
+    public List<IMapEntryBase>? SelectedSongListItems { get; set; }
 
-    public List<IMapEntryBase>? SelectedPlaylistItems
-    {
-        get => _selectedPlaylistItems;
-        set => this.RaiseAndSetIfChanged(ref _selectedPlaylistItems, value);
-    }
+    public List<IMapEntryBase>? SelectedPlaylistItems { get; set; }
 }
