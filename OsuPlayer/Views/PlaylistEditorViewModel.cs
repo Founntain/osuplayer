@@ -1,15 +1,11 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Disposables;
 using DynamicData;
 using OsuPlayer.Data.OsuPlayer.Classes;
-using OsuPlayer.Extensions;
 using OsuPlayer.IO.DbReader.DataModels;
 using OsuPlayer.Modules.Audio;
 using OsuPlayer.ViewModels;
-using OsuPlayer.Windows;
 using ReactiveUI;
-using Splat;
 
 namespace OsuPlayer.Views;
 
@@ -32,10 +28,7 @@ public class PlaylistEditorViewModel : BaseViewModel
 
         Activator = new ViewModelActivator();
 
-        this.WhenActivated(disposables =>
-        {
-            Disposable.Create(() => { }).DisposeWith(disposables);
-        });
+        this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
 
         SelectedPlaylistItems = new List<IMapEntryBase>();
         SelectedSongListItems = new List<IMapEntryBase>();

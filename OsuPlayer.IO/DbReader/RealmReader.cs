@@ -4,9 +4,17 @@ using Realms;
 
 namespace OsuPlayer.IO.DbReader;
 
+/// <summary>
+/// A realm reader used for reading the client.realm file from osu!lazer
+/// </summary>
 public class RealmReader
 {
-    public static async Task<List<IMapEntryBase>?> ReadRealm(string path)
+    /// <summary>
+    /// Reads the client.realm file from the <paramref name="path"/>
+    /// </summary>
+    /// <param name="path">the path where the client.realm is located</param>
+    /// <returns>an <see cref="IList{T}"/> of <see cref="IMapEntryBase"/> read from the client.realm</returns>
+    public static async Task<List<IMapEntryBase>?> Read(string path)
     {
         var realmLoc = Path.Combine(path, "client.realm");
 

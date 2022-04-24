@@ -90,7 +90,7 @@ public partial class SettingsView : ReactivePlayerControl<SettingsViewModel>
             ViewModel.OsuLocation = osuFolder!;
         }
 
-        await Task.Run(ViewModel.Player.ImportSongs);
+        await Task.Run(ViewModel.Player.ImportSongsAsync);
     }
 
     public async void LoginClick(object? sender, RoutedEventArgs routedEventArgs)

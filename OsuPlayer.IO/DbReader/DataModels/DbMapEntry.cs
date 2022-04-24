@@ -7,7 +7,7 @@ namespace OsuPlayer.IO.DbReader.DataModels;
 
 /// <summary>
 /// a full beatmap entry with optionally used data
-/// <remarks>only created on a <see cref="DbReader.ReadFullMapEntry" /> call</remarks>
+/// <remarks>only created on a <see cref="OsuDbReader.ReadFullMapEntry" /> call</remarks>
 /// </summary>
 public class DbMapEntry : DbMapEntryBase, IMapEntry
 {

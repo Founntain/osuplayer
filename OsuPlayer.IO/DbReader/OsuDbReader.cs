@@ -1,19 +1,18 @@
 using System.Text;
 using OsuPlayer.IO.DbReader.DataModels;
-using OsuPlayer.IO.Storage.Config;
 
 namespace OsuPlayer.IO.DbReader;
 
 /// <summary>
 /// A <see cref="BinaryReader" /> to read the osu!.db to extract their beatmap data or to read from the collection.db
 /// </summary>
-public partial class DbReader : BinaryReader
+public class OsuDbReader : BinaryReader
 {
     public static int OsuDbVersion;
 
     private readonly byte[] _buf = new byte[512];
 
-    public DbReader(Stream input) : base(input)
+    public OsuDbReader(Stream input) : base(input)
     {
     }
 
@@ -22,16 +21,15 @@ public partial class DbReader : BinaryReader
     /// </summary>
     /// <param name="osuPath">the osu full path</param>
     /// <returns> a <see cref="DbMapEntryBase" /> list</returns>
-    public static async Task<List<IMapEntryBase>?> ReadOsuDb(string osuPath)
+    public static async Task<List<IMapEntryBase>?> Read(string osuPath)
     {
         var minBeatMaps = new List<IMapEntryBase>();
         var dbLoc = Path.Combine(osuPath, "osu!.db");
 
         if (!File.Exists(dbLoc)) return null;
 
-        await using var config = new Config();
         await using var file = File.OpenRead(dbLoc);
-        using var reader = new DbReader(file);
+        using var reader = new OsuDbReader(file);
 
         var ver = reader.ReadInt32();
         OsuDbVersion = ver;
@@ -85,10 +83,10 @@ public partial class DbReader : BinaryReader
     /// <summary>
     /// Reads a osu!.db map entry and fills a <see cref="DbMapEntryBase" /> with needed data
     /// </summary>
-    /// <param name="r">the <see cref="DbReader" /> instance of the stream</param>
+    /// <param name="r">the <see cref="OsuDbReader" /> instance of the stream</param>
     /// <param name="osuPath">a <see cref="string" /> of the osu! path</param>
     /// <param name="dbMapEntryBase">a reference of a <see cref="DbMapEntryBase" /> to read the data to</param>
-    private static void ReadFromStream(DbReader r, string osuPath, ref DbMapEntryBase dbMapEntryBase)
+    private static void ReadFromStream(OsuDbReader r, string osuPath, ref DbMapEntryBase dbMapEntryBase)
     {
         dbMapEntryBase.Artist = string.Intern(r.ReadString());
 
@@ -158,10 +156,10 @@ public partial class DbReader : BinaryReader
     /// <summary>
     /// Reads a osu!.db map entry and calculates the map length in bytes
     /// </summary>
-    /// <param name="r">the current <see cref="DbReader" /> instance of the stream</param>
+    /// <param name="r">the current <see cref="OsuDbReader" /> instance of the stream</param>
     /// <param name="setId">outputs a <see cref="int" /> of the beatmap set id</param>
     /// <returns>a <see cref="long" /> from the byte length of the current map</returns>
-    private static long CalculateMapLength(DbReader r, out int setId)
+    private static long CalculateMapLength(OsuDbReader r, out int setId)
     {
         var initOffset = r.BaseStream.Position;
 
@@ -223,7 +221,7 @@ public partial class DbReader : BinaryReader
 
         if (!File.Exists(colLoc)) return null;
 
-        using (DbReader reader = new(File.OpenRead(colLoc)))
+        using (OsuDbReader reader = new(File.OpenRead(colLoc)))
         {
             reader.ReadInt32(); //osuVersion
             var num = reader.ReadInt32();

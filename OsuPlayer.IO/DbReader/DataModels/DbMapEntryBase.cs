@@ -4,7 +4,7 @@ namespace OsuPlayer.IO.DbReader.DataModels;
 
 /// <summary>
 /// a minimal beatmap entry with only frequently used data
-/// <remarks>created on call of <see cref="DbReader.ReadOsuDb" /></remarks>
+/// <remarks>created on call of <see cref="OsuDbReader.Read(string)" /></remarks>
 /// </summary>
 public class DbMapEntryBase : IMapEntryBase
 {
@@ -56,7 +56,7 @@ public class DbMapEntryBase : IMapEntryBase
     /// <returns>a new <see cref="DbMapEntry" /> generated from osu!.db data</returns>
     public async Task<IMapEntry> ReadFullEntry(string osuPath)
     {
-        var version = DbReader.OsuDbVersion;
+        var version = OsuDbReader.OsuDbVersion;
 
         var dbLoc = Path.Combine(osuPath, "osu!.db");
 
@@ -64,7 +64,7 @@ public class DbMapEntryBase : IMapEntryBase
 
         await using var file = File.OpenRead(dbLoc);
 
-        using var r = new DbReader(file);
+        using var r = new OsuDbReader(file);
 
         r.BaseStream.Seek(DbOffset, SeekOrigin.Begin);
 

@@ -1,7 +1,6 @@
 ﻿using System.Globalization;
 using Avalonia.Data.Converters;
 using Material.Icons;
-using Material.Icons.Avalonia;
 using OsuPlayer.Data.OsuPlayer.Enums;
 
 namespace OsuPlayer.Extensions.ValueConverters;

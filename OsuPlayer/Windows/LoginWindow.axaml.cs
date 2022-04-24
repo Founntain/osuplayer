@@ -18,8 +18,8 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
     {
         InitializeComponent();
 
-        using var config = new Config();
-        TransparencyLevelHint = config.Read().TransparencyLevelHint;
+        var config = new Config();
+        TransparencyLevelHint = config.Container.TransparencyLevelHint;
 #if DEBUG
         this.AttachDevTools();
 #endif
@@ -54,7 +54,7 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
 
     private void Visual_OnAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
     {
-        var control = (Control)sender;
+        var control = (Control) sender;
 
         control?.Focus();
     }
