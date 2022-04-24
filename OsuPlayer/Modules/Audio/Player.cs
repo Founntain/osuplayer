@@ -146,7 +146,7 @@ public class Player
 
             if (songEntries == null) return;
 
-            SongSource.Value = songEntries.OrderBy(x => CustomSorter(x, config.Container.SortingMode)).ToSourceList();
+            SongSource.Value = songEntries.OrderBy(x => CustomSorter(x, config.Container.SortingMode)).ThenBy(x => x.Title).ToSourceList();
 
             if (Filter.Value != null)
                 SongSource.Value.Connect().Sort(SortExpressionComparer<IMapEntryBase>.Ascending(x => CustomSorter(x, config.Container.SortingMode)))
@@ -205,7 +205,7 @@ public class Player
     /// <param name="sortingMode">a <see cref="SortingMode"/> setting the sort mode of the song list</param>
     private void UpdateSorting(SortingMode sortingMode = SortingMode.Title)
     {
-        SongSource.Value = SongSource.Value.Items.OrderBy(x => CustomSorter(x, sortingMode)).ToSourceList();
+        SongSource.Value = SongSource.Value.Items.OrderBy(x => CustomSorter(x, sortingMode)).ThenBy(x => x.Title).ToSourceList();
 
         if (Filter.Value != null)
             SongSource.Value.Connect().Sort(SortExpressionComparer<IMapEntryBase>.Ascending(x => CustomSorter(x, sortingMode)))
