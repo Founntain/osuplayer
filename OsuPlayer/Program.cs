@@ -19,11 +19,13 @@ internal class Program
         try
         {
             Register(Locator.CurrentMutable, Locator.Current);
+            
             BuildAvaloniaApp()
                 .StartWithClassicDesktopLifetime(args);
         }
-        catch (Exception ex)
+        catch (Exception ex) //If we have an unhandled exception we catch it here
         {
+            //Create crashlog for users
             UnhandledExceptionHandler.HandleException(ex);
         }
     }
