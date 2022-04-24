@@ -24,6 +24,7 @@ public class SettingsViewModel : BaseViewModel
     private string _settingsSearchQ;
 
     public MainWindow? MainWindow;
+    private SortingMode _selectedSortingMode;
 
     public SettingsViewModel(Player player)
     {
@@ -68,6 +69,20 @@ public class SettingsViewModel : BaseViewModel
 
             using var config = new Config();
             config.Read().StartupSong = value;
+        }
+    }
+
+    public IEnumerable<SortingMode> SortingModes => Enum.GetValues<SortingMode>();
+
+    public SortingMode SelectedSortingMode
+    {
+        get => _selectedSortingMode;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _selectedSortingMode, value);
+
+            using var config = new Config();
+            config.Container.SortingMode = value;
         }
     }
 

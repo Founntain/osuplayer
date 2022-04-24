@@ -12,6 +12,7 @@ public class ConfigContainer : IStorableContainer
     public bool IsEqEnabled { get; set; } = false;
     public WindowTransparencyLevel TransparencyLevelHint { get; set; } = WindowTransparencyLevel.AcrylicBlur;
     public StartupSong StartupSong { get; set; } = StartupSong.FirstSong;
+    public SortingMode SortingMode { get; set; } = SortingMode.Title;
     public int LastPlayedSong { get; set; }
     public bool IgnoreSongsWithSameNameCheckBox { get; set; }
 }

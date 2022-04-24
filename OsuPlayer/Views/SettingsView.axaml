@@ -59,6 +59,12 @@
                             <ComboBox SelectedItem="{Binding SelectedStartupSong}" Items="{Binding StartupSongs}"
                                       HorizontalAlignment="Stretch" />
                         </StackPanel>
+                        
+                        <StackPanel Spacing="5" Name="SongsSortingMode">
+                            <TextBlock Text="Sorting Mode"/>
+                            <ComboBox SelectedItem="{Binding SelectedSortingMode}" Items="{Binding SortingModes}"
+                                      HorizontalAlignment="Stretch"/>
+                        </StackPanel>
                     </StackPanel>
                 </Grid>
 
