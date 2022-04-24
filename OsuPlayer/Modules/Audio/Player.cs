@@ -33,7 +33,6 @@ public class Player
     private readonly BassEngine _bassEngine;
     private readonly Stopwatch _currentSongTimer;
     private readonly int?[] _shuffleHistory = new int?[10];
-    private int _shuffleHistoryIndex;
 
     public readonly Bindable<IMapEntry?> CurrentSongBinding = new();
 
@@ -47,19 +46,20 @@ public class Player
 
     public readonly Bindable<RepeatMode> IsRepeating = new();
 
-    public readonly Bindable<SortingMode> SortingModeBindable = new();
-
     public readonly Bindable<bool> IsShuffle = new();
+
+    public readonly Bindable<Playlist?> SelectedPlaylist = new();
 
     public readonly Bindable<bool> SongsLoading = new();
     public readonly Bindable<SourceList<IMapEntryBase>> SongSource = new();
 
-    public readonly Bindable<Playlist?> SelectedPlaylist = new();
+    public readonly Bindable<SortingMode> SortingModeBindable = new();
 
     private bool _isMuted;
     private double _oldVolume;
 
     private PlayState _playState;
+    private int _shuffleHistoryIndex;
 
     // private int _shuffleHistoryIndex;
 
@@ -75,6 +75,7 @@ public class Player
                 Dispatcher.UIThread.Post(NextSong);
         };
 
+        SortingModeBindable.Value = new Config().Container.SortingMode;
         SortingModeBindable.BindValueChanged(d => UpdateSorting(d.NewValue), true);
 
         SongSource.Value = new SourceList<IMapEntryBase>();
@@ -93,7 +94,7 @@ public class Player
 
             using var config = new Config();
 
-            config.Read().LastPlayedSong = CurrentIndex;
+            config.Container.LastPlayedSong = new LastPlayedSongModel(value!.BeatmapSetId, value.Title, value.Artist);
 
             // _mainWindow.ViewModel!.PlayerControl.CurrentSongImage = Task.Run(value!.FindBackground).Result;
         }
@@ -121,28 +122,38 @@ public class Player
         set => IsRepeating.Value = value;
     }
 
+    public Playlist? ActivePlaylist => ActivePlaylistName != default
+        ? PlaylistManager.GetAllPlaylists().First(x => x.Name == ActivePlaylistName)
+        : default;
+
+    public string? ActivePlaylistName { get; set; }
+
     public async Task ImportSongs()
     {
         SongsLoading.Value = true;
 
-        await using var config = new Config();
-        var songEntries = await SongImporter.ImportSongs((await config.ReadAsync()).OsuPath!);
+        ConfigContainer configContainer;
 
-        if (songEntries == null) return;
+        await using (var config = new Config())
+        {
+            var songEntries = await SongImporter.ImportSongs((await config.ReadAsync()).OsuPath!);
 
-        SongSource.Value = songEntries.OrderBy(x => CustomSorter(x, config.Container.SortingMode)).ToSourceList();
+            if (songEntries == null) return;
 
-        if (Filter.Value != null)
-            SongSource.Value.Connect().Sort(SortExpressionComparer<IMapEntryBase>.Ascending(x => CustomSorter(x, config.Container.SortingMode)))
-                .Filter(Filter.Value, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
-                .Bind(out FilteredSongEntries).Subscribe();
+            SongSource.Value = songEntries.OrderBy(x => CustomSorter(x, config.Container.SortingMode)).ToSourceList();
 
-        SongsLoading.Value = false;
+            if (Filter.Value != null)
+                SongSource.Value.Connect().Sort(SortExpressionComparer<IMapEntryBase>.Ascending(x => CustomSorter(x, config.Container.SortingMode)))
+                    .Filter(Filter.Value, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
+                    .Bind(out FilteredSongEntries).Subscribe();
 
-        if (SongSourceList == null || !SongSourceList.Any()) return;
+            SongsLoading.Value = false;
 
-        await using var cfg = new Config();
-        var configContainer = await cfg.ReadAsync();
+            if (SongSourceList == null || !SongSourceList.Any()) return;
+
+            configContainer = config.Container;
+            _bassEngine.Volume = config.Container.Volume;
+        }
 
         switch (configContainer.StartupSong)
         {
@@ -150,17 +161,37 @@ public class Player
                 await PlayAsync(SongSourceList[0]);
                 break;
             case StartupSong.LastPlayed:
-                if (configContainer.LastPlayedSong < SongSourceList.Count && configContainer.LastPlayedSong >= 0)
-                    await PlayAsync(SongSourceList[configContainer.LastPlayedSong]);
-                else
-                    await PlayAsync(SongSourceList[0]);
+                await PlayLastPlayedSongAsync(configContainer);
                 break;
             case StartupSong.RandomSong:
                 await PlayAsync(SongSourceList[new Random().Next(SongSourceList.Count)]);
                 break;
         }
+    }
 
-        _bassEngine.Volume = configContainer.Volume;
+    private async Task PlayLastPlayedSongAsync(ConfigContainer? config = null)
+    {
+        config ??= new Config().Container;
+
+        if (config.LastPlayedSong == null)
+        {
+            await PlayAsync(SongSourceList![0]);
+            return;
+        }
+
+        if (config.LastPlayedSong.SetId != -1)
+        {
+            await PlayAsync(SongSourceList!.First(x => x.BeatmapSetId == config.LastPlayedSong.SetId));
+            return;
+        }
+
+        if (SongSourceList?.FirstOrDefault(x => x.Title == config.LastPlayedSong.Title && x.Artist == config.LastPlayedSong.Artist) is { } map)
+        {
+            await PlayAsync(map);
+            return;
+        }
+
+        await PlayAsync(SongSourceList![0]);
     }
 
     private void UpdateSorting(SortingMode sortingMode = SortingMode.Title)
@@ -252,21 +283,18 @@ public class Player
             return Task.FromException(new NullReferenceException($"{nameof(SongSourceList)} can't be null or empty"));
 
         IMapEntry fullMapEntry;
-        var path = string.Empty;
 
-        await using (var config = new Config())
-        {
-            await config.ReadAsync();
+        var config = new Config();
 
-            path = config.Container.OsuPath!;
+        await config.ReadAsync();
 
-            fullMapEntry = await song.ReadFullEntry(config.Container.OsuPath!);
+        fullMapEntry = await song.ReadFullEntry(config.Container.OsuPath!);
 
-            if (fullMapEntry == default)
-                return Task.FromException(new NullReferenceException());
+        if (fullMapEntry == default)
+            return Task.FromException(new NullReferenceException());
 
-            fullMapEntry.UseUnicode = config.Container.UseSongNameUnicode;
-        }
+        fullMapEntry.UseUnicode = config.Container.UseSongNameUnicode;
+
 
         //We put the XP update to an own try catch because if the API fails or is not available,
         //that the whole TryEnqueue does not fail
@@ -456,11 +484,6 @@ public class Player
             : SongSourceList[CurrentIndex + 1]);
     }
 
-    public Playlist? ActivePlaylist => ActivePlaylistName != default
-        ? PlaylistManager.GetAllPlaylists().First(x => x.Name == ActivePlaylistName)
-        : default;
-
-    public string? ActivePlaylistName { get; set; }
     public event PropertyChangedEventHandler? PlaylistChanged;
 
     public async void PreviousSong()
@@ -516,6 +539,21 @@ public class Player
         if (SongSourceList == null) return;
         await PlayAsync(CurrentIndex == 0 ? SongSourceList.Last() : SongSourceList[CurrentIndex - 1],
             PlayDirection.Backwards);
+    }
+
+    public IMapEntryBase? GetMapEntryFromSetId(int setId)
+    {
+        return SongSourceList!.FirstOrDefault(x => x.BeatmapSetId == setId);
+    }
+
+    public List<IMapEntryBase> GetMapEntriesFromSetId(ICollection<int> setId)
+    {
+        return SongSourceList!.Where(x => setId.Contains(x.BeatmapSetId)).ToList();
+    }
+
+    public void TriggerPlaylistChanged(PropertyChangedEventArgs e)
+    {
+        PlaylistChanged?.Invoke(this, e);
     }
 
     #region Shuffle
@@ -631,29 +669,12 @@ public class Player
         while (shuffleIndex == (Repeat == RepeatMode.Playlist
                    ? ActivePlaylist?.Songs.IndexOf(CurrentSong!.BeatmapSetId)
                    : CurrentIndex)) // || OsuPlayer.Blacklist.IsSongInBlacklist(Songs[shuffleIndex]))
-        {
             shuffleIndex = rdm.Next(0, Repeat == RepeatMode.Playlist
                 ? ActivePlaylist!.Songs.Count
                 : SongSourceList!.Count);
-        }
 
         return shuffleIndex;
     }
 
     #endregion
-
-    public IMapEntryBase? GetMapEntryFromSetId(int setId)
-    {
-        return SongSourceList!.FirstOrDefault(x => x.BeatmapSetId == setId);
-    }
-
-    public List<IMapEntryBase> GetMapEntriesFromSetId(ICollection<int> setId)
-    {
-        return SongSourceList!.Where(x => setId.Contains(x.BeatmapSetId)).ToList();
-    }
-
-    public void TriggerPlaylistChanged(PropertyChangedEventArgs e)
-    {
-        PlaylistChanged?.Invoke(this, e);
-    }
 }

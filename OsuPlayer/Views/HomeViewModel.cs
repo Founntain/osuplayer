@@ -80,7 +80,7 @@ public class HomeViewModel : BaseViewModel
     public bool IsUserNotLoggedIn => CurrentUser == default;
     public bool IsUserLoggedIn => CurrentUser != default;
 
-    public bool SongsLoading => new Config().Read().OsuPath != null && _songsLoading.Value;
+    public bool SongsLoading => new Config().Container.OsuPath != null && _songsLoading.Value;
 
     public User? CurrentUser => ProfileManager.User;
 

@@ -19,14 +19,19 @@ public class SettingsViewModel : BaseViewModel
 {
     public readonly Player Player;
     private string _osuLocation;
-    private StartupSong _selectedStartupSong = new Config().Read().StartupSong;
-    private WindowTransparencyLevel _selectedTransparencyLevel = new Config().Read().TransparencyLevelHint;
+    private StartupSong _selectedStartupSong;
+    private WindowTransparencyLevel _selectedTransparencyLevel;
     private string _settingsSearchQ;
 
     public MainWindow? MainWindow;
 
     public SettingsViewModel(Player player)
     {
+        var config = new Config();
+
+        _selectedStartupSong = config.Container.StartupSong;
+        _selectedTransparencyLevel = config.Container.TransparencyLevelHint;
+
         Player = player;
         Activator = new ViewModelActivator();
         this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
@@ -53,7 +58,7 @@ public class SettingsViewModel : BaseViewModel
 
             MainWindow.TransparencyLevelHint = value;
             using var config = new Config();
-            config.Read().TransparencyLevelHint = value;
+            config.Container.TransparencyLevelHint = value;
         }
     }
 
@@ -67,7 +72,7 @@ public class SettingsViewModel : BaseViewModel
             this.RaiseAndSetIfChanged(ref _selectedStartupSong, value);
 
             using var config = new Config();
-            config.Read().StartupSong = value;
+            config.Container.StartupSong = value;
         }
     }
 

@@ -18,13 +18,13 @@ public partial class MainWindow : ReactivePlayerWindow<MainWindowViewModel>
     public MainWindow(MainWindowViewModel viewModel, Player player)
     {
         ViewModel = viewModel;
-        
+
         Task.Run(player.ImportSongs);
-        
+
         InitializeComponent();
 
         using var config = new Config();
-        TransparencyLevelHint = config.Read().TransparencyLevelHint;
+        TransparencyLevelHint = config.Container.TransparencyLevelHint;
 
         PlaylistManager.SetLastKnownPlaylistAsCurrentPlaylist();
     }
@@ -44,7 +44,6 @@ public partial class MainWindow : ReactivePlayerWindow<MainWindowViewModel>
     {
         base.OnClosing(e);
         using var config = new Config();
-        var configContainer = config.Read();
-        configContainer.Volume = ViewModel.BassEngine.Volume;
+        config.Container.Volume = ViewModel.BassEngine.Volume;
     }
 }

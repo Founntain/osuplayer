@@ -32,7 +32,7 @@ public partial class HomeView : ReactivePlayerControl<HomeViewModel>
 
     private async void HomeViewInitialized()
     {
-        using var config = new Config();
+        var config = new Config();
         var osuPath = (await config.ReadAsync()).OsuPath;
 
         if (string.IsNullOrWhiteSpace(osuPath))

@@ -276,11 +276,11 @@ public sealed class BassEngine : INotifyPropertyChanged
 
     public void Stop()
     {
-        ChannelPosition = (long)SelectionBegin.TotalSeconds;
+        ChannelPosition = (long) SelectionBegin.TotalSeconds;
         if (FxStream != 0)
         {
             Bass.ChannelStop(FxStream);
-            Bass.ChannelSetPosition(FxStream, (long)ChannelPositionB.Value);
+            Bass.ChannelSetPosition(FxStream, (long) ChannelPositionB.Value);
             IsPlaying = false;
         }
     }
@@ -318,7 +318,7 @@ public sealed class BassEngine : INotifyPropertyChanged
             try
             {
                 if (FxStream != 0)
-                    Bass.ChannelSetAttribute(FxStream, ChannelAttribute.Volume, (float)value / 100);
+                    Bass.ChannelSetAttribute(FxStream, ChannelAttribute.Volume, (float) value / 100);
             }
             catch (Exception ex)
             {
@@ -353,10 +353,10 @@ public sealed class BassEngine : INotifyPropertyChanged
                 //SetEqBands();
                 var speed = SampleFrequency * (1 + _playbackSpeed);
                 Bass.ChannelSetAttribute(FxStream, ChannelAttribute.TempoFrequency, speed);
-                Bass.ChannelSetAttribute(FxStream, ChannelAttribute.Volume, (float)Volume / 100);
+                Bass.ChannelSetAttribute(FxStream, ChannelAttribute.Volume, (float) Volume / 100);
 
-                using var config = new Config();
-                SetDeviceInfo(config.Read().SelectedOutputDevice);
+                var config = new Config();
+                SetDeviceInfo(config.Container.SelectedOutputDevice);
 
 
                 // Set the stream to call Stop() when it ends.
@@ -467,7 +467,7 @@ public sealed class BassEngine : INotifyPropertyChanged
 
     private void Initialize()
     {
-        _positionTimer.Interval = TimeSpan.FromMilliseconds((double)1000 / 60);
+        _positionTimer.Interval = TimeSpan.FromMilliseconds((double) 1000 / 60);
         _positionTimer.Tick += PositionTimer_Tick;
         _positionTimer.Start();
 
@@ -530,13 +530,13 @@ public sealed class BassEngine : INotifyPropertyChanged
         {
             var channelLength = Bass.ChannelGetLength(FxStream);
             var repeatPos = endTime.TotalSeconds - 0.2;
-            var endPosition = (long)(repeatPos / ChannelLengthB.Value * channelLength);
+            var endPosition = (long) (repeatPos / ChannelLengthB.Value * channelLength);
             _repeatSyncId = Bass.ChannelSetSync(FxStream,
                 SyncFlags.Position,
                 endPosition,
                 _repeatSyncProc,
                 IntPtr.Zero);
-            ChannelPosition = (long)SelectionBegin.TotalSeconds;
+            ChannelPosition = (long) SelectionBegin.TotalSeconds;
         }
         else
         {

@@ -1,6 +1,5 @@
 using System.Text;
 using OsuPlayer.IO.DbReader.DataModels;
-using OsuPlayer.IO.Storage.Config;
 
 namespace OsuPlayer.IO.DbReader;
 
@@ -29,7 +28,6 @@ public partial class DbReader : BinaryReader
 
         if (!File.Exists(dbLoc)) return null;
 
-        await using var config = new Config();
         await using var file = File.OpenRead(dbLoc);
         using var reader = new DbReader(file);
 
