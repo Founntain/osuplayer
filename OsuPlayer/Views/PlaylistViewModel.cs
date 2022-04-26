@@ -48,7 +48,7 @@ public class PlaylistViewModel : BaseViewModel
                 var playlistStorage = new PlaylistStorage();
                 SelectedPlaylist = Playlists.FirstOrDefault(x => x.Id == playlistStorage.Container.LastSelectedPlaylist) ?? Playlists[0];
 
-                PlaylistManager.SetCurrentPlaylistAsync(SelectedPlaylist);
+                PlaylistManager.SetCurrentPlaylist(SelectedPlaylist);
             }
         });
     }
@@ -64,7 +64,7 @@ public class PlaylistViewModel : BaseViewModel
         get => Player.SelectedPlaylist.Value;
         set
         {
-            PlaylistManager.SetCurrentPlaylistAsync(value);
+            PlaylistManager.SetCurrentPlaylist(value);
             Player.SelectedPlaylist.Value = value;
             this.RaisePropertyChanged();
         }
