@@ -33,6 +33,7 @@ public class SearchViewModel : BaseViewModel
         Player.SortingModeBindable.BindValueChanged(d => UpdateSorting(d.NewValue), true);
 
         Activator = new ViewModelActivator();
+
         this.WhenActivated(disposables =>
         {
             Disposable.Create(() => { }).DisposeWith(disposables);
