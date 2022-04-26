@@ -115,11 +115,11 @@ public class Player
         set => IsRepeating.Value = value;
     }
 
-    public Playlist? ActivePlaylist => ActivePlaylistName != default
-        ? PlaylistManager.GetAllPlaylists().First(x => x.Name == ActivePlaylistName)
+    public Playlist? ActivePlaylist => ActivePlaylistId != default
+        ? PlaylistManager.GetAllPlaylists().First(x => x.Id == ActivePlaylistId)
         : default;
 
-    public string? ActivePlaylistName { get; set; }
+    public Guid? ActivePlaylistId { get; set; }
 
     /// <summary>
     /// Imports the songs from either the osu!.db or client.realm using the <see cref="SongImporter" />. <br />
