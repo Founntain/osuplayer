@@ -7,7 +7,19 @@ public class PlaylistManager
 {
     public static Playlist? CurrentPlaylist;
 
-    public static async Task SetCurrentPlaylist(Playlist? playlist)
+    public static void SetCurrentPlaylist(Playlist? playlist)
+    {
+        if (playlist == default) return;
+
+        CurrentPlaylist = playlist;
+
+        using (var storage = new PlaylistStorage())
+        {
+            storage.Container.LastSelectedPlaylist = CurrentPlaylist.Id;
+        }
+    }
+
+    public static async Task SetCurrentPlaylistAsync(Playlist? playlist)
     {
         if (playlist == default) return;
 
@@ -20,7 +32,7 @@ public class PlaylistManager
             storage.Container.LastSelectedPlaylist = CurrentPlaylist.Id;
         }
     }
-    
+
     public static IList<Playlist> GetAllPlaylists()
     {
         using (var storage = new PlaylistStorage())

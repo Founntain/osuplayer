@@ -100,6 +100,7 @@ public class PlaylistEditorViewModel : BaseViewModel
             _currentSelectedPlaylist = value;
             this.RaisePropertyChanged();
             this.RaisePropertyChanged(nameof(Playlists));
+            PlaylistManager.SetCurrentPlaylist(value);
         }
     }
 
