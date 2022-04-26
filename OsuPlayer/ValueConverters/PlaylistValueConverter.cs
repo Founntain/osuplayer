@@ -7,8 +7,11 @@ using Splat;
 
 namespace OsuPlayer.ValueConverters;
 
-//This ValueConverter is in the OsuPlayer Project, because we need access to the Audio class
-//to convert the checksum to a MapEntry
+
+/// <summary>
+/// This ValueConverter is in the OsuPlayer Project, because we need access to the Audio class
+/// to convert the checksum to a MapEntry
+/// </summary>
 public class PlaylistValueConverter : IValueConverter
 {
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)

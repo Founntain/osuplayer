@@ -6,7 +6,7 @@
 public static class UnhandledExceptionHandler
 {
     /// <summary>
-    /// Creates missing log directories if it does not exists
+    /// Creates missing log directory if it does not exists
     /// </summary>
     private static void CreatLogsDirectoryIfItsMissing()
     {

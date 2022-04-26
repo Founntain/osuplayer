@@ -217,11 +217,20 @@ public class Player
         }
     }
 
+    /// <summary>
+    /// Sets the playbackspeed globally (including pitch)
+    /// </summary>
+    /// <param name="speed">The speed to set</param>
     public void SetPlaybackSpeed(double speed)
     {
         _bassEngine.SetSpeed(speed);
     }
 
+    /// <summary>
+    /// Starts playing a song
+    /// </summary>
+    /// <param name="song">The song to play</param>
+    /// <param name="playDirection">The direction we went in the playlist. Mostly used by the Next and Prev method</param>
     public async Task PlayAsync(IMapEntryBase? song, PlayDirection playDirection = PlayDirection.Forward)
     {
         if (SongSourceList == default || !SongSourceList.Any())
@@ -382,6 +391,9 @@ public class Player
         UserChanged.Invoke(this, new PropertyChangedEventArgs("SongsPlayed"));
     }
 
+    /// <summary>
+    /// Toggles mute of the volume
+    /// </summary>
     public void ToggleMute()
     {
         if (!_isMuted)
@@ -397,6 +409,9 @@ public class Player
         }
     }
 
+    /// <summary>
+    /// Pauses the current song if playing or plays again if paused
+    /// </summary>
     public void PlayPause()
     {
         if (PlayState == PlayState.Paused)
@@ -413,18 +428,27 @@ public class Player
         }
     }
 
+    /// <summary>
+    /// Sets the playing state to Playing
+    /// </summary>
     public void Play()
     {
         _bassEngine.Play();
         PlayState = PlayState.Playing;
     }
 
+    /// <summary>
+    /// Sets the playing state to Pause
+    /// </summary>
     public void Pause()
     {
         _bassEngine.Pause();
         PlayState = PlayState.Paused;
     }
 
+    /// <summary>
+    /// Plays the next song in the list. Or the first if we are at the end
+    /// </summary>
     public async void NextSong()
     {
         if (SongSourceList == null || !SongSourceList.Any())
@@ -484,6 +508,9 @@ public class Player
 
     public event PropertyChangedEventHandler? PlaylistChanged;
 
+    /// <summary>
+    /// Plays the previous song or the last song if we are the beginning
+    /// </summary>
     public async void PreviousSong()
     {
         if (SongSourceList == null || !SongSourceList.Any())
@@ -544,11 +571,20 @@ public class Player
         return SongSourceList!.FirstOrDefault(x => x.BeatmapSetId == setId);
     }
 
+    /// <summary>
+    /// Gets all Songs from a specific beatmapset ID
+    /// </summary>
+    /// <param name="setId">The beatmapset ID</param>
+    /// <returns>A list of <see cref="IMapEntryBase"/></returns>
     public List<IMapEntryBase> GetMapEntriesFromSetId(ICollection<int> setId)
     {
         return SongSourceList!.Where(x => setId.Contains(x.BeatmapSetId)).ToList();
     }
 
+    /// <summary>
+    /// Triggers if the playlist got changed
+    /// </summary>
+    /// <param name="e"></param>
     public void TriggerPlaylistChanged(PropertyChangedEventArgs e)
     {
         PlaylistChanged?.Invoke(this, e);

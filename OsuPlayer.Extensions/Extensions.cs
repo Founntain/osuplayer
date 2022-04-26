@@ -4,6 +4,9 @@ using Splat;
 
 namespace OsuPlayer.Extensions;
 
+/// <summary>
+/// A static class to contain extension methods for various types
+/// </summary>
 public static class Extensions
 {
     public static string FormatTime(this TimeSpan time)
