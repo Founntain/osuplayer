@@ -12,28 +12,28 @@ namespace OsuPlayer.Views;
 
 public class PlaylistViewModel : BaseViewModel
 {
+    public readonly Player Player;
     private ObservableCollection<Playlist> _playlists;
-    private readonly Player _player;
 
     public PlaylistViewModel(Player player)
     {
         Activator = new ViewModelActivator();
 
-        _player = player;
+        Player = player;
 
-        _player.PlaylistChanged += (sender, args) =>
+        Player.PlaylistChanged += (sender, args) =>
         {
-            var selection = _player.SelectedPlaylist.Value;
+            var selection = Player.SelectedPlaylist.Value;
 
             if (selection == default)
                 return;
-            
+
             Playlists = PlaylistManager.GetAllPlaylists().ToObservableCollection();
-            
+
             this.RaisePropertyChanged(nameof(Playlists));
-            
-            _player.SelectedPlaylist.Value = Playlists.First(x => x.Id == selection!.Id);
-            
+
+            Player.SelectedPlaylist.Value = Playlists.First(x => x.Id == selection!.Id);
+
             this.RaisePropertyChanged(nameof(SelectedPlaylist));
         };
 
@@ -60,11 +60,11 @@ public class PlaylistViewModel : BaseViewModel
 
     public Playlist? SelectedPlaylist
     {
-        get => _player.SelectedPlaylist.Value;
+        get => Player.SelectedPlaylist.Value;
         set
         {
             PlaylistManager.SetCurrentPlaylist(value);
-            _player.SelectedPlaylist.Value = value;
+            Player.SelectedPlaylist.Value = value;
             this.RaisePropertyChanged();
         }
     }
