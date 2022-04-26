@@ -12,5 +12,9 @@ public interface IMapEntry : IMapEntryBase
     public string FullPath { get; set; }
     public bool UseUnicode { get; set; }
 
+    /// <summary>
+    /// Gets the background image of this <see cref="IMapEntry" />
+    /// </summary>
+    /// <returns>a <see cref="Bitmap" /> of the background found. Returns null if the map doesn't have a background</returns>
     public Task<Bitmap?> FindBackground();
 }

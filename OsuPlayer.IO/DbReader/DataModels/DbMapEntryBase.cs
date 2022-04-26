@@ -54,7 +54,7 @@ public class DbMapEntryBase : IMapEntryBase
     /// </summary>
     /// <param name="osuPath">a <see cref="string" /> of the osu! path</param>
     /// <returns>a new <see cref="DbMapEntry" /> generated from osu!.db data</returns>
-    public async Task<IMapEntry> ReadFullEntry(string osuPath)
+    public async Task<IMapEntry?> ReadFullEntry(string osuPath)
     {
         var version = OsuDbReader.OsuDbVersion;
 
