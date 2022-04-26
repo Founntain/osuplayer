@@ -1,13 +1,21 @@
 ﻿using System.ComponentModel;
+
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 
 namespace OsuPlayer.Data.OsuPlayer.Classes;
 
+/// <summary>
+/// A playlist object containing an <see cref="Id"/>, the <see cref="Name"/>, the <see cref="CreationTime"/> and a <see cref="Songs"/> list
+/// </summary>
 public class Playlist
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     public string Name { get; set; }
     public DateTime CreationTime { get; set; } = DateTime.UtcNow;
+
+    /// <summary>
+    /// Contains the beatmap set ids of the songs in the <see cref="Playlist"/>
+    /// </summary>
     public BindingList<int> Songs { get; set; } = new();
 
     private bool Equals(Playlist other)
@@ -21,7 +29,7 @@ public class Playlist
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
         if (obj.GetType() != GetType()) return false;
-        return Equals((Playlist)obj);
+        return Equals((Playlist) obj);
     }
 
     public override int GetHashCode()

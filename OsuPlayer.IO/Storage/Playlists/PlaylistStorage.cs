@@ -19,24 +19,24 @@ public class PlaylistStorage : IStorable<PlaylistContainer>
     public PlaylistContainer Read()
     {
         if (!File.Exists(Path) || _container != null)
-            return _container ??= new PlaylistContainer(false);
+            return _container ??= new PlaylistContainer().Init();
 
         var data = File.ReadAllText(Path);
 
         return _container ??= (string.IsNullOrWhiteSpace(data)
-            ? new PlaylistContainer(false)
+            ? new PlaylistContainer().Init()
             : JsonConvert.DeserializeObject<PlaylistContainer>(data))!;
     }
 
     public async Task<PlaylistContainer> ReadAsync()
     {
         if (!File.Exists(Path) || _container != null)
-            return _container ??= new PlaylistContainer(false);
+            return _container ??= new PlaylistContainer().Init();
 
         var data = await File.ReadAllTextAsync(Path);
 
         return _container ??= (string.IsNullOrWhiteSpace(data)
-            ? new PlaylistContainer(false)
+            ? new PlaylistContainer().Init()
             : JsonConvert.DeserializeObject<PlaylistContainer>(data))!;
     }
 
