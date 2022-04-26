@@ -158,11 +158,15 @@
                 </Panel>
 
                 <Border Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#7F000000">
-                    <TextBlock Text="Your songs" FontSize="22" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    <Grid ColumnDefinitions="Auto, *">
+                        <TextBlock Grid.Column="0" Text="Your songs" FontSize="22" VerticalAlignment="Center"
+                                   HorizontalAlignment="Left" Margin="10 0" />
+                        <TextBox Grid.Column="1" Margin="10" Text="{Binding FilterText}" Watermark="type to search..." />
+                    </Grid>
                 </Border>
 
                 <ListBox Grid.Row="1" Background="Transparent" SelectionMode="Multiple, Toggle"
-                         Items="{Binding SongList}" SelectedItems="{Binding SelectedSongListItems}"
+                         Items="{Binding FilteredSongEntries}" SelectedItems="{Binding SelectedSongListItems}"
                          SelectionChanged="SongList_OnSelectionChanged" DoubleTapped="PlaySong">
                     <ListBox.ItemTemplate>
                         <DataTemplate DataType="dataModels:IMapEntryBase">

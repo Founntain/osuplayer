@@ -130,6 +130,6 @@ public partial class PlayerControlView : ReactivePlayerControl<PlayerControlView
 
     private void RepeatContextMenu_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        ViewModel.Player.ActivePlaylistName = ((Playlist)(sender as ContextMenu)?.SelectedItem)?.Name;
+        ViewModel.Player.ActivePlaylistId = ((Playlist)(sender as ContextMenu)?.SelectedItem)?.Id;
     }
 }

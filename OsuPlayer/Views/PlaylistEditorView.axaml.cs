@@ -30,12 +30,6 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
         {
             if (this.GetVisualRoot() is MainWindow mainWindow)
                 _mainWindow = mainWindow;
-
-            if (_mainWindow.ViewModel.PlaylistView.SelectedPlaylist != default)
-                ViewModel.CurrentSelectedPlaylist = ViewModel.Playlists.Items.First(x =>
-                    x.Name == _mainWindow.ViewModel.PlaylistView.SelectedPlaylist!.Name);
-            else if (ViewModel.Playlists.Count > 0)
-                ViewModel.CurrentSelectedPlaylist = ViewModel.Playlists.Items.ElementAt(0);
         });
         AvaloniaXamlLoader.Load(this);
     }
@@ -96,8 +90,6 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
 
     private void SongList_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (ViewModel == default) return;
-
         var listBox = (ListBox) sender!;
 
         var songs = listBox.SelectedItems.Cast<IMapEntryBase>().ToList();
@@ -107,8 +99,6 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
 
     private void Playlist_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (ViewModel == default) return;
-
         var listBox = (ListBox) sender!;
 
         var songs = listBox.SelectedItems.Cast<IMapEntryBase>().ToList();
@@ -118,22 +108,16 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
 
     private void CreatePlaylist_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (ViewModel == default) return;
-
         ViewModel.IsNewPlaylistPopupOpen = !ViewModel.IsNewPlaylistPopupOpen;
     }
 
     private void RenamePlaylist_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (ViewModel == default) return;
-
         ViewModel.IsRenamePlaylistPopupOpen = !ViewModel.IsRenamePlaylistPopupOpen;
     }
 
     private async void ConfirmNewPlaylist_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (ViewModel == default) return;
-
         if (string.IsNullOrWhiteSpace(ViewModel.NewPlaylistNameText)) return;
 
         var playlist = new Playlist
@@ -167,15 +151,11 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
 
     private void DeletePlaylist_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (ViewModel == default) return;
-
         ViewModel.IsDeletePlaylistPopupOpen = !ViewModel.IsDeletePlaylistPopupOpen;
     }
 
     private async void ConfirmDeletePlaylist_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (ViewModel == default) return;
-
         if (ViewModel.CurrentSelectedPlaylist.Name == "Favorites")
         {
             await MessageBox.ShowDialogAsync(_mainWindow, "No you can't delete your favorites! Sorry :(");
@@ -193,8 +173,6 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
 
     private void CancelDeletePlaylist_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (ViewModel == default) return;
-
         ViewModel.IsDeletePlaylistPopupOpen = false;
     }
 

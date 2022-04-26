@@ -45,7 +45,8 @@ public class PlaylistViewModel : BaseViewModel
 
             if (Playlists.Count > 0 && SelectedPlaylist == default)
             {
-                SelectedPlaylist = Playlists[0];
+                var playlistStorage = new PlaylistStorage();
+                SelectedPlaylist = Playlists.FirstOrDefault(x => x.Id == playlistStorage.Container.LastSelectedPlaylist) ?? Playlists[0];
 
                 PlaylistManager.SetCurrentPlaylist(SelectedPlaylist);
             }
