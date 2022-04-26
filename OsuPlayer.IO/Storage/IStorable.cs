@@ -15,6 +15,8 @@ public interface IStorable<T> : IDisposable, IAsyncDisposable where T : IStorabl
     /// <summary>
     /// The container of the <see cref="IStorable{T}" /> type for external access
     /// </summary>
+    /// <remarks>If accessed before a <see cref="Read" /> or <see cref="ReadAsync" /> it calls a <see cref="Read"/>
+    /// to ensure the container is not null for easier handling</remarks>
     public T Container { get; set; }
 
     /// <summary>
