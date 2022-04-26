@@ -11,20 +11,17 @@ namespace OsuPlayer.Views;
 
 public class PlaylistEditorViewModel : BaseViewModel
 {
-    private readonly Player _player;
+    public readonly Player Player;
     private Playlist? _currentSelectedPlaylist;
     private bool _isDeletePlaylistPopupOpen;
     private bool _isNewPlaylistPopupOpen;
     private bool _isRenamePlaylistPopupOpen;
     private string _newPlaylistNameText;
     private SourceList<Playlist>? _playlists;
-    private List<IMapEntryBase>? _selectedPlaylistItems;
-
-    private List<IMapEntryBase>? _selectedSongListItems;
 
     public PlaylistEditorViewModel(Player player)
     {
-        _player = player;
+        Player = player;
 
         Activator = new ViewModelActivator();
 
@@ -75,17 +72,9 @@ public class PlaylistEditorViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _playlists, value);
     }
 
-    public List<IMapEntryBase> SongList => _player.SongSourceList!;
+    public List<IMapEntryBase> SongList => Player.SongSourceList!;
 
-    public List<IMapEntryBase>? SelectedSongListItems
-    {
-        get => _selectedSongListItems;
-        set => this.RaiseAndSetIfChanged(ref _selectedSongListItems, value);
-    }
+    public List<IMapEntryBase>? SelectedSongListItems { get; set; }
 
-    public List<IMapEntryBase>? SelectedPlaylistItems
-    {
-        get => _selectedPlaylistItems;
-        set => this.RaiseAndSetIfChanged(ref _selectedPlaylistItems, value);
-    }
+    public List<IMapEntryBase>? SelectedPlaylistItems { get; set; }
 }

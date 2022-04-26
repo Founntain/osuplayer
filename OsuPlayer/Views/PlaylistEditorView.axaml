@@ -163,7 +163,7 @@
 
                 <ListBox Grid.Row="1" Background="Transparent" SelectionMode="Multiple, Toggle"
                          Items="{Binding SongList}" SelectedItems="{Binding SelectedSongListItems}"
-                         SelectionChanged="SongList_OnSelectionChanged">
+                         SelectionChanged="SongList_OnSelectionChanged" DoubleTapped="PlaySong">
                     <ListBox.ItemTemplate>
                         <DataTemplate DataType="dataModels:IMapEntryBase">
                             <Grid>
@@ -194,7 +194,7 @@
 
                 <ListBox Grid.Row="1" Background="Transparent" SelectionMode="Multiple, Toggle"
                          Items="{Binding CurrentSelectedPlaylist.Songs, Converter={StaticResource PlaylistValueConverter}}"
-                         SelectionChanged="Playlist_OnSelectionChanged">
+                         SelectionChanged="Playlist_OnSelectionChanged" DoubleTapped="PlaySong">
                     <ListBox.ItemTemplate>
                         <DataTemplate DataType="dataModels:IMapEntryBase">
                             <Grid>

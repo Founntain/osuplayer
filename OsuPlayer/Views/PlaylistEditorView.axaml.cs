@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
@@ -97,7 +98,7 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
     {
         if (ViewModel == default) return;
 
-        var listBox = (ListBox)sender!;
+        var listBox = (ListBox) sender!;
 
         var songs = listBox.SelectedItems.Cast<IMapEntryBase>().ToList();
 
@@ -108,7 +109,7 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
     {
         if (ViewModel == default) return;
 
-        var listBox = (ListBox)sender!;
+        var listBox = (ListBox) sender!;
 
         var songs = listBox.SelectedItems.Cast<IMapEntryBase>().ToList();
 
@@ -195,5 +196,14 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
         if (ViewModel == default) return;
 
         ViewModel.IsDeletePlaylistPopupOpen = false;
+    }
+
+    private async void PlaySong(object? sender, RoutedEventArgs e)
+    {
+        var tapped = (TappedEventArgs) e;
+        var controlSource = (Control) tapped.Pointer.Captured;
+
+        if (controlSource?.DataContext is IMapEntryBase song)
+            await ViewModel.Player.PlayAsync(song);
     }
 }

@@ -12,7 +12,7 @@
     <Design.DataContext>
         <views:PlaylistViewModel />
     </Design.DataContext>
-    
+
     <UserControl.Resources>
         <valueConverters:PlaylistValueConverter x:Key="PlaylistValueConverter" />
     </UserControl.Resources>
@@ -64,7 +64,8 @@
             </Panel>
 
             <ListBox Background="Transparent"
-                     Items="{Binding SelectedPlaylist.Songs, Converter={StaticResource PlaylistValueConverter}}">
+                     Items="{Binding SelectedPlaylist.Songs, Converter={StaticResource PlaylistValueConverter}}"
+                     DoubleTapped="PlaySong">
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="dataModels:IMapEntryBase">
                         <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto">
