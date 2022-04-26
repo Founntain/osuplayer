@@ -3,10 +3,17 @@ using OsuPlayer.IO.DbReader.DataModels;
 
 namespace OsuPlayer.IO.Storage.Playlists;
 
+/// <summary>
+/// A wrapper for the <see cref="PlaylistStorage"/>, containing static methods for creating, deleting and modifying playlists
+/// </summary>
 public class PlaylistManager
 {
     public static Playlist? CurrentPlaylist;
 
+    /// <summary>
+    /// Sets a specific playlist as the current playlist globaly in the application
+    /// </summary>
+    /// <param name="playlist">The playlist to set</param>
     public static void SetCurrentPlaylist(Playlist? playlist)
     {
         if (playlist == default) return;
@@ -19,6 +26,10 @@ public class PlaylistManager
         }
     }
 
+    /// <summary>
+    /// Sets a specific playlist as the current playlist globaly in the application asynchronously
+    /// </summary>
+    /// <param name="playlist">The playlist to set</param>
     public static async Task SetCurrentPlaylistAsync(Playlist? playlist)
     {
         if (playlist == default) return;
@@ -33,6 +44,10 @@ public class PlaylistManager
         }
     }
 
+    /// <summary>
+    /// Gets all stored playlists
+    /// </summary>
+    /// <returns>Returns a <see cref="IList{T}"/> containing all playlists</returns>
     public static IList<Playlist> GetAllPlaylists()
     {
         using (var storage = new PlaylistStorage())
@@ -43,6 +58,10 @@ public class PlaylistManager
         }
     }
 
+    /// <summary>
+    /// Gets all stored playlists asynchronously
+    /// </summary>
+    /// <returns>Returns a <see cref="IList{T}"/> containing all playlists</returns>
     public static async Task<IList<Playlist>> GetAllPlaylistsAsync()
     {
         await using (var storage = new PlaylistStorage())
@@ -53,6 +72,11 @@ public class PlaylistManager
         }
     }
 
+    /// <summary>
+    /// Add a playlist to the storage
+    /// </summary>
+    /// <param name="playlist">The playlist to add</param>
+    /// <returns>Returns all playlists including the newly added one</returns>
     public static async Task<IList<Playlist>?> AddPlaylistAsync(Playlist playlist)
     {
         await using (var storage = new PlaylistStorage())
@@ -68,6 +92,10 @@ public class PlaylistManager
         }
     }
 
+    /// <summary>
+    /// Replace a playlist with the same name
+    /// </summary>
+    /// <param name="playlist">The playlist to replace</param>
     public static async Task ReplacePlaylistAsync(Playlist? playlist)
     {
         if (playlist == default) return;
@@ -85,6 +113,10 @@ public class PlaylistManager
         }
     }
 
+    /// <summary>
+    /// Replace a playlist with the same name asynchronously
+    /// </summary>
+    /// <param name="playlist">The playlist to replace</param>
     public static async Task ReplacePlaylistsAsync(IList<Playlist> playlists)
     {
         await using (var storage = new PlaylistStorage())
@@ -95,6 +127,10 @@ public class PlaylistManager
         }
     }
 
+    /// <summary>
+    /// Renames a playlist. Get's the stored playlist by its <see cref="Guid"/> and changes the the name of it
+    /// </summary>
+    /// <param name="playlist">The playlist with the new name</param>
     public static async Task RenamePlaylist(Playlist playlist)
     {
         await using (var storage = new PlaylistStorage())
@@ -111,6 +147,9 @@ public class PlaylistManager
         }
     }
 
+    /// <summary>
+    /// Save all playlists on the hard drive
+    /// </summary>
     public static async Task SavePlaylistsAsync()
     {
         await using (var storage = new PlaylistStorage())
@@ -119,6 +158,12 @@ public class PlaylistManager
         }
     }
 
+    
+    /// <summary>
+    /// Delete a given playlist and remove it from the storage
+    /// </summary>
+    /// <param name="playlist">The playlist to remove</param>
+    /// <returns>Returns all playlist</returns>
     public static async Task<IList<Playlist>?> DeletePlaylistAsync(Playlist playlist)
     {
         await using (var storage = new PlaylistStorage())
@@ -133,6 +178,10 @@ public class PlaylistManager
         }
     }
 
+    /// <summary>
+    /// Toggles a song from the playlist asynchronously which means: If the song is not in the playlist the song gets added, otherwise the song gets removed
+    /// </summary>
+    /// <param name="mapEntry">The song to toggle</param>
     public static async Task ToggleSongOfCurrentPlaylist(IMapEntryBase mapEntry)
     {
         if (CurrentPlaylist.Songs.Contains(mapEntry.BeatmapSetId))
@@ -141,6 +190,10 @@ public class PlaylistManager
             await AddSongToCurrentPlaylist(mapEntry);
     }
 
+    /// <summary>
+    /// Adds a song to the playlist asynchronously
+    /// </summary>
+    /// <param name="mapEntry">The song to add</param>
     public static async Task AddSongToCurrentPlaylist(IMapEntryBase mapEntry)
     {
         CurrentPlaylist.Songs.Add(mapEntry.BeatmapSetId);
@@ -148,6 +201,11 @@ public class PlaylistManager
         await ReplacePlaylistAsync(CurrentPlaylist);
     }
 
+    
+    /// <summary>
+    /// Removes a song to the playlist asynchronously
+    /// </summary>
+    /// <param name="mapEntry">The song to remove</param>
     public static async Task RemoveSongToCurrentPlaylist(IMapEntryBase mapEntry)
     {
         CurrentPlaylist.Songs.Remove(mapEntry.BeatmapSetId);
@@ -155,6 +213,9 @@ public class PlaylistManager
         await ReplacePlaylistAsync(CurrentPlaylist);
     }
 
+    /// <summary>
+    /// Selects the last used playlist after exisiting the player to its current playlist globaly
+    /// </summary>
     public static void SetLastKnownPlaylistAsCurrentPlaylist()
     {
         using (var storage = new PlaylistStorage())
