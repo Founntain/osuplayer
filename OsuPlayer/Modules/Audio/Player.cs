@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using DynamicData;
-using DynamicData.Binding;
 using LiveChartsCore.Defaults;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
@@ -63,8 +60,6 @@ public class Player
 
     // private int _shuffleHistoryIndex;
 
-    public ReadOnlyObservableCollection<IMapEntryBase>? FilteredSongEntries;
-
     public Player(BassEngine bassEngine)
     {
         _bassEngine = bassEngine;
@@ -102,8 +97,6 @@ public class Player
 
     public List<IMapEntryBase>? SongSourceList => SongSource.Value.Items.ToList();
 
-    private SongImporter Importer => new();
-
     private PlayState PlayState
     {
         get => _playState;
@@ -129,10 +122,10 @@ public class Player
     public string? ActivePlaylistName { get; set; }
 
     /// <summary>
-    /// Imports the songs from either the osu!.db or client.realm using the <see cref="SongImporter"/>. <br/>
-    /// Imported songs are saved into <see cref="SongSource"/> and <see cref="FilteredSongEntries"/> filtered from searching. <br/>
-    /// Also plays the first song depending on the <see cref="StartupSong"/> config.
-    /// <seealso cref="SongImporter.ImportSongsAsync"/>
+    /// Imports the songs from either the osu!.db or client.realm using the <see cref="SongImporter" />. <br />
+    /// Imported songs are stored in <see cref="SongSource" />. <br />
+    /// Also plays the first song depending on the <see cref="StartupSong" /> config.
+    /// <seealso cref="SongImporter.ImportSongsAsync" />
     /// </summary>
     public async Task ImportSongsAsync()
     {
@@ -147,11 +140,6 @@ public class Player
             if (songEntries == null) return;
 
             SongSource.Value = songEntries.OrderBy(x => CustomSorter(x, config.Container.SortingMode)).ThenBy(x => x.Title).ToSourceList();
-
-            if (Filter.Value != null)
-                SongSource.Value.Connect().Sort(SortExpressionComparer<IMapEntryBase>.Ascending(x => CustomSorter(x, config.Container.SortingMode)))
-                    .Filter(Filter.Value, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
-                    .Bind(out FilteredSongEntries).Subscribe();
 
             SongsLoading.Value = false;
 
@@ -176,8 +164,8 @@ public class Player
     }
 
     /// <summary>
-    /// Plays the last played song read from the <see cref="ConfigContainer"/> and defaults to the
-    /// first song in the <see cref="SongSourceList"/> if null
+    /// Plays the last played song read from the <see cref="ConfigContainer" /> and defaults to the
+    /// first song in the <see cref="SongSourceList" /> if null
     /// </summary>
     /// <param name="config">optional parameter defaults to null. Used to avoid duplications of config instances</param>
     private async Task PlayLastPlayedSongAsync(ConfigContainer? config = null)
@@ -200,26 +188,21 @@ public class Player
     }
 
     /// <summary>
-    /// Updates the <see cref="SongSource"/> and <see cref="FilteredSongEntries"/> according to the <paramref name="sortingMode"/>
+    /// Updates the <see cref="SongSource" /> according to the <paramref name="sortingMode" />
     /// </summary>
-    /// <param name="sortingMode">a <see cref="SortingMode"/> setting the sort mode of the song list</param>
+    /// <param name="sortingMode">the <see cref="SortingMode" /> of the song list</param>
     private void UpdateSorting(SortingMode sortingMode = SortingMode.Title)
     {
         SongSource.Value = SongSource.Value.Items.OrderBy(x => CustomSorter(x, sortingMode)).ThenBy(x => x.Title).ToSourceList();
-
-        if (Filter.Value != null)
-            SongSource.Value.Connect().Sort(SortExpressionComparer<IMapEntryBase>.Ascending(x => CustomSorter(x, sortingMode)))
-                .Filter(Filter.Value, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
-                .Bind(out FilteredSongEntries).Subscribe();
     }
 
     /// <summary>
-    /// Picks the <see cref="IMapEntryBase"/> property to sort maps on
+    /// Picks the <see cref="IMapEntryBase" /> property to sort maps on
     /// </summary>
-    /// <param name="map">the <see cref="IMapEntryBase"/> to be sorted</param>
-    /// <param name="sortingMode">the <see cref="SortingMode"/> to decide how to sort</param>
-    /// <returns>an <see cref="IComparable"/> containing the property to compare on</returns>
-    private IComparable CustomSorter(IMapEntryBase map, SortingMode sortingMode)
+    /// <param name="map">the <see cref="IMapEntryBase" /> to be sorted</param>
+    /// <param name="sortingMode">the <see cref="SortingMode" /> to decide how to sort</param>
+    /// <returns>an <see cref="IComparable" /> containing the property to compare on</returns>
+    public IComparable CustomSorter(IMapEntryBase map, SortingMode sortingMode)
     {
         switch (sortingMode)
         {
