@@ -30,12 +30,6 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
         {
             if (this.GetVisualRoot() is MainWindow mainWindow)
                 _mainWindow = mainWindow;
-
-            if (_mainWindow.ViewModel.PlaylistView.SelectedPlaylist != default)
-                ViewModel.CurrentSelectedPlaylist = ViewModel.Playlists.Items.First(x =>
-                    x.Name == _mainWindow.ViewModel.PlaylistView.SelectedPlaylist!.Name);
-            else if (ViewModel.Playlists.Count > 0)
-                ViewModel.CurrentSelectedPlaylist = ViewModel.Playlists.Items.ElementAt(0);
         });
         AvaloniaXamlLoader.Load(this);
     }

@@ -10,6 +10,7 @@ using DynamicData.Binding;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.IO.DbReader.DataModels;
+using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules.Audio;
 using OsuPlayer.ViewModels;
 using ReactiveUI;
@@ -44,6 +45,10 @@ public class PlaylistEditorViewModel : BaseViewModel
         this.WhenActivated(disposables =>
         {
             Disposable.Create(() => { }).DisposeWith(disposables);
+
+            var playlistStorage = new PlaylistStorage();
+
+            CurrentSelectedPlaylist = Playlists.Items.FirstOrDefault(x => x.Id == playlistStorage.Container.LastSelectedPlaylist) ?? Playlists.Items.ElementAt(0);
 
             if (_filteredSongEntries == default)
                 Player.SongSource.Value.Connect().Sort(SortExpressionComparer<IMapEntryBase>.Ascending(x => Player.CustomSorter(x, Player.SortingModeBindable.Value)))
