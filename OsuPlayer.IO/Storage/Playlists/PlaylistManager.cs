@@ -138,10 +138,10 @@ public class PlaylistManager
         if (CurrentPlaylist.Songs.Contains(mapEntry.BeatmapSetId))
             await RemoveSongToCurrentPlaylist(mapEntry);
         else
-            await AddSongToCurrentPlaylist(mapEntry);
+            await AddSongToCurrentPlaylistAsync(mapEntry);
     }
 
-    public static async Task AddSongToCurrentPlaylist(IMapEntryBase mapEntry)
+    public static async Task AddSongToCurrentPlaylistAsync(IMapEntryBase mapEntry)
     {
         CurrentPlaylist.Songs.Add(mapEntry.BeatmapSetId);
 
@@ -167,5 +167,29 @@ public class PlaylistManager
 
             CurrentPlaylist = playlist;
         }
+    }
+
+    public static async Task AddSongToPlaylistAsync(string playlistName, int setId)
+    {
+        if (setId < 0) return;
+        
+        Playlist playlist;
+
+        if ((playlist = (await GetAllPlaylistsAsync()).FirstOrDefault(x => x.Name == playlistName)) != default)
+        {
+            if (!playlist.Songs.Contains(setId))
+                playlist.Songs.Add(setId);
+
+            await ReplacePlaylistAsync(playlist);
+            return;
+        }
+
+        playlist = new Playlist
+        {
+            Name = playlistName
+        };
+        playlist.Songs.Add(setId);
+
+        await AddPlaylistAsync(playlist);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using OsuPlayer.IO.DbReader.DataModels;
+using OsuPlayer.IO.Storage.Config;
 using OsuPlayer.IO.Storage.LazerModels.Beatmaps;
 using Realms;
 
@@ -9,6 +10,31 @@ namespace OsuPlayer.IO.DbReader;
 /// </summary>
 public class RealmReader
 {
+    private Realm _realm;
+    private IEnumerable<BeatmapInfo> _beatmapInfos;
+
+    public RealmReader()
+    {
+        var config = new Config();
+
+        if (string.IsNullOrWhiteSpace(config.Container.OsuPath)) return;
+
+        var realmLoc = Path.Combine(config.Container.OsuPath, "client.realm");
+        var realmConfig = new RealmConfiguration(realmLoc)
+        {
+            SchemaVersion = 14,
+            IsReadOnly = true
+        };
+
+        _realm = Realm.GetInstance(realmConfig).Freeze();
+        _beatmapInfos = _realm.DynamicApi.All("Beatmap").ToList().OfType<BeatmapInfo>();
+    }
+
+    ~RealmReader()
+    {
+        _realm.Dispose();
+    }
+
     /// <summary>
     /// Reads the client.realm file from the <paramref name="path"/>
     /// </summary>
@@ -37,7 +63,7 @@ public class RealmReader
                 BeatmapChecksum = beatmap.Hash,
                 BeatmapSetId = beatmap.OnlineID,
                 Title = beatmap.Metadata.Title,
-                TotalTime = (int)beatmap.MaxLength,
+                TotalTime = (int) beatmap.MaxLength,
                 Id = beatmap.ID
             });
         }
@@ -45,5 +71,10 @@ public class RealmReader
         realm.Dispose();
 
         return minBeatMaps;
+    }
+
+    public BeatmapInfo? QueryBeatmap(Func<BeatmapInfo, bool> query)
+    {
+        return _beatmapInfos.FirstOrDefault(query);
     }
 }

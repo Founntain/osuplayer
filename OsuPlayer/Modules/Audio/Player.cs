@@ -13,6 +13,7 @@ using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Extensions;
 using OsuPlayer.Extensions.Bindables;
 using OsuPlayer.IO;
+using OsuPlayer.IO.DbReader;
 using OsuPlayer.IO.DbReader.DataModels;
 using OsuPlayer.IO.Storage.Config;
 using OsuPlayer.IO.Storage.Playlists;
@@ -160,6 +161,40 @@ public class Player
             case StartupSong.RandomSong:
                 await PlayAsync(SongSourceList[new Random().Next(SongSourceList.Count)]);
                 break;
+        }
+    }
+
+    public async Task ImportCollectionsAsync()
+    {
+        var config = new Config();
+        var collections = await OsuCollectionReader.Read(config.Container.OsuPath!);
+
+        if (collections != default && collections.Any())
+        {
+            RealmReader realmReader = null;
+            Dictionary<string, int> beatmapHashes = null;
+
+            if (SongSourceList?[0] is RealmMapEntryBase)
+                realmReader = new RealmReader();
+            else if (SongSourceList?[0] is DbMapEntryBase)
+                beatmapHashes = await OsuDbReader.ReadAllDiffs(config.Container.OsuPath);
+
+            foreach (var collection in collections)
+            {
+                foreach (var hash in collection.BeatmapHashes)
+                {
+                    if (SongSourceList?[0] is RealmMapEntryBase)
+                    {
+                        var setId = realmReader!.QueryBeatmap(x => x.MD5Hash == hash)?.BeatmapSet?.OnlineID ?? -1;
+                        await PlaylistManager.AddSongToPlaylistAsync(collection.Name, setId);
+                    }
+                    else if (SongSourceList?[0] is DbMapEntryBase)
+                    {
+                        var setId = beatmapHashes?.GetValueOrDefault(hash) ?? -1;
+                        await PlaylistManager.AddSongToPlaylistAsync(collection.Name, setId);
+                    }
+                }
+            }
         }
     }
 

@@ -52,7 +52,7 @@ public class OsuDbReader : BinaryReader
 
             if (prevId != -1)
             {
-                var length = CalculateMapLength(reader, out var newSetId);
+                var length = CalculateMapLength(reader, out var newSetId, out _);
                 if (prevId == newSetId)
                 {
                     prevId = newSetId;
@@ -77,6 +77,44 @@ public class OsuDbReader : BinaryReader
         await file.FlushAsync();
         reader.Dispose();
         return minBeatMaps;
+    }
+
+    public static async Task<Dictionary<string, int>?> ReadAllDiffs(string osuPath)
+    {
+        var hashes = new Dictionary<string, int>();
+        var dbLoc = Path.Combine(osuPath, "osu!.db");
+
+        if (!File.Exists(dbLoc)) return null;
+
+        await using var file = File.OpenRead(dbLoc);
+        using var reader = new OsuDbReader(file);
+
+        var ver = reader.ReadInt32();
+        OsuDbVersion = ver;
+        var flag = ver is >= 20160408 and < 20191107;
+
+        reader.ReadInt32();
+        reader.ReadBoolean();
+        reader.ReadInt64();
+        reader.ReadString();
+
+        var mapCount = reader.ReadInt32();
+
+        for (var i = 1; i < mapCount; i++)
+        {
+            if (flag)
+                reader.ReadInt32(); //btlen
+
+            var length = CalculateMapLength(reader, out var setId, out var hash);
+
+            hashes.Add(hash, setId);
+        }
+
+        reader.ReadInt32(); //account rank
+
+        await file.FlushAsync();
+        reader.Dispose();
+        return hashes;
     }
 
 
@@ -157,9 +195,10 @@ public class OsuDbReader : BinaryReader
     /// Reads a osu!.db map entry and calculates the map length in bytes
     /// </summary>
     /// <param name="r">the current <see cref="OsuDbReader" /> instance of the stream</param>
-    /// <param name="setId">outputs a <see cref="int" /> of the beatmap set id</param>
+    /// <param name="setId">outputs an <see cref="int" /> of the beatmap set id</param>
+    /// <param name="hash">outputs an <see cref="string" /> of the beatmap hash</param>
     /// <returns>a <see cref="long" /> from the byte length of the current map</returns>
-    private static long CalculateMapLength(OsuDbReader r, out int setId)
+    private static long CalculateMapLength(OsuDbReader r, out int setId, out string hash)
     {
         var initOffset = r.BaseStream.Position;
 
@@ -172,7 +211,7 @@ public class OsuDbReader : BinaryReader
         r.ReadString(true);
         r.ReadString(true);
         r.ReadString(true);
-        r.ReadString(true);
+        hash = r.ReadString();
         r.ReadString(true);
         r.BaseStream.Seek(15, SeekOrigin.Current);
         if (OsuDbVersion >= 20140609)
@@ -207,29 +246,6 @@ public class OsuDbReader : BinaryReader
             r.BaseStream.Seek(18, SeekOrigin.Current);
 
         return r.BaseStream.Position - initOffset;
-    }
-
-    /// <summary>
-    /// Reads the collection from the collection.db
-    /// </summary>
-    /// <param name="osuPath">the osu full path</param>
-    /// <returns>a <see cref="Collection" /> list</returns>
-    public static List<Collection>? ReadCollections(string osuPath)
-    {
-        var collections = new List<Collection>();
-        var colLoc = Path.Combine(osuPath, "collection.db");
-
-        if (!File.Exists(colLoc)) return null;
-
-        using (OsuDbReader reader = new(File.OpenRead(colLoc)))
-        {
-            reader.ReadInt32(); //osuVersion
-            var num = reader.ReadInt32();
-
-            for (var i = 0; i < num; i++) collections.Add(Collection.ReadFromReader(reader));
-        }
-
-        return collections;
     }
 
     /// <summary>
