@@ -173,7 +173,7 @@ public class Player
             Dictionary<string, int> beatmapHashes = null;
 
             if (SongSourceList?[0] is RealmMapEntryBase)
-                realmReader = new RealmReader();
+                realmReader = new RealmReader(config);
             else if (SongSourceList?[0] is DbMapEntryBase)
                 beatmapHashes = await OsuDbReader.ReadAllDiffs(config.Container.OsuPath);
 

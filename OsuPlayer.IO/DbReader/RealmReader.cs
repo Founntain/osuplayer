@@ -13,9 +13,9 @@ public class RealmReader
     private Realm _realm;
     private IEnumerable<BeatmapInfo> _beatmapInfos;
 
-    public RealmReader()
+    public RealmReader(Config? config = null)
     {
-        var config = new Config();
+        config ??= new Config();
 
         if (string.IsNullOrWhiteSpace(config.Container.OsuPath)) return;
 
