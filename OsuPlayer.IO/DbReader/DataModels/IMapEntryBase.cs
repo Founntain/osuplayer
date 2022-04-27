@@ -20,5 +20,5 @@ public interface IMapEntryBase
 
     public string GetSongName();
 
-    public Task<IMapEntry> ReadFullEntry(string path);
+    public Task<IMapEntry?> ReadFullEntry(string path);
 }

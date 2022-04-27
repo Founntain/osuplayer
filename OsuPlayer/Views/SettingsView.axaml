@@ -48,6 +48,12 @@
                                     HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
                         </StackPanel>
 
+                        <StackPanel Spacing="5" Name="ImportCollections">
+                            <TextBlock Text="Import osu! collections" />
+                            <Button Content="start import" Click="ImportCollectionsClick"
+                                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                        </StackPanel>
+
                         <StackPanel Spacing="5" Name="WindowBlurMethod">
                             <TextBlock Text="Window Blur Method" />
                             <ComboBox SelectedItem="{Binding SelectedTransparencyLevel}"
@@ -59,11 +65,11 @@
                             <ComboBox SelectedItem="{Binding SelectedStartupSong}" Items="{Binding StartupSongs}"
                                       HorizontalAlignment="Stretch" />
                         </StackPanel>
-                        
+
                         <StackPanel Spacing="5" Name="SongsSortingMode">
-                            <TextBlock Text="Sorting Mode"/>
+                            <TextBlock Text="Sorting Mode" />
                             <ComboBox SelectedItem="{Binding SelectedSortingMode}" Items="{Binding SortingModes}"
-                                      HorizontalAlignment="Stretch"/>
+                                      HorizontalAlignment="Stretch" />
                         </StackPanel>
                     </StackPanel>
                 </Grid>

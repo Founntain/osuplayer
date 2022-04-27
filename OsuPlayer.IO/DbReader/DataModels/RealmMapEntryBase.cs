@@ -32,7 +32,7 @@ public class RealmMapEntryBase : IMapEntryBase
         return $"{Artist} - {Title}";
     }
 
-    public async Task<IMapEntry> ReadFullEntry(string path)
+    public async Task<IMapEntry?> ReadFullEntry(string path)
     {
         var realmLoc = Path.Combine(path, "client.realm");
 
@@ -43,9 +43,9 @@ public class RealmMapEntryBase : IMapEntryBase
         };
 
         var realm = await Realm.GetInstanceAsync(realmConfig);
-        var beatmap = (BeatmapSetInfo)realm.DynamicApi.Find("BeatmapSet", Id);
+        var beatmap = (BeatmapSetInfo) realm.DynamicApi.Find("BeatmapSet", Id);
 
-        if (beatmap == default) throw new NullReferenceException();
+        if (beatmap == default) return null;
 
         var audioFile = beatmap.Files.FirstOrDefault(x => x.Filename == beatmap.Metadata.AudioFile);
         var backgroundFile = beatmap.Files.FirstOrDefault(x => string.Equals(x.Filename, beatmap.Metadata.BackgroundFile, StringComparison.OrdinalIgnoreCase));

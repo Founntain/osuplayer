@@ -36,7 +36,7 @@ public partial class SettingsView : ReactivePlayerControl<SettingsViewModel>
             ViewModel.SettingsCategories =
                 this.FindControl<WrapPanel>("SettingsGrid").Children;
         });
-        
+
         AvaloniaXamlLoader.Load(this);
     }
 
@@ -91,6 +91,11 @@ public partial class SettingsView : ReactivePlayerControl<SettingsViewModel>
         }
 
         await Task.Run(ViewModel.Player.ImportSongsAsync);
+    }
+
+    public async void ImportCollectionsClick(object? sender, RoutedEventArgs routedEventArgs)
+    {
+        await Task.Run(ViewModel.Player.ImportCollectionsAsync);
     }
 
     public async void LoginClick(object? sender, RoutedEventArgs routedEventArgs)

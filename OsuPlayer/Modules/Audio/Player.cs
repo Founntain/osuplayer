@@ -36,8 +36,6 @@ public class Player
 
     public readonly Bindable<Bitmap?> CurrentSongImage = new();
 
-    public readonly Bindable<IObservable<Func<IMapEntryBase, bool>>?> Filter = new();
-
     public readonly Bindable<List<ObservableValue>?> GraphValues = new();
 
     public readonly Bindable<bool> IsPlaying = new();
@@ -180,21 +178,17 @@ public class Player
                 beatmapHashes = await OsuDbReader.ReadAllDiffs(config.Container.OsuPath);
 
             foreach (var collection in collections)
-            {
-                foreach (var hash in collection.BeatmapHashes)
+            foreach (var hash in collection.BeatmapHashes)
+                if (SongSourceList?[0] is RealmMapEntryBase)
                 {
-                    if (SongSourceList?[0] is RealmMapEntryBase)
-                    {
-                        var setId = realmReader!.QueryBeatmap(x => x.MD5Hash == hash)?.BeatmapSet?.OnlineID ?? -1;
-                        await PlaylistManager.AddSongToPlaylistAsync(collection.Name, setId);
-                    }
-                    else if (SongSourceList?[0] is DbMapEntryBase)
-                    {
-                        var setId = beatmapHashes?.GetValueOrDefault(hash) ?? -1;
-                        await PlaylistManager.AddSongToPlaylistAsync(collection.Name, setId);
-                    }
+                    var setId = realmReader!.QueryBeatmap(x => x.MD5Hash == hash)?.BeatmapSet?.OnlineID ?? -1;
+                    await PlaylistManager.AddSongToPlaylistAsync(collection.Name, setId);
                 }
-            }
+                else if (SongSourceList?[0] is DbMapEntryBase)
+                {
+                    var setId = beatmapHashes?.GetValueOrDefault(hash) ?? -1;
+                    await PlaylistManager.AddSongToPlaylistAsync(collection.Name, setId);
+                }
         }
     }
 
@@ -315,13 +309,11 @@ public class Player
         if (SongSourceList == null || !SongSourceList.Any())
             return Task.FromException(new NullReferenceException($"{nameof(SongSourceList)} can't be null or empty"));
 
-        IMapEntry fullMapEntry;
-
         var config = new Config();
 
         await config.ReadAsync();
 
-        fullMapEntry = await song.ReadFullEntry(config.Container.OsuPath!);
+        var fullMapEntry = await song.ReadFullEntry(config.Container.OsuPath!);
 
         if (fullMapEntry == default)
             return Task.FromException(new NullReferenceException());
