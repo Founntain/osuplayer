@@ -2,6 +2,9 @@
 
 namespace OsuPlayer.Network.Online;
 
+/// <summary>
+/// A list of all available role colors
+/// </summary>
 public static class UserColors
 {
     public static Brush Developer => new SolidColorBrush(Color.FromRgb(255, 0, 152));

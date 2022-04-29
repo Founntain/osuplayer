@@ -277,7 +277,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
     {
         if (ViewModel?.CurrentUser == default) return;
 
-        var user = await ApiAsync.GetUserByName(ViewModel.CurrentUser.Name);
+        var user = await ApiAsync.GetProfileByNameAsync(ViewModel.CurrentUser.Name);
 
         if (user == default) return;
 

@@ -16,7 +16,7 @@ using OsuPlayer.IO.Storage.Config;
 namespace OsuPlayer.Modules.Audio;
 
 /// <summary>
-/// Audioengine for the osu!player using <see cref="ManagedBass" />
+/// Audio engine for the osu!player using <see cref="ManagedBass" />
 /// </summary>
 public sealed class BassEngine : INotifyPropertyChanged
 {
@@ -104,6 +104,11 @@ public sealed class BassEngine : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Converts the equalizer band frequency to an index
+    /// </summary>
+    /// <param name="frq">the frequency to get the index from</param>
+    /// <returns>the <see cref="int" /> index of the eq band</returns>
     private int GetIndex(int frq)
     {
         switch (frq)
@@ -133,6 +138,11 @@ public sealed class BassEngine : INotifyPropertyChanged
         return -1;
     }
 
+    /// <summary>
+    /// Sets the gain of one equalizer band
+    /// </summary>
+    /// <param name="index">the index of the band, can be converted with the <see cref="GetIndex" /> method</param>
+    /// <param name="gain">the gain for the equalizer band in dB</param>
     private void SetValue(int index, double gain)
     {
         _paramEq.UpdateBand(index, gain);
@@ -170,14 +180,6 @@ public sealed class BassEngine : INotifyPropertyChanged
                 return;
         }
     }
-
-    public void SetSpeed(double speed)
-    {
-        Bass.ChannelSetAttribute(FxStream, ChannelAttribute.TempoFrequency,
-            SampleFrequency * (1 + speed));
-        _playbackSpeed = speed;
-    }
-
 
     #region Player
 
@@ -327,6 +329,23 @@ public sealed class BassEngine : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Sets the speed of the current <see cref="FxStream" />
+    /// </summary>
+    /// <param name="speed">a 0 based offset for the speed</param>
+    public void SetSpeed(double speed)
+    {
+        Bass.ChannelSetAttribute(FxStream, ChannelAttribute.TempoFrequency,
+            SampleFrequency * (1 + speed));
+        _playbackSpeed = speed;
+    }
+
+    /// <summary>
+    /// Opens an audio file and creates an <see cref="FxStream" /> containing the decoded audio stream
+    /// </summary>
+    /// <param name="path">the path to the audio file to be opened</param>
+    /// <returns>true if opening succeeded, false else</returns>
+    /// <exception cref="ArgumentException">if the sync handle could not be created</exception>
     public bool OpenFile(string path)
     {
         Stop();
@@ -379,6 +398,10 @@ public sealed class BassEngine : INotifyPropertyChanged
         return false;
     }
 
+    /// <summary>
+    /// Toggles the equalizer on/off
+    /// </summary>
+    /// <param name="on">true to turn on, false to turn off</param>
     public void ToggleEq(bool on)
     {
         if (on && _paramEq == null)
@@ -420,6 +443,10 @@ public sealed class BassEngine : INotifyPropertyChanged
         //Bass.BASS_FXSetParameters(EQStream[i], ParamEq);
     }
 
+    /// <summary>
+    /// Gets all audio device infos
+    /// </summary>
+    /// <returns>a list of <see cref="DeviceInfo" /> containing the devices</returns>
     public List<DeviceInfo> GetDeviceInfos()
     {
         var list = new List<DeviceInfo>();
@@ -428,6 +455,11 @@ public sealed class BassEngine : INotifyPropertyChanged
         return list;
     }
 
+    /// <summary>
+    /// Sets the output device for the player
+    /// <remarks>If the index is -1 sets the output device to the default device set in the os.</remarks>
+    /// </summary>
+    /// <param name="index"></param>
     public void SetDeviceInfo(int index)
     {
         if (index == -1)
@@ -454,6 +486,10 @@ public sealed class BassEngine : INotifyPropertyChanged
         Console.WriteLine($"SET: {index} | {result} | {Bass.LastError}");
     }
 
+    /// <summary>
+    /// Gets all audio devices
+    /// </summary>
+    /// <returns>an <see cref="IEnumerable{T}" /> of <see cref="AudioDevice" /> containing all found devices on the computer</returns>
     public IEnumerable<AudioDevice> GetAudioDevices()
     {
         foreach (var info in GetDeviceInfos()) yield return new AudioDevice(info);
@@ -505,6 +541,9 @@ public sealed class BassEngine : INotifyPropertyChanged
         //SetDeviceInfo(OsuPlayer.Config.ConfigStorage.SelectedOutputDevice);
     }
 
+    /// <summary>
+    /// Sets all equalizer bands
+    /// </summary>
     private void SetEqBands()
     {
         if (FxStream == 0) return;
