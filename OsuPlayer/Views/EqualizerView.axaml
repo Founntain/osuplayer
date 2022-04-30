@@ -4,50 +4,66 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:OsuPlayer.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="OsuPlayer.Views.EqualizerView" FontSize="10">
+             x:Class="OsuPlayer.Views.EqualizerView" FontSize="16">
     <Design.DataContext>
         <vm:EqualizerViewModel />
     </Design.DataContext>
 
-    <Grid ColumnDefinitions="Auto, *" RowDefinitions="*, Auto">
-        <Panel Margin="0, 10">
-            <TextBlock Text="+15 db" VerticalAlignment="Top" />
-            <TextBlock Text="0 db" VerticalAlignment="Center" />
-            <TextBlock Text="-15 db" VerticalAlignment="Bottom" />
+    <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, *, Auto">
+        <Grid Grid.ColumnSpan="2" Margin="10, 10">
+            <StackPanel Orientation="Horizontal">
+                <CheckBox Name="EqEnabled" IsChecked="{Binding IsEqEnabled}" VerticalAlignment="Center" />
+                <TextBlock Text="Enable equalizer" VerticalAlignment="Center" />
+            </StackPanel>
+        </Grid>
+        <Panel Grid.Column="0" Grid.Row="1" Margin="0, 10">
+            <TextBlock Text="+15 db" VerticalAlignment="Top" FontSize="10" />
+            <TextBlock Text="0 db" VerticalAlignment="Center" FontSize="10" />
+            <TextBlock Text="-15 db" VerticalAlignment="Bottom" FontSize="10" />
         </Panel>
-        <UniformGrid Grid.Row="0" Grid.Column="1" Rows="1" Columns="10">
+        <UniformGrid Grid.Row="1" Grid.Column="1" Rows="1" Columns="10">
             <Slider Name="F80" Orientation="Vertical" HorizontalAlignment="Center"
                     IsSnapToTickEnabled="False" Value="{Binding F80}"
-                    TickPlacement="Outside" Minimum="-15" Maximum="15" TickFrequency="5" Margin="0, 10" />
+                    TickPlacement="Outside" Minimum="-15" Maximum="15" TickFrequency="5" Margin="0, 10"
+                    DoubleTapped="ResetSlider" />
             <Slider Name="F125" Orientation="Vertical" HorizontalAlignment="Center"
                     IsSnapToTickEnabled="False" Value="{Binding F125}"
-                    TickPlacement="Outside" Minimum="-15" Maximum="15" TickFrequency="5" Margin="0, 10" />
+                    TickPlacement="Outside" Minimum="-15" Maximum="15" TickFrequency="5" Margin="0, 10"
+                    DoubleTapped="ResetSlider" />
             <Slider Name="F200" Orientation="Vertical" HorizontalAlignment="Center"
                     IsSnapToTickEnabled="False" Value="{Binding F200}"
-                    TickPlacement="Outside" Minimum="-15" Maximum="15" TickFrequency="5" Margin="0, 10" />
+                    TickPlacement="Outside" Minimum="-15" Maximum="15" TickFrequency="5" Margin="0, 10"
+                    DoubleTapped="ResetSlider" />
             <Slider Name="F300" Orientation="Vertical" HorizontalAlignment="Center"
                     IsSnapToTickEnabled="False" Value="{Binding F300}"
-                    TickPlacement="Outside" Minimum="-15" Maximum="15" TickFrequency="5" Margin="0, 10" />
+                    TickPlacement="Outside" Minimum="-15" Maximum="15" TickFrequency="5" Margin="0, 10"
+                    DoubleTapped="ResetSlider" />
             <Slider Name="F500" Orientation="Vertical" HorizontalAlignment="Center"
                     IsSnapToTickEnabled="False" Value="{Binding F500}"
-                    TickPlacement="Outside" Minimum="-15" Maximum="15" TickFrequency="5" Margin="0, 10" />
+                    TickPlacement="Outside" Minimum="-15" Maximum="15" TickFrequency="5" Margin="0, 10"
+                    DoubleTapped="ResetSlider" />
             <Slider Name="F1000" Orientation="Vertical" HorizontalAlignment="Center"
                     IsSnapToTickEnabled="False" Value="{Binding F1000}"
-                    TickPlacement="Outside" Minimum="-15" Maximum="15" TickFrequency="5" Margin="0, 10" />
+                    TickPlacement="Outside" Minimum="-15" Maximum="15" TickFrequency="5" Margin="0, 10"
+                    DoubleTapped="ResetSlider" />
             <Slider Name="F2000" Orientation="Vertical" HorizontalAlignment="Center"
                     IsSnapToTickEnabled="False" Value="{Binding F2000}"
-                    TickPlacement="Outside" Minimum="-15" Maximum="15" TickFrequency="5" Margin="0, 10" />
+                    TickPlacement="Outside" Minimum="-15" Maximum="15" TickFrequency="5" Margin="0, 10"
+                    DoubleTapped="ResetSlider" />
             <Slider Name="F4000" Orientation="Vertical" HorizontalAlignment="Center"
                     IsSnapToTickEnabled="False" Value="{Binding F4000}"
-                    TickPlacement="Outside" Minimum="-15" Maximum="15" TickFrequency="5" Margin="0, 10" />
+                    TickPlacement="Outside" Minimum="-15" Maximum="15" TickFrequency="5" Margin="0, 10"
+                    DoubleTapped="ResetSlider" />
             <Slider Name="F8000" Orientation="Vertical" HorizontalAlignment="Center"
                     IsSnapToTickEnabled="False" Value="{Binding F8000}"
-                    TickPlacement="Outside" Minimum="-15" Maximum="15" TickFrequency="5" Margin="0, 10" />
+                    TickPlacement="Outside" Minimum="-15" Maximum="15" TickFrequency="5" Margin="0, 10"
+                    DoubleTapped="ResetSlider" />
             <Slider Name="F16000" Orientation="Vertical" HorizontalAlignment="Center"
                     IsSnapToTickEnabled="False" Value="{Binding F16000}"
-                    TickPlacement="Outside" Minimum="-15" Maximum="15" TickFrequency="5" Margin="0, 10" />
+                    TickPlacement="Outside" Minimum="-15" Maximum="15" TickFrequency="5" Margin="0, 10"
+                    DoubleTapped="ResetSlider" />
         </UniformGrid>
-        <UniformGrid Grid.Row="1" Grid.Column="1" Rows="1" Columns="10">
+        <UniformGrid Grid.Row="2" Grid.Column="1" Rows="1" Columns="10">
             <TextBlock Text="80 Hz" HorizontalAlignment="Center" DockPanel.Dock="Bottom" Margin="0, 10" />
             <TextBlock Text="125 Hz" HorizontalAlignment="Center" DockPanel.Dock="Bottom" Margin="0, 10" />
             <TextBlock Text="200 Hz" HorizontalAlignment="Center" DockPanel.Dock="Bottom" Margin="0, 10" />

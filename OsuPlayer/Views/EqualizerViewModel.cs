@@ -1,5 +1,6 @@
 ﻿using System.Reactive.Disposables;
 using OsuPlayer.Extensions.Bindables;
+using OsuPlayer.IO.Storage.Config;
 using OsuPlayer.Modules.Audio;
 using OsuPlayer.ViewModels;
 using ReactiveUI;
@@ -9,14 +10,14 @@ namespace OsuPlayer.Views;
 public class EqualizerViewModel : BaseViewModel
 {
     private readonly BindableArray<double> _frequencies = new(10);
+    private readonly Player _player;
 
     public EqualizerViewModel(Player player)
     {
         Activator = new ViewModelActivator();
-        _frequencies.BindCollectionChanged((sender, args) =>
-        {
-            player.SetEq(((BindableArray<double>) sender)!);
-        });
+        _player = player;
+
+        _frequencies.BindTo(_player.EqGains);
 
         this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
     }
@@ -117,6 +118,22 @@ public class EqualizerViewModel : BaseViewModel
         set
         {
             _frequencies[9] = value;
+            this.RaisePropertyChanged();
+        }
+    }
+
+    public bool IsEqEnabled
+    {
+        get => new Config().Container.IsEqEnabled;
+        set
+        {
+            using (var config = new Config())
+            {
+                config.Container.IsEqEnabled = value;
+            }
+
+            _player.ToggleEq(value);
+
             this.RaisePropertyChanged();
         }
     }

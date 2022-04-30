@@ -34,8 +34,9 @@ public sealed class BassEngine : INotifyPropertyChanged
     private bool _inChannelSet;
     private bool _inChannelTimerUpdate;
     private bool _inRepeatSet;
+    private bool _isEqEnabled;
     private bool _isPlaying;
-    private DXParamEQ _paramEq;
+    private DXParamEQ? _paramEq;
     private double _playbackSpeed;
     private TimeSpan _repeatStart;
     private TimeSpan _repeatStop;
@@ -43,6 +44,7 @@ public sealed class BassEngine : INotifyPropertyChanged
     private int _streamFx;
     public Bindable<double> ChannelLengthB = new();
     public Bindable<double> ChannelPositionB = new();
+    public BindableArray<double> EqGains = new(10);
     public int SampleFrequency = 44100;
     public Bindable<double> VolumeB = new();
 
@@ -86,6 +88,21 @@ public sealed class BassEngine : INotifyPropertyChanged
             _isPlaying = value;
             if (oldValue != _isPlaying)
                 NotifyPropertyChanged("PlayState");
+        }
+    }
+
+    public bool IsEqEnabled
+    {
+        get => _isEqEnabled;
+        set
+        {
+            var oldValue = _isEqEnabled;
+            _isEqEnabled = value;
+            if (oldValue != _isEqEnabled)
+            {
+                NotifyPropertyChanged("EqEnabled");
+                SetAllEq();
+            }
         }
     }
 
@@ -143,9 +160,10 @@ public sealed class BassEngine : INotifyPropertyChanged
     /// </summary>
     /// <param name="index">the index of the band, can be converted with the <see cref="GetIndex" /> method</param>
     /// <param name="gain">the gain for the equalizer band in dB</param>
-    private void SetValue(int index, double gain)
+    /// <param name="on">whether the eq is enabled</param>
+    private void SetValue(int index, double gain, bool on = true)
     {
-        _paramEq.UpdateBand(index, gain);
+        _paramEq?.UpdateBand(index, on ? gain : 0);
         switch (index)
         {
             case 0:
@@ -373,6 +391,8 @@ public sealed class BassEngine : INotifyPropertyChanged
                 var speed = SampleFrequency * (1 + _playbackSpeed);
                 Bass.ChannelSetAttribute(FxStream, ChannelAttribute.TempoFrequency, speed);
                 Bass.ChannelSetAttribute(FxStream, ChannelAttribute.Volume, (float) Volume / 100);
+                InitEq();
+                SetAllEq();
 
                 var config = new Config();
                 SetDeviceInfo(config.Container.SelectedOutputDevice);
@@ -397,23 +417,6 @@ public sealed class BassEngine : INotifyPropertyChanged
         return false;
     }
 
-    /// <summary>
-    /// Toggles the equalizer on/off
-    /// </summary>
-    /// <param name="on">true to turn on, false to turn off</param>
-    public void ToggleEq(bool on)
-    {
-        if (on && _paramEq == null)
-        {
-            SetEqBands();
-        }
-        else if (!on && _paramEq != null)
-        {
-            _paramEq.Dispose();
-            _paramEq = null;
-        }
-    }
-
     // /// <summary>
     // ///     Set the gain of one specific frequency band (from 80 to 16000 Hz)
     // /// </summary>
@@ -431,14 +434,12 @@ public sealed class BassEngine : INotifyPropertyChanged
     /// <summary>
     /// Sets all bands according to the parameter
     /// </summary>
-    /// <param name="gain">10 double values from -15 to +15</param>
     /// <returns></returns>
-    public void SetAllEq(BindableArray<double> gain)
+    public void SetAllEq()
     {
-        using var config = new Config();
-        if (!config.Read().IsEqEnabled || _paramEq == null) return;
-        for (var i = 0; i < gain.Length; i++)
-            SetValue(i, gain[i]);
+        if (_paramEq == null) return;
+        for (var i = 0; i < EqGains.Length; i++)
+            SetValue(i, EqGains[i], _isEqEnabled);
         //Bass.BASS_FXSetParameters(EQStream[i], ParamEq);
     }
 
@@ -509,6 +510,7 @@ public sealed class BassEngine : INotifyPropertyChanged
         ChannelPositionB.BindValueChanged(d => ChannelPosition = d.NewValue);
         ChannelLengthB.BindValueChanged(d => ChannelLength = d.NewValue);
         VolumeB.BindValueChanged(d => Volume = d.NewValue);
+        EqGains.BindCollectionChanged((sender, args) => SetAllEq());
 
         AvailableAudioDevices = new Collection<AudioDevice>();
 
@@ -543,8 +545,9 @@ public sealed class BassEngine : INotifyPropertyChanged
     /// <summary>
     /// Sets all equalizer bands
     /// </summary>
-    private void SetEqBands()
+    private void InitEq()
     {
+        _isEqEnabled = new Config().Container.IsEqEnabled;
         if (FxStream == 0) return;
         _paramEq = new DXParamEQ(FxStream);
         _paramEq.AddBand(80);

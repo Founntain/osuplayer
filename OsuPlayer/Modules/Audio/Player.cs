@@ -99,6 +99,8 @@ public class Player
 
     public List<IMapEntryBase>? SongSourceList => SongSource.Value.Items.ToList();
 
+    public BindableArray<double> EqGains => _bassEngine.EqGains;
+
     private PlayState PlayState
     {
         get => _playState;
@@ -266,11 +268,11 @@ public class Player
         _bassEngine.SetSpeed(speed);
     }
 
-    public void SetEq(BindableArray<double> eqParams)
+    public void ToggleEq(bool on)
     {
-        _bassEngine.SetAllEq(eqParams);
+        _bassEngine.IsEqEnabled = on;
     }
-    
+
     /// <summary>
     /// Starts playing a song
     /// </summary>
