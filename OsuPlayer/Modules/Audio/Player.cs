@@ -258,7 +258,7 @@ public class Player
     }
 
     /// <summary>
-    /// Sets the playbackspeed globally (including pitch)
+    /// Sets the playback speed globally (including pitch)
     /// </summary>
     /// <param name="speed">The speed to set</param>
     public void SetPlaybackSpeed(double speed)

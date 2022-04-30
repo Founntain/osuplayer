@@ -14,6 +14,7 @@
         <entry key="OsuPlayer/UI Extensions/AcrylicPanel.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/UI Extensions/MessageBoxWindow.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/Views/EditUserView.axaml" value="OsuPlayer/OsuPlayer.csproj" />
+        <entry key="OsuPlayer/Views/EqualizerView.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/Views/HomeView.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/Views/MainWindow.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/Views/PartyView.axaml" value="OsuPlayer/OsuPlayer.csproj" />

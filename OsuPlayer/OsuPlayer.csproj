@@ -96,5 +96,8 @@
         <Compile Update="Views\EditUserViewModel.cs">
             <DependentUpon>EditUserView.axaml</DependentUpon>
         </Compile>
+        <Compile Update="Views\EqualizerViewModel.cs">
+          <DependentUpon>EqualizerView.axaml</DependentUpon>
+        </Compile>
     </ItemGroup>
 </Project>
