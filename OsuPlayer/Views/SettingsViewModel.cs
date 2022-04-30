@@ -33,6 +33,7 @@ public class SettingsViewModel : BaseViewModel
         _selectedTransparencyLevel = config.Container.TransparencyLevelHint;
 
         Player = player;
+
         Activator = new ViewModelActivator();
         this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
     }
