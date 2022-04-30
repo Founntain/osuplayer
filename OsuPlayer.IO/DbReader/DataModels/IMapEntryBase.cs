@@ -20,5 +20,13 @@ public interface IMapEntryBase
 
     public string GetSongName();
 
+    /// <summary>
+    /// Reads the full <see cref="IMapEntry" /> from this <see cref="IMapEntryBase" />
+    /// </summary>
+    /// <param name="path">the path to the osu! map</param>
+    /// <returns>
+    /// a full <see cref="IMapEntry" /> for extended usage. Returns null if the path doesn't exist or the map was not
+    /// found.
+    /// </returns>
     public Task<IMapEntry?> ReadFullEntry(string path);
 }

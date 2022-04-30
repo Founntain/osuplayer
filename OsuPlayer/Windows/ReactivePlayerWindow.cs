@@ -5,6 +5,10 @@ using ReactiveUI;
 
 namespace OsuPlayer.Windows;
 
+/// <summary>
+/// A reactive player window class for all windows in our app
+/// </summary>
+/// <typeparam name="TViewModel">the ViewModel which the <see cref="ReactivePlayerWindow{TViewModel}"/> is bound to</typeparam>
 public class ReactivePlayerWindow<TViewModel> : Window, IViewFor<TViewModel> where TViewModel : ReactiveObject
 {
     public static readonly StyledProperty<TViewModel> ViewModelProperty = AvaloniaProperty

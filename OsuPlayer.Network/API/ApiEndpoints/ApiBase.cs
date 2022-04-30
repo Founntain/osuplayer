@@ -4,6 +4,9 @@ using Newtonsoft.Json;
 
 namespace OsuPlayer.Network.API.ApiEndpoints;
 
+/// <summary>
+/// Static class to make HTTP Requests to the osu!player api asynchronously
+/// </summary>
 public static partial class ApiAsync
 {
     public static string Url => Constants.Localhost

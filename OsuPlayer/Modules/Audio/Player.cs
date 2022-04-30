@@ -257,11 +257,20 @@ public class Player
         }
     }
 
+    /// <summary>
+    /// Sets the playbackspeed globally (including pitch)
+    /// </summary>
+    /// <param name="speed">The speed to set</param>
     public void SetPlaybackSpeed(double speed)
     {
         _bassEngine.SetSpeed(speed);
     }
 
+    /// <summary>
+    /// Starts playing a song
+    /// </summary>
+    /// <param name="song">The song to play</param>
+    /// <param name="playDirection">The direction we went in the playlist. Mostly used by the Next and Prev method</param>
     public async Task PlayAsync(IMapEntryBase? song, PlayDirection playDirection = PlayDirection.Forward)
     {
         if (SongSourceList == default || !SongSourceList.Any())
@@ -284,6 +293,11 @@ public class Player
             await TryEnqueueSongAsync(SongSourceList![^1]);
     }
 
+    /// <summary>
+    /// Enqueues a song with a given <paramref name="direction" />
+    /// </summary>
+    /// <param name="direction">a <see cref="PlayDirection" /> to indicate in which direction the next song should be</param>
+    /// <returns>a <see cref="Task" /> from the enqueue try <seealso cref="TryEnqueueSongAsync" /></returns>
     private async Task<Task> EnqueueSongFromDirectionAsync(PlayDirection direction)
     {
         switch (direction)
@@ -315,6 +329,11 @@ public class Player
         return Task.FromException(new InvalidOperationException($"Direction {direction} is not valid"));
     }
 
+    /// <summary>
+    /// Enqueues a specific song to play
+    /// </summary>
+    /// <param name="song">a <see cref="IMapEntryBase" /> to play next</param>
+    /// <returns>a <see cref="Task" /> with the resulting state</returns>
     private async Task<Task> TryEnqueueSongAsync(IMapEntryBase song)
     {
         if (SongSourceList == null || !SongSourceList.Any())
@@ -377,6 +396,9 @@ public class Player
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Updates the user xp on the api
+    /// </summary>
     private async Task UpdateXp()
     {
         if (ProfileManager.User == default) return;
@@ -407,6 +429,10 @@ public class Player
 
     public event PropertyChangedEventHandler UserChanged;
 
+    /// <summary>
+    /// Updates the songs played count of the user
+    /// </summary>
+    /// <param name="beatmapSetId">the beatmap set id of the map that was played</param>
     private async Task UpdateSongsPlayed(int beatmapSetId)
     {
         if (ProfileManager.User == default) return;
@@ -420,6 +446,9 @@ public class Player
         UserChanged.Invoke(this, new PropertyChangedEventArgs("SongsPlayed"));
     }
 
+    /// <summary>
+    /// Toggles mute of the volume
+    /// </summary>
     public void ToggleMute()
     {
         if (!_isMuted)
@@ -435,6 +464,9 @@ public class Player
         }
     }
 
+    /// <summary>
+    /// Pauses the current song if playing or plays again if paused
+    /// </summary>
     public void PlayPause()
     {
         if (PlayState == PlayState.Paused)
@@ -451,18 +483,27 @@ public class Player
         }
     }
 
+    /// <summary>
+    /// Sets the playing state to Playing
+    /// </summary>
     public void Play()
     {
         _bassEngine.Play();
         PlayState = PlayState.Playing;
     }
 
+    /// <summary>
+    /// Sets the playing state to Pause
+    /// </summary>
     public void Pause()
     {
         _bassEngine.Pause();
         PlayState = PlayState.Paused;
     }
 
+    /// <summary>
+    /// Plays the next song in the list. Or the first if we are at the end
+    /// </summary>
     public async void NextSong()
     {
         if (SongSourceList == null || !SongSourceList.Any())
@@ -522,6 +563,9 @@ public class Player
 
     public event PropertyChangedEventHandler? PlaylistChanged;
 
+    /// <summary>
+    /// Plays the previous song or the last song if we are the beginning
+    /// </summary>
     public async void PreviousSong()
     {
         if (SongSourceList == null || !SongSourceList.Any())
@@ -577,16 +621,30 @@ public class Player
             PlayDirection.Backwards);
     }
 
+    /// <summary>
+    /// Gets the map entry from the beatmap set id
+    /// </summary>
+    /// <param name="setId">the beatmap set id to get the map from</param>
+    /// <returns>an <see cref="IMapEntryBase" /> of the found map or null if it doesn't exist</returns>
     private IMapEntryBase? GetMapEntryFromSetId(int setId)
     {
         return SongSourceList!.FirstOrDefault(x => x.BeatmapSetId == setId);
     }
 
+    /// <summary>
+    /// Gets all Songs from a specific beatmapset ID
+    /// </summary>
+    /// <param name="setId">The beatmapset ID</param>
+    /// <returns>A list of <see cref="IMapEntryBase" /></returns>
     public List<IMapEntryBase> GetMapEntriesFromSetId(ICollection<int> setId)
     {
         return SongSourceList!.Where(x => setId.Contains(x.BeatmapSetId)).ToList();
     }
 
+    /// <summary>
+    /// Triggers if the playlist got changed
+    /// </summary>
+    /// <param name="e"></param>
     public void TriggerPlaylistChanged(PropertyChangedEventArgs e)
     {
         PlaylistChanged?.Invoke(this, e);
@@ -594,6 +652,11 @@ public class Player
 
     #region Shuffle
 
+    /// <summary>
+    /// Implements the shuffle logic <seealso cref="GetNextShuffledIndex" />
+    /// </summary>
+    /// <param name="direction">the <see cref="ShuffleDirection" /> to shuffle to</param>
+    /// <returns>a random/shuffled <see cref="IMapEntryBase" /></returns>
     private Task<IMapEntryBase> DoShuffle(ShuffleDirection direction)
     {
         if ((Repeat == RepeatMode.Playlist && ActivePlaylist == default) || CurrentSong == default || SongSourceList == default)
@@ -647,6 +710,10 @@ public class Player
             : SongSourceList![shuffleIndex]);
     }
 
+    /// <summary>
+    /// Generates the next shuffled index in <see cref="_shuffleHistory" />
+    /// <seealso cref="GenerateShuffledIndex" />
+    /// </summary>
     private void GetNextShuffledIndex()
     {
         // If there is no "next" song generate new shuffled index
@@ -671,6 +738,10 @@ public class Player
         }
     }
 
+    /// <summary>
+    /// Generates the previous shuffled index in <see cref="_shuffleHistory" />
+    /// <seealso cref="GenerateShuffledIndex" />
+    /// </summary>
     private void GetPreviousShuffledIndex()
     {
         // If there is no "prev" song generate new shuffled index
@@ -695,6 +766,11 @@ public class Player
         }
     }
 
+    /// <summary>
+    /// Generates a new random/shuffled index of available songs in either the <see cref="SongSourceList" /> or
+    /// <see cref="ActivePlaylist" /> songs
+    /// </summary>
+    /// <returns>the index of the new shuffled index</returns>
     private int GenerateShuffledIndex()
     {
         var rdm = new Random();
