@@ -266,6 +266,11 @@ public class Player
         _bassEngine.SetSpeed(speed);
     }
 
+    public void SetEq(BindableArray<double> eqParams)
+    {
+        _bassEngine.SetAllEq(eqParams);
+    }
+    
     /// <summary>
     /// Starts playing a song
     /// </summary>

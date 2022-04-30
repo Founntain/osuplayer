@@ -6,7 +6,7 @@ namespace OsuPlayer.Extensions.Bindables;
 /// Generic implementation of <see cref="IBindable{T}" />
 /// </summary>
 /// <typeparam name="T">the type of the stored <see cref="Value" /></typeparam>
-public class Bindable<T> : IBindable<T>
+public class Bindable<T> : IBindable<T>, IBindable
 {
     private bool _ignoreSource;
 
@@ -42,6 +42,14 @@ public class Bindable<T> : IBindable<T>
     {
         if (other is Bindable<T> otherB)
             BindTo(otherB);
+    }
+
+    void IBindable.BindTo(IBindable other)
+    {
+        if (!(other is Bindable<T> otherB))
+            throw new InvalidCastException($"Can't bind to a bindable of type {other.GetType()} from a bindable of type {GetType()}.");
+        
+        BindTo(otherB);
     }
 
     /// <summary>

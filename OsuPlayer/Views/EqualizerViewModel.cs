@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reactive.Disposables;
+﻿using System.Reactive.Disposables;
 using OsuPlayer.Extensions.Bindables;
+using OsuPlayer.Modules.Audio;
 using OsuPlayer.ViewModels;
 using ReactiveUI;
 
@@ -9,11 +8,15 @@ namespace OsuPlayer.Views;
 
 public class EqualizerViewModel : BaseViewModel
 {
-    private readonly double[] _frequencies = new double[10];
+    private readonly BindableArray<double> _frequencies = new(10);
 
-    public EqualizerViewModel()
+    public EqualizerViewModel(Player player)
     {
         Activator = new ViewModelActivator();
+        _frequencies.BindCollectionChanged((sender, args) =>
+        {
+            player.SetEq(((BindableArray<double>) sender)!);
+        });
 
         this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
     }
@@ -21,60 +24,100 @@ public class EqualizerViewModel : BaseViewModel
     public double F80
     {
         get => _frequencies[0];
-        set => this.RaiseAndSetIfChanged(ref _frequencies[0], value);
+        set
+        {
+            _frequencies[0] = value;
+            this.RaisePropertyChanged();
+        }
     }
 
     public double F125
     {
         get => _frequencies[1];
-        set => this.RaiseAndSetIfChanged(ref _frequencies[1], value);
+        set
+        {
+            _frequencies[1] = value;
+            this.RaisePropertyChanged();
+        }
     }
 
     public double F200
     {
         get => _frequencies[2];
-        set => this.RaiseAndSetIfChanged(ref _frequencies[2], value);
+        set
+        {
+            _frequencies[2] = value;
+            this.RaisePropertyChanged();
+        }
     }
 
     public double F300
     {
         get => _frequencies[3];
-        set => this.RaiseAndSetIfChanged(ref _frequencies[3], value);
+        set
+        {
+            _frequencies[3] = value;
+            this.RaisePropertyChanged();
+        }
     }
 
     public double F500
     {
         get => _frequencies[4];
-        set => this.RaiseAndSetIfChanged(ref _frequencies[4], value);
+        set
+        {
+            _frequencies[4] = value;
+            this.RaisePropertyChanged();
+        }
     }
 
     public double F1000
     {
         get => _frequencies[5];
-        set => this.RaiseAndSetIfChanged(ref _frequencies[5], value);
+        set
+        {
+            _frequencies[5] = value;
+            this.RaisePropertyChanged();
+        }
     }
 
     public double F2000
     {
         get => _frequencies[6];
-        set => this.RaiseAndSetIfChanged(ref _frequencies[6], value);
+        set
+        {
+            _frequencies[6] = value;
+            this.RaisePropertyChanged();
+        }
     }
 
     public double F4000
     {
         get => _frequencies[7];
-        set => this.RaiseAndSetIfChanged(ref _frequencies[7], value);
+        set
+        {
+            _frequencies[7] = value;
+            this.RaisePropertyChanged();
+        }
     }
 
     public double F8000
     {
         get => _frequencies[8];
-        set => this.RaiseAndSetIfChanged(ref _frequencies[8], value);
+        set
+        {
+            _frequencies[8] = value;
+            this.RaisePropertyChanged();
+        }
     }
 
     public double F16000
     {
         get => _frequencies[9];
-        set => this.RaiseAndSetIfChanged(ref _frequencies[9], value);
+        set
+        {
+            _frequencies[9] = value;
+            this.RaisePropertyChanged();
+        }
     }
 }

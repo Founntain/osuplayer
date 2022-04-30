@@ -433,7 +433,7 @@ public sealed class BassEngine : INotifyPropertyChanged
     /// </summary>
     /// <param name="gain">10 double values from -15 to +15</param>
     /// <returns></returns>
-    public void SetAllEq(double[] gain)
+    public void SetAllEq(BindableArray<double> gain)
     {
         using var config = new Config();
         if (!config.Read().IsEqEnabled || _paramEq == null) return;
