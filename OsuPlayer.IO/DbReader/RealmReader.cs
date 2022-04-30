@@ -10,8 +10,8 @@ namespace OsuPlayer.IO.DbReader;
 /// </summary>
 public class RealmReader
 {
-    private Realm _realm;
-    private IEnumerable<BeatmapInfo> _beatmapInfos;
+    private readonly Realm _realm;
+    private readonly IEnumerable<BeatmapInfo> _beatmapInfos;
 
     public RealmReader(Config? config = null)
     {
@@ -73,6 +73,11 @@ public class RealmReader
         return minBeatMaps;
     }
 
+    /// <summary>
+    /// Queries all beatmaps in the realm
+    /// </summary>
+    /// <param name="query">a <see cref="Func{T, TResult}"/> where the query input is a <see cref="BeatmapInfo"/> and the query result is a <see cref="bool"/></param>
+    /// <returns>the first <see cref="BeatmapInfo"/> where the <paramref name="query"/> returns true, or null if no map was found</returns>
     public BeatmapInfo? QueryBeatmap(Func<BeatmapInfo, bool> query)
     {
         return _beatmapInfos.FirstOrDefault(query);

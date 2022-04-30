@@ -19,7 +19,7 @@ public class OsuDbReader : BinaryReader
     /// <summary>
     /// Reads the osu!.db and skips duplicate beatmaps of one beatmap set
     /// </summary>
-    /// <param name="osuPath">the osu full path</param>
+    /// <param name="osuPath">the osu! root path where the osu!.db is located</param>
     /// <returns> a <see cref="DbMapEntryBase" /> list</returns>
     public static async Task<List<IMapEntryBase>?> Read(string osuPath)
     {
@@ -79,6 +79,11 @@ public class OsuDbReader : BinaryReader
         return minBeatMaps;
     }
 
+    /// <summary>
+    /// Reads all difficulties from the osu!.db with hashes and set ids
+    /// </summary>
+    /// <param name="osuPath">the osu! root path where the osu!.db is located</param>
+    /// <returns>a <see cref="Dictionary{TKey,TValue}"/> where the <b>TKey</b> is the beatmap hash and the <b>TValue</b> is the set id</returns>
     public static async Task<Dictionary<string, int>?> ReadAllDiffs(string osuPath)
     {
         var hashes = new Dictionary<string, int>();
@@ -105,7 +110,7 @@ public class OsuDbReader : BinaryReader
             if (flag)
                 reader.ReadInt32(); //btlen
 
-            var length = CalculateMapLength(reader, out var setId, out var hash);
+            CalculateMapLength(reader, out var setId, out var hash);
 
             hashes.Add(hash, setId);
         }
@@ -122,7 +127,7 @@ public class OsuDbReader : BinaryReader
     /// Reads a osu!.db map entry and fills a <see cref="DbMapEntryBase" /> with needed data
     /// </summary>
     /// <param name="r">the <see cref="OsuDbReader" /> instance of the stream</param>
-    /// <param name="osuPath">a <see cref="string" /> of the osu! path</param>
+    /// <param name="osuPath">the osu! root path where the osu!.db is located</param>
     /// <param name="dbMapEntryBase">a reference of a <see cref="DbMapEntryBase" /> to read the data to</param>
     private static void ReadFromStream(OsuDbReader r, string osuPath, ref DbMapEntryBase dbMapEntryBase)
     {
