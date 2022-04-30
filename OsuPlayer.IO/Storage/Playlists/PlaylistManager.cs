@@ -169,6 +169,11 @@ public class PlaylistManager
         }
     }
 
+    /// <summary>
+    /// Adds a song to a playlist and creates it if it doesn't exist already
+    /// </summary>
+    /// <param name="playlistName">the name of the playlist to add the song to</param>
+    /// <param name="setId">the beatmap set id of the song</param>
     public static async Task AddSongToPlaylistAsync(string playlistName, int setId)
     {
         if (setId < 0) return;
