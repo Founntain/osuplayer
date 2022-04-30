@@ -350,7 +350,6 @@ public class Player
 
         fullMapEntry.UseUnicode = config.Container.UseSongNameUnicode;
 
-
         //We put the XP update to an own try catch because if the API fails or is not available,
         //that the whole TryEnqueue does not fail
         try

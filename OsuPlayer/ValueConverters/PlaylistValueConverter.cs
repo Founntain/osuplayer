@@ -7,7 +7,6 @@ using Splat;
 
 namespace OsuPlayer.ValueConverters;
 
-
 /// <summary>
 /// This ValueConverter is in the OsuPlayer Project, because we need access to the Audio class
 /// to convert the checksum to a MapEntry
@@ -18,7 +17,7 @@ public class PlaylistValueConverter : IValueConverter
     {
         if (value == default) return default;
 
-        return Locator.Current.GetService<Player>().GetMapEntriesFromSetId((ICollection<int>)value);
+        return Locator.Current.GetService<Player>().GetMapEntriesFromSetId((ICollection<int>) value);
     }
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

@@ -122,7 +122,6 @@ public class OsuDbReader : BinaryReader
         return hashes;
     }
 
-
     /// <summary>
     /// Reads a osu!.db map entry and fills a <see cref="DbMapEntryBase" /> with needed data
     /// </summary>

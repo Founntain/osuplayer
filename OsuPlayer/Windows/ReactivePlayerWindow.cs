@@ -14,7 +14,6 @@ public class ReactivePlayerWindow<TViewModel> : Window, IViewFor<TViewModel> whe
     public static readonly StyledProperty<TViewModel> ViewModelProperty = AvaloniaProperty
         .Register<ReactivePlayerWindow<TViewModel>, TViewModel>(nameof(ViewModel));
 
-
     public ReactivePlayerWindow()
     {
         this.WhenActivated(disposables => { });
@@ -25,7 +24,7 @@ public class ReactivePlayerWindow<TViewModel> : Window, IViewFor<TViewModel> whe
     object IViewFor.ViewModel
     {
         get => ViewModel;
-        set => ViewModel = (TViewModel)value;
+        set => ViewModel = (TViewModel) value;
     }
 
     public TViewModel ViewModel

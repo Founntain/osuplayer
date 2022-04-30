@@ -158,7 +158,6 @@ public class PlaylistManager
         }
     }
 
-    
     /// <summary>
     /// Delete a given playlist and remove it from the storage
     /// </summary>
@@ -238,7 +237,7 @@ public class PlaylistManager
     public static async Task AddSongToPlaylistAsync(string playlistName, int setId)
     {
         if (setId < 0) return;
-        
+
         Playlist playlist;
 
         if ((playlist = (await GetAllPlaylistsAsync()).FirstOrDefault(x => x.Name == playlistName)) != default)
