@@ -377,7 +377,6 @@ public sealed class BassEngine : INotifyPropertyChanged
                 var config = new Config();
                 SetDeviceInfo(config.Container.SelectedOutputDevice);
 
-
                 // Set the stream to call Stop() when it ends.
                 var syncHandle = Bass.ChannelSetSync(FxStream,
                     SyncFlags.End,

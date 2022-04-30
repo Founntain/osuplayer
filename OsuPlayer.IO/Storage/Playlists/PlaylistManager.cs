@@ -158,7 +158,6 @@ public class PlaylistManager
         }
     }
 
-    
     /// <summary>
     /// Delete a given playlist and remove it from the storage
     /// </summary>
@@ -188,21 +187,20 @@ public class PlaylistManager
         if (CurrentPlaylist.Songs.Contains(mapEntry.BeatmapSetId))
             await RemoveSongToCurrentPlaylist(mapEntry);
         else
-            await AddSongToCurrentPlaylist(mapEntry);
+            await AddSongToCurrentPlaylistAsync(mapEntry);
     }
 
     /// <summary>
     /// Adds a song to the playlist asynchronously
     /// </summary>
     /// <param name="mapEntry">The song to add</param>
-    public static async Task AddSongToCurrentPlaylist(IMapEntryBase mapEntry)
+    public static async Task AddSongToCurrentPlaylistAsync(IMapEntryBase mapEntry)
     {
         CurrentPlaylist.Songs.Add(mapEntry.BeatmapSetId);
 
         await ReplacePlaylistAsync(CurrentPlaylist);
     }
 
-    
     /// <summary>
     /// Removes a song to the playlist asynchronously
     /// </summary>
@@ -229,5 +227,34 @@ public class PlaylistManager
 
             CurrentPlaylist = playlist;
         }
+    }
+
+    /// <summary>
+    /// Adds a song to a playlist and creates it if it doesn't exist already
+    /// </summary>
+    /// <param name="playlistName">the name of the playlist to add the song to</param>
+    /// <param name="setId">the beatmap set id of the song</param>
+    public static async Task AddSongToPlaylistAsync(string playlistName, int setId)
+    {
+        if (setId < 0) return;
+
+        Playlist playlist;
+
+        if ((playlist = (await GetAllPlaylistsAsync()).FirstOrDefault(x => x.Name == playlistName)) != default)
+        {
+            if (!playlist.Songs.Contains(setId))
+                playlist.Songs.Add(setId);
+
+            await ReplacePlaylistAsync(playlist);
+            return;
+        }
+
+        playlist = new Playlist
+        {
+            Name = playlistName
+        };
+        playlist.Songs.Add(setId);
+
+        await AddPlaylistAsync(playlist);
     }
 }
