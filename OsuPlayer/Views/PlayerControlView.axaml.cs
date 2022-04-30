@@ -8,6 +8,7 @@ using Avalonia.VisualTree;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Extensions;
 using OsuPlayer.IO.Storage.Playlists;
+using OsuPlayer.Network;
 using OsuPlayer.Windows;
 using ReactiveUI;
 
@@ -80,9 +81,9 @@ public partial class PlayerControlView : ReactivePlayerControl<PlayerControlView
         _mainWindow.ViewModel!.MainView = _mainWindow.ViewModel.SettingsView;
     }
 
-    private void Blacklist_OnClick(object? sender, RoutedEventArgs e)
+    private async void Blacklist_OnClick(object? sender, RoutedEventArgs e)
     {
-        throw new NotImplementedException();
+        // throw new NotImplementedException();
     }
 
     private async void Favorite_OnClick(object? sender, RoutedEventArgs e)
