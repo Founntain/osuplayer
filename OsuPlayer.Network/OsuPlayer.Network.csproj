@@ -9,10 +9,12 @@
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="0.10.13" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+        <PackageReference Include="Octokit" Version="0.51.0" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\OsuPlayer.Data\OsuPlayer.Data.csproj" />
+        <ProjectReference Include="..\OsuPlayer.Extensions\OsuPlayer.Extensions.csproj" />
     </ItemGroup>
 
 </Project>

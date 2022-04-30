@@ -29,6 +29,7 @@ public class MainWindowViewModel : BaseWindowViewModel
         EditUserView = new EditUserViewModel();
         PartyView = new PartyViewModel();
         SettingsView = new SettingsViewModel(Player);
+        UpdateView = new UpdateViewModel();
     }
 
     public EditUserViewModel EditUserView { get; }
@@ -40,6 +41,7 @@ public class MainWindowViewModel : BaseWindowViewModel
     public SettingsViewModel SettingsView { get; }
     public UserViewModel UserView { get; }
     public TopBarViewModel TopBar { get; }
+    public UpdateViewModel UpdateView { get; }
     public PlayerControlViewModel PlayerControl { get; }
 
     public BaseViewModel MainView
