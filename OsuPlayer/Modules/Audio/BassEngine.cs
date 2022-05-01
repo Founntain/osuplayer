@@ -10,8 +10,8 @@ using ManagedBass.DirectX8;
 using ManagedBass.Fx;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Extensions.Bindables;
-using OsuPlayer.Extensions.Equalizer;
 using OsuPlayer.IO.Storage.Config;
+using OsuPlayer.IO.Storage.Equalizer;
 
 namespace OsuPlayer.Modules.Audio;
 
@@ -44,7 +44,7 @@ public sealed class BassEngine : INotifyPropertyChanged
     private int _streamFx;
     public Bindable<double> ChannelLengthB = new();
     public Bindable<double> ChannelPositionB = new();
-    public BindableArray<double> EqGains = new(10);
+    public BindableArray<decimal> EqGains = new(10, 1);
     public int SampleFrequency = 44100;
     public Bindable<double> VolumeB = new();
 
@@ -122,80 +122,49 @@ public sealed class BassEngine : INotifyPropertyChanged
     }
 
     /// <summary>
-    /// Converts the equalizer band frequency to an index
-    /// </summary>
-    /// <param name="frq">the frequency to get the index from</param>
-    /// <returns>the <see cref="int" /> index of the eq band</returns>
-    private int GetIndex(int frq)
-    {
-        switch (frq)
-        {
-            case 80:
-                return 0;
-            case 125:
-                return 1;
-            case 200:
-                return 2;
-            case 300:
-                return 3;
-            case 500:
-                return 4;
-            case 1000:
-                return 5;
-            case 2000:
-                return 6;
-            case 4000:
-                return 7;
-            case 8000:
-                return 8;
-            case 16000:
-                return 9;
-        }
-
-        return -1;
-    }
-
-    /// <summary>
     /// Sets the gain of one equalizer band
     /// </summary>
-    /// <param name="index">the index of the band, can be converted with the <see cref="GetIndex" /> method</param>
+    /// <param name="index">the index of the band</param>
     /// <param name="gain">the gain for the equalizer band in dB</param>
     /// <param name="on">whether the eq is enabled</param>
-    private void SetValue(int index, double gain, bool on = true)
+    private void SetEqBand(int index, decimal gain, bool on = true)
     {
-        _paramEq?.UpdateBand(index, on ? gain : 0);
-        switch (index)
+        _paramEq?.UpdateBand(index, (double) (on ? gain : 0));
+        using (var eq = new EqStorage())
         {
-            case 0:
-                EqPresetStorage.F80 = gain;
-                return;
-            case 1:
-                EqPresetStorage.F125 = gain;
-                return;
-            case 2:
-                EqPresetStorage.F200 = gain;
-                return;
-            case 3:
-                EqPresetStorage.F300 = gain;
-                return;
-            case 4:
-                EqPresetStorage.F500 = gain;
-                return;
-            case 5:
-                EqPresetStorage.F1000 = gain;
-                return;
-            case 6:
-                EqPresetStorage.F2000 = gain;
-                return;
-            case 7:
-                EqPresetStorage.F4000 = gain;
-                return;
-            case 8:
-                EqPresetStorage.F8000 = gain;
-                return;
-            case 9:
-                EqPresetStorage.F16000 = gain;
-                return;
+            switch (index)
+            {
+                case 0:
+                    eq.Container.LastUsedEqParams[0] = gain;
+                    return;
+                case 1:
+                    eq.Container.LastUsedEqParams[1] = gain;
+                    return;
+                case 2:
+                    eq.Container.LastUsedEqParams[2] = gain;
+                    return;
+                case 3:
+                    eq.Container.LastUsedEqParams[3] = gain;
+                    return;
+                case 4:
+                    eq.Container.LastUsedEqParams[4] = gain;
+                    return;
+                case 5:
+                    eq.Container.LastUsedEqParams[5] = gain;
+                    return;
+                case 6:
+                    eq.Container.LastUsedEqParams[6] = gain;
+                    return;
+                case 7:
+                    eq.Container.LastUsedEqParams[7] = gain;
+                    return;
+                case 8:
+                    eq.Container.LastUsedEqParams[8] = gain;
+                    return;
+                case 9:
+                    eq.Container.LastUsedEqParams[9] = gain;
+                    return;
+            }
         }
     }
 
@@ -439,7 +408,7 @@ public sealed class BassEngine : INotifyPropertyChanged
     {
         if (_paramEq == null) return;
         for (var i = 0; i < EqGains.Length; i++)
-            SetValue(i, EqGains[i], _isEqEnabled);
+            SetEqBand(i, EqGains[i], _isEqEnabled);
         //Bass.BASS_FXSetParameters(EQStream[i], ParamEq);
     }
 
@@ -560,6 +529,7 @@ public sealed class BassEngine : INotifyPropertyChanged
         _paramEq.AddBand(4000);
         _paramEq.AddBand(8000);
         _paramEq.AddBand(16000);
+        EqGains.Set(new EqStorage().Container.LastUsedEqParams);
     }
 
     private void SetRepeatRange(TimeSpan startTime, TimeSpan endTime)

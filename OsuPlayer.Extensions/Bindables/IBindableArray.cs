@@ -17,5 +17,5 @@ public interface IBindableArray<T> : IUnbindable, INotifyCollectionChanged
     /// <param name="onChange">The action to perform when this <see cref="BindableArray{T}"/> changes.</param>
     /// <param name="ignoreSource">Whether to ignore the source of the event trigger</param>
     /// <param name="runOnceImmediately">Whether the action provided in <paramref name="onChange"/> should be run once immediately.</param>
-    void BindCollectionChanged(NotifyCollectionChangedEventHandler onChange, bool ignoreSource = false, bool runOnceImmediately = false);
+    void BindCollectionChanged(NotifyCollectionChangedEventHandler onChange, bool runOnceImmediately = false);
 }

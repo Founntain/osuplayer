@@ -1,48 +1,49 @@
 ﻿namespace OsuPlayer.Extensions.Equalizer;
 
 /// <summary>
-/// Object for an equalizer preset. Contained in <see cref="EqPresetStorage" />
+/// Object for an equalizer preset. Contained in <see cref="OsuPlayer.Extensions.Equalizer.EqPreset" />
 /// </summary>
 public class EqPreset
 {
-    public readonly int Id;
-    public readonly string Name;
-    public double[] Gain;
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public string Name { get; set; }
+    public decimal[] Gain { get; set; } = new decimal[10];
 
-    /// <summary>
-    /// Generates a new <see cref="EqPreset" />
-    /// </summary>
-    /// <param name="id">Id of the preset</param>
-    /// <param name="name">Name of the preset</param>
-    /// <param name="value">Gain values of the eq-bands in dB (10 double values, Range -15 to +15)</param>
-    private EqPreset(int id, string name, double[] value)
+    public static EqPreset Flat { get; } = new()
     {
-        Id = id;
-        Name = name;
-        Gain = value;
-    }
+        Name = "Flat (Default)",
+        Gain = new decimal[]
+        {
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        }
+    };
 
-
-    public static EqPreset Flat { get; } = new(0, "Flat (Default)", new double[]
+    public static EqPreset Custom { get; set; } = new()
     {
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-    });
+        Name = "Custom",
+        Gain = new decimal[]
+        {
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        }
+    };
 
-    public static EqPreset Custom { get; set; } = new(1, "Custom", new double[]
+    public static EqPreset Classic { get; } = new()
     {
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-    });
+        Name = "Classic",
+        Gain = new decimal[]
+        {
+            0, 0, 0, 0, 0, 0, 0, -2, -3, -4
+        }
+    };
 
-    public static EqPreset Classical { get; } = new(3, "Classical", new double[]
+    public static EqPreset LaptopSpeaker { get; } = new()
     {
-        0, 0, 0, 0, 0, 0, 0, -2, -3, -4
-    });
-
-    public static EqPreset LaptopSpeaker { get; } =
-        new(4, "Laptop speaker", new double[]
+        Name = "Laptop speaker",
+        Gain = new decimal[]
         {
             2, 6, 2, -2, -1, 0, 2, 3, 5, 8
-        });
+        }
+    };
 
     public override string ToString()
     {

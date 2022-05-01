@@ -1,6 +1,11 @@
-﻿using System.Reactive.Disposables;
+﻿using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Linq;
+using System.Reactive.Disposables;
 using OsuPlayer.Extensions.Bindables;
+using OsuPlayer.Extensions.Equalizer;
 using OsuPlayer.IO.Storage.Config;
+using OsuPlayer.IO.Storage.Equalizer;
 using OsuPlayer.Modules.Audio;
 using OsuPlayer.ViewModels;
 using ReactiveUI;
@@ -9,7 +14,7 @@ namespace OsuPlayer.Views;
 
 public class EqualizerViewModel : BaseViewModel
 {
-    private readonly BindableArray<double> _frequencies = new(10);
+    private readonly BindableArray<decimal> _frequencies = new(10, 1);
     private readonly Player _player;
 
     public EqualizerViewModel(Player player)
@@ -18,11 +23,57 @@ public class EqualizerViewModel : BaseViewModel
         _player = player;
 
         _frequencies.BindTo(_player.EqGains);
+        _frequencies.BindCollectionChanged(UpdateEq);
 
         this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
     }
 
-    public double F80
+    private void UpdateEq(object sender, NotifyCollectionChangedEventArgs args)
+    {
+        using var eqPresets = new EqStorage();
+        if (eqPresets.Container.EqPresets?.FirstOrDefault(x => x.Name == "Flat (Default)") == default)
+        {
+            eqPresets.Container.EqPresets ??= new List<EqPreset>();
+
+            eqPresets.Container.EqPresets.Insert(0, EqPreset.Flat);
+
+            EqPresets = eqPresets.Container.EqPresets;
+
+            this.RaisePropertyChanged(nameof(EqPresets));
+        }
+
+        var freq = (BindableArray<decimal>) sender;
+
+        if (eqPresets.Container.EqPresets == default || EqPresets == default) return;
+
+        if (eqPresets.Container.EqPresets.FirstOrDefault(x => x.Gain.SequenceEqual(freq!.Array)) is { } found)
+        {
+            this.RaisePropertyChanged(nameof(SelectedPreset));
+        }
+        else
+        {
+            if (eqPresets.Container.EqPresets.FirstOrDefault(x => x.Name == "Custom") is { } custom)
+            {
+                custom.Gain = freq!.Array;
+            }
+            else
+            {
+                var newCustom = EqPreset.Custom;
+                newCustom.Gain = freq!.Array;
+
+                eqPresets.Container.EqPresets.Insert(1, newCustom);
+            }
+
+            EqPresets = eqPresets.Container.EqPresets;
+
+            this.RaisePropertyChanged(nameof(EqPresets));
+            this.RaisePropertyChanged(nameof(SelectedPreset));
+        }
+    }
+
+    #region EqFrequencies
+
+    public decimal F80
     {
         get => _frequencies[0];
         set
@@ -32,7 +83,7 @@ public class EqualizerViewModel : BaseViewModel
         }
     }
 
-    public double F125
+    public decimal F125
     {
         get => _frequencies[1];
         set
@@ -42,7 +93,7 @@ public class EqualizerViewModel : BaseViewModel
         }
     }
 
-    public double F200
+    public decimal F200
     {
         get => _frequencies[2];
         set
@@ -52,7 +103,7 @@ public class EqualizerViewModel : BaseViewModel
         }
     }
 
-    public double F300
+    public decimal F300
     {
         get => _frequencies[3];
         set
@@ -62,7 +113,7 @@ public class EqualizerViewModel : BaseViewModel
         }
     }
 
-    public double F500
+    public decimal F500
     {
         get => _frequencies[4];
         set
@@ -72,7 +123,7 @@ public class EqualizerViewModel : BaseViewModel
         }
     }
 
-    public double F1000
+    public decimal F1000
     {
         get => _frequencies[5];
         set
@@ -82,7 +133,7 @@ public class EqualizerViewModel : BaseViewModel
         }
     }
 
-    public double F2000
+    public decimal F2000
     {
         get => _frequencies[6];
         set
@@ -92,7 +143,7 @@ public class EqualizerViewModel : BaseViewModel
         }
     }
 
-    public double F4000
+    public decimal F4000
     {
         get => _frequencies[7];
         set
@@ -102,7 +153,7 @@ public class EqualizerViewModel : BaseViewModel
         }
     }
 
-    public double F8000
+    public decimal F8000
     {
         get => _frequencies[8];
         set
@@ -112,7 +163,7 @@ public class EqualizerViewModel : BaseViewModel
         }
     }
 
-    public double F16000
+    public decimal F16000
     {
         get => _frequencies[9];
         set
@@ -121,6 +172,8 @@ public class EqualizerViewModel : BaseViewModel
             this.RaisePropertyChanged();
         }
     }
+
+    #endregion
 
     public bool IsEqEnabled
     {
@@ -134,6 +187,32 @@ public class EqualizerViewModel : BaseViewModel
 
             _player.ToggleEq(value);
 
+            this.RaisePropertyChanged();
+        }
+    }
+
+    public List<EqPreset>? EqPresets { get; private set; } = new EqStorage().Container.EqPresets;
+
+    public EqPreset? SelectedPreset
+    {
+        get => EqPresets?.FirstOrDefault(x => x.Gain.SequenceEqual(_frequencies.Array));
+        set
+        {
+            if (value == default) return;
+
+            var eq = new EqStorage();
+            _frequencies.Set(eq.Container.EqPresets?.First(x => x.Name == value.Name).Gain);
+
+            this.RaisePropertyChanged(nameof(F80));
+            this.RaisePropertyChanged(nameof(F125));
+            this.RaisePropertyChanged(nameof(F200));
+            this.RaisePropertyChanged(nameof(F300));
+            this.RaisePropertyChanged(nameof(F500));
+            this.RaisePropertyChanged(nameof(F1000));
+            this.RaisePropertyChanged(nameof(F2000));
+            this.RaisePropertyChanged(nameof(F4000));
+            this.RaisePropertyChanged(nameof(F8000));
+            this.RaisePropertyChanged(nameof(F16000));
             this.RaisePropertyChanged();
         }
     }

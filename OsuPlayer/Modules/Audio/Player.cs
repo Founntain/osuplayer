@@ -99,7 +99,7 @@ public class Player
 
     public List<IMapEntryBase>? SongSourceList => SongSource.Value.Items.ToList();
 
-    public BindableArray<double> EqGains => _bassEngine.EqGains;
+    public BindableArray<decimal> EqGains => _bassEngine.EqGains;
 
     private PlayState PlayState
     {
