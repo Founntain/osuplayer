@@ -1,7 +1,7 @@
-﻿namespace OsuPlayer.Extensions.Equalizer;
+﻿namespace OsuPlayer.Data.OsuPlayer.Classes;
 
 /// <summary>
-/// Object for an equalizer preset. Contained in <see cref="OsuPlayer.Extensions.Equalizer.EqPreset" />
+/// Object for an equalizer preset. Contained in <see cref="EqPreset" />
 /// </summary>
 public class EqPreset
 {

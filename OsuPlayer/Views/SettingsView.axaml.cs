@@ -7,6 +7,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
+using OsuPlayer.Controls;
 using OsuPlayer.IO.Storage.Config;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
@@ -34,7 +35,7 @@ public partial class SettingsView : ReactivePlayerControl<SettingsViewModel>
             }
 
             ViewModel.SettingsCategories =
-                this.FindControl<WrapPanel>("SettingsGrid").Children;
+                this.FindControl<CascadingWrapPanel>("SettingsGrid").Children;
         });
 
         AvaloniaXamlLoader.Load(this);
@@ -106,5 +107,10 @@ public partial class SettingsView : ReactivePlayerControl<SettingsViewModel>
         };
 
         await loginWindow.ShowDialog(_mainWindow);
+    }
+
+    private void OpenEqClick(object? sender, RoutedEventArgs e)
+    {
+        _mainWindow.ViewModel.MainView = _mainWindow.ViewModel.EqualizerView;
     }
 }

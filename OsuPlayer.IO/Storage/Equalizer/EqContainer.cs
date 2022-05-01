@@ -1,4 +1,4 @@
-﻿using OsuPlayer.Extensions.Equalizer;
+﻿using OsuPlayer.Data.OsuPlayer.Classes;
 
 namespace OsuPlayer.IO.Storage.Equalizer;
 

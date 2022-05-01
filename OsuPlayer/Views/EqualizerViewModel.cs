@@ -2,8 +2,8 @@
 using System.Collections.Specialized;
 using System.Linq;
 using System.Reactive.Disposables;
+using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Extensions.Bindables;
-using OsuPlayer.Extensions.Equalizer;
 using OsuPlayer.IO.Storage.Config;
 using OsuPlayer.IO.Storage.Equalizer;
 using OsuPlayer.Modules.Audio;
@@ -14,166 +14,28 @@ namespace OsuPlayer.Views;
 
 public class EqualizerViewModel : BaseViewModel
 {
-    private readonly BindableArray<decimal> _frequencies = new(10, 1);
     private readonly Player _player;
+    public readonly BindableArray<decimal> Frequencies = new(10, 1);
+    private List<EqPreset>? _eqPresets = new EqStorage().Container.EqPresets;
+    private bool _isDeleteEqPresetPopupOpen;
+    private bool _isNewEqPresetPopupOpen;
+    private bool _isRenameEqPresetPopupOpen;
+    private string _newEqPresetNameText;
+
+    private EqPreset? _selectedPreset;
 
     public EqualizerViewModel(Player player)
     {
         Activator = new ViewModelActivator();
         _player = player;
 
-        _frequencies.BindTo(_player.EqGains);
-        _frequencies.BindCollectionChanged(UpdateEq);
+        Frequencies.BindTo(_player.EqGains);
+        Frequencies.BindCollectionChanged(UpdateEq);
+
+        SelectedPreset = EqPresets?.FirstOrDefault(x => x.Gain.SequenceEqual(new EqStorage().Container.LastUsedEqParams));
 
         this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
     }
-
-    private void UpdateEq(object sender, NotifyCollectionChangedEventArgs args)
-    {
-        using var eqPresets = new EqStorage();
-        if (eqPresets.Container.EqPresets?.FirstOrDefault(x => x.Name == "Flat (Default)") == default)
-        {
-            eqPresets.Container.EqPresets ??= new List<EqPreset>();
-
-            eqPresets.Container.EqPresets.Insert(0, EqPreset.Flat);
-
-            EqPresets = eqPresets.Container.EqPresets;
-
-            this.RaisePropertyChanged(nameof(EqPresets));
-        }
-
-        var freq = (BindableArray<decimal>) sender;
-
-        if (eqPresets.Container.EqPresets == default || EqPresets == default) return;
-
-        if (eqPresets.Container.EqPresets.FirstOrDefault(x => x.Gain.SequenceEqual(freq!.Array)) is { } found)
-        {
-            this.RaisePropertyChanged(nameof(SelectedPreset));
-        }
-        else
-        {
-            if (eqPresets.Container.EqPresets.FirstOrDefault(x => x.Name == "Custom") is { } custom)
-            {
-                custom.Gain = freq!.Array;
-            }
-            else
-            {
-                var newCustom = EqPreset.Custom;
-                newCustom.Gain = freq!.Array;
-
-                eqPresets.Container.EqPresets.Insert(1, newCustom);
-            }
-
-            EqPresets = eqPresets.Container.EqPresets;
-
-            this.RaisePropertyChanged(nameof(EqPresets));
-            this.RaisePropertyChanged(nameof(SelectedPreset));
-        }
-    }
-
-    #region EqFrequencies
-
-    public decimal F80
-    {
-        get => _frequencies[0];
-        set
-        {
-            _frequencies[0] = value;
-            this.RaisePropertyChanged();
-        }
-    }
-
-    public decimal F125
-    {
-        get => _frequencies[1];
-        set
-        {
-            _frequencies[1] = value;
-            this.RaisePropertyChanged();
-        }
-    }
-
-    public decimal F200
-    {
-        get => _frequencies[2];
-        set
-        {
-            _frequencies[2] = value;
-            this.RaisePropertyChanged();
-        }
-    }
-
-    public decimal F300
-    {
-        get => _frequencies[3];
-        set
-        {
-            _frequencies[3] = value;
-            this.RaisePropertyChanged();
-        }
-    }
-
-    public decimal F500
-    {
-        get => _frequencies[4];
-        set
-        {
-            _frequencies[4] = value;
-            this.RaisePropertyChanged();
-        }
-    }
-
-    public decimal F1000
-    {
-        get => _frequencies[5];
-        set
-        {
-            _frequencies[5] = value;
-            this.RaisePropertyChanged();
-        }
-    }
-
-    public decimal F2000
-    {
-        get => _frequencies[6];
-        set
-        {
-            _frequencies[6] = value;
-            this.RaisePropertyChanged();
-        }
-    }
-
-    public decimal F4000
-    {
-        get => _frequencies[7];
-        set
-        {
-            _frequencies[7] = value;
-            this.RaisePropertyChanged();
-        }
-    }
-
-    public decimal F8000
-    {
-        get => _frequencies[8];
-        set
-        {
-            _frequencies[8] = value;
-            this.RaisePropertyChanged();
-        }
-    }
-
-    public decimal F16000
-    {
-        get => _frequencies[9];
-        set
-        {
-            _frequencies[9] = value;
-            this.RaisePropertyChanged();
-        }
-    }
-
-    #endregion
 
     public bool IsEqEnabled
     {
@@ -191,17 +53,26 @@ public class EqualizerViewModel : BaseViewModel
         }
     }
 
-    public List<EqPreset>? EqPresets { get; private set; } = new EqStorage().Container.EqPresets;
+    public List<EqPreset>? EqPresets
+    {
+        get => _eqPresets;
+        set
+        {
+            _eqPresets = value;
+            this.RaisePropertyChanged();
+            this.RaisePropertyChanged(nameof(SelectedPreset));
+        }
+    }
 
     public EqPreset? SelectedPreset
     {
-        get => EqPresets?.FirstOrDefault(x => x.Gain.SequenceEqual(_frequencies.Array));
+        get => _selectedPreset;
         set
         {
-            if (value == default) return;
+            //if (value == default) return;
 
-            var eq = new EqStorage();
-            _frequencies.Set(eq.Container.EqPresets?.First(x => x.Name == value.Name).Gain);
+            _selectedPreset = value;
+            Frequencies.Set(new EqStorage().Container.EqPresets?.FirstOrDefault(x => x.Id == value?.Id)?.Gain);
 
             this.RaisePropertyChanged(nameof(F80));
             this.RaisePropertyChanged(nameof(F125));
@@ -216,4 +87,171 @@ public class EqualizerViewModel : BaseViewModel
             this.RaisePropertyChanged();
         }
     }
+
+    public bool IsNewEqPresetPopupOpen
+    {
+        get => _isNewEqPresetPopupOpen;
+        set => this.RaiseAndSetIfChanged(ref _isNewEqPresetPopupOpen, value);
+    }
+
+    public string NewEqPresetNameText
+    {
+        get => _newEqPresetNameText;
+        set => this.RaiseAndSetIfChanged(ref _newEqPresetNameText, value);
+    }
+
+    public bool IsDeleteEqPresetPopupOpen
+    {
+        get => _isDeleteEqPresetPopupOpen;
+        set => this.RaiseAndSetIfChanged(ref _isDeleteEqPresetPopupOpen, value);
+    }
+
+    public bool IsRenameEqPresetPopupOpen
+    {
+        get => _isRenameEqPresetPopupOpen;
+        set => this.RaiseAndSetIfChanged(ref _isRenameEqPresetPopupOpen, value);
+    }
+
+    private void UpdateEq(object sender, NotifyCollectionChangedEventArgs args)
+    {
+        if (EqPresets?.FirstOrDefault(x => x.Name == "Flat (Default)") == default)
+        {
+            EqPresets ??= new List<EqPreset>();
+
+            EqPresets.Insert(0, EqPreset.Flat);
+
+            using (var eqPresets = new EqStorage())
+            {
+                eqPresets.Container.EqPresets = EqPresets;
+            }
+        }
+
+        if (SelectedPreset == default) return;
+
+        if (SelectedPreset.Name == "Flat (Default)")
+        {
+            SelectedPreset = EqPresets.FirstOrDefault(x => x.Name == "Custom");
+
+            if (SelectedPreset == default)
+            {
+                var newCustom = EqPreset.Custom;
+                newCustom.Gain = (decimal[]) Frequencies.Array.Clone();
+
+                EqPresets.Insert(1, newCustom);
+
+                SelectedPreset = EqPresets[1];
+            }
+        }
+
+        SelectedPreset.Gain = (decimal[]) Frequencies.Array.Clone();
+
+        using (var eqPresets = new EqStorage())
+        {
+            eqPresets.Container.EqPresets = EqPresets;
+        }
+    }
+
+    #region EqFrequencies
+
+    public decimal F80
+    {
+        get => Frequencies[0];
+        set
+        {
+            Frequencies[0] = value;
+            this.RaisePropertyChanged();
+        }
+    }
+
+    public decimal F125
+    {
+        get => Frequencies[1];
+        set
+        {
+            Frequencies[1] = value;
+            this.RaisePropertyChanged();
+        }
+    }
+
+    public decimal F200
+    {
+        get => Frequencies[2];
+        set
+        {
+            Frequencies[2] = value;
+            this.RaisePropertyChanged();
+        }
+    }
+
+    public decimal F300
+    {
+        get => Frequencies[3];
+        set
+        {
+            Frequencies[3] = value;
+            this.RaisePropertyChanged();
+        }
+    }
+
+    public decimal F500
+    {
+        get => Frequencies[4];
+        set
+        {
+            Frequencies[4] = value;
+            this.RaisePropertyChanged();
+        }
+    }
+
+    public decimal F1000
+    {
+        get => Frequencies[5];
+        set
+        {
+            Frequencies[5] = value;
+            this.RaisePropertyChanged();
+        }
+    }
+
+    public decimal F2000
+    {
+        get => Frequencies[6];
+        set
+        {
+            Frequencies[6] = value;
+            this.RaisePropertyChanged();
+        }
+    }
+
+    public decimal F4000
+    {
+        get => Frequencies[7];
+        set
+        {
+            Frequencies[7] = value;
+            this.RaisePropertyChanged();
+        }
+    }
+
+    public decimal F8000
+    {
+        get => Frequencies[8];
+        set
+        {
+            Frequencies[8] = value;
+            this.RaisePropertyChanged();
+        }
+    }
+
+    public decimal F16000
+    {
+        get => Frequencies[9];
+        set
+        {
+            Frequencies[9] = value;
+            this.RaisePropertyChanged();
+        }
+    }
+
+    #endregion
 }

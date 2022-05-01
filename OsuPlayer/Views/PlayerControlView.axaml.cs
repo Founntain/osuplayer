@@ -34,10 +34,10 @@ public partial class PlayerControlView : ReactivePlayerControl<PlayerControlView
 
             ProgressSlider.AddHandler(PointerPressedEvent, SongProgressSlider_OnPointerPressed,
                 RoutingStrategies.Tunnel);
-            
+
             ProgressSlider.AddHandler(PointerReleasedEvent, SongProgressSlider_OnPointerReleased,
                 RoutingStrategies.Tunnel);
-            
+
             RepeatButton.AddHandler(PointerReleasedEvent, Repeat_OnPointerReleased, RoutingStrategies.Tunnel);
 
             PlaylistManager.SetLastKnownPlaylistAsCurrentPlaylist();
@@ -82,8 +82,7 @@ public partial class PlayerControlView : ReactivePlayerControl<PlayerControlView
 
     private void Blacklist_OnClick(object? sender, RoutedEventArgs e)
     {
-        _mainWindow.ViewModel!.MainView = _mainWindow.ViewModel.EqualizerView;
-        //throw new NotImplementedException();
+        throw new NotImplementedException();
     }
 
     private async void Favorite_OnClick(object? sender, RoutedEventArgs e)
@@ -131,6 +130,6 @@ public partial class PlayerControlView : ReactivePlayerControl<PlayerControlView
 
     private void RepeatContextMenu_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        ViewModel.Player.ActivePlaylistId = ((Playlist)(sender as ContextMenu)?.SelectedItem)?.Id;
+        ViewModel.Player.ActivePlaylistId = ((Playlist) (sender as ContextMenu)?.SelectedItem)?.Id;
     }
 }
