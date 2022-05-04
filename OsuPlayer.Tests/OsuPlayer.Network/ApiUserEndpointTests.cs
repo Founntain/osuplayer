@@ -26,12 +26,28 @@ public class ApiUserEndpointTests
         Constants.OfflineMode = false;
 
         var onlineResult = await ApiAsync.GetRequestAsync<User>("nonExistingController", "nonExistingAction");
-        var onlineResult2 = await ApiAsync.ApiRequestAsync<(int, bool, string)>("nonExistingController", "nonExistingAction", "");
+        var onlineResult2 = await ApiAsync.ApiRequestAsync<User>("nonExistingController", "nonExistingAction", "");
         var onlineResult3 = await ApiAsync.GetRequestWithParameterAsync<User>("nonExistingController", "nonExistingAction", "");
         
         Assert.IsNull(onlineResult);
-        Assert.IsInstanceOf<(int, bool, string)>(onlineResult2);
+        Assert.IsNull(onlineResult2);
         Assert.IsNull(onlineResult3);
+    }
+
+    [Test]
+    public async Task LocalhostTest()
+    {
+        Constants.Localhost = true;
+        
+        var result = await ApiAsync.GetRequestAsync<User>("nonExistingController", "nonExistingAction");
+        
+        Assert.IsNull(result);
+
+        Constants.Localhost = false;
+        
+        var result2 = await ApiAsync.GetRequestAsync<User>("nonExistingController", "nonExistingAction");
+        
+        Assert.IsNull(result2);
     }
     
     [Test]
@@ -40,6 +56,14 @@ public class ApiUserEndpointTests
         var result = await ApiAsync.GetRequestAsync<Exception>("nonExistingController", "nonExistingAction");
 
         Assert.IsNull(result);
+    }
+    
+    [Test]
+    public async Task FalseApiRequestTest()
+    {
+        var result = await ApiAsync.ApiRequestAsync<(int, bool, string)>("nonExistingController", "nonExistingAction", "");
+
+        Assert.IsInstanceOf<(int, bool, string)>(result);
     }
     
     [Test]
