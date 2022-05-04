@@ -15,13 +15,11 @@ public class PlaylistTests
     {
         PlaylistManager.SetCurrentPlaylist(default);
         PlaylistManager.SetCurrentPlaylist(new ());
-        
     }
     
     [Test]
     public async Task SetCurrentPlaylistAsyncTest()
     {
-        
         await PlaylistManager.SetCurrentPlaylistAsync(default);
         await PlaylistManager.SetCurrentPlaylistAsync(new ());
     }
