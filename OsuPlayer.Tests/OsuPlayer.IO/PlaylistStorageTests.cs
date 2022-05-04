@@ -8,7 +8,7 @@ using OsuPlayer.IO.Storage.Playlists;
 
 namespace OsuPlayer.Tests;
 
-public class PlaylistTests
+public class PlaylistStorageTests
 {
     private PlaylistStorage _playlist;
 
@@ -16,6 +16,7 @@ public class PlaylistTests
     public void Setup()
     {
         _playlist = new PlaylistStorage();
+        
         if (Directory.Exists("data"))
             Directory.Delete("data", true);
     }
@@ -69,12 +70,16 @@ public class PlaylistTests
                 Name = "Test"
             }
         };
+        
         container.Playlists = testPlaylist;
+        
         _playlist.Save(container);
         _playlist = new PlaylistStorage();
+        
         var newContainer = _playlist.Read();
         var sequenceEqual =
             testPlaylist.Select(x => x.Id).SequenceEqual(newContainer.Playlists!.Select(x => x.Id));
+        
         Assert.IsTrue(sequenceEqual);
     }
 
@@ -85,7 +90,14 @@ public class PlaylistTests
         {
             new()
         };
+        
         Assert.DoesNotThrow(() => _playlist.Container.Playlists = testPlaylist);
         Assert.AreEqual(testPlaylist, _playlist.Read().Playlists);
+    }
+
+    [Test]
+    public void StorageContainerSetTest()
+    {
+        _playlist.Container = new PlaylistContainer().Init();
     }
 }
