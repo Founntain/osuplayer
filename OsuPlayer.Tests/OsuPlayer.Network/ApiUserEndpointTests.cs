@@ -11,7 +11,8 @@ namespace OsuPlayer.Tests.OsuPlayer.Network;
 public class ApiUserEndpointTests
 {
     [Test]
-    public async Task OfflineModeTests()
+    [Ignore("Discuss practicability")]
+    public async Task OfflineModeTrueTests()
     {
         Constants.OfflineMode = true;
 
@@ -22,7 +23,12 @@ public class ApiUserEndpointTests
         Assert.IsNull(offlineResult);
         Assert.IsNull(offlineResult2);
         Assert.IsNull(offlineResult3);
-        
+    }
+    
+    [Test]
+    [Ignore("Discuss practicability")]
+    public async Task OfflineModeFalseTests()
+    {
         Constants.OfflineMode = false;
 
         var onlineResult = await ApiAsync.GetRequestAsync<User>("nonExistingController", "nonExistingAction");

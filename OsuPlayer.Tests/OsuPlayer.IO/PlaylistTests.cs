@@ -11,10 +11,16 @@ namespace OsuPlayer.Tests;
 public class PlaylistTests
 {
     [Test]
-    public async Task SetCurrentPlaylist()
+    public void SetCurrentPlaylistTest()
     {
         PlaylistManager.SetCurrentPlaylist(default);
         PlaylistManager.SetCurrentPlaylist(new ());
+        
+    }
+    
+    [Test]
+    public async Task SetCurrentPlaylistAsyncTest()
+    {
         
         await PlaylistManager.SetCurrentPlaylistAsync(default);
         await PlaylistManager.SetCurrentPlaylistAsync(new ());

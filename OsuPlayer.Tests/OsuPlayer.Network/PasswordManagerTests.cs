@@ -7,7 +7,7 @@ namespace OsuPlayer.Tests.OsuPlayer.Network;
 public class PasswordManagerTests
 {
     [Test]
-    public async Task PasswordManagerTest()
+    public void PasswordManagerTest()
     {
         var r1 = PasswordManager.CheckIfPasswordMeetsRequirements("");
         var r2 = PasswordManager.CheckIfPasswordMeetsRequirements("Test");
