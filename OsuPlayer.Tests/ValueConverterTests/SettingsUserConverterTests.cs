@@ -4,7 +4,7 @@ using NUnit.Framework;
 using OsuPlayer.Extensions.ValueConverters;
 using OsuPlayer.Network.Online;
 
-namespace OsuPlayer.Tests.ValueConverterTests;
+namespace OsuPlayer.Tests;
 
 public class SettingsUserConverterTests
 {
@@ -58,6 +58,6 @@ public class SettingsUserConverterTests
     {
         var output = _userConverter.Convert(10, _expectedOutput, null, CultureInfo.InvariantCulture);
         Assert.IsInstanceOf(_expectedOutput, output);
-        Assert.AreEqual(output, "Wrong converter usage");
+        Assert.AreEqual(output, "Not logged in");
     }
 }

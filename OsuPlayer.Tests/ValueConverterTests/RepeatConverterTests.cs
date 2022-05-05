@@ -5,7 +5,7 @@ using NUnit.Framework;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Extensions.ValueConverters;
 
-namespace OsuPlayer.Tests.ValueConverterTests;
+namespace OsuPlayer.Tests;
 
 public class RepeatConverterTests
 {
@@ -41,15 +41,15 @@ public class RepeatConverterTests
         Assert.IsInstanceOf(_expectedOutput, output);
     }
 
-    [TestCase(new object[] {RepeatMode.NoRepeat, false})]
-    [TestCase(new object[] {RepeatMode.Playlist, true})]
-    public void TestCorrectBoolUsage(object[] input)
+    [TestCase(RepeatMode.NoRepeat, false)]
+    [TestCase(RepeatMode.Playlist, true)]
+    public void TestCorrectBoolUsage(RepeatMode mode, bool expected)
     {
         var type = typeof(bool);
-        
-        var output = _repeatConverter.Convert(input[0], type, null, CultureInfo.InvariantCulture);
+
+        var output = _repeatConverter.Convert(mode, type, null, CultureInfo.InvariantCulture);
         Assert.IsInstanceOf(type, output);
-        Assert.AreEqual(output, input[1]);
+        Assert.AreEqual(output, expected);
     }
 
     [Test]

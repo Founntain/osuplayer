@@ -3,7 +3,7 @@ using System.Globalization;
 using NUnit.Framework;
 using OsuPlayer.Extensions.ValueConverters;
 
-namespace OsuPlayer.Tests.ValueConverterTests;
+namespace OsuPlayer.Tests;
 
 public class GridFormatterTests
 {

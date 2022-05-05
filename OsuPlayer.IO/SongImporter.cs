@@ -15,7 +15,8 @@ public sealed class SongImporter
     /// <returns>an <see cref="ICollection{T}"/> of <see cref="IMapEntryBase"/> containing the imported songs</returns>
     public static async Task<ICollection<IMapEntryBase>?> ImportSongsAsync(string path)
     {
-        if (string.IsNullOrEmpty(path)) return null;
+        if (string.IsNullOrEmpty(path)) 
+            return null;
 
         IMapEntryBase[] maps = null;
 
