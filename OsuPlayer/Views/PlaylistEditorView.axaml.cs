@@ -44,7 +44,9 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
                 return;
         }
 
-        var playlist = ViewModel.CurrentSelectedPlaylist.Songs;
+        var playlist = ViewModel.CurrentSelectedPlaylist!.Songs;
+
+        if (ViewModel.SelectedSongListItems == default) return;
 
         foreach (var song in ViewModel.SelectedSongListItems)
         {
@@ -54,7 +56,7 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
             playlist.Add(song.BeatmapSetId);
         }
 
-        ViewModel!.SelectedSongListItems = new List<IMapEntryBase>();
+        ViewModel.SelectedSongListItems = new List<IMapEntryBase>();
 
         await PlaylistManager.ReplacePlaylistAsync(ViewModel.CurrentSelectedPlaylist);
 
@@ -71,9 +73,11 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
                 return;
         }
 
-        var playlist = ViewModel.CurrentSelectedPlaylist.Songs;
+        var playlist = ViewModel.CurrentSelectedPlaylist!.Songs;
 
-        foreach (var song in ViewModel.SelectedPlaylistItems!)
+        if (ViewModel.SelectedPlaylistItems == null) return;
+
+        foreach (var song in ViewModel.SelectedPlaylistItems)
         {
             if (!playlist.Contains(song.BeatmapSetId))
                 continue;
@@ -81,7 +85,7 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
             playlist.Remove(song.BeatmapSetId);
         }
 
-        ViewModel!.SelectedPlaylistItems = new List<IMapEntryBase>();
+        ViewModel.SelectedPlaylistItems = new List<IMapEntryBase>();
 
         await PlaylistManager.ReplacePlaylistAsync(ViewModel.CurrentSelectedPlaylist);
 
@@ -90,20 +94,20 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
 
     private void SongList_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        var listBox = (ListBox) sender!;
+        if (sender is not ListBox listBox) return;
 
         var songs = listBox.SelectedItems.Cast<IMapEntryBase>().ToList();
 
-        ViewModel.SelectedSongListItems = songs;
+        _mainWindow.ViewModel.PlaylistEditorViewModel.SelectedSongListItems = songs;
     }
 
     private void Playlist_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        var listBox = (ListBox) sender!;
+        if (sender is not ListBox listBox) return;
 
         var songs = listBox.SelectedItems.Cast<IMapEntryBase>().ToList();
 
-        ViewModel.SelectedPlaylistItems = songs;
+        _mainWindow.ViewModel.PlaylistEditorViewModel.SelectedPlaylistItems = songs;
     }
 
     private void CreatePlaylist_OnClick(object? sender, RoutedEventArgs e)
