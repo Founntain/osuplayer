@@ -16,7 +16,7 @@ public class PlaylistStorageTests
     public void Setup()
     {
         _playlist = new PlaylistStorage();
-        
+
         if (Directory.Exists("data"))
             Directory.Delete("data", true);
     }
@@ -70,16 +70,16 @@ public class PlaylistStorageTests
                 Name = "Test"
             }
         };
-        
+
         container.Playlists = testPlaylist;
-        
+
         _playlist.Save(container);
         _playlist = new PlaylistStorage();
-        
+
         var newContainer = _playlist.Read();
         var sequenceEqual =
             testPlaylist.Select(x => x.Id).SequenceEqual(newContainer.Playlists!.Select(x => x.Id));
-        
+
         Assert.IsTrue(sequenceEqual);
     }
 
@@ -90,7 +90,7 @@ public class PlaylistStorageTests
         {
             new()
         };
-        
+
         Assert.DoesNotThrow(() => _playlist.Container.Playlists = testPlaylist);
         Assert.AreEqual(testPlaylist, _playlist.Read().Playlists);
     }

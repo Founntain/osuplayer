@@ -11,10 +11,10 @@ public class DirectoryManagerTests
     {
         Assert.DoesNotThrow(() =>
         {
-            if(Directory.Exists("data"))
+            if (Directory.Exists("data"))
                 Directory.Delete("data", true);
         });
-        
-        Assert.DoesNotThrow(() => DirectoryManager.GenerateMissingDirectories());
+
+        Assert.DoesNotThrow(DirectoryManager.GenerateMissingDirectories);
     }
 }

@@ -4,7 +4,7 @@ using Material.Icons;
 using NUnit.Framework;
 using OsuPlayer.Extensions.ValueConverters;
 
-namespace OsuPlayer.Tests.ValueConverterTests;
+namespace OsuPlayer.Tests;
 
 public class VolumeConverterTests
 {

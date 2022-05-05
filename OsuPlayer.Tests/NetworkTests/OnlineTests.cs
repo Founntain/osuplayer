@@ -1,13 +1,10 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using Avalonia.Media;
 using NUnit.Framework;
 using OsuPlayer.Data.API.Enums;
-using OsuPlayer.Data.API.Models.User;
 using OsuPlayer.Network.Online;
 
-namespace OsuPlayer.Tests.OsuPlayer.Network;
+namespace OsuPlayer.Tests;
 
 public class OnlineTests
 {
@@ -37,17 +34,17 @@ public class OnlineTests
             CustomWebBackground = default,
             HasXpLock = default
         };
-        
+
         Assert.IsNotNull(user);
 
         for (var i = 0; i <= 7; i++)
         {
             user.Role = (UserRole) i;
-            
+
             Assert.IsNotNull(user.RoleColor);
             Assert.IsNotEmpty(user.RoleString);
         }
-        
+
         Assert.IsNotEmpty(user.ToString());
         Assert.IsNotEmpty(user.SongsPlayedString);
         Assert.IsNotEmpty(user.LevelString);
@@ -56,7 +53,7 @@ public class OnlineTests
         Assert.IsNotEmpty(user.DescriptionTitleString);
         Assert.IsNotEmpty(user.JoinDateString);
         Assert.IsNotEmpty(user.TotalXpString);
-        
+
         Assert.GreaterOrEqual(User.GetXpNeededForNextLevel(1), 0);
     }
 
@@ -70,9 +67,9 @@ public class OnlineTests
             Title = "Title",
             CreationTime = DateTime.UtcNow
         };
-        
+
         Assert.IsNotNull(article);
-        
+
         Assert.IsNotEmpty(article.Content);
         Assert.IsNotEmpty(article.Creator);
         Assert.IsNotEmpty(article.Title);
@@ -90,7 +87,7 @@ public class OnlineTests
             Title = "Title",
             CreationTime = DateTime.UtcNow
         };
-        
+
         Assert.IsNotEmpty(news.Content);
         Assert.IsNotEmpty(news.Creator);
         Assert.IsNotEmpty(news.Title);
@@ -102,15 +99,15 @@ public class OnlineTests
     public void OnlineStatusModel()
     {
         var model = new OnlineUserStatusModelExtended();
-        
+
         Assert.IsNotEmpty(model.Status);
 
         model.StatusType = UserOnlineStatusType.Listening;
-        
+
         Assert.IsNotEmpty(model.Status);
-        
+
         model.StatusType = UserOnlineStatusType.InParty;
-        
+
         Assert.IsNotEmpty(model.Status);
     }
 
@@ -118,7 +115,7 @@ public class OnlineTests
     public async Task ProfileManagerTest()
     {
         var result = await ProfileManager.LoadProfile("TestUser", "TestPassword");
-        
+
         Assert.IsNull(result);
     }
 }

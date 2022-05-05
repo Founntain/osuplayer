@@ -11,23 +11,38 @@ namespace OsuPlayer.Tests;
 public class PlaylistTests
 {
     [Test]
-    public void SetCurrentPlaylistTest()
+    public void SetCurrentPlaylistNullTest()
     {
         PlaylistManager.SetCurrentPlaylist(default);
-        PlaylistManager.SetCurrentPlaylist(new ());
-    }
-    
-    [Test]
-    public async Task SetCurrentPlaylistAsyncTest()
-    {
-        await PlaylistManager.SetCurrentPlaylistAsync(default);
-        await PlaylistManager.SetCurrentPlaylistAsync(new ());
     }
 
     [Test]
-    public async Task GetAllPlaylists()
+    public void SetCurrentPlaylistTest()
+    {
+        PlaylistManager.SetCurrentPlaylist(new Playlist());
+    }
+
+    [Test]
+    public async Task SetCurrentPlaylistNullAsyncTest()
+    {
+        await PlaylistManager.SetCurrentPlaylistAsync(default);
+    }
+
+    [Test]
+    public async Task SetCurrentPlaylistAsyncTest()
+    {
+        await PlaylistManager.SetCurrentPlaylistAsync(new Playlist());
+    }
+
+    [Test]
+    public void GetAllPlaylistsTest()
     {
         PlaylistManager.GetAllPlaylists();
+    }
+
+    [Test]
+    public async Task GetAllPlaylistsAsyncTest()
+    {
         await PlaylistManager.GetAllPlaylistsAsync();
     }
 
@@ -35,14 +50,14 @@ public class PlaylistTests
     public async Task AddPlaylistAsync()
     {
         var id = Guid.NewGuid();
-        
-        await PlaylistManager.AddPlaylistAsync(new()
+
+        await PlaylistManager.AddPlaylistAsync(new Playlist
         {
             Id = id,
             Name = "Unit Test"
         });
-        
-        await PlaylistManager.AddPlaylistAsync(new()
+
+        await PlaylistManager.AddPlaylistAsync(new Playlist
         {
             Id = id,
             Name = "Unit Test"
@@ -52,11 +67,11 @@ public class PlaylistTests
     [Test]
     public async Task ReplacePlaylistTest()
     {
-        await PlaylistManager.ReplacePlaylistAsync(new()
+        await PlaylistManager.ReplacePlaylistAsync(new Playlist
         {
             Name = "Favorites"
         });
-        
+
         await PlaylistManager.ReplacePlaylistAsync(default);
 
         await PlaylistManager.ReplacePlaylistsAsync(new List<Playlist>()
@@ -84,9 +99,9 @@ public class PlaylistTests
         playlist.Name = "New Name";
 
         await PlaylistManager.RenamePlaylist(playlist);
-        
+
         var playlists = await PlaylistManager.GetAllPlaylistsAsync();
-        
+
         Assert.IsTrue(playlists.Any(x => x.Name == "New Name"));
     }
 
@@ -112,7 +127,7 @@ public class PlaylistTests
         await PlaylistManager.DeletePlaylistAsync(playlist);
 
         var playlists = await PlaylistManager.GetAllPlaylistsAsync();
-        
+
         Assert.IsFalse(playlists.Any(x => x.Name == id.ToString()));
     }
 
@@ -126,7 +141,7 @@ public class PlaylistTests
     public void CreateContainer()
     {
         var obj = new PlaylistContainer().Init();
-        
+
         Assert.IsNotNull(obj);
     }
 }

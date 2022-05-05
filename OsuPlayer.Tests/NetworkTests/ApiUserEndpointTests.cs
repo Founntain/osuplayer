@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using NUnit.Framework;
+using OsuPlayer.Network;
 using OsuPlayer.Network.API.ApiEndpoints;
 using OsuPlayer.Network.Online;
-using Constants = OsuPlayer.Network.Constants;
 
-namespace OsuPlayer.Tests.OsuPlayer.Network;
+namespace OsuPlayer.Tests;
 
 public class ApiUserEndpointTests
 {
@@ -19,12 +19,12 @@ public class ApiUserEndpointTests
         var offlineResult = await ApiAsync.GetRequestAsync<User>("nonExistingController", "nonExistingAction");
         var offlineResult2 = await ApiAsync.ApiRequestAsync<User>("nonExistingController", "nonExistingAction", "");
         var offlineResult3 = await ApiAsync.GetRequestWithParameterAsync<User>("nonExistingController", "nonExistingAction", "");
-        
+
         Assert.IsNull(offlineResult);
         Assert.IsNull(offlineResult2);
         Assert.IsNull(offlineResult3);
     }
-    
+
     [Test]
     [Ignore("Discuss practicability")]
     public async Task OfflineModeFalseTests()
@@ -34,7 +34,7 @@ public class ApiUserEndpointTests
         var onlineResult = await ApiAsync.GetRequestAsync<User>("nonExistingController", "nonExistingAction");
         var onlineResult2 = await ApiAsync.ApiRequestAsync<User>("nonExistingController", "nonExistingAction", "");
         var onlineResult3 = await ApiAsync.GetRequestWithParameterAsync<User>("nonExistingController", "nonExistingAction", "");
-        
+
         Assert.IsNull(onlineResult);
         Assert.IsNull(onlineResult2);
         Assert.IsNull(onlineResult3);
@@ -44,18 +44,18 @@ public class ApiUserEndpointTests
     public async Task LocalhostTest()
     {
         Constants.Localhost = true;
-        
+
         var result = await ApiAsync.GetRequestAsync<User>("nonExistingController", "nonExistingAction");
-        
+
         Assert.IsNull(result);
 
         Constants.Localhost = false;
-        
+
         var result2 = await ApiAsync.GetRequestAsync<User>("nonExistingController", "nonExistingAction");
-        
+
         Assert.IsNull(result2);
     }
-    
+
     [Test]
     public async Task FalseGetRequestTest()
     {
@@ -63,7 +63,7 @@ public class ApiUserEndpointTests
 
         Assert.IsNull(result);
     }
-    
+
     [Test]
     public async Task FalseApiRequestTest()
     {
@@ -71,7 +71,7 @@ public class ApiUserEndpointTests
 
         Assert.IsInstanceOf<(int, bool, string)>(result);
     }
-    
+
     [Test]
     public async Task GetRequestTest()
     {
@@ -84,7 +84,7 @@ public class ApiUserEndpointTests
     public async Task ApiRequestTest()
     {
         var result = await ApiAsync.ApiRequestAsync<User>("users", "edituser");
-        
+
         Assert.AreEqual(Guid.Empty, result?.Id);
     }
 
@@ -92,11 +92,11 @@ public class ApiUserEndpointTests
     public async Task GetProfilePictureTest()
     {
         var falseResult = await ApiAsync.GetProfilePictureAsync("");
-        
+
         Assert.IsNull(falseResult);
-        
+
         var result = await ApiAsync.GetProfilePictureAsync("Founntain");
-        
+
         Assert.IsNotNull(result);
     }
 
@@ -116,11 +116,11 @@ public class ApiUserEndpointTests
     public async Task GetProfileByNameTest()
     {
         var falseResult = await ApiAsync.GetProfileByNameAsync("");
-        
+
         Assert.IsNull(falseResult);
-        
+
         var result = await ApiAsync.GetProfileByNameAsync("Founntain");
-        
+
         Assert.IsNotNull(result);
     }
 
@@ -128,7 +128,7 @@ public class ApiUserEndpointTests
     public async Task LoadUserWithCredentialsTest()
     {
         var result = await ApiAsync.LoadUserWithCredentialsAsync("Test", "Test");
-        
+
         Assert.IsNull(result);
     }
 
@@ -136,7 +136,7 @@ public class ApiUserEndpointTests
     public async Task GetBeatmapsPlayedByUserTest()
     {
         var result = await ApiAsync.GetBeatmapsPlayedByUser("Founntain");
-        
+
         Assert.IsNotNull(result);
         Assert.AreEqual(result.Count, 10);
     }
