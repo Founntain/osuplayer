@@ -38,7 +38,6 @@ public static class GitHubUpdater
     /// <returns>a GitHub release</returns>
     public static async Task<Release?> GetLatestRelease(bool includPreReleases = false)
     {
-        
         var github = new GitHubClient(new ProductHeaderValue("osu!player"));
 
         var releases = await github.Repository.Release.GetAll("Founntain", "osuplayer");

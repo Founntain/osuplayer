@@ -86,7 +86,6 @@ public class CascadingWrapPanel : Panel, INavigableContainer
     IInputElement? INavigableContainer.GetControl(NavigationDirection direction, IInputElement? from, bool wrap)
     {
         var orientation = Orientation;
-        var children = Children;
         var horiz = orientation == Orientation.Horizontal;
         var index = from is not null ? Children.IndexOf((IControl) from) : -1;
 
@@ -96,7 +95,7 @@ public class CascadingWrapPanel : Panel, INavigableContainer
                 index = 0;
                 break;
             case NavigationDirection.Last:
-                index = children.Count - 1;
+                index = Children.Count - 1;
                 break;
             case NavigationDirection.Next:
                 ++index;
@@ -118,8 +117,8 @@ public class CascadingWrapPanel : Panel, INavigableContainer
                 break;
         }
 
-        if (index >= 0 && index < children.Count)
-            return children[index];
+        if (index >= 0 && index < Children.Count)
+            return Children[index];
         else
             return null;
     }
@@ -132,10 +131,6 @@ public class CascadingWrapPanel : Panel, INavigableContainer
         var orientation = Orientation;
         var isHorizontal = orientation == Orientation.Horizontal;
         _lineCount = (int) Round((isHorizontal ? constraint.Width : constraint.Height) / (isHorizontal ? itemWidth : itemHeight));
-        var children = Children;
-        var curLineSize = new UVSize(orientation);
-        var panelSize = new UVSize(orientation);
-        var uvConstraint = new UVSize(orientation, constraint.Width, constraint.Height);
         var itemWidthSet = !double.IsNaN(itemWidth);
         var itemHeightSet = !double.IsNaN(itemHeight);
         double[]? heights = null;
@@ -146,29 +141,27 @@ public class CascadingWrapPanel : Panel, INavigableContainer
             itemWidthSet ? itemWidth : constraint.Width,
             itemHeightSet ? itemHeight : constraint.Height);
 
-        for (int i = 0, count = children.Count; i < count; i++)
+        for (int i = 0, count = Children.Count; i < count; i++)
         {
-            var child = children[i];
-            if (child != null)
+            var child = Children[i];
+            if (child == null) continue;
+            // Flow passes its own constraint to children
+            child.Measure(childConstraint);
+
+            // This is the size of the child in UV space
+            var sz = new UvSize(orientation,
+                itemWidthSet ? itemWidth : child.DesiredSize.Width,
+                itemHeightSet ? itemHeight : child.DesiredSize.Height);
+
+            if (heights == null) continue;
+
+            if (i - _lineCount >= 0)
             {
-                // Flow passes its own constraint to children
-                child.Measure(childConstraint);
-
-                // This is the size of the child in UV space
-                var sz = new UVSize(orientation,
-                    itemWidthSet ? itemWidth : child.DesiredSize.Width,
-                    itemHeightSet ? itemHeight : child.DesiredSize.Height);
-
-                if (heights == null) continue;
-
-                if (i - _lineCount >= 0)
-                {
-                    var line = heights.IndexOf(heights.Min());
-                    heights[line] += isHorizontal ? sz.V : sz.U;
-                }
-
-                if (i - _lineCount < 0) heights[i % _lineCount] = isHorizontal ? sz.V : sz.U;
+                var line = heights.IndexOf(heights.Min());
+                heights[line] += isHorizontal ? sz.V : sz.U;
             }
+
+            if (i - _lineCount < 0) heights[i % _lineCount] = isHorizontal ? sz.V : sz.U;
         }
 
         var x = isHorizontal ? constraint.Width : constraint.Height;
@@ -185,64 +178,55 @@ public class CascadingWrapPanel : Panel, INavigableContainer
         var orientation = Orientation;
         var isHorizontal = orientation == Orientation.Horizontal;
         _lineCount = (int) Round((isHorizontal ? finalSize.Width : finalSize.Height) / (isHorizontal ? itemWidth : itemHeight));
-        var children = Children;
-        var firstInLine = 0;
-        double accumulatedV = 0;
-        var itemU = isHorizontal ? itemWidth : itemHeight;
-        var curLineSize = new UVSize(orientation);
-        var uvFinalSize = new UVSize(orientation, finalSize.Width, finalSize.Height);
         var itemWidthSet = !double.IsNaN(itemWidth);
         var itemHeightSet = !double.IsNaN(itemHeight);
-        var useItemU = isHorizontal ? itemWidthSet : itemHeightSet;
         double[]? heights = null;
         if (_lineCount > 0)
             heights = new double[_lineCount];
 
-        for (var i = 0; i < children.Count; i++)
+        for (var i = 0; i < Children.Count; i++)
         {
-            var child = children[i];
-            if (child != null)
+            var child = Children[i];
+            if (child == null) continue;
+            var sz = new UvSize(orientation,
+                itemWidthSet ? itemWidth : child.DesiredSize.Width,
+                itemHeightSet ? itemHeight : child.DesiredSize.Height);
+
+            if (i - _lineCount >= 0)
             {
-                var sz = new UVSize(orientation,
-                    itemWidthSet ? itemWidth : child.DesiredSize.Width,
-                    itemHeightSet ? itemHeight : child.DesiredSize.Height);
+                if (heights == null) continue;
 
-                if (i - _lineCount >= 0)
-                {
-                    if (heights == null) continue;
+                var line = heights.IndexOf(heights.Min());
 
-                    var line = heights.IndexOf(heights.Min());
+                child.Arrange(new Rect(
+                    isHorizontal ? line * sz.U : heights[line],
+                    isHorizontal ? heights[line] : line * sz.V,
+                    sz.U,
+                    sz.V));
 
-                    child.Arrange(new Rect(
-                        isHorizontal ? line * sz.U : heights[line],
-                        isHorizontal ? heights[line] : line * sz.V,
-                        sz.U,
-                        sz.V));
+                heights[line] += isHorizontal ? sz.V : sz.U;
+            }
+            else if (i - _lineCount < 0)
+            {
+                var curLine = i % _lineCount;
 
-                    heights[line] += isHorizontal ? sz.V : sz.U;
-                }
-                else if (i - _lineCount < 0)
-                {
-                    var curLine = i % _lineCount;
+                child.Arrange(new Rect(
+                    isHorizontal ? curLine * sz.U : 0,
+                    isHorizontal ? 0 : curLine * sz.V,
+                    sz.U,
+                    sz.V));
 
-                    child.Arrange(new Rect(
-                        isHorizontal ? curLine * sz.U : 0,
-                        isHorizontal ? 0 : curLine * sz.V,
-                        sz.U,
-                        sz.V));
-
-                    if (heights != null)
-                        heights[curLine] += isHorizontal ? sz.V : sz.U;
-                }
+                if (heights != null)
+                    heights[curLine] += isHorizontal ? sz.V : sz.U;
             }
         }
 
         return finalSize;
     }
 
-    private struct UVSize
+    private struct UvSize
     {
-        internal UVSize(Orientation orientation, double width, double height)
+        internal UvSize(Orientation orientation, double width, double height)
         {
             U = V = 0d;
             _orientation = orientation;
@@ -250,30 +234,30 @@ public class CascadingWrapPanel : Panel, INavigableContainer
             Height = height;
         }
 
-        internal UVSize(Orientation orientation)
+        internal UvSize(Orientation orientation)
         {
             U = V = 0d;
             _orientation = orientation;
         }
 
-        internal double U;
-        internal double V;
-        private Orientation _orientation;
+        internal readonly double U;
+        internal readonly double V;
+        private readonly Orientation _orientation;
 
-        internal double Width
+        private double Width
         {
             get => _orientation == Orientation.Horizontal ? U : V;
-            set
+            init
             {
                 if (_orientation == Orientation.Horizontal) U = value;
                 else V = value;
             }
         }
 
-        internal double Height
+        private double Height
         {
             get => _orientation == Orientation.Horizontal ? V : U;
-            set
+            init
             {
                 if (_orientation == Orientation.Horizontal) V = value;
                 else U = value;

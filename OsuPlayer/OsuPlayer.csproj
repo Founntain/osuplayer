@@ -98,6 +98,7 @@
         </Compile>
         <Compile Update="Views\EqualizerViewModel.cs">
           <DependentUpon>EqualizerView.axaml</DependentUpon>
+        </Compile>
         <Compile Update="Views\UpdateViewModel.cs">
           <DependentUpon>UpdateView.axaml</DependentUpon>
         </Compile>
