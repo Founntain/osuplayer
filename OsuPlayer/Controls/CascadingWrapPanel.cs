@@ -25,7 +25,7 @@ public class CascadingWrapPanel : Panel, INavigableContainer
     /// Defines the <see cref="Orientation" /> property.
     /// </summary>
     public static readonly StyledProperty<Orientation> OrientationProperty =
-        AvaloniaProperty.Register<CascadingWrapPanel, Orientation>(nameof(Orientation), Orientation.Horizontal);
+        AvaloniaProperty.Register<CascadingWrapPanel, Orientation>(nameof(Orientation));
 
     /// <summary>
     /// Defines the <see cref="ItemWidth" /> property.
@@ -39,7 +39,7 @@ public class CascadingWrapPanel : Panel, INavigableContainer
     public static readonly StyledProperty<double> ItemHeightProperty =
         AvaloniaProperty.Register<CascadingWrapPanel, double>(nameof(ItemHeight), double.NaN);
 
-    private int _lineCount = 0;
+    private int _lineCount;
 
     /// <summary>
     /// Initializes static members of the <see cref="CascadingWrapPanel" /> class.
@@ -126,23 +126,23 @@ public class CascadingWrapPanel : Panel, INavigableContainer
     /// <inheritdoc />
     protected override Size MeasureOverride(Size constraint)
     {
-        var itemWidth = ItemWidth;
-        var itemHeight = ItemHeight;
-        var orientation = Orientation;
-        var isHorizontal = orientation == Orientation.Horizontal;
-        
-        _lineCount = (int) Round((isHorizontal ? constraint.Width : constraint.Height) / (isHorizontal ? itemWidth : itemHeight));
-        
-        var itemWidthSet = !double.IsNaN(itemWidth);
-        var itemHeightSet = !double.IsNaN(itemHeight);
+        var parameters = new MeasureOverrideParameters
+        {
+            ItemWidth = ItemWidth,
+            ItemHeight = ItemHeight,
+            Orientation = Orientation
+        };
+
+        _lineCount = (int) Round((parameters.IsHorizontal ? constraint.Width : constraint.Height) / (parameters.IsHorizontal ? parameters.ItemWidth : parameters.ItemHeight));
+
         double[]? heights = null;
 
         if (_lineCount > 0)
             heights = new double[_lineCount];
 
         var childConstraint = new Size(
-            itemWidthSet ? itemWidth : constraint.Width,
-            itemHeightSet ? itemHeight : constraint.Height);
+            parameters.ItemWidthSet ? parameters.ItemWidth : constraint.Width,
+            parameters.ItemHeightSet ? parameters.ItemHeight : constraint.Height);
 
         for (int i = 0, count = Children.Count; i < count; i++)
         {
@@ -154,42 +154,42 @@ public class CascadingWrapPanel : Panel, INavigableContainer
             child.Measure(childConstraint);
 
             // This is the size of the child in UV space
-            var sz = new UvSize(orientation,
-                itemWidthSet ? itemWidth : child.DesiredSize.Width,
-                itemHeightSet ? itemHeight : child.DesiredSize.Height);
+            var sz = new UvSize(parameters.Orientation,
+                parameters.ItemWidthSet ? parameters.ItemWidth : child.DesiredSize.Width,
+                parameters.ItemHeightSet ? parameters.ItemHeight : child.DesiredSize.Height);
 
             if (heights == null) continue;
 
             if (i - _lineCount < 0)
             {
-                heights[i % _lineCount] = isHorizontal ? sz.V : sz.U;
+                heights[i % _lineCount] = parameters.IsHorizontal ? sz.V : sz.U;
                 continue;
             }
 
             var line = heights.IndexOf(heights.Min());
-            heights[line] += isHorizontal ? sz.V : sz.U;
+            heights[line] += parameters.IsHorizontal ? sz.V : sz.U;
         }
 
-        var x = isHorizontal ? constraint.Width : constraint.Height;
+        var x = parameters.IsHorizontal ? constraint.Width : constraint.Height;
 
         // Go from UV space to W/H space
-        return new Size(isHorizontal ? x : heights?.Max() ?? 0, isHorizontal ? heights?.Max() ?? 0 : x);
+        return new Size(parameters.IsHorizontal ? x : heights?.Max() ?? 0, parameters.IsHorizontal ? heights?.Max() ?? 0 : x);
     }
 
     /// <inheritdoc />
     protected override Size ArrangeOverride(Size finalSize)
     {
-        var itemWidth = ItemWidth;
-        var itemHeight = ItemHeight;
-        var orientation = Orientation;
-        var isHorizontal = orientation == Orientation.Horizontal;
-        var itemWidthSet = !double.IsNaN(itemWidth);
-        var itemHeightSet = !double.IsNaN(itemHeight);
-        
+        var parameters = new ArrangeOverrideParameters
+        {
+            ItemWidth = ItemWidth,
+            ItemHeight = ItemHeight,
+            Orientation = Orientation
+        };
+
         double[]? heights = null;
 
-        _lineCount = (int) Round((isHorizontal ? finalSize.Width : finalSize.Height) / (isHorizontal ? itemWidth : itemHeight));
-        
+        _lineCount = (int) Round((parameters.IsHorizontal ? finalSize.Width : finalSize.Height) / (parameters.IsHorizontal ? parameters.ItemWidth : parameters.ItemHeight));
+
         if (_lineCount > 0)
             heights = new double[_lineCount];
 
@@ -199,25 +199,25 @@ public class CascadingWrapPanel : Panel, INavigableContainer
 
             if (child == null) continue;
 
-            var sz = new UvSize(orientation,
-                itemWidthSet ? itemWidth : child.DesiredSize.Width,
-                itemHeightSet ? itemHeight : child.DesiredSize.Height);
+            var sz = new UvSize(parameters.Orientation,
+                parameters.ItemWidthSet ? parameters.ItemWidth : child.DesiredSize.Width,
+                parameters.ItemHeightSet ? parameters.ItemHeight : child.DesiredSize.Height);
 
             if (heights == null) continue;
 
             int line;
-            
+
             if (i - _lineCount < 0)
             {
                 line = i % _lineCount;
 
                 child.Arrange(new Rect(
-                    isHorizontal ? line * sz.U : 0,
-                    isHorizontal ? 0 : line * sz.V,
+                    parameters.IsHorizontal ? line * sz.U : 0,
+                    parameters.IsHorizontal ? 0 : line * sz.V,
                     sz.U,
                     sz.V));
 
-                heights[line] += isHorizontal ? sz.V : sz.U;
+                heights[line] += parameters.IsHorizontal ? sz.V : sz.U;
 
                 continue;
             }
@@ -225,15 +225,35 @@ public class CascadingWrapPanel : Panel, INavigableContainer
             line = heights.IndexOf(heights.Min());
 
             child.Arrange(new Rect(
-                isHorizontal ? line * sz.U : heights[line],
-                isHorizontal ? heights[line] : line * sz.V,
+                parameters.IsHorizontal ? line * sz.U : heights[line],
+                parameters.IsHorizontal ? heights[line] : line * sz.V,
                 sz.U,
                 sz.V));
 
-            heights[line] += isHorizontal ? sz.V : sz.U;
+            heights[line] += parameters.IsHorizontal ? sz.V : sz.U;
         }
 
         return finalSize;
+    }
+
+    private record MeasureOverrideParameters
+    {
+        internal double ItemHeight;
+        internal double ItemWidth;
+        internal Orientation Orientation;
+        internal bool IsHorizontal => Orientation == Orientation.Horizontal;
+        internal bool ItemWidthSet => !double.IsNaN(ItemWidth);
+        internal bool ItemHeightSet => !double.IsNaN(ItemHeight);
+    }
+
+    private record ArrangeOverrideParameters
+    {
+        internal double ItemHeight;
+        internal double ItemWidth;
+        internal Orientation Orientation;
+        internal bool IsHorizontal => Orientation == Orientation.Horizontal;
+        internal bool ItemWidthSet => !double.IsNaN(ItemWidth);
+        internal bool ItemHeightSet => !double.IsNaN(ItemHeight);
     }
 
     private struct UvSize
