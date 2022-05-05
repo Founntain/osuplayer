@@ -29,6 +29,7 @@ public class MainWindowViewModel : BaseWindowViewModel
         EditUserView = new EditUserViewModel();
         PartyView = new PartyViewModel();
         SettingsView = new SettingsViewModel(Player);
+        EqualizerView = new EqualizerViewModel(Player);
         UpdateView = new UpdateViewModel();
     }
 
@@ -43,6 +44,7 @@ public class MainWindowViewModel : BaseWindowViewModel
     public TopBarViewModel TopBar { get; }
     public UpdateViewModel UpdateView { get; }
     public PlayerControlViewModel PlayerControl { get; }
+    public EqualizerViewModel EqualizerView { get; }
 
     public BaseViewModel MainView
     {

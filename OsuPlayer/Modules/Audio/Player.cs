@@ -99,6 +99,8 @@ public class Player
 
     public List<IMapEntryBase>? SongSourceList => SongSource.Value.Items.ToList();
 
+    public BindableArray<decimal> EqGains => _bassEngine.EqGains;
+
     private PlayState PlayState
     {
         get => _playState;
@@ -258,12 +260,17 @@ public class Player
     }
 
     /// <summary>
-    /// Sets the playbackspeed globally (including pitch)
+    /// Sets the playback speed globally (including pitch)
     /// </summary>
     /// <param name="speed">The speed to set</param>
     public void SetPlaybackSpeed(double speed)
     {
         _bassEngine.SetSpeed(speed);
+    }
+
+    public void ToggleEq(bool on)
+    {
+        _bassEngine.IsEqEnabled = on;
     }
 
     /// <summary>

@@ -1,11 +1,11 @@
-﻿using System.Diagnostics;
-using System.Reflection;
+﻿using System.Reflection;
 using Octokit;
 
 namespace OsuPlayer.Network;
 
 /// <summary>
-/// A static class to help us provide updates for the osu!player and check if updates are available by checking our GitHub-Repository releases
+/// A static class to help us provide updates for the osu!player and check if updates are available by checking our
+/// GitHub-Repository releases
 /// </summary>
 public static class GitHubUpdater
 {
@@ -23,10 +23,7 @@ public static class GitHubUpdater
 
         if (release == default) return (false, null, null);
 
-        if (currentVersion != release.TagName)
-        {
-            return (true, release.HtmlUrl, release.TagName);
-        }
+        if (currentVersion != release.TagName) return (true, release.HtmlUrl, release.TagName);
 
         return (false, null, null);
     }
@@ -38,7 +35,6 @@ public static class GitHubUpdater
     /// <returns>a GitHub release</returns>
     public static async Task<Release?> GetLatestRelease(bool includPreReleases = false)
     {
-        
         var github = new GitHubClient(new ProductHeaderValue("osu!player"));
 
         var releases = await github.Repository.Release.GetAll("Founntain", "osuplayer");

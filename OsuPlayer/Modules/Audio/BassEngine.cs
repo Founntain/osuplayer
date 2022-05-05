@@ -4,14 +4,15 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using Avalonia.Threading;
 using ManagedBass;
 using ManagedBass.DirectX8;
 using ManagedBass.Fx;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Extensions.Bindables;
-using OsuPlayer.Extensions.Equalizer;
 using OsuPlayer.IO.Storage.Config;
+using OsuPlayer.IO.Storage.Equalizer;
 
 namespace OsuPlayer.Modules.Audio;
 
@@ -34,8 +35,9 @@ public sealed class BassEngine : INotifyPropertyChanged
     private bool _inChannelSet;
     private bool _inChannelTimerUpdate;
     private bool _inRepeatSet;
+    private bool _isEqEnabled;
     private bool _isPlaying;
-    private DXParamEQ _paramEq;
+    private DXParamEQ? _paramEq;
     private double _playbackSpeed;
     private TimeSpan _repeatStart;
     private TimeSpan _repeatStop;
@@ -43,6 +45,7 @@ public sealed class BassEngine : INotifyPropertyChanged
     private int _streamFx;
     public Bindable<double> ChannelLengthB = new();
     public Bindable<double> ChannelPositionB = new();
+    public BindableArray<decimal> EqGains = new(10, 1);
     public int SampleFrequency = 44100;
     public Bindable<double> VolumeB = new();
 
@@ -89,6 +92,21 @@ public sealed class BassEngine : INotifyPropertyChanged
         }
     }
 
+    public bool IsEqEnabled
+    {
+        get => _isEqEnabled;
+        set
+        {
+            var oldValue = _isEqEnabled;
+            _isEqEnabled = value;
+            if (oldValue != _isEqEnabled)
+            {
+                NotifyPropertyChanged("EqEnabled");
+                SetAllEq();
+            }
+        }
+    }
+
     private void PositionTimer_Tick(object sender, EventArgs e)
     {
         if (!IsPlaying) return;
@@ -105,80 +123,14 @@ public sealed class BassEngine : INotifyPropertyChanged
     }
 
     /// <summary>
-    /// Converts the equalizer band frequency to an index
-    /// </summary>
-    /// <param name="frq">the frequency to get the index from</param>
-    /// <returns>the <see cref="int" /> index of the eq band</returns>
-    private int GetIndex(int frq)
-    {
-        switch (frq)
-        {
-            case 80:
-                return 0;
-            case 125:
-                return 1;
-            case 200:
-                return 2;
-            case 300:
-                return 3;
-            case 500:
-                return 4;
-            case 1000:
-                return 5;
-            case 2000:
-                return 6;
-            case 4000:
-                return 7;
-            case 8000:
-                return 8;
-            case 16000:
-                return 9;
-        }
-
-        return -1;
-    }
-
-    /// <summary>
     /// Sets the gain of one equalizer band
     /// </summary>
-    /// <param name="index">the index of the band, can be converted with the <see cref="GetIndex" /> method</param>
+    /// <param name="index">the index of the band</param>
     /// <param name="gain">the gain for the equalizer band in dB</param>
-    private void SetValue(int index, double gain)
+    /// <param name="on">whether the eq is enabled</param>
+    private void SetEqBand(int index, decimal gain, bool on = true)
     {
-        _paramEq.UpdateBand(index, gain);
-        switch (index)
-        {
-            case 0:
-                EqPresetStorage.F80 = gain;
-                return;
-            case 1:
-                EqPresetStorage.F125 = gain;
-                return;
-            case 2:
-                EqPresetStorage.F200 = gain;
-                return;
-            case 3:
-                EqPresetStorage.F300 = gain;
-                return;
-            case 4:
-                EqPresetStorage.F500 = gain;
-                return;
-            case 5:
-                EqPresetStorage.F1000 = gain;
-                return;
-            case 6:
-                EqPresetStorage.F2000 = gain;
-                return;
-            case 7:
-                EqPresetStorage.F4000 = gain;
-                return;
-            case 8:
-                EqPresetStorage.F8000 = gain;
-                return;
-            case 9:
-                EqPresetStorage.F16000 = gain;
-                return;
-        }
+        _paramEq?.UpdateBand(index, (double) (on ? gain : 0));
     }
 
     #region Player
@@ -373,6 +325,8 @@ public sealed class BassEngine : INotifyPropertyChanged
                 var speed = SampleFrequency * (1 + _playbackSpeed);
                 Bass.ChannelSetAttribute(FxStream, ChannelAttribute.TempoFrequency, speed);
                 Bass.ChannelSetAttribute(FxStream, ChannelAttribute.Volume, (float) Volume / 100);
+                InitEq();
+                SetAllEq();
 
                 var config = new Config();
                 SetDeviceInfo(config.Container.SelectedOutputDevice);
@@ -397,23 +351,6 @@ public sealed class BassEngine : INotifyPropertyChanged
         return false;
     }
 
-    /// <summary>
-    /// Toggles the equalizer on/off
-    /// </summary>
-    /// <param name="on">true to turn on, false to turn off</param>
-    public void ToggleEq(bool on)
-    {
-        if (on && _paramEq == null)
-        {
-            SetEqBands();
-        }
-        else if (!on && _paramEq != null)
-        {
-            _paramEq.Dispose();
-            _paramEq = null;
-        }
-    }
-
     // /// <summary>
     // ///     Set the gain of one specific frequency band (from 80 to 16000 Hz)
     // /// </summary>
@@ -431,14 +368,12 @@ public sealed class BassEngine : INotifyPropertyChanged
     /// <summary>
     /// Sets all bands according to the parameter
     /// </summary>
-    /// <param name="gain">10 double values from -15 to +15</param>
     /// <returns></returns>
-    public void SetAllEq(double[] gain)
+    public void SetAllEq()
     {
-        using var config = new Config();
-        if (!config.Read().IsEqEnabled || _paramEq == null) return;
-        for (var i = 0; i < gain.Length; i++)
-            SetValue(i, gain[i]);
+        if (_paramEq == null) return;
+        for (var i = 0; i < EqGains.Length; i++)
+            SetEqBand(i, EqGains[i], _isEqEnabled);
         //Bass.BASS_FXSetParameters(EQStream[i], ParamEq);
     }
 
@@ -509,6 +444,7 @@ public sealed class BassEngine : INotifyPropertyChanged
         ChannelPositionB.BindValueChanged(d => ChannelPosition = d.NewValue);
         ChannelLengthB.BindValueChanged(d => ChannelLength = d.NewValue);
         VolumeB.BindValueChanged(d => Volume = d.NewValue);
+        EqGains.BindCollectionChanged((sender, args) => SetAllEq());
 
         AvailableAudioDevices = new Collection<AudioDevice>();
 
@@ -543,8 +479,9 @@ public sealed class BassEngine : INotifyPropertyChanged
     /// <summary>
     /// Sets all equalizer bands
     /// </summary>
-    private void SetEqBands()
+    private void InitEq()
     {
+        _isEqEnabled = new Config().Container.IsEqEnabled;
         if (FxStream == 0) return;
         _paramEq = new DXParamEQ(FxStream);
         _paramEq.AddBand(80);
@@ -557,6 +494,13 @@ public sealed class BassEngine : INotifyPropertyChanged
         _paramEq.AddBand(4000);
         _paramEq.AddBand(8000);
         _paramEq.AddBand(16000);
+
+        using (var eqStorage = new EqStorage())
+        {
+            eqStorage.Container.LastUsedEqId ??= eqStorage.Container.EqPresets?.First().Id;
+
+            EqGains.Set(eqStorage.Container.EqPresets?.FirstOrDefault(x => x.Id == eqStorage.Container.LastUsedEqId)?.Gain);
+        }
     }
 
     private void SetRepeatRange(TimeSpan startTime, TimeSpan endTime)

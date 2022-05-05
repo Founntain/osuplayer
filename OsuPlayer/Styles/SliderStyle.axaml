@@ -152,9 +152,9 @@
                                 <Grid x:Name="VerticalTemplate" RowDefinitions="*,Auto,Auto"
                                       MinWidth="{DynamicResource SliderVerticalWidth}">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="{DynamicResource SliderPreContentMargin}" />
                                         <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="{DynamicResource SliderPostContentMargin}" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <TickBar Name="LeftTickBar" Placement="Left"
                                              Width="{DynamicResource SliderOutsideTickBarThemeHeight}"

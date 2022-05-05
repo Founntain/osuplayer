@@ -1,9 +1,7 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using OsuPlayer.Modules;
 using OsuPlayer.Windows;
-using ReactiveUI;
 using Splat;
 
 namespace OsuPlayer;
