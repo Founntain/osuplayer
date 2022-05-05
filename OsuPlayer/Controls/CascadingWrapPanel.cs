@@ -130,7 +130,9 @@ public class CascadingWrapPanel : Panel, INavigableContainer
         var itemHeight = ItemHeight;
         var orientation = Orientation;
         var isHorizontal = orientation == Orientation.Horizontal;
+        
         _lineCount = (int) Round((isHorizontal ? constraint.Width : constraint.Height) / (isHorizontal ? itemWidth : itemHeight));
+        
         var itemWidthSet = !double.IsNaN(itemWidth);
         var itemHeightSet = !double.IsNaN(itemHeight);
         double[]? heights = null;
@@ -181,11 +183,13 @@ public class CascadingWrapPanel : Panel, INavigableContainer
         var itemHeight = ItemHeight;
         var orientation = Orientation;
         var isHorizontal = orientation == Orientation.Horizontal;
-        _lineCount = (int) Round((isHorizontal ? finalSize.Width : finalSize.Height) / (isHorizontal ? itemWidth : itemHeight));
         var itemWidthSet = !double.IsNaN(itemWidth);
         var itemHeightSet = !double.IsNaN(itemHeight);
+        
         double[]? heights = null;
 
+        _lineCount = (int) Round((isHorizontal ? finalSize.Width : finalSize.Height) / (isHorizontal ? itemWidth : itemHeight));
+        
         if (_lineCount > 0)
             heights = new double[_lineCount];
 
@@ -202,6 +206,7 @@ public class CascadingWrapPanel : Panel, INavigableContainer
             if (heights == null) continue;
 
             int line;
+            
             if (i - _lineCount < 0)
             {
                 line = i % _lineCount;
