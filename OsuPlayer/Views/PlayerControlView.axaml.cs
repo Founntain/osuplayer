@@ -8,7 +8,6 @@ using Avalonia.VisualTree;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Extensions;
 using OsuPlayer.IO.Storage.Playlists;
-using OsuPlayer.Network;
 using OsuPlayer.Windows;
 using ReactiveUI;
 
@@ -35,10 +34,10 @@ public partial class PlayerControlView : ReactivePlayerControl<PlayerControlView
 
             ProgressSlider.AddHandler(PointerPressedEvent, SongProgressSlider_OnPointerPressed,
                 RoutingStrategies.Tunnel);
-            
+
             ProgressSlider.AddHandler(PointerReleasedEvent, SongProgressSlider_OnPointerReleased,
                 RoutingStrategies.Tunnel);
-            
+
             RepeatButton.AddHandler(PointerReleasedEvent, Repeat_OnPointerReleased, RoutingStrategies.Tunnel);
 
             PlaylistManager.SetLastKnownPlaylistAsCurrentPlaylist();
@@ -81,7 +80,7 @@ public partial class PlayerControlView : ReactivePlayerControl<PlayerControlView
         _mainWindow.ViewModel!.MainView = _mainWindow.ViewModel.SettingsView;
     }
 
-    private async void Blacklist_OnClick(object? sender, RoutedEventArgs e)
+    private void Blacklist_OnClick(object? sender, RoutedEventArgs e)
     {
         // throw new NotImplementedException();
     }
@@ -131,6 +130,6 @@ public partial class PlayerControlView : ReactivePlayerControl<PlayerControlView
 
     private void RepeatContextMenu_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        ViewModel.Player.ActivePlaylistId = ((Playlist)(sender as ContextMenu)?.SelectedItem)?.Id;
+        ViewModel.Player.ActivePlaylistId = ((Playlist) (sender as ContextMenu)?.SelectedItem)?.Id;
     }
 }

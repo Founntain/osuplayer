@@ -6,7 +6,7 @@ using NUnit.Framework;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Extensions.ValueConverters;
 
-namespace OsuPlayer.Tests.ValueConverterTests;
+namespace OsuPlayer.Tests;
 
 public class SourceListValueConverterTests
 {
@@ -45,7 +45,7 @@ public class SourceListValueConverterTests
         Assert.IsInstanceOf(_expectedInput, input);
         var output = _playPauseConverter.Convert(input, _expectedOutput, null, CultureInfo.InvariantCulture);
         Assert.IsInstanceOf(_expectedOutput, output);
-        Assert.AreEqual(initialItemCount, ((List<Playlist>)output)!.Count);
+        Assert.AreEqual(initialItemCount, ((List<Playlist>) output)!.Count);
     }
 
     [Test]
