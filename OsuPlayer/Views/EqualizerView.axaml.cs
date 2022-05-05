@@ -68,12 +68,7 @@ public partial class EqualizerView : ReactivePlayerControl<EqualizerViewModel>
         }
     }
 
-    private void DeleteEqPreset_OnClick(object? sender, RoutedEventArgs e)
-    {
-        ViewModel.IsDeleteEqPresetPopupOpen = !ViewModel.IsDeleteEqPresetPopupOpen;
-    }
-
-    private async void ConfirmDeleteEqPreset_OnClick(object? sender, RoutedEventArgs e)
+    private async void DeleteEqPreset_OnClick(object? sender, RoutedEventArgs e)
     {
         if (ViewModel.SelectedPreset?.Name is "Flat (Default)" or "Custom")
         {
@@ -81,6 +76,11 @@ public partial class EqualizerView : ReactivePlayerControl<EqualizerViewModel>
             return;
         }
 
+        ViewModel.IsDeleteEqPresetPopupOpen = !ViewModel.IsDeleteEqPresetPopupOpen;
+    }
+
+    private async void ConfirmDeleteEqPreset_OnClick(object? sender, RoutedEventArgs e)
+    {
         await using (var eqStorage = new EqStorage())
         {
             eqStorage.Container.EqPresets?.Remove(eqStorage.Container.EqPresets?.FirstOrDefault(x => x.Id == ViewModel.SelectedPreset?.Id));
@@ -121,8 +121,14 @@ public partial class EqualizerView : ReactivePlayerControl<EqualizerViewModel>
         ViewModel.IsRenameEqPresetPopupOpen = false;
     }
 
-    private void RenameEqPreset_OnClick(object? sender, RoutedEventArgs e)
+    private async void RenameEqPreset_OnClick(object? sender, RoutedEventArgs e)
     {
+        if (ViewModel.SelectedPreset?.Name is "Flat (Default)" or "Custom")
+        {
+            await MessageBox.ShowDialogAsync(_mainWindow, "No you can't rename the default and custom preset! Sorry :(");
+            return;
+        }
+
         ViewModel.IsRenameEqPresetPopupOpen = !ViewModel.IsRenameEqPresetPopupOpen;
     }
 }

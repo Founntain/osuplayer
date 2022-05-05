@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using Avalonia.Threading;
 using ManagedBass;
 using ManagedBass.DirectX8;
@@ -130,42 +131,6 @@ public sealed class BassEngine : INotifyPropertyChanged
     private void SetEqBand(int index, decimal gain, bool on = true)
     {
         _paramEq?.UpdateBand(index, (double) (on ? gain : 0));
-        using (var eq = new EqStorage())
-        {
-            switch (index)
-            {
-                case 0:
-                    eq.Container.LastUsedEqParams[0] = gain;
-                    return;
-                case 1:
-                    eq.Container.LastUsedEqParams[1] = gain;
-                    return;
-                case 2:
-                    eq.Container.LastUsedEqParams[2] = gain;
-                    return;
-                case 3:
-                    eq.Container.LastUsedEqParams[3] = gain;
-                    return;
-                case 4:
-                    eq.Container.LastUsedEqParams[4] = gain;
-                    return;
-                case 5:
-                    eq.Container.LastUsedEqParams[5] = gain;
-                    return;
-                case 6:
-                    eq.Container.LastUsedEqParams[6] = gain;
-                    return;
-                case 7:
-                    eq.Container.LastUsedEqParams[7] = gain;
-                    return;
-                case 8:
-                    eq.Container.LastUsedEqParams[8] = gain;
-                    return;
-                case 9:
-                    eq.Container.LastUsedEqParams[9] = gain;
-                    return;
-            }
-        }
     }
 
     #region Player
@@ -529,7 +494,13 @@ public sealed class BassEngine : INotifyPropertyChanged
         _paramEq.AddBand(4000);
         _paramEq.AddBand(8000);
         _paramEq.AddBand(16000);
-        EqGains.Set(new EqStorage().Container.LastUsedEqParams);
+
+        using (var eqStorage = new EqStorage())
+        {
+            eqStorage.Container.LastUsedEqId ??= eqStorage.Container.EqPresets?.First().Id;
+
+            EqGains.Set(eqStorage.Container.EqPresets?.FirstOrDefault(x => x.Id == eqStorage.Container.LastUsedEqId)?.Gain);
+        }
     }
 
     private void SetRepeatRange(TimeSpan startTime, TimeSpan endTime)

@@ -32,7 +32,11 @@ public class EqualizerViewModel : BaseViewModel
         Frequencies.BindTo(_player.EqGains);
         Frequencies.BindCollectionChanged(UpdateEq);
 
-        SelectedPreset = EqPresets?.FirstOrDefault(x => x.Gain.SequenceEqual(new EqStorage().Container.LastUsedEqParams));
+        using (var eqStorage = new EqStorage())
+        {
+            eqStorage.Container.LastUsedEqId ??= eqStorage.Container.EqPresets?.First().Id;
+            SelectedPreset = eqStorage.Container.EqPresets?.FirstOrDefault(x => x.Id == eqStorage.Container.LastUsedEqId);
+        }
 
         this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
     }
@@ -72,7 +76,12 @@ public class EqualizerViewModel : BaseViewModel
             //if (value == default) return;
 
             _selectedPreset = value;
-            Frequencies.Set(new EqStorage().Container.EqPresets?.FirstOrDefault(x => x.Id == value?.Id)?.Gain);
+            using (var eqStorage = new EqStorage())
+            {
+                eqStorage.Container.LastUsedEqId = value?.Id;
+
+                Frequencies.Set(eqStorage.Container.EqPresets?.FirstOrDefault(x => x.Id == value?.Id)?.Gain);
+            }
 
             this.RaisePropertyChanged(nameof(F80));
             this.RaisePropertyChanged(nameof(F125));
@@ -128,7 +137,7 @@ public class EqualizerViewModel : BaseViewModel
 
         if (SelectedPreset == default) return;
 
-        if (SelectedPreset.Name == "Flat (Default)")
+        if (SelectedPreset.Name == "Flat (Default)" && Frequencies.Array.Any(x => x != 0))
         {
             SelectedPreset = EqPresets.FirstOrDefault(x => x.Name == "Custom");
 

@@ -4,7 +4,7 @@ namespace OsuPlayer.IO.Storage.Equalizer;
 
 public class EqContainer : IStorableContainer
 {
-    public decimal[] LastUsedEqParams { get; set; } = new decimal[10];
+    public Guid? LastUsedEqId { get; set; }
 
     public List<EqPreset>? EqPresets { get; set; }
 
@@ -15,6 +15,8 @@ public class EqContainer : IStorableContainer
         EqPresets.Add(EqPreset.Custom);
         EqPresets.Add(EqPreset.Classic);
         EqPresets.Add(EqPreset.LaptopSpeaker);
+
+        LastUsedEqId ??= EqPresets.First().Id;
 
         return this;
     }

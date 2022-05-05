@@ -18,8 +18,4 @@
         <ProjectReference Include="..\OsuPlayer.Network\OsuPlayer.Network.csproj"/>
     </ItemGroup>
 
-    <ItemGroup>
-        <Folder Include="Equalizer"/>
-    </ItemGroup>
-
 </Project>

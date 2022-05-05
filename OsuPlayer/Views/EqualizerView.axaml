@@ -23,10 +23,11 @@
                     <TextBlock Text="Enable equalizer" VerticalAlignment="Center" />
                 </StackPanel>
 
-                <Panel Margin="0 0 10 0" VerticalAlignment="Center" DockPanel.Dock="Right">
+                <Panel Margin="0 0 10 0" VerticalAlignment="Center" DockPanel.Dock="Right"
+                       ToolTip.Tip="Deletes the currently selected eq preset">
                     <Button Name="DeleteEqPreset" Width="38" Height="38" CornerRadius="50"
                             Background="Transparent" Click="DeleteEqPreset_OnClick">
-                        <avalonia:MaterialIcon Kind="PlaylistRemove" Height="28" Width="28" />
+                        <avalonia:MaterialIcon Kind="Delete" Height="28" Width="28" />
                     </Button>
                     <Popup PlacementMode="AnchorAndGravity" Width="250" MaxWidth="250"
                            HorizontalOffset="-150" IsOpen="{Binding IsDeleteEqPresetPopupOpen}">
@@ -41,7 +42,7 @@
                                         HorizontalAlignment="Right"
                                         Background="Transparent"
                                         Click="ConfirmDeleteEqPreset_OnClick">
-                                    <avalonia:MaterialIcon Kind="Delete" Height="28" Width="28" />
+                                    <avalonia:MaterialIcon Kind="Check" Height="28" Width="28" />
                                 </Button>
 
                                 <Button Grid.Column="2" Name="CancelDeleteEqPreset" Width="38" Height="38"
@@ -55,10 +56,11 @@
                     </Popup>
                 </Panel>
 
-                <Panel Margin="0 0 10 0" VerticalAlignment="Center" DockPanel.Dock="Right">
+                <Panel Margin="0 0 10 0" VerticalAlignment="Center" DockPanel.Dock="Right"
+                       ToolTip.Tip="Renames the currently selected eq preset">
                     <Button Name="RenameEqPreset" Width="38" Height="38" CornerRadius="50"
                             Background="Transparent" Click="RenameEqPreset_OnClick">
-                        <avalonia:MaterialIcon Kind="PlaylistEdit" Height="28" Width="28" />
+                        <avalonia:MaterialIcon Kind="FormTextbox" Height="28" Width="28" />
                     </Button>
                     <Popup PlacementMode="AnchorAndGravity" Width="250" MaxWidth="250"
                            HorizontalOffset="-150" IsOpen="{Binding IsRenameEqPresetPopupOpen}">
@@ -82,10 +84,11 @@
                     </Popup>
                 </Panel>
 
-                <Panel Margin="0 0 10 0" VerticalAlignment="Center" DockPanel.Dock="Right">
+                <Panel Margin="0 0 10 0" VerticalAlignment="Center" DockPanel.Dock="Right"
+                       ToolTip.Tip="Duplicates the current eq preset into a new one">
                     <Button Name="AddEqPreset" Width="38" Height="38" CornerRadius="50"
                             Background="Transparent" Click="AddEqPreset_OnClick">
-                        <avalonia:MaterialIcon Kind="PlaylistAdd" Height="28" Width="28" />
+                        <avalonia:MaterialIcon Kind="ContentDuplicate" Height="28" Width="28" />
                     </Button>
                     <Popup PlacementMode="AnchorAndGravity" Width="250" MaxWidth="250"
                            HorizontalOffset="-150" IsOpen="{Binding IsNewEqPresetPopupOpen}">
