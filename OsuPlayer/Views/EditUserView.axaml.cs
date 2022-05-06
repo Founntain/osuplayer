@@ -308,7 +308,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
         if (string.IsNullOrWhiteSpace(ViewModel.ConfirmDeletionPassword))
         {
-            await MessageBox.ShowDialogAsync(Core.Instance.MainWindow, "Please enter your password, to confirm your deletion!");
+            MessageBox.Show("Please enter your password, to confirm your deletion!");
 
             return;
         }
@@ -323,20 +323,23 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
         {
             if (response == UserResponse.PasswordIncorrect)
             {
-                await MessageBox.ShowDialogAsync(Core.Instance.MainWindow, "Profile could not be deleted, because you entered the wrong password!");
+                MessageBox.Show("Profile could not be deleted, because you entered the wrong password!");
 
                 return;
             }
             
-            await MessageBox.ShowDialogAsync(Core.Instance.MainWindow, "Profile could not be deleted, due to an server error!");
+            MessageBox.Show("Profile could not be deleted, due to an server error!");
 
             return;
         }
 
         ProfileManager.User = default;
 
-        await MessageBox.ShowDialogAsync(Core.Instance.MainWindow, "Profile deleted!\n\nSee you next time!");
+        await MessageBox.ShowDialogAsync(_mainWindow, "Profile deleted!\n\nSee you next time!");
 
-        Core.Instance.MainWindow.ViewModel!.MainView = Core.Instance.MainWindow.ViewModel.HomeView;
+        ViewModel.ConfirmDeletionPassword = string.Empty;
+        ViewModel.IsDeleteProfilePopupOpen = false;
+
+        _mainWindow.ViewModel!.MainView = _mainWindow.ViewModel.HomeView;
     }
 }

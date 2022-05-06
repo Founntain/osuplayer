@@ -4,8 +4,9 @@ using Avalonia.ReactiveUI;
 using OsuPlayer.Data.API.Models.User;
 using OsuPlayer.Extensions;
 using OsuPlayer.IO.Storage.Config;
-using OsuPlayer.Modules.Security;
 using OsuPlayer.Network.API.ApiEndpoints;
+using OsuPlayer.Network.Online;
+using OsuPlayer.Network.Security;
 using OsuPlayer.UI_Extensions;
 
 namespace OsuPlayer.Windows;
@@ -30,9 +31,20 @@ public partial class CreateProfileWindow : ReactiveWindow<CreateProfileWindowVie
         if (ViewModel == default) return;
 
         if (string.IsNullOrWhiteSpace(ViewModel.Username) || string.IsNullOrWhiteSpace(ViewModel.Password))
+        {
+            await MessageBox.ShowDialogAsync(this, "Please enter a username and a password!");
+            
             return;
+        }
 
-        if (!await PasswordManager.CheckIfPasswordMeetsRequirements(ViewModel.Password)) return;
+        var passwordRequirements = PasswordManager.CheckIfPasswordMeetsRequirementsWithErrorList(ViewModel.Password);
+        
+        if (!passwordRequirements.Item1)
+        {
+            await MessageBox.ShowDialogAsync(this, passwordRequirements.Item2);
+            
+            return;
+        }
 
         var response = await ApiAsync.ApiRequestAsync<string>("users", "createUser", new CreateUserModel
         {
@@ -46,17 +58,22 @@ public partial class CreateProfileWindow : ReactiveWindow<CreateProfileWindowVie
         switch (response)
         {
             case "User already exists":
-                await MessageBox.ShowDialogAsync(Core.Instance.MainWindow, "User already exists, please try another username!");
+                MessageBox.Show("User already exists, please try another username!");
                 return;
             case "Profile creation failed":
-                await MessageBox.ShowDialogAsync(Core.Instance.MainWindow, "Profile couldn't be created!");
+                MessageBox.Show("Profile couldn't be created!");
 
                 return;
         }
 
-        if (!string.IsNullOrWhiteSpace(response)) return;
+        if (!string.IsNullOrWhiteSpace(response))
+        {
+            await MessageBox.ShowDialogAsync(this, "Profile created successfully. You can now log in!");
+            Close();
+            return;
+        }
 
-        await MessageBox.ShowDialogAsync(Core.Instance.MainWindow, "And error occured on the server side, or the API is not reachable! Please try again later");
+        MessageBox.Show("And error occured on the server side, or the API is not reachable! Please try again later");
     }
 
     private void OpenTosBtn_OnClick(object? sender, RoutedEventArgs e)
