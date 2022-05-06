@@ -43,14 +43,14 @@ public class OsuDbReader : BinaryReader
         var mapCount = reader.ReadInt32();
 
         minBeatMaps.Capacity = mapCount;
-        var prevId = -1;
+        int? prevId = null;
 
         for (var i = 1; i < mapCount; i++)
         {
             if (flag)
                 reader.ReadInt32(); //btlen
 
-            if (prevId != -1)
+            if (prevId != null)
             {
                 var length = CalculateMapLength(reader, out var newSetId, out _);
                 if (prevId == newSetId)
