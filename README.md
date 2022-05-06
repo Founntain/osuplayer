@@ -79,7 +79,7 @@ Best practice is, that we discuss (new) features and if they are needed. So don'
 - [x] Nightcore and daycore function  
 - [x] User profiles, for stats, uploading themes, languages and other stuff  
 - [x] XP and Levelsystem  
-- [ ] Patchnotes inside the client  
+- [x] Patchnotes inside the client  
 
 #### 🔧 Features with lower priority
 - [x] Audio-Equalizer 
