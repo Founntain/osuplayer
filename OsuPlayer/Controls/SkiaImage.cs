@@ -31,10 +31,6 @@ public class SkiaImage : Control
     private ISkiaDrawingContextImpl _skiaContext;
     private SKPaint _skPaint;
 
-    static SkiaImage()
-    {
-    }
-
     public SKBitmap? Source
     {
         get => GetValue(SourceProperty);

@@ -52,7 +52,7 @@ public partial class UserView : ReactivePlayerControl<UserViewModel>
         if (beatmapModel == default || ViewModel.Player.SongSourceList == default) return;
         var mapEntry = ViewModel.Player.SongSourceList.FirstOrDefault(x =>
             x.BeatmapSetId == beatmapModel.Beatmap.BeatmapSetId ||
-            x.Artist == beatmapModel.Beatmap.Artist && x.Title == beatmapModel.Beatmap.Title);
+            (x.Artist == beatmapModel.Beatmap.Artist && x.Title == beatmapModel.Beatmap.Title));
         if (mapEntry != default)
             await ViewModel.Player.PlayAsync(mapEntry);
     }

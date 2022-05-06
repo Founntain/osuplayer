@@ -26,10 +26,4 @@ public class CreateProfileWindowViewModel : BaseWindowViewModel
         get => _isTosChecked;
         set => this.RaiseAndSetIfChanged(ref _isTosChecked, value);
     }
-
-    public CreateProfileWindowViewModel()
-    {
-        
-    }
-    
 }

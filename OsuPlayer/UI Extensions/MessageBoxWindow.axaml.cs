@@ -30,8 +30,7 @@ public partial class MessageBoxWindow : Window
         this.AttachDevTools();
 #endif
     }
-
-
+    
     private void InitializeComponent()
     {
         AvaloniaXamlLoader.Load(this);
