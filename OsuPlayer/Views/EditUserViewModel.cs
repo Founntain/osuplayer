@@ -28,6 +28,20 @@ public class EditUserViewModel : BaseViewModel
     private CancellationTokenSource? _profilePictureCancellationTokenSource;
     private CancellationTokenSource? _topSongsCancellationTokenSource;
     private ObservableCollection<BeatmapUserValidityModel>? _topSongsOfCurrentUser;
+    private bool _isDeleteProfilePopupOpen;
+    private string _confirmDeletionPassword;
+
+    public string ConfirmDeletionPassword
+    {
+        get => _confirmDeletionPassword;
+        set => this.RaiseAndSetIfChanged(ref _confirmDeletionPassword, value);
+    }
+
+    public bool IsDeleteProfilePopupOpen
+    {
+        get => _isDeleteProfilePopupOpen;
+        set => this.RaiseAndSetIfChanged(ref _isDeleteProfilePopupOpen, value);
+    }
 
     public EditUserViewModel()
     {

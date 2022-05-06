@@ -64,4 +64,14 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
         if (e.Key == Key.Return)
             await Login();
     }
+
+    private async void CreateProfileBtn_OnClick(object? sender, RoutedEventArgs e)
+    {
+        var createProfileWindow = new CreateProfileWindow
+        {
+            ViewModel = new()
+        };
+
+        await createProfileWindow.ShowDialog(this);
+    }
 }

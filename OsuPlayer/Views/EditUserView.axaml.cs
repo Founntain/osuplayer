@@ -129,7 +129,9 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
     private void DeleteProfile_OnClick(object? sender, RoutedEventArgs e)
     {
-        throw new NotImplementedException();
+        if (ViewModel == default) return;
+
+        ViewModel.IsDeleteProfilePopupOpen = !ViewModel.IsDeleteProfilePopupOpen;
     }
 
     private async void SaveChanges_OnClick(object? sender, RoutedEventArgs e)
@@ -298,5 +300,46 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
         ViewModel.CurrentProfileBanner = banner;
         ViewModel.IsNewBannerSelected = false;
+    }
+
+    private async void ConfirmDeleteProfile_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (ProfileManager.User == default || ViewModel == default) return;
+
+        if (string.IsNullOrWhiteSpace(ViewModel.ConfirmDeletionPassword))
+        {
+            MessageBox.Show("Please enter your password, to confirm your deletion!");
+
+            return;
+        }
+
+        var response = await ApiAsync.ApiRequestAsync<UserResponse>("users", "deleteUser", new
+        {
+            Id = ProfileManager.User.Id.ToString(),
+            Password = ViewModel.ConfirmDeletionPassword
+        });
+
+        if (response != UserResponse.UserDeleted)
+        {
+            if (response == UserResponse.PasswordIncorrect)
+            {
+                MessageBox.Show("Profile could not be deleted, because you entered the wrong password!");
+
+                return;
+            }
+            
+            MessageBox.Show("Profile could not be deleted, due to an server error!");
+
+            return;
+        }
+
+        ProfileManager.User = default;
+
+        await MessageBox.ShowDialogAsync(_mainWindow, "Profile deleted!\n\nSee you next time!");
+
+        ViewModel.ConfirmDeletionPassword = string.Empty;
+        ViewModel.IsDeleteProfilePopupOpen = false;
+
+        _mainWindow.ViewModel!.MainView = _mainWindow.ViewModel.HomeView;
     }
 }

@@ -10,7 +10,7 @@
 
         WindowStartupLocation="CenterScreen"
         MaxWidth="300" MinWidth="300"
-        MaxHeight="175" MinHeight="175"
+        MaxHeight="200" MinHeight="200"
 
         Background="Transparent"
         TransparencyLevelHint="AcrylicBlur"
@@ -37,8 +37,16 @@
                      HorizontalAlignment="Stretch" KeyUp="InputElement_OnKeyUp" />
         </StackPanel>
 
-        <Button Margin="10" Content="login"
-                VerticalAlignment="Bottom" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
-                Click="LoginBtn_OnClick" />
+        <StackPanel VerticalAlignment="Bottom" Margin="10" Spacing="5" > 
+            <Button  Content="login"
+                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                    Click="LoginBtn_OnClick" />
+        
+            <Button
+                    Content="create a profile"
+                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                    Click="CreateProfileBtn_OnClick" />
+        </StackPanel>
+        
     </Grid>
 </Window>

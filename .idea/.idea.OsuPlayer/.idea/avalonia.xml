@@ -26,6 +26,7 @@
         <entry key="OsuPlayer/Views/TopBarView.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/Views/UpdateView.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/Views/UserView.axaml" value="OsuPlayer/OsuPlayer.csproj" />
+        <entry key="OsuPlayer/Windows/CreateProfileWindow.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/Windows/LoginWindow.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/Windows/MainWindow.axaml" value="OsuPlayer/OsuPlayer.csproj" />
       </map>

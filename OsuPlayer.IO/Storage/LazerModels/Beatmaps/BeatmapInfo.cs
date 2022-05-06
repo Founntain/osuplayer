@@ -40,8 +40,7 @@ public class BeatmapInfo : RealmObject, IHasGuidPrimaryKey, IBeatmapInfo, IEquat
     public BeatmapSetInfo? BeatmapSet { get; set; }
 
     [Ignored] public RealmNamedFileUsage? File => BeatmapSet?.Files.FirstOrDefault(f => f.File.Hash == Hash);
-
-
+    
     [Ignored]
     public BeatmapOnlineStatus Status
     {
