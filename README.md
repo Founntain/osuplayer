@@ -74,14 +74,15 @@ Best practice is, that we discuss (new) features and if they are needed. So don'
 - [x] Import songs from osu! via osu!.db or osu!lazer client.realm  
 - [x] Play songs
 - [x] Create custom playlists and put songs in there
-- [ ] Favorise songs via the heart button
-- [ ] Create playlists from collection.db   
+- [x] Favorise songs via the heart button
+- [x] Create playlists from collection.db   
 - [x] Nightcore and daycore function  
 - [x] User profiles, for stats, uploading themes, languages and other stuff  
 - [x] XP and Levelsystem  
 - [ ] Patchnotes inside the client  
 
 #### 🔧 Features with lower priority
+- [x] Audio-Equalizer 
 - [ ] Localization 
 - [ ] Language Editor 
 - [ ] Language Manager to upload and download translations   
