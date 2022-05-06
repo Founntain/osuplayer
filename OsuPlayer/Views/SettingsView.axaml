@@ -5,6 +5,8 @@
              xmlns:views="clr-namespace:OsuPlayer.Views"
              xmlns:valueConverters="clr-namespace:OsuPlayer.Extensions.ValueConverters;assembly=OsuPlayer.Extensions"
              xmlns:controls="clr-namespace:OsuPlayer.Controls"
+             xmlns:avalonia="clr-namespace:Markdown.Avalonia;assembly=Markdown.Avalonia"
+             xmlns:ctxt="clr-namespace:ColorTextBlock.Avalonia;assembly=ColorTextBlock.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.SettingsView"
              Initialized="SettingsView_OnInitialized">
@@ -119,9 +121,36 @@
 
                         <StackPanel Spacing="5" Name="EqualizerSettings">
                             <TextBlock Text="Equalizer settings" />
-                            <Button Content="open eq" Click="OpenEqClick" HorizontalAlignment="Stretch"
+                            <Button Content="open equalizer" Click="OpenEqClick" HorizontalAlignment="Stretch"
                                     HorizontalContentAlignment="Center" />
                         </StackPanel>
+                    </StackPanel>
+                </Grid>
+                
+                <Grid RowDefinitions="Auto" Margin="10" Name="PatchnotesSettings">
+                    <Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+                            <ExperimentalAcrylicBorder.Material>
+                                <ExperimentalAcrylicMaterial
+                                    BackgroundSource="Digger"
+                                    TintColor="Black"
+                                    TintOpacity="1"
+                                    MaterialOpacity="0.75" />
+                            </ExperimentalAcrylicBorder.Material>
+                        </ExperimentalAcrylicBorder>
+                    </Panel>
+                    
+                    <StackPanel Margin="10" Spacing="10" Name="PatchnotesPanel">
+                        <TextBlock Text="Patch-notes" FontSize="32" VerticalAlignment="Center"
+                                   HorizontalAlignment="Stretch" />
+
+                        <avalonia:MarkdownScrollViewer Markdown="{Binding Patchnotes}">
+                            <avalonia:MarkdownScrollViewer.Styles>
+                                <Style Selector="ctxt|CTextBlock.Heading2">
+                                    <Setter Property="Foreground" Value="White"/>
+                                </Style>
+                            </avalonia:MarkdownScrollViewer.Styles>
+                        </avalonia:MarkdownScrollViewer>
                     </StackPanel>
                 </Grid>
             </controls:CascadingWrapPanel>
