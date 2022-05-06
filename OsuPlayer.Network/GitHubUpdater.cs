@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Globalization;
+using System.Reflection;
 using Octokit;
 
 namespace OsuPlayer.Network;
@@ -40,5 +41,19 @@ public static class GitHubUpdater
         var releases = await github.Repository.Release.GetAll("Founntain", "osuplayer");
 
         return releases.FirstOrDefault(x => x.Prerelease == includPreReleases);
+    }
+
+    public static async Task<string> GetLatestPatchNotes(bool includePreReleases = false)
+    {
+        var release = await GetLatestRelease(includePreReleases);
+
+        if (release == default)
+            return "**No patch-notes found**";
+
+        return $"## {(release.Prerelease ? "pre-release" : "release")} v" + release.TagName + Environment.NewLine 
+               +"*released " + release.CreatedAt.ToString("F", new CultureInfo("en-us")) + "*"
+               + Environment.NewLine 
+               + Environment.NewLine 
+               + release.Body;
     }
 }
