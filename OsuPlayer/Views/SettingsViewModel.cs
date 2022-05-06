@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Disposables;
+using System.Text.RegularExpressions;
 using Avalonia.Controls;
+using Avalonia.Controls.Shapes;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.IO.Storage.Config;
@@ -50,7 +52,10 @@ public class SettingsViewModel : BaseViewModel
     {
         Disposable.Create(() => { }).DisposeWith(disposables);
 
-        Patchnotes = await GitHubUpdater.GetLatestPatchnotes(true);
+        var latestPatchNotes = await GitHubUpdater.GetLatestPatchNotes(true);
+
+        var regex = new Regex(@"( in )([\w\s:\/\.])*[\d]+");
+        Patchnotes = regex.Replace(latestPatchNotes, "");
     }
 
     public User? CurrentUser => ProfileManager.User;

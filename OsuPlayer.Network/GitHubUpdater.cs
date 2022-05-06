@@ -43,7 +43,7 @@ public static class GitHubUpdater
         return releases.FirstOrDefault(x => x.Prerelease == includPreReleases);
     }
 
-    public static async Task<string> GetLatestPatchnotes(bool includePreReleases = false)
+    public static async Task<string> GetLatestPatchNotes(bool includePreReleases = false)
     {
         var release = await GetLatestRelease(includePreReleases);
 
