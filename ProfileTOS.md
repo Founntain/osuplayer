@@ -4,7 +4,7 @@ We will be completly honest with you. When you create a profile you allow us to 
 *You always have the right to delete your profile by using the delete option where you edit your profile!*
 
 ### Tell me, what do you collect from me 
-Well lets make it and tell you everything.  
+Well lets make it quick and tell you everything.  
 Because we can and want you to know what we save and do with your information.
 
 **Example profile**
