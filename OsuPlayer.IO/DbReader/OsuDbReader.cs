@@ -83,7 +83,10 @@ public class OsuDbReader : BinaryReader
     /// Reads all difficulties from the osu!.db with hashes and set ids
     /// </summary>
     /// <param name="osuPath">the osu! root path where the osu!.db is located</param>
-    /// <returns>a <see cref="Dictionary{TKey,TValue}"/> where the <b>TKey</b> is the beatmap hash and the <b>TValue</b> is the set id</returns>
+    /// <returns>
+    /// a <see cref="Dictionary{TKey,TValue}" /> where the <b>TKey</b> is the beatmap hash and the <b>TValue</b> is
+    /// the set id
+    /// </returns>
     public static async Task<Dictionary<string, int>?> ReadAllDiffs(string osuPath)
     {
         var hashes = new Dictionary<string, int>();
@@ -150,7 +153,7 @@ public class OsuDbReader : BinaryReader
         r.ReadString(true); //Difficulty
         r.ReadString(true);
 
-        dbMapEntryBase.BeatmapChecksum = r.ReadString();
+        dbMapEntryBase.Hash = r.ReadString();
 
         r.ReadString(true); //BeatmapFileName
 

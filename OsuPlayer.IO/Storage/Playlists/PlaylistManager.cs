@@ -4,7 +4,8 @@ using OsuPlayer.IO.DbReader.DataModels;
 namespace OsuPlayer.IO.Storage.Playlists;
 
 /// <summary>
-/// A wrapper for the <see cref="PlaylistStorage"/>, containing static methods for creating, deleting and modifying playlists
+/// A wrapper for the <see cref="PlaylistStorage" />, containing static methods for creating, deleting and modifying
+/// playlists
 /// </summary>
 public class PlaylistManager
 {
@@ -47,7 +48,7 @@ public class PlaylistManager
     /// <summary>
     /// Gets all stored playlists
     /// </summary>
-    /// <returns>an <see cref="IList{T}"/> containing all playlists</returns>
+    /// <returns>an <see cref="IList{T}" /> containing all playlists</returns>
     public static IList<Playlist> GetAllPlaylists()
     {
         using (var storage = new PlaylistStorage())
@@ -61,7 +62,7 @@ public class PlaylistManager
     /// <summary>
     /// Gets all stored playlists asynchronously
     /// </summary>
-    /// <returns>an <see cref="IList{T}"/> containing all playlists</returns>
+    /// <returns>an <see cref="IList{T}" /> containing all playlists</returns>
     public static async Task<IList<Playlist>> GetAllPlaylistsAsync()
     {
         await using (var storage = new PlaylistStorage())
@@ -128,7 +129,7 @@ public class PlaylistManager
     }
 
     /// <summary>
-    /// Renames a playlist. Gets the stored playlist by its <see cref="Guid"/> and changes the the name of it
+    /// Renames a playlist. Gets the stored playlist by its <see cref="Guid" /> and changes the the name of it
     /// </summary>
     /// <param name="playlist">The playlist with the new name</param>
     public static async Task RenamePlaylist(Playlist playlist)
@@ -184,7 +185,7 @@ public class PlaylistManager
     /// <param name="mapEntry">The song to toggle</param>
     public static async Task ToggleSongOfCurrentPlaylist(IMapEntryBase mapEntry)
     {
-        if (CurrentPlaylist.Songs.Contains(mapEntry.BeatmapSetId))
+        if (CurrentPlaylist.Songs.Contains(mapEntry.Hash))
             await RemoveSongToCurrentPlaylist(mapEntry);
         else
             await AddSongToCurrentPlaylistAsync(mapEntry);
@@ -196,7 +197,7 @@ public class PlaylistManager
     /// <param name="mapEntry">The song to add</param>
     public static async Task AddSongToCurrentPlaylistAsync(IMapEntryBase mapEntry)
     {
-        CurrentPlaylist.Songs.Add(mapEntry.BeatmapSetId);
+        CurrentPlaylist.Songs.Add(mapEntry.Hash);
 
         await ReplacePlaylistAsync(CurrentPlaylist);
     }
@@ -207,7 +208,7 @@ public class PlaylistManager
     /// <param name="mapEntry">The song to remove</param>
     public static async Task RemoveSongToCurrentPlaylist(IMapEntryBase mapEntry)
     {
-        CurrentPlaylist.Songs.Remove(mapEntry.BeatmapSetId);
+        CurrentPlaylist.Songs.Remove(mapEntry.Hash);
 
         await ReplacePlaylistAsync(CurrentPlaylist);
     }
@@ -233,17 +234,17 @@ public class PlaylistManager
     /// Adds a song to a playlist and creates it if it doesn't exist already
     /// </summary>
     /// <param name="playlistName">the name of the playlist to add the song to</param>
-    /// <param name="setId">the beatmap set id of the song</param>
-    public static async Task AddSongToPlaylistAsync(string playlistName, int setId)
+    /// <param name="hash">the beatmap set id of the song</param>
+    public static async Task AddSongToPlaylistAsync(string playlistName, string hash)
     {
-        if (setId < 0) return;
+        if (string.IsNullOrWhiteSpace(hash)) return;
 
         Playlist playlist;
 
         if ((playlist = (await GetAllPlaylistsAsync()).FirstOrDefault(x => x.Name == playlistName)) != default)
         {
-            if (!playlist.Songs.Contains(setId))
-                playlist.Songs.Add(setId);
+            if (!playlist.Songs.Contains(hash))
+                playlist.Songs.Add(hash);
 
             await ReplacePlaylistAsync(playlist);
             return;
@@ -253,7 +254,7 @@ public class PlaylistManager
         {
             Name = playlistName
         };
-        playlist.Songs.Add(setId);
+        playlist.Songs.Add(hash);
 
         await AddPlaylistAsync(playlist);
     }

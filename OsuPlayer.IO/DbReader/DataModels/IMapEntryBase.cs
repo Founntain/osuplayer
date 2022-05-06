@@ -6,7 +6,7 @@ public interface IMapEntryBase
 {
     public string Artist { get; set; }
     public string Title { get; set; }
-    public string BeatmapChecksum { get; set; }
+    public string Hash { get; set; }
     public int BeatmapSetId { get; set; }
     public int TotalTime { get; set; }
     public string TotalTimeString => TimeSpan.FromMilliseconds(TotalTime).FormatTime();

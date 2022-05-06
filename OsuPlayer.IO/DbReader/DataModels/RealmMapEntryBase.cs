@@ -4,12 +4,16 @@ using Realms;
 
 namespace OsuPlayer.IO.DbReader.DataModels;
 
+/// <summary>
+/// a minimal beatmap entry with only frequently used data
+/// <remarks>created on call of <see cref="RealmReader.Read(string)" /></remarks>
+/// </summary>
 public class RealmMapEntryBase : IMapEntryBase
 {
     public Guid Id { get; set; }
     public string Artist { get; set; }
     public string Title { get; set; }
-    public string BeatmapChecksum { get; set; }
+    public string Hash { get; set; }
     public int BeatmapSetId { get; set; }
     public int TotalTime { get; set; }
     public string TotalTimeString => TimeSpan.FromMilliseconds(TotalTime).FormatTime();
@@ -63,7 +67,7 @@ public class RealmMapEntryBase : IMapEntryBase
             TitleUnicode = beatmap.Metadata.TitleUnicode,
             AudioFileName = beatmap.Metadata.AudioFile,
             BackgroundFileLocation = string.IsNullOrEmpty(backgroundFolderName) ? string.Empty : Path.Combine(path, "files", backgroundFolderName, backgroundFile!.File.Hash),
-            BeatmapChecksum = BeatmapChecksum,
+            Hash = Hash,
             BeatmapSetId = beatmap.OnlineID,
             FolderName = audioFolderName,
             FolderPath = Path.Combine("files", audioFolderName),

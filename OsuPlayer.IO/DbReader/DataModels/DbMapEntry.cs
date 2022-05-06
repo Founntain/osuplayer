@@ -7,9 +7,9 @@ namespace OsuPlayer.IO.DbReader.DataModels;
 
 /// <summary>
 /// a full beatmap entry with optionally used data
-/// <remarks>only created on a <see cref="OsuDbReader.ReadFullMapEntry" /> call</remarks>
+/// <remarks>only created on a <see cref="IMapEntryBase.ReadFullEntry" /> call</remarks>
 /// </summary>
-public class DbMapEntry : DbMapEntryBase, IMapEntry
+internal class DbMapEntry : DbMapEntryBase, IMapEntry
 {
     public string ArtistUnicode { get; set; }
     public string TitleUnicode { get; set; }
@@ -109,13 +109,13 @@ public class DbMapEntry : DbMapEntryBase, IMapEntry
 
     public override bool Equals(object? obj)
     {
-        if (obj is DbMapEntry other) return BeatmapChecksum == other.BeatmapChecksum;
+        if (obj is DbMapEntry other) return Hash == other.Hash;
 
         return false;
     }
 
     public override int GetHashCode()
     {
-        return BitConverter.ToInt32(Encoding.UTF8.GetBytes(BeatmapChecksum));
+        return BitConverter.ToInt32(Encoding.UTF8.GetBytes(Hash));
     }
 }

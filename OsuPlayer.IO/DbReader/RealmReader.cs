@@ -10,8 +10,8 @@ namespace OsuPlayer.IO.DbReader;
 /// </summary>
 public class RealmReader
 {
-    private readonly Realm _realm;
     private readonly IEnumerable<BeatmapInfo> _beatmapInfos;
+    private readonly Realm _realm;
 
     public RealmReader(Config? config = null)
     {
@@ -36,10 +36,10 @@ public class RealmReader
     }
 
     /// <summary>
-    /// Reads the client.realm file from the <paramref name="path"/>
+    /// Reads the client.realm file from the <paramref name="path" />
     /// </summary>
     /// <param name="path">the path where the client.realm is located</param>
-    /// <returns>an <see cref="IList{T}"/> of <see cref="IMapEntryBase"/> read from the client.realm</returns>
+    /// <returns>an <see cref="IList{T}" /> of <see cref="IMapEntryBase" /> read from the client.realm</returns>
     public static async Task<List<IMapEntryBase>?> Read(string path)
     {
         var realmLoc = Path.Combine(path, "client.realm");
@@ -56,17 +56,15 @@ public class RealmReader
         var beatmaps = realm.DynamicApi.All("BeatmapSet").ToList().OfType<BeatmapSetInfo>();
 
         foreach (var beatmap in beatmaps)
-        {
             minBeatMaps.Add(new RealmMapEntryBase
             {
-                Artist = beatmap.Metadata.Artist,
-                BeatmapChecksum = beatmap.Hash,
+                Artist = string.Intern(beatmap.Metadata.Artist),
+                Hash = beatmap.Beatmaps.First().MD5Hash,
                 BeatmapSetId = beatmap.OnlineID,
                 Title = beatmap.Metadata.Title,
                 TotalTime = (int) beatmap.MaxLength,
                 Id = beatmap.ID
             });
-        }
 
         realm.Dispose();
 
@@ -76,8 +74,14 @@ public class RealmReader
     /// <summary>
     /// Queries all beatmaps in the realm
     /// </summary>
-    /// <param name="query">a <see cref="Func{T, TResult}"/> where the query input is a <see cref="BeatmapInfo"/> and the query result is a <see cref="bool"/></param>
-    /// <returns>the first <see cref="BeatmapInfo"/> where the <paramref name="query"/> returns true, or null if no map was found</returns>
+    /// <param name="query">
+    /// a <see cref="Func{T, TResult}" /> where the query input is a <see cref="BeatmapInfo" /> and the
+    /// query result is a <see cref="bool" />
+    /// </param>
+    /// <returns>
+    /// the first <see cref="BeatmapInfo" /> where the <paramref name="query" /> returns true, or null if no map was
+    /// found
+    /// </returns>
     public BeatmapInfo? QueryBeatmap(Func<BeatmapInfo, bool> query)
     {
         return _beatmapInfos.FirstOrDefault(query);

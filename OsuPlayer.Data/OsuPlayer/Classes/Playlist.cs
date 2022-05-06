@@ -5,7 +5,8 @@
 namespace OsuPlayer.Data.OsuPlayer.Classes;
 
 /// <summary>
-/// A playlist object containing an <see cref="Id"/>, the <see cref="Name"/>, the <see cref="CreationTime"/> and a <see cref="Songs"/> list
+/// A playlist object containing an <see cref="Id" />, the <see cref="Name" />, the <see cref="CreationTime" /> and a
+/// <see cref="Songs" /> list
 /// </summary>
 public class Playlist
 {
@@ -14,9 +15,9 @@ public class Playlist
     public DateTime CreationTime { get; set; } = DateTime.UtcNow;
 
     /// <summary>
-    /// Contains the beatmap set ids of the songs in the <see cref="Playlist"/>
+    /// Contains the hashes of the songs in the <see cref="Playlist" />
     /// </summary>
-    public BindingList<int> Songs { get; set; } = new();
+    public BindingList<string> Songs { get; set; } = new();
 
     private bool Equals(Playlist other)
     {

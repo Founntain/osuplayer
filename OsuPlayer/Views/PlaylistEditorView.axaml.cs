@@ -50,10 +50,10 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
 
         foreach (var song in ViewModel.SelectedSongListItems)
         {
-            if (playlist.Contains(song.BeatmapSetId))
+            if (playlist.Contains(song.Hash))
                 continue;
 
-            playlist.Add(song.BeatmapSetId);
+            playlist.Add(song.Hash);
         }
 
         ViewModel.SelectedSongListItems = new List<IMapEntryBase>();
@@ -79,10 +79,10 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
 
         foreach (var song in ViewModel.SelectedPlaylistItems)
         {
-            if (!playlist.Contains(song.BeatmapSetId))
+            if (!playlist.Contains(song.Hash))
                 continue;
 
-            playlist.Remove(song.BeatmapSetId);
+            playlist.Remove(song.Hash);
         }
 
         ViewModel.SelectedPlaylistItems = new List<IMapEntryBase>();
