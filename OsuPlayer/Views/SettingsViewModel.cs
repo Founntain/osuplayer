@@ -8,6 +8,7 @@ using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.IO.Storage.Config;
 using OsuPlayer.Modules.Audio;
+using OsuPlayer.Network;
 using OsuPlayer.Network.Online;
 using OsuPlayer.ViewModels;
 using OsuPlayer.Windows;
@@ -24,6 +25,13 @@ public class SettingsViewModel : BaseViewModel
     private string _settingsSearchQ;
 
     public MainWindow? MainWindow;
+    private string _patchnotes;
+
+    public string Patchnotes
+    {
+        get => _patchnotes;
+        set => this.RaiseAndSetIfChanged(ref _patchnotes, value);
+    }
 
     public SettingsViewModel(Player player)
     {
@@ -35,7 +43,14 @@ public class SettingsViewModel : BaseViewModel
         Player = player;
 
         Activator = new ViewModelActivator();
-        this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
+        this.WhenActivated(Block);
+    }
+
+    private async void Block(CompositeDisposable disposables)
+    {
+        Disposable.Create(() => { }).DisposeWith(disposables);
+
+        Patchnotes = await GitHubUpdater.GetLatestPatchnotes(true);
     }
 
     public User? CurrentUser => ProfileManager.User;
