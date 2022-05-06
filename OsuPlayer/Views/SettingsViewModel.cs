@@ -55,6 +55,8 @@ public class SettingsViewModel : BaseViewModel
         var latestPatchNotes = await GitHubUpdater.GetLatestPatchNotes(true);
 
         var regex = new Regex(@"( in )([\w\s:\/\.])*[\d]+");
+        latestPatchNotes = regex.Replace(latestPatchNotes, "");
+        regex = new Regex(@"(\n?\r?)*[\*]*(Full Changelog)[\*]*:.*$");
         Patchnotes = regex.Replace(latestPatchNotes, "");
     }
 
