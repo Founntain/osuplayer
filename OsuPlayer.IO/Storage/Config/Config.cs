@@ -1,12 +1,23 @@
 ﻿using Newtonsoft.Json;
+using ErrorEventArgs = Newtonsoft.Json.Serialization.ErrorEventArgs;
 
 namespace OsuPlayer.IO.Storage.Config;
 
 public class Config : IStorable<ConfigContainer>
 {
-    public string Path => System.IO.Path.Combine("data", "config.json");
+    private readonly JsonSerializerSettings _serializerSettings = new()
+    {
+        Error = delegate(object? sender, ErrorEventArgs args)
+        {
+            if ((string) args.ErrorContext.Member == "LastPlayedSong")
+                args.ErrorContext.Handled = true;
+        },
+        Formatting = Formatting.Indented
+    };
 
     private ConfigContainer? _configContainer;
+
+    public string Path => System.IO.Path.Combine("data", "config.json");
 
     public ConfigContainer Container
     {
@@ -23,7 +34,7 @@ public class Config : IStorable<ConfigContainer>
 
         return _configContainer ??= (string.IsNullOrWhiteSpace(data)
             ? new ConfigContainer()
-            : JsonConvert.DeserializeObject<ConfigContainer>(data))!;
+            : JsonConvert.DeserializeObject<ConfigContainer>(data, _serializerSettings))!;
     }
 
     public async Task<ConfigContainer> ReadAsync()
@@ -35,32 +46,36 @@ public class Config : IStorable<ConfigContainer>
 
         return _configContainer ??= (string.IsNullOrWhiteSpace(data)
             ? new ConfigContainer()
-            : JsonConvert.DeserializeObject<ConfigContainer>(data))!;
+            : JsonConvert.DeserializeObject<ConfigContainer>(data, _serializerSettings))!;
     }
 
     public void Save(ConfigContainer container)
     {
         Directory.CreateDirectory("data");
 
-        File.WriteAllText(Path, JsonConvert.SerializeObject(container));
+        File.WriteAllText(Path, JsonConvert.SerializeObject(container, _serializerSettings));
     }
 
     public async Task SaveAsync(ConfigContainer container)
     {
         Directory.CreateDirectory("data");
 
-        await File.WriteAllTextAsync(Path, JsonConvert.SerializeObject(container));
+        await File.WriteAllTextAsync(Path, JsonConvert.SerializeObject(container, _serializerSettings));
     }
 
     public void Dispose()
     {
         if (_configContainer != default)
             Save(_configContainer);
+
+        GC.SuppressFinalize(this);
     }
 
     public async ValueTask DisposeAsync()
     {
         if (_configContainer != default)
             await SaveAsync(_configContainer);
+
+        GC.SuppressFinalize(this);
     }
 }

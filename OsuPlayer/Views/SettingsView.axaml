@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:OsuPlayer.Views"
              xmlns:valueConverters="clr-namespace:OsuPlayer.Extensions.ValueConverters;assembly=OsuPlayer.Extensions"
+             xmlns:controls="clr-namespace:OsuPlayer.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.SettingsView"
              Initialized="SettingsView_OnInitialized">
@@ -20,7 +21,7 @@
                  Watermark="type to search for settings" Margin="10 10 10 0" />
 
         <ScrollViewer Grid.Row="1">
-            <WrapPanel
+            <controls:CascadingWrapPanel
                 ItemWidth="{Binding RelativeSource={RelativeSource Self}, Path=Bounds.Width, Converter={StaticResource GridFormatter}, ConverterParameter=700}"
                 Name="SettingsGrid">
 
@@ -44,7 +45,13 @@
 
                         <StackPanel Spacing="5" Name="ImportOsuSongs">
                             <TextBlock Text="{Binding OsuLocation}" />
-                            <Button Content="import osu! songs" Command="{Binding ImportSongsClick}"
+                            <Button Content="import osu! songs" Click="ImportSongsClick"
+                                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                        </StackPanel>
+
+                        <StackPanel Spacing="5" Name="ImportCollections">
+                            <TextBlock Text="Import osu! collections" />
+                            <Button Content="start import" Click="ImportCollectionsClick"
                                     HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
                         </StackPanel>
 
@@ -57,6 +64,12 @@
                         <StackPanel Spacing="5" Name="StartupSong">
                             <TextBlock Text="Startup song" />
                             <ComboBox SelectedItem="{Binding SelectedStartupSong}" Items="{Binding StartupSongs}"
+                                      HorizontalAlignment="Stretch" />
+                        </StackPanel>
+
+                        <StackPanel Spacing="5" Name="SongsSortingMode">
+                            <TextBlock Text="Sorting Mode" />
+                            <ComboBox SelectedItem="{Binding SelectedSortingMode}" Items="{Binding SortingModes}"
                                       HorizontalAlignment="Stretch" />
                         </StackPanel>
                     </StackPanel>
@@ -81,12 +94,37 @@
 
                         <StackPanel Spacing="5" Name="Login">
                             <TextBlock Text="{Binding CurrentUser, Converter={StaticResource SettingsUserConverter}}" />
-                            <Button Content="log in" Command="{Binding Login}" HorizontalAlignment="Stretch"
+                            <Button Content="log in" Click="LoginClick" HorizontalAlignment="Stretch"
                                     HorizontalContentAlignment="Center" />
                         </StackPanel>
                     </StackPanel>
                 </Grid>
-            </WrapPanel>
+
+                <Grid RowDefinitions="Auto" Margin="10" Name="AudioSettings">
+                    <Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+                            <ExperimentalAcrylicBorder.Material>
+                                <ExperimentalAcrylicMaterial
+                                    BackgroundSource="Digger"
+                                    TintColor="Black"
+                                    TintOpacity="1"
+                                    MaterialOpacity="0.75" />
+                            </ExperimentalAcrylicBorder.Material>
+                        </ExperimentalAcrylicBorder>
+                    </Panel>
+
+                    <StackPanel Margin="10" Spacing="10" Name="AudioSettingsPanel">
+                        <TextBlock Text="Audio Settings" FontSize="32" VerticalAlignment="Center"
+                                   HorizontalAlignment="Stretch" />
+
+                        <StackPanel Spacing="5" Name="EqualizerSettings">
+                            <TextBlock Text="Equalizer settings" />
+                            <Button Content="open eq" Click="OpenEqClick" HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Center" />
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </controls:CascadingWrapPanel>
         </ScrollViewer>
     </Grid>
 </UserControl>

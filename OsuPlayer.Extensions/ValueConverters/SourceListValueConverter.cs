@@ -12,10 +12,7 @@ public class SourceListValueConverter : IValueConverter
         if (value == default)
             return new List<Playlist>();
 
-        if (value is SourceList<Playlist> val)
-        {
-            return val.Items.ToList();
-        }
+        if (value is SourceList<Playlist> val) return val.Items.ToList();
 
         return new List<Playlist>();
     }

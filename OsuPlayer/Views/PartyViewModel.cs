@@ -4,7 +4,7 @@ using ReactiveUI;
 
 namespace OsuPlayer.Views;
 
-public class PartyViewModel : BaseViewModel, IActivatableViewModel
+public class PartyViewModel : BaseViewModel
 {
     public PartyViewModel()
     {

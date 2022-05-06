@@ -2,16 +2,16 @@
 using System.Globalization;
 using Material.Icons;
 using NUnit.Framework;
+using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Extensions.ValueConverters;
-using OsuPlayer.Network.Online;
 
-namespace OsuPlayer.Tests.ValueConverterTests;
+namespace OsuPlayer.Tests;
 
 public class RepeatConverterTests
 {
+    private readonly Type _expectedInput = typeof(RepeatMode);
+    private readonly Type _expectedOutput = typeof(MaterialIconKind);
     private RepeatConverter _repeatConverter;
-    private Type _expectedInput = typeof(bool);
-    private Type _expectedOutput = typeof(MaterialIconKind);
 
     [SetUp]
     public void Setup()
@@ -33,11 +33,23 @@ public class RepeatConverterTests
         Assert.DoesNotThrow(() => _repeatConverter.Convert(null, _expectedOutput, null, CultureInfo.InvariantCulture));
     }
 
-    [Test]
-    public void TestCorrectUsage()
+    [TestCase(RepeatMode.NoRepeat)]
+    [TestCase(RepeatMode.Playlist)]
+    public void TestCorrectUsage(RepeatMode test)
     {
-        var output = _repeatConverter.Convert(true, _expectedOutput, null, CultureInfo.InvariantCulture);
+        var output = _repeatConverter.Convert(test, _expectedOutput, null, CultureInfo.InvariantCulture);
         Assert.IsInstanceOf(_expectedOutput, output);
+    }
+
+    [TestCase(RepeatMode.NoRepeat, false)]
+    [TestCase(RepeatMode.Playlist, true)]
+    public void TestCorrectBoolUsage(RepeatMode mode, bool expected)
+    {
+        var type = typeof(bool);
+
+        var output = _repeatConverter.Convert(mode, type, null, CultureInfo.InvariantCulture);
+        Assert.IsInstanceOf(type, output);
+        Assert.AreEqual(output, expected);
     }
 
     [Test]

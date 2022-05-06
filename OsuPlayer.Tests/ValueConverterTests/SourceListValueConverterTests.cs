@@ -2,18 +2,17 @@
 using System.Collections.Generic;
 using System.Globalization;
 using DynamicData;
-using Material.Icons;
 using NUnit.Framework;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Extensions.ValueConverters;
 
-namespace OsuPlayer.Tests.ValueConverterTests;
+namespace OsuPlayer.Tests;
 
 public class SourceListValueConverterTests
 {
+    private readonly Type _expectedInput = typeof(SourceList<Playlist>);
+    private readonly Type _expectedOutput = typeof(List<Playlist>);
     private SourceListValueConverter _playPauseConverter;
-    private Type _expectedInput = typeof(SourceList<Playlist>);
-    private Type _expectedOutput = typeof(List<Playlist>);
 
     [SetUp]
     public void Setup()

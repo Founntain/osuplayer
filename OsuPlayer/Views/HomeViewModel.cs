@@ -10,9 +10,10 @@ using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
-using OsuPlayer.IO.DbReader;
+using OsuPlayer.Extensions.Bindables;
 using OsuPlayer.IO.DbReader.DataModels;
 using OsuPlayer.IO.Storage.Config;
+using OsuPlayer.Modules.Audio;
 using OsuPlayer.Network.API.ApiEndpoints;
 using OsuPlayer.Network.Online;
 using OsuPlayer.ViewModels;
@@ -23,23 +24,34 @@ namespace OsuPlayer.Views;
 
 public class HomeViewModel : BaseViewModel
 {
-    private ObservableCollection<ObservableValue> _graphValues;
+    private readonly Bindable<bool> _songsLoading = new();
+
+    public readonly Player Player;
+    private List<ObservableValue> _graphValues;
     private Bitmap? _profilePicture;
 
-    private bool _songsLoading;
-
-    public HomeViewModel()
+    public HomeViewModel(Player player)
     {
+        Player = player;
+
+        _songsLoading.BindTo(Player.SongsLoading);
+        _songsLoading.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongsLoading)));
+
+        Player.GraphValues.BindValueChanged(d => GraphValues = d.NewValue, true);
+        Player.SongSource.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongEntries)), true);
+
+        Player.UserChanged += (sender, args) => this.RaisePropertyChanged(nameof(CurrentUser));
+
+        GraphValues = new List<ObservableValue>();
+
         Activator = new ViewModelActivator();
         this.WhenActivated(Block);
-
-        GraphValues = new();
     }
 
-    public ObservableCollection<ObservableValue> GraphValues
+    public List<ObservableValue> GraphValues
     {
         get => _graphValues;
-        set
+        private set
         {
             if (Series != default)
             {
@@ -47,6 +59,7 @@ public class HomeViewModel : BaseViewModel
                 this.RaisePropertyChanged(nameof(Series));
             }
 
+            this.RaisePropertyChanged(nameof(CurrentUser));
             this.RaiseAndSetIfChanged(ref _graphValues, value);
         }
     }
@@ -62,16 +75,12 @@ public class HomeViewModel : BaseViewModel
         }
     };
 
-    public List<MinimalMapEntry> SongEntries => Core.Instance.Player.SongSource!;
+    public List<IMapEntryBase> SongEntries => Player.SongSourceList!;
 
     public bool IsUserNotLoggedIn => CurrentUser == default;
     public bool IsUserLoggedIn => CurrentUser != default;
 
-    public bool SongsLoading
-    {
-        get => new Config().Read().OsuPath != null && _songsLoading;
-        set => this.RaiseAndSetIfChanged(ref _songsLoading, value);
-    }
+    public bool SongsLoading => new Config().Container.OsuPath != null && _songsLoading.Value;
 
     public User? CurrentUser => ProfileManager.User;
 

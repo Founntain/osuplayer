@@ -1,9 +1,15 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reactive.Disposables;
 using Avalonia.Media.Imaging;
+using OsuPlayer.Data.OsuPlayer.Classes;
+using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Extensions;
-using OsuPlayer.IO.DbReader;
+using OsuPlayer.Extensions.Bindables;
 using OsuPlayer.IO.DbReader.DataModels;
+using OsuPlayer.IO.Storage.Playlists;
+using OsuPlayer.Modules.Audio;
 using OsuPlayer.ViewModels;
 using ReactiveUI;
 
@@ -11,41 +17,98 @@ namespace OsuPlayer.Views;
 
 public class PlayerControlViewModel : BaseViewModel
 {
-    private MapEntry? _currentSong;
+    private readonly Bindable<IMapEntry?> _currentSong = new();
+
+    private readonly Bindable<bool> _isPlaying = new();
+    private readonly Bindable<RepeatMode> _isRepeating = new();
+    private readonly Bindable<bool> _isShuffle = new();
+    private readonly Bindable<double> _songLength = new();
+    private readonly Bindable<double> _songTime = new();
+    private readonly Bindable<double> _volume = new();
+
+    public readonly Player Player;
     private Bitmap? _currentSongImage;
     private string _currentSongLength = "00:00";
 
     private string _currentSongTime = "00:00";
 
-    private bool _isPlaying;
-    private bool _isRepeating;
-
-    private bool _isShuffle;
-    private bool _isSpeedVisible;
-    private bool _isVolumeVisible;
-
     private double _playbackSpeed;
+    private bool _isCurrentSongOnBlacklist;
 
-    private double _songLength;
+    public bool IsCurrentSongInPlaylist => _currentSong.Value != null
+                                           && PlaylistManager.CurrentPlaylist != null
+                                           && PlaylistManager.CurrentPlaylist.Songs.Contains(_currentSong.Value.BeatmapSetId);
 
-    private double _songTime;
+    public bool IsAPlaylistSelected => PlaylistManager.CurrentPlaylist != default;
 
-    public PlayerControlViewModel()
+    public bool IsCurrentSongOnBlacklist
     {
+        get => _isCurrentSongOnBlacklist;
+        set => this.RaiseAndSetIfChanged(ref _isCurrentSongOnBlacklist, value);
+    }
+
+    public PlayerControlViewModel(Player player, BassEngine bassEngine)
+    {
+        Player = player;
+
+        _songTime.BindTo(bassEngine.ChannelPositionB);
+        _songTime.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongTime)));
+
+        _songLength.BindTo(bassEngine.ChannelLengthB);
+        _songLength.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongLength)));
+
+        _currentSong.BindTo(Player.CurrentSongBinding);
+        _currentSong.BindValueChanged(d =>
+        {
+            this.RaisePropertyChanged(nameof(TitleText));
+            this.RaisePropertyChanged(nameof(ArtistText));
+            this.RaisePropertyChanged(nameof(SongText));
+            this.RaisePropertyChanged(nameof(IsCurrentSongInPlaylist));
+            this.RaisePropertyChanged(nameof(IsCurrentSongOnBlacklist));
+        });
+
+        _volume.BindTo(bassEngine.VolumeB);
+        _volume.BindValueChanged(d => this.RaisePropertyChanged(nameof(Volume)));
+
+        _isPlaying.BindTo(Player.IsPlaying);
+        _isPlaying.BindValueChanged(d => this.RaisePropertyChanged(nameof(IsPlaying)));
+
+        _isRepeating.BindTo(Player.IsRepeating);
+        _isRepeating.BindValueChanged(d => { this.RaisePropertyChanged(nameof(IsRepeating)); });
+
+        _isShuffle.BindTo(Player.IsShuffle);
+        _isShuffle.BindValueChanged(d => this.RaisePropertyChanged(nameof(IsShuffle)));
+
+        Player.CurrentSongImage.BindValueChanged(d => CurrentSongImage = d.NewValue, true);
+
+        Player.SelectedPlaylist.BindValueChanged(_ =>
+        {
+            this.RaisePropertyChanged(nameof(IsAPlaylistSelected));
+            this.RaisePropertyChanged(nameof(IsCurrentSongInPlaylist));
+        }, true);
+        
         Activator = new ViewModelActivator();
         this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
     }
 
     public double Volume
     {
-        get => Core.Instance.Player.Volume;
-        set => Core.Instance.Player.Volume = value;
+        get => _volume.Value;
+        set
+        {
+            _volume.Value = value;
+            this.RaisePropertyChanged();
+        }
     }
 
     public bool IsShuffle
     {
-        get => _isShuffle;
-        set => this.RaiseAndSetIfChanged(ref _isShuffle, value);
+        get => _isShuffle.Value;
+        set
+        {
+            _isShuffle.Value = value;
+            this.RaisePropertyChanged();
+        }
     }
 
     public double PlaybackSpeed
@@ -53,90 +116,60 @@ public class PlayerControlViewModel : BaseViewModel
         get => _playbackSpeed;
         set
         {
-            Core.Instance.Player.SetPlaybackSpeed(value);
+            Player.SetPlaybackSpeed(value);
             this.RaiseAndSetIfChanged(ref _playbackSpeed, value);
-            SongLength = _songLength;
+            this.RaisePropertyChanged(nameof(CurrentSongLength));
         }
     }
 
     public double SongTime
     {
-        get => _songTime;
-        set
+        get
         {
-            this.RaiseAndSetIfChanged(ref _songTime, value);
-            CurrentSongTime = TimeSpan.FromSeconds(value * (1 - PlaybackSpeed)).FormatTime();
+            this.RaisePropertyChanged(nameof(CurrentSongTime));
+            return _songTime.Value;
         }
+        set => _songTime.Value = value;
     }
 
     public string CurrentSongTime
     {
-        get => _currentSongTime;
+        get => TimeSpan.FromSeconds(_songTime.Value * (1 - PlaybackSpeed)).FormatTime();
         set => this.RaiseAndSetIfChanged(ref _currentSongTime, value);
     }
 
     public double SongLength
     {
-        get => _songLength;
-        set
+        get
         {
-            this.RaiseAndSetIfChanged(ref _songLength, value);
-            CurrentSongLength = TimeSpan.FromSeconds(value * (1 - PlaybackSpeed)).FormatTime();
+            this.RaisePropertyChanged(nameof(CurrentSongLength));
+            return _songLength.Value;
         }
     }
 
     public string CurrentSongLength
     {
-        get => _currentSongLength;
+        get => TimeSpan.FromSeconds(_songLength.Value * (1 - PlaybackSpeed)).FormatTime();
         set => this.RaiseAndSetIfChanged(ref _currentSongLength, value);
     }
 
-    public bool IsPlaying
-    {
-        get => _isPlaying;
-        set => this.RaiseAndSetIfChanged(ref _isPlaying, value);
-    }
+    public bool IsPlaying => _isPlaying.Value;
 
-    public bool IsRepeating
-    {
-        get => _isRepeating;
-        set => this.RaiseAndSetIfChanged(ref _isRepeating, value);
-    }
+    public string TitleText => _currentSong.Value?.Title ?? "No song is playing";
 
-    public MapEntry? CurrentSong
+    public RepeatMode IsRepeating
     {
-        get => _currentSong;
+        get => _isRepeating.Value;
         set
         {
-            _currentSong = value;
-            this.RaisePropertyChanged(nameof(TitleText));
-            this.RaisePropertyChanged(nameof(ArtistText));
-            this.RaisePropertyChanged(nameof(SongText));
+            _isRepeating.Value = value;
+            this.RaisePropertyChanged();
         }
     }
 
-    public string TitleText => _currentSong?.Title ?? "No song is playing";
-
-    public string ArtistText => _currentSong?.Artist ?? "please select from song list";
+    public string ArtistText => _currentSong.Value?.Artist ?? "please select from song list";
 
     public string SongText => $"{ArtistText} - {TitleText}";
-
-    public bool IsVolumeVisible
-    {
-        get => _isVolumeVisible;
-        set => this.RaiseAndSetIfChanged(ref _isVolumeVisible, value);
-    }
-
-    public bool IsSpeedVisible
-    {
-        get => _isSpeedVisible;
-        set => this.RaiseAndSetIfChanged(ref _isSpeedVisible, value);
-    }
-
-    public bool VolumePointerOver { get; set; }
-    public bool VolumePopupPointerOver { get; set; }
-    public bool SpeedPointerOver { get; set; }
-    public bool SpeedPopupPointerOver { get; set; }
 
     public Bitmap? CurrentSongImage
     {
@@ -147,4 +180,8 @@ public class PlayerControlViewModel : BaseViewModel
             this.RaiseAndSetIfChanged(ref _currentSongImage, value);
         }
     }
+
+    public IEnumerable<Playlist> Playlists => PlaylistManager.GetAllPlaylists().Where(x => x.Songs.Count > 0);
+
+    public string ActivePlaylist => $"Active playlist: {Player.ActivePlaylist?.Name ?? "none"}";
 }

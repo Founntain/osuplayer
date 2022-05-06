@@ -4,56 +4,57 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using Avalonia.Threading;
 using ManagedBass;
 using ManagedBass.DirectX8;
 using ManagedBass.Fx;
 using OsuPlayer.Data.OsuPlayer.Classes;
-using OsuPlayer.Extensions.Equalizer;
+using OsuPlayer.Extensions.Bindables;
 using OsuPlayer.IO.Storage.Config;
+using OsuPlayer.IO.Storage.Equalizer;
 
 namespace OsuPlayer.Modules.Audio;
 
 /// <summary>
-///     Audioengine for the osu!player using <see cref="ManagedBass"/>
+/// Audio engine for the osu!player using <see cref="ManagedBass" />
 /// </summary>
-public sealed class BassEngine
+public sealed class BassEngine : INotifyPropertyChanged
 {
     private const int KRepeatThreshold = 200;
-    private static BassEngine engine = null!;
     private readonly SyncProcedure _endTrackSyncProc;
-    private readonly int[] _frq = {80, 125, 200, 300, 500, 1000, 2000, 4000, 8000, 16000};
+
+    private readonly int[] _frq =
+    {
+        80, 125, 200, 300, 500, 1000, 2000, 4000, 8000, 16000
+    };
+
     private readonly DispatcherTimer _positionTimer = new(DispatcherPriority.ApplicationIdle);
     private readonly SyncProcedure _repeatSyncProc;
-    private readonly DispatcherTimer _songTimer = new(DispatcherPriority.Layout);
     private int _activeStream;
-    private double _channelLengthD;
-    private double _currentChannelPosition;
     private bool _inChannelSet;
     private bool _inChannelTimerUpdate;
     private bool _inRepeatSet;
+    private bool _isEqEnabled;
     private bool _isPlaying;
-    private DXParamEQ _paramEq;
+    private DXParamEQ? _paramEq;
+    private double _playbackSpeed;
     private TimeSpan _repeatStart;
     private TimeSpan _repeatStop;
     private int _repeatSyncId;
     private int _streamFx;
+    public Bindable<double> ChannelLengthB = new();
+    public Bindable<double> ChannelPositionB = new();
+    public BindableArray<decimal> EqGains = new(10, 1);
     public int SampleFrequency = 44100;
+    public Bindable<double> VolumeB = new();
 
-    private BassEngine()
+    public BassEngine()
     {
         Initialize();
         _endTrackSyncProc = EndTrack;
         _repeatSyncProc = RepeatCallback;
     }
-
-    public double Difference { get; set; }
-
-    #region Singleton Instance
-
-    public static BassEngine Instance => engine ??= new BassEngine();
-
-    #endregion
 
     public int ActiveStreamHandle
     {
@@ -91,6 +92,21 @@ public sealed class BassEngine
         }
     }
 
+    public bool IsEqEnabled
+    {
+        get => _isEqEnabled;
+        set
+        {
+            var oldValue = _isEqEnabled;
+            _isEqEnabled = value;
+            if (oldValue != _isEqEnabled)
+            {
+                NotifyPropertyChanged("EqEnabled");
+                SetAllEq();
+            }
+        }
+    }
+
     private void PositionTimer_Tick(object sender, EventArgs e)
     {
         if (!IsPlaying) return;
@@ -106,80 +122,16 @@ public sealed class BassEngine
         }
     }
 
-    private void _songTimerOnTick(object? sender, EventArgs e)
+    /// <summary>
+    /// Sets the gain of one equalizer band
+    /// </summary>
+    /// <param name="index">the index of the band</param>
+    /// <param name="gain">the gain for the equalizer band in dB</param>
+    /// <param name="on">whether the eq is enabled</param>
+    private void SetEqBand(int index, decimal gain, bool on = true)
     {
-        if (!_isPlaying || FxStream == 0) return;
-        Core.Instance.MainWindow.ViewModel!.PlayerControl.SongTime =
-            Bass.ChannelBytes2Seconds(FxStream, Bass.ChannelGetPosition(FxStream));
+        _paramEq?.UpdateBand(index, (double) (on ? gain : 0));
     }
-
-    private int GetIndex(int frq)
-    {
-        switch (frq)
-        {
-            case 80:
-                return 0;
-            case 125:
-                return 1;
-            case 200:
-                return 2;
-            case 300:
-                return 3;
-            case 500:
-                return 4;
-            case 1000:
-                return 5;
-            case 2000:
-                return 6;
-            case 4000:
-                return 7;
-            case 8000:
-                return 8;
-            case 16000:
-                return 9;
-        }
-
-        return -1;
-    }
-
-    private void SetValue(int index, double gain)
-    {
-        _paramEq.UpdateBand(index, gain);
-        switch (index)
-        {
-            case 0:
-                EqPresetStorage.F80 = gain;
-                return;
-            case 1:
-                EqPresetStorage.F125 = gain;
-                return;
-            case 2:
-                EqPresetStorage.F200 = gain;
-                return;
-            case 3:
-                EqPresetStorage.F300 = gain;
-                return;
-            case 4:
-                EqPresetStorage.F500 = gain;
-                return;
-            case 5:
-                EqPresetStorage.F1000 = gain;
-                return;
-            case 6:
-                EqPresetStorage.F2000 = gain;
-                return;
-            case 7:
-                EqPresetStorage.F4000 = gain;
-                return;
-            case 8:
-                EqPresetStorage.F8000 = gain;
-                return;
-            case 9:
-                EqPresetStorage.F16000 = gain;
-                return;
-        }
-    }
-
 
     #region Player
 
@@ -219,25 +171,15 @@ public sealed class BassEngine
         }
     }
 
-    public double ChannelLength
+    private double ChannelLength
     {
-        get => _channelLengthD;
-        set
-        {
-            var oldValue = _channelLengthD;
-            _channelLengthD = value;
-            // ReSharper disable once CompareOfFloatsByEqualityOperator
-            if (oldValue != _channelLengthD)
-            {
-                NotifyPropertyChanged("ChannelLength");
-                Core.Instance.MainWindow.ViewModel!.PlayerControl.SongLength = value;
-            }
-        }
+        get => ChannelLengthB.Value;
+        set => ChannelLengthB.Value = value;
     }
 
-    public double ChannelPosition
+    private double ChannelPosition
     {
-        get => _currentChannelPosition;
+        get => ChannelPositionB.Value;
         set
         {
             if (_inChannelSet) return;
@@ -246,11 +188,10 @@ public sealed class BassEngine
             //Math.Max(0, Math.Min(value, ChannelLength));
             if (!_inChannelTimerUpdate)
                 Bass.ChannelSetPosition(FxStream, Bass.ChannelSeconds2Bytes(FxStream, value));
-            if (Math.Abs(_currentChannelPosition - value) > 0.1)
+            if (Math.Abs(ChannelPositionB.Value - value) > 0.05)
             {
+                ChannelPositionB.Value = value;
                 NotifyPropertyChanged("ChannelPosition");
-                Core.Instance.MainWindow.ViewModel!.PlayerControl.SongTime = value;
-                _currentChannelPosition = value;
             }
 
             _inChannelSet = false;
@@ -263,7 +204,8 @@ public sealed class BassEngine
 
     private void EndTrack(int handle, int channel, int data, IntPtr user)
     {
-        Dispatcher.UIThread.Post(Core.Instance.Player.NextSong);
+        NotifyPropertyChanged("SongEnd");
+        //Dispatcher.UIThread.Post(Locator.Current.GetService<Player>().NextSong);
     }
 
     private void RepeatCallback(int handle, int channel, int data, IntPtr user)
@@ -292,7 +234,7 @@ public sealed class BassEngine
         if (FxStream != 0)
         {
             Bass.ChannelStop(FxStream);
-            Bass.ChannelSetPosition(FxStream, (long) ChannelPosition);
+            Bass.ChannelSetPosition(FxStream, (long) ChannelPositionB.Value);
             IsPlaying = false;
         }
     }
@@ -321,29 +263,16 @@ public sealed class BassEngine
         }
     }
 
-    public float Volume
+    public double Volume
     {
-        get
-        {
-            float value = 0;
-            try
-            {
-                //if(FXStream != 0)
-                Bass.ChannelGetAttribute(FxStream, ChannelAttribute.Volume, out value);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.ToString());
-            }
-
-            return value;
-        }
+        get => VolumeB.Value;
         set
         {
+            VolumeB.Value = value;
             try
             {
-                //if(FXStream != 0)
-                Bass.ChannelSetAttribute(FxStream, ChannelAttribute.Volume, value);
+                if (FxStream != 0)
+                    Bass.ChannelSetAttribute(FxStream, ChannelAttribute.Volume, (float) value / 100);
             }
             catch (Exception ex)
             {
@@ -352,6 +281,23 @@ public sealed class BassEngine
         }
     }
 
+    /// <summary>
+    /// Sets the speed of the current <see cref="FxStream" />
+    /// </summary>
+    /// <param name="speed">a 0 based offset for the speed</param>
+    public void SetSpeed(double speed)
+    {
+        Bass.ChannelSetAttribute(FxStream, ChannelAttribute.TempoFrequency,
+            SampleFrequency * (1 + speed));
+        _playbackSpeed = speed;
+    }
+
+    /// <summary>
+    /// Opens an audio file and creates an <see cref="FxStream" /> containing the decoded audio stream
+    /// </summary>
+    /// <param name="path">the path to the audio file to be opened</param>
+    /// <returns>true if opening succeeded, false else</returns>
+    /// <exception cref="ArgumentException">if the sync handle could not be created</exception>
     public bool OpenFile(string path)
     {
         Stop();
@@ -375,14 +321,15 @@ public sealed class BassEngine
                 // Obtain the sample rate of the stream
                 var info = Bass.ChannelGetInfo(FxStream);
                 SampleFrequency = info.Frequency;
-                Difference = 44100 - SampleFrequency;
                 //SetEqBands();
-                var speed = SampleFrequency * (1 + Core.Instance.MainWindow.ViewModel!.PlayerControl.PlaybackSpeed);
+                var speed = SampleFrequency * (1 + _playbackSpeed);
                 Bass.ChannelSetAttribute(FxStream, ChannelAttribute.TempoFrequency, speed);
+                Bass.ChannelSetAttribute(FxStream, ChannelAttribute.Volume, (float) Volume / 100);
+                InitEq();
+                SetAllEq();
 
-                using var config = new Config();
-                SetDeviceInfo(config.Read().SelectedOutputDevice);
-
+                var config = new Config();
+                SetDeviceInfo(config.Container.SelectedOutputDevice);
 
                 // Set the stream to call Stop() when it ends.
                 var syncHandle = Bass.ChannelSetSync(FxStream,
@@ -404,47 +351,36 @@ public sealed class BassEngine
         return false;
     }
 
-    public void ToggleEq(bool on)
-    {
-        if (on && _paramEq == null)
-        {
-            SetEqBands();
-        }
-        else if (!on && _paramEq != null)
-        {
-            _paramEq.Dispose();
-            _paramEq = null;
-        }
-    }
-
     // /// <summary>
     // ///     Set the gain of one specific frequency band (from 80 to 16000 Hz)
     // /// </summary>
     // /// <param name="center">Frequency to set</param>
     // /// <param name="gain">Gain to set</param>
     // /// <returns></returns>
-    //public void SetEQ(int center, double gain, EqualizerWindow window)
-    //{
-    //    if (window.PresetBox.SelectedIndex == 0) EqPreset.Custom.Gain[GetIndex(center)] = gain;
-    //    if (!OsuPlayer.Config.ConfigStorage.IsEQEnabled || ParamEq == null) return;
-    //    SetValue(GetIndex(center), gain);
-    //    //return Bass.FXSetParameters(EQStream[GetIndex(center)], ParamEq);
-    //}
+    // public void SetEQ(int center, double gain, EqualizerWindow window)
+    // {
+    //     if (window.PresetBox.SelectedIndex == 0) EqPreset.Custom.Gain[GetIndex(center)] = gain;
+    //     if (!OsuPlayer.Config.ConfigStorage.IsEQEnabled || ParamEq == null) return;
+    //     SetValue(GetIndex(center), gain);
+    //     //return Bass.FXSetParameters(EQStream[GetIndex(center)], ParamEq);
+    // }
 
     /// <summary>
-    ///     Sets all bands according to the parameter
+    /// Sets all bands according to the parameter
     /// </summary>
-    /// <param name="gain">10 double values from -15 to +15</param>
     /// <returns></returns>
-    public void SetAllEq(double[] gain)
+    public void SetAllEq()
     {
-        using var config = new Config();
-        if (!config.Read().IsEqEnabled || _paramEq == null) return;
-        for (var i = 0; i < gain.Length; i++)
-            SetValue(i, gain[i]);
+        if (_paramEq == null) return;
+        for (var i = 0; i < EqGains.Length; i++)
+            SetEqBand(i, EqGains[i], _isEqEnabled);
         //Bass.BASS_FXSetParameters(EQStream[i], ParamEq);
     }
 
+    /// <summary>
+    /// Gets all audio device infos
+    /// </summary>
+    /// <returns>a list of <see cref="DeviceInfo" /> containing the devices</returns>
     public List<DeviceInfo> GetDeviceInfos()
     {
         var list = new List<DeviceInfo>();
@@ -453,6 +389,11 @@ public sealed class BassEngine
         return list;
     }
 
+    /// <summary>
+    /// Sets the output device for the player
+    /// <remarks>If the index is -1 sets the output device to the default device set in the os.</remarks>
+    /// </summary>
+    /// <param name="index"></param>
     public void SetDeviceInfo(int index)
     {
         if (index == -1)
@@ -479,6 +420,10 @@ public sealed class BassEngine
         Console.WriteLine($"SET: {index} | {result} | {Bass.LastError}");
     }
 
+    /// <summary>
+    /// Gets all audio devices
+    /// </summary>
+    /// <returns>an <see cref="IEnumerable{T}" /> of <see cref="AudioDevice" /> containing all found devices on the computer</returns>
     public IEnumerable<AudioDevice> GetAudioDevices()
     {
         foreach (var info in GetDeviceInfos()) yield return new AudioDevice(info);
@@ -492,19 +437,16 @@ public sealed class BassEngine
 
     private void Initialize()
     {
-        _positionTimer.Interval = TimeSpan.FromMilliseconds(500);
+        _positionTimer.Interval = TimeSpan.FromMilliseconds((double) 1000 / 60);
         _positionTimer.Tick += PositionTimer_Tick;
         _positionTimer.Start();
-        _songTimer.Interval = TimeSpan.FromMilliseconds(1000 / 60);
-        _songTimer.Tick += _songTimerOnTick;
-        _songTimer.Start();
+
+        ChannelPositionB.BindValueChanged(d => ChannelPosition = d.NewValue);
+        ChannelLengthB.BindValueChanged(d => ChannelLength = d.NewValue);
+        VolumeB.BindValueChanged(d => Volume = d.NewValue);
+        EqGains.BindCollectionChanged((sender, args) => SetAllEq());
+
         AvailableAudioDevices = new Collection<AudioDevice>();
-
-        var mainWindow = Core.Instance.MainWindow;
-
-        if (mainWindow == default) return;
-
-        //var interopHelper = new Interop(mainWindow);
 
         var deviceInfos = GetDeviceInfos();
 
@@ -529,14 +471,17 @@ public sealed class BassEngine
             counter++;
         }
 
-        Core.Instance.MainWindow.ViewModel!.OutputDeviceComboboxItems =
-            new ObservableCollection<AudioDevice>(GetAudioDevices());
+        //_mainWindow.ViewModel!.SettingsView.OutputDeviceComboboxItems = new ObservableCollection<AudioDevice>(GetAudioDevices());
 
         //SetDeviceInfo(OsuPlayer.Config.ConfigStorage.SelectedOutputDevice);
     }
 
-    private void SetEqBands()
+    /// <summary>
+    /// Sets all equalizer bands
+    /// </summary>
+    private void InitEq()
     {
+        _isEqEnabled = new Config().Container.IsEqEnabled;
         if (FxStream == 0) return;
         _paramEq = new DXParamEQ(FxStream);
         _paramEq.AddBand(80);
@@ -549,6 +494,13 @@ public sealed class BassEngine
         _paramEq.AddBand(4000);
         _paramEq.AddBand(8000);
         _paramEq.AddBand(16000);
+
+        using (var eqStorage = new EqStorage())
+        {
+            eqStorage.Container.LastUsedEqId ??= eqStorage.Container.EqPresets?.First().Id;
+
+            EqGains.Set(eqStorage.Container.EqPresets?.FirstOrDefault(x => x.Id == eqStorage.Container.LastUsedEqId)?.Gain);
+        }
     }
 
     private void SetRepeatRange(TimeSpan startTime, TimeSpan endTime)
@@ -560,7 +512,7 @@ public sealed class BassEngine
         {
             var channelLength = Bass.ChannelGetLength(FxStream);
             var repeatPos = endTime.TotalSeconds - 0.2;
-            var endPosition = (long) (repeatPos / ChannelLength * channelLength);
+            var endPosition = (long) (repeatPos / ChannelLengthB.Value * channelLength);
             _repeatSyncId = Bass.ChannelSetSync(FxStream,
                 SyncFlags.Position,
                 endPosition,
@@ -585,10 +537,7 @@ public sealed class BassEngine
     private bool PlayCurrentStream()
     {
         // Play Stream
-        if (FxStream != 0 && Bass.ChannelPlay(FxStream))
-        {
-            return true;
-        }
+        if (FxStream != 0 && Bass.ChannelPlay(FxStream)) return true;
 
         return false;
     }

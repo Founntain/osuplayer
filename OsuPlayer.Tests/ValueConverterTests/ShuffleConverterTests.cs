@@ -4,13 +4,13 @@ using Material.Icons;
 using NUnit.Framework;
 using OsuPlayer.Extensions.ValueConverters;
 
-namespace OsuPlayer.Tests.ValueConverterTests;
+namespace OsuPlayer.Tests;
 
 public class ShuffleConverterTests
 {
+    private readonly Type _expectedInput = typeof(bool);
+    private readonly Type _expectedOutput = typeof(MaterialIconKind);
     private ShuffleConverter _repeatConverter;
-    private Type _expectedInput = typeof(bool);
-    private Type _expectedOutput = typeof(MaterialIconKind);
 
     [SetUp]
     public void Setup()

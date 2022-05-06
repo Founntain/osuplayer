@@ -1,48 +1,73 @@
 using System;
+using System.ComponentModel;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
-using Avalonia.ReactiveUI;
+using Avalonia.VisualTree;
+using OsuPlayer.Data.OsuPlayer.Classes;
+using OsuPlayer.Extensions;
+using OsuPlayer.IO.Storage.Playlists;
+using OsuPlayer.Windows;
 using ReactiveUI;
 
 namespace OsuPlayer.Views;
 
-public partial class PlayerControlView : ReactiveUserControl<PlayerControlViewModel>
+public partial class PlayerControlView : ReactivePlayerControl<PlayerControlViewModel>
 {
+    private MainWindow _mainWindow;
+
     public PlayerControlView()
     {
         InitializeComponent();
     }
 
     private Slider ProgressSlider => this.FindControl<Slider>("SongProgressSlider");
+    private Button RepeatButton => this.FindControl<Button>("Repeat");
 
     private void InitializeComponent()
     {
         this.WhenActivated(disposables =>
         {
+            if (this.GetVisualRoot() is MainWindow mainWindow)
+                _mainWindow = mainWindow;
+
             ProgressSlider.AddHandler(PointerPressedEvent, SongProgressSlider_OnPointerPressed,
                 RoutingStrategies.Tunnel);
+
             ProgressSlider.AddHandler(PointerReleasedEvent, SongProgressSlider_OnPointerReleased,
                 RoutingStrategies.Tunnel);
+
+            RepeatButton.AddHandler(PointerReleasedEvent, Repeat_OnPointerReleased, RoutingStrategies.Tunnel);
+
+            PlaylistManager.SetLastKnownPlaylistAsCurrentPlaylist();
+
+            ViewModel.RaisePropertyChanged(nameof(ViewModel.IsAPlaylistSelected));
+            ViewModel.RaisePropertyChanged(nameof(ViewModel.IsCurrentSongInPlaylist));
+            ViewModel.RaisePropertyChanged(nameof(ViewModel.IsCurrentSongOnBlacklist));
         });
         AvaloniaXamlLoader.Load(this);
     }
 
+    private void Repeat_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
+    {
+        if (e.InitialPressMouseButton == MouseButton.Right)
+            ViewModel.RaisePropertyChanged(nameof(ViewModel.Playlists));
+    }
+
     private void SongProgressSlider_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        Core.Instance.Engine.ChannelPosition = Core.Instance.MainWindow.ViewModel!.PlayerControl.SongTime;
-        Core.Instance.Player.Play();
+        ViewModel.Player.Play();
     }
 
     private void SongProgressSlider_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        Core.Instance.Player.Pause();
+        ViewModel.Player.Pause();
     }
 
     private void Volume_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        Core.Instance.Player.Mute();
+        ViewModel.Player.ToggleMute();
     }
 
     private void PlaybackSpeedBtn_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
@@ -52,7 +77,7 @@ public partial class PlayerControlView : ReactiveUserControl<PlayerControlViewMo
 
     private void Settings_OnClick(object? sender, RoutedEventArgs e)
     {
-        Core.Instance.MainWindow.ViewModel!.MainView = Core.Instance.MainWindow.ViewModel.SettingsView;
+        _mainWindow.ViewModel!.MainView = _mainWindow.ViewModel.SettingsView;
     }
 
     private void Blacklist_OnClick(object? sender, RoutedEventArgs e)
@@ -60,9 +85,15 @@ public partial class PlayerControlView : ReactiveUserControl<PlayerControlViewMo
         // throw new NotImplementedException();
     }
 
-    private void Favorite_OnClick(object? sender, RoutedEventArgs e)
+    private async void Favorite_OnClick(object? sender, RoutedEventArgs e)
     {
-        // throw new NotImplementedException();
+        if (ViewModel.Player.CurrentSongBinding.Value != null)
+        {
+            await PlaylistManager.ToggleSongOfCurrentPlaylist(ViewModel.Player.CurrentSongBinding.Value);
+            ViewModel.Player.TriggerPlaylistChanged(new PropertyChangedEventArgs("Fav"));
+        }
+
+        ViewModel.RaisePropertyChanged(nameof(ViewModel.IsCurrentSongInPlaylist));
     }
 
     private void SongControl(object? sender, RoutedEventArgs e)
@@ -70,26 +101,26 @@ public partial class PlayerControlView : ReactiveUserControl<PlayerControlViewMo
         switch ((sender as Control)?.Name)
         {
             case "Repeat":
-                Core.Instance.Player.Repeat = !Core.Instance.Player.Repeat;
+                ViewModel.Player.Repeat = ViewModel.Player.Repeat.Next();
                 break;
             case "Previous":
-                Core.Instance.Player.PreviousSong();
+                ViewModel.Player.PreviousSong();
                 break;
             case "PlayPause":
-                Core.Instance.Player.PlayPause();
+                ViewModel.Player.PlayPause();
                 break;
             case "Next":
-                Core.Instance.Player.NextSong();
+                ViewModel.Player.NextSong();
                 break;
             case "Shuffle":
-                Core.Instance.Player.Shuffle = !Core.Instance.Player.Shuffle;
+                ViewModel.IsShuffle = !ViewModel.IsShuffle;
                 break;
         }
     }
 
     private void Volume_OnClick(object? sender, RoutedEventArgs e)
     {
-        Core.Instance.Player.Mute();
+        ViewModel.Player.ToggleMute();
     }
 
     private void PlaybackSpeed_OnClick(object? sender, RoutedEventArgs e)
@@ -97,45 +128,8 @@ public partial class PlayerControlView : ReactiveUserControl<PlayerControlViewMo
         ViewModel!.PlaybackSpeed = 0;
     }
 
-    private void VolumePopupHandler(object? sender, PointerEventArgs e)
+    private void RepeatContextMenu_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        if (e.RoutedEvent!.Name == "PointerEnter")
-        {
-            ViewModel!.IsVolumeVisible = true;
-        }
-        else
-        {
-            if (ViewModel!.VolumePopupPointerOver)
-                return;
-            ViewModel!.IsVolumeVisible = false;
-        }
-    }
-
-    private void SpeedPopupHandler(object? sender, PointerEventArgs e)
-    {
-        if (e.RoutedEvent!.Name == "PointerEnter")
-        {
-            ViewModel!.IsSpeedVisible = true;
-        }
-        else
-        {
-            if (ViewModel!.SpeedPopupPointerOver)
-                return;
-            ViewModel!.IsSpeedVisible = false;
-        }
-    }
-
-    private void VolumePopup_OnPointerLeave(object? sender, PointerEventArgs e)
-    {
-        if (ViewModel!.VolumePointerOver)
-            return;
-        ViewModel!.IsVolumeVisible = false;
-    }
-
-    private void PlaybackSpeedPopup_OnPointerLeave(object? sender, PointerEventArgs e)
-    {
-        if (ViewModel!.SpeedPointerOver)
-            return;
-        ViewModel!.IsSpeedVisible = false;
+        ViewModel.Player.ActivePlaylistId = ((Playlist) (sender as ContextMenu)?.SelectedItem)?.Id;
     }
 }

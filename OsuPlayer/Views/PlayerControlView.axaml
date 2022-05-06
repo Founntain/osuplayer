@@ -3,7 +3,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:cv="using:OsuPlayer.Extensions.ValueConverters"
-             xmlns:map="using:OsuPlayer.IO.DbReader"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:views="clr-namespace:OsuPlayer.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
@@ -18,8 +17,7 @@
         <cv:ShuffleConverter x:Key="ShuffleConverter" />
         <cv:RepeatConverter x:Key="RepeatConverter" />
         <cv:VolumeConverter x:Key="VolumeConverter" />
-        <Color x:Key="PopupBase">#FF2B2B2B</Color>
-        <Color x:Key="PopupBorder">#FF1D1D1D</Color>
+        <cv:IsCurrentSongInPlaylistConverter x:Key="IsCurrentSongInPlaylistConverter" />
     </UserControl.Resources>
 
     <Design.DataContext>
@@ -106,9 +104,13 @@
                     </Button>
                 </Panel>
 
-                <Button Name="Favorite" Width="38" Height="38" CornerRadius="50" Click="Favorite_OnClick"
+                <Button Name="Favorite" Width="38" Height="38" CornerRadius="50"
+                        IsEnabled="{Binding IsAPlaylistSelected}"
+                        Click="Favorite_OnClick"
                         Background="Transparent">
-                    <avalonia:MaterialIcon Kind="HeartOutline" Height="19" Width="19" />
+                    <avalonia:MaterialIcon
+                        Kind="{Binding IsCurrentSongInPlaylist, Converter={StaticResource IsCurrentSongInPlaylistConverter}}"
+                        Height="19" Width="19" />
                 </Button>
 
                 <Button Name="Blacklist" Width="38" Height="38" CornerRadius="50" Click="Blacklist_OnClick"
@@ -125,8 +127,18 @@
             <DockPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <Button Name="Repeat" Width="38" Height="38" CornerRadius="50" Click="SongControl"
                         Background="Transparent">
-                    <avalonia:MaterialIcon Kind="{Binding IsRepeating, Converter={StaticResource RepeatConverter}}"
-                                           Height="19" Width="19" />
+                    <Button.ContextMenu>
+                        <ContextMenu IsVisible="{Binding IsRepeating, Converter={StaticResource RepeatConverter}}" Items="{Binding Playlists}" PointerReleased="RepeatContextMenu_OnPointerReleased" />
+                    </Button.ContextMenu>
+                    <Panel>
+                        <avalonia:MaterialIcon Kind="{Binding IsRepeating, Converter={StaticResource RepeatConverter}}"
+                                               Height="19" Width="19" />
+                        <ToolTip IsVisible="{Binding IsRepeating, Converter={StaticResource RepeatConverter}}">
+                            <ToolTip.Tip>
+                                <TextBlock Text="{Binding ActivePlaylist}"/>
+                            </ToolTip.Tip>
+                        </ToolTip>
+                    </Panel>
                 </Button>
 
                 <Button Name="Previous" Width="38" Height="38" CornerRadius="50" Click="SongControl"

@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Globalization;
-using Material.Icons;
 using NUnit.Framework;
 using OsuPlayer.Extensions.ValueConverters;
 using OsuPlayer.Network.Online;
 
-namespace OsuPlayer.Tests.ValueConverterTests;
+namespace OsuPlayer.Tests;
 
 public class SettingsUserConverterTests
 {
+    private readonly Type _expectedInput = typeof(User);
+    private readonly Type _expectedOutput = typeof(string);
     private SettingsUserConverter _userConverter;
-    private Type _expectedInput = typeof(User);
-    private Type _expectedOutput = typeof(string);
 
     [SetUp]
     public void Setup()
@@ -59,6 +58,6 @@ public class SettingsUserConverterTests
     {
         var output = _userConverter.Convert(10, _expectedOutput, null, CultureInfo.InvariantCulture);
         Assert.IsInstanceOf(_expectedOutput, output);
-        Assert.AreEqual(output, "Wrong converter usage");
+        Assert.AreEqual(output, "Not logged in");
     }
 }

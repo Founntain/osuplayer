@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace OsuPlayer.Extensions;
 
-public class GeneralExtensions
+public static class GeneralExtensions
 {
     public static void OpenUrl(string url)
     {
@@ -38,4 +38,4 @@ public class GeneralExtensions
             }
         }
     }
-}
+} 

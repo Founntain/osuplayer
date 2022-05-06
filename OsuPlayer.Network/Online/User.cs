@@ -5,6 +5,9 @@ using OsuPlayer.Data.API.Models.User;
 
 namespace OsuPlayer.Network.Online;
 
+/// <summary>
+/// Represents a osu!player user
+/// </summary>
 public sealed class User : UserModel
 {
     public User()

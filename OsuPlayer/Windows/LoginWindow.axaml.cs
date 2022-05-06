@@ -18,8 +18,8 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
     {
         InitializeComponent();
 
-        using var config = new Config();
-        TransparencyLevelHint = config.Read().TransparencyLevelHint;
+        var config = new Config();
+        TransparencyLevelHint = config.Container.TransparencyLevelHint;
 #if DEBUG
         this.AttachDevTools();
 #endif

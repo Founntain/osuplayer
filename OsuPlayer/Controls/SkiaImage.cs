@@ -35,7 +35,7 @@ public class SkiaImage : Control
     {
     }
 
-    public SKBitmap Source
+    public SKBitmap? Source
     {
         get => GetValue(SourceProperty);
         set => SetValue(SourceProperty, value);
@@ -75,11 +75,6 @@ public class SkiaImage : Control
         set => SetValue(BitMapInterpolationModeProperty, value);
     }
 
-    public override void EndInit()
-    {
-        base.EndInit();
-    }
-
     protected override void OnPropertyChanged<T>(AvaloniaPropertyChangedEventArgs<T> change)
     {
         if (Source != null)
@@ -95,7 +90,7 @@ public class SkiaImage : Control
                     new Vector(96, 96));
 
                 var skContext = _renderTarget.CreateDrawingContext(null);
-                _skiaContext = (ISkiaDrawingContextImpl) skContext;
+                _skiaContext = (ISkiaDrawingContextImpl)skContext;
                 _skiaContext.SkCanvas.Clear(new SKColor(255, 255, 255, 0));
                 _skiaContext.SkCanvas.DrawBitmap(Source, 0, 0, _skPaint);
                 InvalidateVisual();

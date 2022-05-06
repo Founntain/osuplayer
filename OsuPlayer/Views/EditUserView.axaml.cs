@@ -8,18 +8,22 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using Avalonia.ReactiveUI;
+using Avalonia.VisualTree;
 using OsuPlayer.Data.API.Enums;
 using OsuPlayer.Data.API.Models.User;
 using OsuPlayer.Extensions;
 using OsuPlayer.Network.API.ApiEndpoints;
 using OsuPlayer.Network.Online;
 using OsuPlayer.UI_Extensions;
+using OsuPlayer.Windows;
 using ReactiveUI;
 
 namespace OsuPlayer.Views;
 
 public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 {
+    private MainWindow _mainWindow;
+
     public EditUserView()
     {
         InitializeComponent();
@@ -27,6 +31,11 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
     private void InitializeComponent()
     {
+        this.WhenActivated(disposables =>
+        {
+            if (this.GetVisualRoot() is MainWindow mainWindow)
+                _mainWindow = mainWindow;
+        });
         AvaloniaXamlLoader.Load(this);
     }
 
@@ -41,11 +50,16 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
         {
             new()
             {
-                Extensions = new List<string> {"png", "jpg", "jpeg"}
+                Extensions = new List<string>
+                {
+                    "png",
+                    "jpg",
+                    "jpeg"
+                }
             }
         };
 
-        var result = await dialog.ShowAsync(Core.Instance.MainWindow);
+        var result = await dialog.ShowAsync(_mainWindow);
 
         var file = result?.FirstOrDefault();
 
@@ -56,11 +70,11 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
         switch (ViewModel.CurrentUser.IsDonator)
         {
             case false when fileInfo.Length / 1024 / 1024 >= 2:
-                await MessageBox.ShowDialogAsync(Core.Instance.MainWindow,
+                await MessageBox.ShowDialogAsync(_mainWindow,
                     "The file you selected is bigger than 2 MB.\n\nIf you want to upload profile pictures up to 4 MB consider getting donator");
                 return;
             case true when fileInfo.Length / 1024 / 1024 >= 4:
-                await MessageBox.ShowDialogAsync(Core.Instance.MainWindow,
+                await MessageBox.ShowDialogAsync(_mainWindow,
                     "The file you selected is bigger than 4 MB! Sorry :'(");
                 return;
         }
@@ -86,11 +100,16 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
         {
             new()
             {
-                Extensions = new List<string> {"png", "jpg", "jpeg"}
+                Extensions = new List<string>
+                {
+                    "png",
+                    "jpg",
+                    "jpeg"
+                }
             }
         };
 
-        var result = await dialog.ShowAsync(Core.Instance.MainWindow);
+        var result = await dialog.ShowAsync(_mainWindow);
 
         var file = result?.FirstOrDefault();
 
@@ -123,7 +142,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
         if (tempUser == default)
         {
-            await MessageBox.ShowDialogAsync(Core.Instance.MainWindow,
+            await MessageBox.ShowDialogAsync(_mainWindow,
                 "Couldn't fetch profile from server! Please try again later");
 
             return;
@@ -131,7 +150,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
         if (string.IsNullOrWhiteSpace(ViewModel.Password))
         {
-            await MessageBox.ShowDialogAsync(Core.Instance.MainWindow,
+            await MessageBox.ShowDialogAsync(_mainWindow,
                 "Please enter your current password to save your changes!");
 
             return;
@@ -139,7 +158,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
         if (ViewModel.CurrentUser.OsuProfile.Length > 0 && !ViewModel.CurrentUser.OsuProfile.IsDigitsOnly())
         {
-            await MessageBox.ShowDialogAsync(Core.Instance.MainWindow,
+            await MessageBox.ShowDialogAsync(_mainWindow,
                 "Your osu!profile ID should only contain numbers");
 
             return;
@@ -162,31 +181,31 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
         switch (response)
         {
             case UserResponse.UserEdited:
-                await MessageBox.ShowDialogAsync(Core.Instance.MainWindow, "Profile edited successfully!");
+                await MessageBox.ShowDialogAsync(_mainWindow, "Profile edited successfully!");
 
                 break;
             case UserResponse.UserEditedAndPasswordChanged:
-                await MessageBox.ShowDialogAsync(Core.Instance.MainWindow,
+                await MessageBox.ShowDialogAsync(_mainWindow,
                     "Profile edited successfully and password changed.");
 
                 break;
             case UserResponse.UserEditedAndPasswordNotChanged:
-                await MessageBox.ShowDialogAsync(Core.Instance.MainWindow,
+                await MessageBox.ShowDialogAsync(_mainWindow,
                     "Profile edited successfully. However your password couldn't be changed!");
 
                 break;
             case UserResponse.UserAlreadyExists:
-                await MessageBox.ShowDialogAsync(Core.Instance.MainWindow,
+                await MessageBox.ShowDialogAsync(_mainWindow,
                     "Profile not updated because the user already exists. Did you try changing your name?");
 
                 return;
             case UserResponse.PasswordIncorrect:
-                await MessageBox.ShowDialogAsync(Core.Instance.MainWindow,
+                await MessageBox.ShowDialogAsync(_mainWindow,
                     "The password you entered is not correct, therefor your profile was not updated!");
                 return;
 
             default:
-                await MessageBox.ShowDialogAsync(Core.Instance.MainWindow,
+                await MessageBox.ShowDialogAsync(_mainWindow,
                     string.Format($"We had trouble updating your profile error message:\n\n{response:G}"));
 
                 return;
@@ -216,14 +235,14 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
             if (response == UserResponse.CantSaveProfilePicture)
             {
-                await MessageBox.ShowDialogAsync(Core.Instance.MainWindow, "Profile picture could not be saved!");
+                await MessageBox.ShowDialogAsync(_mainWindow, "Profile picture could not be saved!");
 
                 ViewModel.LoadProfilePicture();
 
                 return;
             }
 
-            await MessageBox.ShowDialogAsync(Core.Instance.MainWindow, "Profile picture changed succesfully!");
+            await MessageBox.ShowDialogAsync(_mainWindow, "Profile picture changed succesfully!");
 
             ViewModel.IsNewProfilePictureSelected = false;
         }
@@ -260,7 +279,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
     {
         if (ViewModel?.CurrentUser == default) return;
 
-        var user = await ApiAsync.GetUserByName(ViewModel.CurrentUser.Name);
+        var user = await ApiAsync.GetProfileByNameAsync(ViewModel.CurrentUser.Name);
 
         if (user == default) return;
 

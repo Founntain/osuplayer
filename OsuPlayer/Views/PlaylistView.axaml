@@ -2,12 +2,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:dbReader="clr-namespace:OsuPlayer.IO.DbReader;assembly=OsuPlayer.IO"
              xmlns:valueConverters="clr-namespace:OsuPlayer.ValueConverters"
              xmlns:classes="clr-namespace:OsuPlayer.Data.OsuPlayer.Classes;assembly=OsuPlayer.Data"
+             xmlns:views="clr-namespace:OsuPlayer.Views"
              xmlns:dataModels="clr-namespace:OsuPlayer.IO.DbReader.DataModels;assembly=OsuPlayer.IO"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.PlaylistView">
+
+    <Design.DataContext>
+        <views:PlaylistViewModel />
+    </Design.DataContext>
 
     <UserControl.Resources>
         <valueConverters:PlaylistValueConverter x:Key="PlaylistValueConverter" />
@@ -42,7 +46,7 @@
             <Button Grid.Row="2" Content="playlist editor" Margin="10 0"
                     VerticalContentAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center"
                     HorizontalAlignment="Stretch"
-                    Command="{Binding OpenPlaylistEditor}"
+                    Click="Button_OnClick"
                     FontWeight="SemiBold" />
         </Grid>
 
@@ -60,9 +64,10 @@
             </Panel>
 
             <ListBox Background="Transparent"
-                     Items="{Binding SelectedPlaylist.Songs, Converter={StaticResource PlaylistValueConverter}}">
+                     Items="{Binding SelectedPlaylist.Songs, Converter={StaticResource PlaylistValueConverter}}"
+                     DoubleTapped="PlaySong">
                 <ListBox.ItemTemplate>
-                    <DataTemplate DataType="dataModels:MinimalMapEntry">
+                    <DataTemplate DataType="dataModels:IMapEntryBase">
                         <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto">
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding TitleString}" FontSize="20"
                                        FontWeight="SemiBold" />

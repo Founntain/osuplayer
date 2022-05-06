@@ -3,7 +3,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-             xmlns:dbReader="clr-namespace:OsuPlayer.IO.DbReader;assembly=OsuPlayer.IO"
              xmlns:valueConverters="clr-namespace:OsuPlayer.ValueConverters"
              xmlns:extensions="clr-namespace:OsuPlayer.Extensions.ValueConverters;assembly=OsuPlayer.Extensions"
              xmlns:views="clr-namespace:OsuPlayer.Views"
@@ -54,7 +53,7 @@
                         <Border Background="{DynamicResource PopupBase}" CornerRadius="5"
                                 BorderBrush="{DynamicResource SystemAccentColor}" BorderThickness="1">
                             <Grid ColumnDefinitions="*, Auto">
-                                <TextBox Grid.Column="0" Text="{Binding NewPlaylistnameText}"
+                                <TextBox Grid.Column="0" Text="{Binding NewPlaylistNameText}"
                                          Watermark="enter playlistname"
                                          VerticalContentAlignment="Center" HorizontalAlignment="Stretch"
                                          BorderThickness="0" />
@@ -159,14 +158,18 @@
                 </Panel>
 
                 <Border Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#7F000000">
-                    <TextBlock Text="Your songs" FontSize="22" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    <Grid ColumnDefinitions="Auto, *">
+                        <TextBlock Grid.Column="0" Text="Your songs" FontSize="22" VerticalAlignment="Center"
+                                   HorizontalAlignment="Left" Margin="10 0" />
+                        <TextBox Grid.Column="1" Margin="10" Text="{Binding FilterText}" Watermark="type to search..." />
+                    </Grid>
                 </Border>
 
                 <ListBox Grid.Row="1" Background="Transparent" SelectionMode="Multiple, Toggle"
-                         Items="{Binding SongList}" SelectedItems="{Binding SelectedSongListItems}"
-                         SelectionChanged="SongList_OnSelectionChanged">
+                         Items="{Binding FilteredSongEntries}" SelectedItems="{Binding SelectedSongListItems}"
+                         SelectionChanged="SongList_OnSelectionChanged" DoubleTapped="PlaySong">
                     <ListBox.ItemTemplate>
-                        <DataTemplate DataType="dataModels:MinimalMapEntry">
+                        <DataTemplate DataType="dataModels:IMapEntryBase">
                             <Grid>
                                 <TextBlock Text="{Binding SongName}" FontWeight="SemiBold" />
                             </Grid>
@@ -195,9 +198,9 @@
 
                 <ListBox Grid.Row="1" Background="Transparent" SelectionMode="Multiple, Toggle"
                          Items="{Binding CurrentSelectedPlaylist.Songs, Converter={StaticResource PlaylistValueConverter}}"
-                         SelectionChanged="Playlist_OnSelectionChanged">
+                         SelectionChanged="Playlist_OnSelectionChanged" DoubleTapped="PlaySong">
                     <ListBox.ItemTemplate>
-                        <DataTemplate DataType="dataModels:MinimalMapEntry">
+                        <DataTemplate DataType="dataModels:IMapEntryBase">
                             <Grid>
                                 <TextBlock Text="{Binding SongName}" FontWeight="SemiBold" />
                             </Grid>
