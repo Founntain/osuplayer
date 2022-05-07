@@ -4,7 +4,11 @@ using Avalonia.Platform;
 
 namespace OsuPlayer.IO.DbReader.DataModels;
 
-public class RealmMapEntry : RealmMapEntryBase, IMapEntry
+/// <summary>
+/// a full beatmap entry with optionally used data
+/// <remarks>only created on a <see cref="IMapEntryBase.ReadFullEntry" /> call</remarks>
+/// </summary>
+internal class RealmMapEntry : RealmMapEntryBase, IMapEntry
 {
     public string BackgroundFileLocation { get; set; }
     public string ArtistUnicode { get; set; }

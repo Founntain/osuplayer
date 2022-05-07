@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using ErrorEventArgs = Newtonsoft.Json.Serialization.ErrorEventArgs;
 
 namespace OsuPlayer.IO.Storage.Config;
@@ -7,11 +8,6 @@ public class Config : IStorable<ConfigContainer>
 {
     private readonly JsonSerializerSettings _serializerSettings = new()
     {
-        Error = delegate(object? sender, ErrorEventArgs args)
-        {
-            if ((string) args.ErrorContext.Member == "LastPlayedSong")
-                args.ErrorContext.Handled = true;
-        },
         Formatting = Formatting.Indented
     };
 
@@ -32,9 +28,18 @@ public class Config : IStorable<ConfigContainer>
 
         var data = File.ReadAllText(Path);
 
-        return _configContainer ??= (string.IsNullOrWhiteSpace(data)
-            ? new ConfigContainer()
-            : JsonConvert.DeserializeObject<ConfigContainer>(data, _serializerSettings))!;
+        try
+        {
+            return _configContainer ??= (string.IsNullOrWhiteSpace(data)
+                ? new ConfigContainer()
+                : JsonConvert.DeserializeObject<ConfigContainer>(data, _serializerSettings))!;
+        }
+        catch (JsonReaderException e)
+        {
+            var rawJson = JObject.Parse(data);
+            rawJson.Remove(e.Path ?? string.Empty);
+            return _configContainer = JsonConvert.DeserializeObject<ConfigContainer>(rawJson.ToString(), _serializerSettings)!;
+        }
     }
 
     public async Task<ConfigContainer> ReadAsync()
@@ -44,9 +49,18 @@ public class Config : IStorable<ConfigContainer>
 
         var data = await File.ReadAllTextAsync(Path);
 
-        return _configContainer ??= (string.IsNullOrWhiteSpace(data)
-            ? new ConfigContainer()
-            : JsonConvert.DeserializeObject<ConfigContainer>(data, _serializerSettings))!;
+        try
+        {
+            return _configContainer ??= (string.IsNullOrWhiteSpace(data)
+                ? new ConfigContainer()
+                : JsonConvert.DeserializeObject<ConfigContainer>(data, _serializerSettings))!;
+        }
+        catch (JsonReaderException e)
+        {
+            var rawJson = JObject.Parse(data);
+            rawJson.Remove(e.Path ?? string.Empty);
+            return _configContainer = JsonConvert.DeserializeObject<ConfigContainer>(rawJson.ToString(), _serializerSettings)!;
+        }
     }
 
     public void Save(ConfigContainer container)

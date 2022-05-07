@@ -11,7 +11,7 @@ public class DbMapEntryBase : IMapEntryBase
     public long DbOffset { get; set; }
     public string Artist { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
-    public string BeatmapChecksum { get; set; } = string.Empty;
+    public string Hash { get; set; } = string.Empty;
     public int BeatmapSetId { get; set; }
     public int TotalTime { get; set; }
     public string TotalTimeString => TimeSpan.FromMilliseconds(TotalTime).FormatTime();
@@ -90,7 +90,7 @@ public class DbMapEntryBase : IMapEntryBase
         r.ReadString(true); //Difficulty
 
         mapEntry.AudioFileName = r.ReadString();
-        mapEntry.BeatmapChecksum = r.ReadString();
+        mapEntry.Hash = r.ReadString();
 
         r.ReadString(true); //BeatmapFileName
         r.ReadByte(); //RankedStatus

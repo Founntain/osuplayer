@@ -87,11 +87,11 @@ public class Player
         {
             CurrentSongBinding.Value = value;
 
-            CurrentIndex = SongSourceList!.FindIndex(x => x.BeatmapChecksum == value!.BeatmapChecksum);
+            CurrentIndex = SongSourceList!.FindIndex(x => x.Hash == value!.Hash);
 
             using var config = new Config();
 
-            config.Container.LastPlayedSong = new LastPlayedSongModel(value!.BeatmapSetId, value.Title, value.Artist);
+            config.Container.LastPlayedSong = value?.Hash;
 
             // _mainWindow.ViewModel!.PlayerControl.CurrentSongImage = Task.Run(value!.FindBackground).Result;
         }
@@ -189,13 +189,13 @@ public class Player
             foreach (var hash in collection.BeatmapHashes)
                 if (SongSourceList?[0] is RealmMapEntryBase)
                 {
-                    var setId = realmReader?.QueryBeatmap(x => x.MD5Hash == hash)?.BeatmapSet?.OnlineID ?? -1;
-                    await PlaylistManager.AddSongToPlaylistAsync(collection.Name, setId);
+                    var md5Hash = realmReader?.QueryBeatmap(x => x.MD5Hash == hash)?.BeatmapSet?.Beatmaps.First().MD5Hash ?? string.Empty;
+                    await PlaylistManager.AddSongToPlaylistAsync(collection.Name, md5Hash);
                 }
                 else if (SongSourceList?[0] is DbMapEntryBase)
                 {
                     var setId = beatmapHashes?.GetValueOrDefault(hash) ?? -1;
-                    await PlaylistManager.AddSongToPlaylistAsync(collection.Name, setId);
+                    await PlaylistManager.AddSongToPlaylistAsync(collection.Name, SongSourceList.FirstOrDefault(x => x.BeatmapSetId == setId)?.Hash ?? string.Empty);
                 }
 
             Dispatcher.UIThread.Post(() => MessageBox.Show(Locator.Current.GetService<MainWindow>(), "Import successful. Have fun!", "Import complete!"));
@@ -220,13 +220,13 @@ public class Player
             return;
         }
 
-        if (config.LastPlayedSong.SetId != -1)
+        if (!string.IsNullOrWhiteSpace(config.LastPlayedSong))
         {
-            await PlayAsync(GetMapEntryFromSetId(config.LastPlayedSong.SetId));
+            await PlayAsync(GetMapEntryFromHash(config.LastPlayedSong));
             return;
         }
 
-        await PlayAsync(SongSourceList?.FirstOrDefault(x => x.Title == config.LastPlayedSong.Title && x.Artist == config.LastPlayedSong.Artist));
+        await PlayAsync(SongSourceList?[0]);
     }
 
     /// <summary>
@@ -292,7 +292,7 @@ public class Player
 
         if (CurrentSongBinding.Value != null && Repeat != RepeatMode.SingleSong
                                              && (await new Config().ReadAsync()).IgnoreSongsWithSameNameCheckBox
-                                             && CurrentSongBinding.Value.BeatmapChecksum == song.BeatmapChecksum)
+                                             && CurrentSongBinding.Value.Hash == song.Hash)
             if ((await EnqueueSongFromDirectionAsync(playDirection)).IsFaulted)
                 await TryEnqueueSongAsync(SongSourceList![^1]);
 
@@ -313,7 +313,7 @@ public class Player
             {
                 for (var i = CurrentIndex - 1; i < SongSourceList?.Count; i--)
                 {
-                    if (SongSourceList[i].BeatmapChecksum == CurrentSongBinding.Value!.BeatmapChecksum) continue;
+                    if (SongSourceList[i].Hash == CurrentSongBinding.Value!.Hash) continue;
 
                     return await TryEnqueueSongAsync(SongSourceList[i]);
                 }
@@ -324,7 +324,7 @@ public class Player
             {
                 for (var i = CurrentIndex + 1; i < SongSourceList?.Count; i++)
                 {
-                    if (SongSourceList[i].BeatmapChecksum == CurrentSongBinding.Value!.BeatmapChecksum) continue;
+                    if (SongSourceList[i].Hash == CurrentSongBinding.Value!.Hash) continue;
 
                     return await TryEnqueueSongAsync(SongSourceList[i]);
                 }
@@ -416,7 +416,7 @@ public class Player
         var time = (double) _currentSongTimer.ElapsedMilliseconds / 1000;
 
         var response = await ApiAsync.UpdateXpFromCurrentUserAsync(
-            CurrentSongBinding.Value?.BeatmapChecksum ?? string.Empty,
+            CurrentSongBinding.Value?.Hash ?? string.Empty,
             time,
             _bassEngine.ChannelLengthB.Value);
 
@@ -552,12 +552,12 @@ public class Player
                 return;
             }
 
-            var currentPlaylistIndex = ActivePlaylist.Songs.IndexOf(CurrentSong!.BeatmapSetId);
+            var currentPlaylistIndex = ActivePlaylist.Songs.IndexOf(CurrentSong!.Hash);
 
             if (currentPlaylistIndex == ActivePlaylist.Songs.Count - 1)
-                await PlayAsync(GetMapEntryFromSetId(ActivePlaylist.Songs[0]));
+                await PlayAsync(GetMapEntryFromHash(ActivePlaylist.Songs[0]));
             else
-                await PlayAsync(GetMapEntryFromSetId(ActivePlaylist.Songs[currentPlaylistIndex + 1]));
+                await PlayAsync(GetMapEntryFromHash(ActivePlaylist.Songs[currentPlaylistIndex + 1]));
 
             return;
         }
@@ -612,12 +612,12 @@ public class Player
                 return;
             }
 
-            var currentPlaylistIndex = ActivePlaylist.Songs.IndexOf(CurrentSong!.BeatmapSetId);
+            var currentPlaylistIndex = ActivePlaylist.Songs.IndexOf(CurrentSong!.Hash);
 
             if (currentPlaylistIndex <= 0)
-                await PlayAsync(GetMapEntryFromSetId(ActivePlaylist.Songs[^1]));
+                await PlayAsync(GetMapEntryFromHash(ActivePlaylist.Songs[^1]));
             else
-                await PlayAsync(GetMapEntryFromSetId(ActivePlaylist.Songs[currentPlaylistIndex - 1]));
+                await PlayAsync(GetMapEntryFromHash(ActivePlaylist.Songs[currentPlaylistIndex - 1]));
 
             return;
         }
@@ -638,6 +638,16 @@ public class Player
     }
 
     /// <summary>
+    /// Gets the map entry from the beatmap hash
+    /// </summary>
+    /// <param name="hash">the beatmap hash to get the map from</param>
+    /// <returns>an <see cref="IMapEntryBase" /> of the found map or null if it doesn't exist</returns>
+    private IMapEntryBase? GetMapEntryFromHash(string hash)
+    {
+        return SongSourceList!.FirstOrDefault(x => x.Hash == hash);
+    }
+
+    /// <summary>
     /// Gets all Songs from a specific beatmapset ID
     /// </summary>
     /// <param name="setId">The beatmapset ID</param>
@@ -645,6 +655,16 @@ public class Player
     public List<IMapEntryBase> GetMapEntriesFromSetId(ICollection<int> setId)
     {
         return SongSourceList!.Where(x => setId.Contains(x.BeatmapSetId)).ToList();
+    }
+
+    /// <summary>
+    /// Gets all Songs from a specific beatmap hash
+    /// </summary>
+    /// <param name="hash">The beatmap hash</param>
+    /// <returns>A list of <see cref="IMapEntryBase" /></returns>
+    public List<IMapEntryBase> GetMapEntriesFromHash(ICollection<string> hash)
+    {
+        return SongSourceList!.Where(x => hash.Contains(x.Hash)).ToList();
     }
 
     /// <summary>
@@ -712,7 +732,7 @@ public class Player
         var shuffleIndex = (int) _shuffleHistory[_shuffleHistoryIndex];
 
         return Task.FromResult(Repeat == RepeatMode.Playlist
-            ? GetMapEntryFromSetId(ActivePlaylist!.Songs[shuffleIndex])
+            ? GetMapEntryFromHash(ActivePlaylist!.Songs[shuffleIndex])
             : SongSourceList![shuffleIndex]);
     }
 
@@ -726,7 +746,7 @@ public class Player
         if (_shuffleHistory[_shuffleHistoryIndex + 1] == null)
         {
             _shuffleHistory[_shuffleHistoryIndex] = Repeat == RepeatMode.Playlist
-                ? ActivePlaylist?.Songs.IndexOf(CurrentSong!.BeatmapSetId)
+                ? ActivePlaylist?.Songs.IndexOf(CurrentSong!.Hash)
                 : CurrentIndex;
             _shuffleHistory[++_shuffleHistoryIndex] = GenerateShuffledIndex();
         }
@@ -754,7 +774,7 @@ public class Player
         if (_shuffleHistory[_shuffleHistoryIndex - 1] == null)
         {
             _shuffleHistory[_shuffleHistoryIndex] = Repeat == RepeatMode.Playlist
-                ? ActivePlaylist?.Songs.IndexOf(CurrentSong!.BeatmapSetId)
+                ? ActivePlaylist?.Songs.IndexOf(CurrentSong!.Hash)
                 : CurrentIndex;
             _shuffleHistory[--_shuffleHistoryIndex] = GenerateShuffledIndex();
         }
@@ -785,7 +805,7 @@ public class Player
             : SongSourceList!.Count);
 
         while (shuffleIndex == (Repeat == RepeatMode.Playlist
-                   ? ActivePlaylist?.Songs.IndexOf(CurrentSong!.BeatmapSetId)
+                   ? ActivePlaylist?.Songs.IndexOf(CurrentSong!.Hash)
                    : CurrentIndex)) // || OsuPlayer.Blacklist.IsSongInBlacklist(Songs[shuffleIndex]))
             shuffleIndex = rdm.Next(0, Repeat == RepeatMode.Playlist
                 ? ActivePlaylist!.Songs.Count
