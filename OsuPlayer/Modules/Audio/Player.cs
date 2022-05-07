@@ -91,7 +91,7 @@ public class Player
 
             using var config = new Config();
 
-            config.Container.LastPlayedSong = new LastPlayedSongModel(value!.BeatmapSetId, value.Title, value.Artist);
+            config.Container.LastPlayedSong = value?.Hash;
 
             // _mainWindow.ViewModel!.PlayerControl.CurrentSongImage = Task.Run(value!.FindBackground).Result;
         }
@@ -220,13 +220,13 @@ public class Player
             return;
         }
 
-        if (config.LastPlayedSong.SetId != -1)
+        if (!string.IsNullOrWhiteSpace(config.LastPlayedSong))
         {
-            await PlayAsync(GetMapEntryFromSetId(config.LastPlayedSong.SetId));
+            await PlayAsync(GetMapEntryFromHash(config.LastPlayedSong));
             return;
         }
 
-        await PlayAsync(SongSourceList?.FirstOrDefault(x => x.Title == config.LastPlayedSong.Title && x.Artist == config.LastPlayedSong.Artist));
+        await PlayAsync(SongSourceList?[0]);
     }
 
     /// <summary>

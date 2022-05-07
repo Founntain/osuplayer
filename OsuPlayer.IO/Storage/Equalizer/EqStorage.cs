@@ -7,11 +7,6 @@ public class EqStorage : IStorable<EqContainer>
 {
     private readonly JsonSerializerSettings _serializerSettings = new()
     {
-        Error =  delegate(object? sender, ErrorEventArgs args)
-        {
-            if ((string) args.ErrorContext.Member == "LastPlayedSong")
-                args.ErrorContext.Handled = true;
-        },
         Formatting = Formatting.Indented
     };
 
