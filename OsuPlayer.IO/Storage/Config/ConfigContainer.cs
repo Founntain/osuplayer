@@ -1,5 +1,4 @@
 ﻿using Avalonia.Controls;
-using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
 
 namespace OsuPlayer.IO.Storage.Config;
@@ -16,4 +15,9 @@ public class ConfigContainer : IStorableContainer
     public SortingMode SortingMode { get; set; } = SortingMode.Title;
     public string? LastPlayedSong { get; set; }
     public bool IgnoreSongsWithSameNameCheckBox { get; set; }
+
+    public IStorableContainer Init()
+    {
+        return this;
+    }
 }

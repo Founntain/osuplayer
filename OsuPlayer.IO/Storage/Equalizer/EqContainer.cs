@@ -8,7 +8,7 @@ public class EqContainer : IStorableContainer
 
     public List<EqPreset>? EqPresets { get; set; }
 
-    public EqContainer Init()
+    public IStorableContainer Init()
     {
         EqPresets ??= new List<EqPreset>();
         EqPresets.Add(EqPreset.Flat);
