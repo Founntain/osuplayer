@@ -61,8 +61,6 @@ public class Player
     private PlayState _playState;
     private int _shuffleHistoryIndex;
 
-    public event PropertyChangedEventHandler? PlaylistChanged;
-
     // private int _shuffleHistoryIndex;
 
     public Player(BassEngine bassEngine)
@@ -122,11 +120,19 @@ public class Player
         set => IsRepeating.Value = value;
     }
 
+    public bool IsEqEnabled
+    {
+        get => _bassEngine.IsEqEnabled;
+        set => _bassEngine.IsEqEnabled = value;
+    }
+
     public Playlist? ActivePlaylist => ActivePlaylistId != default
         ? PlaylistManager.GetAllPlaylists().First(x => x.Id == ActivePlaylistId)
         : default;
 
     public Guid? ActivePlaylistId { get; set; }
+
+    public event PropertyChangedEventHandler? PlaylistChanged;
 
     /// <summary>
     /// Imports the songs from either the osu!.db or client.realm using the <see cref="SongImporter" />. <br />
@@ -280,11 +286,6 @@ public class Player
         _bassEngine.SetSpeed(speed);
     }
 
-    public void ToggleEq(bool on)
-    {
-        _bassEngine.IsEqEnabled = on;
-    }
-
     /// <summary>
     /// Updates the user xp on the api
     /// </summary>
@@ -333,6 +334,46 @@ public class Player
         ProfileManager.User = response;
 
         UserChanged.Invoke(this, new PropertyChangedEventArgs("SongsPlayed"));
+    }
+
+    /// <summary>
+    /// Gets the map entry from the beatmap set id
+    /// </summary>
+    /// <param name="setId">the beatmap set id to get the map from</param>
+    /// <returns>an <see cref="IMapEntryBase" /> of the found map or null if it doesn't exist</returns>
+    private IMapEntryBase? GetMapEntryFromSetId(int setId)
+    {
+        return SongSourceList!.FirstOrDefault(x => x.BeatmapSetId == setId);
+    }
+
+    /// <summary>
+    /// Gets the map entry from the beatmap hash
+    /// </summary>
+    /// <param name="hash">the beatmap hash to get the map from</param>
+    /// <returns>an <see cref="IMapEntryBase" /> of the found map or null if it doesn't exist</returns>
+    private IMapEntryBase? GetMapEntryFromHash(string hash)
+    {
+        return SongSourceList!.FirstOrDefault(x => x.Hash == hash);
+    }
+
+    /// <summary>
+    /// Gets all Songs from a specific beatmap set ID
+    /// </summary>
+    /// <param name="setId">The beatmap set ID</param>
+    /// <returns>A list of <see cref="IMapEntryBase" /></returns>
+    public List<IMapEntryBase> GetMapEntriesFromSetId(ICollection<int> setId)
+    {
+        return SongSourceList!.Where(x => setId.Contains(x.BeatmapSetId)).ToList();
+    }
+
+    /// <summary>
+    /// Gets all Songs from a specific beatmap hash
+    /// </summary>
+    /// <param name="hash">The beatmap hash</param>
+    /// <returns>A list of <see cref="IMapEntryBase" /></returns>
+    public List<IMapEntryBase> GetMapEntriesFromHash(ICollection<string> hash)
+    {
+        return hash.Select(x => SongSourceList!.Find(y => y.Hash == x)).ToList();
     }
 
     #region Player
@@ -471,16 +512,6 @@ public class Player
             await TryEnqueueSongAsync(await DoShuffle(ShuffleDirection.Backwards), PlayDirection.Backwards);
             return;
         }
-
-        // if (CurrentIndex - 1 == -1)
-        // {
-        //     // if (false) //OsuPlayer.Blacklist.IsSongInBlacklist(Songs[Songs.Count - 1]))
-        //     // {
-        //     //     CurrentIndex--;
-        //     //     PreviousSong();
-        //     //     return;
-        //     // }
-        // }
 
         if (Repeat == RepeatMode.Playlist)
         {
@@ -802,44 +833,4 @@ public class Player
     }
 
     #endregion
-
-    /// <summary>
-    /// Gets the map entry from the beatmap set id
-    /// </summary>
-    /// <param name="setId">the beatmap set id to get the map from</param>
-    /// <returns>an <see cref="IMapEntryBase" /> of the found map or null if it doesn't exist</returns>
-    private IMapEntryBase? GetMapEntryFromSetId(int setId)
-    {
-        return SongSourceList!.FirstOrDefault(x => x.BeatmapSetId == setId);
-    }
-
-    /// <summary>
-    /// Gets the map entry from the beatmap hash
-    /// </summary>
-    /// <param name="hash">the beatmap hash to get the map from</param>
-    /// <returns>an <see cref="IMapEntryBase" /> of the found map or null if it doesn't exist</returns>
-    private IMapEntryBase? GetMapEntryFromHash(string hash)
-    {
-        return SongSourceList!.FirstOrDefault(x => x.Hash == hash);
-    }
-
-    /// <summary>
-    /// Gets all Songs from a specific beatmap set ID
-    /// </summary>
-    /// <param name="setId">The beatmap set ID</param>
-    /// <returns>A list of <see cref="IMapEntryBase" /></returns>
-    public List<IMapEntryBase> GetMapEntriesFromSetId(ICollection<int> setId)
-    {
-        return SongSourceList!.Where(x => setId.Contains(x.BeatmapSetId)).ToList();
-    }
-
-    /// <summary>
-    /// Gets all Songs from a specific beatmap hash
-    /// </summary>
-    /// <param name="hash">The beatmap hash</param>
-    /// <returns>A list of <see cref="IMapEntryBase" /></returns>
-    public List<IMapEntryBase> GetMapEntriesFromHash(ICollection<string> hash)
-    {
-        return SongSourceList!.Where(x => hash.Contains(x.Hash)).ToList();
-    }
 }
