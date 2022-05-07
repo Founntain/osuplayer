@@ -18,6 +18,7 @@
         <cv:RepeatConverter x:Key="RepeatConverter" />
         <cv:VolumeConverter x:Key="VolumeConverter" />
         <cv:IsCurrentSongInPlaylistConverter x:Key="IsCurrentSongInPlaylistConverter" />
+        <cv:IsCurrentSongOnBlacklistConverter x:Key="IsCurrentSongOnBlacklistConverter" />
     </UserControl.Resources>
 
     <Design.DataContext>
@@ -115,7 +116,7 @@
 
                 <Button Name="Blacklist" Width="38" Height="38" CornerRadius="50" Click="Blacklist_OnClick"
                         Background="Transparent">
-                    <avalonia:MaterialIcon Kind="HeartBrokenOutline" Height="19" Width="19" />
+                    <avalonia:MaterialIcon Kind="{Binding IsCurrentSongOnBlacklist, Converter={StaticResource IsCurrentSongOnBlacklistConverter}}" Height="19" Width="19" />
                 </Button>
 
                 <Button Name="Settings" Width="42" Height="42" CornerRadius="50" Click="Settings_OnClick"

@@ -8,6 +8,7 @@ using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Extensions;
 using OsuPlayer.Extensions.Bindables;
 using OsuPlayer.IO.DbReader.DataModels;
+using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules.Audio;
 using OsuPlayer.ViewModels;
@@ -17,7 +18,7 @@ namespace OsuPlayer.Views;
 
 public class PlayerControlViewModel : BaseViewModel
 {
-    private readonly Bindable<IMapEntry?> _currentSong = new();
+    public readonly Bindable<IMapEntry?> CurrentSong = new();
 
     private readonly Bindable<bool> _isPlaying = new();
     private readonly Bindable<RepeatMode> _isRepeating = new();
@@ -31,7 +32,6 @@ public class PlayerControlViewModel : BaseViewModel
     private string _currentSongLength = "00:00";
 
     private string _currentSongTime = "00:00";
-    private bool _isCurrentSongOnBlacklist;
 
     private double _playbackSpeed;
 
@@ -45,8 +45,8 @@ public class PlayerControlViewModel : BaseViewModel
         _songLength.BindTo(bassEngine.ChannelLengthB);
         _songLength.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongLength)));
 
-        _currentSong.BindTo(Player.CurrentSongBinding);
-        _currentSong.BindValueChanged(d =>
+        CurrentSong.BindTo(Player.CurrentSongBinding);
+        CurrentSong.BindValueChanged(d =>
         {
             this.RaisePropertyChanged(nameof(TitleText));
             this.RaisePropertyChanged(nameof(ArtistText));
@@ -79,17 +79,13 @@ public class PlayerControlViewModel : BaseViewModel
         this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
     }
 
-    public bool IsCurrentSongInPlaylist => _currentSong.Value != null
+    public bool IsCurrentSongInPlaylist => CurrentSong.Value != null
                                            && PlaylistManager.CurrentPlaylist != null
-                                           && PlaylistManager.CurrentPlaylist.Songs.Contains(_currentSong.Value.Hash);
+                                           && PlaylistManager.CurrentPlaylist.Songs.Contains(CurrentSong.Value.Hash);
 
     public bool IsAPlaylistSelected => PlaylistManager.CurrentPlaylist != default;
 
-    public bool IsCurrentSongOnBlacklist
-    {
-        get => _isCurrentSongOnBlacklist;
-        set => this.RaiseAndSetIfChanged(ref _isCurrentSongOnBlacklist, value);
-    }
+    public bool IsCurrentSongOnBlacklist => new Blacklist().Container.Songs?.Contains(CurrentSong.Value?.Hash) ?? false;
 
     public double Volume
     {
@@ -155,7 +151,7 @@ public class PlayerControlViewModel : BaseViewModel
 
     public bool IsPlaying => _isPlaying.Value;
 
-    public string TitleText => _currentSong.Value?.Title ?? "No song is playing";
+    public string TitleText => CurrentSong.Value?.Title ?? "No song is playing";
 
     public RepeatMode IsRepeating
     {
@@ -167,7 +163,7 @@ public class PlayerControlViewModel : BaseViewModel
         }
     }
 
-    public string ArtistText => _currentSong.Value?.Artist ?? "please select from song list";
+    public string ArtistText => CurrentSong.Value?.Artist ?? "please select from song list";
 
     public string SongText => $"{ArtistText} - {TitleText}";
 

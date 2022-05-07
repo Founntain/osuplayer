@@ -54,6 +54,6 @@ public partial class UserView : ReactivePlayerControl<UserViewModel>
             x.BeatmapSetId == beatmapModel.Beatmap.BeatmapSetId ||
             (x.Artist == beatmapModel.Beatmap.Artist && x.Title == beatmapModel.Beatmap.Title));
         if (mapEntry != default)
-            await ViewModel.Player.PlayAsync(mapEntry);
+            await ViewModel.Player.TryEnqueueSongAsync(mapEntry);
     }
 }

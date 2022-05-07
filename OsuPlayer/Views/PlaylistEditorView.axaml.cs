@@ -186,6 +186,6 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
         var controlSource = (Control) tapped.Pointer.Captured;
 
         if (controlSource?.DataContext is IMapEntryBase song)
-            await ViewModel.Player.PlayAsync(song);
+            await ViewModel.Player.TryEnqueueSongAsync(song);
     }
 }
