@@ -15,6 +15,7 @@ public class ConfigContainer : IStorableContainer
     public SortingMode SortingMode { get; set; } = SortingMode.Title;
     public string? LastPlayedSong { get; set; }
     public bool IgnoreSongsWithSameNameCheckBox { get; set; }
+    public bool BlacklistSkip { get; set; }
 
     public IStorableContainer Init()
     {

@@ -61,7 +61,7 @@ public class PlayerControlViewModel : BaseViewModel
         _isPlaying.BindTo(Player.IsPlaying);
         _isPlaying.BindValueChanged(d => this.RaisePropertyChanged(nameof(IsPlaying)));
 
-        _isRepeating.BindTo(Player.IsRepeating);
+        _isRepeating.BindTo(Player.RepeatMode);
         _isRepeating.BindValueChanged(d => { this.RaisePropertyChanged(nameof(IsRepeating)); });
 
         _isShuffle.BindTo(Player.IsShuffle);

@@ -33,6 +33,7 @@
         <PackageReference Include="Avalonia.Diagnostics" Version="0.10.13" />
         <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.13" />
         <PackageReference Include="Avalonia.Skia" Version="0.10.13" />
+        <PackageReference Include="DynamicData" Version="7.1.1" />
         <PackageReference Include="Founntain.OsuPlayer.NativeLibs" Version="1.0.4" />
         <PackageReference Include="LiveChartsCore.SkiaSharpView.Avalonia" Version="2.0.0-beta.101" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
@@ -102,6 +103,9 @@
         </Compile>
         <Compile Update="Views\UpdateViewModel.cs">
             <DependentUpon>UpdateView.axaml</DependentUpon>
+        </Compile>
+        <Compile Update="Views\BlacklistEditorViewModel.cs">
+            <DependentUpon>BlacklistEditorView.axaml</DependentUpon>
         </Compile>
     </ItemGroup>
 </Project>

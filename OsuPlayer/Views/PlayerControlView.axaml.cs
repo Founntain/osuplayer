@@ -78,15 +78,20 @@ public partial class PlayerControlView : ReactivePlayerControl<PlayerControlView
 
             var currentHash = ViewModel.CurrentSong.Value?.Hash;
 
-            if (blacklist.Container.Songs?.Contains(currentHash) ?? false)
-                blacklist.Container.Songs?.Remove(currentHash);
+            if (blacklist.Container.Songs.Contains(currentHash))
+            {
+                blacklist.Container.Songs.Remove(currentHash);
+            }
             else
             {
-                blacklist.Container.Songs?.Add(currentHash);
-                ViewModel.Player.NextSong();
+                blacklist.Container.Songs.Add(currentHash);
+
+                if (ViewModel.Player.BlacklistSkip.Value)
+                    ViewModel.Player.NextSong();
             }
         }
 
+        ViewModel.Player.TriggerBlacklistChanged(new PropertyChangedEventArgs("Black"));
         ViewModel.RaisePropertyChanged(nameof(ViewModel.IsCurrentSongOnBlacklist));
     }
 

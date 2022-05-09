@@ -5,9 +5,9 @@ using System.Linq;
 using System.Reactive.Disposables;
 using System.Text.RegularExpressions;
 using Avalonia.Controls;
-using Avalonia.Controls.Shapes;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
+using OsuPlayer.Extensions.Bindables;
 using OsuPlayer.IO.Storage.Config;
 using OsuPlayer.Modules.Audio;
 using OsuPlayer.Network;
@@ -26,6 +26,9 @@ public class SettingsViewModel : BaseViewModel
     private WindowTransparencyLevel _selectedTransparencyLevel;
     private string _settingsSearchQ;
 
+    private readonly Bindable<SortingMode> _sortingMode = new();
+    private readonly Bindable<bool> _blacklistSkip = new();
+
     public MainWindow? MainWindow;
     private string _patchnotes;
 
@@ -43,6 +46,12 @@ public class SettingsViewModel : BaseViewModel
         _selectedTransparencyLevel = config.Container.TransparencyLevelHint;
 
         Player = player;
+
+        _sortingMode.BindTo(Player.SortingModeBindable);
+        _sortingMode.BindValueChanged(d => this.RaisePropertyChanged(nameof(SelectedSortingMode)));
+
+        _blacklistSkip.BindTo(Player.BlacklistSkip);
+        _blacklistSkip.BindValueChanged(d => this.RaisePropertyChanged(nameof(BlacklistSkip)));
 
         Activator = new ViewModelActivator();
         this.WhenActivated(Block);
@@ -103,14 +112,27 @@ public class SettingsViewModel : BaseViewModel
 
     public SortingMode SelectedSortingMode
     {
-        get => Player.SortingModeBindable.Value;
+        get => _sortingMode.Value;
         set
         {
-            Player.SortingModeBindable.Value = value;
+            _sortingMode.Value = value;
             this.RaisePropertyChanged();
 
             using var config = new Config();
             config.Container.SortingMode = value;
+        }
+    }
+
+    public bool BlacklistSkip
+    {
+        get => _blacklistSkip.Value;
+        set
+        {
+            _blacklistSkip.Value = value;
+            this.RaisePropertyChanged();
+
+            using var cfg = new Config();
+            cfg.Container.BlacklistSkip = value;
         }
     }
 

@@ -5,7 +5,6 @@ using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
 using OsuPlayer.Extensions;
 using OsuPlayer.IO.DbReader.DataModels;
-using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Windows;
 using ReactiveUI;
 
@@ -30,13 +29,16 @@ public partial class PlaylistView : ReactivePlayerControl<PlaylistViewModel>
         AvaloniaXamlLoader.Load(this);
     }
 
-    private async void Button_OnClick(object? sender, RoutedEventArgs e)
+    private void OpenPlaylistEditor_OnClick(object? sender, RoutedEventArgs e)
     {
-        var playlists = await PlaylistManager.GetAllPlaylistsAsync();
+        _mainWindow.ViewModel!.PlaylistEditorView.Playlists = ViewModel.Playlists.ToSourceList();
 
-        _mainWindow.ViewModel!.PlaylistEditorViewModel.Playlists = playlists.ToSourceList();
+        _mainWindow.ViewModel!.MainView = _mainWindow.ViewModel.PlaylistEditorView;
+    }
 
-        _mainWindow.ViewModel!.MainView = _mainWindow.ViewModel.PlaylistEditorViewModel;
+    private void OpenBlacklistEditor_OnClick(object? sender, RoutedEventArgs e)
+    {
+        _mainWindow.ViewModel.MainView = _mainWindow.ViewModel.BlacklistEditorView;
     }
 
     private async void PlaySong(object? sender, RoutedEventArgs e)

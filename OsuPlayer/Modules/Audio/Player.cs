@@ -44,9 +44,11 @@ public class Player
 
     public readonly Bindable<bool> IsPlaying = new();
 
-    public readonly Bindable<RepeatMode> IsRepeating = new();
+    public readonly Bindable<RepeatMode> RepeatMode = new();
 
     public readonly Bindable<bool> IsShuffle = new();
+
+    public readonly Bindable<bool> BlacklistSkip = new();
 
     public readonly Bindable<Playlist?> SelectedPlaylist = new();
 
@@ -73,8 +75,12 @@ public class Player
                 Dispatcher.UIThread.Post(NextSong);
         };
 
-        SortingModeBindable.Value = new Config().Container.SortingMode;
-        SortingModeBindable.BindValueChanged(d => UpdateSorting(d.NewValue), true);
+        var config = new Config();
+
+        SortingModeBindable.Value = config.Container.SortingMode;
+        BlacklistSkip.Value = config.Container.BlacklistSkip;
+
+        SortingModeBindable.BindValueChanged(d => UpdateSorting(d.NewValue));
 
         SongSource.Value = new SourceList<IMapEntryBase>();
 
@@ -116,8 +122,8 @@ public class Player
 
     public RepeatMode Repeat
     {
-        get => IsRepeating.Value;
-        set => IsRepeating.Value = value;
+        get => RepeatMode.Value;
+        set => RepeatMode.Value = value;
     }
 
     public bool IsEqEnabled
@@ -133,6 +139,7 @@ public class Player
     public Guid? ActivePlaylistId { get; set; }
 
     public event PropertyChangedEventHandler? PlaylistChanged;
+    public event PropertyChangedEventHandler? BlacklistChanged;
 
     /// <summary>
     /// Imports the songs from either the osu!.db or client.realm using the <see cref="SongImporter" />. <br />
@@ -254,6 +261,15 @@ public class Player
     public void TriggerPlaylistChanged(PropertyChangedEventArgs e)
     {
         PlaylistChanged?.Invoke(this, e);
+    }
+
+    /// <summary>
+    /// Triggers if the blacklist got changed
+    /// </summary>
+    /// <param name="e"></param>
+    public void TriggerBlacklistChanged(PropertyChangedEventArgs e)
+    {
+        BlacklistChanged?.Invoke(this, e);
     }
 
     /// <summary>
@@ -434,66 +450,6 @@ public class Player
     }
 
     /// <summary>
-    /// Plays the next song in the list. Or the first if we are at the end
-    /// </summary>
-    public async void NextSong()
-    {
-        if (SongSourceList == null || !SongSourceList.Any())
-            return;
-
-        if (Repeat == RepeatMode.SingleSong)
-        {
-            await TryEnqueueSongAsync(SongSourceList[CurrentIndex]);
-            return;
-        }
-
-        if (IsShuffle.Value)
-        {
-            await TryEnqueueSongAsync(await DoShuffle(ShuffleDirection.Forward));
-
-            return;
-        }
-
-        if (Repeat == RepeatMode.Playlist)
-        {
-            if (ActivePlaylist == default || ActivePlaylist.Songs.Count == 0)
-            {
-                // OsuPlayerMessageBox.Show(
-                //    OsuPlayer.LanguageService.LoadControlLanguageWithKey("message.noPlaylistSelected"));
-                Repeat = RepeatMode.NoRepeat;
-
-                await TryEnqueueSongAsync(CurrentIndex == SongSourceList.Count - 1 ? SongSourceList[0] : SongSourceList[CurrentIndex + 1]);
-
-                return;
-            }
-
-            var currentPlaylistIndex = ActivePlaylist.Songs.IndexOf(CurrentSong!.Hash);
-
-            if (currentPlaylistIndex == ActivePlaylist.Songs.Count - 1)
-                await TryEnqueueSongAsync(GetMapEntryFromHash(ActivePlaylist.Songs[0]));
-            else
-                await TryEnqueueSongAsync(GetMapEntryFromHash(ActivePlaylist.Songs[currentPlaylistIndex + 1]));
-
-            return;
-        }
-
-        var blacklist = new Blacklist();
-        for (var i = CurrentIndex + 1; i != CurrentIndex - 1; i++)
-        {
-            var x = i % SongSourceList!.Count;
-            i = x < 0 ? i + SongSourceList!.Count : x;
-
-            if (blacklist.Container.Songs?.Contains(SongSourceList[i].Hash) ?? false) continue;
-
-            await TryEnqueueSongAsync(SongSourceList[i]);
-            return;
-        }
-
-        MessageBox.Show("There is no song to play!");
-        _bassEngine.Stop();
-    }
-
-    /// <summary>
     /// Plays the previous song or the last song if we are the beginning
     /// </summary>
     public async void PreviousSong()
@@ -513,13 +469,13 @@ public class Player
             return;
         }
 
-        if (Repeat == RepeatMode.Playlist)
+        if (Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist)
         {
             if (ActivePlaylist == default || ActivePlaylist.Songs.Count == 0)
             {
                 // OsuPlayerMessageBox.Show(
                 //    OsuPlayer.LanguageService.LoadControlLanguageWithKey("message.noPlaylistSelected"));
-                Repeat = RepeatMode.NoRepeat;
+                Repeat = Data.OsuPlayer.Enums.RepeatMode.NoRepeat;
 
                 await TryEnqueueSongAsync(CurrentIndex <= 0 ? SongSourceList[^1] : SongSourceList[CurrentIndex - 1], PlayDirection.Backwards);
 
@@ -536,20 +492,94 @@ public class Player
             return;
         }
 
-        var blacklist = new Blacklist();
-        for (var i = CurrentIndex - 1; i != CurrentIndex + 1; i--)
+        if (BlacklistSkip.Value)
         {
-            var x = i % SongSourceList!.Count;
-            i = x < 0 ? i + SongSourceList!.Count : x;
+            var blacklist = new Blacklist();
+            for (var i = CurrentIndex - 1; i != CurrentIndex + 1; i--)
+            {
+                var x = i % SongSourceList!.Count;
+                i = x < 0 ? x + SongSourceList!.Count : x;
 
-            if (blacklist.Container.Songs?.Contains(SongSourceList[i].Hash) ?? false) continue;
+                if (blacklist.Container.Songs?.Contains(SongSourceList[i].Hash) ?? false) continue;
 
-            await TryEnqueueSongAsync(SongSourceList[i]);
+                await TryEnqueueSongAsync(SongSourceList[i]);
+                return;
+            }
+
+            MessageBox.Show("There is no song to play!");
+            _bassEngine.Stop();
             return;
         }
 
-        MessageBox.Show("There is no song to play!");
-        _bassEngine.Stop();
+        var prevIndex = (CurrentIndex - 1) % SongSourceList!.Count;
+        await TryEnqueueAsync(SongSourceList[prevIndex < 0 ? prevIndex + SongSourceList!.Count : prevIndex]);
+    }
+
+    /// <summary>
+    /// Plays the next song in the list. Or the first if we are at the end
+    /// </summary>
+    public async void NextSong()
+    {
+        if (SongSourceList == null || !SongSourceList.Any())
+            return;
+
+        if (Repeat == Data.OsuPlayer.Enums.RepeatMode.SingleSong)
+        {
+            await TryEnqueueSongAsync(SongSourceList[CurrentIndex]);
+            return;
+        }
+
+        if (IsShuffle.Value)
+        {
+            await TryEnqueueSongAsync(await DoShuffle(ShuffleDirection.Forward));
+
+            return;
+        }
+
+        if (Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist)
+        {
+            if (ActivePlaylist == default || ActivePlaylist.Songs.Count == 0)
+            {
+                // OsuPlayerMessageBox.Show(
+                //    OsuPlayer.LanguageService.LoadControlLanguageWithKey("message.noPlaylistSelected"));
+                Repeat = Data.OsuPlayer.Enums.RepeatMode.NoRepeat;
+
+                await TryEnqueueSongAsync(CurrentIndex == SongSourceList.Count - 1 ? SongSourceList[0] : SongSourceList[CurrentIndex + 1]);
+
+                return;
+            }
+
+            var currentPlaylistIndex = ActivePlaylist.Songs.IndexOf(CurrentSong!.Hash);
+
+            if (currentPlaylistIndex == ActivePlaylist.Songs.Count - 1)
+                await TryEnqueueSongAsync(GetMapEntryFromHash(ActivePlaylist.Songs[0]));
+            else
+                await TryEnqueueSongAsync(GetMapEntryFromHash(ActivePlaylist.Songs[currentPlaylistIndex + 1]));
+
+            return;
+        }
+
+        if (BlacklistSkip.Value)
+        {
+            var blacklist = new Blacklist();
+            for (var i = CurrentIndex + 1; i != CurrentIndex - 1; i++)
+            {
+                var x = i % SongSourceList!.Count;
+                i = x < 0 ? x + SongSourceList!.Count : x;
+
+                if (blacklist.Container.Songs?.Contains(SongSourceList[i].Hash) ?? false) continue;
+
+                await TryEnqueueSongAsync(SongSourceList[i]);
+                return;
+            }
+
+            MessageBox.Show("There is no song to play!");
+            _bassEngine.Stop();
+            return;
+        }
+
+        var nextIndex = (CurrentIndex + 1) % SongSourceList!.Count;
+        await TryEnqueueAsync(SongSourceList[nextIndex < 0 ? nextIndex + SongSourceList!.Count : nextIndex]);
     }
 
     /// <summary>
@@ -582,7 +612,7 @@ public class Player
             return await TryPlaySongAsync(SongSourceList[^1]);
 
         if (CurrentSongBinding.Value != null
-            && Repeat != RepeatMode.SingleSong
+            && Repeat != Data.OsuPlayer.Enums.RepeatMode.SingleSong
             && (await new Config().ReadAsync()).IgnoreSongsWithSameNameCheckBox
             && CurrentSongBinding.Value.Hash == song.Hash)
             return await EnqueueSongFromDirectionAsync(playDirection);
@@ -703,7 +733,7 @@ public class Player
     /// <returns>a random/shuffled <see cref="IMapEntryBase" /></returns>
     private Task<IMapEntryBase> DoShuffle(ShuffleDirection direction)
     {
-        if ((Repeat == RepeatMode.Playlist && ActivePlaylist == default) || CurrentSong == default || SongSourceList == default)
+        if ((Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist && ActivePlaylist == default) || CurrentSong == default || SongSourceList == default)
             return Task.FromException<IMapEntryBase>(new NullReferenceException());
 
         switch (direction)
@@ -749,7 +779,7 @@ public class Player
         // ReSharper disable once PossibleInvalidOperationException
         var shuffleIndex = (int) _shuffleHistory[_shuffleHistoryIndex];
 
-        return Task.FromResult(Repeat == RepeatMode.Playlist
+        return Task.FromResult(Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist
             ? GetMapEntryFromHash(ActivePlaylist!.Songs[shuffleIndex])
             : SongSourceList![shuffleIndex]);
     }
@@ -763,7 +793,7 @@ public class Player
         // If there is no "next" song generate new shuffled index
         if (_shuffleHistory[_shuffleHistoryIndex + 1] == null)
         {
-            _shuffleHistory[_shuffleHistoryIndex] = Repeat == RepeatMode.Playlist
+            _shuffleHistory[_shuffleHistoryIndex] = Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist
                 ? ActivePlaylist?.Songs.IndexOf(CurrentSong!.Hash)
                 : CurrentIndex;
             _shuffleHistory[++_shuffleHistoryIndex] = GenerateShuffledIndex();
@@ -772,7 +802,7 @@ public class Player
         else
         {
             // Check if next song index is in allowed boundary
-            if (_shuffleHistory[_shuffleHistoryIndex + 1] < (Repeat == RepeatMode.Playlist
+            if (_shuffleHistory[_shuffleHistoryIndex + 1] < (Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist
                     ? ActivePlaylist?.Songs.Count
                     : SongSourceList!.Count))
                 _shuffleHistoryIndex++;
@@ -791,7 +821,7 @@ public class Player
         // If there is no "prev" song generate new shuffled index
         if (_shuffleHistory[_shuffleHistoryIndex - 1] == null)
         {
-            _shuffleHistory[_shuffleHistoryIndex] = Repeat == RepeatMode.Playlist
+            _shuffleHistory[_shuffleHistoryIndex] = Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist
                 ? ActivePlaylist?.Songs.IndexOf(CurrentSong!.Hash)
                 : CurrentIndex;
             _shuffleHistory[--_shuffleHistoryIndex] = GenerateShuffledIndex();
@@ -800,7 +830,7 @@ public class Player
         else
         {
             // Check if next song index is in allowed boundary
-            if (_shuffleHistory[_shuffleHistoryIndex - 1] < (Repeat == RepeatMode.Playlist
+            if (_shuffleHistory[_shuffleHistoryIndex - 1] < (Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist
                     ? ActivePlaylist?.Songs.Count
                     : SongSourceList!.Count))
                 _shuffleHistoryIndex--;
@@ -818,14 +848,14 @@ public class Player
     private int GenerateShuffledIndex()
     {
         var rdm = new Random();
-        var shuffleIndex = rdm.Next(0, Repeat == RepeatMode.Playlist
+        var shuffleIndex = rdm.Next(0, Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist
             ? ActivePlaylist!.Songs.Count
             : SongSourceList!.Count);
 
-        while (shuffleIndex == (Repeat == RepeatMode.Playlist
+        while (shuffleIndex == (Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist
                    ? ActivePlaylist?.Songs.IndexOf(CurrentSong!.Hash)
                    : CurrentIndex)) // || OsuPlayer.Blacklist.IsSongInBlacklist(Songs[shuffleIndex]))
-            shuffleIndex = rdm.Next(0, Repeat == RepeatMode.Playlist
+            shuffleIndex = rdm.Next(0, Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist
                 ? ActivePlaylist!.Songs.Count
                 : SongSourceList!.Count);
 

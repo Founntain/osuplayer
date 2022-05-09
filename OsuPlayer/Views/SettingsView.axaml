@@ -74,6 +74,10 @@
                             <ComboBox SelectedItem="{Binding SelectedSortingMode}" Items="{Binding SortingModes}"
                                       HorizontalAlignment="Stretch" />
                         </StackPanel>
+
+                        <StackPanel Spacing="5" Name="BlacklistSkip">
+                            <CheckBox IsChecked="{Binding BlacklistSkip}" Content="Blacklist skipping" />
+                        </StackPanel>
                     </StackPanel>
                 </Grid>
 
@@ -126,8 +130,8 @@
                         </StackPanel>
                     </StackPanel>
                 </Grid>
-                
-                <Grid RowDefinitions="Auto" Margin="10" Name="PatchnotesSettings">
+
+                <Grid RowDefinitions="Auto" Margin="10" Name="PatchNotesSettings">
                     <Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                         <ExperimentalAcrylicBorder IsHitTestVisible="False">
                             <ExperimentalAcrylicBorder.Material>
@@ -139,8 +143,8 @@
                             </ExperimentalAcrylicBorder.Material>
                         </ExperimentalAcrylicBorder>
                     </Panel>
-                    
-                    <StackPanel Margin="10" Spacing="10" Name="PatchnotesPanel">
+
+                    <StackPanel Margin="10" Spacing="10" Name="PatchNotesSettingsPanel">
                         <TextBlock Text="Patch-notes" FontSize="32" VerticalAlignment="Center"
                                    HorizontalAlignment="Stretch" />
 
