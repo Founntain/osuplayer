@@ -99,6 +99,9 @@ Best practice is, that we discuss (new) features and if they are needed. So don'
 - ✉️ 7@founntain.dev
 - 📣 [Discord](https://discord.gg/RJQSc5B)
 
+## Supported by
+<img width=150 height=150 src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" alt="JetBrains Logo (Main) logo.">
+
 ## Screenshots
 
 ![](https://7.founntain.dev/xR5yZCvY.png)
