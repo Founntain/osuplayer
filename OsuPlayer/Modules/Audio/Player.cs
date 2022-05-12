@@ -527,6 +527,11 @@ public class Player
         await TryEnqueueAsync(SongSourceList[nextIndex < 0 ? nextIndex + SongSourceList!.Count : nextIndex]);
     }
 
+    /// <summary>
+    /// Enqueues a song in the current active <see cref="Playlist"/>.
+    /// Called only if the current <see cref="RepeatMode"/> is <see cref="Data.OsuPlayer.Enums.RepeatMode.Playlist"/>
+    /// </summary>
+    /// <param name="forward">whether to go forward in the playlist</param>
     private async Task EnqueuePlaylistAsync(bool forward)
     {
         var offset = forward ? 1 : -1;
@@ -553,6 +558,11 @@ public class Player
             await TryEnqueueSongAsync(GetMapEntryFromHash(forward ? ActivePlaylist.Songs.First() : ActivePlaylist.Songs.Last()));
     }
 
+    /// <summary>
+    /// Enqueues a song ignoring all songs in the <see cref="Blacklist"/>.
+    /// Called only if the <see cref="BlacklistSkip"/> is true
+    /// </summary>
+    /// <param name="forward">whether to go forward in the song list</param>
     private async Task EnqueueBlacklistAsync(bool forward)
     {
         var offset = forward ? 1 : -1;
