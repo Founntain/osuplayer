@@ -69,4 +69,9 @@ public static class Extensions
         var j = Array.IndexOf<T>(arr, src) + 1;
         return arr.Length == j ? arr[0] : arr[j];
     }
+
+    public static bool IsInBounds<T>(this IEnumerable<T> enumerable, int index) where T : class
+    {
+        return index >= 0 && index < enumerable.Count();
+    }
 }

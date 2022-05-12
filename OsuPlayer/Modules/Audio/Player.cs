@@ -36,6 +36,8 @@ public class Player
     private readonly Stopwatch _currentSongTimer;
     private readonly int?[] _shuffleHistory = new int?[10];
 
+    public readonly Bindable<bool> BlacklistSkip = new();
+
     public readonly Bindable<IMapEntry?> CurrentSongBinding = new();
 
     public readonly Bindable<Bitmap?> CurrentSongImage = new();
@@ -44,11 +46,9 @@ public class Player
 
     public readonly Bindable<bool> IsPlaying = new();
 
-    public readonly Bindable<RepeatMode> RepeatMode = new();
-
     public readonly Bindable<bool> IsShuffle = new();
 
-    public readonly Bindable<bool> BlacklistSkip = new();
+    public readonly Bindable<RepeatMode> RepeatMode = new();
 
     public readonly Bindable<Playlist?> SelectedPlaylist = new();
 
@@ -463,6 +463,12 @@ public class Player
             return;
         }
 
+        if (Repeat == Data.OsuPlayer.Enums.RepeatMode.SingleSong)
+        {
+            await TryPlaySongAsync(SongSourceList[CurrentIndex]);
+            return;
+        }
+
         if (IsShuffle.Value)
         {
             await TryEnqueueSongAsync(await DoShuffle(ShuffleDirection.Backwards), PlayDirection.Backwards);
@@ -471,42 +477,13 @@ public class Player
 
         if (Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist)
         {
-            if (ActivePlaylist == default || ActivePlaylist.Songs.Count == 0)
-            {
-                // OsuPlayerMessageBox.Show(
-                //    OsuPlayer.LanguageService.LoadControlLanguageWithKey("message.noPlaylistSelected"));
-                Repeat = Data.OsuPlayer.Enums.RepeatMode.NoRepeat;
-
-                await TryEnqueueSongAsync(CurrentIndex <= 0 ? SongSourceList[^1] : SongSourceList[CurrentIndex - 1], PlayDirection.Backwards);
-
-                return;
-            }
-
-            var currentPlaylistIndex = ActivePlaylist.Songs.IndexOf(CurrentSong!.Hash);
-
-            if (currentPlaylistIndex <= 0)
-                await TryEnqueueSongAsync(GetMapEntryFromHash(ActivePlaylist.Songs[^1]), PlayDirection.Backwards);
-            else
-                await TryEnqueueSongAsync(GetMapEntryFromHash(ActivePlaylist.Songs[currentPlaylistIndex - 1]), PlayDirection.Backwards);
-
+            await EnqueuePlaylistAsync(false);
             return;
         }
 
         if (BlacklistSkip.Value)
         {
-            for (var i = CurrentIndex - 1; i != CurrentIndex + 1; i--)
-            {
-                var x = i % SongSourceList!.Count;
-                i = x < 0 ? x + SongSourceList!.Count : x;
-
-                if (new Blacklist().Contains(SongSourceList[i])) continue;
-
-                await TryEnqueueSongAsync(SongSourceList[i]);
-                return;
-            }
-
-            MessageBox.Show("There is no song to play!");
-            _bassEngine.Stop();
+            await EnqueueBlacklistAsync(false);
             return;
         }
 
@@ -524,61 +501,76 @@ public class Player
 
         if (Repeat == Data.OsuPlayer.Enums.RepeatMode.SingleSong)
         {
-            await TryEnqueueSongAsync(SongSourceList[CurrentIndex]);
+            await TryPlaySongAsync(SongSourceList[CurrentIndex]);
             return;
         }
 
         if (IsShuffle.Value)
         {
             await TryEnqueueSongAsync(await DoShuffle(ShuffleDirection.Forward));
-
             return;
         }
 
         if (Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist)
         {
-            if (ActivePlaylist == default || ActivePlaylist.Songs.Count == 0)
-            {
-                // OsuPlayerMessageBox.Show(
-                //    OsuPlayer.LanguageService.LoadControlLanguageWithKey("message.noPlaylistSelected"));
-                Repeat = Data.OsuPlayer.Enums.RepeatMode.NoRepeat;
-
-                await TryEnqueueSongAsync(CurrentIndex == SongSourceList.Count - 1 ? SongSourceList[0] : SongSourceList[CurrentIndex + 1]);
-
-                return;
-            }
-
-            var currentPlaylistIndex = ActivePlaylist.Songs.IndexOf(CurrentSong!.Hash);
-
-            if (currentPlaylistIndex == ActivePlaylist.Songs.Count - 1)
-                await TryEnqueueSongAsync(GetMapEntryFromHash(ActivePlaylist.Songs[0]));
-            else
-                await TryEnqueueSongAsync(GetMapEntryFromHash(ActivePlaylist.Songs[currentPlaylistIndex + 1]));
-
+            await EnqueuePlaylistAsync(true);
             return;
         }
 
         if (BlacklistSkip.Value)
         {
-            var blacklist = new Blacklist();
-            for (var i = CurrentIndex + 1; i != CurrentIndex - 1; i++)
-            {
-                var x = i % SongSourceList!.Count;
-                i = x < 0 ? x + SongSourceList!.Count : x;
-
-                if (blacklist.Contains(SongSourceList[i])) continue;
-
-                await TryEnqueueSongAsync(SongSourceList[i]);
-                return;
-            }
-
-            MessageBox.Show("There is no song to play!");
-            _bassEngine.Stop();
+            await EnqueueBlacklistAsync(true);
             return;
         }
 
         var nextIndex = (CurrentIndex + 1) % SongSourceList!.Count;
         await TryEnqueueAsync(SongSourceList[nextIndex < 0 ? nextIndex + SongSourceList!.Count : nextIndex]);
+    }
+
+    private async Task EnqueuePlaylistAsync(bool forward)
+    {
+        var offset = forward ? 1 : -1;
+
+        if (ActivePlaylist == default || ActivePlaylist.Songs.Count == 0)
+        {
+            // OsuPlayerMessageBox.Show(
+            //    OsuPlayer.LanguageService.LoadControlLanguageWithKey("message.noPlaylistSelected"));
+            Repeat = Data.OsuPlayer.Enums.RepeatMode.NoRepeat;
+
+            if (SongSourceList!.IsInBounds(CurrentIndex + offset))
+                await TryEnqueueSongAsync(SongSourceList[CurrentIndex + offset]);
+            else
+                await TryEnqueueSongAsync(forward ? SongSourceList.First() : SongSourceList.Last());
+
+            return;
+        }
+
+        var currentPlaylistIndex = ActivePlaylist.Songs.IndexOf(CurrentSong!.Hash);
+
+        if (ActivePlaylist.Songs.IsInBounds(currentPlaylistIndex + offset))
+            await TryEnqueueSongAsync(GetMapEntryFromHash(ActivePlaylist.Songs[currentPlaylistIndex + offset]));
+        else
+            await TryEnqueueSongAsync(GetMapEntryFromHash(forward ? ActivePlaylist.Songs.First() : ActivePlaylist.Songs.Last()));
+    }
+
+    private async Task EnqueueBlacklistAsync(bool forward)
+    {
+        var offset = forward ? 1 : -1;
+
+        var blacklist = new Blacklist();
+        for (var i = CurrentIndex + offset; i != CurrentIndex - offset; i += offset)
+        {
+            var x = i % SongSourceList!.Count;
+            i = x < 0 ? x + SongSourceList!.Count : x;
+
+            if (blacklist.Contains(SongSourceList[i])) continue;
+
+            await TryEnqueueSongAsync(SongSourceList[i]);
+            return;
+        }
+
+        MessageBox.Show("There is no song to play!");
+        _bassEngine.Stop();
     }
 
     /// <summary>
@@ -610,49 +602,41 @@ public class Player
         if (song == default)
             return await TryPlaySongAsync(SongSourceList[^1]);
 
-        if (CurrentSongBinding.Value != null
-            && Repeat != Data.OsuPlayer.Enums.RepeatMode.SingleSong
-            && (await new Config().ReadAsync()).IgnoreSongsWithSameNameCheckBox
-            && CurrentSongBinding.Value.Hash == song.Hash)
-            return await EnqueueSongFromDirectionAsync(playDirection);
+        if ((await new Config().ReadAsync()).IgnoreSongsWithSameNameCheckBox)
+            return await EnqueueIgnoreSameNameAsync(playDirection);
 
         return await TryPlaySongAsync(song);
     }
 
     /// <summary>
-    /// Enqueues a song with a given <paramref name="direction" />
+    /// Enqueues a song with a given <paramref name="direction" /> and ignores all songs with the same name as the currently
+    /// playing song
     /// </summary>
     /// <param name="direction">a <see cref="PlayDirection" /> to indicate in which direction the next song should be</param>
     /// <returns>a <see cref="Task" /> from the enqueue try <seealso cref="TryPlaySongAsync" /></returns>
-    private async Task<Task> EnqueueSongFromDirectionAsync(PlayDirection direction)
+    private async Task<Task> EnqueueIgnoreSameNameAsync(PlayDirection direction)
     {
-        switch (direction)
+        if (CurrentSong == default)
+            return Task.FromException(new NullReferenceException());
+
+        var offset = direction switch
         {
-            case PlayDirection.Backwards:
-            {
-                for (var i = CurrentIndex - 1; i < SongSourceList?.Count; i--)
-                {
-                    if (SongSourceList[i].Hash == CurrentSongBinding.Value!.Hash) continue;
+            PlayDirection.Backwards => -1,
+            PlayDirection.Forward => 1,
+            _ => 0
+        };
 
-                    return await TryPlaySongAsync(SongSourceList[i]);
-                }
+        if (offset == 0)
+            return Task.FromException(new InvalidOperationException($"Direction {direction} is not valid"));
 
-                break;
-            }
-            case PlayDirection.Forward:
-            {
-                for (var i = CurrentIndex + 1; i < SongSourceList?.Count; i++)
-                {
-                    if (SongSourceList[i].Hash == CurrentSongBinding.Value!.Hash) continue;
+        for (var i = CurrentIndex + offset; i < SongSourceList?.Count; i += offset)
+        {
+            if (SongSourceList[i].SongName == CurrentSongBinding.Value!.SongName) continue;
 
-                    return await TryPlaySongAsync(SongSourceList[i]);
-                }
-
-                break;
-            }
+            return await TryPlaySongAsync(SongSourceList[i]);
         }
 
-        return Task.FromException(new InvalidOperationException($"Direction {direction} is not valid"));
+        return Task.FromException(new InvalidOperationException("There is no song with a different name"));
     }
 
     /// <summary>
