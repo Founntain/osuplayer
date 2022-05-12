@@ -85,7 +85,7 @@ public class PlayerControlViewModel : BaseViewModel
 
     public bool IsAPlaylistSelected => PlaylistManager.CurrentPlaylist != default;
 
-    public bool IsCurrentSongOnBlacklist => new Blacklist().Container.Songs?.Contains(CurrentSong.Value?.Hash) ?? false;
+    public bool IsCurrentSongOnBlacklist =>  new Blacklist().Contains(CurrentSong.Value);
 
     public double Volume
     {

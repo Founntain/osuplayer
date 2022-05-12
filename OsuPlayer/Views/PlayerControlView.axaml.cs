@@ -78,7 +78,7 @@ public partial class PlayerControlView : ReactivePlayerControl<PlayerControlView
 
             var currentHash = ViewModel.CurrentSong.Value?.Hash;
 
-            if (blacklist.Container.Songs.Contains(currentHash))
+            if (blacklist.Contains(ViewModel.CurrentSong.Value))
             {
                 blacklist.Container.Songs.Remove(currentHash);
             }

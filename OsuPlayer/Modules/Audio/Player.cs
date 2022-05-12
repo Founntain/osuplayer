@@ -494,13 +494,12 @@ public class Player
 
         if (BlacklistSkip.Value)
         {
-            var blacklist = new Blacklist();
             for (var i = CurrentIndex - 1; i != CurrentIndex + 1; i--)
             {
                 var x = i % SongSourceList!.Count;
                 i = x < 0 ? x + SongSourceList!.Count : x;
 
-                if (blacklist.Container.Songs?.Contains(SongSourceList[i].Hash) ?? false) continue;
+                if (new Blacklist().Contains(SongSourceList[i])) continue;
 
                 await TryEnqueueSongAsync(SongSourceList[i]);
                 return;
@@ -567,7 +566,7 @@ public class Player
                 var x = i % SongSourceList!.Count;
                 i = x < 0 ? x + SongSourceList!.Count : x;
 
-                if (blacklist.Container.Songs?.Contains(SongSourceList[i].Hash) ?? false) continue;
+                if (blacklist.Contains(SongSourceList[i])) continue;
 
                 await TryEnqueueSongAsync(SongSourceList[i]);
                 return;
