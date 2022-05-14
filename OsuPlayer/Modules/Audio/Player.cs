@@ -172,13 +172,13 @@ public class Player
         switch (configContainer.StartupSong)
         {
             case StartupSong.FirstSong:
-                await TryEnqueueSongAsync(SongSourceList[0]);
+                await TryPlaySongAsync(SongSourceList[0]);
                 break;
             case StartupSong.LastPlayed:
                 await PlayLastPlayedSongAsync(configContainer);
                 break;
             case StartupSong.RandomSong:
-                await TryEnqueueSongAsync(SongSourceList[new Random().Next(SongSourceList.Count)]);
+                await TryPlaySongAsync(SongSourceList[new Random().Next(SongSourceList.Count)]);
                 break;
         }
     }
@@ -232,17 +232,17 @@ public class Player
 
         if (config.LastPlayedSong == null)
         {
-            await TryEnqueueSongAsync(null);
+            await TryPlaySongAsync(null);
             return;
         }
 
         if (!string.IsNullOrWhiteSpace(config.LastPlayedSong))
         {
-            await TryEnqueueSongAsync(GetMapEntryFromHash(config.LastPlayedSong));
+            await TryPlaySongAsync(GetMapEntryFromHash(config.LastPlayedSong));
             return;
         }
 
-        await TryEnqueueSongAsync(SongSourceList?[0]);
+        await TryPlaySongAsync(SongSourceList?[0]);
     }
 
     /// <summary>
@@ -459,36 +459,36 @@ public class Player
 
         if (_bassEngine.ChannelPositionB.Value > 3)
         {
-            await TryPlaySongAsync(SongSourceList[CurrentIndex]);
+            await TryStartSongAsync(SongSourceList[CurrentIndex]);
             return;
         }
 
         if (Repeat == Data.OsuPlayer.Enums.RepeatMode.SingleSong)
         {
-            await TryPlaySongAsync(SongSourceList[CurrentIndex]);
+            await TryStartSongAsync(SongSourceList[CurrentIndex]);
             return;
         }
 
         if (IsShuffle.Value)
         {
-            await TryEnqueueSongAsync(await DoShuffle(ShuffleDirection.Backwards), PlayDirection.Backwards);
+            await TryPlaySongAsync(await DoShuffle(ShuffleDirection.Backwards), PlayDirection.Backwards);
             return;
         }
 
         if (Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist)
         {
-            await EnqueuePlaylistAsync(false);
+            await EnqueuePlaylistAsync(PlayDirection.Backwards);
             return;
         }
 
         if (BlacklistSkip.Value)
         {
-            await EnqueueBlacklistAsync(false);
+            await EnqueueBlacklistAsync(PlayDirection.Backwards);
             return;
         }
 
         var prevIndex = (CurrentIndex - 1) % SongSourceList!.Count;
-        await TryEnqueueAsync(SongSourceList[prevIndex < 0 ? prevIndex + SongSourceList!.Count : prevIndex]);
+        await TryEnqueueAsync(SongSourceList[prevIndex < 0 ? prevIndex + SongSourceList!.Count : prevIndex], PlayDirection.Backwards);
     }
 
     /// <summary>
@@ -501,40 +501,48 @@ public class Player
 
         if (Repeat == Data.OsuPlayer.Enums.RepeatMode.SingleSong)
         {
-            await TryPlaySongAsync(SongSourceList[CurrentIndex]);
+            await TryStartSongAsync(SongSourceList[CurrentIndex]);
             return;
         }
 
         if (IsShuffle.Value)
         {
-            await TryEnqueueSongAsync(await DoShuffle(ShuffleDirection.Forward));
+            await TryPlaySongAsync(await DoShuffle(ShuffleDirection.Forward));
             return;
         }
 
         if (Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist)
         {
-            await EnqueuePlaylistAsync(true);
+            await EnqueuePlaylistAsync(PlayDirection.Forward);
             return;
         }
 
         if (BlacklistSkip.Value)
         {
-            await EnqueueBlacklistAsync(true);
+            await EnqueueBlacklistAsync(PlayDirection.Forward);
             return;
         }
 
         var nextIndex = (CurrentIndex + 1) % SongSourceList!.Count;
-        await TryEnqueueAsync(SongSourceList[nextIndex < 0 ? nextIndex + SongSourceList!.Count : nextIndex]);
+        await TryEnqueueAsync(SongSourceList[nextIndex < 0 ? nextIndex + SongSourceList!.Count : nextIndex], PlayDirection.Forward);
     }
 
     /// <summary>
-    /// Enqueues a song in the current active <see cref="Playlist"/>.
-    /// Called only if the current <see cref="RepeatMode"/> is <see cref="Data.OsuPlayer.Enums.RepeatMode.Playlist"/>
+    /// Enqueues a song in the current active <see cref="Playlist" />.
+    /// Called only if the current <see cref="RepeatMode" /> is <see cref="Data.OsuPlayer.Enums.RepeatMode.Playlist" />
     /// </summary>
-    /// <param name="forward">whether to go forward in the playlist</param>
-    private async Task EnqueuePlaylistAsync(bool forward)
+    /// <param name="direction">in what direction the next song should be</param>
+    private async Task EnqueuePlaylistAsync(PlayDirection direction = PlayDirection.Normal)
     {
-        var offset = forward ? 1 : -1;
+        var offset = direction switch
+        {
+            PlayDirection.Backwards => -1,
+            PlayDirection.Forward => 1,
+            _ => 0
+        };
+
+        if (offset == 0)
+            throw new InvalidOperationException();
 
         if (ActivePlaylist == default || ActivePlaylist.Songs.Count == 0)
         {
@@ -543,9 +551,9 @@ public class Player
             Repeat = Data.OsuPlayer.Enums.RepeatMode.NoRepeat;
 
             if (SongSourceList!.IsInBounds(CurrentIndex + offset))
-                await TryEnqueueSongAsync(SongSourceList[CurrentIndex + offset]);
+                await TryPlaySongAsync(SongSourceList[CurrentIndex + offset], direction);
             else
-                await TryEnqueueSongAsync(forward ? SongSourceList.First() : SongSourceList.Last());
+                await TryPlaySongAsync(direction == PlayDirection.Forward ? SongSourceList.First() : SongSourceList.Last(), direction);
 
             return;
         }
@@ -553,19 +561,27 @@ public class Player
         var currentPlaylistIndex = ActivePlaylist.Songs.IndexOf(CurrentSong!.Hash);
 
         if (ActivePlaylist.Songs.IsInBounds(currentPlaylistIndex + offset))
-            await TryEnqueueSongAsync(GetMapEntryFromHash(ActivePlaylist.Songs[currentPlaylistIndex + offset]));
+            await TryPlaySongAsync(GetMapEntryFromHash(ActivePlaylist.Songs[currentPlaylistIndex + offset]), direction);
         else
-            await TryEnqueueSongAsync(GetMapEntryFromHash(forward ? ActivePlaylist.Songs.First() : ActivePlaylist.Songs.Last()));
+            await TryPlaySongAsync(GetMapEntryFromHash(direction == PlayDirection.Forward ? ActivePlaylist.Songs.First() : ActivePlaylist.Songs.Last()));
     }
 
     /// <summary>
-    /// Enqueues a song ignoring all songs in the <see cref="Blacklist"/>.
-    /// Called only if the <see cref="BlacklistSkip"/> is true
+    /// Enqueues a song ignoring all songs in the <see cref="Blacklist" />.
+    /// Called only if the <see cref="BlacklistSkip" /> is true
     /// </summary>
-    /// <param name="forward">whether to go forward in the song list</param>
-    private async Task EnqueueBlacklistAsync(bool forward)
+    /// <param name="direction">in what direction the next song should be</param>
+    private async Task EnqueueBlacklistAsync(PlayDirection direction = PlayDirection.Normal)
     {
-        var offset = forward ? 1 : -1;
+        var offset = direction switch
+        {
+            PlayDirection.Backwards => -1,
+            PlayDirection.Forward => 1,
+            _ => 0
+        };
+
+        if (offset == 0)
+            throw new InvalidOperationException();
 
         var blacklist = new Blacklist();
         for (var i = CurrentIndex + offset; i != CurrentIndex - offset; i += offset)
@@ -575,7 +591,7 @@ public class Player
 
             if (blacklist.Contains(SongSourceList[i])) continue;
 
-            await TryEnqueueSongAsync(SongSourceList[i]);
+            await TryPlaySongAsync(SongSourceList[i], direction);
             return;
         }
 
@@ -584,50 +600,22 @@ public class Player
     }
 
     /// <summary>
-    /// Enqueues a specific song to play
-    /// </summary>
-    /// <param name="song">The song to enqueue</param>
-    /// <param name="playDirection">The direction we went in the playlist. Mostly used by the Next and Prev method</param>
-    public async Task TryEnqueueSongAsync(IMapEntryBase? song, PlayDirection playDirection = PlayDirection.Forward)
-    {
-        if ((await TryEnqueueAsync(song, playDirection)).IsFaulted)
-        {
-            if (!SongSourceList?.Any() ?? true)
-                return;
-
-            await TryPlaySongAsync(SongSourceList[0]);
-        }
-    }
-
-    /// <summary>
-    /// Enqueues a specific song to play
-    /// </summary>
-    /// <param name="song">The song to enqueue</param>
-    /// <param name="playDirection">The direction we went in the playlist. Mostly used by the Next and Prev method</param>
-    private async Task<Task> TryEnqueueAsync(IMapEntryBase? song, PlayDirection playDirection = PlayDirection.Forward)
-    {
-        if (SongSourceList == default || !SongSourceList.Any())
-            return Task.FromException(new NullReferenceException());
-
-        if (song == default)
-            return await TryPlaySongAsync(SongSourceList[^1]);
-
-        if ((await new Config().ReadAsync()).IgnoreSongsWithSameNameCheckBox)
-            return await EnqueueIgnoreSameNameAsync(playDirection);
-
-        return await TryPlaySongAsync(song);
-    }
-
-    /// <summary>
     /// Enqueues a song with a given <paramref name="direction" /> and ignores all songs with the same name as the currently
     /// playing song
     /// </summary>
+    /// <param name="song">
+    /// the song that should be played when the <paramref name="direction" /> is
+    /// <see cref="PlayDirection.Normal" />
+    /// </param>
     /// <param name="direction">a <see cref="PlayDirection" /> to indicate in which direction the next song should be</param>
-    /// <returns>a <see cref="Task" /> from the enqueue try <seealso cref="TryPlaySongAsync" /></returns>
-    private async Task<Task> EnqueueIgnoreSameNameAsync(PlayDirection direction)
+    /// <returns>a <see cref="Task" /> from the enqueue try <seealso cref="TryStartSongAsync" /></returns>
+    private async Task<Task> TryEnqueueIgnoreSameNameAsync(IMapEntryBase song, PlayDirection direction)
     {
         if (CurrentSong == default)
             return Task.FromException(new NullReferenceException());
+
+        if (RepeatMode.Value == Data.OsuPlayer.Enums.RepeatMode.Playlist)
+            return TryStartSongAsync(song);
 
         var offset = direction switch
         {
@@ -637,16 +625,65 @@ public class Player
         };
 
         if (offset == 0)
-            return Task.FromException(new InvalidOperationException($"Direction {direction} is not valid"));
+            return await TryStartSongAsync(song);
+
+        if (CurrentSong.SongName == song.SongName)
+        {
+            CurrentSong = await song.ReadFullEntry(new Config().Container.OsuPath!);
+            switch (direction)
+            {
+                case PlayDirection.Forward:
+                    NextSong();
+                    return Task.CompletedTask;
+                case PlayDirection.Backwards:
+                    PreviousSong();
+                    return Task.CompletedTask;
+            }
+        }
 
         for (var i = CurrentIndex + offset; i < SongSourceList?.Count; i += offset)
         {
-            if (SongSourceList[i].SongName == CurrentSongBinding.Value!.SongName) continue;
+            if (SongSourceList[i].SongName == CurrentSong.SongName) continue;
 
-            return await TryPlaySongAsync(SongSourceList[i]);
+            return await TryStartSongAsync(SongSourceList[i]);
         }
 
         return Task.FromException(new InvalidOperationException("There is no song with a different name"));
+    }
+
+    /// <summary>
+    /// Enqueues a specific song to play
+    /// </summary>
+    /// <param name="song">The song to enqueue</param>
+    /// <param name="playDirection">The direction we went in the playlist. Mostly used by the Next and Prev method</param>
+    public async Task TryPlaySongAsync(IMapEntryBase? song, PlayDirection playDirection = PlayDirection.Normal)
+    {
+        if ((await TryEnqueueAsync(song, playDirection)).IsFaulted)
+        {
+            if (!SongSourceList?.Any() ?? true)
+                return;
+
+            await TryStartSongAsync(SongSourceList[0]);
+        }
+    }
+
+    /// <summary>
+    /// Enqueues a specific song to play
+    /// </summary>
+    /// <param name="song">The song to enqueue</param>
+    /// <param name="playDirection">The direction we went in the playlist. Mostly used by the Next and Prev method</param>
+    private async Task<Task> TryEnqueueAsync(IMapEntryBase? song, PlayDirection playDirection = PlayDirection.Normal)
+    {
+        if (SongSourceList == default || !SongSourceList.Any())
+            return Task.FromException(new NullReferenceException());
+
+        if (song == default)
+            return await TryStartSongAsync(SongSourceList[^1]);
+
+        if ((await new Config().ReadAsync()).IgnoreSongsWithSameNameCheckBox)
+            return await TryEnqueueIgnoreSameNameAsync(song, playDirection);
+
+        return await TryStartSongAsync(song);
     }
 
     /// <summary>
@@ -654,7 +691,7 @@ public class Player
     /// </summary>
     /// <param name="song">a <see cref="IMapEntryBase" /> to play next</param>
     /// <returns>a <see cref="Task" /> with the resulting state</returns>
-    private async Task<Task> TryPlaySongAsync(IMapEntryBase song)
+    private async Task<Task> TryStartSongAsync(IMapEntryBase song)
     {
         if (SongSourceList == null || !SongSourceList.Any())
             return Task.FromException(new NullReferenceException($"{nameof(SongSourceList)} can't be null or empty"));

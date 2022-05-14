@@ -36,7 +36,7 @@ public partial class BlacklistEditorView : ReactivePlayerControl<BlacklistEditor
         var controlSource = (Control) tapped.Pointer.Captured;
 
         if (controlSource?.DataContext is IMapEntryBase song)
-            await ViewModel.Player.TryEnqueueSongAsync(song);
+            await ViewModel.Player.TryPlaySongAsync(song);
     }
 
     private async void AddToBlacklist_OnClick(object? sender, RoutedEventArgs e)

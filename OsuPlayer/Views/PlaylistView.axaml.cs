@@ -47,6 +47,6 @@ public partial class PlaylistView : ReactivePlayerControl<PlaylistViewModel>
         var controlSource = (Control) tapped.Pointer.Captured;
 
         if (controlSource?.DataContext is IMapEntryBase song)
-            await ViewModel.Player.TryEnqueueSongAsync(song);
+            await ViewModel.Player.TryPlaySongAsync(song);
     }
 }
