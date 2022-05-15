@@ -17,8 +17,8 @@
         <valueConverters:PlaylistValueConverter x:Key="PlaylistValueConverter" />
     </UserControl.Resources>
     <Grid ColumnDefinitions="25*, 75*">
-        <Grid Column="0" Margin="10" RowDefinitions="50, *, 50">
-            <Panel Grid.RowSpan="3">
+        <Grid Column="0" Margin="10" RowDefinitions="50, *, 40, 40">
+            <Panel Grid.RowSpan="4">
                 <ExperimentalAcrylicBorder IsHitTestVisible="False">
                     <ExperimentalAcrylicBorder.Material>
                         <ExperimentalAcrylicMaterial
@@ -45,9 +45,11 @@
 
             <Button Grid.Row="2" Content="playlist editor" Margin="10 0"
                     VerticalContentAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center"
-                    HorizontalAlignment="Stretch"
-                    Click="Button_OnClick"
-                    FontWeight="SemiBold" />
+                    HorizontalAlignment="Stretch" Click="OpenPlaylistEditor_OnClick" FontWeight="SemiBold" />
+
+            <Button Grid.Row="3" Content="blacklist editor" Margin="10 0"
+                    VerticalContentAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center"
+                    HorizontalAlignment="Stretch" Click="OpenBlacklistEditor_OnClick" FontWeight="SemiBold" />
         </Grid>
 
         <Grid Column="1" Margin="10">

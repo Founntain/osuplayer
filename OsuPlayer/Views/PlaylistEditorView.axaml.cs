@@ -61,6 +61,7 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
         await PlaylistManager.ReplacePlaylistAsync(ViewModel.CurrentSelectedPlaylist);
 
         ViewModel.RaisePropertyChanged(nameof(ViewModel.Playlists));
+        ViewModel.RaisePropertyChanged(nameof(ViewModel.SelectedSongListItems));
     }
 
     private async void RemoveFromPlaylist_OnClick(object? sender, RoutedEventArgs e)
@@ -98,7 +99,7 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
 
         var songs = listBox.SelectedItems.Cast<IMapEntryBase>().ToList();
 
-        _mainWindow.ViewModel.PlaylistEditorViewModel.SelectedSongListItems = songs;
+        _mainWindow.ViewModel.PlaylistEditorView.SelectedSongListItems = songs;
     }
 
     private void Playlist_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -107,7 +108,7 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
 
         var songs = listBox.SelectedItems.Cast<IMapEntryBase>().ToList();
 
-        _mainWindow.ViewModel.PlaylistEditorViewModel.SelectedPlaylistItems = songs;
+        _mainWindow.ViewModel.PlaylistEditorView.SelectedPlaylistItems = songs;
     }
 
     private void CreatePlaylist_OnClick(object? sender, RoutedEventArgs e)
@@ -186,6 +187,6 @@ public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorVi
         var controlSource = (Control) tapped.Pointer.Captured;
 
         if (controlSource?.DataContext is IMapEntryBase song)
-            await ViewModel.Player.PlayAsync(song);
+            await ViewModel.Player.TryPlaySongAsync(song);
     }
 }

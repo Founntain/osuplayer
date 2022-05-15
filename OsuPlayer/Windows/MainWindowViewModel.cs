@@ -23,7 +23,8 @@ public class MainWindowViewModel : BaseWindowViewModel
 
         SearchView = new SearchViewModel(Player);
         PlaylistView = new PlaylistViewModel(Player);
-        PlaylistEditorViewModel = new PlaylistEditorViewModel(Player);
+        PlaylistEditorView = new PlaylistEditorViewModel(Player);
+        BlacklistEditorView = new BlacklistEditorViewModel(Player);
         HomeView = new HomeViewModel(Player);
         UserView = new UserViewModel(Player);
         EditUserView = new EditUserViewModel();
@@ -36,7 +37,8 @@ public class MainWindowViewModel : BaseWindowViewModel
     public EditUserViewModel EditUserView { get; }
     public HomeViewModel HomeView { get; }
     public PartyViewModel PartyView { get; }
-    public PlaylistEditorViewModel PlaylistEditorViewModel { get; }
+    public BlacklistEditorViewModel BlacklistEditorView { get; }
+    public PlaylistEditorViewModel PlaylistEditorView { get; }
     public PlaylistViewModel PlaylistView { get; }
     public SearchViewModel SearchView { get; }
     public SettingsViewModel SettingsView { get; }

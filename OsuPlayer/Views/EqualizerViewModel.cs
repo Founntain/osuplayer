@@ -43,7 +43,7 @@ public class EqualizerViewModel : BaseViewModel
 
     public bool IsEqEnabled
     {
-        get => new Config().Container.IsEqEnabled;
+        get => _player.IsEqEnabled;
         set
         {
             using (var config = new Config())
@@ -51,7 +51,7 @@ public class EqualizerViewModel : BaseViewModel
                 config.Container.IsEqEnabled = value;
             }
 
-            _player.ToggleEq(value);
+            _player.IsEqEnabled = value;
 
             this.RaisePropertyChanged();
         }

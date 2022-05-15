@@ -157,9 +157,9 @@ public class Bindable<T> : IBindable<T>, IBindable
     /// <summary>
     /// Binds a <see cref="ValueChangedEvent{T}" /> to a <see cref="Bindable{T}" />
     /// </summary>
-    /// <param name="onChange"></param>
-    /// <param name="ignoreSource"></param>
-    /// <param name="runOnceImmediately"></param>
+    /// <param name="onChange">the <see cref="Action{T}"/> that should be executed</param>
+    /// <param name="ignoreSource">whether to ignore the trigger source</param>
+    /// <param name="runOnceImmediately">whether to run the <paramref name="onChange"/> action once immediately</param>
     public void BindValueChanged(Action<ValueChangedEvent<T>> onChange, bool ignoreSource = false, bool runOnceImmediately = false)
     {
         ValueChanged += onChange;

@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -7,6 +6,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Extensions;
+using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Windows;
 using ReactiveUI;
@@ -65,24 +65,34 @@ public partial class PlayerControlView : ReactivePlayerControl<PlayerControlView
         ViewModel.Player.Pause();
     }
 
-    private void Volume_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
-    {
-        ViewModel.Player.ToggleMute();
-    }
-
-    private void PlaybackSpeedBtn_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
-    {
-        throw new NotImplementedException();
-    }
-
     private void Settings_OnClick(object? sender, RoutedEventArgs e)
     {
         _mainWindow.ViewModel!.MainView = _mainWindow.ViewModel.SettingsView;
     }
 
-    private void Blacklist_OnClick(object? sender, RoutedEventArgs e)
+    private async void Blacklist_OnClick(object? sender, RoutedEventArgs e)
     {
-        // throw new NotImplementedException();
+        await using (var blacklist = new Blacklist())
+        {
+            await blacklist.ReadAsync();
+
+            var currentHash = ViewModel.CurrentSong.Value?.Hash;
+
+            if (blacklist.Contains(ViewModel.CurrentSong.Value))
+            {
+                blacklist.Container.Songs.Remove(currentHash);
+            }
+            else
+            {
+                blacklist.Container.Songs.Add(currentHash);
+
+                if (ViewModel.Player.BlacklistSkip.Value)
+                    ViewModel.Player.NextSong();
+            }
+        }
+
+        ViewModel.Player.TriggerBlacklistChanged(new PropertyChangedEventArgs("Black"));
+        ViewModel.RaisePropertyChanged(nameof(ViewModel.IsCurrentSongOnBlacklist));
     }
 
     private async void Favorite_OnClick(object? sender, RoutedEventArgs e)

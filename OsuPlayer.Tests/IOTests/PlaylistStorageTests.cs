@@ -98,6 +98,6 @@ public class PlaylistStorageTests
     [Test]
     public void StorageContainerSetTest()
     {
-        _playlist.Container = new PlaylistContainer().Init();
+        _playlist.Container = (PlaylistContainer) new PlaylistContainer().Init();
     }
 }

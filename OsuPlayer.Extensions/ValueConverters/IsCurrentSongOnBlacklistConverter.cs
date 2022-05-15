@@ -8,7 +8,8 @@ public class IsCurrentSongOnBlacklistConverter : IValueConverter
 {
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        var x = (bool) value;
+        if (value is not bool x)
+            return MaterialIconKind.QuestionMark;
 
         return x ? MaterialIconKind.HeartBroken : MaterialIconKind.HeartBrokenOutline;
     }

@@ -7,9 +7,9 @@ namespace OsuPlayer.IO.Storage.Playlists;
 /// A wrapper for the <see cref="PlaylistStorage" />, containing static methods for creating, deleting and modifying
 /// playlists
 /// </summary>
-public class PlaylistManager
+public static class PlaylistManager
 {
-    public static Playlist? CurrentPlaylist;
+    public static Playlist? CurrentPlaylist { get; private set; }
 
     /// <summary>
     /// Sets a specific playlist as the current playlist globally in the application
@@ -49,7 +49,7 @@ public class PlaylistManager
     /// Gets all stored playlists
     /// </summary>
     /// <returns>an <see cref="IList{T}" /> containing all playlists</returns>
-    public static IList<Playlist> GetAllPlaylists()
+    public static IList<Playlist>? GetAllPlaylists()
     {
         using (var storage = new PlaylistStorage())
         {
@@ -63,7 +63,7 @@ public class PlaylistManager
     /// Gets all stored playlists asynchronously
     /// </summary>
     /// <returns>an <see cref="IList{T}" /> containing all playlists</returns>
-    public static async Task<IList<Playlist>> GetAllPlaylistsAsync()
+    public static async Task<IList<Playlist>?> GetAllPlaylistsAsync()
     {
         await using (var storage = new PlaylistStorage())
         {
@@ -84,10 +84,10 @@ public class PlaylistManager
         {
             await storage.ReadAsync();
 
-            if (storage.Container.Playlists.Any(x => x == playlist))
-                return default;
+            if (storage.Container.Playlists?.Any(x => x == playlist) ?? true)
+                return storage.Container.Playlists;
 
-            storage.Container.Playlists.Add(playlist);
+            storage.Container.Playlists?.Add(playlist);
 
             return storage.Container.Playlists;
         }
@@ -105,12 +105,12 @@ public class PlaylistManager
         {
             await storage.ReadAsync();
 
-            var playlistToRemove = storage.Container.Playlists
+            var playlistToRemove = storage.Container.Playlists?
                 .FirstOrDefault(x => x.Name == playlist.Name);
 
-            storage.Container.Playlists.Remove(playlistToRemove);
+            storage.Container.Playlists?.Remove(playlistToRemove);
 
-            storage.Container.Playlists.Add(playlist);
+            storage.Container.Playlists?.Add(playlist);
         }
     }
 
@@ -138,13 +138,13 @@ public class PlaylistManager
         {
             await storage.ReadAsync();
 
-            var p = storage.Container.Playlists.FirstOrDefault(x => x == playlist);
+            var p = storage.Container.Playlists?.FirstOrDefault(x => x == playlist);
 
-            storage.Container.Playlists.Remove(p);
+            storage.Container.Playlists?.Remove(p);
 
             p.Name = playlist.Name;
 
-            storage.Container.Playlists.Add(p);
+            storage.Container.Playlists?.Add(p);
         }
     }
 
@@ -170,9 +170,9 @@ public class PlaylistManager
         {
             await storage.ReadAsync();
 
-            var p = storage.Container.Playlists.First(x => x == playlist);
+            var p = storage.Container.Playlists?.First(x => x == playlist);
 
-            storage.Container.Playlists.Remove(p);
+            storage.Container.Playlists?.Remove(p);
 
             return storage.Container.Playlists;
         }
@@ -185,6 +185,9 @@ public class PlaylistManager
     /// <param name="mapEntry">The song to toggle</param>
     public static async Task ToggleSongOfCurrentPlaylist(IMapEntryBase mapEntry)
     {
+        if (CurrentPlaylist == default)
+            return;
+
         if (CurrentPlaylist.Songs.Contains(mapEntry.Hash))
             await RemoveSongToCurrentPlaylist(mapEntry);
         else
@@ -197,7 +200,7 @@ public class PlaylistManager
     /// <param name="mapEntry">The song to add</param>
     public static async Task AddSongToCurrentPlaylistAsync(IMapEntryBase mapEntry)
     {
-        CurrentPlaylist.Songs.Add(mapEntry.Hash);
+        CurrentPlaylist?.Songs.Add(mapEntry.Hash);
 
         await ReplacePlaylistAsync(CurrentPlaylist);
     }
@@ -208,7 +211,7 @@ public class PlaylistManager
     /// <param name="mapEntry">The song to remove</param>
     public static async Task RemoveSongToCurrentPlaylist(IMapEntryBase mapEntry)
     {
-        CurrentPlaylist.Songs.Remove(mapEntry.Hash);
+        CurrentPlaylist?.Songs.Remove(mapEntry.Hash);
 
         await ReplacePlaylistAsync(CurrentPlaylist);
     }

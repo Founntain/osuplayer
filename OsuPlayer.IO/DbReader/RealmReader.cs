@@ -61,7 +61,7 @@ public class RealmReader
                 Artist = string.Intern(beatmap.Metadata.Artist),
                 Hash = beatmap.Beatmaps.First().MD5Hash,
                 BeatmapSetId = beatmap.OnlineID,
-                Title = beatmap.Metadata.Title,
+                Title = string.Intern(beatmap.Metadata.Title),
                 TotalTime = (int) beatmap.MaxLength,
                 Id = beatmap.ID
             });

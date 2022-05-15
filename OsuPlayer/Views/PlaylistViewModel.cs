@@ -28,7 +28,7 @@ public class PlaylistViewModel : BaseViewModel
             if (selection == default)
                 return;
 
-            Playlists = PlaylistManager.GetAllPlaylists().ToObservableCollection();
+            Playlists = PlaylistManager.GetAllPlaylists()?.OrderBy(x => x.Name).ToObservableCollection() ?? new ObservableCollection<Playlist>();
 
             this.RaisePropertyChanged(nameof(Playlists));
 
@@ -41,7 +41,7 @@ public class PlaylistViewModel : BaseViewModel
         {
             Disposable.Create(() => { }).DisposeWith(disposables);
 
-            Playlists = PlaylistManager.GetAllPlaylists().ToObservableCollection();
+            Playlists = PlaylistManager.GetAllPlaylists()?.OrderBy(x => x.Name).ToObservableCollection() ?? new ObservableCollection<Playlist>();
 
             if (Playlists.Count > 0 && SelectedPlaylist == default)
             {

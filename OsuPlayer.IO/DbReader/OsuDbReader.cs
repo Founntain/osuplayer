@@ -141,7 +141,7 @@ public class OsuDbReader : BinaryReader
         if (OsuDbVersion >= 20121008)
             r.ReadString(true);
 
-        dbMapEntryBase.Title = r.ReadString();
+        dbMapEntryBase.Title = string.Intern(r.ReadString());
 
         if (dbMapEntryBase.Title.Length == 0)
             dbMapEntryBase.Title = "Unknown Title";
