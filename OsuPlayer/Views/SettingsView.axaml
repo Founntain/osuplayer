@@ -157,6 +157,27 @@
                         </avalonia:MarkdownScrollViewer>
                     </StackPanel>
                 </Grid>
+                <Grid RowDefinitions="Auto" Margin="10" Name="HelpSettings">
+                    <Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+                            <ExperimentalAcrylicBorder.Material>
+                                <ExperimentalAcrylicMaterial
+                                    BackgroundSource="Digger"
+                                    TintColor="Black"
+                                    TintOpacity="1"
+                                    MaterialOpacity="0.75" />
+                            </ExperimentalAcrylicBorder.Material>
+                        </ExperimentalAcrylicBorder>
+                    </Panel>
+
+                    <StackPanel Margin="10" Spacing="10" Name="HelpAndFeedbackSettingsPanel">
+                        <TextBlock Text="Help and feedback" FontSize="32" VerticalAlignment="Center"
+                                   HorizontalAlignment="Stretch" />
+                        <Button Content="report a bug or request a feature" Click="ReportBug_OnClick" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+                        <Button Content="join the discord server" Click="JoinDiscord_OnClick" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+                        <Button Content="contact us" Click="ContactUs_OnClick" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
             </controls:CascadingWrapPanel>
         </ScrollViewer>
     </Grid>

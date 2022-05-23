@@ -8,6 +8,7 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
 using OsuPlayer.Controls;
+using OsuPlayer.Extensions;
 using OsuPlayer.IO.Storage.Config;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
@@ -112,5 +113,20 @@ public partial class SettingsView : ReactivePlayerControl<SettingsViewModel>
     private void OpenEqClick(object? sender, RoutedEventArgs e)
     {
         _mainWindow.ViewModel.MainView = _mainWindow.ViewModel.EqualizerView;
+    }
+
+    private void ReportBug_OnClick(object? sender, RoutedEventArgs e)
+    {
+        GeneralExtensions.OpenUrl("https://github.com/Founntain/osuplayer/issues/new/choose");
+    }
+
+    private void JoinDiscord_OnClick(object? sender, RoutedEventArgs e)
+    {
+        GeneralExtensions.OpenUrl("https://discord.gg/RJQSc5B");
+    }
+
+    private void ContactUs_OnClick(object? sender, RoutedEventArgs e)
+    {
+        GeneralExtensions.OpenUrl("https://github.com/Founntain/osuplayer#contact");
     }
 }
