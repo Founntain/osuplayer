@@ -1,10 +1,7 @@
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Reactive.Disposables;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Extensions;
 using OsuPlayer.IO.Storage.Playlists;
-using OsuPlayer.Modules.Audio;
 using OsuPlayer.ViewModels;
 using ReactiveUI;
 

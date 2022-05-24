@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
@@ -12,8 +8,6 @@ using Avalonia.VisualTree;
 using OsuPlayer.Data.API.Enums;
 using OsuPlayer.Data.API.Models.User;
 using OsuPlayer.Extensions;
-using OsuPlayer.Network.API.ApiEndpoints;
-using OsuPlayer.Network.Online;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
 using ReactiveUI;

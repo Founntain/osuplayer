@@ -2,8 +2,6 @@
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
-using OsuPlayer.IO.DbReader.DataModels;
-using OsuPlayer.IO.Storage.Config;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
 using ReactiveUI;
@@ -25,8 +23,10 @@ public partial class HomeView : ReactivePlayerControl<HomeViewModel>
         {
             if (this.GetVisualRoot() is MainWindow mainWindow)
                 _mainWindow = mainWindow;
+            
             HomeViewInitialized();
         });
+        
         AvaloniaXamlLoader.Load(this);
     }
 
@@ -37,7 +37,7 @@ public partial class HomeView : ReactivePlayerControl<HomeViewModel>
 
         if (string.IsNullOrWhiteSpace(osuPath))
             await MessageBox.ShowDialogAsync(_mainWindow,
-                "You have to select your osu!.db file, before you can start listening to your songs.\nPlease head to the settings to select your osu!.db.");
+                "You have to select your osu!.db or client.realm file, before you can start listening to your songs.\nPlease head to the settings to select your osu!.db or client.realm.");
 
         //ViewModel!.Songs = new ObservableCollection<SongEntry>(songs);
     }
@@ -46,6 +46,7 @@ public partial class HomeView : ReactivePlayerControl<HomeViewModel>
     {
         var list = sender as ListBox;
         var song = list!.SelectedItem as IMapEntryBase;
+        
         await ViewModel.Player.TryPlaySongAsync(song);
     }
 
@@ -53,10 +54,7 @@ public partial class HomeView : ReactivePlayerControl<HomeViewModel>
     {
         if (ViewModel == default) return;
 
-        var loginWindow = new LoginWindow
-        {
-            ViewModel = new LoginWindowViewModel()
-        };
+        var loginWindow = new LoginWindow();
 
         await loginWindow.ShowDialog(_mainWindow);
 

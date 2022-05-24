@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Threading;
 using Avalonia.Controls;
@@ -13,9 +8,6 @@ using Material.Icons.Avalonia;
 using OsuPlayer.Data.API.Enums;
 using OsuPlayer.Data.API.Models.Beatmap;
 using OsuPlayer.Extensions;
-using OsuPlayer.Modules.Audio;
-using OsuPlayer.Network.API.ApiEndpoints;
-using OsuPlayer.Network.Online;
 using OsuPlayer.ViewModels;
 using ReactiveUI;
 

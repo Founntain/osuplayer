@@ -1,11 +1,9 @@
-﻿using System.Linq;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Markup.Xaml;
 using OsuPlayer.Data.API.Models.Beatmap;
-using OsuPlayer.Network.Online;
 
 namespace OsuPlayer.Views;
 

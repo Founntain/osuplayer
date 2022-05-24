@@ -1,12 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
+﻿using System.Collections.Specialized;
 using System.Reactive.Disposables;
 using OsuPlayer.Data.OsuPlayer.Classes;
-using OsuPlayer.Extensions.Bindables;
-using OsuPlayer.IO.Storage.Config;
 using OsuPlayer.IO.Storage.Equalizer;
-using OsuPlayer.Modules.Audio;
 using OsuPlayer.ViewModels;
 using ReactiveUI;
 
