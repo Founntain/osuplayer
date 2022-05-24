@@ -3,9 +3,6 @@ using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using OsuPlayer.Data.API.Models.User;
 using OsuPlayer.Extensions;
-using OsuPlayer.IO.Storage.Config;
-using OsuPlayer.Network.API.ApiEndpoints;
-using OsuPlayer.Network.Online;
 using OsuPlayer.Network.Security;
 using OsuPlayer.UI_Extensions;
 

@@ -6,12 +6,17 @@
              xmlns:views="clr-namespace:OsuPlayer.Views"
              xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
              xmlns:dataModels="clr-namespace:OsuPlayer.IO.DbReader.DataModels;assembly=OsuPlayer.IO"
+             xmlns:valueConverters="clr-namespace:OsuPlayer.Extensions.ValueConverters;assembly=OsuPlayer.Extensions"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.HomeView">
 
     <Design.DataContext>
         <views:HomeViewModel />
     </Design.DataContext>
+    
+    <UserControl.Resources>
+        <valueConverters:UsernameConverter x:Key="UsernameConverter" />
+    </UserControl.Resources>
 
     <Grid RowDefinitions="Auto, 50*" ColumnDefinitions="50*, 50*" Background="Transparent">
         <!--User Grid-->
@@ -37,7 +42,7 @@
             </Border>
 
             <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                <TextBlock Text="{Binding CurrentUser.Name}" Foreground="{Binding CurrentUser.RoleColor}" FontSize="28"
+                <TextBlock Text="{Binding CurrentUser.Name, Converter={StaticResource UsernameConverter}}" Foreground="{Binding CurrentUser.RoleColor}" FontSize="28"
                            TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding CurrentUser.Name}" />
                 <TextBlock Text="{Binding CurrentUser.SongsPlayedString}" FontStyle="Italic"
                            TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding CurrentUser.SongsPlayedString}" />

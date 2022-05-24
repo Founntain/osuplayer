@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.IO;
+﻿using System.Diagnostics;
 using System.Reactive.Disposables;
 using System.Threading;
 using Avalonia.Media.Imaging;
 using OsuPlayer.Data.API.Models.Beatmap;
 using OsuPlayer.Extensions;
-using OsuPlayer.Network.API.ApiEndpoints;
-using OsuPlayer.Network.Online;
 using OsuPlayer.ViewModels;
 using ReactiveUI;
 

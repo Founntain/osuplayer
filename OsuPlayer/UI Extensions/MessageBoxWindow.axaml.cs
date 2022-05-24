@@ -1,7 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using OsuPlayer.IO.Storage.Config;
 
 namespace OsuPlayer.UI_Extensions;
 

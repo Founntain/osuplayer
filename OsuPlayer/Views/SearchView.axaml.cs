@@ -1,7 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
-using OsuPlayer.IO.DbReader.DataModels;
 using ReactiveUI;
 
 namespace OsuPlayer.Views;

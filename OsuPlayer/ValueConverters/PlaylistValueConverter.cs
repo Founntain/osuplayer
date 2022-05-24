@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Globalization;
 using Avalonia.Data.Converters;
-using OsuPlayer.Modules.Audio;
 using Splat;
 
 namespace OsuPlayer.ValueConverters;

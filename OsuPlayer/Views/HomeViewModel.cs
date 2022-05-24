@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
@@ -10,12 +5,6 @@ using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
-using OsuPlayer.Extensions.Bindables;
-using OsuPlayer.IO.DbReader.DataModels;
-using OsuPlayer.IO.Storage.Config;
-using OsuPlayer.Modules.Audio;
-using OsuPlayer.Network.API.ApiEndpoints;
-using OsuPlayer.Network.Online;
 using OsuPlayer.ViewModels;
 using ReactiveUI;
 using SkiaSharp;
@@ -77,8 +66,8 @@ public class HomeViewModel : BaseViewModel
 
     public List<IMapEntryBase> SongEntries => Player.SongSourceList!;
 
-    public bool IsUserNotLoggedIn => CurrentUser == default;
-    public bool IsUserLoggedIn => CurrentUser != default;
+    public bool IsUserNotLoggedIn => CurrentUser == default || CurrentUser?.Id == Guid.Empty;
+    public bool IsUserLoggedIn => CurrentUser != default && CurrentUser?.Id != Guid.Empty;
 
     public bool SongsLoading => new Config().Container.OsuPath != null && _songsLoading.Value;
 

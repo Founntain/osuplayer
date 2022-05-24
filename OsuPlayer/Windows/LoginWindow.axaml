@@ -34,7 +34,7 @@
             <TextBox Text="{Binding Username}" Watermark="username..." FontWeight="SemiBold"
                      HorizontalAlignment="Stretch" AttachedToVisualTree="Visual_OnAttachedToVisualTree" />
             <TextBox Text="{Binding Password}" Watermark="password..." FontWeight="SemiBold" PasswordChar="•"
-                     HorizontalAlignment="Stretch" KeyUp="InputElement_OnKeyUp" />
+                     HorizontalAlignment="Stretch" x:Name="PasswordBox" KeyUp="InputElement_OnKeyUp" />
         </StackPanel>
 
         <StackPanel VerticalAlignment="Bottom" Margin="10" Spacing="5" > 

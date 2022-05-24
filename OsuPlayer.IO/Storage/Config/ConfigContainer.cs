@@ -16,6 +16,7 @@ public class ConfigContainer : IStorableContainer
     public string? LastPlayedSong { get; set; }
     public bool IgnoreSongsWithSameNameCheckBox { get; set; }
     public bool BlacklistSkip { get; set; }
+    public string? Username { get; set; }
 
     public IStorableContainer Init()
     {

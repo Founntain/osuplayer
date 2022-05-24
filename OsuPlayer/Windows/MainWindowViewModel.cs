@@ -1,4 +1,3 @@
-using OsuPlayer.Modules.Audio;
 using OsuPlayer.ViewModels;
 using OsuPlayer.Views;
 using ReactiveUI;

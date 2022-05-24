@@ -1,17 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Text.RegularExpressions;
 using Avalonia.Controls;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
-using OsuPlayer.Extensions.Bindables;
-using OsuPlayer.IO.Storage.Config;
-using OsuPlayer.Modules.Audio;
 using OsuPlayer.Network;
-using OsuPlayer.Network.Online;
 using OsuPlayer.ViewModels;
 using OsuPlayer.Windows;
 using ReactiveUI;

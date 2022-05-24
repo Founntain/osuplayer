@@ -1,10 +1,8 @@
-﻿using System.Linq;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
-using OsuPlayer.IO.DbReader.DataModels;
 using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.Windows;
 using ReactiveUI;
