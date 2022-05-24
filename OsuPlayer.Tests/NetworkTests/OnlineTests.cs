@@ -46,10 +46,10 @@ public class OnlineTests
         }
 
         Assert.IsNotEmpty(user.ToString());
-        Assert.IsNotEmpty(user.SongsPlayedString);
+        Assert.IsEmpty(user.SongsPlayedString);
         Assert.IsNotEmpty(user.LevelString);
-        Assert.IsNotEmpty(user.LevelProgressString);
-        Assert.IsNotEmpty(user.LevelAndTotalXpString);
+        Assert.IsEmpty(user.LevelProgressString);
+        Assert.IsEmpty(user.LevelAndTotalXpString);
         Assert.IsNotEmpty(user.DescriptionTitleString);
         Assert.IsNotEmpty(user.JoinDateString);
         Assert.IsNotEmpty(user.TotalXpString);
