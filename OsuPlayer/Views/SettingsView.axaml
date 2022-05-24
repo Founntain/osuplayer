@@ -157,7 +157,7 @@
                         </avalonia:MarkdownScrollViewer>
                     </StackPanel>
                 </Grid>
-                <Grid RowDefinitions="Auto" Margin="10" Name="HelpSettings">
+                <Grid RowDefinitions="Auto" Margin="10" Name="HelpAndFeedbackSettings">
                     <Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                         <ExperimentalAcrylicBorder IsHitTestVisible="False">
                             <ExperimentalAcrylicBorder.Material>
