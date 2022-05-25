@@ -13,14 +13,14 @@ public static class GitHubUpdater
     /// <summary>
     /// Checks if the current version is older and needs to be updated
     /// </summary>
-    /// <param name="includePreReleases">If pre-releases should be included</param>
-    public static async Task<(bool, string?, string?)> CheckForUpdates(bool includePreReleases = false)
+    /// <param name="releaseChannel">The release channel to be used</param>
+    public static async Task<(bool, string?, string?)> CheckForUpdates(ReleaseChannels releaseChannel = ReleaseChannels.Stable)
     {
         var curVersion = Assembly.GetEntryAssembly()!.GetName().Version;
 
         var currentVersion = $"{curVersion!.Major}.{curVersion.Minor}.{curVersion.Build}";
 
-        var release = await GetLatestRelease(includePreReleases);
+        var release = await GetLatestRelease(releaseChannel);
 
         if (release == default) return (false, null, null);
 
@@ -32,20 +32,22 @@ public static class GitHubUpdater
     /// <summary>
     /// Gets the latest release from GitHub
     /// </summary>
-    /// <param name="includPreReleases">If pre-releases should be included as well</param>
+    /// <param name="releaseChannel">The release channel to be used</param>
     /// <returns>a GitHub release</returns>
-    public static async Task<Release?> GetLatestRelease(bool includPreReleases = false)
+    public static async Task<Release?> GetLatestRelease(ReleaseChannels releaseChannel = ReleaseChannels.Stable)
     {
         var github = new GitHubClient(new ProductHeaderValue("osu!player"));
 
         var releases = await github.Repository.Release.GetAll("Founntain", "osuplayer");
 
-        return releases.FirstOrDefault(x => x.Prerelease == includPreReleases);
+        var includePreReleases = releaseChannel == ReleaseChannels.PreReleases;
+        
+        return releases.FirstOrDefault(x => x.Prerelease == includePreReleases);
     }
 
-    public static async Task<string> GetLatestPatchNotes(bool includePreReleases = false)
+    public static async Task<string> GetLatestPatchNotes(ReleaseChannels releaseChannel = ReleaseChannels.Stable)
     {
-        var release = await GetLatestRelease(includePreReleases);
+        var release = await GetLatestRelease(releaseChannel);
 
         if (release == default)
             return "**No patch-notes found**";

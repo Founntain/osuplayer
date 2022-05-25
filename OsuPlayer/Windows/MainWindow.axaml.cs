@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Avalonia.Markup.Xaml;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -53,7 +54,17 @@ public partial class MainWindow : ReactivePlayerWindow<MainWindowViewModel>
 
     private async void Window_OnInitialized(object? sender, EventArgs e)
     {
-        var result = await GitHubUpdater.CheckForUpdates(true);
+        try
+        {
+            await using var config = new Config();
+        
+            var result = await GitHubUpdater.CheckForUpdates(config.Container.ReleaseChannel);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex);
+            Debugger.Break();
+        }
 
 #if DEBUG
         // We are ignoring update checks if we are running in debug.
@@ -66,23 +77,31 @@ public partial class MainWindow : ReactivePlayerWindow<MainWindowViewModel>
             ViewModel!.MainView = ViewModel.UpdateView;
         }
 #endif
+
+        try
+        {
+            await using var config = new Config();
         
-        await using var config = new Config();
+            var username = config.Container.Username;
 
-        var username = config.Container.Username;
+            if (string.IsNullOrWhiteSpace(username)) return;
 
-        if (string.IsNullOrWhiteSpace(username)) return;
+            var loginWindow = new LoginWindow(username);
+            await loginWindow.ShowDialog(this);
 
-        var loginWindow = new LoginWindow(username);
-        await loginWindow.ShowDialog(this);
-
-        // We only want to update the user panel, when the home view is already open, to refresh the panel.
-        if (ViewModel.MainView.GetType() != typeof(HomeViewModel)) return;
+            // We only want to update the user panel, when the home view is already open, to refresh the panel.
+            if (ViewModel.MainView.GetType() != typeof(HomeViewModel)) return;
         
-        ViewModel.HomeView.RaisePropertyChanged(nameof(ViewModel.HomeView.IsUserLoggedIn));
-        ViewModel.HomeView.RaisePropertyChanged(nameof(ViewModel.HomeView.IsUserNotLoggedIn));
-        ViewModel.HomeView.RaisePropertyChanged(nameof(ViewModel.HomeView.CurrentUser));
+            ViewModel.HomeView.RaisePropertyChanged(nameof(ViewModel.HomeView.IsUserLoggedIn));
+            ViewModel.HomeView.RaisePropertyChanged(nameof(ViewModel.HomeView.IsUserNotLoggedIn));
+            ViewModel.HomeView.RaisePropertyChanged(nameof(ViewModel.HomeView.CurrentUser));
 
-        ViewModel.HomeView.ProfilePicture = await ViewModel.HomeView.LoadProfilePicture();
+            ViewModel.HomeView.ProfilePicture = await ViewModel.HomeView.LoadProfilePicture();
+        }
+        catch (Exception exception)
+        {
+            Debug.WriteLine(exception);
+            Debugger.Break();
+        }
     }
 }
