@@ -49,42 +49,6 @@ internal partial class TopBarView : ReactivePlayerControl<TopBarViewModel>
         }
     }
 
-    private void WindowButtonPressed(object? sender, PointerReleasedEventArgs e)
-    {
-        switch ((sender as Control)?.Name)
-        {
-            case "Minimize":
-                _mainWindow.WindowState = WindowState.Minimized;
-                break;
-            case "Miniplayer":
-                //TODO: open mini player
-                break;
-            case "Close":
-                _mainWindow.Close();
-                break;
-        }
-    }
-
-    private void OpenFullscreenMenuItem_OnClick(object? sender, RoutedEventArgs e)
-    {
-        throw new NotImplementedException();
-    }
-
-    private void OpenMiniplayerMenuItem_OnClick(object? sender, RoutedEventArgs e)
-    {
-        throw new NotImplementedException();
-    }
-
-    private void OpenEqualizerMenuItem_OnClick(object? sender, RoutedEventArgs e)
-    {
-        throw new NotImplementedException();
-    }
-
-    private void OpenContributersMenuItem_OnClick(object? sender, RoutedEventArgs e)
-    {
-        throw new NotImplementedException();
-    }
-
     private void TopBarGrid_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
         _mainWindow.BeginMoveDrag(e);
