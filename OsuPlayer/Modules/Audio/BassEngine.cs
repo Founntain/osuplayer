@@ -315,7 +315,7 @@ public sealed class BassEngine : INotifyPropertyChanged
     }
 
     /// <summary>
-    /// Inits the eq on the <see cref="FxStream"/>
+    /// Inits the eq on the <see cref="FxStream" />
     /// </summary>
     private void InitEq()
     {
@@ -344,7 +344,7 @@ public sealed class BassEngine : INotifyPropertyChanged
     }
 
     /// <summary>
-    /// Sets all eq bands with values from <see cref="EqGains"/>
+    /// Sets all eq bands with values from <see cref="EqGains" />
     /// </summary>
     private void SetAllEq()
     {

@@ -29,7 +29,7 @@ public static class PasswordManager
             var s = "Your password needs to meet the following requirements:\n";
 
             foreach (var errorMessage in errorMessages) s += errorMessage + "\n";
-            
+
             // OsuPlayerMessageBox.Show(s, "Fix password errors");
 
             return false;
@@ -62,7 +62,7 @@ public static class PasswordManager
             var s = "Your password needs to meet the following requirements:\n";
 
             foreach (var errorMessage in errorMessages) s += errorMessage + "\n";
-            
+
             // OsuPlayerMessageBox.Show(s, "Fix password errors");
 
             return (false, s);

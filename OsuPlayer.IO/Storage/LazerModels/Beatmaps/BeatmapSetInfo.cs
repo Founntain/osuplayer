@@ -31,11 +31,11 @@ public class BeatmapSetInfo : RealmObject, IHasRealmFiles, IEquatable<BeatmapSet
     [Ignored]
     public BeatmapOnlineStatus Status
     {
-        get => (BeatmapOnlineStatus)StatusInt;
-        set => StatusInt = (int)value;
+        get => (BeatmapOnlineStatus) StatusInt;
+        set => StatusInt = (int) value;
     }
 
-    [MapTo(nameof(Status))] public int StatusInt { get; set; } = (int)BeatmapOnlineStatus.None;
+    [MapTo(nameof(Status))] public int StatusInt { get; set; } = (int) BeatmapOnlineStatus.None;
 
     public bool DeletePending { get; set; }
 

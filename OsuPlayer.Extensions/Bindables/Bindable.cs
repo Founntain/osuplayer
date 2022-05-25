@@ -18,6 +18,14 @@ public class Bindable<T> : IBindable<T>, IBindable
 
     protected LockedWeakList<Bindable<T>>? Bindings { get; private set; }
 
+    void IBindable.BindTo(IBindable other)
+    {
+        if (!(other is Bindable<T> otherB))
+            throw new InvalidCastException($"Can't bind to a bindable of type {other.GetType()} from a bindable of type {GetType()}.");
+
+        BindTo(otherB);
+    }
+
     /// <summary>
     /// An event raised when <see cref="Value" /> has changed
     /// </summary>
@@ -42,14 +50,6 @@ public class Bindable<T> : IBindable<T>, IBindable
     {
         if (other is Bindable<T> otherB)
             BindTo(otherB);
-    }
-
-    void IBindable.BindTo(IBindable other)
-    {
-        if (!(other is Bindable<T> otherB))
-            throw new InvalidCastException($"Can't bind to a bindable of type {other.GetType()} from a bindable of type {GetType()}.");
-        
-        BindTo(otherB);
     }
 
     /// <summary>
@@ -157,9 +157,9 @@ public class Bindable<T> : IBindable<T>, IBindable
     /// <summary>
     /// Binds a <see cref="ValueChangedEvent{T}" /> to a <see cref="Bindable{T}" />
     /// </summary>
-    /// <param name="onChange">the <see cref="Action{T}"/> that should be executed</param>
+    /// <param name="onChange">the <see cref="Action{T}" /> that should be executed</param>
     /// <param name="ignoreSource">whether to ignore the trigger source</param>
-    /// <param name="runOnceImmediately">whether to run the <paramref name="onChange"/> action once immediately</param>
+    /// <param name="runOnceImmediately">whether to run the <paramref name="onChange" /> action once immediately</param>
     public void BindValueChanged(Action<ValueChangedEvent<T>> onChange, bool ignoreSource = false, bool runOnceImmediately = false)
     {
         ValueChanged += onChange;

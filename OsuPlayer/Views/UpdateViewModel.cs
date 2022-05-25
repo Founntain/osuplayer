@@ -6,9 +6,16 @@ namespace OsuPlayer.Views;
 
 public class UpdateViewModel : BaseViewModel
 {
-    private string? _updateUrl;
-    private string? _newVersion;
     private string _infoString;
+    private string? _newVersion;
+    private string? _updateUrl;
+
+    public UpdateViewModel()
+    {
+        Activator = new ViewModelActivator();
+
+        this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
+    }
 
     public string InfoString
     {
@@ -26,15 +33,5 @@ public class UpdateViewModel : BaseViewModel
     {
         get => _newVersion;
         set => this.RaiseAndSetIfChanged(ref _newVersion, value);
-    }
-
-    public UpdateViewModel()
-    {
-        Activator = new ViewModelActivator();
-        
-        this.WhenActivated(disposables =>
-        {
-            Disposable.Create(() => { }).DisposeWith(disposables);
-        });
     }
 }

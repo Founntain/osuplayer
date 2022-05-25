@@ -4,6 +4,7 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Markup.Xaml;
 using OsuPlayer.Data.API.Models.Beatmap;
+using OsuPlayer.Extensions;
 
 namespace OsuPlayer.Views;
 
@@ -53,5 +54,19 @@ public partial class UserView : ReactivePlayerControl<UserViewModel>
             (x.Artist == beatmapModel.Beatmap.Artist && x.Title == beatmapModel.Beatmap.Title));
         if (mapEntry != default)
             await ViewModel.Player.TryPlaySongAsync(mapEntry);
+    }
+
+    private void WebProfile_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (ViewModel.SelectedUser == default) return;
+
+        GeneralExtensions.OpenUrl($"https://stats.founntain.dev/user/{Uri.EscapeDataString(ViewModel.SelectedUser.Name)}");
+    }
+
+    private void OsuProfile_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (ViewModel.SelectedUser == default) return;
+
+        GeneralExtensions.OpenUrl($"https://osu.ppy.sh/users/{ViewModel.SelectedUser.OsuProfile}");
     }
 }

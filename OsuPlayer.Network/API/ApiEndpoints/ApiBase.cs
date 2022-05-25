@@ -17,11 +17,11 @@ public static partial class ApiAsync
     {
         if (ex.GetType() != typeof(WebException)) return;
 
-        var webEx = (WebException)ex;
+        var webEx = (WebException) ex;
 
         if (webEx.Status != WebExceptionStatus.ConnectFailure && webEx.Status != WebExceptionStatus.Timeout) return;
         if (Constants.OfflineMode) return;
-        
+
         Constants.OfflineMode = true;
     }
 

@@ -13,7 +13,7 @@
     <Design.DataContext>
         <views:HomeViewModel />
     </Design.DataContext>
-    
+
     <UserControl.Resources>
         <valueConverters:UsernameConverter x:Key="UsernameConverter" />
     </UserControl.Resources>
@@ -42,7 +42,8 @@
             </Border>
 
             <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                <TextBlock Text="{Binding CurrentUser.Name, Converter={StaticResource UsernameConverter}}" Foreground="{Binding CurrentUser.RoleColor}" FontSize="28"
+                <TextBlock Text="{Binding CurrentUser.Name, Converter={StaticResource UsernameConverter}}"
+                           Foreground="{Binding CurrentUser.RoleColor}" FontSize="28"
                            TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding CurrentUser.Name}" />
                 <TextBlock Text="{Binding CurrentUser.SongsPlayedString}" FontStyle="Italic"
                            TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding CurrentUser.SongsPlayedString}" />

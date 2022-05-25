@@ -151,7 +151,7 @@
                         <avalonia:MarkdownScrollViewer Markdown="{Binding Patchnotes}">
                             <avalonia:MarkdownScrollViewer.Styles>
                                 <Style Selector="ctxt|CTextBlock.Heading2">
-                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="Foreground" Value="White" />
                                 </Style>
                             </avalonia:MarkdownScrollViewer.Styles>
                         </avalonia:MarkdownScrollViewer>
@@ -173,9 +173,12 @@
                     <StackPanel Margin="10" Spacing="10" Name="HelpAndFeedbackSettingsPanel">
                         <TextBlock Text="Help and feedback" FontSize="32" VerticalAlignment="Center"
                                    HorizontalAlignment="Stretch" />
-                        <Button Content="report a bug or request a feature" Click="ReportBug_OnClick" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
-                        <Button Content="join the discord server" Click="JoinDiscord_OnClick" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
-                        <Button Content="contact us" Click="ContactUs_OnClick" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+                        <Button Content="report a bug or request a feature" Click="ReportBug_OnClick"
+                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                        <Button Content="join the discord server" Click="JoinDiscord_OnClick"
+                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                        <Button Content="contact us" Click="ContactUs_OnClick" HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Center" />
                     </StackPanel>
                 </Grid>
             </controls:CascadingWrapPanel>

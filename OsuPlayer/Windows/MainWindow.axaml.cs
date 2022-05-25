@@ -1,7 +1,6 @@
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Avalonia.Markup.Xaml;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Network;
 using OsuPlayer.Views;
@@ -44,9 +43,9 @@ public partial class MainWindow : ReactivePlayerWindow<MainWindowViewModel>
     protected override void OnClosing(CancelEventArgs e)
     {
         base.OnClosing(e);
-        
+
         using var config = new Config();
-        
+
         config.Container.Volume = ViewModel.BassEngine.Volume;
         config.Container.Username = ProfileManager.User?.Name;
     }
@@ -66,7 +65,7 @@ public partial class MainWindow : ReactivePlayerWindow<MainWindowViewModel>
             ViewModel!.MainView = ViewModel.UpdateView;
         }
 #endif
-        
+
         await using var config = new Config();
 
         var username = config.Container.Username;
@@ -78,7 +77,7 @@ public partial class MainWindow : ReactivePlayerWindow<MainWindowViewModel>
 
         // We only want to update the user panel, when the home view is already open, to refresh the panel.
         if (ViewModel.MainView.GetType() != typeof(HomeViewModel)) return;
-        
+
         ViewModel.HomeView.RaisePropertyChanged(nameof(ViewModel.HomeView.IsUserLoggedIn));
         ViewModel.HomeView.RaisePropertyChanged(nameof(ViewModel.HomeView.IsUserNotLoggedIn));
         ViewModel.HomeView.RaisePropertyChanged(nameof(ViewModel.HomeView.CurrentUser));

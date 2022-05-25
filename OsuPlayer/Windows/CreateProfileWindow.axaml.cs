@@ -13,7 +13,7 @@ public partial class CreateProfileWindow : ReactiveWindow<CreateProfileWindowVie
     public CreateProfileWindow()
     {
         InitializeComponent();
-        
+
         using var config = new Config();
         TransparencyLevelHint = config.Read().TransparencyLevelHint;
     }
@@ -30,16 +30,16 @@ public partial class CreateProfileWindow : ReactiveWindow<CreateProfileWindowVie
         if (string.IsNullOrWhiteSpace(ViewModel.Username) || string.IsNullOrWhiteSpace(ViewModel.Password))
         {
             await MessageBox.ShowDialogAsync(this, "Please enter a username and a password!");
-            
+
             return;
         }
 
         var passwordRequirements = PasswordManager.CheckIfPasswordMeetsRequirementsWithErrorList(ViewModel.Password);
-        
+
         if (!passwordRequirements.Item1)
         {
             await MessageBox.ShowDialogAsync(this, passwordRequirements.Item2);
-            
+
             return;
         }
 

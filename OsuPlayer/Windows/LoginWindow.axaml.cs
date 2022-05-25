@@ -6,7 +6,6 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using ReactiveUI;
-using Key = Avalonia.Input.Key;
 
 namespace OsuPlayer.Windows;
 
@@ -22,7 +21,7 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
         Init();
 
         if (ViewModel == default) return;
-        
+
         ViewModel.Username = username;
     }
 
@@ -31,7 +30,7 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
         InitializeComponent();
 
         ViewModel = new LoginWindowViewModel();
-        
+
         var config = new Config();
         TransparencyLevelHint = config.Container.TransparencyLevelHint;
 #if DEBUG
@@ -44,7 +43,7 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
         this.WhenActivated(disposables =>
         {
             if (string.IsNullOrWhiteSpace(ViewModel?.Username)) return;
-            
+
             this.FindControl<TextBox>("PasswordBox").Focus();
         });
 
@@ -88,7 +87,7 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
     {
         var createProfileWindow = new CreateProfileWindow
         {
-            ViewModel = new()
+            ViewModel = new CreateProfileWindowViewModel()
         };
 
         await createProfileWindow.ShowDialog(this);

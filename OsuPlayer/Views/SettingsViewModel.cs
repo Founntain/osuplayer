@@ -12,23 +12,17 @@ namespace OsuPlayer.Views;
 
 public class SettingsViewModel : BaseViewModel
 {
+    private readonly Bindable<bool> _blacklistSkip = new();
+
+    private readonly Bindable<SortingMode> _sortingMode = new();
     public readonly Player Player;
     private string _osuLocation;
+    private string _patchnotes;
     private StartupSong _selectedStartupSong;
     private WindowTransparencyLevel _selectedTransparencyLevel;
     private string _settingsSearchQ;
 
-    private readonly Bindable<SortingMode> _sortingMode = new();
-    private readonly Bindable<bool> _blacklistSkip = new();
-
     public MainWindow? MainWindow;
-    private string _patchnotes;
-
-    public string Patchnotes
-    {
-        get => _patchnotes;
-        set => this.RaiseAndSetIfChanged(ref _patchnotes, value);
-    }
 
     public SettingsViewModel(Player player)
     {
@@ -49,16 +43,10 @@ public class SettingsViewModel : BaseViewModel
         this.WhenActivated(Block);
     }
 
-    private async void Block(CompositeDisposable disposables)
+    public string Patchnotes
     {
-        Disposable.Create(() => { }).DisposeWith(disposables);
-
-        var latestPatchNotes = await GitHubUpdater.GetLatestPatchNotes(true);
-
-        var regex = new Regex(@"( in )([\w\s:\/\.])*[\d]+");
-        latestPatchNotes = regex.Replace(latestPatchNotes, "");
-        regex = new Regex(@"(\n?\r?)*[\*]*(Full Changelog)[\*]*:.*$");
-        Patchnotes = regex.Replace(latestPatchNotes, "");
+        get => _patchnotes;
+        set => this.RaiseAndSetIfChanged(ref _patchnotes, value);
     }
 
     public User? CurrentUser => ProfileManager.User;
@@ -175,4 +163,16 @@ public class SettingsViewModel : BaseViewModel
     public Avalonia.Controls.Controls SettingsCategories { get; set; }
 
     public ObservableCollection<AudioDevice> OutputDeviceComboboxItems { get; set; }
+
+    private async void Block(CompositeDisposable disposables)
+    {
+        Disposable.Create(() => { }).DisposeWith(disposables);
+
+        var latestPatchNotes = await GitHubUpdater.GetLatestPatchNotes(true);
+
+        var regex = new Regex(@"( in )([\w\s:\/\.])*[\d]+");
+        latestPatchNotes = regex.Replace(latestPatchNotes, "");
+        regex = new Regex(@"(\n?\r?)*[\*]*(Full Changelog)[\*]*:.*$");
+        Patchnotes = regex.Replace(latestPatchNotes, "");
+    }
 }

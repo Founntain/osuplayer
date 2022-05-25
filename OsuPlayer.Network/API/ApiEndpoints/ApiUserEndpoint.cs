@@ -23,7 +23,7 @@ public partial class ApiAsync
     /// Gets the banner of a specific user
     /// </summary>
     /// <param name="bannerUrl">The url of the banner</param>
-    /// <returns>The banner as an <see cref="Bitmap"/></returns>
+    /// <returns>The banner as an <see cref="Bitmap" /></returns>
     public static async Task<Bitmap?> GetProfileBannerAsync(string? bannerUrl = null)
     {
         if (string.IsNullOrWhiteSpace(bannerUrl)) return default;
@@ -50,11 +50,11 @@ public partial class ApiAsync
     /// Gets the whole data of a specific user
     /// </summary>
     /// <param name="username">The username of the user</param>
-    /// <returns>A <see cref="User"/> with all its data</returns>
+    /// <returns>A <see cref="User" /> with all its data</returns>
     public static async Task<User?> GetProfileByNameAsync(string username)
     {
         if (string.IsNullOrWhiteSpace(username)) return default;
-        
+
         return await GetRequestWithParameterAsync<User>("users", "getUserByName", $"name={username}");
     }
 
@@ -64,7 +64,7 @@ public partial class ApiAsync
     /// <param name="songChecksum">The song the user played</param>
     /// <param name="elapsedMilliseconds">How long the user played it</param>
     /// <param name="channellength">The total song length</param>
-    /// <returns>The updated <see cref="User"/></returns>
+    /// <returns>The updated <see cref="User" /></returns>
     public static async Task<User?> UpdateXpFromCurrentUserAsync(string songChecksum, double elapsedMilliseconds,
         double channellength)
     {
@@ -86,7 +86,7 @@ public partial class ApiAsync
     /// </summary>
     /// <param name="amount">How many songs the user played</param>
     /// <param name="beatmapSetId">The beatmapset ID to update service side playing statistics</param>
-    /// <returns>The updated <see cref="User"/></returns>
+    /// <returns>The updated <see cref="User" /></returns>
     public static async Task<User?> UpdateSongsPlayedForCurrentUserAsync(int amount, int beatmapSetId = -1)
     {
         if (ProfileManager.User?.Name == default) return default;
@@ -115,7 +115,7 @@ public partial class ApiAsync
     /// </summary>
     /// <param name="username">The username of the user to get it's stats from</param>
     /// <param name="amount">The amount of songs to get. Default 10</param>
-    /// <returns>A list of <see cref="BeatmapUserValidityModel"/> containing the top songs of the user</returns>
+    /// <returns>A list of <see cref="BeatmapUserValidityModel" /> containing the top songs of the user</returns>
     public static async Task<List<BeatmapUserValidityModel>?> GetBeatmapsPlayedByUser(string username, int amount = 10)
     {
         return await GetRequestWithParameterAsync<List<BeatmapUserValidityModel>>("beatmaps", "getBeatmapsPlayedByUser",

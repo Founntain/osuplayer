@@ -5,11 +5,11 @@
              xmlns:views="clr-namespace:OsuPlayer.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.UpdateView">
-    
+
     <Design.DataContext>
         <views:UpdateViewModel />
     </Design.DataContext>
-    
+
     <Grid>
         <Panel>
             <ExperimentalAcrylicBorder IsHitTestVisible="False">
@@ -22,11 +22,11 @@
                 </ExperimentalAcrylicBorder.Material>
             </ExperimentalAcrylicBorder>
         </Panel>
-        
+
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Stretch" Spacing="10">
-            <TextBlock Text="UPDATE AVAILABLE" FontSize="64" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <TextBlock Text="UPDATE AVAILABLE" FontSize="64" VerticalAlignment="Center" HorizontalAlignment="Center" />
             <TextBlock Text="{Binding InfoString}" HorizontalAlignment="Center" FontSize="24" />
-            <Button Content="open github" HorizontalAlignment="Center" Click="Button_OnClick" FontSize="18"/>
+            <Button Content="open github" HorizontalAlignment="Center" Click="Button_OnClick" FontSize="18" />
         </StackPanel>
     </Grid>
 </UserControl>

@@ -74,7 +74,7 @@ public class PlaylistTests
 
         await PlaylistManager.ReplacePlaylistAsync(default);
 
-        await PlaylistManager.ReplacePlaylistsAsync(new List<Playlist>()
+        await PlaylistManager.ReplacePlaylistsAsync(new List<Playlist>
         {
             new()
             {
@@ -88,7 +88,7 @@ public class PlaylistTests
     {
         var id = Guid.NewGuid();
 
-        var playlist = new Playlist()
+        var playlist = new Playlist
         {
             Id = id,
             Name = id.ToString()
@@ -116,7 +116,7 @@ public class PlaylistTests
     {
         var id = Guid.NewGuid();
 
-        var playlist = new Playlist()
+        var playlist = new Playlist
         {
             Id = id,
             Name = id.ToString()

@@ -116,7 +116,9 @@
 
                 <Button Name="Blacklist" Width="38" Height="38" CornerRadius="50" Click="Blacklist_OnClick"
                         Background="Transparent">
-                    <avalonia:MaterialIcon Kind="{Binding IsCurrentSongOnBlacklist, Converter={StaticResource IsCurrentSongOnBlacklistConverter}}" Height="19" Width="19" />
+                    <avalonia:MaterialIcon
+                        Kind="{Binding IsCurrentSongOnBlacklist, Converter={StaticResource IsCurrentSongOnBlacklistConverter}}"
+                        Height="19" Width="19" />
                 </Button>
 
                 <Button Name="Settings" Width="42" Height="42" CornerRadius="50" Click="Settings_OnClick"
@@ -129,14 +131,15 @@
                 <Button Name="Repeat" Width="38" Height="38" CornerRadius="50" Click="SongControl"
                         Background="Transparent">
                     <Button.ContextMenu>
-                        <ContextMenu IsVisible="{Binding IsRepeating, Converter={StaticResource RepeatConverter}}" Items="{Binding Playlists}" PointerReleased="RepeatContextMenu_OnPointerReleased" />
+                        <ContextMenu IsVisible="{Binding IsRepeating, Converter={StaticResource RepeatConverter}}"
+                                     Items="{Binding Playlists}" PointerReleased="RepeatContextMenu_OnPointerReleased" />
                     </Button.ContextMenu>
                     <Panel>
                         <avalonia:MaterialIcon Kind="{Binding IsRepeating, Converter={StaticResource RepeatConverter}}"
                                                Height="19" Width="19" />
                         <ToolTip IsVisible="{Binding IsRepeating, Converter={StaticResource RepeatConverter}}">
                             <ToolTip.Tip>
-                                <TextBlock Text="{Binding ActivePlaylist}"/>
+                                <TextBlock Text="{Binding ActivePlaylist}" />
                             </ToolTip.Tip>
                         </ToolTip>
                     </Panel>

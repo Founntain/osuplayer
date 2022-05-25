@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
 using Avalonia.Media;
-using Octokit;
 using OsuPlayer.Data.API.Enums;
 using OsuPlayer.Data.API.Models.User;
 
@@ -16,13 +15,13 @@ public sealed class User : UserModel
         Role = UserRole.Unknown;
     }
 
-    public string SongsPlayedString => Id == Guid.Empty ? String.Empty : $"{SongsPlayed.ToString("##,###", CultureInfo.InvariantCulture)} songs played";
+    public string SongsPlayedString => Id == Guid.Empty ? string.Empty : $"{SongsPlayed.ToString("##,###", CultureInfo.InvariantCulture)} songs played";
 
     public string LevelAndTotalXpString =>
-        Id == Guid.Empty ? String.Empty : $"Level {Level.ToString("##,###", CultureInfo.InvariantCulture)} | Total XP: {TotalXp.ToString("##,###", CultureInfo.InvariantCulture)}";
+        Id == Guid.Empty ? string.Empty : $"Level {Level.ToString("##,###", CultureInfo.InvariantCulture)} | Total XP: {TotalXp.ToString("##,###", CultureInfo.InvariantCulture)}";
 
     public string LevelProgressString =>
-        Id == Guid.Empty ? String.Empty : $"{Xp.ToString("##,###", CultureInfo.InvariantCulture)} XP / {GetXpNeededForNextLevel().ToString("##,###", CultureInfo.InvariantCulture)} XP";
+        Id == Guid.Empty ? string.Empty : $"{Xp.ToString("##,###", CultureInfo.InvariantCulture)} XP / {GetXpNeededForNextLevel().ToString("##,###", CultureInfo.InvariantCulture)} XP";
 
     public Brush RoleColor => GetRoleColorBrush();
     public string RoleString => GetRoleString();
