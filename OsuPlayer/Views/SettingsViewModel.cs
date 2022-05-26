@@ -23,6 +23,14 @@ public class SettingsViewModel : BaseViewModel
     private string _settingsSearchQ;
 
     public MainWindow? MainWindow;
+    private string _patchnotes;
+    private ReleaseChannels _selectedReleaseChannel;
+
+    public string Patchnotes
+    {
+        get => _patchnotes;
+        set => this.RaiseAndSetIfChanged(ref _patchnotes, value);
+    }
 
     public SettingsViewModel(Player player)
     {
@@ -30,6 +38,7 @@ public class SettingsViewModel : BaseViewModel
 
         _selectedStartupSong = config.Container.StartupSong;
         _selectedTransparencyLevel = config.Container.TransparencyLevelHint;
+        _selectedReleaseChannel = config.Container.ReleaseChannel;
 
         Player = player;
 
@@ -43,10 +52,16 @@ public class SettingsViewModel : BaseViewModel
         this.WhenActivated(Block);
     }
 
-    public string Patchnotes
+    private async void Block(CompositeDisposable disposables)
     {
-        get => _patchnotes;
-        set => this.RaiseAndSetIfChanged(ref _patchnotes, value);
+        Disposable.Create(() => { }).DisposeWith(disposables);
+
+        var latestPatchNotes = await GitHubUpdater.GetLatestPatchNotes(_selectedReleaseChannel);
+
+        var regex = new Regex(@"( in )([\w\s:\/\.])*[\d]+");
+        latestPatchNotes = regex.Replace(latestPatchNotes, "");
+        regex = new Regex(@"(\n?\r?)*[\*]*(Full Changelog)[\*]*:.*$");
+        Patchnotes = regex.Replace(latestPatchNotes, "");
     }
 
     public User? CurrentUser => ProfileManager.User;
@@ -55,6 +70,20 @@ public class SettingsViewModel : BaseViewModel
     {
         get => $"osu! location: {_osuLocation}";
         set => this.RaiseAndSetIfChanged(ref _osuLocation, value);
+    }
+
+    public IEnumerable<ReleaseChannels> ReleaseChannels => Enum.GetValues<ReleaseChannels>();
+
+    public ReleaseChannels SelectedReleaseChannel
+    {
+        get => _selectedReleaseChannel;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _selectedReleaseChannel, value);
+
+            using var config = new Config();
+            config.Container.ReleaseChannel = value;
+        }
     }
 
     public IEnumerable<WindowTransparencyLevel> WindowTransparencyLevels => Enum.GetValues<WindowTransparencyLevel>();

@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls;
 using OsuPlayer.Data.OsuPlayer.Enums;
+using OsuPlayer.Network;
 
 namespace OsuPlayer.IO.Storage.Config;
 
@@ -17,6 +18,7 @@ public class ConfigContainer : IStorableContainer
     public bool IgnoreSongsWithSameNameCheckBox { get; set; }
     public bool BlacklistSkip { get; set; }
     public string? Username { get; set; }
+    public ReleaseChannels ReleaseChannel { get; set; } = 0;
 
     public IStorableContainer Init()
     {

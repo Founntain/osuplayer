@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Avalonia.Markup.Xaml;
 using OsuPlayer.IO.Storage.Playlists;
@@ -52,7 +53,17 @@ public partial class MainWindow : ReactivePlayerWindow<MainWindowViewModel>
 
     private async void Window_OnInitialized(object? sender, EventArgs e)
     {
-        var result = await GitHubUpdater.CheckForUpdates(true);
+        try
+        {
+            await using var config = new Config();
+        
+            var result = await GitHubUpdater.CheckForUpdates(config.Container.ReleaseChannel);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex);
+            Debugger.Break();
+        }
 
 #if DEBUG
         // We are ignoring update checks if we are running in debug.

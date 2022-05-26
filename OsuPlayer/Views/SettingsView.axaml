@@ -57,6 +57,12 @@
                                     HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
                         </StackPanel>
 
+                        <StackPanel Spacing="5" Name="UpdateChannel">
+                            <TextBlock Text="Update channel (changing requires restart)"/>
+                            <ComboBox SelectedItem="{Binding SelectedReleaseChannel}" Items="{Binding ReleaseChannels}"
+                                      HorizontalAlignment="Stretch" />
+                        </StackPanel>
+                        
                         <StackPanel Spacing="5" Name="WindowBlurMethod">
                             <TextBlock Text="Window Blur Method" />
                             <ComboBox SelectedItem="{Binding SelectedTransparencyLevel}"
