@@ -23,10 +23,10 @@ public partial class HomeView : ReactivePlayerControl<HomeViewModel>
         {
             if (this.GetVisualRoot() is MainWindow mainWindow)
                 _mainWindow = mainWindow;
-            
+
             HomeViewInitialized();
         });
-        
+
         AvaloniaXamlLoader.Load(this);
     }
 
@@ -46,7 +46,7 @@ public partial class HomeView : ReactivePlayerControl<HomeViewModel>
     {
         var list = sender as ListBox;
         var song = list!.SelectedItem as IMapEntryBase;
-        
+
         await ViewModel.Player.TryPlaySongAsync(song);
     }
 

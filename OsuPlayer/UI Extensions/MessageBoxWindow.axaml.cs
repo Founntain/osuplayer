@@ -9,7 +9,7 @@ public partial class MessageBoxWindow : Window
     public MessageBoxWindow()
     {
         InitializeComponent();
-        
+
         DataContext = new MessageBoxViewModel();
 
         using var config = new Config();
@@ -29,7 +29,7 @@ public partial class MessageBoxWindow : Window
         this.AttachDevTools();
 #endif
     }
-    
+
     private void InitializeComponent()
     {
         AvaloniaXamlLoader.Load(this);

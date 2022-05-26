@@ -12,17 +12,17 @@ namespace OsuPlayer.Views;
 
 public class SettingsViewModel : BaseViewModel
 {
+    private readonly Bindable<bool> _blacklistSkip = new();
+
+    private readonly Bindable<SortingMode> _sortingMode = new();
     public readonly Player Player;
     private string _osuLocation;
+    private string _patchnotes;
     private StartupSong _selectedStartupSong;
     private WindowTransparencyLevel _selectedTransparencyLevel;
     private string _settingsSearchQ;
 
-    private readonly Bindable<SortingMode> _sortingMode = new();
-    private readonly Bindable<bool> _blacklistSkip = new();
-
     public MainWindow? MainWindow;
-    private string _patchnotes;
     private ReleaseChannels _selectedReleaseChannel;
 
     public string Patchnotes

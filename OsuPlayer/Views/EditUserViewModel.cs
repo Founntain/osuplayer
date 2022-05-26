@@ -12,10 +12,12 @@ namespace OsuPlayer.Views;
 public class EditUserViewModel : BaseViewModel
 {
     private CancellationTokenSource? _bannerCancellationTokenSource;
+    private string _confirmDeletionPassword;
     private Bitmap? _currentProfileBanner;
     private Bitmap? _currentProfilePicture;
 
     private User? _currentUser;
+    private bool _isDeleteProfilePopupOpen;
     private bool _isNewBannerSelected;
     private bool _isNewProfilePictureSelected;
     private string _newPassword;
@@ -23,8 +25,17 @@ public class EditUserViewModel : BaseViewModel
     private CancellationTokenSource? _profilePictureCancellationTokenSource;
     private CancellationTokenSource? _topSongsCancellationTokenSource;
     private ObservableCollection<BeatmapUserValidityModel>? _topSongsOfCurrentUser;
-    private bool _isDeleteProfilePopupOpen;
-    private string _confirmDeletionPassword;
+
+    public EditUserViewModel()
+    {
+        Activator = new ViewModelActivator();
+        this.WhenActivated(disposables =>
+        {
+            Disposable.Create(() => { }).DisposeWith(disposables);
+
+            CurrentUser = ProfileManager.User;
+        });
+    }
 
     public string ConfirmDeletionPassword
     {
@@ -36,17 +47,6 @@ public class EditUserViewModel : BaseViewModel
     {
         get => _isDeleteProfilePopupOpen;
         set => this.RaiseAndSetIfChanged(ref _isDeleteProfilePopupOpen, value);
-    }
-
-    public EditUserViewModel()
-    {
-        Activator = new ViewModelActivator();
-        this.WhenActivated(disposables =>
-        {
-            Disposable.Create(() => { }).DisposeWith(disposables);
-
-            CurrentUser = ProfileManager.User;
-        });
     }
 
     public string Password

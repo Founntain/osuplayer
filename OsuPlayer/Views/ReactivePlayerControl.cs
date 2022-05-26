@@ -7,7 +7,7 @@ namespace OsuPlayer.Views;
 /// <summary>
 /// A reactive player control class for all controls in our app
 /// </summary>
-/// <typeparam name="TViewModel">the ViewModel which the <see cref="ReactivePlayerControl{TViewModel}"/> is bound to</typeparam>
+/// <typeparam name="TViewModel">the ViewModel which the <see cref="ReactivePlayerControl{TViewModel}" /> is bound to</typeparam>
 public class ReactivePlayerControl<TViewModel> : UserControl, IViewFor<TViewModel> where TViewModel : class
 {
     public static readonly StyledProperty<TViewModel> ViewModelProperty = AvaloniaProperty

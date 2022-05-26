@@ -4,7 +4,7 @@ namespace OsuPlayer.Network.Online;
 
 public static class ProfileManager
 {
-    public static User? User = User ?? new ();
+    public static User? User = User ?? new User();
 
     public static async Task<User?> LoadProfile(string username, string password)
     {

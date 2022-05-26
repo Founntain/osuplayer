@@ -18,10 +18,10 @@
         ExtendClientAreaChromeHints="PreferSystemChrome"
 
         Icon="avares://OsuPlayer/Resources/x96.ico"
-        
+
         Initialized="Window_OnInitialized">
 
-<Window.Styles>
+    <Window.Styles>
         <StyleInclude Source="/Styles/SliderStyle.axaml" />
     </Window.Styles>
 

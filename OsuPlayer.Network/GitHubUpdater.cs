@@ -52,10 +52,10 @@ public static class GitHubUpdater
         if (release == default)
             return "**No patch-notes found**";
 
-        return $"## {(release.Prerelease ? "pre-release" : "release")} v" + release.TagName + Environment.NewLine 
-               +"*released " + release.CreatedAt.ToString("F", new CultureInfo("en-us")) + "*"
-               + Environment.NewLine 
-               + Environment.NewLine 
+        return $"## {(release.Prerelease ? "pre-release" : "release")} v" + release.TagName + Environment.NewLine
+               + "*released " + release.CreatedAt.ToString("F", new CultureInfo("en-us")) + "*"
+               + Environment.NewLine
+               + Environment.NewLine
                + release.Body;
     }
 }

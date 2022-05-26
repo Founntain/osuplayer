@@ -32,10 +32,7 @@ public static class GeneralExtensions
                 return;
             }
 
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                Process.Start("open", url);
-            }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) Process.Start("open", url);
         }
     }
-} 
+}

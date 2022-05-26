@@ -321,7 +321,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
                 return;
             }
-            
+
             MessageBox.Show("Profile could not be deleted, due to an server error!");
 
             return;

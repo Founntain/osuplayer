@@ -34,7 +34,7 @@ public static class UnhandledExceptionHandler
                        + "🛑 Error stacktrace below:"
                        + Environment.NewLine
                        + ex.Message + Environment.NewLine + ex.StackTrace;
-        
+
         File.WriteAllText($"logs/{dateString}.txt", crashlog);
     }
 }

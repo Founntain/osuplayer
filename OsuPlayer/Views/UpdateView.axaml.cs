@@ -19,7 +19,7 @@ public partial class UpdateView : ReactivePlayerControl<UpdateViewModel>
     private void Button_OnClick(object? sender, RoutedEventArgs e)
     {
         if (ViewModel?.UpdateUrl == default) return;
-        
+
         GeneralExtensions.OpenUrl(ViewModel.UpdateUrl);
     }
 }

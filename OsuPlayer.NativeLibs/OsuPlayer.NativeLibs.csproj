@@ -26,7 +26,7 @@
             <Pack>true</Pack>
             <PackagePath>runtimes</PackagePath>
         </None>
-        <None Include="image\icon.png" Pack="true" PackagePath="\"/>
+        <None Include="image\icon.png" Pack="true" PackagePath="\" />
         <None Include="_._">
             <!-- Means this package doesn't provide any reference assembly to the target framework.
                  nupkg is a zip file and doesn't has concept for folders,

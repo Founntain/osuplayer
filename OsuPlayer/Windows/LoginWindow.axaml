@@ -37,16 +37,16 @@
                      HorizontalAlignment="Stretch" x:Name="PasswordBox" KeyUp="InputElement_OnKeyUp" />
         </StackPanel>
 
-        <StackPanel VerticalAlignment="Bottom" Margin="10" Spacing="5" > 
-            <Button  Content="login"
+        <StackPanel VerticalAlignment="Bottom" Margin="10" Spacing="5">
+            <Button Content="login"
                     HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
                     Click="LoginBtn_OnClick" />
-        
+
             <Button
-                    Content="create a profile"
-                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
-                    Click="CreateProfileBtn_OnClick" />
+                Content="create a profile"
+                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                Click="CreateProfileBtn_OnClick" />
         </StackPanel>
-        
+
     </Grid>
 </Window>

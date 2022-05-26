@@ -1,4 +1,5 @@
-﻿using Avalonia;
+﻿using System.Diagnostics;
+using Avalonia;
 using Avalonia.ReactiveUI;
 using OsuPlayer.Extensions;
 using OsuPlayer.Windows;
@@ -17,7 +18,7 @@ internal class Program
         try
         {
             Register(Locator.CurrentMutable, Locator.Current);
-            
+
             BuildAvaloniaApp()
                 .StartWithClassicDesktopLifetime(args);
         }
@@ -25,6 +26,14 @@ internal class Program
         {
             //Create crashlog for users
             UnhandledExceptionHandler.HandleException(ex);
+
+#if DEBUG
+            // If we debug the application and an unhandled exception is thrown,
+            // we need to initiate a break for the debugger, so we can debug the exception.
+            // Because we handle it above, the application just closes and logs it.
+            // This avoids opening the logs and we can debug it directly.
+            Debugger.Break();
+#endif
         }
     }
 

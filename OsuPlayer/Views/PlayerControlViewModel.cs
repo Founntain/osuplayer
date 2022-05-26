@@ -12,14 +12,13 @@ namespace OsuPlayer.Views;
 
 public class PlayerControlViewModel : BaseViewModel
 {
-    public readonly Bindable<IMapEntry?> CurrentSong = new();
-
     private readonly Bindable<bool> _isPlaying = new();
     private readonly Bindable<RepeatMode> _isRepeating = new();
     private readonly Bindable<bool> _isShuffle = new();
     private readonly Bindable<double> _songLength = new();
     private readonly Bindable<double> _songTime = new();
     private readonly Bindable<double> _volume = new();
+    public readonly Bindable<IMapEntry?> CurrentSong = new();
 
     public readonly Player Player;
     private Bitmap? _currentSongImage;
@@ -79,7 +78,7 @@ public class PlayerControlViewModel : BaseViewModel
 
     public bool IsAPlaylistSelected => PlaylistManager.CurrentPlaylist != default;
 
-    public bool IsCurrentSongOnBlacklist =>  new Blacklist().Contains(CurrentSong.Value);
+    public bool IsCurrentSongOnBlacklist => new Blacklist().Contains(CurrentSong.Value);
 
     public double Volume
     {
