@@ -53,17 +53,9 @@ public partial class MainWindow : ReactivePlayerWindow<MainWindowViewModel>
 
     private async void Window_OnInitialized(object? sender, EventArgs e)
     {
-        try
-        {
-            await using var config = new Config();
-        
-            var result = await GitHubUpdater.CheckForUpdates(config.Container.ReleaseChannel);
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine(ex);
-            Debugger.Break();
-        }
+        await using var config = new Config();
+
+        var result = await GitHubUpdater.CheckForUpdates(config.Container.ReleaseChannel);
 
 #if DEBUG
         // We are ignoring update checks if we are running in debug.
@@ -76,8 +68,6 @@ public partial class MainWindow : ReactivePlayerWindow<MainWindowViewModel>
             ViewModel!.MainView = ViewModel.UpdateView;
         }
 #endif
-
-        await using var config = new Config();
 
         var username = config.Container.Username;
 

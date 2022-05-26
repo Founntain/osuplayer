@@ -23,7 +23,6 @@ public class SettingsViewModel : BaseViewModel
     private string _settingsSearchQ;
 
     public MainWindow? MainWindow;
-    private string _patchnotes;
     private ReleaseChannels _selectedReleaseChannel;
 
     public string Patchnotes
@@ -192,16 +191,4 @@ public class SettingsViewModel : BaseViewModel
     public Avalonia.Controls.Controls SettingsCategories { get; set; }
 
     public ObservableCollection<AudioDevice> OutputDeviceComboboxItems { get; set; }
-
-    private async void Block(CompositeDisposable disposables)
-    {
-        Disposable.Create(() => { }).DisposeWith(disposables);
-
-        var latestPatchNotes = await GitHubUpdater.GetLatestPatchNotes(true);
-
-        var regex = new Regex(@"( in )([\w\s:\/\.])*[\d]+");
-        latestPatchNotes = regex.Replace(latestPatchNotes, "");
-        regex = new Regex(@"(\n?\r?)*[\*]*(Full Changelog)[\*]*:.*$");
-        Patchnotes = regex.Replace(latestPatchNotes, "");
-    }
 }
