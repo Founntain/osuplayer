@@ -4,5 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.PartyView">
-    <TextBlock Text="work in progress..." VerticalAlignment="Center" HorizontalAlignment="Center" />
+    <StackPanel Spacing="5" VerticalAlignment="Center" HorizontalAlignment="Center">
+        <TextBlock Text="sorry, but this is still work in progress" VerticalAlignment="Center" HorizontalAlignment="Center" />
+        <TextBlock Text="we are working hard to implement this feature for you" VerticalAlignment="Center" HorizontalAlignment="Center" />
+        <Button Content="view progress" Click="Button_OnClick" VerticalAlignment="Center" HorizontalAlignment="Center" />
+    </StackPanel>
 </UserControl>
