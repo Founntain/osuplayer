@@ -25,6 +25,9 @@ public partial class MessageBoxWindow : Window
         InitializeComponent();
 
         DataContext = new MessageBoxViewModel(this, text, title);
+        
+        using var config = new Config();
+        TransparencyLevelHint = config.Read().TransparencyLevelHint;
 #if DEBUG
         this.AttachDevTools();
 #endif
