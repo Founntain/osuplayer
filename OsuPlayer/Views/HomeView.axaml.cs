@@ -37,7 +37,7 @@ public partial class HomeView : ReactivePlayerControl<HomeViewModel>
 
         if (string.IsNullOrWhiteSpace(osuPath))
             await MessageBox.ShowDialogAsync(_mainWindow,
-                "You have to select your osu!.db or client.realm file, before you can start listening to your songs.\nPlease head to the settings to select your osu!.db or client.realm.");
+                "Before you can start listening to your songs, you have to import them.\nPlease head to the settings to select your osu!.db or client.realm.");
 
         //ViewModel!.Songs = new ObservableCollection<SongEntry>(songs);
     }

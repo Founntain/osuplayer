@@ -1,16 +1,19 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Markup.Xaml;
+using Avalonia.ReactiveUI;
+using ReactiveUI;
 
 namespace OsuPlayer.UI_Extensions;
 
-public partial class MessageBoxWindow : Window
+public partial class MessageBoxWindow : ReactiveWindow<MessageBoxViewModel>
 {
     public MessageBoxWindow()
     {
         InitializeComponent();
 
-        DataContext = new MessageBoxViewModel();
+        ViewModel = new MessageBoxViewModel();
 
         using var config = new Config();
         TransparencyLevelHint = config.Read().TransparencyLevelHint;
@@ -24,7 +27,7 @@ public partial class MessageBoxWindow : Window
     {
         InitializeComponent();
 
-        DataContext = new MessageBoxViewModel(this, text, title);
+        ViewModel = new MessageBoxViewModel(this, text, title);
         
         using var config = new Config();
         TransparencyLevelHint = config.Read().TransparencyLevelHint;
@@ -35,6 +38,10 @@ public partial class MessageBoxWindow : Window
 
     private void InitializeComponent()
     {
+        this.WhenActivated(disposables =>
+        {
+        });
+        
         AvaloniaXamlLoader.Load(this);
     }
 }

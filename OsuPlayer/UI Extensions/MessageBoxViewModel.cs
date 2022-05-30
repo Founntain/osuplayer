@@ -4,7 +4,7 @@ using ReactiveUI;
 
 namespace OsuPlayer.UI_Extensions;
 
-public class MessageBoxViewModel : BaseViewModel
+public class MessageBoxViewModel : BaseWindowViewModel
 {
     private readonly Window _window;
     private string _messageBoxText;
