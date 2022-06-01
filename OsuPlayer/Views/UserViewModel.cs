@@ -89,7 +89,7 @@ public class UserViewModel : BaseViewModel
 
         var user = ProfileManager.User;
 
-        if (user == default)
+        if (user == default || user.Id == Guid.Empty)
         {
             if (Users == default) return;
 

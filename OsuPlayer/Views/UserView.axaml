@@ -38,7 +38,7 @@
                              Watermark="type to search..." />
 
             <ListBox Grid.Row="1" Background="Transparent" Items="{Binding Users}"
-                     SelectedItem="{Binding SelectedUser}" SelectionChanged="SelectingItemsControl_OnSelectionChanged">
+                     SelectedItem="{Binding SelectedUser}" SelectionChanged="UserList_OnSelectionChanged">
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="online:User">
                         <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Foreground="{Binding RoleColor}" />
@@ -177,7 +177,7 @@
                                        HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                         <ListBox Grid.Row="1" Background="Transparent" Items="{Binding TopSongsOfCurrentUser}"
-                                 DoubleTapped="InputElement_OnDoubleTapped">
+                                 DoubleTapped="UserTopSongsList_OnDoubleTapped">
                             <ListBox.ItemTemplate>
                                 <DataTemplate DataType="beatmap:BeatmapUserValidityModel">
                                     <StackPanel>

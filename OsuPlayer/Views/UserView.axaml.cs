@@ -20,7 +20,7 @@ public partial class UserView : ReactivePlayerControl<UserViewModel>
         AvaloniaXamlLoader.Load(this);
     }
 
-    private void SelectingItemsControl_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    private void UserList_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         var viewer = this.FindControl<ContentPresenter>("BadgeItems");
         var list = (ListBox) sender;
@@ -43,15 +43,20 @@ public partial class UserView : ReactivePlayerControl<UserViewModel>
         viewer.UpdateChild();
     }
 
-    private async void InputElement_OnDoubleTapped(object? sender, RoutedEventArgs e)
+    private async void UserTopSongsList_OnDoubleTapped(object? sender, RoutedEventArgs e)
     {
         var listBox = (ListBox) sender;
+        
         if (listBox == default) return;
+        
         var beatmapModel = (BeatmapUserValidityModel) listBox.SelectedItem;
+        
         if (beatmapModel == default || ViewModel.Player.SongSourceList == default) return;
+        
         var mapEntry = ViewModel.Player.SongSourceList.FirstOrDefault(x =>
             x.BeatmapSetId == beatmapModel.Beatmap.BeatmapSetId ||
             (x.Artist == beatmapModel.Beatmap.Artist && x.Title == beatmapModel.Beatmap.Title));
+        
         if (mapEntry != default)
             await ViewModel.Player.TryPlaySongAsync(mapEntry);
     }
