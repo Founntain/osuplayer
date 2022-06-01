@@ -19,14 +19,124 @@ jobs:
         omitNameDuringUpdate: true
         omitPrereleaseDuringUpdate: true
 
-  build:
+  build-linux:
     needs: setup
     name: Publish ${{ matrix.release }}
     strategy:
       matrix:
-        release: [win-x86, win-x64, linux-x64, osx-x64]
+        release: [linux-x64]
 
     runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Get tag name
+      id: get_tag
+      run: echo ::set-output name=TAG::${GITHUB_REF#refs/tags/}
+      shell: bash
+
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Execute unit tests
+      run: dotnet test
+
+    - name: Restore the application
+      run: dotnet restore
+
+    - name: Build
+      env:
+        RELEASE_VERSION: ${{ steps.get_tag.outputs.TAG }}
+      run: |
+        cd OsuPlayer
+        dotnet publish -c Release -o ../releases/${{ matrix.release }} -r ${{ matrix.release }}
+
+    - name: Generate artifact
+      uses: TheDoctor0/zip-release@0.6.1
+      with:
+        type: 'zip'
+        filename: '${{ matrix.release }}.zip'
+        directory: 'releases/${{ matrix.release }}'
+
+    - name: Publish Artifact
+      uses: ncipollo/release-action@v1
+      with:
+        allowUpdates: true
+        omitBodyDuringUpdate: true
+        omitNameDuringUpdate: true
+        omitPrereleaseDuringUpdate: true
+        artifacts: 'releases/${{ matrix.release }}/${{ matrix.release }}.zip'
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+  build-macos:
+    needs: setup
+    name: Publish ${{ matrix.release }}
+    strategy:
+      matrix:
+        release: [osx-x64]
+
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Get tag name
+      id: get_tag
+      run: echo ::set-output name=TAG::${GITHUB_REF#refs/tags/}
+      shell: bash
+
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Execute unit tests
+      run: dotnet test
+
+    - name: Restore the application
+      run: dotnet restore
+
+    - name: Build
+      env:
+        RELEASE_VERSION: ${{ steps.get_tag.outputs.TAG }}
+      run: |
+        cd OsuPlayer
+        dotnet publish -c Release -o ../releases/${{ matrix.release }} -r ${{ matrix.release }}
+
+    - name: Generate artifact
+      uses: TheDoctor0/zip-release@0.6.1
+      with:
+        type: 'zip'
+        filename: '${{ matrix.release }}.zip'
+        directory: 'releases/${{ matrix.release }}'
+
+    - name: Publish Artifact
+      uses: ncipollo/release-action@v1
+      with:
+        allowUpdates: true
+        omitBodyDuringUpdate: true
+        omitNameDuringUpdate: true
+        omitPrereleaseDuringUpdate: true
+        artifacts: 'releases/${{ matrix.release }}/${{ matrix.release }}.zip'
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+  build-win:
+    needs: setup
+    name: Publish ${{ matrix.release }}
+    strategy:
+      matrix:
+        release: [win-x86, win-x64]
+
+    runs-on: windows-latest
 
     steps:
     - name: Checkout
