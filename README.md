@@ -8,14 +8,15 @@
 ![](https://img.shields.io/github/languages/code-size/founntain/osuplayer)
 ![](https://img.shields.io/github/repo-size/founntain/osuplayer)
 ![](https://img.shields.io/tokei/lines/github/founntain/osuplayer)
+![](https://img.shields.io/github/issues/Founntain/osuplayer?color=red)
 ![](https://img.shields.io/github/contributors/founntain/osuplayer?color=blueviolet)  
 [![CI](https://github.com/Founntain/osuplayer/actions/workflows/dotnet.yml/badge.svg?branch=master)](https://github.com/Founntain/osuplayer/actions/workflows/dotnet.yml)
 [![.NET Publish](https://github.com/Founntain/osuplayer/actions/workflows/dotnet-publish.yml/badge.svg)](https://github.com/Founntain/osuplayer/actions/workflows/dotnet-publish.yml)
 
 
 This is the *official* **osu!player** (Avalonia) repository and is mainly developed by [@Founntain](https://github.com/Founntain), with help of [@Cesan](https://github.com/Cesan).  
-This repository will be a complete rewrite of osu!player plus, so keep in mind this is all *work in progress*, with the *ultimate goal to go cross-platform*.  
-So if we speak osu!player in this repository we mean the Avalonia (this) version. If you want to refer to other versions of the osu!player mention them by their name, either *osu!player **plus*** or *osu!player **legacy*** (osu!player versions before the plus).  
+This repository is a complete rewrite of the osu!player plus, so keep in mind that some stuff is still *work in progress*, with the *ultimate goal to go cross-platform*.  
+So if we speak osu!player in this repository we mean the this (Avalonia) version. If you want to refer to other versions of the osu!player mention them by their name, either *osu!player **plus*** or *osu!player **legacy*** (osu!player versions before the plus).  
  
 osu!player is a music player for *osu!* with the focus of playing your osu! songs **without having to start osu!**.
 
@@ -30,8 +31,8 @@ If you want to contribute, feel free to fork this repository, read the [contribu
 ✔️ An internet connection if you want to use your osu!player plus profile
 
 #### Download osu!player
-If you want to try out our current pre-releases head to our [release](https://github.com/Founntain/osuplayer/releases) section to download the latest pre-release
-Or build the project for yourself, see the section below
+To download the osu!player head to our [release](https://github.com/Founntain/osuplayer/releases) section to download the latest release.  
+You can also build the project for yourself; see the section below!
 
 ## ⚒️Building the project
  - Clone / Download the source
@@ -68,18 +69,7 @@ Best practice is, that we discuss (new) features and if they are needed. So don'
 ## ✨ Special thanks
 - ***SourRaindrop***: for creating a lot of custom images and assets like our logo
 
-## osu!player todo list
-
-#### 🛠️ Features with higher priority
-- [x] Import songs from osu! via osu!.db or osu!lazer client.realm  
-- [x] Play songs
-- [x] Create custom playlists and put songs in there
-- [x] Favorise songs via the heart button
-- [x] Create playlists from collection.db   
-- [x] Nightcore and daycore function  
-- [x] User profiles, for stats, uploading themes, languages and other stuff  
-- [x] XP and Levelsystem  
-- [x] Patchnotes inside the client  
+## 🪛 Features that are missing to have the full osu!player plus feature set
 
 #### 🔧 Features with lower priority
 - [x] Audio-Equalizer 
@@ -95,14 +85,14 @@ Best practice is, that we discuss (new) features and if they are needed. So don'
 #### 🎱 Stop asking for it
 ❌ Steering wheel support
 
-## Contact
+## 📫 Contact
 - ✉️ 7@founntain.dev
 - 📣 [Discord](https://discord.gg/RJQSc5B)
 
-## Supported by
+## ❤️ Supported by
 <img width=150 height=150 src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" alt="JetBrains Logo (Main) logo.">
 
-## Screenshots
+## 🖼️ Screenshots
 
 ![](https://7.founntain.dev/xR5yZCvY.png)
 ![](https://7.founntain.dev/JZvjRNY4.png)
