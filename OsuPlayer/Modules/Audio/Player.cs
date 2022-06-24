@@ -463,7 +463,7 @@ public class Player
 
         if (IsShuffle.Value)
         {
-            await TryPlaySongAsync(await DoShuffle(ShuffleDirection.Backwards), PlayDirection.Backwards);
+            await TryPlaySongAsync(DoShuffle(ShuffleDirection.Backwards), PlayDirection.Backwards);
             return;
         }
 
@@ -499,7 +499,7 @@ public class Player
 
         if (IsShuffle.Value)
         {
-            await TryPlaySongAsync(await DoShuffle(ShuffleDirection.Forward));
+            await TryPlaySongAsync(DoShuffle(ShuffleDirection.Forward));
             return;
         }
 
@@ -753,10 +753,10 @@ public class Player
     /// </summary>
     /// <param name="direction">the <see cref="ShuffleDirection" /> to shuffle to</param>
     /// <returns>a random/shuffled <see cref="IMapEntryBase" /></returns>
-    private Task<IMapEntryBase> DoShuffle(ShuffleDirection direction)
+    private IMapEntryBase? DoShuffle(ShuffleDirection direction)
     {
         if (CurrentSong == default || SongSourceList == default)
-            return Task.FromException<IMapEntryBase>(new NullReferenceException());
+            throw new NullReferenceException();
 
         if (Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist && ActivePlaylist == default)
         {
@@ -806,9 +806,9 @@ public class Player
         // ReSharper disable once PossibleInvalidOperationException
         var shuffleIndex = (int) _shuffleHistory[_shuffleHistoryIndex];
 
-        return Task.FromResult(Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist && ActivePlaylist != default
+        return Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist && ActivePlaylist != default
             ? GetMapEntryFromHash(ActivePlaylist!.Songs[shuffleIndex])
-            : SongSourceList![shuffleIndex]);
+            : SongSourceList![shuffleIndex];
     }
 
     /// <summary>
