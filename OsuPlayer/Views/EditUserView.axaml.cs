@@ -133,6 +133,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
         if (ViewModel?.CurrentUser == default) return;
 
         var tempUser = await ApiAsync.GetProfileByNameAsync(ViewModel.CurrentUser.Name);
+        var changedProfilePicture = ViewModel.IsNewProfilePictureSelected;
 
         if (tempUser == default)
         {
@@ -206,7 +207,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
         {
             ProfileManager.User = await ApiAsync.GetProfileByNameAsync(editUserModel.UserModel.Name);
 
-            if (ViewModel.IsNewProfilePictureSelected)
+            if (changedProfilePicture)
             {
                 await MessageBox.ShowDialogAsync(_mainWindow, $"We couldn't update your profile picture, because you left the edit view to early!{Environment.NewLine}If you want to update your profile picture please wait, until you get the message that it's been done!");
             }
@@ -218,7 +219,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
             
             ProfileManager.User = ViewModel.CurrentUser;
             
-            if (ViewModel.IsNewProfilePictureSelected)
+            if (changedProfilePicture)
                 await UpdateProfilePicture();
         }
     }
