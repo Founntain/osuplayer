@@ -755,8 +755,13 @@ public class Player
     /// <returns>a random/shuffled <see cref="IMapEntryBase" /></returns>
     private Task<IMapEntryBase> DoShuffle(ShuffleDirection direction)
     {
-        if ((Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist && ActivePlaylist == default) || CurrentSong == default || SongSourceList == default)
+        if (CurrentSong == default || SongSourceList == default)
             return Task.FromException<IMapEntryBase>(new NullReferenceException());
+
+        if (Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist && ActivePlaylist == default)
+        {
+            ActivePlaylistId = (PlaylistManager.GetAllPlaylists() as List<Playlist>)?.Find(x => x.Name == "Favorites")?.Id;
+        }
 
         switch (direction)
         {
@@ -801,7 +806,7 @@ public class Player
         // ReSharper disable once PossibleInvalidOperationException
         var shuffleIndex = (int) _shuffleHistory[_shuffleHistoryIndex];
 
-        return Task.FromResult(Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist
+        return Task.FromResult(Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist && ActivePlaylist != default
             ? GetMapEntryFromHash(ActivePlaylist!.Songs[shuffleIndex])
             : SongSourceList![shuffleIndex]);
     }
