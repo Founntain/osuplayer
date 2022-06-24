@@ -463,7 +463,7 @@ public class Player
 
         if (IsShuffle.Value)
         {
-            await TryPlaySongAsync(await DoShuffle(ShuffleDirection.Backwards), PlayDirection.Backwards);
+            await TryPlaySongAsync(DoShuffle(ShuffleDirection.Backwards), PlayDirection.Backwards);
             return;
         }
 
@@ -499,7 +499,7 @@ public class Player
 
         if (IsShuffle.Value)
         {
-            await TryPlaySongAsync(await DoShuffle(ShuffleDirection.Forward));
+            await TryPlaySongAsync(DoShuffle(ShuffleDirection.Forward));
             return;
         }
 
@@ -753,10 +753,15 @@ public class Player
     /// </summary>
     /// <param name="direction">the <see cref="ShuffleDirection" /> to shuffle to</param>
     /// <returns>a random/shuffled <see cref="IMapEntryBase" /></returns>
-    private Task<IMapEntryBase> DoShuffle(ShuffleDirection direction)
+    private IMapEntryBase? DoShuffle(ShuffleDirection direction)
     {
-        if ((Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist && ActivePlaylist == default) || CurrentSong == default || SongSourceList == default)
-            return Task.FromException<IMapEntryBase>(new NullReferenceException());
+        if (CurrentSong == default || SongSourceList == default)
+            throw new NullReferenceException();
+
+        if (Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist && ActivePlaylist == default)
+        {
+            ActivePlaylistId = (PlaylistManager.GetAllPlaylists() as List<Playlist>)?.Find(x => x.Name == "Favorites")?.Id;
+        }
 
         switch (direction)
         {
@@ -801,9 +806,9 @@ public class Player
         // ReSharper disable once PossibleInvalidOperationException
         var shuffleIndex = (int) _shuffleHistory[_shuffleHistoryIndex];
 
-        return Task.FromResult(Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist
+        return Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist && ActivePlaylist != default
             ? GetMapEntryFromHash(ActivePlaylist!.Songs[shuffleIndex])
-            : SongSourceList![shuffleIndex]);
+            : SongSourceList![shuffleIndex];
     }
 
     /// <summary>
