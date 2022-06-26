@@ -71,6 +71,9 @@ public class Player
 
         SortingModeBindable.Value = config.Container.SortingMode;
         BlacklistSkip.Value = config.Container.BlacklistSkip;
+        Repeat = config.Container.RepeatMode;
+        IsShuffle.Value = config.Container.IsShuffle;
+        ActivePlaylistId = config.Container.ActivePlaylistId;
 
         SortingModeBindable.BindValueChanged(d => UpdateSorting(d.NewValue));
 
