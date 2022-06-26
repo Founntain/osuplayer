@@ -169,39 +169,9 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
         };
 
         var response = await ApiAsync.ApiRequestAsync<UserResponse>("users", "editUser", editUserModel);
-        
-        switch (response)
-        {
-            case UserResponse.UserEdited:
-                await MessageBox.ShowDialogAsync(_mainWindow, "Profile edited successfully!");
 
-                break;
-            case UserResponse.UserEditedAndPasswordChanged:
-                await MessageBox.ShowDialogAsync(_mainWindow,
-                    "Profile edited successfully and password changed.");
-
-                break;
-            case UserResponse.UserEditedAndPasswordNotChanged:
-                await MessageBox.ShowDialogAsync(_mainWindow,
-                    "Profile edited successfully. However your password couldn't be changed!");
-
-                break;
-            case UserResponse.UserAlreadyExists:
-                await MessageBox.ShowDialogAsync(_mainWindow,
-                    "Profile not updated because the user already exists. Did you try changing your name?");
-
-                return;
-            case UserResponse.PasswordIncorrect:
-                await MessageBox.ShowDialogAsync(_mainWindow,
-                    "The password you entered is not correct, therefor your profile was not updated!");
-                return;
-
-            default:
-                await MessageBox.ShowDialogAsync(_mainWindow,
-                    string.Format($"We had trouble updating your profile error message:\n\n{response:G}"));
-
-                return;
-        }
+        if (!await HandleResponse(response))
+            return;
 
         if (ViewModel == null)
         {
@@ -216,11 +186,46 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
         {
             ViewModel.NewPassword = string.Empty;
             ViewModel.Password = string.Empty;
-            
+
             ProfileManager.User = ViewModel.CurrentUser;
-            
+
             if (changedProfilePicture)
                 await UpdateProfilePicture();
+        }
+    }
+
+    /// <summary>
+    /// This handles the <see cref="UserResponse"/> got from editing the user.
+    /// </summary>
+    /// <param name="response">the response to handle</param>
+    /// <returns>true if the response is a successful one, false otherwise</returns>
+    private async Task<bool> HandleResponse(UserResponse response)
+    {
+        switch (response)
+        {
+            case UserResponse.UserEdited:
+                await MessageBox.ShowDialogAsync(_mainWindow, "Profile edited successfully!");
+                return true;
+            case UserResponse.UserEditedAndPasswordChanged:
+                await MessageBox.ShowDialogAsync(_mainWindow,
+                    "Profile edited successfully and password changed.");
+                return true;
+            case UserResponse.UserEditedAndPasswordNotChanged:
+                await MessageBox.ShowDialogAsync(_mainWindow,
+                    "Profile edited successfully. However your password couldn't be changed!");
+                return true;
+            case UserResponse.UserAlreadyExists:
+                await MessageBox.ShowDialogAsync(_mainWindow,
+                    "Profile not updated because the user already exists. Did you try changing your name?");
+                return false;
+            case UserResponse.PasswordIncorrect:
+                await MessageBox.ShowDialogAsync(_mainWindow,
+                    "The password you entered is not correct, therefore your profile was not updated!");
+                return false;
+            default:
+                await MessageBox.ShowDialogAsync(_mainWindow,
+                    string.Format($"We had trouble updating your profile error message:\n\n{response:G}"));
+                return false;
         }
     }
 

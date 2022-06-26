@@ -14,9 +14,13 @@ public class ConfigContainer : IStorableContainer
     public WindowTransparencyLevel TransparencyLevelHint { get; set; } = WindowTransparencyLevel.AcrylicBlur;
     public StartupSong StartupSong { get; set; } = StartupSong.FirstSong;
     public SortingMode SortingMode { get; set; } = SortingMode.Title;
+    public RepeatMode RepeatMode { get; set; } = RepeatMode.NoRepeat;
+    public Guid? ActivePlaylistId { get; set; }
+    public bool IsShuffle { get; set; }
     public string? LastPlayedSong { get; set; }
     public bool IgnoreSongsWithSameNameCheckBox { get; set; }
     public bool BlacklistSkip { get; set; }
+    public bool PlaylistEnableOnPlay { get; set; }
     public string? Username { get; set; }
     public ReleaseChannels ReleaseChannel { get; set; } = 0;
 

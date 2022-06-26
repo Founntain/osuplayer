@@ -6,6 +6,7 @@
              xmlns:classes="clr-namespace:OsuPlayer.Data.OsuPlayer.Classes;assembly=OsuPlayer.Data"
              xmlns:views="clr-namespace:OsuPlayer.Views"
              xmlns:dataModels="clr-namespace:OsuPlayer.IO.DbReader.DataModels;assembly=OsuPlayer.IO"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.PlaylistView">
 
@@ -36,9 +37,23 @@
 
             <ListBox Grid.Row="1" SelectedItem="{Binding SelectedPlaylist}" Items="{Binding Playlists}"
                      Background="Transparent">
+                <ListBox.Styles>
+                    <Style Selector="ListBoxItem">
+                        <Setter Property="Margin" Value="0" />
+                        <Setter Property="Padding" Value="0" />
+                    </Style>
+                </ListBox.Styles>
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="classes:Playlist">
-                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+                        <Grid ColumnDefinitions="*,Auto" Margin="10 0">
+                            <TextBlock Grid.Column="0" Text="{Binding Name}" FontWeight="SemiBold"
+                                       VerticalAlignment="Center" Margin="0 10" />
+                            <Button Grid.Column="1" Name="PlayPlaylist" Height="30" Width="30" CornerRadius="30"
+                                    Click="PlayPlaylist_OnClick" Margin="0" VerticalAlignment="Center"
+                                    IsVisible="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}, AncestorLevel=1}, Path=IsSelected}">
+                                <avalonia:MaterialIcon Kind="PlayArrow" Height="20" Width="20" />
+                            </Button>
+                        </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
@@ -66,11 +81,11 @@
             </Panel>
 
             <ListBox Background="Transparent"
-                     Items="{Binding SelectedPlaylist.Songs, Converter={StaticResource PlaylistValueConverter}}"
-                     DoubleTapped="PlaySong">
+                     Items="{Binding SelectedPlaylist.Songs, Converter={StaticResource PlaylistValueConverter}}">
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="dataModels:IMapEntryBase">
-                        <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto">
+                        <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto" DoubleTapped="PlaySong"
+                              Background="Transparent">
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding TitleString}" FontSize="20"
                                        FontWeight="SemiBold" />
                             <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding ArtistString}"
@@ -79,7 +94,6 @@
                             <TextBlock Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Text="{Binding TotalTimeString}"
                                        FontSize="20" FontWeight="Light"
                                        VerticalAlignment="Center" HorizontalAlignment="Center" />
-
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

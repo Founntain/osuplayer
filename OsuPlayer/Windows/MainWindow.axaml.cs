@@ -49,6 +49,9 @@ public partial class MainWindow : ReactivePlayerWindow<MainWindowViewModel>
 
         config.Container.Volume = ViewModel.BassEngine.Volume;
         config.Container.Username = ProfileManager.User?.Name;
+        config.Container.RepeatMode = ViewModel.Player.Repeat;
+        config.Container.IsShuffle = ViewModel.Player.IsShuffle.Value;
+        config.Container.ActivePlaylistId = ViewModel.Player.ActivePlaylistId;
     }
 
     private async void Window_OnInitialized(object? sender, EventArgs e)

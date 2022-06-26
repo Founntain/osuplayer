@@ -39,6 +39,7 @@ public class Player
     public readonly Bindable<bool> IsPlaying = new();
 
     public readonly Bindable<bool> IsShuffle = new();
+    public readonly Bindable<bool> PlaylistEnableOnPlay = new();
 
     public readonly Bindable<RepeatMode> RepeatMode = new();
 
@@ -71,6 +72,10 @@ public class Player
 
         SortingModeBindable.Value = config.Container.SortingMode;
         BlacklistSkip.Value = config.Container.BlacklistSkip;
+        PlaylistEnableOnPlay.Value = config.Container.PlaylistEnableOnPlay;
+        Repeat = config.Container.RepeatMode;
+        IsShuffle.Value = config.Container.IsShuffle;
+        ActivePlaylistId = config.Container.ActivePlaylistId;
 
         SortingModeBindable.BindValueChanged(d => UpdateSorting(d.NewValue));
 
@@ -359,7 +364,7 @@ public class Player
     /// </summary>
     /// <param name="hash">the beatmap hash to get the map from</param>
     /// <returns>an <see cref="IMapEntryBase" /> of the found map or null if it doesn't exist</returns>
-    private IMapEntryBase? GetMapEntryFromHash(string hash)
+    public IMapEntryBase? GetMapEntryFromHash(string hash)
     {
         return SongSourceList!.FirstOrDefault(x => x.Hash == hash);
     }
@@ -758,10 +763,7 @@ public class Player
         if (CurrentSong == default || SongSourceList == default)
             throw new NullReferenceException();
 
-        if (Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist && ActivePlaylist == default)
-        {
-            ActivePlaylistId = (PlaylistManager.GetAllPlaylists() as List<Playlist>)?.Find(x => x.Name == "Favorites")?.Id;
-        }
+        if (Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist && ActivePlaylist == default) ActivePlaylistId = (PlaylistManager.GetAllPlaylists() as List<Playlist>)?.Find(x => x.Name == "Favorites")?.Id;
 
         switch (direction)
         {

@@ -58,11 +58,11 @@
                         </StackPanel>
 
                         <StackPanel Spacing="5" Name="UpdateChannel">
-                            <TextBlock Text="Update channel (changing requires restart)"/>
+                            <TextBlock Text="Update channel (changing requires restart)" />
                             <ComboBox SelectedItem="{Binding SelectedReleaseChannel}" Items="{Binding ReleaseChannels}"
                                       HorizontalAlignment="Stretch" />
                         </StackPanel>
-                        
+
                         <StackPanel Spacing="5" Name="WindowBlurMethod">
                             <TextBlock Text="Window Blur Method" />
                             <ComboBox SelectedItem="{Binding SelectedTransparencyLevel}"
@@ -83,6 +83,14 @@
 
                         <StackPanel Spacing="5" Name="BlacklistSkip">
                             <CheckBox IsChecked="{Binding BlacklistSkip}" Content="Blacklist skipping" />
+                        </StackPanel>
+
+                        <StackPanel Spacing="5" Name="PlaylistEnableOnPlay">
+                            <ToolTip.Tip>
+                                This will enable the playlist mode when you play a song directly from the playlist viewer.
+                            </ToolTip.Tip>
+                            <CheckBox IsChecked="{Binding PlaylistEnableOnPlay}"
+                                      Content="Enable playlist mode on song play" />
                         </StackPanel>
                     </StackPanel>
                 </Grid>
