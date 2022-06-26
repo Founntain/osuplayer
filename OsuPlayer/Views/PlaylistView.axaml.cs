@@ -1,5 +1,4 @@
 ﻿using Avalonia.Controls;
-using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
@@ -44,16 +43,20 @@ public partial class PlaylistView : ReactivePlayerControl<PlaylistViewModel>
 
     private async void PlaySong(object? sender, RoutedEventArgs e)
     {
-        var tapped = (TappedEventArgs) e;
-        var controlSource = (Control) tapped.Pointer.Captured;
+        if (sender is not Control {DataContext: IMapEntryBase song}) return;
 
-        if (controlSource?.DataContext is IMapEntryBase song)
-            await ViewModel.Player.TryPlaySongAsync(song);
+        if (new Config().Container.PlaylistEnableOnPlay)
+        {
+            ViewModel.Player.Repeat = RepeatMode.Playlist;
+            ViewModel.Player.ActivePlaylistId = ViewModel.SelectedPlaylist?.Id;
+        }
+
+        await ViewModel.Player.TryPlaySongAsync(song);
     }
 
     private async void PlayPlaylist_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (sender is not Button {DataContext: Playlist playlist}) return;
+        if (sender is not Control {DataContext: Playlist playlist}) return;
 
         ViewModel.Player.ActivePlaylistId = playlist.Id;
         ViewModel.Player.Repeat = RepeatMode.Playlist;

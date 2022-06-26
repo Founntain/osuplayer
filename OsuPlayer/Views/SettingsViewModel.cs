@@ -13,23 +13,17 @@ namespace OsuPlayer.Views;
 public class SettingsViewModel : BaseViewModel
 {
     private readonly Bindable<bool> _blacklistSkip = new();
-
+    private readonly Bindable<bool> _playlistEnableOnPlay = new();
     private readonly Bindable<SortingMode> _sortingMode = new();
     public readonly Player Player;
     private string _osuLocation;
     private string _patchnotes;
+    private ReleaseChannels _selectedReleaseChannel;
     private StartupSong _selectedStartupSong;
     private WindowTransparencyLevel _selectedTransparencyLevel;
     private string _settingsSearchQ;
 
     public MainWindow? MainWindow;
-    private ReleaseChannels _selectedReleaseChannel;
-
-    public string Patchnotes
-    {
-        get => _patchnotes;
-        set => this.RaiseAndSetIfChanged(ref _patchnotes, value);
-    }
 
     public SettingsViewModel(Player player)
     {
@@ -47,20 +41,17 @@ public class SettingsViewModel : BaseViewModel
         _blacklistSkip.BindTo(Player.BlacklistSkip);
         _blacklistSkip.BindValueChanged(d => this.RaisePropertyChanged(nameof(BlacklistSkip)));
 
+        _playlistEnableOnPlay.BindTo(Player.PlaylistEnableOnPlay);
+        _blacklistSkip.BindValueChanged(d => this.RaisePropertyChanged(nameof(PlaylistEnableOnPlay)));
+
         Activator = new ViewModelActivator();
         this.WhenActivated(Block);
     }
 
-    private async void Block(CompositeDisposable disposables)
+    public string Patchnotes
     {
-        Disposable.Create(() => { }).DisposeWith(disposables);
-
-        var latestPatchNotes = await GitHubUpdater.GetLatestPatchNotes(_selectedReleaseChannel);
-
-        var regex = new Regex(@"( in )([\w\s:\/\.])*[\d]+");
-        latestPatchNotes = regex.Replace(latestPatchNotes, "");
-        regex = new Regex(@"(\n?\r?)*[\*]*(Full Changelog)[\*]*:.*$");
-        Patchnotes = regex.Replace(latestPatchNotes, "");
+        get => _patchnotes;
+        set => this.RaiseAndSetIfChanged(ref _patchnotes, value);
     }
 
     public User? CurrentUser => ProfileManager.User;
@@ -144,6 +135,19 @@ public class SettingsViewModel : BaseViewModel
         }
     }
 
+    public bool PlaylistEnableOnPlay
+    {
+        get => _playlistEnableOnPlay.Value;
+        set
+        {
+            _playlistEnableOnPlay.Value = value;
+            this.RaisePropertyChanged();
+
+            using var cfg = new Config();
+            cfg.Container.PlaylistEnableOnPlay = value;
+        }
+    }
+
     public string SettingsSearchQ
     {
         get => _settingsSearchQ;
@@ -191,4 +195,16 @@ public class SettingsViewModel : BaseViewModel
     public Avalonia.Controls.Controls SettingsCategories { get; set; }
 
     public ObservableCollection<AudioDevice> OutputDeviceComboboxItems { get; set; }
+
+    private async void Block(CompositeDisposable disposables)
+    {
+        Disposable.Create(() => { }).DisposeWith(disposables);
+
+        var latestPatchNotes = await GitHubUpdater.GetLatestPatchNotes(_selectedReleaseChannel);
+
+        var regex = new Regex(@"( in )([\w\s:\/\.])*[\d]+");
+        latestPatchNotes = regex.Replace(latestPatchNotes, "");
+        regex = new Regex(@"(\n?\r?)*[\*]*(Full Changelog)[\*]*:.*$");
+        Patchnotes = regex.Replace(latestPatchNotes, "");
+    }
 }
