@@ -4,12 +4,12 @@
 
 # osu!player
 [![CodeFactor](https://www.codefactor.io/repository/github/osu-player/osuplayer/badge)](https://www.codefactor.io/repository/github/osu-player/osuplayer)
-[![GitHub release](https://img.shields.io/github/release-pre/founntain/osuplayer.svg)](https://github.com/founntain/osuplayer/releases/latest)
-![](https://img.shields.io/github/languages/code-size/founntain/osuplayer)
-![](https://img.shields.io/github/repo-size/founntain/osuplayer)
-![](https://img.shields.io/tokei/lines/github/founntain/osuplayer)
-![](https://img.shields.io/github/issues/Founntain/osuplayer?color=red)
-![](https://img.shields.io/github/contributors/founntain/osuplayer?color=blueviolet)  
+[![GitHub release](https://img.shields.io/github/release-pre/osu-player/osuplayer.svg)](https://github.com/founntain/osuplayer/releases/latest)
+![](https://img.shields.io/github/languages/code-size/osu-player/osuplayer)
+![](https://img.shields.io/github/repo-size/osu-player/osuplayer)
+![](https://img.shields.io/tokei/lines/github/osu-player/osuplayer)
+![](https://img.shields.io/github/issues/osu-player/osuplayer?color=red)
+![](https://img.shields.io/github/contributors/osu-player/osuplayer?color=blueviolet)  
 [![CI](https://github.com/osu-player/osuplayer/actions/workflows/dotnet.yml/badge.svg?branch=master)](https://github.com/osu-player/osuplayer/actions/workflows/dotnet.yml)
 [![.NET Publish](https://github.com/osu-player/osuplayer/actions/workflows/dotnet-publish.yml/badge.svg)](https://github.com/osu-player/osuplayer/actions/workflows/dotnet-publish.yml)
 
@@ -20,7 +20,7 @@ So if we speak osu!player in this repository we mean the this (Avalonia) version
  
 osu!player is a music player for *osu!* with the focus of playing your osu! songs **without having to start osu!**.
 
-If you want to contribute, feel free to fork this repository, read the [contributing information](https://github.com/Founntain/osuplayer.git) and head to the [official osu!player discord](https://discord.gg/RJQSc5B) (not mandetory, but helpful). There you can add all valuable ideas and discuss other stuff regarding development.
+If you want to contribute, feel free to fork this repository, read the [contributing information](https://github.com/osu-player/osuplayer.git) and head to the [official osu!player discord](https://discord.gg/RJQSc5B) (not mandetory, but helpful). There you can add all valuable ideas and discuss other stuff regarding development.
 
 ## ☝️ Requirements
 
@@ -31,7 +31,7 @@ If you want to contribute, feel free to fork this repository, read the [contribu
 ✔️ An internet connection if you want to use your osu!player plus profile
 
 #### Download osu!player
-To download the osu!player head to our [release](https://github.com/Founntain/osuplayer/releases) section to download the latest release.  
+To download the osu!player head to our [release](https://github.com/osu-player/osuplayer/releases) section to download the latest release.  
 You can also build the project for yourself; see the section below!
 
 ## ⚒️Building the project
