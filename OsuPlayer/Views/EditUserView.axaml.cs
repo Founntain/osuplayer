@@ -194,6 +194,11 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
         }
     }
 
+    /// <summary>
+    /// This handles the <see cref="UserResponse"/> got from editing the user.
+    /// </summary>
+    /// <param name="response">the response to handle</param>
+    /// <returns>true if the response is a successful one, false otherwise</returns>
     private async Task<bool> HandleResponse(UserResponse response)
     {
         switch (response)
