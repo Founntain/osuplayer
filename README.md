@@ -20,7 +20,7 @@ So if we speak osu!player in this repository we mean the this (Avalonia) version
  
 osu!player is a music player for *osu!* with the focus of playing your osu! songs **without having to start osu!**.
 
-If you want to contribute, feel free to fork this repository, read the [contributing information](https://github.com/osu-player/osuplayer.git) and head to the [official osu!player discord](https://discord.gg/RJQSc5B) (not mandetory, but helpful). There you can add all valuable ideas and discuss other stuff regarding development.
+If you want to contribute, feel free to fork this repository, read the [contributing information]([https://github.com/osu-player/osuplayer.git](https://github.com/osu-player/osuplayer#-contributing-to-the-project) and head to the [official osu!player discord](https://discord.gg/RJQSc5B) (not mandetory, but helpful). There you can add all valuable ideas and discuss other stuff regarding development.
 
 ## ☝️ Requirements
 
