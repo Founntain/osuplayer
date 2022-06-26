@@ -359,7 +359,7 @@ public class Player
     /// </summary>
     /// <param name="hash">the beatmap hash to get the map from</param>
     /// <returns>an <see cref="IMapEntryBase" /> of the found map or null if it doesn't exist</returns>
-    private IMapEntryBase? GetMapEntryFromHash(string hash)
+    public IMapEntryBase? GetMapEntryFromHash(string hash)
     {
         return SongSourceList!.FirstOrDefault(x => x.Hash == hash);
     }

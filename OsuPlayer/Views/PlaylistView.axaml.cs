@@ -3,6 +3,8 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
+using OsuPlayer.Data.OsuPlayer.Classes;
+using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Extensions;
 using OsuPlayer.Windows;
 using ReactiveUI;
@@ -47,5 +49,15 @@ public partial class PlaylistView : ReactivePlayerControl<PlaylistViewModel>
 
         if (controlSource?.DataContext is IMapEntryBase song)
             await ViewModel.Player.TryPlaySongAsync(song);
+    }
+
+    private async void PlayPlaylist_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not Button {DataContext: Playlist playlist}) return;
+
+        ViewModel.Player.ActivePlaylistId = playlist.Id;
+        ViewModel.Player.Repeat = RepeatMode.Playlist;
+
+        await ViewModel.Player.TryPlaySongAsync(ViewModel.Player.GetMapEntryFromHash(playlist.Songs.First()));
     }
 }
