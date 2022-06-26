@@ -3,7 +3,7 @@
 </P>
 
 # osu!player
-[![CodeFactor](https://www.codefactor.io/repository/github/founntain/osuplayer/badge)](https://www.codefactor.io/repository/github/founntain/osuplayer)
+[![CodeFactor](https://www.codefactor.io/repository/github/osu-player/osuplayer/badge)](https://www.codefactor.io/repository/github/osu-player/osuplayer)
 [![GitHub release](https://img.shields.io/github/release-pre/founntain/osuplayer.svg)](https://github.com/founntain/osuplayer/releases/latest)
 ![](https://img.shields.io/github/languages/code-size/founntain/osuplayer)
 ![](https://img.shields.io/github/repo-size/founntain/osuplayer)
