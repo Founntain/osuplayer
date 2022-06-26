@@ -19,6 +19,6 @@ public partial class PartyView : UserControl
 
     private void Button_OnClick(object? sender, RoutedEventArgs e)
     {
-        GeneralExtensions.OpenUrl("https://github.com/Founntain/osuplayer/issues/70");
+        GeneralExtensions.OpenUrl("https://github.com/osu-player/osuplayer/issues/70");
     }
 }

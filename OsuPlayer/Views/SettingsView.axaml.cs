@@ -112,7 +112,7 @@ public partial class SettingsView : ReactivePlayerControl<SettingsViewModel>
 
     private void ReportBug_OnClick(object? sender, RoutedEventArgs e)
     {
-        GeneralExtensions.OpenUrl("https://github.com/Founntain/osuplayer/issues/new/choose");
+        GeneralExtensions.OpenUrl("https://github.com/osu-player/osuplayer/issues/new/choose");
     }
 
     private void JoinDiscord_OnClick(object? sender, RoutedEventArgs e)
@@ -122,6 +122,6 @@ public partial class SettingsView : ReactivePlayerControl<SettingsViewModel>
 
     private void ContactUs_OnClick(object? sender, RoutedEventArgs e)
     {
-        GeneralExtensions.OpenUrl("https://github.com/Founntain/osuplayer#contact");
+        GeneralExtensions.OpenUrl("https://github.com/osu-player/osuplayer#contact");
     }
 }
