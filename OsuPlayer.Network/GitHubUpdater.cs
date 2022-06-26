@@ -38,7 +38,7 @@ public static class GitHubUpdater
     {
         var github = new GitHubClient(new ProductHeaderValue("osu!player"));
 
-        var releases = await github.Repository.Release.GetAll("Founntain", "osuplayer");
+        var releases = await github.Repository.Release.GetAll("osu-player", "osuplayer");
 
         var includePreReleases = releaseChannel == ReleaseChannels.PreReleases;
         
