@@ -10,8 +10,8 @@
 ![](https://img.shields.io/tokei/lines/github/founntain/osuplayer)
 ![](https://img.shields.io/github/issues/Founntain/osuplayer?color=red)
 ![](https://img.shields.io/github/contributors/founntain/osuplayer?color=blueviolet)  
-[![CI](https://github.com/Founntain/osuplayer/actions/workflows/dotnet.yml/badge.svg?branch=master)](https://github.com/Founntain/osuplayer/actions/workflows/dotnet.yml)
-[![.NET Publish](https://github.com/Founntain/osuplayer/actions/workflows/dotnet-publish.yml/badge.svg)](https://github.com/Founntain/osuplayer/actions/workflows/dotnet-publish.yml)
+[![CI](https://github.com/osu-player/osuplayer/actions/workflows/dotnet.yml/badge.svg?branch=master)](https://github.com/osu-player/osuplayer/actions/workflows/dotnet.yml)
+[![.NET Publish](https://github.com/osu-player/osuplayer/actions/workflows/dotnet-publish.yml/badge.svg)](https://github.com/osu-player/osuplayer/actions/workflows/dotnet-publish.yml)
 
 
 This is the *official* **osu!player** (Avalonia) repository and is mainly developed by [@Founntain](https://github.com/Founntain), with help of [@Cesan](https://github.com/Cesan).  
