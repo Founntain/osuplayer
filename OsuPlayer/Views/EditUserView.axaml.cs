@@ -133,6 +133,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
         if (ViewModel?.CurrentUser == default) return;
 
         var tempUser = await ApiAsync.GetProfileByNameAsync(ViewModel.CurrentUser.Name);
+        var changedProfilePicture = ViewModel.IsNewProfilePictureSelected;
 
         if (tempUser == default)
         {
@@ -168,10 +169,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
         };
 
         var response = await ApiAsync.ApiRequestAsync<UserResponse>("users", "editUser", editUserModel);
-
-        ViewModel.NewPassword = string.Empty;
-        ViewModel.Password = string.Empty;
-
+        
         switch (response)
         {
             case UserResponse.UserEdited:
@@ -205,10 +203,25 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
                 return;
         }
 
-        ProfileManager.User = ViewModel.CurrentUser;
+        if (ViewModel == null)
+        {
+            ProfileManager.User = await ApiAsync.GetProfileByNameAsync(editUserModel.UserModel.Name);
 
-        if (ViewModel.IsNewProfilePictureSelected)
-            await UpdateProfilePicture();
+            if (changedProfilePicture)
+            {
+                await MessageBox.ShowDialogAsync(_mainWindow, $"We couldn't update your profile picture, because you left the edit view to early!{Environment.NewLine}If you want to update your profile picture please wait, until you get the message that it's been done!");
+            }
+        }
+        else
+        {
+            ViewModel.NewPassword = string.Empty;
+            ViewModel.Password = string.Empty;
+            
+            ProfileManager.User = ViewModel.CurrentUser;
+            
+            if (changedProfilePicture)
+                await UpdateProfilePicture();
+        }
     }
 
     private async Task UpdateProfilePicture()
