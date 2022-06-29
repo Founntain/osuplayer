@@ -76,7 +76,7 @@ public partial class MainWindow : ReactivePlayerWindow<MainWindowViewModel>
 
         if (string.IsNullOrWhiteSpace(username)) return;
 
-        var loginWindow = new LoginWindow(username);
+        var loginWindow = new LoginWindow(this, username);
         await loginWindow.ShowDialog(this);
 
         // We only want to update the user panel, when the home view is already open, to refresh the panel.
