@@ -5,21 +5,26 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
+using OsuPlayer.UI_Extensions;
 using ReactiveUI;
 
 namespace OsuPlayer.Windows;
 
 public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
 {
+    private MainWindow _mainWindow;
+    
     public LoginWindow()
     {
         Init();
     }
 
-    public LoginWindow(string username)
+    public LoginWindow(MainWindow mainWindow, string username)
     {
         Init();
 
+        _mainWindow = mainWindow;
+        
         if (ViewModel == default) return;
 
         ViewModel.Username = username;
@@ -56,9 +61,23 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
 
         var user = await ApiAsync.LoadUserWithCredentialsAsync(ViewModel.Username, ViewModel.Password);
 
-        if (user == default) return;
+        if (user == default)
+        {
+            await MessageBox.ShowDialogAsync(_mainWindow, "Login failed, please try again!", "Login failed");
+            
+            ViewModel.Password = String.Empty;
+            
+            return;
+        }
 
-        if (user.Name != ViewModel.Username) return;
+        if (user.Name != ViewModel.Username)
+        {
+            await MessageBox.ShowDialogAsync(_mainWindow, "Could not retrieve the correct user from the API! Please try again later!", "Login failed");
+            
+            ViewModel.Password = String.Empty;
+            
+            return;
+        }
 
         ProfileManager.User = user;
 
