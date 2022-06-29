@@ -15,7 +15,6 @@
     </Design.DataContext>
 
     <UserControl.Resources>
-        <valueConverters:PlaylistValueConverter x:Key="PlaylistValueConverter" />
     </UserControl.Resources>
     <Grid ColumnDefinitions="25*, 75*">
         <Grid Column="0" Margin="10" RowDefinitions="50, *, 40, 40">
@@ -67,8 +66,8 @@
                     HorizontalAlignment="Stretch" Click="OpenBlacklistEditor_OnClick" FontWeight="SemiBold" />
         </Grid>
 
-        <Grid Column="1" Margin="10">
-            <Panel Grid.ColumnSpan="2">
+        <Grid Column="1" Margin="10" RowDefinitions="Auto, *">
+            <Panel Grid.ColumnSpan="2" Grid.RowSpan="2">
                 <ExperimentalAcrylicBorder IsHitTestVisible="False">
                     <ExperimentalAcrylicBorder.Material>
                         <ExperimentalAcrylicMaterial
@@ -80,8 +79,9 @@
                 </ExperimentalAcrylicBorder>
             </Panel>
 
-            <ListBox Background="Transparent"
-                     Items="{Binding SelectedPlaylist.Songs, Converter={StaticResource PlaylistValueConverter}}">
+            <TextBox Grid.Row="0" Margin="10" Text="{Binding FilterText}" Watermark="type to search..." />
+            <ListBox Grid.Row="1" Background="Transparent"
+                     Items="{Binding FilteredSongEntries}">
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="dataModels:IMapEntryBase">
                         <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto" DoubleTapped="PlaySong"
