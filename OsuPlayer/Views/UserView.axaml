@@ -6,6 +6,7 @@
              xmlns:views="clr-namespace:OsuPlayer.Views"
              xmlns:beatmap="clr-namespace:OsuPlayer.Data.API.Models.Beatmap;assembly=OsuPlayer.Data"
              xmlns:valueConverters="clr-namespace:OsuPlayer.Extensions.ValueConverters;assembly=OsuPlayer.Extensions"
+             xmlns:avalonia="clr-namespace:LiveChartsCore.SkiaSharpView.Avalonia;assembly=LiveChartsCore.SkiaSharpView.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.UserView">
 
@@ -47,7 +48,9 @@
             </ListBox>
         </Grid>
 
-        <Grid Column="1" RowDefinitions="Auto, *">
+        <ScrollViewer Grid.Column="1">
+            
+            <Grid Column="1" RowDefinitions="Auto, *, Auto">
             <!-- Profile Picture  -->
             <Grid Row="0" ColumnSpan="3">
                 <!-- <Panel Grid.ColumnSpan="3" Grid.RowSpan="2"> -->
@@ -190,6 +193,39 @@
                     </Grid>
                 </Grid>
             </Grid>
+            
+            <Grid Row="2" RowDefinitions="50, 300" Margin="0 1 0 0">
+                <Panel Grid.RowSpan="2">
+                    <ExperimentalAcrylicBorder IsHitTestVisible="False">
+                        <ExperimentalAcrylicBorder.Material>
+                            <ExperimentalAcrylicMaterial
+                                BackgroundSource="Digger"
+                                TintColor="Black"
+                                TintOpacity="1"
+                                MaterialOpacity="0.75" />
+                        </ExperimentalAcrylicBorder.Material>
+                    </ExperimentalAcrylicBorder>
+                </Panel>
+                
+                <Border Grid.Row="0" Background="#7F000000" HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch">
+                    <TextBlock Text="Lifetime statistics" FontSize="24"
+                               HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Border>
+                
+                <avalonia:CartesianChart Grid.Row="1"
+                                    VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                                    YAxes="{Binding YAxes}"
+                                    XAxes="{Binding XAxes}"
+                                    Series="{Binding Series}"
+                                    TooltipBackground="#7F000000"
+                                    TooltipTextBrush="White"
+                                    TooltipFontFamily="{DynamicResource Montserrat}"
+                                    TooltipFontWeight="Bold"/>
+            </Grid>
         </Grid>
+            
+        </ScrollViewer>
+        
     </Grid>
 </UserControl>

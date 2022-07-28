@@ -121,4 +121,9 @@ public partial class ApiAsync
         return await GetRequestWithParameterAsync<List<BeatmapUserValidityModel>>("beatmaps", "getBeatmapsPlayedByUser",
             $"username={username}&amount={amount}");
     }
+
+    public static async Task<List<(string, int, int)>?> GetActivityOfUser(string username)
+    {
+        return await GetRequestWithParameterAsync<List<(string, int, int)>>("statistics", "getActivityOfUser", $"username={username}");
+    }
 }

@@ -1,8 +1,13 @@
 using System.Diagnostics;
 using System.Reactive.Disposables;
 using System.Threading;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Media.Imaging;
+using LiveChartsCore;
+using LiveChartsCore.Defaults;
+using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
 using Material.Icons;
 using Material.Icons.Avalonia;
 using OsuPlayer.Data.API.Enums;
@@ -10,6 +15,7 @@ using OsuPlayer.Data.API.Models.Beatmap;
 using OsuPlayer.Extensions;
 using OsuPlayer.ViewModels;
 using ReactiveUI;
+using SkiaSharp;
 
 namespace OsuPlayer.Views;
 
@@ -22,10 +28,15 @@ public class UserViewModel : BaseViewModel
     private Bitmap? _currentProfilePicture;
     private CancellationTokenSource? _profilePictureCancellationTokenSource;
     private User? _selectedUser;
+    private List<ObservableValue> _songsPlayedGraphValues;
     private CancellationTokenSource? _topSongsCancellationTokenSource;
     private ObservableCollection<BeatmapUserValidityModel> _topSongsOfCurrentUser;
 
     private ObservableCollection<User> _users;
+    private List<ObservableValue> _xpGainedGraphValues;
+
+    public Bindable<List<ObservableValue>?> SongsPlayedGraphValuesBindable = new();
+    public Bindable<List<ObservableValue>?> XpGainedGraphValuesBindable = new();
 
     public UserViewModel(Player player)
     {
@@ -35,7 +46,63 @@ public class UserViewModel : BaseViewModel
 
         Badges = new ObservableCollection<IControl>();
 
+        SongsPlayedGraphValues = new List<ObservableValue>();
+        XpGainedGraphValues = new List<ObservableValue>();
+
         this.WhenActivated(Block);
+    }
+
+    public ObservableCollection<ISeries> Series { get; set; }
+
+    public Axis[] YAxes { get; set; } =
+    {
+        new()
+        {
+            IsVisible = false,
+            Labels = null
+        }
+    };
+
+    public Axis[] XAxes { get; set; } =
+    {
+        new()
+        {
+            IsVisible = true,
+            LabelsPaint = new SolidColorPaint(SKColors.White),
+            LabelsRotation = 45,
+        }
+    };
+
+    public List<ObservableValue> XpGainedGraphValues
+    {
+        get => _xpGainedGraphValues;
+        private set
+        {
+            if (Series != default)
+            {
+                Series[1].Values = value;
+                this.RaisePropertyChanged(nameof(Series));
+            }
+
+            this.RaisePropertyChanged(nameof(SelectedUser));
+            this.RaiseAndSetIfChanged(ref _xpGainedGraphValues, value);
+        }
+    }
+
+    public List<ObservableValue> SongsPlayedGraphValues
+    {
+        get => _songsPlayedGraphValues;
+        private set
+        {
+            if (Series != default)
+            {
+                Series[0].Values = value;
+                this.RaisePropertyChanged(nameof(Series));
+            }
+
+            this.RaisePropertyChanged(nameof(SelectedUser));
+            this.RaiseAndSetIfChanged(ref _songsPlayedGraphValues, value);
+        }
     }
 
     public ObservableCollection<BeatmapUserValidityModel> TopSongsOfCurrentUser
@@ -78,6 +145,7 @@ public class UserViewModel : BaseViewModel
             LoadTopSongs();
             LoadProfilePicture();
             LoadProfileBanner();
+            LoadStats();
         }
     }
 
@@ -86,6 +154,59 @@ public class UserViewModel : BaseViewModel
         Disposable.Create(() => { }).DisposeWith(disposables);
 
         Users = (await ApiAsync.GetRequestAsync<List<User>>("users", "getUsersWithData")).ToObservableCollection();
+        
+        SongsPlayedGraphValuesBindable.BindValueChanged(x => SongsPlayedGraphValues = x.NewValue, true);
+        XpGainedGraphValuesBindable.BindValueChanged(x => XpGainedGraphValues = x.NewValue, true);
+
+        Series = new ObservableCollection<ISeries>
+        {
+            new LineSeries<ObservableValue>
+            {
+                Name = "Songs played",
+                Values = SongsPlayedGraphValues,
+                Fill = new LinearGradientPaint(new[]
+                {
+                    new SKColor(128, 0, 128, 0),
+                    new SKColor(128, 0, 128, 25),
+                    new SKColor(128, 0, 128, 50),
+                    new SKColor(128, 0, 128, 75),
+                    new SKColor(128, 0, 128, 100),
+                    new SKColor(128, 0, 128, 125),
+                    new SKColor(128, 0, 128, 150),
+                    new SKColor(128, 0, 128, 175),
+                    new SKColor(128, 0, 128, 200),
+                    new SKColor(128, 0, 128, 225),
+                    SKColors.Purple
+                }, new SKPoint(.5f, 1f), new SKPoint(.5f, 0f)),
+                Stroke = new SolidColorPaint(SKColors.MediumPurple),
+                GeometrySize = 5,
+                GeometryFill = new SolidColorPaint(SKColors.MediumPurple),
+                GeometryStroke = new SolidColorPaint(SKColors.White)
+            },
+            new LineSeries<ObservableValue>
+            {
+                Name = "XP gained",
+                Values = XpGainedGraphValues,
+                Fill = new LinearGradientPaint(new[]
+                {
+                    new SKColor(128, 0, 0, 0),
+                    new SKColor(128, 0, 0, 25),
+                    new SKColor(128, 0, 0, 50),
+                    new SKColor(128, 0, 0, 75),
+                    new SKColor(128, 0, 0, 100),
+                    new SKColor(128, 0, 0, 125),
+                    new SKColor(128, 0, 0, 150),
+                    new SKColor(128, 0, 0, 175),
+                    new SKColor(128, 0, 0, 200),
+                    new SKColor(128, 0, 0, 225),
+                    SKColors.Purple
+                }, new SKPoint(.5f, 1f), new SKPoint(.5f, 0f)),
+                Stroke = new SolidColorPaint(SKColors.MediumVioletRed),
+                GeometrySize = 5,
+                GeometryFill = new SolidColorPaint(SKColors.MediumVioletRed),
+                GeometryStroke = new SolidColorPaint(SKColors.White)
+            }
+        };
 
         var user = ProfileManager.User;
 
@@ -223,6 +344,39 @@ public class UserViewModel : BaseViewModel
 
             CurrentProfileBanner = default;
         }
+    }
+
+    private async Task LoadStats()
+    {
+        if (SelectedUser == default) return;
+
+        var data = await ApiAsync.GetActivityOfUser(SelectedUser.Name);
+
+        if (data == default) return;
+
+        XAxes.First().Labels = new List<string>();
+
+        var songsPlayedValues =  new List<ObservableValue>();
+        var xpGainedValues = new List<ObservableValue>();
+
+        foreach (var item in data)
+            try
+            {
+                XAxes.First().Labels.Add(item.Item1);
+
+                songsPlayedValues.Add(new ObservableValue(item.Item2));
+                xpGainedValues.Add(new ObservableValue(item.Item3));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+        SongsPlayedGraphValuesBindable.Value = songsPlayedValues;
+        XpGainedGraphValuesBindable.Value = xpGainedValues;
+
+        this.RaisePropertyChanged(nameof(XAxes));
     }
 
     public IEnumerable<IControl> LoadBadges(User currentUser)
