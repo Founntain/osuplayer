@@ -35,8 +35,8 @@ public class UserViewModel : BaseViewModel
     private ObservableCollection<User> _users;
     private List<ObservableValue> _xpGainedGraphValues;
 
-    public Bindable<List<ObservableValue>?> SongsPlayedGraphValuesBindable = new();
-    public Bindable<List<ObservableValue>?> XpGainedGraphValuesBindable = new();
+    private Bindable<List<ObservableValue>?> _songsPlayedGraphValuesBindable = new();
+    private Bindable<List<ObservableValue>?> _xpGainedGraphValuesBindable = new();
 
     public UserViewModel(Player player)
     {
@@ -155,8 +155,8 @@ public class UserViewModel : BaseViewModel
 
         Users = (await ApiAsync.GetRequestAsync<List<User>>("users", "getUsersWithData")).ToObservableCollection();
         
-        SongsPlayedGraphValuesBindable.BindValueChanged(x => SongsPlayedGraphValues = x.NewValue, true);
-        XpGainedGraphValuesBindable.BindValueChanged(x => XpGainedGraphValues = x.NewValue, true);
+        _songsPlayedGraphValuesBindable.BindValueChanged(x => SongsPlayedGraphValues = x.NewValue, true);
+        _xpGainedGraphValuesBindable.BindValueChanged(x => XpGainedGraphValues = x.NewValue, true);
 
         Series = new ObservableCollection<ISeries>
         {
@@ -373,8 +373,8 @@ public class UserViewModel : BaseViewModel
                 throw;
             }
 
-        SongsPlayedGraphValuesBindable.Value = songsPlayedValues;
-        XpGainedGraphValuesBindable.Value = xpGainedValues;
+        _songsPlayedGraphValuesBindable.Value = songsPlayedValues;
+        _xpGainedGraphValuesBindable.Value = xpGainedValues;
 
         this.RaisePropertyChanged(nameof(XAxes));
     }
