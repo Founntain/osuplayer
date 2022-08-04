@@ -3,6 +3,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:OsuPlayer.Views"
+             xmlns:avalonia="clr-namespace:Markdown.Avalonia;assembly=Markdown.Avalonia"
+             xmlns:ctxt="clr-namespace:ColorTextBlock.Avalonia;assembly=ColorTextBlock.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.UpdateView">
 
@@ -10,7 +12,7 @@
         <views:UpdateViewModel />
     </Design.DataContext>
 
-    <Grid>
+    <Grid >
         <Panel>
             <ExperimentalAcrylicBorder IsHitTestVisible="False">
                 <ExperimentalAcrylicBorder.Material>
@@ -22,11 +24,19 @@
                 </ExperimentalAcrylicBorder.Material>
             </ExperimentalAcrylicBorder>
         </Panel>
-
-        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Stretch" Spacing="10">
-            <TextBlock Text="UPDATE AVAILABLE" FontSize="64" VerticalAlignment="Center" HorizontalAlignment="Center" />
-            <TextBlock Text="{Binding InfoString}" HorizontalAlignment="Center" FontSize="24" />
-            <Button Content="open github" HorizontalAlignment="Center" Click="Button_OnClick" FontSize="18" />
-        </StackPanel>
+        
+        <Grid RowDefinitions="Auto, *, 50" Margin="5">
+            <TextBlock Grid.Row="0" Text="Look a new osu!player update" FontSize="48"  FontStyle="Italic" VerticalAlignment="Center" HorizontalAlignment="Left" />
+            
+            <avalonia:MarkdownScrollViewer Grid.Row="1" Markdown="{Binding Update.PatchNotes}">
+                <avalonia:MarkdownScrollViewer.Styles>
+                    <Style Selector="ctxt|CTextBlock.Heading2">
+                        <Setter Property="Foreground" Value="White" />
+                    </Style>
+                </avalonia:MarkdownScrollViewer.Styles>
+            </avalonia:MarkdownScrollViewer>
+            
+            <Button Grid.Row="2" Content="open github" HorizontalAlignment="Center" Click="Button_OnClick" FontSize="18" />
+        </Grid>
     </Grid>
 </UserControl>
