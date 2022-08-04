@@ -1,5 +1,8 @@
 ﻿namespace OsuPlayer.Network;
 
+/// <summary>
+/// A data structure for an update.
+/// </summary>
 public sealed class UpdateResponse
 {
     public bool IsNewVersionAvailable { get; set; }
