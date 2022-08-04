@@ -11,9 +11,10 @@ namespace OsuPlayer.Network;
 public static class GitHubUpdater
 {
     /// <summary>
-    /// Checks if the current version is older and needs to be updated
+    /// Checks if an older version is running and if so it will notify the user.
     /// </summary>
     /// <param name="releaseChannel">The release channel to be used</param>
+    /// <returns>a UpdateResponse object</returns>
     public static async Task<UpdateResponse> CheckForUpdates(ReleaseChannels releaseChannel = ReleaseChannels.Stable)
     {
         var curVersion = Assembly.GetEntryAssembly()!.GetName().Version;
