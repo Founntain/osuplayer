@@ -14,7 +14,7 @@ public static class GitHubUpdater
     /// Checks if the current version is older and needs to be updated
     /// </summary>
     /// <param name="releaseChannel">The release channel to be used</param>
-    public static async Task<(bool, string?, string?)> CheckForUpdates(ReleaseChannels releaseChannel = ReleaseChannels.Stable)
+    public static async Task<UpdateResponse> CheckForUpdates(ReleaseChannels releaseChannel = ReleaseChannels.Stable)
     {
         var curVersion = Assembly.GetEntryAssembly()!.GetName().Version;
 
@@ -22,11 +22,25 @@ public static class GitHubUpdater
 
         var release = await GetLatestRelease(releaseChannel);
 
-        if (release == default) return (false, null, null);
+        if (release == default) return new()
+        {
+            IsNewVersionAvailable = false
+        };
 
-        if (currentVersion != release.TagName) return (true, release.HtmlUrl, release.TagName);
+        if (currentVersion != release.TagName) return new ()
+        {
+            IsNewVersionAvailable = true,
+            HtmlUrl = release.HtmlUrl,
+            IsPrerelease = releaseChannel == ReleaseChannels.PreReleases,
+            Version = release.TagName,
+            ReleaseDate = release.CreatedAt,
+            PatchNotes = await GetLatestPatchNotes(releaseChannel)
+        };
 
-        return (false, null, null);
+        return new UpdateResponse
+        {
+            IsNewVersionAvailable = false
+        };
     }
 
     /// <summary>
@@ -41,8 +55,17 @@ public static class GitHubUpdater
         var releases = await github.Repository.Release.GetAll("osu-player", "osuplayer");
 
         var includePreReleases = releaseChannel == ReleaseChannels.PreReleases;
-        
-        return releases.FirstOrDefault(x => x.Prerelease == includePreReleases);
+
+        Release latestRelease = null;
+
+        foreach (var release in releases.OrderBy(x => x.CreatedAt))
+        {
+            if(release.Prerelease && !includePreReleases) continue;
+
+            latestRelease = release;
+        }
+
+        return latestRelease;
     }
 
     public static async Task<string> GetLatestPatchNotes(ReleaseChannels releaseChannel = ReleaseChannels.Stable)

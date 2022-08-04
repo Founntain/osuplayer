@@ -63,11 +63,15 @@ public partial class MainWindow : ReactivePlayerWindow<MainWindowViewModel>
 #if DEBUG
         // We are ignoring update checks if we are running in debug.
         // The local development version will always be greater than the latest release
-#else
-        if (result.Item1)
+        if (result.IsNewVersionAvailable)
         {
-            ViewModel.UpdateView.UpdateUrl = result.Item2;
-            ViewModel.UpdateView.NewVersion = result.Item3;
+            ViewModel.UpdateView.Update = result;
+            ViewModel!.MainView = ViewModel.UpdateView;
+        }
+#else
+        if (result.IsNewVersionAvailable)
+        {
+            ViewModel.UpdateView.Update = result;
             ViewModel!.MainView = ViewModel.UpdateView;
         }
 #endif
