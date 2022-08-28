@@ -60,11 +60,12 @@ Best practice is, that we discuss (new) features and if they are needed. So don'
 **We appreciate your ideas and feedback!**
 
 ## 📦 Dependencies
-| Dependency                                                   | Description                                       |
-|--------------------------------------------------------------|---------------------------------------------------|
-| [AvaloniaUI](https://github.com/AvaloniaUI/Avalonia)         | The UI-Framework                                  |
-| [ManagedBass](https://github.com/ManagedBass/ManagedBass)    | The Audio-Engine                                  |
-| [Newtonsoft.Json](https://www.newtonsoft.com/json)           | Used for reading and editing various config files |
+| Dependency                                                        | Description                                       |
+|-------------------------------------------------------------------|---------------------------------------------------|
+| [AvaloniaUI](https://github.com/AvaloniaUI/Avalonia)              | The UI-Framework                                  |
+| [ManagedBass](https://github.com/ManagedBass/ManagedBass)         | The Audio-Engine                                  |
+| [Newtonsoft.Json](https://www.newtonsoft.com/json)                | Used for reading and editing various config files |
+| [discord-rpc-sharp](https://github.com/Lachee/discord-rpc-csharp) | Used to display Discord RPC                       |
 
 ## ✨ Special thanks
 - ***SourRaindrop***: for creating a lot of custom images and assets like our logo
