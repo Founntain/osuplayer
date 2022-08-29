@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics;
+using System.Globalization;
 using System.Reflection;
 using Octokit;
 
@@ -17,31 +18,43 @@ public static class GitHubUpdater
     /// <returns>a UpdateResponse object</returns>
     public static async Task<UpdateResponse> CheckForUpdates(ReleaseChannels releaseChannel = ReleaseChannels.Stable)
     {
-        var curVersion = Assembly.GetEntryAssembly()!.GetName().Version;
-
-        var currentVersion = $"{curVersion!.Major}.{curVersion.Minor}.{curVersion.Build}";
-
-        var release = await GetLatestRelease(releaseChannel);
-
-        if (release == default) return new()
+        try
         {
-            IsNewVersionAvailable = false
-        };
+            var curVersion = Assembly.GetEntryAssembly()!.GetName().Version;
 
-        if (currentVersion != release.TagName) return new ()
-        {
-            IsNewVersionAvailable = true,
-            HtmlUrl = release.HtmlUrl,
-            IsPrerelease = releaseChannel == ReleaseChannels.PreReleases,
-            Version = release.TagName,
-            ReleaseDate = release.CreatedAt,
-            PatchNotes = await GetLatestPatchNotes(releaseChannel)
-        };
+            var currentVersion = $"{curVersion!.Major}.{curVersion.Minor}.{curVersion.Build}";
 
-        return new UpdateResponse
+            var release = await GetLatestRelease(releaseChannel);
+
+            if (release == default) return new()
+            {
+                IsNewVersionAvailable = false
+            };
+
+            if (currentVersion != release.TagName) return new ()
+            {
+                IsNewVersionAvailable = true,
+                HtmlUrl = release.HtmlUrl,
+                IsPrerelease = releaseChannel == ReleaseChannels.PreReleases,
+                Version = release.TagName,
+                ReleaseDate = release.CreatedAt,
+                PatchNotes = await GetLatestPatchNotes(releaseChannel)
+            };
+
+            return new UpdateResponse
+            {
+                IsNewVersionAvailable = false
+            };
+        }
+        catch (RateLimitExceededException ex)
         {
-            IsNewVersionAvailable = false
-        };
+            Debug.WriteLine($"Can't check for updates rate limit exceeded! + {ex.Message}");
+            
+            return new()
+            {
+                IsNewVersionAvailable = false
+            };
+        }
     }
 
     /// <summary>
@@ -69,17 +82,25 @@ public static class GitHubUpdater
         return latestRelease;
     }
 
-    public static async Task<string> GetLatestPatchNotes(ReleaseChannels releaseChannel = ReleaseChannels.Stable)
+    public static async Task<string?> GetLatestPatchNotes(ReleaseChannels releaseChannel = ReleaseChannels.Stable)
     {
-        var release = await GetLatestRelease(releaseChannel);
+        try
+        {
+            var release = await GetLatestRelease(releaseChannel);
 
-        if (release == default)
-            return "**No patch-notes found**";
+            if (release == default)
+                return "**No patch-notes found**";
 
-        return $"## {(release.Prerelease ? "pre-release" : "release")} v" + release.TagName + Environment.NewLine
-               + "*released " + release.CreatedAt.ToString("F", new CultureInfo("en-us")) + "*"
-               + Environment.NewLine
-               + Environment.NewLine
-               + release.Body;
+            return $"## {(release.Prerelease ? "pre-release" : "release")} v" + release.TagName + Environment.NewLine
+                   + "*released " + release.CreatedAt.ToString("F", new CultureInfo("en-us")) + "*"
+                   + Environment.NewLine
+                   + Environment.NewLine
+                   + release.Body;
+        }
+        catch (RateLimitExceededException ex)
+        {
+            Debug.WriteLine($"Can't check for updates rate limit exceeded! + {ex.Message}");
+            return "**No patch-notes found, due to GitHub rate limit exceeded**";
+        }
     }
 }
