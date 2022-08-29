@@ -12,6 +12,7 @@ using OsuPlayer.IO;
 using OsuPlayer.IO.DbReader;
 using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.IO.Storage.Playlists;
+using OsuPlayer.Network.Discord;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
 using Splat;
@@ -27,6 +28,7 @@ public class Player
     private readonly BassEngine _bassEngine;
     private readonly Stopwatch _currentSongTimer;
     private readonly int?[] _shuffleHistory = new int?[10];
+    private readonly DiscordClient? _discordClient;
 
     public readonly Bindable<bool> BlacklistSkip = new();
 
@@ -68,6 +70,8 @@ public class Player
                 Dispatcher.UIThread.Post(NextSong);
         };
 
+        _discordClient = new DiscordClient().Initialize();
+
         var config = new Config();
 
         SortingModeBindable.Value = config.Container.SortingMode;
@@ -97,6 +101,10 @@ public class Player
 
             config.Container.LastPlayedSong = value?.Hash;
 
+            if (_discordClient is null || CurrentSong is null) return;
+            
+            _discordClient.UpdatePresence(CurrentSong.Title, $"by {CurrentSong.Artist}");
+            
             // _mainWindow.ViewModel!.PlayerControl.CurrentSongImage = Task.Run(value!.FindBackground).Result;
         }
     }
@@ -389,6 +397,11 @@ public class Player
         return hash.Select(x => SongSourceList!.Find(y => y.Hash == x)).ToList();
     }
 
+    public void DisposeDiscordClient()
+    {
+        _discordClient?.DeInitialize();
+    }
+    
     #region Player
 
     /// <summary>

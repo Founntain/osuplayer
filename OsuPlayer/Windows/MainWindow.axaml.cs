@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Avalonia.Markup.Xaml;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Network;
+using OsuPlayer.Network.Discord;
 using OsuPlayer.Views;
 using ReactiveUI;
 
@@ -11,6 +12,8 @@ namespace OsuPlayer.Windows;
 
 public partial class MainWindow : ReactivePlayerWindow<MainWindowViewModel>
 {
+    private Player _player;
+    
     public MainWindow()
     {
         InitializeComponent();
@@ -20,7 +23,9 @@ public partial class MainWindow : ReactivePlayerWindow<MainWindowViewModel>
     {
         ViewModel = viewModel;
 
-        Task.Run(player.ImportSongsAsync);
+        _player = player;
+        
+        Task.Run(_player.ImportSongsAsync);
 
         InitializeComponent();
 
@@ -52,6 +57,8 @@ public partial class MainWindow : ReactivePlayerWindow<MainWindowViewModel>
         config.Container.RepeatMode = ViewModel.Player.Repeat;
         config.Container.IsShuffle = ViewModel.Player.IsShuffle.Value;
         config.Container.ActivePlaylistId = ViewModel.Player.ActivePlaylistId;
+        
+        _player.DisposeDiscordClient();
     }
 
     private async void Window_OnInitialized(object? sender, EventArgs e)
@@ -59,6 +66,9 @@ public partial class MainWindow : ReactivePlayerWindow<MainWindowViewModel>
         await using var config = new Config();
 
         var result = await GitHubUpdater.CheckForUpdates(config.Container.ReleaseChannel);
+
+        var rpc = new DiscordClient();
+        rpc.Initialize();
 
 #if DEBUG
         // We are ignoring update checks if we are running in debug.
