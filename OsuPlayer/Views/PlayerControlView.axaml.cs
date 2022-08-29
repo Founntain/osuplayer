@@ -68,6 +68,7 @@ public partial class PlayerControlView : ReactivePlayerControl<PlayerControlView
     private void Settings_OnClick(object? sender, RoutedEventArgs e)
     {
         _mainWindow.ViewModel!.MainView = _mainWindow.ViewModel.SettingsView;
+        _mainWindow.ViewModel!.IsPaneOpen = true;
     }
 
     private async void Blacklist_OnClick(object? sender, RoutedEventArgs e)

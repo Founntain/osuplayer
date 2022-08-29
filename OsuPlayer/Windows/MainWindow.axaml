@@ -29,21 +29,83 @@
         <windows:MainWindowViewModel />
     </Design.DataContext>
 
-    <Grid Name="MainGrid" RowDefinitions="50, *, 100">
-        <Panel Grid.Row="0" Grid.RowSpan="3">
-            <ExperimentalAcrylicBorder IsHitTestVisible="False">
-                <ExperimentalAcrylicBorder.Material>
-                    <ExperimentalAcrylicMaterial
-                        BackgroundSource="Digger"
-                        TintColor="Black"
-                        TintOpacity="1"
-                        MaterialOpacity="0.25" />
-                </ExperimentalAcrylicBorder.Material>
-            </ExperimentalAcrylicBorder>
-        </Panel>
-
-        <ContentControl Name="TopBarPanel" Grid.Row="0" Content="{Binding TopBar}" />
-        <ContentControl Name="MainViewPanel" Grid.Row="1" Content="{Binding MainView}" />
-        <ContentControl Name="PlayerControlPanel" Grid.Row="2" Content="{Binding PlayerControl}" />
-    </Grid>
+    <SplitView Name="MainSplitView" OpenPaneLength="256" IsPaneOpen="{Binding IsPaneOpen}" DisplayMode="CompactOverlay" CompactPaneLength="0"
+               PaneClosed="MainSplitView_OnPaneClosed">
+        <SplitView.Pane>
+            <Grid Name="PaneGrid" RowDefinitions="50, *, Auto">
+                <Panel Grid.Row="0">
+                    <ExperimentalAcrylicBorder IsHitTestVisible="False">
+                        <ExperimentalAcrylicBorder.Material>
+                            <ExperimentalAcrylicMaterial
+                                BackgroundSource="Digger"
+                                TintColor="Black"
+                                TintOpacity="1"
+                                MaterialOpacity=".75" />
+                        </ExperimentalAcrylicBorder.Material>
+                    </ExperimentalAcrylicBorder>
+                </Panel>
+                <Panel Grid.Row="1" Grid.RowSpan="2">
+                    <ExperimentalAcrylicBorder IsHitTestVisible="False">
+                        <ExperimentalAcrylicBorder.Material>
+                            <ExperimentalAcrylicMaterial
+                                BackgroundSource="Digger"
+                                TintColor="Black"
+                                TintOpacity="1"
+                                MaterialOpacity=".9" />
+                        </ExperimentalAcrylicBorder.Material>
+                    </ExperimentalAcrylicBorder>
+                </Panel>
+                
+                <Border Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <TextBlock Text="Quick Access" FontSize="24"   HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10 0"/>
+                </Border>
+                
+                <StackPanel Grid.Row="1" Spacing="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Orientation="Vertical">
+                    <Grid RowDefinitions="Auto, Auto, Auto" Background="#2F000000">
+                        <TextBlock Grid.Row="0" Text="Audio" FontStyle="Italic" FontSize="18" Margin="10 10 10 5"/>
+                        <CheckBox Grid.Row="1" Content="use equalizer" Margin="10 0 10 0"/>
+                        <Button Grid.Row="2" Content="open equalizer"  Margin="10 5 10 10"
+                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalAlignment="Center" />
+                    </Grid>
+                    <Grid RowDefinitions="Auto, Auto, Auto" Background="#2F000000">
+                        <TextBlock Grid.Row="0" Text="User" FontStyle="Italic" FontSize="18"  Margin="10 10 10 5"/>
+                        <TextBlock Grid.Row="1" Text="Logged in as: Founntain" FontSize="12" Margin="10 5 10 5"/>
+                        <Button Grid.Row="2" Content="view profile" Margin="10 5 10 10"
+                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalAlignment="Center"/>
+                    </Grid>
+                    <Grid RowDefinitions="Auto, Auto" Background="#2F000000">
+                        <TextBlock Grid.Row="0" Text="Party" FontStyle="Italic" FontSize="18"  Margin="10 10 10 5"/>
+                        <TextBlock Grid.Row="1" Text="Currently not in a party" FontSize="12" Margin="10 10 10 5"/>
+                    </Grid>
+                </StackPanel>
+                
+                <Grid Row="2">
+                    <StackPanel Spacing="5" Margin="5">
+                            <Button Content="report a bug or request a feature"
+                                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </SplitView.Pane>
+            
+        <Grid Name="MainGrid" RowDefinitions="50, *, 100">
+            <Panel Grid.Row="0" Grid.RowSpan="3">
+                <ExperimentalAcrylicBorder IsHitTestVisible="False">
+                    <ExperimentalAcrylicBorder.Material>
+                        <ExperimentalAcrylicMaterial
+                            BackgroundSource="Digger"
+                            TintColor="Black"
+                            TintOpacity="1"
+                            MaterialOpacity="0.25" />
+                    </ExperimentalAcrylicBorder.Material>
+                </ExperimentalAcrylicBorder>
+            </Panel>
+            
+            <ContentControl Name="TopBarPanel" Grid.Row="0" Content="{Binding TopBar}" />
+            <ContentControl Name="MainViewPanel" Grid.Row="1" Content="{Binding MainView}" />
+            <ContentControl Name="PlayerControlPanel" Grid.Row="2" Content="{Binding PlayerControl}" />
+        </Grid>
+    </SplitView>
+    
+    
 </Window>

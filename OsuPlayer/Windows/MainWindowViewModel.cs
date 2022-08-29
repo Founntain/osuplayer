@@ -9,7 +9,14 @@ public class MainWindowViewModel : BaseWindowViewModel
     public readonly BassEngine BassEngine;
     public readonly Player Player;
 
+    public bool IsPaneOpen  
+    {
+        get => _isPaneOpen;
+        set => this.RaiseAndSetIfChanged(ref _isPaneOpen, value);
+    }
+
     private BaseViewModel _mainView;
+    private bool _isPaneOpen;
 
     public MainWindowViewModel(BassEngine engine, Player player)
     {

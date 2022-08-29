@@ -65,8 +65,6 @@ public partial class MainWindow : ReactivePlayerWindow<MainWindowViewModel>
     {
         await using var config = new Config();
 
-        var result = await GitHubUpdater.CheckForUpdates(config.Container.ReleaseChannel);
-
         var rpc = new DiscordClient();
         rpc.Initialize();
 
@@ -76,12 +74,16 @@ public partial class MainWindow : ReactivePlayerWindow<MainWindowViewModel>
         
         // Uncomment code below to force the update UI to show for testing purposes.
         
+        // var result = await GitHubUpdater.CheckForUpdates(config.Container.ReleaseChannel);
+        //
         // if (result.IsNewVersionAvailable)
         // {
         //     ViewModel.UpdateView.Update = result;
         //     ViewModel!.MainView = ViewModel.UpdateView;
         // }
 #else
+        var result = await GitHubUpdater.CheckForUpdates(config.Container.ReleaseChannel);
+
         if (result.IsNewVersionAvailable)
         {
             ViewModel.UpdateView.Update = result;
@@ -104,5 +106,10 @@ public partial class MainWindow : ReactivePlayerWindow<MainWindowViewModel>
         ViewModel.HomeView.RaisePropertyChanged(nameof(ViewModel.HomeView.CurrentUser));
 
         ViewModel.HomeView.ProfilePicture = await ViewModel.HomeView.LoadProfilePicture();
+    }
+
+    private void MainSplitView_OnPaneClosed(object? sender, EventArgs e)
+    {
+        ViewModel.IsPaneOpen = false;
     }
 }

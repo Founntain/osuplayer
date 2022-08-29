@@ -202,6 +202,8 @@ public class SettingsViewModel : BaseViewModel
 
         var latestPatchNotes = await GitHubUpdater.GetLatestPatchNotes(_selectedReleaseChannel);
 
+        if (string.IsNullOrWhiteSpace(latestPatchNotes)) return;
+        
         var regex = new Regex(@"( in )([\w\s:\/\.])*[\d]+");
         latestPatchNotes = regex.Replace(latestPatchNotes, "");
         regex = new Regex(@"(\n?\r?)*[\*]*(Full Changelog)[\*]*:.*$");
