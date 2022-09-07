@@ -48,7 +48,7 @@ public static class GitHubUpdater
         }
         catch (RateLimitExceededException ex)
         {
-            Debug.WriteLine("Can't check for updates rate limit exceeded!");
+            Debug.WriteLine($"Can't check for updates rate limit exceeded! + {ex.Message}");
             
             return new()
             {
@@ -99,7 +99,7 @@ public static class GitHubUpdater
         }
         catch (RateLimitExceededException ex)
         {
-            Debug.WriteLine("Can't check for updates rate limit exceeded!");
+            Debug.WriteLine($"Can't check for updates rate limit exceeded! + {ex.Message}");
             return "**No patch-notes found, due to GitHub rate limit exceeded**";
         }
     }
