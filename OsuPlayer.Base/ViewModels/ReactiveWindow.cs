@@ -44,7 +44,7 @@ public class ReactiveWindow<TViewModel> : Window, IViewFor<TViewModel> where TVi
     {
         if (value == null)
             ClearValue(DataContextProperty);
-        
-        else if (DataContext != value) DataContext = value;
+        else if (DataContext != value) 
+            DataContext = value;
     }
 }
