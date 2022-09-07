@@ -32,13 +32,15 @@ internal class Program
             Debugger.Break();
 #endif
             
-            //Create crashlog for users
+            // Create crashlog for users
             UnhandledExceptionHandler.HandleException(ex);
       
-            var processStartInfo = new ProcessStartInfo("dotnet", "OsuPlayer.CrashHandler.dll");
+            // Start the CrashHandler to display the error message to the user
+            var processStartInfo = new ProcessStartInfo("dotnet", "OsuPlayer.CrashHandler.dll")
+            {
+                CreateNoWindow = true
+            };
 
-            processStartInfo.CreateNoWindow = true;
-            
             Process.Start(processStartInfo);
         }
     }
