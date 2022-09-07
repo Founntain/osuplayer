@@ -5,6 +5,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using DynamicData;
 using LiveChartsCore.Defaults;
+using OsuPlayer.Data.API.Enums;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Extensions;
@@ -100,6 +101,8 @@ public class Player
             using var config = new Config();
 
             config.Container.LastPlayedSong = value?.Hash;
+
+            ApiAsync.SetUserOnlineStatus(UserOnlineStatusType.Listening, value?.ToString(), value?.Hash);
 
             if (_discordClient is null || CurrentSong is null) return;
             
@@ -425,19 +428,23 @@ public class Player
     /// <summary>
     /// Pauses the current song if playing or plays again if paused
     /// </summary>
-    public void PlayPause()
+    public async Task PlayPause()
     {
         if (PlayState == PlayState.Paused)
         {
             _bassEngine.Play();
             _currentSongTimer.Start();
             PlayState = PlayState.Playing;
+            
+            await ApiAsync.SetUserOnlineStatus(UserOnlineStatusType.Listening, CurrentSong?.ToString(), CurrentSong?.Hash);
         }
         else
         {
             _bassEngine.Pause();
             _currentSongTimer.Stop();
             PlayState = PlayState.Paused;
+            
+            await ApiAsync.SetUserOnlineStatus(UserOnlineStatusType.Idle);
         }
     }
 

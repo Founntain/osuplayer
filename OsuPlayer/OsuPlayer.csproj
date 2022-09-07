@@ -50,6 +50,7 @@
         <AvaloniaResource Include="Resources\**" />
     </ItemGroup>
     <ItemGroup>
+        <ProjectReference Include="..\OsuPlayer.Base\OsuPlayer.Base.csproj" />
         <ProjectReference Include="..\OsuPlayer.Data\OsuPlayer.Data.csproj" />
         <ProjectReference Include="..\OsuPlayer.Extensions\OsuPlayer.Extensions.csproj" />
         <ProjectReference Include="..\OsuPlayer.IO\OsuPlayer.IO.csproj" />

@@ -1,6 +1,8 @@
 ﻿using Avalonia.Media.Imaging;
+using OsuPlayer.Data.API.Enums;
 using OsuPlayer.Data.API.Models.Beatmap;
 using OsuPlayer.Data.API.Models.User;
+using OsuPlayer.Extensions.ValueConverters;
 using OsuPlayer.Network.Online;
 
 namespace OsuPlayer.Network.API.ApiEndpoints;
@@ -125,5 +127,23 @@ public partial class ApiAsync
     public static async Task<List<(string, int, int)>?> GetActivityOfUser(string username)
     {
         return await GetRequestWithParameterAsync<List<(string, int, int)>>("statistics", "getActivityOfUser", $"username={username}");
+    }
+
+    public static async Task<UserOnlineStatusModel?> SetUserOnlineStatus(UserOnlineStatusType statusType, string? song = null, string? checksum = null)
+    {
+        var username = ProfileManager.User?.Name;
+
+        if (string.IsNullOrWhiteSpace(username))
+            return default;
+
+        var data = new UserOnlineStatusModel
+        {
+            Username = username,
+            StatusType = statusType,
+            Song = song,
+            SongChecksum = checksum
+        };
+
+        return await ApiRequestAsync<UserOnlineStatusModel>("users", "setUserOnlineStatus", data);
     }
 }

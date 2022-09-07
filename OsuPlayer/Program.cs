@@ -24,9 +24,6 @@ internal class Program
         }
         catch (Exception ex) //If we have an unhandled exception we catch it here
         {
-            //Create crashlog for users
-            UnhandledExceptionHandler.HandleException(ex);
-
 #if DEBUG
             // If we debug the application and an unhandled exception is thrown,
             // we need to initiate a break for the debugger, so we can debug the exception.
@@ -34,6 +31,15 @@ internal class Program
             // This avoids opening the logs and we can debug it directly.
             Debugger.Break();
 #endif
+            
+            //Create crashlog for users
+            UnhandledExceptionHandler.HandleException(ex);
+      
+            var processStartInfo = new ProcessStartInfo("dotnet", "OsuPlayer.CrashHandler.dll");
+
+            processStartInfo.CreateNoWindow = true;
+            
+            Process.Start(processStartInfo);
         }
     }
 

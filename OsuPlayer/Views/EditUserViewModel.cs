@@ -2,9 +2,9 @@
 using System.Reactive.Disposables;
 using System.Threading;
 using Avalonia.Media.Imaging;
+using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Data.API.Models.Beatmap;
 using OsuPlayer.Extensions;
-using OsuPlayer.ViewModels;
 using ReactiveUI;
 
 namespace OsuPlayer.Views;

@@ -1,7 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Layout;
-using OsuPlayer.ViewModels;
+using OsuPlayer.Base.ViewModels;
 
 namespace OsuPlayer.Views;
 

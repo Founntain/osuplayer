@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Avalonia.Markup.Xaml;
+using OsuPlayer.Base.ViewModels;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Network;
 using OsuPlayer.Network.Discord;
@@ -10,7 +11,7 @@ using ReactiveUI;
 
 namespace OsuPlayer.Windows;
 
-public partial class MainWindow : ReactivePlayerWindow<MainWindowViewModel>
+public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 {
     private Player _player;
     

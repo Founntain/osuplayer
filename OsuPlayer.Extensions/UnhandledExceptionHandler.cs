@@ -1,4 +1,6 @@
-﻿namespace OsuPlayer.Extensions;
+﻿using System.Globalization;
+
+namespace OsuPlayer.Extensions;
 
 /// <summary>
 /// A class to handle an unhandled <see cref="Exception" /> thrown in the Main method.
@@ -21,17 +23,17 @@ public static class UnhandledExceptionHandler
     {
         CreatLogsDirectoryIfItsMissing();
 
-        var dateString = DateTime.UtcNow.ToString("yyyyMMdd_HHmmss");
+        var date = DateTime.UtcNow;
+        
+        var dateString = date.ToString("yyyyMMdd_HHmmss");
 
         //Not using concatenation so it is better readable
         var crashlog = "A shit, it looks like you did something that the osu!player did not like. If you think this is a bug, please report this crashlog to Founntain via the following methods:"
                        + Environment.NewLine
-                       + Environment.NewLine + "🐈 GitHub: https://github.com/Founntain/osuplayer/issues/new?assignees=&labels=bug&template=bug_report.md&title=%5BBUG%5D+"
-                       + Environment.NewLine + "🗨️ Discord: https://discord.gg/RJQSc5B"
-                       + Environment.NewLine + "✉️ Email: 7@founntain.dev"
+                       + "UTC Time: " + date.ToString("f", new CultureInfo("en-us"))
                        + Environment.NewLine
                        + Environment.NewLine
-                       + "🛑 Error stacktrace below:"
+                       + "Error stacktrace below:"
                        + Environment.NewLine
                        + ex.Message + Environment.NewLine + ex.StackTrace;
 

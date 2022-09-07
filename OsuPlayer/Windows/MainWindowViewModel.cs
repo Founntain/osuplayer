@@ -1,4 +1,4 @@
-using OsuPlayer.ViewModels;
+using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Views;
 using ReactiveUI;
 

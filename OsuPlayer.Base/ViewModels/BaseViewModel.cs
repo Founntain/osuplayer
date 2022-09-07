@@ -1,6 +1,6 @@
 ﻿using ReactiveUI;
 
-namespace OsuPlayer.ViewModels;
+namespace OsuPlayer.Base.ViewModels;
 
 public class BaseViewModel : ReactiveObject, IActivatableViewModel
 {
