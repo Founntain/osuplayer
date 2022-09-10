@@ -4,7 +4,7 @@ using OsuPlayer.Extensions;
 
 namespace OsuPlayer.Views;
 
-public partial class UpdateView : ReactivePlayerControl<UpdateViewModel>
+public partial class UpdateView : ReactiveControl<UpdateViewModel>
 {
     public UpdateView()
     {

@@ -428,7 +428,7 @@ public class Player
     /// <summary>
     /// Pauses the current song if playing or plays again if paused
     /// </summary>
-    public async Task PlayPause()
+    public async void PlayPause()
     {
         if (PlayState == PlayState.Paused)
         {

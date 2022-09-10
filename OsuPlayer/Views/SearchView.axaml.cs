@@ -5,7 +5,7 @@ using ReactiveUI;
 
 namespace OsuPlayer.Views;
 
-public partial class SearchView : ReactivePlayerControl<SearchViewModel>
+public partial class SearchView : ReactiveControl<SearchViewModel>
 {
     public SearchView()
     {

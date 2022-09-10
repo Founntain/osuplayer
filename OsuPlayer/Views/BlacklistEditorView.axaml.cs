@@ -9,7 +9,7 @@ using ReactiveUI;
 
 namespace OsuPlayer.Views;
 
-public partial class BlacklistEditorView : ReactivePlayerControl<BlacklistEditorViewModel>
+public partial class BlacklistEditorView : ReactiveControl<BlacklistEditorViewModel>
 {
     private MainWindow _mainWindow;
 

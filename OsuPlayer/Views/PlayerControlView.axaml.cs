@@ -13,7 +13,7 @@ using ReactiveUI;
 
 namespace OsuPlayer.Views;
 
-public partial class PlayerControlView : ReactivePlayerControl<PlayerControlViewModel>
+public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
 {
     private MainWindow _mainWindow;
 
@@ -107,7 +107,7 @@ public partial class PlayerControlView : ReactivePlayerControl<PlayerControlView
         ViewModel.RaisePropertyChanged(nameof(ViewModel.IsCurrentSongInPlaylist));
     }
 
-    private async void SongControl(object? sender, RoutedEventArgs e)
+    private void SongControl(object? sender, RoutedEventArgs e)
     {
         switch ((sender as Control)?.Name)
         {
@@ -118,7 +118,7 @@ public partial class PlayerControlView : ReactivePlayerControl<PlayerControlView
                 ViewModel.Player.PreviousSong();
                 break;
             case "PlayPause":
-                await ViewModel.Player.PlayPause();
+                ViewModel.Player.PlayPause();
                 break;
             case "Next":
                 ViewModel.Player.NextSong();

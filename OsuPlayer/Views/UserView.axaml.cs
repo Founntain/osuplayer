@@ -8,7 +8,7 @@ using OsuPlayer.Extensions;
 
 namespace OsuPlayer.Views;
 
-public partial class UserView : ReactivePlayerControl<UserViewModel>
+public partial class UserView : ReactiveControl<UserViewModel>
 {
     public UserView()
     {
