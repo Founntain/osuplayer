@@ -8,7 +8,7 @@ using ReactiveUI;
 
 namespace OsuPlayer.Views;
 
-internal partial class TopBarView : ReactivePlayerControl<TopBarViewModel>
+internal partial class TopBarView : ReactiveControl<TopBarViewModel>
 {
     private MainWindow _mainWindow;
 

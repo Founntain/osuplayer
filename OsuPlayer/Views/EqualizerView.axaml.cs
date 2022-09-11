@@ -10,7 +10,7 @@ using ReactiveUI;
 
 namespace OsuPlayer.Views;
 
-public partial class EqualizerView : ReactivePlayerControl<EqualizerViewModel>
+public partial class EqualizerView : ReactiveControl<EqualizerViewModel>
 {
     private MainWindow _mainWindow;
 

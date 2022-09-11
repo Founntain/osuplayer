@@ -4,13 +4,12 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
-using Avalonia.ReactiveUI;
 using OsuPlayer.UI_Extensions;
 using ReactiveUI;
 
 namespace OsuPlayer.Windows;
 
-public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
+public partial class LoginWindow : Avalonia.ReactiveUI.ReactiveWindow<LoginWindowViewModel>
 {
     private MainWindow _mainWindow;
     

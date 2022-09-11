@@ -1,10 +1,10 @@
 using System.Reactive.Disposables;
 using System.Text.RegularExpressions;
 using Avalonia.Controls;
+using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Network;
-using OsuPlayer.ViewModels;
 using OsuPlayer.Windows;
 using ReactiveUI;
 
@@ -202,6 +202,8 @@ public class SettingsViewModel : BaseViewModel
 
         var latestPatchNotes = await GitHubUpdater.GetLatestPatchNotes(_selectedReleaseChannel);
 
+        if (string.IsNullOrWhiteSpace(latestPatchNotes)) return;
+        
         var regex = new Regex(@"( in )([\w\s:\/\.])*[\d]+");
         latestPatchNotes = regex.Replace(latestPatchNotes, "");
         regex = new Regex(@"(\n?\r?)*[\*]*(Full Changelog)[\*]*:.*$");

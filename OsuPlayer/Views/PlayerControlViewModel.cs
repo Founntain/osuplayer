@@ -1,11 +1,11 @@
 using System.Reactive.Disposables;
 using Avalonia.Media.Imaging;
+using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Extensions;
 using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.IO.Storage.Playlists;
-using OsuPlayer.ViewModels;
 using ReactiveUI;
 
 namespace OsuPlayer.Views;

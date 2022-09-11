@@ -12,7 +12,7 @@ using ReactiveUI;
 
 namespace OsuPlayer.Views;
 
-public partial class PlaylistEditorView : ReactivePlayerControl<PlaylistEditorViewModel>
+public partial class PlaylistEditorView : ReactiveControl<PlaylistEditorViewModel>
 {
     private MainWindow _mainWindow;
 

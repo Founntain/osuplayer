@@ -11,7 +11,7 @@ using ReactiveUI;
 
 namespace OsuPlayer.Views;
 
-public partial class SettingsView : ReactivePlayerControl<SettingsViewModel>
+public partial class SettingsView : ReactiveControl<SettingsViewModel>
 {
     private MainWindow _mainWindow;
 

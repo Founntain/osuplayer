@@ -8,7 +8,7 @@ using ReactiveUI;
 
 namespace OsuPlayer.Views;
 
-public partial class HomeView : ReactivePlayerControl<HomeViewModel>
+public partial class HomeView : ReactiveControl<HomeViewModel>
 {
     private MainWindow _mainWindow;
 

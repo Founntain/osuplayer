@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using System.Reactive.Disposables;
 using System.Threading;
-using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using LiveChartsCore;
@@ -10,10 +9,10 @@ using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using Material.Icons;
 using Material.Icons.Avalonia;
+using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Data.API.Enums;
 using OsuPlayer.Data.API.Models.Beatmap;
 using OsuPlayer.Extensions;
-using OsuPlayer.ViewModels;
 using ReactiveUI;
 using SkiaSharp;
 
