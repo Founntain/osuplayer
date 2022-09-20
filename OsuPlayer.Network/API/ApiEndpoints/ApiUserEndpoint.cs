@@ -41,7 +41,7 @@ public partial class ApiAsync
                     return new Bitmap(stream);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return default;
             }

@@ -54,6 +54,7 @@ public class OnlineTests
         Assert.IsNotEmpty(user.JoinDateString);
         Assert.IsNotEmpty(user.TotalXpString);
 
+        Assert.GreaterOrEqual(user.GetXpNeededForNextLevel(), 0);
         Assert.GreaterOrEqual(User.GetXpNeededForNextLevel(1), 0);
     }
 

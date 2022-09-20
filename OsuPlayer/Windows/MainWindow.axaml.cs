@@ -1,9 +1,15 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using Avalonia.Platform;
+using Avalonia.Remote.Protocol.Input;
+using Avalonia.VisualTree;
+using Avalonia.Win32;
 using OsuPlayer.Base.ViewModels;
 using OsuPlayer.IO.Storage.Playlists;
+using OsuPlayer.Modules.Hotkeys;
 using OsuPlayer.Network;
 using OsuPlayer.Network.Discord;
 using OsuPlayer.Views;
@@ -14,6 +20,7 @@ namespace OsuPlayer.Windows;
 public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 {
     private Player _player;
+    private HotkeyInitializer _hotkeyInitializer;
     
     public MainWindow()
     {
@@ -28,6 +35,8 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         
         Task.Run(_player.ImportSongsAsync);
 
+        _hotkeyInitializer = new (this);
+        
         InitializeComponent();
 
         using var config = new Config();
@@ -42,9 +51,31 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         {
             if (ViewModel != null)
                 ViewModel.MainView = ViewModel.HomeView;
+
+            var hotkeys = new List<Hotkey>()
+            {
+                new Hotkey(1, Key.Right, () =>
+                {
+                    _player.NextSong();
+                })
+            };
+            
+            _hotkeyInitializer.SetHotkeys(hotkeys);
+            
+            RegisterHotkeys();
         });
 
         AvaloniaXamlLoader.Load(this);
+    }
+
+    private void RegisterHotkeys()
+    {
+        _hotkeyInitializer.RegisterHotkeys();
+    }
+
+    private void UnregisterHotkeys()
+    {
+        _hotkeyInitializer.UnregisterHotkeys();
     }
 
     protected override void OnClosing(CancelEventArgs e)
@@ -60,6 +91,8 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         config.Container.ActivePlaylistId = ViewModel.Player.ActivePlaylistId;
         
         _player.DisposeDiscordClient();
+        
+        UnregisterHotkeys();
     }
 
     private async void Window_OnInitialized(object? sender, EventArgs e)
