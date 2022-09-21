@@ -2,7 +2,6 @@
 using OsuPlayer.Data.API.Enums;
 using OsuPlayer.Data.API.Models.Beatmap;
 using OsuPlayer.Data.API.Models.User;
-using OsuPlayer.Extensions.ValueConverters;
 using OsuPlayer.Network.Online;
 
 namespace OsuPlayer.Network.API.ApiEndpoints;

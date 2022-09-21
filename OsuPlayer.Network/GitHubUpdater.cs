@@ -26,20 +26,22 @@ public static class GitHubUpdater
 
             var release = await GetLatestRelease(releaseChannel);
 
-            if (release == default) return new()
-            {
-                IsNewVersionAvailable = false
-            };
+            if (release == default)
+                return new UpdateResponse
+                {
+                    IsNewVersionAvailable = false
+                };
 
-            if (currentVersion != release.TagName) return new ()
-            {
-                IsNewVersionAvailable = true,
-                HtmlUrl = release.HtmlUrl,
-                IsPrerelease = releaseChannel == ReleaseChannels.PreReleases,
-                Version = release.TagName,
-                ReleaseDate = release.CreatedAt,
-                PatchNotes = await GetLatestPatchNotes(releaseChannel)
-            };
+            if (currentVersion != release.TagName)
+                return new UpdateResponse
+                {
+                    IsNewVersionAvailable = true,
+                    HtmlUrl = release.HtmlUrl,
+                    IsPrerelease = releaseChannel == ReleaseChannels.PreReleases,
+                    Version = release.TagName,
+                    ReleaseDate = release.CreatedAt,
+                    PatchNotes = await GetLatestPatchNotes(releaseChannel)
+                };
 
             return new UpdateResponse
             {
@@ -49,8 +51,8 @@ public static class GitHubUpdater
         catch (RateLimitExceededException ex)
         {
             Debug.WriteLine($"Can't check for updates rate limit exceeded! + {ex.Message}");
-            
-            return new()
+
+            return new UpdateResponse
             {
                 IsNewVersionAvailable = false
             };
@@ -74,7 +76,7 @@ public static class GitHubUpdater
 
         foreach (var release in releases.OrderBy(x => x.CreatedAt))
         {
-            if(release.Prerelease && !includePreReleases) continue;
+            if (release.Prerelease && !includePreReleases) continue;
 
             latestRelease = release;
         }

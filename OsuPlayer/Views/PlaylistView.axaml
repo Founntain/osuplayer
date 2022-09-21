@@ -2,7 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:valueConverters="clr-namespace:OsuPlayer.ValueConverters"
              xmlns:classes="clr-namespace:OsuPlayer.Data.OsuPlayer.Classes;assembly=OsuPlayer.Data"
              xmlns:views="clr-namespace:OsuPlayer.Views"
              xmlns:dataModels="clr-namespace:OsuPlayer.IO.DbReader.DataModels;assembly=OsuPlayer.IO"

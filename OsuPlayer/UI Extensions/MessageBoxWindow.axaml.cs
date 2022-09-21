@@ -26,7 +26,7 @@ public partial class MessageBoxWindow : ReactiveWindow<MessageBoxViewModel>
         InitializeComponent();
 
         ViewModel = new MessageBoxViewModel(this, text, title);
-        
+
         using var config = new Config();
         TransparencyLevelHint = config.Read().TransparencyLevelHint;
 #if DEBUG
@@ -36,10 +36,8 @@ public partial class MessageBoxWindow : ReactiveWindow<MessageBoxViewModel>
 
     private void InitializeComponent()
     {
-        this.WhenActivated(disposables =>
-        {
-        });
-        
+        this.WhenActivated(disposables => { });
+
         AvaloniaXamlLoader.Load(this);
     }
 }

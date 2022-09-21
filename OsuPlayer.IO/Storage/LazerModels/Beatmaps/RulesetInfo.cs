@@ -8,6 +8,8 @@ namespace OsuPlayer.IO.Storage.LazerModels.Beatmaps;
 [MapTo("Ruleset")]
 public class RulesetInfo : RealmObject, IEquatable<RulesetInfo>, IComparable<RulesetInfo>, IRulesetInfo
 {
+    public bool Available { get; set; }
+
     public RulesetInfo(string shortName, string name, string instantiationInfo, int onlineID)
     {
         ShortName = shortName;
@@ -20,8 +22,6 @@ public class RulesetInfo : RealmObject, IEquatable<RulesetInfo>, IComparable<Rul
     public RulesetInfo()
     {
     }
-
-    public bool Available { get; set; }
 
     public int CompareTo(RulesetInfo other)
     {

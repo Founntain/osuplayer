@@ -1,5 +1,6 @@
 ﻿using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.ReactiveUI;
 using OsuPlayer.Data.API.Models.User;
 using OsuPlayer.Extensions;
 using OsuPlayer.Network.Security;
@@ -7,7 +8,7 @@ using OsuPlayer.UI_Extensions;
 
 namespace OsuPlayer.Windows;
 
-public partial class CreateProfileWindow : Avalonia.ReactiveUI.ReactiveWindow<CreateProfileWindowViewModel>
+public partial class CreateProfileWindow : ReactiveWindow<CreateProfileWindowViewModel>
 {
     public CreateProfileWindow()
     {

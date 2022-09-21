@@ -38,13 +38,6 @@ public sealed class BassEngine : INotifyPropertyChanged
     public BindableArray<decimal> EqGains = new(10, 1);
     public Bindable<double> VolumeB = new();
 
-    public BassEngine()
-    {
-        Initialize();
-        _endTrackSyncProc = EndTrack;
-        _repeatSyncProc = RepeatCallback;
-    }
-
     public int ActiveStreamHandle
     {
         get => _activeStream;
@@ -94,6 +87,13 @@ public sealed class BassEngine : INotifyPropertyChanged
                 SetAllEq();
             }
         }
+    }
+
+    public BassEngine()
+    {
+        Initialize();
+        _endTrackSyncProc = EndTrack;
+        _repeatSyncProc = RepeatCallback;
     }
 
     #region Metadata

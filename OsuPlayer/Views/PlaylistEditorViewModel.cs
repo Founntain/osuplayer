@@ -24,38 +24,6 @@ public class PlaylistEditorViewModel : BaseViewModel
     private string _newPlaylistNameText;
     private SourceList<Playlist>? _playlists;
 
-    public PlaylistEditorViewModel(Player player)
-    {
-        Player = player;
-
-        _filter = this.WhenAnyValue(x => x.FilterText)
-            .Throttle(TimeSpan.FromMilliseconds(20))
-            .Select(BuildFilter);
-
-        Player.SortingModeBindable.BindValueChanged(d => UpdateSorting(d.NewValue), true);
-
-        Activator = new ViewModelActivator();
-
-        this.WhenActivated(disposables =>
-        {
-            Disposable.Create(() => { }).DisposeWith(disposables);
-
-            var playlistStorage = new PlaylistStorage();
-
-            CurrentSelectedPlaylist = Playlists.Items.FirstOrDefault(x => x.Id == playlistStorage.Container.LastSelectedPlaylist) ?? Playlists.Items.ElementAt(0);
-
-            if (_filteredSongEntries == default)
-                Player.SongSource.Value.Connect().Sort(SortExpressionComparer<IMapEntryBase>.Ascending(x => Player.CustomSorter(x, Player.SortingModeBindable.Value)))
-                    .Filter(_filter, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
-                    .Bind(out _filteredSongEntries).Subscribe();
-
-            this.RaisePropertyChanged(nameof(FilteredSongEntries));
-        });
-
-        SelectedPlaylistItems = new List<IMapEntryBase>();
-        SelectedSongListItems = new List<IMapEntryBase>();
-    }
-
     public string FilterText
     {
         get => _filterText;
@@ -109,6 +77,38 @@ public class PlaylistEditorViewModel : BaseViewModel
     public List<IMapEntryBase>? SelectedPlaylistItems { get; set; }
 
     public ReadOnlyObservableCollection<IMapEntryBase>? FilteredSongEntries => _filteredSongEntries;
+
+    public PlaylistEditorViewModel(Player player)
+    {
+        Player = player;
+
+        _filter = this.WhenAnyValue(x => x.FilterText)
+            .Throttle(TimeSpan.FromMilliseconds(20))
+            .Select(BuildFilter);
+
+        Player.SortingModeBindable.BindValueChanged(d => UpdateSorting(d.NewValue), true);
+
+        Activator = new ViewModelActivator();
+
+        this.WhenActivated(disposables =>
+        {
+            Disposable.Create(() => { }).DisposeWith(disposables);
+
+            var playlistStorage = new PlaylistStorage();
+
+            CurrentSelectedPlaylist = Playlists.Items.FirstOrDefault(x => x.Id == playlistStorage.Container.LastSelectedPlaylist) ?? Playlists.Items.ElementAt(0);
+
+            if (_filteredSongEntries == default)
+                Player.SongSource.Value.Connect().Sort(SortExpressionComparer<IMapEntryBase>.Ascending(x => Player.CustomSorter(x, Player.SortingModeBindable.Value)))
+                    .Filter(_filter, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
+                    .Bind(out _filteredSongEntries).Subscribe();
+
+            this.RaisePropertyChanged(nameof(FilteredSongEntries));
+        });
+
+        SelectedPlaylistItems = new List<IMapEntryBase>();
+        SelectedSongListItems = new List<IMapEntryBase>();
+    }
 
     /// <summary>
     /// Updates the <see cref="FilteredSongEntries" /> according to the <paramref name="sortingMode" />

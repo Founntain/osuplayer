@@ -8,15 +8,35 @@ public class MainWindowViewModel : BaseWindowViewModel
 {
     public readonly BassEngine BassEngine;
     public readonly Player Player;
+    private bool _isPaneOpen;
 
-    public bool IsPaneOpen  
+    private BaseViewModel _mainView;
+
+    public bool IsPaneOpen
     {
         get => _isPaneOpen;
         set => this.RaiseAndSetIfChanged(ref _isPaneOpen, value);
     }
 
-    private BaseViewModel _mainView;
-    private bool _isPaneOpen;
+    public EditUserViewModel EditUserView { get; }
+    public HomeViewModel HomeView { get; }
+    public PartyViewModel PartyView { get; }
+    public BlacklistEditorViewModel BlacklistEditorView { get; }
+    public PlaylistEditorViewModel PlaylistEditorView { get; }
+    public PlaylistViewModel PlaylistView { get; }
+    public SearchViewModel SearchView { get; }
+    public SettingsViewModel SettingsView { get; }
+    public UserViewModel UserView { get; }
+    public TopBarViewModel TopBar { get; }
+    public UpdateViewModel UpdateView { get; }
+    public PlayerControlViewModel PlayerControl { get; }
+    public EqualizerViewModel EqualizerView { get; }
+
+    public BaseViewModel MainView
+    {
+        get => _mainView;
+        set => this.RaiseAndSetIfChanged(ref _mainView, value);
+    }
 
     public MainWindowViewModel(BassEngine engine, Player player)
     {
@@ -38,25 +58,5 @@ public class MainWindowViewModel : BaseWindowViewModel
         SettingsView = new SettingsViewModel(Player);
         EqualizerView = new EqualizerViewModel(Player);
         UpdateView = new UpdateViewModel();
-    }
-
-    public EditUserViewModel EditUserView { get; }
-    public HomeViewModel HomeView { get; }
-    public PartyViewModel PartyView { get; }
-    public BlacklistEditorViewModel BlacklistEditorView { get; }
-    public PlaylistEditorViewModel PlaylistEditorView { get; }
-    public PlaylistViewModel PlaylistView { get; }
-    public SearchViewModel SearchView { get; }
-    public SettingsViewModel SettingsView { get; }
-    public UserViewModel UserView { get; }
-    public TopBarViewModel TopBar { get; }
-    public UpdateViewModel UpdateView { get; }
-    public PlayerControlViewModel PlayerControl { get; }
-    public EqualizerViewModel EqualizerView { get; }
-
-    public BaseViewModel MainView
-    {
-        get => _mainView;
-        set => this.RaiseAndSetIfChanged(ref _mainView, value);
     }
 }

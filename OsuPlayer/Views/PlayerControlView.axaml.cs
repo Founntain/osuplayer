@@ -17,13 +17,13 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
 {
     private MainWindow _mainWindow;
 
+    private Slider ProgressSlider => this.FindControl<Slider>("SongProgressSlider");
+    private Button RepeatButton => this.FindControl<Button>("Repeat");
+
     public PlayerControlView()
     {
         InitializeComponent();
     }
-
-    private Slider ProgressSlider => this.FindControl<Slider>("SongProgressSlider");
-    private Button RepeatButton => this.FindControl<Button>("Repeat");
 
     private void InitializeComponent()
     {

@@ -41,14 +41,6 @@ public class CascadingWrapPanel : Panel, INavigableContainer
     private int _lineCount;
 
     /// <summary>
-    /// Initializes static members of the <see cref="CascadingWrapPanel" /> class.
-    /// </summary>
-    static CascadingWrapPanel()
-    {
-        AffectsMeasure<CascadingWrapPanel>(OrientationProperty, ItemWidthProperty, ItemHeightProperty);
-    }
-
-    /// <summary>
     /// Gets or sets the orientation in which child controls will be layed out.
     /// </summary>
     public Orientation Orientation
@@ -73,6 +65,14 @@ public class CascadingWrapPanel : Panel, INavigableContainer
     {
         get => GetValue(ItemHeightProperty);
         set => SetValue(ItemHeightProperty, value);
+    }
+
+    /// <summary>
+    /// Initializes static members of the <see cref="CascadingWrapPanel" /> class.
+    /// </summary>
+    static CascadingWrapPanel()
+    {
+        AffectsMeasure<CascadingWrapPanel>(OrientationProperty, ItemWidthProperty, ItemHeightProperty);
     }
 
     /// <summary>

@@ -34,20 +34,6 @@ public class UserViewModel : BaseViewModel
     private ObservableCollection<User> _users;
     private List<ObservableValue> _xpGainedGraphValues;
 
-    public UserViewModel(Player player)
-    {
-        Player = player;
-
-        Activator = new ViewModelActivator();
-
-        Badges = new ObservableCollection<IControl>();
-
-        SongsPlayedGraphValues = new List<ObservableValue>();
-        XpGainedGraphValues = new List<ObservableValue>();
-
-        this.WhenActivated(Block);
-    }
-
     public ObservableCollection<ISeries> Series { get; set; }
 
     public Axis[] YAxes { get; set; } =
@@ -65,7 +51,7 @@ public class UserViewModel : BaseViewModel
         {
             IsVisible = true,
             LabelsPaint = new SolidColorPaint(SKColors.White),
-            LabelsRotation = 45,
+            LabelsRotation = 45
         }
     };
 
@@ -143,6 +129,20 @@ public class UserViewModel : BaseViewModel
             LoadProfileBanner();
             LoadStats();
         }
+    }
+
+    public UserViewModel(Player player)
+    {
+        Player = player;
+
+        Activator = new ViewModelActivator();
+
+        Badges = new ObservableCollection<IControl>();
+
+        SongsPlayedGraphValues = new List<ObservableValue>();
+        XpGainedGraphValues = new List<ObservableValue>();
+
+        this.WhenActivated(Block);
     }
 
     private async void Block(CompositeDisposable disposables)
@@ -349,7 +349,7 @@ public class UserViewModel : BaseViewModel
 
         XAxes.First().Labels = new List<string>();
 
-        var songsPlayedValues =  new List<ObservableValue>();
+        var songsPlayedValues = new List<ObservableValue>();
         var xpGainedValues = new List<ObservableValue>();
 
         foreach (var item in data)

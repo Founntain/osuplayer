@@ -28,50 +28,6 @@ public class PlayerControlViewModel : BaseViewModel
 
     private double _playbackSpeed;
 
-    public PlayerControlViewModel(Player player, BassEngine bassEngine)
-    {
-        Player = player;
-
-        _songTime.BindTo(bassEngine.ChannelPositionB);
-        _songTime.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongTime)));
-
-        _songLength.BindTo(bassEngine.ChannelLengthB);
-        _songLength.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongLength)));
-
-        CurrentSong.BindTo(Player.CurrentSongBinding);
-        CurrentSong.BindValueChanged(d =>
-        {
-            this.RaisePropertyChanged(nameof(TitleText));
-            this.RaisePropertyChanged(nameof(ArtistText));
-            this.RaisePropertyChanged(nameof(SongText));
-            this.RaisePropertyChanged(nameof(IsCurrentSongInPlaylist));
-            this.RaisePropertyChanged(nameof(IsCurrentSongOnBlacklist));
-        });
-
-        _volume.BindTo(bassEngine.VolumeB);
-        _volume.BindValueChanged(d => this.RaisePropertyChanged(nameof(Volume)));
-
-        _isPlaying.BindTo(Player.IsPlaying);
-        _isPlaying.BindValueChanged(d => this.RaisePropertyChanged(nameof(IsPlaying)));
-
-        _isRepeating.BindTo(Player.RepeatMode);
-        _isRepeating.BindValueChanged(d => { this.RaisePropertyChanged(nameof(IsRepeating)); });
-
-        _isShuffle.BindTo(Player.IsShuffle);
-        _isShuffle.BindValueChanged(d => this.RaisePropertyChanged(nameof(IsShuffle)));
-
-        Player.CurrentSongImage.BindValueChanged(d => CurrentSongImage = d.NewValue, true);
-
-        Player.SelectedPlaylist.BindValueChanged(_ =>
-        {
-            this.RaisePropertyChanged(nameof(IsAPlaylistSelected));
-            this.RaisePropertyChanged(nameof(IsCurrentSongInPlaylist));
-        }, true);
-
-        Activator = new ViewModelActivator();
-        this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
-    }
-
     public bool IsCurrentSongInPlaylist => CurrentSong.Value != null
                                            && PlaylistManager.CurrentPlaylist != null
                                            && PlaylistManager.CurrentPlaylist.Songs.Contains(CurrentSong.Value.Hash);
@@ -173,4 +129,48 @@ public class PlayerControlViewModel : BaseViewModel
     public IEnumerable<Playlist> Playlists => PlaylistManager.GetAllPlaylists().Where(x => x.Songs.Count > 0);
 
     public string ActivePlaylist => $"Active playlist: {Player.ActivePlaylist?.Name ?? "none"}";
+
+    public PlayerControlViewModel(Player player, BassEngine bassEngine)
+    {
+        Player = player;
+
+        _songTime.BindTo(bassEngine.ChannelPositionB);
+        _songTime.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongTime)));
+
+        _songLength.BindTo(bassEngine.ChannelLengthB);
+        _songLength.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongLength)));
+
+        CurrentSong.BindTo(Player.CurrentSongBinding);
+        CurrentSong.BindValueChanged(d =>
+        {
+            this.RaisePropertyChanged(nameof(TitleText));
+            this.RaisePropertyChanged(nameof(ArtistText));
+            this.RaisePropertyChanged(nameof(SongText));
+            this.RaisePropertyChanged(nameof(IsCurrentSongInPlaylist));
+            this.RaisePropertyChanged(nameof(IsCurrentSongOnBlacklist));
+        });
+
+        _volume.BindTo(bassEngine.VolumeB);
+        _volume.BindValueChanged(d => this.RaisePropertyChanged(nameof(Volume)));
+
+        _isPlaying.BindTo(Player.IsPlaying);
+        _isPlaying.BindValueChanged(d => this.RaisePropertyChanged(nameof(IsPlaying)));
+
+        _isRepeating.BindTo(Player.RepeatMode);
+        _isRepeating.BindValueChanged(d => { this.RaisePropertyChanged(nameof(IsRepeating)); });
+
+        _isShuffle.BindTo(Player.IsShuffle);
+        _isShuffle.BindValueChanged(d => this.RaisePropertyChanged(nameof(IsShuffle)));
+
+        Player.CurrentSongImage.BindValueChanged(d => CurrentSongImage = d.NewValue, true);
+
+        Player.SelectedPlaylist.BindValueChanged(_ =>
+        {
+            this.RaisePropertyChanged(nameof(IsAPlaylistSelected));
+            this.RaisePropertyChanged(nameof(IsCurrentSongInPlaylist));
+        }, true);
+
+        Activator = new ViewModelActivator();
+        this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
+    }
 }

@@ -12,7 +12,7 @@
         <views:UpdateViewModel />
     </Design.DataContext>
 
-    <Grid >
+    <Grid>
         <Panel>
             <ExperimentalAcrylicBorder IsHitTestVisible="False">
                 <ExperimentalAcrylicBorder.Material>
@@ -24,10 +24,11 @@
                 </ExperimentalAcrylicBorder.Material>
             </ExperimentalAcrylicBorder>
         </Panel>
-        
+
         <Grid RowDefinitions="Auto, *, 50" Margin="5">
-            <TextBlock Grid.Row="0" Text="Look a new osu!player update" FontSize="48"  FontStyle="Italic" VerticalAlignment="Center" HorizontalAlignment="Left" />
-            
+            <TextBlock Grid.Row="0" Text="Look a new osu!player update" FontSize="48" FontStyle="Italic"
+                       VerticalAlignment="Center" HorizontalAlignment="Left" />
+
             <avalonia:MarkdownScrollViewer Grid.Row="1" Markdown="{Binding Update.PatchNotes}">
                 <avalonia:MarkdownScrollViewer.Styles>
                     <Style Selector="ctxt|CTextBlock.Heading2">
@@ -35,8 +36,9 @@
                     </Style>
                 </avalonia:MarkdownScrollViewer.Styles>
             </avalonia:MarkdownScrollViewer>
-            
-            <Button Grid.Row="2" Content="open github" HorizontalAlignment="Center" Click="Button_OnClick" FontSize="18" />
+
+            <Button Grid.Row="2" Content="open github" HorizontalAlignment="Center" Click="Button_OnClick"
+                    FontSize="18" />
         </Grid>
     </Grid>
 </UserControl>

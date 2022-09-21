@@ -116,7 +116,7 @@ public class OsuDbReader : BinaryReader
             CalculateMapLength(reader, out var setId, out var hash);
 
             if (hashes.Keys.Contains(hash)) continue;
-            
+
             hashes.Add(hash, setId);
         }
 

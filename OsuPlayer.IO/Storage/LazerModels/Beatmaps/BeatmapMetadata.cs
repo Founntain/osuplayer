@@ -12,6 +12,8 @@ namespace OsuPlayer.IO.Storage.LazerModels.Beatmaps;
 [MapTo("BeatmapMetadata")]
 public class BeatmapMetadata : RealmObject, IBeatmapMetadataInfo
 {
+    public RealmUser Author { get; set; } = null!;
+
     public BeatmapMetadata(RealmUser? user = null)
     {
         Author = user ?? new RealmUser();
@@ -22,7 +24,6 @@ public class BeatmapMetadata : RealmObject, IBeatmapMetadataInfo
     {
     }
 
-    public RealmUser Author { get; set; } = null!;
     public string Title { get; set; } = string.Empty;
 
     [JsonProperty("title_unicode")] public string TitleUnicode { get; set; } = string.Empty;

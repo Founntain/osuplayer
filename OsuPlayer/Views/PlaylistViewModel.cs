@@ -20,6 +20,42 @@ public class PlaylistViewModel : BaseViewModel
     private string _filterText;
     private ObservableCollection<Playlist> _playlists;
 
+    public ObservableCollection<Playlist> Playlists
+    {
+        get => _playlists;
+        set => this.RaiseAndSetIfChanged(ref _playlists, value);
+    }
+
+    public Playlist? SelectedPlaylist
+    {
+        get => Player.SelectedPlaylist.Value;
+        set
+        {
+            PlaylistManager.SetCurrentPlaylist(value);
+
+            Player.SelectedPlaylist.Value = value;
+
+            if (_filteredSongEntries != null)
+                _currentBind.Dispose();
+
+            if (Player.SelectedPlaylist.Value?.Songs != null)
+                _currentBind = Player.GetMapEntriesFromHash(Player.SelectedPlaylist.Value.Songs).ToSourceList().Connect()
+                    .Filter(_filter, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
+                    .Bind(out _filteredSongEntries).Subscribe();
+
+            this.RaisePropertyChanged();
+            this.RaisePropertyChanged(nameof(FilteredSongEntries));
+        }
+    }
+
+    public ReadOnlyObservableCollection<IMapEntryBase>? FilteredSongEntries => _filteredSongEntries;
+
+    public string FilterText
+    {
+        get => _filterText;
+        set => this.RaiseAndSetIfChanged(ref _filterText, value);
+    }
+
     public PlaylistViewModel(Player player)
     {
         Activator = new ViewModelActivator();
@@ -60,42 +96,6 @@ public class PlaylistViewModel : BaseViewModel
                 PlaylistManager.SetCurrentPlaylist(SelectedPlaylist);
             }
         });
-    }
-
-    public ObservableCollection<Playlist> Playlists
-    {
-        get => _playlists;
-        set => this.RaiseAndSetIfChanged(ref _playlists, value);
-    }
-
-    public Playlist? SelectedPlaylist
-    {
-        get => Player.SelectedPlaylist.Value;
-        set
-        {
-            PlaylistManager.SetCurrentPlaylist(value);
-
-            Player.SelectedPlaylist.Value = value;
-
-            if (_filteredSongEntries != null)
-                _currentBind.Dispose();
-
-            if (Player.SelectedPlaylist.Value?.Songs != null)
-                _currentBind = Player.GetMapEntriesFromHash(Player.SelectedPlaylist.Value.Songs).ToSourceList().Connect()
-                    .Filter(_filter, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
-                    .Bind(out _filteredSongEntries).Subscribe();
-
-            this.RaisePropertyChanged();
-            this.RaisePropertyChanged(nameof(FilteredSongEntries));
-        }
-    }
-
-    public ReadOnlyObservableCollection<IMapEntryBase>? FilteredSongEntries => _filteredSongEntries;
-
-    public string FilterText
-    {
-        get => _filterText;
-        set => this.RaiseAndSetIfChanged(ref _filterText, value);
     }
 
     /// <summary>

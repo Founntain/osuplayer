@@ -177,10 +177,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
         {
             ProfileManager.User = await ApiAsync.GetProfileByNameAsync(editUserModel.UserModel.Name);
 
-            if (changedProfilePicture)
-            {
-                await MessageBox.ShowDialogAsync(_mainWindow, $"We couldn't update your profile picture, because you left the edit view to early!{Environment.NewLine}If you want to update your profile picture please wait, until you get the message that it's been done!");
-            }
+            if (changedProfilePicture) await MessageBox.ShowDialogAsync(_mainWindow, $"We couldn't update your profile picture, because you left the edit view to early!{Environment.NewLine}If you want to update your profile picture please wait, until you get the message that it's been done!");
         }
         else
         {
@@ -195,7 +192,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
     }
 
     /// <summary>
-    /// This handles the <see cref="UserResponse"/> got from editing the user.
+    /// This handles the <see cref="UserResponse" /> got from editing the user.
     /// </summary>
     /// <param name="response">the response to handle</param>
     /// <returns>true if the response is a successful one, false otherwise</returns>
