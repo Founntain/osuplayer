@@ -9,8 +9,9 @@ namespace OsuPlayer.Network.Discord;
 
 public class DiscordClient
 {
-    private readonly DiscordRpcClient _client;
     private const string ApplicationId = "506435812397940736";
+    private readonly DiscordRpcClient _client;
+
     /// <summary>
     /// Default assets for the RPC including the logo
     /// </summary>
@@ -19,14 +20,14 @@ public class DiscordClient
     public DiscordClient()
     {
         _client = new DiscordRpcClient(ApplicationId);
-        
+
         _defaultAssets = new Assets
         {
-            LargeImageKey = "logo",        
+            LargeImageKey = "logo",
             LargeImageText = "osu!player v" + FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion
         };
     }
-    
+
     /// <summary>
     /// Initializes the Discord Client and prepares all events
     /// </summary>
@@ -42,15 +43,15 @@ public class DiscordClient
         _client.OnPresenceUpdate += Client_OnPresenceUpdate;
 
         _client.Initialize();
-        
-        _client.SetPresence(new ()
+
+        _client.SetPresence(new RichPresence
         {
             Details = "osu!player",
             State = "doing nothing...",
-            Assets = new ()
+            Assets = new Assets
             {
                 LargeImageKey = "logo",
-                LargeImageText = "osu!player" 
+                LargeImageText = "osu!player"
             }
         });
 
@@ -75,7 +76,7 @@ public class DiscordClient
     /// <param name="assets">Assets to use</param>
     public void UpdatePresence(string details, string state, Assets? assets = null)
     {
-        _client.SetPresence(new()
+        _client.SetPresence(new RichPresence
         {
             Details = details,
             State = state,
@@ -90,20 +91,17 @@ public class DiscordClient
     private Button[]? GetButtons()
     {
         var buttons = new List<Button>();
-        
-        buttons.Add(new ()
+
+        buttons.Add(new Button
             {
-                Label = $"osu!player GitHub",
-                Url = $"https://github.com/osu-player/osuplayer"
+                Label = "osu!player GitHub",
+                Url = "https://github.com/osu-player/osuplayer"
             }
         );
-        
-        if (ProfileManager.User is null || string.IsNullOrWhiteSpace(ProfileManager.User.Name))
-        {
-            return buttons.ToArray();
-        }
-        
-        buttons.Add(new()
+
+        if (ProfileManager.User is null || string.IsNullOrWhiteSpace(ProfileManager.User.Name)) return buttons.ToArray();
+
+        buttons.Add(new Button
             {
                 Label = $"{ProfileManager.User.Name}'s profile",
                 Url = $"https://stats.founntain.dev/user/{Uri.EscapeDataString(ProfileManager.User.Name)}"
@@ -112,7 +110,7 @@ public class DiscordClient
 
         return buttons.ToArray();
     }
-    
+
     private void Client_OnReady(object sender, ReadyMessage args)
     {
         Debug.WriteLine("Discord client ready...");

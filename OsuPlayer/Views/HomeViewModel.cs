@@ -19,24 +19,6 @@ public class HomeViewModel : BaseViewModel
     private List<ObservableValue> _graphValues;
     private Bitmap? _profilePicture;
 
-    public HomeViewModel(Player player)
-    {
-        Player = player;
-
-        _songsLoading.BindTo(Player.SongsLoading);
-        _songsLoading.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongsLoading)));
-
-        Player.GraphValues.BindValueChanged(d => GraphValues = d.NewValue, true);
-        Player.SongSource.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongEntries)), true);
-
-        Player.UserChanged += (sender, args) => this.RaisePropertyChanged(nameof(CurrentUser));
-
-        GraphValues = new List<ObservableValue>();
-
-        Activator = new ViewModelActivator();
-        this.WhenActivated(Block);
-    }
-
     public List<ObservableValue> GraphValues
     {
         get => _graphValues;
@@ -77,6 +59,24 @@ public class HomeViewModel : BaseViewModel
     {
         get => _profilePicture;
         set => this.RaiseAndSetIfChanged(ref _profilePicture, value);
+    }
+
+    public HomeViewModel(Player player)
+    {
+        Player = player;
+
+        _songsLoading.BindTo(Player.SongsLoading);
+        _songsLoading.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongsLoading)));
+
+        Player.GraphValues.BindValueChanged(d => GraphValues = d.NewValue, true);
+        Player.SongSource.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongEntries)), true);
+
+        Player.UserChanged += (sender, args) => this.RaisePropertyChanged(nameof(CurrentUser));
+
+        GraphValues = new List<ObservableValue>();
+
+        Activator = new ViewModelActivator();
+        this.WhenActivated(Block);
     }
 
     private IEnumerable<double> GetValues()

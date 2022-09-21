@@ -12,25 +12,6 @@ namespace OsuPlayer.IO.Storage.LazerModels.Beatmaps;
 [MapTo("Beatmap")]
 public class BeatmapInfo : RealmObject, IHasGuidPrimaryKey, IBeatmapInfo, IEquatable<BeatmapInfo>
 {
-    public BeatmapInfo(RulesetInfo? ruleset = null, BeatmapDifficulty? difficulty = null, BeatmapMetadata? metadata = null)
-    {
-        ID = Guid.NewGuid();
-        Ruleset = ruleset ?? new RulesetInfo
-        {
-            OnlineID = 0,
-            ShortName = @"osu",
-            Name = @"null placeholder ruleset"
-        };
-        Difficulty = difficulty ?? new BeatmapDifficulty();
-        Metadata = metadata ?? new BeatmapMetadata();
-        //UserSettings = new BeatmapUserSettings();
-    }
-
-    [UsedImplicitly]
-    private BeatmapInfo()
-    {
-    }
-
     public RulesetInfo Ruleset { get; set; } = null!;
 
     public BeatmapDifficulty Difficulty { get; set; } = null!;
@@ -51,6 +32,25 @@ public class BeatmapInfo : RealmObject, IHasGuidPrimaryKey, IBeatmapInfo, IEquat
     [MapTo(nameof(Status))] public int StatusInt { get; set; } = (int) BeatmapOnlineStatus.None;
 
     [JsonIgnore] public bool Hidden { get; set; }
+
+    public BeatmapInfo(RulesetInfo? ruleset = null, BeatmapDifficulty? difficulty = null, BeatmapMetadata? metadata = null)
+    {
+        ID = Guid.NewGuid();
+        Ruleset = ruleset ?? new RulesetInfo
+        {
+            OnlineID = 0,
+            ShortName = @"osu",
+            Name = @"null placeholder ruleset"
+        };
+        Difficulty = difficulty ?? new BeatmapDifficulty();
+        Metadata = metadata ?? new BeatmapMetadata();
+        //UserSettings = new BeatmapUserSettings();
+    }
+
+    [UsedImplicitly]
+    private BeatmapInfo()
+    {
+    }
 
     public string DifficultyName { get; set; } = string.Empty;
 

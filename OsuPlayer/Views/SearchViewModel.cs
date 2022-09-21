@@ -17,6 +17,14 @@ public class SearchViewModel : BaseViewModel
     private ReadOnlyObservableCollection<IMapEntryBase>? _filteredSongEntries;
     private string _filterText;
 
+    public string FilterText
+    {
+        get => _filterText;
+        set => this.RaiseAndSetIfChanged(ref _filterText, value);
+    }
+
+    public ReadOnlyObservableCollection<IMapEntryBase>? FilteredSongEntries => _filteredSongEntries;
+
     public SearchViewModel(Player player)
     {
         Player = player;
@@ -41,14 +49,6 @@ public class SearchViewModel : BaseViewModel
             this.RaisePropertyChanged(nameof(FilteredSongEntries));
         });
     }
-
-    public string FilterText
-    {
-        get => _filterText;
-        set => this.RaiseAndSetIfChanged(ref _filterText, value);
-    }
-
-    public ReadOnlyObservableCollection<IMapEntryBase>? FilteredSongEntries => _filteredSongEntries;
 
     /// <summary>
     /// Updates the <see cref="FilteredSongEntries" /> according to the <paramref name="sortingMode" />

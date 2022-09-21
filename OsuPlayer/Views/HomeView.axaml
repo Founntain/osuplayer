@@ -91,7 +91,7 @@
                                 TooltipBackground="#7F000000"
                                 TooltipTextBrush="White"
                                 TooltipFontFamily="{DynamicResource Montserrat}"
-                                TooltipFontWeight="Bold"/>
+                                TooltipFontWeight="Bold" />
         </Grid>
 
         <!--Test Grid-->

@@ -24,7 +24,7 @@ public static class UnhandledExceptionHandler
         CreatLogsDirectoryIfItsMissing();
 
         var date = DateTime.UtcNow;
-        
+
         var dateString = date.ToString("yyyyMMdd_HHmmss");
 
         //Not using concatenation so it is better readable

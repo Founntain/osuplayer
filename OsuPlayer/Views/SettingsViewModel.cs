@@ -25,29 +25,6 @@ public class SettingsViewModel : BaseViewModel
 
     public MainWindow? MainWindow;
 
-    public SettingsViewModel(Player player)
-    {
-        var config = new Config();
-
-        _selectedStartupSong = config.Container.StartupSong;
-        _selectedTransparencyLevel = config.Container.TransparencyLevelHint;
-        _selectedReleaseChannel = config.Container.ReleaseChannel;
-
-        Player = player;
-
-        _sortingMode.BindTo(Player.SortingModeBindable);
-        _sortingMode.BindValueChanged(d => this.RaisePropertyChanged(nameof(SelectedSortingMode)));
-
-        _blacklistSkip.BindTo(Player.BlacklistSkip);
-        _blacklistSkip.BindValueChanged(d => this.RaisePropertyChanged(nameof(BlacklistSkip)));
-
-        _playlistEnableOnPlay.BindTo(Player.PlaylistEnableOnPlay);
-        _blacklistSkip.BindValueChanged(d => this.RaisePropertyChanged(nameof(PlaylistEnableOnPlay)));
-
-        Activator = new ViewModelActivator();
-        this.WhenActivated(Block);
-    }
-
     public string Patchnotes
     {
         get => _patchnotes;
@@ -196,6 +173,29 @@ public class SettingsViewModel : BaseViewModel
 
     public ObservableCollection<AudioDevice> OutputDeviceComboboxItems { get; set; }
 
+    public SettingsViewModel(Player player)
+    {
+        var config = new Config();
+
+        _selectedStartupSong = config.Container.StartupSong;
+        _selectedTransparencyLevel = config.Container.TransparencyLevelHint;
+        _selectedReleaseChannel = config.Container.ReleaseChannel;
+
+        Player = player;
+
+        _sortingMode.BindTo(Player.SortingModeBindable);
+        _sortingMode.BindValueChanged(d => this.RaisePropertyChanged(nameof(SelectedSortingMode)));
+
+        _blacklistSkip.BindTo(Player.BlacklistSkip);
+        _blacklistSkip.BindValueChanged(d => this.RaisePropertyChanged(nameof(BlacklistSkip)));
+
+        _playlistEnableOnPlay.BindTo(Player.PlaylistEnableOnPlay);
+        _blacklistSkip.BindValueChanged(d => this.RaisePropertyChanged(nameof(PlaylistEnableOnPlay)));
+
+        Activator = new ViewModelActivator();
+        this.WhenActivated(Block);
+    }
+
     private async void Block(CompositeDisposable disposables)
     {
         Disposable.Create(() => { }).DisposeWith(disposables);
@@ -203,7 +203,7 @@ public class SettingsViewModel : BaseViewModel
         var latestPatchNotes = await GitHubUpdater.GetLatestPatchNotes(_selectedReleaseChannel);
 
         if (string.IsNullOrWhiteSpace(latestPatchNotes)) return;
-        
+
         var regex = new Regex(@"( in )([\w\s:\/\.])*[\d]+");
         latestPatchNotes = regex.Replace(latestPatchNotes, "");
         regex = new Regex(@"(\n?\r?)*[\*]*(Full Changelog)[\*]*:.*$");

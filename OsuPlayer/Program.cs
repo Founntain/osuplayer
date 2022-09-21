@@ -31,10 +31,10 @@ internal class Program
             // This avoids opening the logs and we can debug it directly.
             Debugger.Break();
 #endif
-            
+
             // Create crashlog for users
             UnhandledExceptionHandler.HandleException(ex);
-      
+
             // Start the CrashHandler to display the error message to the user
             var processStartInfo = new ProcessStartInfo("dotnet", "OsuPlayer.CrashHandler.dll")
             {

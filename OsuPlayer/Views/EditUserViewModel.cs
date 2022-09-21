@@ -26,17 +26,6 @@ public class EditUserViewModel : BaseViewModel
     private CancellationTokenSource? _topSongsCancellationTokenSource;
     private ObservableCollection<BeatmapUserValidityModel>? _topSongsOfCurrentUser;
 
-    public EditUserViewModel()
-    {
-        Activator = new ViewModelActivator();
-        this.WhenActivated(disposables =>
-        {
-            Disposable.Create(() => { }).DisposeWith(disposables);
-
-            CurrentUser = ProfileManager.User;
-        });
-    }
-
     public string ConfirmDeletionPassword
     {
         get => _confirmDeletionPassword;
@@ -108,6 +97,17 @@ public class EditUserViewModel : BaseViewModel
     {
         get => _newPassword;
         set => this.RaiseAndSetIfChanged(ref _newPassword, value);
+    }
+
+    public EditUserViewModel()
+    {
+        Activator = new ViewModelActivator();
+        this.WhenActivated(disposables =>
+        {
+            Disposable.Create(() => { }).DisposeWith(disposables);
+
+            CurrentUser = ProfileManager.User;
+        });
     }
 
     private async void LoadTopSongs()

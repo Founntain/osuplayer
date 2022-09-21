@@ -11,17 +11,6 @@ public class MessageBoxViewModel : BaseWindowViewModel
 
     private string _messageBoxTitle;
 
-    public MessageBoxViewModel()
-    {
-    }
-
-    public MessageBoxViewModel(Window window, string messageBoxText, string? messageBoxTitle = null)
-    {
-        _window = window;
-        MessageBoxText = messageBoxText;
-        MessageBoxTitle = messageBoxTitle ?? "Hey, listen!";
-    }
-
     public string MessageBoxTitle
     {
         get => _messageBoxTitle;
@@ -32,6 +21,17 @@ public class MessageBoxViewModel : BaseWindowViewModel
     {
         get => _messageBoxText;
         set => this.RaiseAndSetIfChanged(ref _messageBoxText, value);
+    }
+
+    public MessageBoxViewModel()
+    {
+    }
+
+    public MessageBoxViewModel(Window window, string messageBoxText, string? messageBoxTitle = null)
+    {
+        _window = window;
+        MessageBoxText = messageBoxText;
+        MessageBoxTitle = messageBoxTitle ?? "Hey, listen!";
     }
 
     public void CloseMessageBox()

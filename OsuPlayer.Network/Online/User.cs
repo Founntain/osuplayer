@@ -10,11 +10,6 @@ namespace OsuPlayer.Network.Online;
 /// </summary>
 public sealed class User : UserModel
 {
-    public User()
-    {
-        Role = UserRole.Unknown;
-    }
-
     public string SongsPlayedString => Id == Guid.Empty ? string.Empty : $"{SongsPlayed.ToString("##,###", CultureInfo.InvariantCulture)} songs played";
 
     public string LevelAndTotalXpString =>
@@ -32,6 +27,11 @@ public sealed class User : UserModel
 
     public string TotalXpString =>
         TotalXp == 0 ? "0 XP" : $"{TotalXp.ToString("##,###", CultureInfo.InvariantCulture)} XP";
+
+    public User()
+    {
+        Role = UserRole.Unknown;
+    }
 
     public override string ToString()
     {

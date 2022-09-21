@@ -7,11 +7,6 @@ namespace OsuPlayer.Data.OsuPlayer.Classes;
 /// </summary>
 public sealed class AudioDevice
 {
-    public AudioDevice(DeviceInfo deviceInfo)
-    {
-        DeviceInfo = deviceInfo;
-    }
-
     private DeviceInfo DeviceInfo { get; }
     public string DeviceName => DeviceInfo.Name;
     public bool IsEnabled => DeviceInfo.IsEnabled;
@@ -19,6 +14,11 @@ public sealed class AudioDevice
     public bool IsInitialized => DeviceInfo.IsInitialized;
     public string Driver => DeviceInfo.Driver;
     public string DeviceToString => DeviceInfo.ToString();
+
+    public AudioDevice(DeviceInfo deviceInfo)
+    {
+        DeviceInfo = deviceInfo;
+    }
 
     public override string ToString()
     {

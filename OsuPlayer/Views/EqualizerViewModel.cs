@@ -19,23 +19,6 @@ public class EqualizerViewModel : BaseViewModel
 
     private EqPreset? _selectedPreset;
 
-    public EqualizerViewModel(Player player)
-    {
-        Activator = new ViewModelActivator();
-        _player = player;
-
-        Frequencies.BindTo(_player.EqGains);
-        Frequencies.BindCollectionChanged(UpdateEq);
-
-        using (var eqStorage = new EqStorage())
-        {
-            eqStorage.Container.LastUsedEqId ??= eqStorage.Container.EqPresets?.First().Id;
-            SelectedPreset = eqStorage.Container.EqPresets?.FirstOrDefault(x => x.Id == eqStorage.Container.LastUsedEqId);
-        }
-
-        this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
-    }
-
     public bool IsEqEnabled
     {
         get => _player.IsEqEnabled;
@@ -114,6 +97,23 @@ public class EqualizerViewModel : BaseViewModel
     {
         get => _isRenameEqPresetPopupOpen;
         set => this.RaiseAndSetIfChanged(ref _isRenameEqPresetPopupOpen, value);
+    }
+
+    public EqualizerViewModel(Player player)
+    {
+        Activator = new ViewModelActivator();
+        _player = player;
+
+        Frequencies.BindTo(_player.EqGains);
+        Frequencies.BindCollectionChanged(UpdateEq);
+
+        using (var eqStorage = new EqStorage())
+        {
+            eqStorage.Container.LastUsedEqId ??= eqStorage.Container.EqPresets?.First().Id;
+            SelectedPreset = eqStorage.Container.EqPresets?.FirstOrDefault(x => x.Id == eqStorage.Container.LastUsedEqId);
+        }
+
+        this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
     }
 
     private void UpdateEq(object sender, NotifyCollectionChangedEventArgs args)

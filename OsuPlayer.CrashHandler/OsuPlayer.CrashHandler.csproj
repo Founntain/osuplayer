@@ -8,10 +8,10 @@
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <OutputPath>..\OsuPlayer\bin\Debug\</OutputPath>
+        <OutputPath>..\OsuPlayer\bin\Debug\</OutputPath>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-      <OutputPath>..\OsuPlayer\bin\Release\</OutputPath>
+        <OutputPath>..\OsuPlayer\bin\Release\</OutputPath>
     </PropertyGroup>
     <ItemGroup>
         <None Remove=".gitignore" />
@@ -33,12 +33,12 @@
         <PackageReference Include="XamlNameReferenceGenerator" Version="1.3.4" />
     </ItemGroup>
     <ItemGroup>
-      <Compile Update="MainWindowViewModel.cs">
-        <DependentUpon>MainWindow.axaml</DependentUpon>
-      </Compile>
+        <Compile Update="MainWindowViewModel.cs">
+            <DependentUpon>MainWindow.axaml</DependentUpon>
+        </Compile>
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\OsuPlayer.Base\OsuPlayer.Base.csproj" />
-      <ProjectReference Include="..\OsuPlayer.Extensions\OsuPlayer.Extensions.csproj" />
+        <ProjectReference Include="..\OsuPlayer.Base\OsuPlayer.Base.csproj" />
+        <ProjectReference Include="..\OsuPlayer.Extensions\OsuPlayer.Extensions.csproj" />
     </ItemGroup>
 </Project>

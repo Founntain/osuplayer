@@ -19,6 +19,23 @@ public class BlacklistEditorViewModel : BaseViewModel
 
     public Player Player;
 
+    public List<IMapEntryBase>? SelectedSongListItems { get; set; }
+    public List<IMapEntryBase>? SelectedBlacklistItems { get; set; }
+
+    public string FilterText
+    {
+        get => _filterText;
+        set => this.RaiseAndSetIfChanged(ref _filterText, value);
+    }
+
+    public BlacklistContainer Blacklist
+    {
+        get => _blacklist;
+        set => this.RaiseAndSetIfChanged(ref _blacklist, value);
+    }
+
+    public ReadOnlyObservableCollection<IMapEntryBase>? FilteredSongEntries => _filteredSongEntries;
+
     public BlacklistEditorViewModel(Player player)
     {
         Activator = new ViewModelActivator();
@@ -47,23 +64,6 @@ public class BlacklistEditorViewModel : BaseViewModel
             this.RaisePropertyChanged(nameof(FilteredSongEntries));
         });
     }
-
-    public List<IMapEntryBase>? SelectedSongListItems { get; set; }
-    public List<IMapEntryBase>? SelectedBlacklistItems { get; set; }
-
-    public string FilterText
-    {
-        get => _filterText;
-        set => this.RaiseAndSetIfChanged(ref _filterText, value);
-    }
-
-    public BlacklistContainer Blacklist
-    {
-        get => _blacklist;
-        set => this.RaiseAndSetIfChanged(ref _blacklist, value);
-    }
-
-    public ReadOnlyObservableCollection<IMapEntryBase>? FilteredSongEntries => _filteredSongEntries;
 
     /// <summary>
     /// Updates the <see cref="FilteredSongEntries" /> according to the <paramref name="sortingMode" />

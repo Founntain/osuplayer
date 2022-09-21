@@ -49,119 +49,153 @@
         </Grid>
 
         <ScrollViewer Grid.Column="1">
-            
+
             <Grid Column="1" RowDefinitions="Auto, *, Auto">
-            <!-- Profile Picture  -->
-            <Grid Row="0" ColumnSpan="3">
-                <!-- <Panel Grid.ColumnSpan="3" Grid.RowSpan="2"> -->
-                <!--     <ExperimentalAcrylicBorder IsHitTestVisible="False"> -->
-                <!--         <ExperimentalAcrylicBorder.Material> -->
-                <!--             <ExperimentalAcrylicMaterial -->
-                <!--                 BackgroundSource="Digger" -->
-                <!--                 TintColor="Black" -->
-                <!--                 TintOpacity="1" -->
-                <!--                 MaterialOpacity="0.75" /> -->
-                <!--         </ExperimentalAcrylicBorder.Material> -->
-                <!--     </ExperimentalAcrylicBorder> -->
-                <!-- </Panel> -->
+                <!-- Profile Picture  -->
+                <Grid Row="0" ColumnSpan="3">
+                    <!-- <Panel Grid.ColumnSpan="3" Grid.RowSpan="2"> -->
+                    <!--     <ExperimentalAcrylicBorder IsHitTestVisible="False"> -->
+                    <!--         <ExperimentalAcrylicBorder.Material> -->
+                    <!--             <ExperimentalAcrylicMaterial -->
+                    <!--                 BackgroundSource="Digger" -->
+                    <!--                 TintColor="Black" -->
+                    <!--                 TintOpacity="1" -->
+                    <!--                 MaterialOpacity="0.75" /> -->
+                    <!--         </ExperimentalAcrylicBorder.Material> -->
+                    <!--     </ExperimentalAcrylicBorder> -->
+                    <!-- </Panel> -->
 
-                <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                    <StackPanel.Background>
-                        <ImageBrush Source="{Binding CurrentProfileBanner}"
-                                    RenderOptions.BitmapInterpolationMode="HighQuality" Opacity="0.5"
-                                    Stretch="UniformToFill" />
-                    </StackPanel.Background>
+                    <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                        <StackPanel.Background>
+                            <ImageBrush Source="{Binding CurrentProfileBanner}"
+                                        RenderOptions.BitmapInterpolationMode="HighQuality" Opacity="0.5"
+                                        Stretch="UniformToFill" />
+                        </StackPanel.Background>
 
-                    <Border Margin="10" CornerRadius="1000" Height="150" Width="150" MaxHeight="150" MaxWidth="150"
-                            BorderBrush="White" BorderThickness="3" HorizontalAlignment="Center">
-                        <Border.Background>
-                            <ImageBrush Source="{Binding CurrentProfilePicture}"
-                                        RenderOptions.BitmapInterpolationMode="HighQuality" Stretch="UniformToFill" />
-                        </Border.Background>
-                    </Border>
-
-                    <StackPanel HorizontalAlignment="Stretch" Margin="0 0 0 10">
-                        <TextBlock Text="{Binding SelectedUser.Name}" FontSize="26" FontWeight="SemiBold"
-                                   HorizontalAlignment="Center" />
-                        <TextBlock Text="{Binding SelectedUser.JoinDateString}" FontSize="14" FontStyle="Italic"
-                                   FontWeight="SemiBold" HorizontalAlignment="Center" />
-                    </StackPanel>
-
-                </StackPanel>
-            </Grid>
-
-            <!-- UserData -->
-            <Grid Row="1" ColumnDefinitions="25*, 50*, 25*">
-                <Grid Column="0">
-                    <Panel Grid.ColumnSpan="3" Grid.RowSpan="2">
-                        <ExperimentalAcrylicBorder IsHitTestVisible="False">
-                            <ExperimentalAcrylicBorder.Material>
-                                <ExperimentalAcrylicMaterial
-                                    BackgroundSource="Digger"
-                                    TintColor="Black"
-                                    TintOpacity="1"
-                                    MaterialOpacity="0.75" />
-                            </ExperimentalAcrylicBorder.Material>
-                        </ExperimentalAcrylicBorder>
-                    </Panel>
-
-                    <Grid RowDefinitions="50, Auto, *">
-                        <Border Grid.Row="0" Background="#7F000000" HorizontalAlignment="Stretch"
-                                VerticalAlignment="Stretch">
-                            <TextBlock Text="{Binding SelectedUser.TotalXpString}" FontSize="24"
-                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <Border Margin="10" CornerRadius="1000" Height="150" Width="150" MaxHeight="150" MaxWidth="150"
+                                BorderBrush="White" BorderThickness="3" HorizontalAlignment="Center">
+                            <Border.Background>
+                                <ImageBrush Source="{Binding CurrentProfilePicture}"
+                                            RenderOptions.BitmapInterpolationMode="HighQuality" Stretch="UniformToFill" />
+                            </Border.Background>
                         </Border>
-                        <StackPanel Grid.Row="1" Spacing="5" Margin="10" VerticalAlignment="Stretch"
-                                    HorizontalAlignment="Stretch">
-                            <Button Content="web profile" FontWeight="SemiBold" HorizontalAlignment="Stretch"
-                                    HorizontalContentAlignment="Center" Click="WebProfile_OnClick" />
-                            <Button Content="osu! profile"
-                                    IsEnabled="{Binding SelectedUser.OsuProfile, Converter={StaticResource OsuProfileConverter}}"
-                                    FontWeight="SemiBold" HorizontalAlignment="Stretch"
-                                    HorizontalContentAlignment="Center" Click="OsuProfile_OnClick" />
+
+                        <StackPanel HorizontalAlignment="Stretch" Margin="0 0 0 10">
+                            <TextBlock Text="{Binding SelectedUser.Name}" FontSize="26" FontWeight="SemiBold"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock Text="{Binding SelectedUser.JoinDateString}" FontSize="14" FontStyle="Italic"
+                                       FontWeight="SemiBold" HorizontalAlignment="Center" />
                         </StackPanel>
 
-                        <ScrollViewer Name="BadgeViewer" Grid.Row="2" Margin="10 0">
-                            <ContentPresenter Name="BadgeItems" />
-                        </ScrollViewer>
-                    </Grid>
-
+                    </StackPanel>
                 </Grid>
 
-                <Grid Column="1" Margin="1 0">
-                    <Panel Grid.ColumnSpan="3" Grid.RowSpan="2">
-                        <ExperimentalAcrylicBorder IsHitTestVisible="False">
-                            <ExperimentalAcrylicBorder.Material>
-                                <ExperimentalAcrylicMaterial
-                                    BackgroundSource="Digger"
-                                    TintColor="Black"
-                                    TintOpacity="1"
-                                    MaterialOpacity="0.75" />
-                            </ExperimentalAcrylicBorder.Material>
-                        </ExperimentalAcrylicBorder>
-                    </Panel>
+                <!-- UserData -->
+                <Grid Row="1" ColumnDefinitions="25*, 50*, 25*">
+                    <Grid Column="0">
+                        <Panel Grid.ColumnSpan="3" Grid.RowSpan="2">
+                            <ExperimentalAcrylicBorder IsHitTestVisible="False">
+                                <ExperimentalAcrylicBorder.Material>
+                                    <ExperimentalAcrylicMaterial
+                                        BackgroundSource="Digger"
+                                        TintColor="Black"
+                                        TintOpacity="1"
+                                        MaterialOpacity="0.75" />
+                                </ExperimentalAcrylicBorder.Material>
+                            </ExperimentalAcrylicBorder>
+                        </Panel>
 
-                    <Grid RowDefinitions="50, *">
-                        <Border Grid.Row="0" Background="#7F000000" HorizontalAlignment="Stretch"
-                                VerticalAlignment="Stretch">
-                            <TextBlock Text="{Binding SelectedUser.RoleString}"
-                                       Foreground="{Binding SelectedUser.RoleColor}" FontSize="28"
-                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
-                        <ScrollViewer Grid.Row="1">
-                            <StackPanel Spacing="5" Margin="10">
-                                <TextBlock Text="{Binding SelectedUser.DescriptionTitleString}"
-                                           HorizontalAlignment="Center" TextAlignment="Center" />
-                                <TextBlock Text="{Binding SelectedUser.Description}" FontWeight="Light"
-                                           HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" />
+                        <Grid RowDefinitions="50, Auto, *">
+                            <Border Grid.Row="0" Background="#7F000000" HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch">
+                                <TextBlock Text="{Binding SelectedUser.TotalXpString}" FontSize="24"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <StackPanel Grid.Row="1" Spacing="5" Margin="10" VerticalAlignment="Stretch"
+                                        HorizontalAlignment="Stretch">
+                                <Button Content="web profile" FontWeight="SemiBold" HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Center" Click="WebProfile_OnClick" />
+                                <Button Content="osu! profile"
+                                        IsEnabled="{Binding SelectedUser.OsuProfile, Converter={StaticResource OsuProfileConverter}}"
+                                        FontWeight="SemiBold" HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Center" Click="OsuProfile_OnClick" />
                             </StackPanel>
-                        </ScrollViewer>
 
+                            <ScrollViewer Name="BadgeViewer" Grid.Row="2" Margin="10 0">
+                                <ContentPresenter Name="BadgeItems" />
+                            </ScrollViewer>
+                        </Grid>
+
+                    </Grid>
+
+                    <Grid Column="1" Margin="1 0">
+                        <Panel Grid.ColumnSpan="3" Grid.RowSpan="2">
+                            <ExperimentalAcrylicBorder IsHitTestVisible="False">
+                                <ExperimentalAcrylicBorder.Material>
+                                    <ExperimentalAcrylicMaterial
+                                        BackgroundSource="Digger"
+                                        TintColor="Black"
+                                        TintOpacity="1"
+                                        MaterialOpacity="0.75" />
+                                </ExperimentalAcrylicBorder.Material>
+                            </ExperimentalAcrylicBorder>
+                        </Panel>
+
+                        <Grid RowDefinitions="50, *">
+                            <Border Grid.Row="0" Background="#7F000000" HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch">
+                                <TextBlock Text="{Binding SelectedUser.RoleString}"
+                                           Foreground="{Binding SelectedUser.RoleColor}" FontSize="28"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <ScrollViewer Grid.Row="1">
+                                <StackPanel Spacing="5" Margin="10">
+                                    <TextBlock Text="{Binding SelectedUser.DescriptionTitleString}"
+                                               HorizontalAlignment="Center" TextAlignment="Center" />
+                                    <TextBlock Text="{Binding SelectedUser.Description}" FontWeight="Light"
+                                               HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" />
+                                </StackPanel>
+                            </ScrollViewer>
+
+                        </Grid>
+                    </Grid>
+
+                    <Grid Column="2">
+                        <Panel Grid.ColumnSpan="3" Grid.RowSpan="2">
+                            <ExperimentalAcrylicBorder IsHitTestVisible="False">
+                                <ExperimentalAcrylicBorder.Material>
+                                    <ExperimentalAcrylicMaterial
+                                        BackgroundSource="Digger"
+                                        TintColor="Black"
+                                        TintOpacity="1"
+                                        MaterialOpacity="0.75" />
+                                </ExperimentalAcrylicBorder.Material>
+                            </ExperimentalAcrylicBorder>
+                        </Panel>
+
+                        <Grid RowDefinitions="50, *">
+                            <Border Grid.Row="0" Background="#7F000000" HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch">
+                                <TextBlock Text="{Binding SelectedUser.LevelString}" FontSize="24"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <ListBox Grid.Row="1" Background="Transparent" Items="{Binding TopSongsOfCurrentUser}"
+                                     DoubleTapped="UserTopSongsList_OnDoubleTapped">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate DataType="beatmap:BeatmapUserValidityModel">
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding GetTitle}" FontWeight="SemiBold" />
+                                            <TextBlock Text="{Binding GetTimesplayed}" FontSize="12" FontWeight="Light" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Grid>
                     </Grid>
                 </Grid>
 
-                <Grid Column="2">
-                    <Panel Grid.ColumnSpan="3" Grid.RowSpan="2">
+                <Grid Row="2" RowDefinitions="50, 300" Margin="0 1 0 0">
+                    <Panel Grid.RowSpan="2">
                         <ExperimentalAcrylicBorder IsHitTestVisible="False">
                             <ExperimentalAcrylicBorder.Material>
                                 <ExperimentalAcrylicMaterial
@@ -173,59 +207,25 @@
                         </ExperimentalAcrylicBorder>
                     </Panel>
 
-                    <Grid RowDefinitions="50, *">
-                        <Border Grid.Row="0" Background="#7F000000" HorizontalAlignment="Stretch"
-                                VerticalAlignment="Stretch">
-                            <TextBlock Text="{Binding SelectedUser.LevelString}" FontSize="24"
-                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
-                        <ListBox Grid.Row="1" Background="Transparent" Items="{Binding TopSongsOfCurrentUser}"
-                                 DoubleTapped="UserTopSongsList_OnDoubleTapped">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate DataType="beatmap:BeatmapUserValidityModel">
-                                    <StackPanel>
-                                        <TextBlock Text="{Binding GetTitle}" FontWeight="SemiBold" />
-                                        <TextBlock Text="{Binding GetTimesplayed}" FontSize="12" FontWeight="Light" />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
-                    </Grid>
+                    <Border Grid.Row="0" Background="#7F000000" HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch">
+                        <TextBlock Text="Lifetime statistics" FontSize="24"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+
+                    <avalonia:CartesianChart Grid.Row="1"
+                                             VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                                             YAxes="{Binding YAxes}"
+                                             XAxes="{Binding XAxes}"
+                                             Series="{Binding Series}"
+                                             TooltipBackground="#7F000000"
+                                             TooltipTextBrush="White"
+                                             TooltipFontFamily="{DynamicResource Montserrat}"
+                                             TooltipFontWeight="Bold" />
                 </Grid>
             </Grid>
-            
-            <Grid Row="2" RowDefinitions="50, 300" Margin="0 1 0 0">
-                <Panel Grid.RowSpan="2">
-                    <ExperimentalAcrylicBorder IsHitTestVisible="False">
-                        <ExperimentalAcrylicBorder.Material>
-                            <ExperimentalAcrylicMaterial
-                                BackgroundSource="Digger"
-                                TintColor="Black"
-                                TintOpacity="1"
-                                MaterialOpacity="0.75" />
-                        </ExperimentalAcrylicBorder.Material>
-                    </ExperimentalAcrylicBorder>
-                </Panel>
-                
-                <Border Grid.Row="0" Background="#7F000000" HorizontalAlignment="Stretch"
-                        VerticalAlignment="Stretch">
-                    <TextBlock Text="Lifetime statistics" FontSize="24"
-                               HorizontalAlignment="Center" VerticalAlignment="Center" />
-                </Border>
-                
-                <avalonia:CartesianChart Grid.Row="1"
-                                    VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
-                                    YAxes="{Binding YAxes}"
-                                    XAxes="{Binding XAxes}"
-                                    Series="{Binding Series}"
-                                    TooltipBackground="#7F000000"
-                                    TooltipTextBrush="White"
-                                    TooltipFontFamily="{DynamicResource Montserrat}"
-                                    TooltipFontWeight="Bold"/>
-            </Grid>
-        </Grid>
-            
+
         </ScrollViewer>
-        
+
     </Grid>
 </UserControl>

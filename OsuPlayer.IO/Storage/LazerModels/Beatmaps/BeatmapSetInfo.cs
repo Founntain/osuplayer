@@ -11,19 +11,6 @@ namespace OsuPlayer.IO.Storage.LazerModels.Beatmaps;
 [MapTo("BeatmapSet")]
 public class BeatmapSetInfo : RealmObject, IHasRealmFiles, IEquatable<BeatmapSetInfo>, IBeatmapSetInfo
 {
-    public BeatmapSetInfo(IEnumerable<BeatmapInfo>? beatmaps = null)
-        : this()
-    {
-        ID = Guid.NewGuid();
-        if (beatmaps != null)
-            Beatmaps.AddRange(beatmaps);
-    }
-
-    [UsedImplicitly] // Realm
-    private BeatmapSetInfo()
-    {
-    }
-
     [PrimaryKey] public Guid ID { get; set; }
 
     public IList<BeatmapInfo> Beatmaps { get; } = null!;
@@ -43,6 +30,19 @@ public class BeatmapSetInfo : RealmObject, IHasRealmFiles, IEquatable<BeatmapSet
     /// Whether deleting this beatmap set should be prohibited (due to it being a system requirement to be present).
     /// </summary>
     public bool Protected { get; set; }
+
+    public BeatmapSetInfo(IEnumerable<BeatmapInfo>? beatmaps = null)
+        : this()
+    {
+        ID = Guid.NewGuid();
+        if (beatmaps != null)
+            Beatmaps.AddRange(beatmaps);
+    }
+
+    [UsedImplicitly] // Realm
+    private BeatmapSetInfo()
+    {
+    }
 
     [Indexed] public int OnlineID { get; set; } = -1;
 

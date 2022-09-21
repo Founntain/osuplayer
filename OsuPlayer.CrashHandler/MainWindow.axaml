@@ -9,17 +9,22 @@
         WindowStartupLocation="CenterScreen"
         Activated="Window_OnActivated">
     <Grid RowDefinitions="*, Auto, Auto">
-        <TextBox Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextWrapping="Wrap" Text="{Binding CrashLog}"/>
-       
-        <Button Grid.Row="1" Content="Copy To Clipboard" VerticalAlignment="Center" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" 
-                Click="Copy_OnClick"/>
-        
+        <TextBox Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextWrapping="Wrap"
+                 Text="{Binding CrashLog}" />
+
+        <Button Grid.Row="1" Content="Copy To Clipboard" VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Center"
+                Click="Copy_OnClick" />
+
         <Grid Row="2" ColumnDefinitions="*, *, *">
-            <Button Grid.Column="0" Content="Report on GitHub" VerticalAlignment="Center" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" 
-                    Click="GitHub_OnClick"/>
-            <Button Grid.Column="1" Content="Report on Discord" VerticalAlignment="Center" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" 
-                    Click="Discord_OnClick"/>
-            <Button Grid.Column="2" Content="Write an E-Mail" VerticalAlignment="Center" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" 
+            <Button Grid.Column="0" Content="Report on GitHub" VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Click="GitHub_OnClick" />
+            <Button Grid.Column="1" Content="Report on Discord" VerticalAlignment="Center"
+                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                    Click="Discord_OnClick" />
+            <Button Grid.Column="2" Content="Write an E-Mail" VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
                     Click="Email_OnClick" />
         </Grid>
     </Grid>

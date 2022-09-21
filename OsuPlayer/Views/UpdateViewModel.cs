@@ -7,14 +7,14 @@ namespace OsuPlayer.Views;
 
 public class UpdateViewModel : BaseViewModel
 {
+    private UpdateResponse _update;
+
     public UpdateResponse Update
     {
         get => _update;
         set => this.RaiseAndSetIfChanged(ref _update, value);
     }
-    
-    private UpdateResponse _update;
-    
+
     public UpdateViewModel()
     {
         Activator = new ViewModelActivator();

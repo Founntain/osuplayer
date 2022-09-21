@@ -5,15 +5,8 @@ namespace OsuPlayer.Extensions.Bindables;
 
 public class BindableArray<T> : IBindableArray<T>, IBindable
 {
-    private LockedWeakList<BindableArray<T>>? _bindings;
-
     private readonly int _precision;
-
-    public BindableArray(int size = 0, int precision = 2)
-    {
-        Array = new T[size];
-        _precision = precision;
-    }
+    private LockedWeakList<BindableArray<T>>? _bindings;
 
     private WeakReference<BindableArray<T>> WeakReference => new(this);
 
@@ -26,6 +19,12 @@ public class BindableArray<T> : IBindableArray<T>, IBindable
     public int Length => Array.Length;
 
     public T[] Array { get; }
+
+    public BindableArray(int size = 0, int precision = 2)
+    {
+        Array = new T[size];
+        _precision = precision;
+    }
 
     public void BindTo(IBindable other)
     {

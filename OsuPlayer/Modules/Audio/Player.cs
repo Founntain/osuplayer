@@ -28,8 +28,8 @@ public class Player
 {
     private readonly BassEngine _bassEngine;
     private readonly Stopwatch _currentSongTimer;
-    private readonly int?[] _shuffleHistory = new int?[10];
     private readonly DiscordClient? _discordClient;
+    private readonly int?[] _shuffleHistory = new int?[10];
 
     public readonly Bindable<bool> BlacklistSkip = new();
 
@@ -59,36 +59,6 @@ public class Player
     private PlayState _playState;
     private int _shuffleHistoryIndex;
 
-    // private int _shuffleHistoryIndex;
-
-    public Player(BassEngine bassEngine)
-    {
-        _bassEngine = bassEngine;
-
-        _bassEngine.PropertyChanged += (sender, args) =>
-        {
-            if (args.PropertyName == "SongEnd")
-                Dispatcher.UIThread.Post(NextSong);
-        };
-
-        _discordClient = new DiscordClient().Initialize();
-
-        var config = new Config();
-
-        SortingModeBindable.Value = config.Container.SortingMode;
-        BlacklistSkip.Value = config.Container.BlacklistSkip;
-        PlaylistEnableOnPlay.Value = config.Container.PlaylistEnableOnPlay;
-        Repeat = config.Container.RepeatMode;
-        IsShuffle.Value = config.Container.IsShuffle;
-        ActivePlaylistId = config.Container.ActivePlaylistId;
-
-        SortingModeBindable.BindValueChanged(d => UpdateSorting(d.NewValue));
-
-        SongSource.Value = new SourceList<IMapEntryBase>();
-
-        _currentSongTimer = new Stopwatch();
-    }
-
     private IMapEntry? CurrentSong
     {
         get => CurrentSongBinding.Value;
@@ -105,9 +75,9 @@ public class Player
             ApiAsync.SetUserOnlineStatus(UserOnlineStatusType.Listening, value?.ToString(), value?.Hash);
 
             if (_discordClient is null || CurrentSong is null) return;
-            
+
             _discordClient.UpdatePresence(CurrentSong.Title, $"by {CurrentSong.Artist}");
-            
+
             // _mainWindow.ViewModel!.PlayerControl.CurrentSongImage = Task.Run(value!.FindBackground).Result;
         }
     }
@@ -145,6 +115,36 @@ public class Player
         : default;
 
     public Guid? ActivePlaylistId { get; set; }
+
+    // private int _shuffleHistoryIndex;
+
+    public Player(BassEngine bassEngine)
+    {
+        _bassEngine = bassEngine;
+
+        _bassEngine.PropertyChanged += (sender, args) =>
+        {
+            if (args.PropertyName == "SongEnd")
+                Dispatcher.UIThread.Post(NextSong);
+        };
+
+        _discordClient = new DiscordClient().Initialize();
+
+        var config = new Config();
+
+        SortingModeBindable.Value = config.Container.SortingMode;
+        BlacklistSkip.Value = config.Container.BlacklistSkip;
+        PlaylistEnableOnPlay.Value = config.Container.PlaylistEnableOnPlay;
+        Repeat = config.Container.RepeatMode;
+        IsShuffle.Value = config.Container.IsShuffle;
+        ActivePlaylistId = config.Container.ActivePlaylistId;
+
+        SortingModeBindable.BindValueChanged(d => UpdateSorting(d.NewValue));
+
+        SongSource.Value = new SourceList<IMapEntryBase>();
+
+        _currentSongTimer = new Stopwatch();
+    }
 
     public event PropertyChangedEventHandler? PlaylistChanged;
     public event PropertyChangedEventHandler? BlacklistChanged;
@@ -404,7 +404,7 @@ public class Player
     {
         _discordClient?.DeInitialize();
     }
-    
+
     #region Player
 
     /// <summary>
@@ -435,7 +435,7 @@ public class Player
             _bassEngine.Play();
             _currentSongTimer.Start();
             PlayState = PlayState.Playing;
-            
+
             await ApiAsync.SetUserOnlineStatus(UserOnlineStatusType.Listening, CurrentSong?.ToString(), CurrentSong?.Hash);
         }
         else
@@ -443,7 +443,7 @@ public class Player
             _bassEngine.Pause();
             _currentSongTimer.Stop();
             PlayState = PlayState.Paused;
-            
+
             await ApiAsync.SetUserOnlineStatus(UserOnlineStatusType.Idle);
         }
     }
