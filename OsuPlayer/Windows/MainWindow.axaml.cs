@@ -101,6 +101,11 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         
         var username = config.Container.Username;
 
+        if (string.IsNullOrWhiteSpace(username)) return;
+        
+        var loginWindow = new LoginWindow(this, username);
+        await loginWindow.ShowDialog(this);
+        
         // We only want to update the user panel, when the home view is already open, to refresh the panel.
         if (ViewModel.MainView.GetType() != typeof(HomeViewModel)) return;
 
@@ -111,8 +116,5 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         ViewModel.HomeView.ProfilePicture = await ViewModel.HomeView.LoadProfilePicture();
         
         if (string.IsNullOrWhiteSpace(username)) return;
-
-        var loginWindow = new LoginWindow(this, username);
-        await loginWindow.ShowDialog(this);
     }
 }
