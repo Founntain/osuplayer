@@ -1,6 +1,8 @@
-﻿using OsuPlayer.Extensions;
-using OsuPlayer.IO.Storage.LazerModels.Beatmaps;
+﻿using osu.Game.Beatmaps;
+using osu.Game.Models;
+using OsuPlayer.Extensions;
 using Realms;
+using Realms.Dynamic;
 
 namespace OsuPlayer.IO.DbReader.DataModels;
 
@@ -42,36 +44,47 @@ public class RealmMapEntryBase : IMapEntryBase
 
         var realmConfig = new RealmConfiguration(realmLoc)
         {
-            SchemaVersion = 14,
+            IsDynamic = true,
             IsReadOnly = true
         };
 
         var realm = await Realm.GetInstanceAsync(realmConfig);
-        var beatmap = (BeatmapSetInfo) realm.DynamicApi.Find("BeatmapSet", Id);
+        var beatmap = (DynamicRealmObject) realm.DynamicApi.Find("BeatmapSet", Id);
 
         if (beatmap == default) return null;
 
-        var audioFile = beatmap.Files.FirstOrDefault(x => x.Filename == beatmap.Metadata.AudioFile);
-        var backgroundFile = beatmap.Files.FirstOrDefault(x => string.Equals(x.Filename, beatmap.Metadata.BackgroundFile, StringComparison.OrdinalIgnoreCase));
+        var beatmaps = beatmap.DynamicApi.GetList<DynamicRealmObject>(nameof(BeatmapSetInfo.Beatmaps));
+        var metadata = beatmaps.First().DynamicApi.Get<DynamicRealmObject>(nameof(BeatmapInfo.Metadata)).DynamicApi;
 
-        if (audioFile == default) throw new NullReferenceException();
+        var files = (RealmList<DynamicEmbeddedObject>)beatmap.DynamicApi.GetList<DynamicEmbeddedObject>(nameof(BeatmapSetInfo.Files));
 
-        var audioFolderName = Path.Combine($"{audioFile.File.Hash[0]}", $"{audioFile.File.Hash[0]}{audioFile.File.Hash[1]}");
-        var backgroundFolderName = Path.Combine($"{backgroundFile?.File.Hash[0]}", $"{backgroundFile?.File.Hash[0]}{backgroundFile?.File.Hash[1]}");
+        var audioFileName = metadata.Get<string>(nameof(BeatmapMetadata.AudioFile));
+        var backgroundFileName = metadata.Get<string>(nameof(BeatmapMetadata.BackgroundFile));
+
+        var audioFile = (RealmObjectBase)files.FirstOrDefault(x => string.Equals(x.DynamicApi.Get<string>(nameof(RealmNamedFileUsage.Filename)), audioFileName, StringComparison.CurrentCultureIgnoreCase));
+        var backgroundFile = (RealmObjectBase)files.FirstOrDefault(x => string.Equals(x.DynamicApi.Get<string>(nameof(RealmNamedFileUsage.Filename)), backgroundFileName, StringComparison.CurrentCultureIgnoreCase));
+  
+        if (audioFile == default || backgroundFile == default) throw new NullReferenceException();
+
+        var audioHash = audioFile.DynamicApi.Get<RealmObjectBase>(nameof(RealmNamedFileUsage.File)).DynamicApi.Get<string>(nameof(RealmFile.Hash));
+        var backgroundHash = backgroundFile.DynamicApi.Get<RealmObjectBase>(nameof(RealmNamedFileUsage.File)).DynamicApi.Get<string>(nameof(RealmFile.Hash));
+
+        var audioFolderName = Path.Combine($"{audioHash[0]}", $"{audioHash[0]}{audioHash[1]}");
+        var backgroundFolderName = Path.Combine($"{backgroundHash[0]}", $"{backgroundHash[0]}{backgroundHash[1]}");
 
         var newMap = new RealmMapEntry
         {
             Artist = Artist,
-            ArtistUnicode = beatmap.Metadata.ArtistUnicode,
+            ArtistUnicode = metadata.Get<string>(nameof(BeatmapMetadata.ArtistUnicode)),
             Title = Title,
-            TitleUnicode = beatmap.Metadata.TitleUnicode,
-            AudioFileName = beatmap.Metadata.AudioFile,
-            BackgroundFileLocation = string.IsNullOrEmpty(backgroundFolderName) ? string.Empty : Path.Combine(path, "files", backgroundFolderName, backgroundFile!.File.Hash),
+            TitleUnicode = metadata.Get<string>(nameof(BeatmapMetadata.TitleUnicode)),
+            AudioFileName = audioFileName,
+            BackgroundFileLocation = string.IsNullOrEmpty(backgroundFolderName) ? string.Empty : Path.Combine(path, "files", backgroundFolderName, backgroundHash),
             Hash = Hash,
-            BeatmapSetId = beatmap.OnlineID,
+            BeatmapSetId = BeatmapSetId,
             FolderName = audioFolderName,
             FolderPath = Path.Combine("files", audioFolderName),
-            FullPath = Path.Combine(path, "files", audioFolderName, audioFile.File.Hash)
+            FullPath = Path.Combine(path, "files", audioFolderName, audioHash)
         };
 
         realm.Dispose();
