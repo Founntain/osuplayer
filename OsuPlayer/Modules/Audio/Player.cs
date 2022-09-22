@@ -5,6 +5,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using DynamicData;
 using LiveChartsCore.Defaults;
+using osu.Game.Beatmaps;
 using OsuPlayer.Data.API.Enums;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
@@ -16,6 +17,7 @@ using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Network.Discord;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
+using Realms;
 using Splat;
 
 namespace OsuPlayer.Modules.Audio;
@@ -213,7 +215,9 @@ public class Player
             foreach (var hash in collection.BeatmapHashes)
                 if (SongSourceList?[0] is RealmMapEntryBase)
                 {
-                    var md5Hash = realmReader?.QueryBeatmap(x => x.MD5Hash == hash)?.BeatmapSet?.Beatmaps.First().MD5Hash ?? string.Empty;
+                    var foundMap = realmReader?.QueryBeatmap(x => x.DynamicApi.Get<string>(nameof(BeatmapInfo.MD5Hash)) == hash);
+                    var md5Hash = foundMap.DynamicApi.Get<RealmObjectBase>(nameof(BeatmapInfo.BeatmapSet)).DynamicApi.GetList<RealmObjectBase>(nameof(BeatmapSetInfo.Beatmaps)).First().DynamicApi.Get<string>(nameof(BeatmapInfo.MD5Hash));
+      
                     await PlaylistManager.AddSongToPlaylistAsync(collection.Name, md5Hash);
                 }
                 else if (SongSourceList?[0] is DbMapEntryBase)
