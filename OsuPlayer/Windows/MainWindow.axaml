@@ -19,7 +19,8 @@
 
         Icon="avares://OsuPlayer/Resources/x96.ico"
 
-        Initialized="Window_OnInitialized">
+        Initialized="Window_OnInitialized"
+        Opened="Window_OnOpened">
 
     <Window.Styles>
         <StyleInclude Source="/Styles/SliderStyle.axaml" />
