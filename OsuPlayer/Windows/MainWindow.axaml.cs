@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Avalonia.Markup.Xaml;
 using OsuPlayer.Base.ViewModels;
 using OsuPlayer.IO.Storage.Playlists;
+using OsuPlayer.Network;
 using OsuPlayer.Network.Discord;
 using OsuPlayer.Views;
 using ReactiveUI;

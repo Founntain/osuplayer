@@ -1,7 +1,8 @@
-﻿using OsuPlayer.IO.DbReader.DataModels;
+﻿using osu.Game.Beatmaps;
+using OsuPlayer.IO.DbReader.DataModels;
 using OsuPlayer.IO.Storage.Config;
-using OsuPlayer.IO.Storage.LazerModels.Beatmaps;
 using Realms;
+using Realms.Dynamic;
 
 namespace OsuPlayer.IO.DbReader;
 
@@ -10,7 +11,7 @@ namespace OsuPlayer.IO.DbReader;
 /// </summary>
 public class RealmReader
 {
-    private readonly IEnumerable<BeatmapInfo> _beatmapInfos;
+    private readonly IEnumerable<DynamicRealmObject> _beatmapInfos;
     private readonly Realm _realm;
 
     public RealmReader(Config? config = null)
@@ -22,12 +23,12 @@ public class RealmReader
         var realmLoc = Path.Combine(config.Container.OsuPath, "client.realm");
         var realmConfig = new RealmConfiguration(realmLoc)
         {
-            SchemaVersion = 14,
+            IsDynamic = true,
             IsReadOnly = true
         };
 
         _realm = Realm.GetInstance(realmConfig).Freeze();
-        _beatmapInfos = _realm.DynamicApi.All("Beatmap").ToList().OfType<BeatmapInfo>();
+        _beatmapInfos = _realm.DynamicApi.All("Beatmap").ToList().OfType<DynamicRealmObject>().ToList();
     }
 
     ~RealmReader()
@@ -46,25 +47,41 @@ public class RealmReader
 
         var realmConfig = new RealmConfiguration(realmLoc)
         {
-            SchemaVersion = 14,
+            IsDynamic = true,
             IsReadOnly = true
         };
 
         var minBeatMaps = new List<IMapEntryBase>();
 
         var realm = await Realm.GetInstanceAsync(realmConfig);
-        var beatmaps = realm.DynamicApi.All("BeatmapSet").ToList().OfType<BeatmapSetInfo>();
 
-        foreach (var beatmap in beatmaps)
+        var objects = realm.DynamicApi.All("BeatmapSet").ToList();
+
+        var beatmaps = objects.OfType<DynamicRealmObject>().ToList();
+
+        foreach (var dynamicBeatmap in beatmaps)
+        {
+            var infos = dynamicBeatmap.DynamicApi.GetList<DynamicRealmObject>(nameof(BeatmapSetInfo.Beatmaps));
+            var firstBeatmap = infos.First().DynamicApi;
+            var metadata = firstBeatmap.Get<DynamicRealmObject>(nameof(BeatmapInfo.Metadata)).DynamicApi;
+            var artist = metadata.Get<string>(nameof(BeatmapMetadata.Artist));
+            var hash = firstBeatmap.Get<string>(nameof(BeatmapInfo.MD5Hash));
+            var beatmapSetId = dynamicBeatmap.DynamicApi.Get<int>(nameof(BeatmapInfo.OnlineID));
+            var title = metadata.Get<string>(nameof(BeatmapMetadata.Title));
+
+            var totalTime = Enumerable.Max(infos.Select(x => x.DynamicApi.Get<double>(nameof(BeatmapInfo.Length))));
+            var id = dynamicBeatmap.DynamicApi.Get<Guid>(nameof(BeatmapSetInfo.ID));
+
             minBeatMaps.Add(new RealmMapEntryBase
             {
-                Artist = string.Intern(beatmap.Metadata.Artist),
-                Hash = beatmap.Beatmaps.First().MD5Hash,
-                BeatmapSetId = beatmap.OnlineID,
-                Title = string.Intern(beatmap.Metadata.Title),
-                TotalTime = (int) beatmap.MaxLength,
-                Id = beatmap.ID
+                Artist = artist,
+                Hash = hash,
+                BeatmapSetId = beatmapSetId,
+                Title = title,
+                TotalTime = (int) totalTime,
+                Id = id
             });
+        }
 
         realm.Dispose();
 
@@ -82,7 +99,7 @@ public class RealmReader
     /// the first <see cref="BeatmapInfo" /> where the <paramref name="query" /> returns true, or null if no map was
     /// found
     /// </returns>
-    public BeatmapInfo? QueryBeatmap(Func<BeatmapInfo, bool> query)
+    public DynamicRealmObject? QueryBeatmap(Func<DynamicRealmObject, bool> query)
     {
         return _beatmapInfos.FirstOrDefault(query);
     }
