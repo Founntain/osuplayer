@@ -87,15 +87,6 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
             ViewModel!.MainView = ViewModel.UpdateView;
         }
 #endif
-
-        // We only want to update the user panel, when the home view is already open, to refresh the panel.
-        if (ViewModel.MainView.GetType() != typeof(HomeViewModel)) return;
-
-        ViewModel.HomeView.RaisePropertyChanged(nameof(ViewModel.HomeView.IsUserLoggedIn));
-        ViewModel.HomeView.RaisePropertyChanged(nameof(ViewModel.HomeView.IsUserNotLoggedIn));
-        ViewModel.HomeView.RaisePropertyChanged(nameof(ViewModel.HomeView.CurrentUser));
-
-        ViewModel.HomeView.ProfilePicture = await ViewModel.HomeView.LoadProfilePicture();
     }
 
     private void MainSplitView_OnPaneClosed(object? sender, EventArgs e)
@@ -109,6 +100,15 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         
         var username = config.Container.Username;
 
+        // We only want to update the user panel, when the home view is already open, to refresh the panel.
+        if (ViewModel.MainView.GetType() != typeof(HomeViewModel)) return;
+
+        ViewModel.HomeView.RaisePropertyChanged(nameof(ViewModel.HomeView.IsUserLoggedIn));
+        ViewModel.HomeView.RaisePropertyChanged(nameof(ViewModel.HomeView.IsUserNotLoggedIn));
+        ViewModel.HomeView.RaisePropertyChanged(nameof(ViewModel.HomeView.CurrentUser));
+
+        ViewModel.HomeView.ProfilePicture = await ViewModel.HomeView.LoadProfilePicture();
+        
         if (string.IsNullOrWhiteSpace(username)) return;
 
         var loginWindow = new LoginWindow(this, username);
