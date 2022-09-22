@@ -62,8 +62,6 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
     private async void Window_OnInitialized(object? sender, EventArgs e)
     {
-        await using var config = new Config();
-
         var rpc = new DiscordClient();
         rpc.Initialize();
 
@@ -90,13 +88,6 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         }
 #endif
 
-        var username = config.Container.Username;
-
-        if (string.IsNullOrWhiteSpace(username)) return;
-
-        var loginWindow = new LoginWindow(this, username);
-        await loginWindow.ShowDialog(this);
-
         // We only want to update the user panel, when the home view is already open, to refresh the panel.
         if (ViewModel.MainView.GetType() != typeof(HomeViewModel)) return;
 
@@ -110,5 +101,17 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
     private void MainSplitView_OnPaneClosed(object? sender, EventArgs e)
     {
         ViewModel.IsPaneOpen = false;
+    }
+
+    private async void Window_OnOpened(object? sender, EventArgs e)
+    {
+        await using var config = new Config();
+        
+        var username = config.Container.Username;
+
+        if (string.IsNullOrWhiteSpace(username)) return;
+
+        var loginWindow = new LoginWindow(this, username);
+        await loginWindow.ShowDialog(this);
     }
 }
