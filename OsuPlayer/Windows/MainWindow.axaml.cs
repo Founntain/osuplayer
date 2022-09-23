@@ -80,6 +80,8 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         //     ViewModel!.MainView = ViewModel.UpdateView;
         // }
 #else
+        await using var config = new Config();
+
         var result = await GitHubUpdater.CheckForUpdates(config.Container.ReleaseChannel);
 
         if (result.IsNewVersionAvailable)
