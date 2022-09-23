@@ -110,12 +110,4 @@ public class OnlineTests
 
         Assert.IsNotEmpty(model.Status);
     }
-
-    [Test]
-    public async Task ProfileManagerTest()
-    {
-        var result = await ProfileManager.LoadProfile("TestUser", "TestPassword");
-
-        Assert.IsNull(result);
-    }
 }
