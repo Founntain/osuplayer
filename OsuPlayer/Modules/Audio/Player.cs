@@ -317,7 +317,7 @@ public class Player
     /// <summary>
     /// Updates the user xp on the api
     /// </summary>
-    private async Task UpdateXp()
+    private async void UpdateXp()
     {
         if (ProfileManager.User == default) return;
 
@@ -351,7 +351,7 @@ public class Player
     /// Updates the songs played count of the user
     /// </summary>
     /// <param name="beatmapSetId">the beatmap set id of the map that was played</param>
-    private async Task UpdateSongsPlayed(int beatmapSetId)
+    private async void UpdateSongsPlayed(int beatmapSetId)
     {
         if (ProfileManager.User == default) return;
 
@@ -727,13 +727,14 @@ public class Player
             return Task.FromException(new NullReferenceException());
 
         fullMapEntry.UseUnicode = config.Container.UseSongNameUnicode;
+        var findBackgroundTask = fullMapEntry.FindBackground();
 
         //We put the XP update to an own try catch because if the API fails or is not available,
         //that the whole TryEnqueue does not fail
         try
         {
             if (CurrentSongBinding.Value != default)
-                await UpdateXp();
+                UpdateXp();
         }
         catch (Exception e)
         {
@@ -761,14 +762,14 @@ public class Player
         try
         {
             if (CurrentSongBinding.Value != default)
-                await UpdateSongsPlayed(fullMapEntry.BeatmapSetId);
+                UpdateSongsPlayed(fullMapEntry.BeatmapSetId);
         }
         catch (Exception e)
         {
             Debug.WriteLine($"Could not update Songs Played error => {e}");
         }
 
-        CurrentSongImage.Value = await fullMapEntry.FindBackground();
+        CurrentSongImage.Value = await findBackgroundTask;
 
         return Task.CompletedTask;
     }
