@@ -61,7 +61,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         _player.DisposeDiscordClient();
     }
 
-    private void Window_OnInitialized(object? sender, EventArgs e)
+    private async void Window_OnInitialized(object? sender, EventArgs e)
     {
         var rpc = new DiscordClient();
         rpc.Initialize();
