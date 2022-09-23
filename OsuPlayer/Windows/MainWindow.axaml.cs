@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Markup.Xaml;
 using OsuPlayer.Base.ViewModels;
 using OsuPlayer.IO.Storage.Playlists;
@@ -66,30 +67,18 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         var rpc = new DiscordClient();
         rpc.Initialize();
 
-#if DEBUG
-        // We are ignoring update checks if we are running in debug.
-        // The local development version will always be greater than the latest release
-
-        // Uncomment code below to force the update UI to show for testing purposes.
-
-        // var result = await GitHubUpdater.CheckForUpdates(config.Container.ReleaseChannel);
-        //
-        // if (result.IsNewVersionAvailable)
-        // {
-        //     ViewModel.UpdateView.Update = result;
-        //     ViewModel!.MainView = ViewModel.UpdateView;
-        // }
-#else
-        await using var config = new Config();
-
-        var result = await GitHubUpdater.CheckForUpdates(config.Container.ReleaseChannel);
-
-        if (result.IsNewVersionAvailable)
+        if (!System.Diagnostics.Debugger.IsAttached)
         {
-            ViewModel.UpdateView.Update = result;
-            ViewModel!.MainView = ViewModel.UpdateView;
+            await using var config = new Config();
+
+            var result = await GitHubUpdater.CheckForUpdates(config.Container.ReleaseChannel);
+
+            if (result.IsNewVersionAvailable)
+            {
+                ViewModel.UpdateView.Update = result;
+                ViewModel!.MainView = ViewModel.UpdateView;
+            }
         }
-#endif
     }
 
     private void MainSplitView_OnPaneClosed(object? sender, EventArgs e)
