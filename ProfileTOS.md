@@ -41,6 +41,9 @@ Your profile picture will also be deleted when you delete your profile, obviousl
 ### ☝️ Some rules
 Don't post anything NSFW, hate-/harmful in your description or somewhere else in the client. This also includes your profile picture. *(sorry about that, but no anime tiddies as profile picture)*  
 
+If you create a profile and don't reach level 2 in 24 hours **we have the right to delete your profile**. Please only create on if you intend to use the player and its user feature aswell and as intended.  
+You don't need a profile if you don't use the user feature to collect XP and statistics! If you profile was deleted, you will still be able to create a new profile if you think you use it as intended.
+
 ⚠️ If for whatever reason you do so, we have the right to clear your description, remove your profile picture / banner or send your profile to the *sun (deleting it)*.
 
 That's all. Amazing that you read this far here is a nice flower for you 🌺
