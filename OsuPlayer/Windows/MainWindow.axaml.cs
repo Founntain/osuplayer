@@ -67,17 +67,16 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         var rpc = new DiscordClient();
         rpc.Initialize();
 
-        if (!System.Diagnostics.Debugger.IsAttached)
+        if (System.Diagnostics.Debugger.IsAttached) return;
+
+        await using var config = new Config();
+
+        var result = await GitHubUpdater.CheckForUpdates(config.Container.ReleaseChannel);
+
+        if (result.IsNewVersionAvailable)
         {
-            await using var config = new Config();
-
-            var result = await GitHubUpdater.CheckForUpdates(config.Container.ReleaseChannel);
-
-            if (result.IsNewVersionAvailable)
-            {
-                ViewModel.UpdateView.Update = result;
-                ViewModel!.MainView = ViewModel.UpdateView;
-            }
+            ViewModel.UpdateView.Update = result;
+            ViewModel!.MainView = ViewModel.UpdateView;
         }
     }
 
@@ -89,14 +88,14 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
     private async void Window_OnOpened(object? sender, EventArgs e)
     {
         await using var config = new Config();
-        
+
         var username = config.Container.Username;
 
         if (string.IsNullOrWhiteSpace(username)) return;
-        
+
         var loginWindow = new LoginWindow(this, username);
         await loginWindow.ShowDialog(this);
-        
+
         // We only want to update the user panel, when the home view is already open, to refresh the panel.
         if (ViewModel.MainView.GetType() != typeof(HomeViewModel)) return;
 
@@ -105,7 +104,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         ViewModel.HomeView.RaisePropertyChanged(nameof(ViewModel.HomeView.CurrentUser));
 
         ViewModel.HomeView.ProfilePicture = await ViewModel.HomeView.LoadProfilePicture();
-        
+
         if (string.IsNullOrWhiteSpace(username)) return;
     }
 }
