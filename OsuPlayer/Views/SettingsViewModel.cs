@@ -204,7 +204,7 @@ public class SettingsViewModel : BaseViewModel
 
         if (string.IsNullOrWhiteSpace(latestPatchNotes)) return;
 
-        var regex = new Regex(@"( in )([\w\s:\/\.])*[\d]+");
+        var regex = new Regex(@"( in )([\w\s:\/\.-])*[\d]+");
         latestPatchNotes = regex.Replace(latestPatchNotes, "");
         regex = new Regex(@"(\n?\r?)*[\*]*(Full Changelog)[\*]*:.*$");
         Patchnotes = regex.Replace(latestPatchNotes, "");
