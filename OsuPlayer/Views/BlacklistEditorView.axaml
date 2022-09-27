@@ -29,18 +29,7 @@
             </StackPanel>
         </Grid>
 
-        <Grid Column="0" Margin="10" RowDefinitions="50, *">
-            <Panel Grid.Row="0" Grid.RowSpan="2">
-                <ExperimentalAcrylicBorder IsHitTestVisible="False">
-                    <ExperimentalAcrylicBorder.Material>
-                        <ExperimentalAcrylicMaterial
-                            BackgroundSource="Digger"
-                            TintColor="Black"
-                            TintOpacity="1"
-                            MaterialOpacity="0.75" />
-                    </ExperimentalAcrylicBorder.Material>
-                </ExperimentalAcrylicBorder>
-            </Panel>
+        <Grid Column="0" Margin="10" RowDefinitions="50, *" Background="{DynamicResource AcrylicBaseColor}">
 
             <Border Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#7F000000">
                 <Grid ColumnDefinitions="Auto, *">
@@ -63,19 +52,7 @@
             </ListBox>
         </Grid>
 
-        <Grid Column="2" Margin="10" RowDefinitions="50, *">
-            <Panel Grid.Row="0" Grid.RowSpan="2">
-                <ExperimentalAcrylicBorder IsHitTestVisible="False">
-                    <ExperimentalAcrylicBorder.Material>
-                        <ExperimentalAcrylicMaterial
-                            BackgroundSource="Digger"
-                            TintColor="Black"
-                            TintOpacity="1"
-                            MaterialOpacity="0.75" />
-                    </ExperimentalAcrylicBorder.Material>
-                </ExperimentalAcrylicBorder>
-            </Panel>
-
+        <Grid Column="2" Margin="10" RowDefinitions="50, *" Background="{DynamicResource AcrylicBaseColor}">
             <Border Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#7F000000">
                 <TextBlock Text="blacklist songs" FontSize="22" VerticalAlignment="Center"
                            HorizontalAlignment="Center" />

@@ -9,8 +9,8 @@
     <Application.Resources>
         <Color x:Key="BaseColor">#FA282C34</Color>
         <Color x:Key="AcrylicBaseColor">#7F000000</Color>
+        <Color x:Key="AcrylicSecondaryColor">#9F000000</Color>
         <Color x:Key="SecondaryColor">#FA21252B</Color>
-        <Color x:Key="AcrylicSecondaryColor">#7F000000</Color>
         <Color x:Key="AccentColor">#FFFFCC22</Color>
         <Color x:Key="ControlsButtonColor">#FF21252B</Color>
         <Color x:Key="SidemenuButtonsGlow">#FFFFE48A</Color>
@@ -19,6 +19,8 @@
 
         <SolidColorBrush x:Key="ProgressbarColorBrush" Color="{DynamicResource ProgressbarColor}" />
         <SolidColorBrush x:Key="ButtonBackground" Color="#4C000000" />
+        
+        <Color x:Key="AppBackgroundColor">Black</Color>
 
         <FontFamily x:Key="Montserrat">/Resources/Fonts/#Montserrat</FontFamily>
     </Application.Resources>
