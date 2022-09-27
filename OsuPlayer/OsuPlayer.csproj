@@ -110,4 +110,11 @@
             <DependentUpon>BlacklistEditorView.axaml</DependentUpon>
         </Compile>
     </ItemGroup>
+    <ItemGroup>
+      <UpToDateCheckInput Remove="Resources\profiles\cesan.jpg" />
+      <UpToDateCheckInput Remove="Resources\profiles\Founntain.png" />
+      <UpToDateCheckInput Remove="Resources\profiles\login.jpg" />
+      <UpToDateCheckInput Remove="Resources\profiles\rene.png" />
+      <UpToDateCheckInput Remove="Resources\profiles\teddy.png" />
+    </ItemGroup>
 </Project>

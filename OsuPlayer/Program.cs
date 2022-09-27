@@ -55,7 +55,8 @@ internal class Program
             .UseReactiveUI()
             .With(new Win32PlatformOptions
             {
-                AllowEglInitialization = true
+                AllowEglInitialization = true,
+                UseWindowsUIComposition = true
             });
     }
 
