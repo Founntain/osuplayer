@@ -1,6 +1,6 @@
-﻿using osu.Game.Beatmaps;
-using osu.Game.Models;
-using OsuPlayer.Extensions;
+﻿using OsuPlayer.Extensions;
+using OsuPlayer.IO.Storage.LazerModels.Beatmaps;
+using OsuPlayer.IO.Storage.LazerModels.Files;
 using Realms;
 using Realms.Dynamic;
 
