@@ -2,7 +2,9 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
 using OsuPlayer.Base.ViewModels;
+using OsuPlayer.Extensions;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Network;
 using OsuPlayer.Network.Discord;
@@ -33,6 +35,10 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         using var config = new Config();
         TransparencyLevelHint = config.Container.TransparencyLevelHint;
 
+        var backgroundColor = config.Container.BackgroundColor?.ToColor() ?? Colors.Black;
+        
+        Background = new SolidColorBrush(backgroundColor);
+        
         PlaylistManager.SetLastKnownPlaylistAsCurrentPlaylist();
     }
 

@@ -7,7 +7,7 @@
              x:Class="OsuPlayer.Views.TopBarView">
     <Grid Name="TopBarGrid">
         <Grid.Background>
-            <SolidColorBrush Color="{StaticResource AcrylicBaseColor}" />
+            <SolidColorBrush Color="{StaticResource AcrylicSecondaryColor}" />
         </Grid.Background>
 
         <Border Background="Transparent" PointerPressed="TopBarGrid_PointerPressed" />

@@ -115,19 +115,7 @@
 
         <!-- UserData -->
         <Grid Row="1" ColumnDefinitions="25*, 50*, 25*">
-            <Grid Column="0">
-                <Panel Grid.ColumnSpan="3" Grid.RowSpan="2">
-                    <ExperimentalAcrylicBorder IsHitTestVisible="False">
-                        <ExperimentalAcrylicBorder.Material>
-                            <ExperimentalAcrylicMaterial
-                                BackgroundSource="Digger"
-                                TintColor="Black"
-                                TintOpacity="1"
-                                MaterialOpacity="0.75" />
-                        </ExperimentalAcrylicBorder.Material>
-                    </ExperimentalAcrylicBorder>
-                </Panel>
-
+            <Grid Column="0" Background="{DynamicResource AcrylicBaseColor}">
                 <Grid RowDefinitions="50, *, Auto">
                     <Border Grid.Row="0" Background="#7F000000" HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch">
@@ -167,19 +155,7 @@
 
             </Grid>
 
-            <Grid Column="1" Margin="1 0">
-                <Panel Grid.ColumnSpan="3" Grid.RowSpan="2">
-                    <ExperimentalAcrylicBorder IsHitTestVisible="False">
-                        <ExperimentalAcrylicBorder.Material>
-                            <ExperimentalAcrylicMaterial
-                                BackgroundSource="Digger"
-                                TintColor="Black"
-                                TintOpacity="1"
-                                MaterialOpacity="0.75" />
-                        </ExperimentalAcrylicBorder.Material>
-                    </ExperimentalAcrylicBorder>
-                </Panel>
-
+            <Grid Column="1" Margin="1 0" Background="{DynamicResource AcrylicBaseColor}">
                 <Grid RowDefinitions="50, Auto, *">
                     <Border Grid.Row="0" Background="#7F000000" HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch">
@@ -197,19 +173,7 @@
                 </Grid>
             </Grid>
 
-            <Grid Column="2">
-                <Panel Grid.ColumnSpan="3" Grid.RowSpan="2">
-                    <ExperimentalAcrylicBorder IsHitTestVisible="False">
-                        <ExperimentalAcrylicBorder.Material>
-                            <ExperimentalAcrylicMaterial
-                                BackgroundSource="Digger"
-                                TintColor="Black"
-                                TintOpacity="1"
-                                MaterialOpacity="0.75" />
-                        </ExperimentalAcrylicBorder.Material>
-                    </ExperimentalAcrylicBorder>
-                </Panel>
-
+            <Grid Column="2" Background="{DynamicResource AcrylicBaseColor}">
                 <Grid RowDefinitions="50, *, Auto">
                     <Border Grid.Row="0" Background="#7F000000" HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch">

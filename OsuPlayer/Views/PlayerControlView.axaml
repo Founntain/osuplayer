@@ -27,7 +27,7 @@
 
     <Grid RowDefinitions="30, *">
         <Grid.Background>
-            <SolidColorBrush Color="{DynamicResource AcrylicBaseColor}" />
+            <SolidColorBrush Color="{DynamicResource AcrylicSecondaryColor}" />
         </Grid.Background>
 
 
@@ -55,9 +55,9 @@
                         <TextBlock Text="{Binding SongText}" />
                     </ToolTip.Tip>
                     <TextBlock Name="TitleText" Text="{Binding TitleText}" FontSize="20"
-                               Foreground="White" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                               Foreground="White" FontWeight="Medium" TextTrimming="CharacterEllipsis" />
                     <TextBlock Name="ArtistText" Text="{Binding ArtistText}" FontSize="16"
-                               Foreground="#FFCCCCCC" FontWeight="Medium" TextTrimming="CharacterEllipsis" />
+                               Foreground="#FFCCCCCC" FontWeight="Normal" TextTrimming="CharacterEllipsis" />
                 </StackPanel>
             </Grid>
 

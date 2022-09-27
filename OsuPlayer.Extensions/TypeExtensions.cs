@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using Avalonia.Media;
 using DynamicData;
 using Splat;
 
@@ -74,4 +75,6 @@ public static class Extensions
     {
         return index >= 0 && index < enumerable.Count();
     }
+
+    public static Color ToColor(this KnownColors color) => Color.FromUInt32((uint) color);
 }

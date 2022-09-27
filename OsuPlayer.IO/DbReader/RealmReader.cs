@@ -1,6 +1,6 @@
-﻿using osu.Game.Beatmaps;
-using OsuPlayer.IO.DbReader.DataModels;
+﻿using OsuPlayer.IO.DbReader.DataModels;
 using OsuPlayer.IO.Storage.Config;
+using OsuPlayer.IO.Storage.LazerModels.Beatmaps;
 using Realms;
 using Realms.Dynamic;
 

@@ -22,8 +22,8 @@
                 <ExperimentalAcrylicBorder.Material>
                     <ExperimentalAcrylicMaterial
                         BackgroundSource="Digger"
-                        TintColor="Black"
-                        TintOpacity="1"
+                        TintColor="{DynamicResource AppBackgroundColor}"
+                        TintOpacity="0.5"
                         MaterialOpacity="0.25" />
                 </ExperimentalAcrylicBorder.Material>
             </ExperimentalAcrylicBorder>
