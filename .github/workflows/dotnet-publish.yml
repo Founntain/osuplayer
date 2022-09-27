@@ -55,7 +55,6 @@ jobs:
         RELEASE_VERSION: ${{ steps.get_tag.outputs.TAG }}
       run: |
         dotnet publish -c Release -o ./releases/${{ matrix.release }} -r ${{ matrix.release }} --no-self-contained
-        rm ./releases/${{ matrix.release }}/osu.Game.Resources.dll
 
     - name: Generate artifact
       uses: TheDoctor0/zip-release@0.6.1
@@ -110,7 +109,6 @@ jobs:
         RELEASE_VERSION: ${{ steps.get_tag.outputs.TAG }}
       run: |
         dotnet publish -c Release -o ./releases/${{ matrix.release }} -r ${{ matrix.release }} --no-self-contained
-        rm ./releases/${{ matrix.release }}/osu.Game.Resources.dll
 
     - name: Generate artifact
       uses: TheDoctor0/zip-release@0.6.1
@@ -165,7 +163,6 @@ jobs:
         RELEASE_VERSION: ${{ steps.get_tag.outputs.TAG }}
       run: |
         dotnet publish -c Release -o ./releases/${{ matrix.release }} -r ${{ matrix.release }} --no-self-contained
-        rm ./releases/${{ matrix.release }}/osu.Game.Resources.dll
 
     - name: Generate artifact
       uses: TheDoctor0/zip-release@0.6.1
