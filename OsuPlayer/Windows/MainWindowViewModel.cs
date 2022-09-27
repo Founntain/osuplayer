@@ -1,4 +1,6 @@
+using Avalonia.Media;
 using OsuPlayer.Base.ViewModels;
+using OsuPlayer.Extensions;
 using OsuPlayer.Views;
 using ReactiveUI;
 
@@ -11,6 +13,7 @@ public class MainWindowViewModel : BaseWindowViewModel
     private bool _isPaneOpen;
 
     private BaseViewModel _mainView;
+    private ExperimentalAcrylicMaterial _panelMaterial;
 
     public bool IsPaneOpen
     {
@@ -38,6 +41,12 @@ public class MainWindowViewModel : BaseWindowViewModel
         set => this.RaiseAndSetIfChanged(ref _mainView, value);
     }
 
+    public ExperimentalAcrylicMaterial PanelMaterial
+    {
+        get => _panelMaterial;
+        set => _panelMaterial = value;
+    }
+
     public MainWindowViewModel(BassEngine engine, Player player)
     {
         BassEngine = engine;
@@ -58,5 +67,17 @@ public class MainWindowViewModel : BaseWindowViewModel
         SettingsView = new SettingsViewModel(Player);
         EqualizerView = new EqualizerViewModel(Player);
         UpdateView = new UpdateViewModel();
+        
+        using var config = new Config();
+
+        var backgroundColor = config.Container.BackgroundColor?.ToColor() ?? KnownColors.Black.ToColor();
+        
+        PanelMaterial = new ()
+        {
+            BackgroundSource = AcrylicBackgroundSource.Digger,
+            TintColor = backgroundColor,
+            TintOpacity = 1,
+            MaterialOpacity = 0.25
+        };
     }
 }

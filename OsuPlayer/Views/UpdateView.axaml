@@ -12,19 +12,7 @@
         <views:UpdateViewModel />
     </Design.DataContext>
 
-    <Grid>
-        <Panel>
-            <ExperimentalAcrylicBorder IsHitTestVisible="False">
-                <ExperimentalAcrylicBorder.Material>
-                    <ExperimentalAcrylicMaterial
-                        BackgroundSource="Digger"
-                        TintColor="Black"
-                        TintOpacity="1"
-                        MaterialOpacity="0.75" />
-                </ExperimentalAcrylicBorder.Material>
-            </ExperimentalAcrylicBorder>
-        </Panel>
-
+    <Grid Background="{DynamicResource AcrylicBaseColor}">
         <Grid RowDefinitions="Auto, *, 50" Margin="5">
             <TextBlock Grid.Row="0" Text="Look a new osu!player update" FontSize="48" FontStyle="Italic"
                        VerticalAlignment="Center" HorizontalAlignment="Left" />

@@ -16,19 +16,7 @@
     <UserControl.Resources>
     </UserControl.Resources>
     <Grid ColumnDefinitions="25*, 75*">
-        <Grid Column="0" Margin="10" RowDefinitions="50, *, 40, 40">
-            <Panel Grid.RowSpan="4">
-                <ExperimentalAcrylicBorder IsHitTestVisible="False">
-                    <ExperimentalAcrylicBorder.Material>
-                        <ExperimentalAcrylicMaterial
-                            BackgroundSource="Digger"
-                            TintColor="Black"
-                            TintOpacity="1"
-                            MaterialOpacity="0.75" />
-                    </ExperimentalAcrylicBorder.Material>
-                </ExperimentalAcrylicBorder>
-            </Panel>
-
+        <Grid Column="0" Margin="10" RowDefinitions="50, *, 40, 40" Background="{DynamicResource AcrylicBaseColor}">
             <Border Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#7F000000">
                 <TextBlock Text="your playlists" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Center" />
             </Border>
@@ -65,19 +53,7 @@
                     HorizontalAlignment="Stretch" Click="OpenBlacklistEditor_OnClick" FontWeight="SemiBold" />
         </Grid>
 
-        <Grid Column="1" Margin="10" RowDefinitions="Auto, *">
-            <Panel Grid.ColumnSpan="2" Grid.RowSpan="2">
-                <ExperimentalAcrylicBorder IsHitTestVisible="False">
-                    <ExperimentalAcrylicBorder.Material>
-                        <ExperimentalAcrylicMaterial
-                            BackgroundSource="Digger"
-                            TintColor="Black"
-                            TintOpacity="1"
-                            MaterialOpacity="0.75" />
-                    </ExperimentalAcrylicBorder.Material>
-                </ExperimentalAcrylicBorder>
-            </Panel>
-
+        <Grid Column="1" Margin="10" RowDefinitions="Auto, *" Background="{DynamicResource AcrylicBaseColor}">
             <TextBox Grid.Row="0" Margin="10" Text="{Binding FilterText}" Watermark="type to search..." />
             <ListBox Grid.Row="1" Background="Transparent"
                      Items="{Binding FilteredSongEntries}">

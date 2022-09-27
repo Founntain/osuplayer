@@ -9,7 +9,8 @@
              xmlns:ctxt="clr-namespace:ColorTextBlock.Avalonia;assembly=ColorTextBlock.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.SettingsView"
-             Initialized="SettingsView_OnInitialized">
+             Initialized="SettingsView_OnInitialized"
+             FontFamily="Montserrat">
     <UserControl.Resources>
         <valueConverters:SettingsUserConverter x:Key="SettingsUserConverter" />
         <valueConverters:GridFormatter x:Key="GridFormatter" />
@@ -27,18 +28,7 @@
                 ItemWidth="{Binding RelativeSource={RelativeSource Self}, Path=Bounds.Width, Converter={StaticResource GridFormatter}, ConverterParameter=700}"
                 Name="SettingsGrid">
 
-                <Grid RowDefinitions="Auto" Margin="10" Name="GeneralSettings">
-                    <Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                        <ExperimentalAcrylicBorder IsHitTestVisible="False">
-                            <ExperimentalAcrylicBorder.Material>
-                                <ExperimentalAcrylicMaterial
-                                    BackgroundSource="Digger"
-                                    TintColor="Black"
-                                    TintOpacity="1"
-                                    MaterialOpacity="0.75" />
-                            </ExperimentalAcrylicBorder.Material>
-                        </ExperimentalAcrylicBorder>
-                    </Panel>
+                <Grid RowDefinitions="Auto" Margin="10" Name="GeneralSettings" Background="{DynamicResource AcrylicBaseColor}">
 
                     <StackPanel Spacing="10" Margin="10" Name="GeneralSettingsPanel">
                         <TextBlock Text="General Settings" FontSize="32"
@@ -68,6 +58,12 @@
                             <ComboBox SelectedItem="{Binding SelectedTransparencyLevel}"
                                       Items="{Binding WindowTransparencyLevels}" HorizontalAlignment="Stretch" />
                         </StackPanel>
+                        
+                        <StackPanel Spacing="5" Name="WindowBackgroundColor">
+                            <TextBlock Text="Background Color" />
+                            <AutoCompleteBox SelectedItem="{Binding SelectedBackgroundColors}" Watermark="Type to search for color" FilterMode="ContainsOrdinal" MinimumPrefixLength="0"
+                                      Items="{Binding WindowBackgroundColors}" HorizontalAlignment="Stretch" />
+                        </StackPanel>
 
                         <StackPanel Spacing="5" Name="StartupSong">
                             <TextBlock Text="Startup song" />
@@ -95,18 +91,7 @@
                     </StackPanel>
                 </Grid>
 
-                <Grid RowDefinitions="Auto" Margin="10" Name="UserSettings">
-                    <Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                        <ExperimentalAcrylicBorder IsHitTestVisible="False">
-                            <ExperimentalAcrylicBorder.Material>
-                                <ExperimentalAcrylicMaterial
-                                    BackgroundSource="Digger"
-                                    TintColor="Black"
-                                    TintOpacity="1"
-                                    MaterialOpacity="0.75" />
-                            </ExperimentalAcrylicBorder.Material>
-                        </ExperimentalAcrylicBorder>
-                    </Panel>
+                <Grid RowDefinitions="Auto" Margin="10" Name="UserSettings" Background="{DynamicResource AcrylicBaseColor}">
 
                     <StackPanel Margin="10" Spacing="10" Name="UserSettingsPanel">
                         <TextBlock Text="User Settings" FontSize="32" VerticalAlignment="Center"
@@ -120,18 +105,7 @@
                     </StackPanel>
                 </Grid>
 
-                <Grid RowDefinitions="Auto" Margin="10" Name="AudioSettings">
-                    <Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                        <ExperimentalAcrylicBorder IsHitTestVisible="False">
-                            <ExperimentalAcrylicBorder.Material>
-                                <ExperimentalAcrylicMaterial
-                                    BackgroundSource="Digger"
-                                    TintColor="Black"
-                                    TintOpacity="1"
-                                    MaterialOpacity="0.75" />
-                            </ExperimentalAcrylicBorder.Material>
-                        </ExperimentalAcrylicBorder>
-                    </Panel>
+                <Grid RowDefinitions="Auto" Margin="10" Name="AudioSettings" Background="{DynamicResource AcrylicBaseColor}">
 
                     <StackPanel Margin="10" Spacing="10" Name="AudioSettingsPanel">
                         <TextBlock Text="Audio Settings" FontSize="32" VerticalAlignment="Center"
@@ -145,18 +119,7 @@
                     </StackPanel>
                 </Grid>
 
-                <Grid RowDefinitions="Auto" Margin="10" Name="PatchNotesSettings">
-                    <Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                        <ExperimentalAcrylicBorder IsHitTestVisible="False">
-                            <ExperimentalAcrylicBorder.Material>
-                                <ExperimentalAcrylicMaterial
-                                    BackgroundSource="Digger"
-                                    TintColor="Black"
-                                    TintOpacity="1"
-                                    MaterialOpacity="0.75" />
-                            </ExperimentalAcrylicBorder.Material>
-                        </ExperimentalAcrylicBorder>
-                    </Panel>
+                <Grid RowDefinitions="Auto" Margin="10" Name="PatchNotesSettings" Background="{DynamicResource AcrylicBaseColor}">
 
                     <StackPanel Margin="10" Spacing="10" Name="PatchNotesSettingsPanel">
                         <TextBlock Text="Patch-notes" FontSize="32" VerticalAlignment="Center"
@@ -171,18 +134,7 @@
                         </avalonia:MarkdownScrollViewer>
                     </StackPanel>
                 </Grid>
-                <Grid RowDefinitions="Auto" Margin="10" Name="HelpAndFeedbackSettings">
-                    <Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                        <ExperimentalAcrylicBorder IsHitTestVisible="False">
-                            <ExperimentalAcrylicBorder.Material>
-                                <ExperimentalAcrylicMaterial
-                                    BackgroundSource="Digger"
-                                    TintColor="Black"
-                                    TintOpacity="1"
-                                    MaterialOpacity="0.75" />
-                            </ExperimentalAcrylicBorder.Material>
-                        </ExperimentalAcrylicBorder>
-                    </Panel>
+                <Grid RowDefinitions="Auto" Margin="10" Name="HelpAndFeedbackSettings" Background="{DynamicResource AcrylicBaseColor}">
 
                     <StackPanel Margin="10" Spacing="10" Name="HelpAndFeedbackSettingsPanel">
                         <TextBlock Text="Help and feedback" FontSize="32" VerticalAlignment="Center"

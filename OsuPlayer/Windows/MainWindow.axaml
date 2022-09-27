@@ -8,12 +8,12 @@
         Title="osu!player" Width="1280" Height="720"
         WindowStartupLocation="CenterScreen" CanResize="True"
         Foreground="White"
-        FontFamily="{DynamicResource Montserrat}"
+        FontFamily="Montserrat"
         FontSize="16"
-        FontWeight="SemiBold"
+        FontWeight="Medium"
 
-        Background="Transparent"
-        TransparencyLevelHint="AcrylicBlur"
+        Background="DeepPink"
+        TransparencyLevelHint="None"
         ExtendClientAreaToDecorationsHint="True"
         ExtendClientAreaChromeHints="PreferSystemChrome"
 
@@ -32,15 +32,7 @@
 
     <Grid Name="MainGrid" RowDefinitions="50, *, 100">
         <Panel Grid.Row="0" Grid.RowSpan="3">
-            <ExperimentalAcrylicBorder IsHitTestVisible="False">
-                <ExperimentalAcrylicBorder.Material>
-                    <ExperimentalAcrylicMaterial
-                        BackgroundSource="Digger"
-                        TintColor="Black"
-                        TintOpacity="1"
-                        MaterialOpacity="0.25" />
-                </ExperimentalAcrylicBorder.Material>
-            </ExperimentalAcrylicBorder>
+            <ExperimentalAcrylicBorder IsHitTestVisible="False" Material="{Binding PanelMaterial}" />
         </Panel>
 
         <ContentControl Name="TopBarPanel" Grid.Row="0" Content="{Binding TopBar}" />
