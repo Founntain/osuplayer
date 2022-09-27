@@ -1,6 +1,9 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsuPlayer", "OsuPlayer\OsuPlayer.csproj", "{600BF274-0B41-4748-A679-95F90F1DE679}"
+	ProjectSection(ProjectDependencies) = postProject
+		{99497585-DB09-4427-8813-88CE41BB392E} = {99497585-DB09-4427-8813-88CE41BB392E}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{AF8CA35D-63B3-4B8B-95B1-4717C57ED0E1}"
 EndProject
