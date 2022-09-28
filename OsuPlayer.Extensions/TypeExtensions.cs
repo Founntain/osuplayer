@@ -77,4 +77,9 @@ public static class Extensions
     }
 
     public static Color ToColor(this KnownColors color) => Color.FromUInt32((uint) color);
+    
+    public static float GetPerceivedBrightness(this System.Drawing.Color color)
+    {
+        return (color.R * 0.299f + color.G * 0.587f + color.B *0.114f) / 256f;
+    }
 }

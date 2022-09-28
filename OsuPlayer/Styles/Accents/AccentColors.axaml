@@ -1,6 +1,5 @@
-<Style xmlns="https://github.com/avaloniaui"
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Style.Resources>
         <!-- Accent Colours -->
         <!-- TODO pull accents from system... algorithm to generate shades -->
         <Color x:Key="SystemAccentColor">#B200FF</Color>
@@ -10,5 +9,4 @@
         <Color x:Key="SystemAccentColorLight1">#be29ff</Color>
         <Color x:Key="SystemAccentColorLight2">#c849ff</Color>
         <Color x:Key="SystemAccentColorLight3">#d676ff</Color>
-    </Style.Resources>
-</Style>
+</ResourceDictionary>

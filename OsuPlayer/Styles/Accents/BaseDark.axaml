@@ -31,6 +31,13 @@
 
         <Color x:Key="SystemRevealListLowColor">#18FFFFFF</Color>
         <Color x:Key="SystemRevealListMediumColor">#30FFFFFF</Color>
+        
+        <SolidColorBrush x:Key="SystemAccentColorDark1Brush" Color="{DynamicResource SystemAccentColorDark1}"/>
+        <SolidColorBrush x:Key="SystemAccentColorDark2Brush" Color="{DynamicResource SystemAccentColorDark2}"/>
+        <SolidColorBrush x:Key="SystemAccentColorDark3Brush" Color="{DynamicResource SystemAccentColorDark3}"/>
+        <SolidColorBrush x:Key="SystemAccentColorLight1Brush" Color="{DynamicResource SystemAccentColorLight1}"/>
+        <SolidColorBrush x:Key="SystemAccentColorLight2Brush" Color="{DynamicResource SystemAccentColorLight2}"/>
+        <SolidColorBrush x:Key="SystemAccentColorLight3Brush" Color="{DynamicResource SystemAccentColorLight3}"/>
 
         <SolidColorBrush x:Key="SystemControlBackgroundAccentBrush" Color="{DynamicResource SystemAccentColor}" />
         <SolidColorBrush x:Key="SystemControlBackgroundAltHighBrush" Color="{StaticResource SystemAltHighColor}" />

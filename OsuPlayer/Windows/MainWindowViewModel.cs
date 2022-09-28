@@ -67,12 +67,12 @@ public class MainWindowViewModel : BaseWindowViewModel
         SettingsView = new SettingsViewModel(Player);
         EqualizerView = new EqualizerViewModel(Player);
         UpdateView = new UpdateViewModel();
-        
+
         using var config = new Config();
 
         var backgroundColor = config.Container.BackgroundColor?.ToColor() ?? KnownColors.Black.ToColor();
-        
-        PanelMaterial = new ()
+
+        PanelMaterial = new()
         {
             BackgroundSource = AcrylicBackgroundSource.Digger,
             TintColor = backgroundColor,

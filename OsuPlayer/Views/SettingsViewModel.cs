@@ -1,5 +1,4 @@
 using System.Reactive.Disposables;
-using System.Text.RegularExpressions;
 using Avalonia.Controls;
 using Avalonia.Media;
 using OsuPlayer.Base.ViewModels;
@@ -7,6 +6,7 @@ using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Extensions;
 using OsuPlayer.Network;
+using OsuPlayer.Styles;
 using OsuPlayer.Windows;
 using ReactiveUI;
 
@@ -92,7 +92,7 @@ public class SettingsViewModel : BaseViewModel
                 MaterialOpacity = 0.25
             };
 
-            MainWindow.Background = new SolidColorBrush(value.ToColor());
+            ColorSetter.SetColor(value.ToColor());
             MainWindow.ViewModel.RaisePropertyChanged(nameof(MainWindow.ViewModel.PanelMaterial));
 
             using var config = new Config();
