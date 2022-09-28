@@ -1,11 +1,11 @@
 using System.Reactive.Disposables;
-using System.Text.RegularExpressions;
 using Avalonia.Controls;
 using Avalonia.Media;
 using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Extensions;
+using OsuPlayer.Extensions.Enums;
 using OsuPlayer.Network;
 using OsuPlayer.Windows;
 using ReactiveUI;
@@ -21,6 +21,7 @@ public class SettingsViewModel : BaseViewModel
     private string _osuLocation;
     private string _patchnotes;
     private KnownColors _selectedBackgroundColors;
+    private FontWeights _selectedFontWeight;
     private ReleaseChannels _selectedReleaseChannel;
     private StartupSong _selectedStartupSong;
     private WindowTransparencyLevel _selectedTransparencyLevel;
@@ -59,6 +60,24 @@ public class SettingsViewModel : BaseViewModel
     public IEnumerable<WindowTransparencyLevel> WindowTransparencyLevels => Enum.GetValues<WindowTransparencyLevel>();
 
     public IEnumerable<KnownColors> WindowBackgroundColors => Enum.GetValues<KnownColors>();
+
+    public IEnumerable<FontWeights> FontWeights => Enum.GetValues<FontWeights>();
+
+    public FontWeights SelectedFontWeight
+    {
+        get => _selectedFontWeight;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _selectedFontWeight, value);
+            
+            using var config = new Config();
+            config.Container.DefaultFontWeight = value;
+
+            if (MainWindow == null) return;
+            
+            MainWindow.FontWeight = (FontWeight) value;
+        }
+    }
 
     public WindowTransparencyLevel SelectedTransparencyLevel
     {
@@ -211,6 +230,7 @@ public class SettingsViewModel : BaseViewModel
         _selectedTransparencyLevel = config.Container.TransparencyLevelHint;
         _selectedReleaseChannel = config.Container.ReleaseChannel;
         _selectedBackgroundColors = config.Container.BackgroundColor ?? KnownColors.Black;
+        _selectedFontWeight = config.Container.DefaultFontWeight ?? Extensions.Enums.FontWeights.Medium;
 
         Player = player;
 

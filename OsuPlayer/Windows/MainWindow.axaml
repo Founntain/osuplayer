@@ -10,7 +10,6 @@
         Foreground="White"
         FontFamily="Montserrat"
         FontSize="16"
-        FontWeight="Medium"
 
         Background="DeepPink"
         TransparencyLevelHint="None"

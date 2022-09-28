@@ -53,6 +53,13 @@
                                       HorizontalAlignment="Stretch" />
                         </StackPanel>
 
+                        <StackPanel Spacing="5" Name="FontWeight">
+                            <TextBlock Text="Font Weight" />
+                            <ComboBox SelectedItem="{Binding SelectedFontWeight}"
+                                      Items="{Binding FontWeights}" HorizontalAlignment="Stretch" />
+                        </StackPanel>
+
+                        
                         <StackPanel Spacing="5" Name="WindowBlurMethod">
                             <TextBlock Text="Window Blur Method" />
                             <ComboBox SelectedItem="{Binding SelectedTransparencyLevel}"
@@ -127,7 +134,13 @@
 
                         <avalonia:MarkdownScrollViewer Markdown="{Binding Patchnotes}">
                             <avalonia:MarkdownScrollViewer.Styles>
+                                <Style Selector="ctxt|CTextBlock.Heading">
+                                    <Setter Property="Foreground" Value="White" />
+                                </Style>
                                 <Style Selector="ctxt|CTextBlock.Heading2">
+                                    <Setter Property="Foreground" Value="White" />
+                                </Style>
+                                <Style Selector="ctxt|CTextBlock.Heading3">
                                     <Setter Property="Foreground" Value="White" />
                                 </Style>
                             </avalonia:MarkdownScrollViewer.Styles>

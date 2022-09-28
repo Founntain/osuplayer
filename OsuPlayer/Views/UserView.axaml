@@ -30,7 +30,7 @@
                      SelectedItem="{Binding SelectedUser}" SelectionChanged="UserList_OnSelectionChanged">
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="online:User">
-                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Foreground="{Binding RoleColor}" />
+                        <TextBlock Text="{Binding Name}" Foreground="{Binding RoleColor}" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
@@ -69,7 +69,7 @@
                         </Border>
 
                         <StackPanel HorizontalAlignment="Stretch" Margin="0 0 0 10">
-                            <TextBlock Text="{Binding SelectedUser.Name}" FontSize="26" FontWeight="SemiBold"
+                            <TextBlock Text="{Binding SelectedUser.Name}" FontSize="26"
                                        HorizontalAlignment="Center" />
                             <TextBlock Text="{Binding SelectedUser.JoinDateString}" FontSize="14" FontStyle="Italic"
                                        FontWeight="SemiBold" HorizontalAlignment="Center" />
