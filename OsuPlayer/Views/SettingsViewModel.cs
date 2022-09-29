@@ -20,7 +20,8 @@ public class SettingsViewModel : BaseViewModel
     public readonly Player Player;
     private string _osuLocation;
     private string _patchnotes;
-    private KnownColors _selectedBackgroundColors;
+    private KnownColors _selectedBackgroundColor;
+    private KnownColors _selectedAccentColor;
     private ReleaseChannels _selectedReleaseChannel;
     private StartupSong _selectedStartupSong;
     private WindowTransparencyLevel _selectedTransparencyLevel;
@@ -58,7 +59,7 @@ public class SettingsViewModel : BaseViewModel
 
     public IEnumerable<WindowTransparencyLevel> WindowTransparencyLevels => Enum.GetValues<WindowTransparencyLevel>();
 
-    public IEnumerable<KnownColors> WindowBackgroundColors => Enum.GetValues<KnownColors>();
+    public IEnumerable<KnownColors> KnownColors => Enum.GetValues<KnownColors>();
 
     public WindowTransparencyLevel SelectedTransparencyLevel
     {
@@ -75,12 +76,12 @@ public class SettingsViewModel : BaseViewModel
         }
     }
 
-    public KnownColors SelectedBackgroundColors
+    public KnownColors SelectedBackgroundColor
     {
-        get => _selectedBackgroundColors;
+        get => _selectedBackgroundColor;
         set
         {
-            this.RaiseAndSetIfChanged(ref _selectedBackgroundColors, value);
+            this.RaiseAndSetIfChanged(ref _selectedBackgroundColor, value);
 
             if (MainWindow == null) return;
 
@@ -92,11 +93,25 @@ public class SettingsViewModel : BaseViewModel
                 MaterialOpacity = 0.25
             };
 
-            ColorSetter.SetColor(value.ToColor());
+            MainWindow.Background = new SolidColorBrush(value.ToColor());
             MainWindow.ViewModel.RaisePropertyChanged(nameof(MainWindow.ViewModel.PanelMaterial));
 
             using var config = new Config();
             config.Container.BackgroundColor = value;
+        }
+    }
+
+    public KnownColors SelectedAccentColor
+    {
+        get => _selectedAccentColor;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _selectedAccentColor, value);
+
+            ColorSetter.SetColor(value.ToColor());
+
+            using var config = new Config();
+            config.Container.AccentColor = value;
         }
     }
 
@@ -210,7 +225,8 @@ public class SettingsViewModel : BaseViewModel
         _selectedStartupSong = config.Container.StartupSong;
         _selectedTransparencyLevel = config.Container.TransparencyLevelHint;
         _selectedReleaseChannel = config.Container.ReleaseChannel;
-        _selectedBackgroundColors = config.Container.BackgroundColor ?? KnownColors.Black;
+        _selectedBackgroundColor = config.Container.BackgroundColor ?? Extensions.KnownColors.Black;
+        _selectedAccentColor = config.Container.AccentColor ?? Extensions.KnownColors.White;
 
         Player = player;
 

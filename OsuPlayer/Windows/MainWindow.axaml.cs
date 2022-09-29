@@ -35,9 +35,16 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         using var config = new Config();
         TransparencyLevelHint = config.Container.TransparencyLevelHint;
 
-        var backgroundColor = config.Container.BackgroundColor?.ToColor() ?? Colors.Black;
-        
-        ColorSetter.SetColor(backgroundColor);
+        var backgroundColor = config.Container.BackgroundColor ?? KnownColors.Black;
+
+        Background = new SolidColorBrush(backgroundColor.ToColor());
+
+        var accentColor = config.Container.AccentColor ?? KnownColors.White;
+
+        ColorSetter.SetColor(accentColor.ToColor());
+
+        config.Container.BackgroundColor = backgroundColor;
+        config.Container.AccentColor = accentColor;
 
         PlaylistManager.SetLastKnownPlaylistAsCurrentPlaylist();
     }

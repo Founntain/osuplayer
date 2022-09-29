@@ -12,7 +12,7 @@
         FontSize="16"
         FontWeight="Medium"
 
-        Background="{DynamicResource SystemControlBackgroundAccentBrush}"
+        Background="Transparent"
         TransparencyLevelHint="None"
         ExtendClientAreaToDecorationsHint="True"
         ExtendClientAreaChromeHints="PreferSystemChrome"

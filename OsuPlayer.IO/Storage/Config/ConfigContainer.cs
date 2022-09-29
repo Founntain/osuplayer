@@ -25,6 +25,7 @@ public class ConfigContainer : IStorableContainer
     public string? Username { get; set; }
     public ReleaseChannels ReleaseChannel { get; set; } = 0;
     public KnownColors? BackgroundColor { get; set; }
+    public KnownColors? AccentColor { get; set; }
 
     public IStorableContainer Init()
     {

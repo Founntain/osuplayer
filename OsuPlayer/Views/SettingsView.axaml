@@ -28,7 +28,8 @@
                 ItemWidth="{Binding RelativeSource={RelativeSource Self}, Path=Bounds.Width, Converter={StaticResource GridFormatter}, ConverterParameter=700}"
                 Name="SettingsGrid">
 
-                <Grid RowDefinitions="Auto" Margin="10" Name="GeneralSettings" Background="{DynamicResource AcrylicBaseColor}">
+                <Grid RowDefinitions="Auto" Margin="10" Name="GeneralSettings"
+                      Background="{DynamicResource AcrylicBaseColor}">
 
                     <StackPanel Spacing="10" Margin="10" Name="GeneralSettingsPanel">
                         <TextBlock Text="General Settings" FontSize="32"
@@ -54,15 +55,25 @@
                         </StackPanel>
 
                         <StackPanel Spacing="5" Name="WindowBlurMethod">
-                            <TextBlock Text="Window Blur Method" />
+                            <TextBlock Text="Window blur method" />
                             <ComboBox SelectedItem="{Binding SelectedTransparencyLevel}"
                                       Items="{Binding WindowTransparencyLevels}" HorizontalAlignment="Stretch" />
                         </StackPanel>
-                        
+
                         <StackPanel Spacing="5" Name="WindowBackgroundColor">
-                            <TextBlock Text="Background Color" />
-                            <AutoCompleteBox SelectedItem="{Binding SelectedBackgroundColors}" Watermark="Type to search for color" FilterMode="ContainsOrdinal" MinimumPrefixLength="0"
-                                      Items="{Binding WindowBackgroundColors}" HorizontalAlignment="Stretch" />
+                            <TextBlock Text="Background color" />
+                            <AutoCompleteBox SelectedItem="{Binding SelectedBackgroundColor}"
+                                             Watermark="Type to search for color" FilterMode="ContainsOrdinal"
+                                             MinimumPrefixLength="0" Items="{Binding KnownColors}"
+                                             HorizontalAlignment="Stretch" />
+                        </StackPanel>
+
+                        <StackPanel Spacing="5" Name="AccentColor">
+                            <TextBlock Text="Accent color" />
+                            <AutoCompleteBox SelectedItem="{Binding SelectedAccentColor}"
+                                             Watermark="Type to search for color" FilterMode="ContainsOrdinal"
+                                             MinimumPrefixLength="0" Items="{Binding KnownColors}"
+                                             HorizontalAlignment="Stretch" />
                         </StackPanel>
 
                         <StackPanel Spacing="5" Name="StartupSong">
@@ -91,7 +102,8 @@
                     </StackPanel>
                 </Grid>
 
-                <Grid RowDefinitions="Auto" Margin="10" Name="UserSettings" Background="{DynamicResource AcrylicBaseColor}">
+                <Grid RowDefinitions="Auto" Margin="10" Name="UserSettings"
+                      Background="{DynamicResource AcrylicBaseColor}">
 
                     <StackPanel Margin="10" Spacing="10" Name="UserSettingsPanel">
                         <TextBlock Text="User Settings" FontSize="32" VerticalAlignment="Center"
@@ -105,7 +117,8 @@
                     </StackPanel>
                 </Grid>
 
-                <Grid RowDefinitions="Auto" Margin="10" Name="AudioSettings" Background="{DynamicResource AcrylicBaseColor}">
+                <Grid RowDefinitions="Auto" Margin="10" Name="AudioSettings"
+                      Background="{DynamicResource AcrylicBaseColor}">
 
                     <StackPanel Margin="10" Spacing="10" Name="AudioSettingsPanel">
                         <TextBlock Text="Audio Settings" FontSize="32" VerticalAlignment="Center"
@@ -119,7 +132,8 @@
                     </StackPanel>
                 </Grid>
 
-                <Grid RowDefinitions="Auto" Margin="10" Name="PatchNotesSettings" Background="{DynamicResource AcrylicBaseColor}">
+                <Grid RowDefinitions="Auto" Margin="10" Name="PatchNotesSettings"
+                      Background="{DynamicResource AcrylicBaseColor}">
 
                     <StackPanel Margin="10" Spacing="10" Name="PatchNotesSettingsPanel">
                         <TextBlock Text="Patch-notes" FontSize="32" VerticalAlignment="Center"
@@ -134,7 +148,8 @@
                         </avalonia:MarkdownScrollViewer>
                     </StackPanel>
                 </Grid>
-                <Grid RowDefinitions="Auto" Margin="10" Name="HelpAndFeedbackSettings" Background="{DynamicResource AcrylicBaseColor}">
+                <Grid RowDefinitions="Auto" Margin="10" Name="HelpAndFeedbackSettings"
+                      Background="{DynamicResource AcrylicBaseColor}">
 
                     <StackPanel Margin="10" Spacing="10" Name="HelpAndFeedbackSettingsPanel">
                         <TextBlock Text="Help and feedback" FontSize="32" VerticalAlignment="Center"
