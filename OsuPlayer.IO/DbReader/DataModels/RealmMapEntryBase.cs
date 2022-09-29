@@ -56,14 +56,14 @@ public class RealmMapEntryBase : IMapEntryBase
         var beatmaps = beatmap.DynamicApi.GetList<DynamicRealmObject>(nameof(BeatmapSetInfo.Beatmaps));
         var metadata = beatmaps.First().DynamicApi.Get<DynamicRealmObject>(nameof(BeatmapInfo.Metadata)).DynamicApi;
 
-        var files = (RealmList<DynamicEmbeddedObject>)beatmap.DynamicApi.GetList<DynamicEmbeddedObject>(nameof(BeatmapSetInfo.Files));
+        var files = (RealmList<DynamicEmbeddedObject>) beatmap.DynamicApi.GetList<DynamicEmbeddedObject>(nameof(BeatmapSetInfo.Files));
 
         var audioFileName = metadata.Get<string>(nameof(BeatmapMetadata.AudioFile));
         var backgroundFileName = metadata.Get<string>(nameof(BeatmapMetadata.BackgroundFile));
 
-        var audioFile = (RealmObjectBase)files.FirstOrDefault(x => string.Equals(x.DynamicApi.Get<string>(nameof(RealmNamedFileUsage.Filename)), audioFileName, StringComparison.CurrentCultureIgnoreCase));
-        var backgroundFile = (RealmObjectBase)files.FirstOrDefault(x => string.Equals(x.DynamicApi.Get<string>(nameof(RealmNamedFileUsage.Filename)), backgroundFileName, StringComparison.CurrentCultureIgnoreCase));
-  
+        var audioFile = (RealmObjectBase) files.FirstOrDefault(x => string.Equals(x.DynamicApi.Get<string>(nameof(RealmNamedFileUsage.Filename)), audioFileName, StringComparison.CurrentCultureIgnoreCase));
+        var backgroundFile = (RealmObjectBase) files.FirstOrDefault(x => string.Equals(x.DynamicApi.Get<string>(nameof(RealmNamedFileUsage.Filename)), backgroundFileName, StringComparison.CurrentCultureIgnoreCase));
+
         if (audioFile == default || backgroundFile == default) throw new NullReferenceException();
 
         var audioHash = audioFile.DynamicApi.Get<RealmObjectBase>(nameof(RealmNamedFileUsage.File)).DynamicApi.Get<string>(nameof(RealmFile.Hash));
@@ -90,5 +90,10 @@ public class RealmMapEntryBase : IMapEntryBase
         realm.Dispose();
 
         return newMap;
+    }
+
+    public IDatabaseReader GetReader(string path)
+    {
+        return new RealmReader(path);
     }
 }

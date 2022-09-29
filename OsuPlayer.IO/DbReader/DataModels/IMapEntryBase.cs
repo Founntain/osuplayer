@@ -29,4 +29,6 @@ public interface IMapEntryBase
     /// found.
     /// </returns>
     public Task<IMapEntry?> ReadFullEntry(string path);
+
+    public IDatabaseReader GetReader(string path);
 }

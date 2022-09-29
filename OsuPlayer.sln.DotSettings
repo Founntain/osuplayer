@@ -276,6 +276,7 @@
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=E0EFA8310746FC43BF2D0E8EFB4D8AF8/Text/@EntryValue">{ get; set; }</s:String>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Avalonia/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Beatmap/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=Beatmaps/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Bindables/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=crashlog/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>
 	

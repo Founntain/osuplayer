@@ -18,8 +18,24 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.7" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="6.0.7" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.7" />
+        <PackageReference Include="MongoDB.Bson" Version="2.17.1" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-        <PackageReference Include="Realm" Version="10.15.1" />
+        <PackageReference Include="Realm" Version="10.15.1">
+            <IncludeAssets>native</IncludeAssets>
+        </PackageReference>
+        <!--        <PackageReference Include="Realm.Fody" Version="10.15.1">-->
+        <!--            <IncludeAssets>all</IncludeAssets>-->
+        <!--            <ExcludeAssets>compile</ExcludeAssets>-->
+        <!--        </PackageReference>-->
+    </ItemGroup>
+
+    <ItemGroup>
+        <Reference Include="Realm">
+            <HintPath>Realm.dll</HintPath>
+        </Reference>
+        <Reference Include="Realm.Fody">
+            <HintPath>Realm.Fody.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
 </Project>

@@ -1,46 +1,43 @@
 using System.Text;
+using OsuPlayer.IO.DbReader;
 using OsuPlayer.IO.DbReader.DataModels;
 
-namespace OsuPlayer.IO.DbReader;
+namespace OsuPlayeIO.DbReader;
 
 /// <summary>
 /// A <see cref="BinaryReader" /> to read the osu!.db to extract their beatmap data or to read from the collection.db
 /// </summary>
-public class OsuDbReader : BinaryReader
+public class OsuDbReader : BinaryReader, IDatabaseReader
 {
     public static int OsuDbVersion;
 
     private readonly byte[] _buf = new byte[512];
 
+    private readonly string _path;
+
     public OsuDbReader(Stream input) : base(input)
     {
     }
 
-    /// <summary>
-    /// Reads the osu!.db and skips duplicate beatmaps of one beatmap set
-    /// </summary>
-    /// <param name="osuPath">the osu! root path where the osu!.db is located</param>
-    /// <returns> a <see cref="DbMapEntryBase" /> list</returns>
-    public static async Task<List<IMapEntryBase>?> Read(string osuPath)
+    public OsuDbReader(Stream input, string path) : base(input)
+    {
+        _path = path;
+    }
+
+    public Task<List<IMapEntryBase>?> ReadBeatmaps()
     {
         var minBeatMaps = new List<IMapEntryBase>();
-        var dbLoc = Path.Combine(osuPath, "osu!.db");
 
-        if (!File.Exists(dbLoc)) return null;
-
-        await using var file = File.OpenRead(dbLoc);
-        using var reader = new OsuDbReader(file);
-
-        var ver = reader.ReadInt32();
+        var ver = ReadInt32();
         OsuDbVersion = ver;
         var flag = ver is >= 20160408 and < 20191107;
 
-        reader.ReadInt32();
-        reader.ReadBoolean();
-        reader.ReadInt64();
-        reader.ReadString();
+        ReadInt32();
+        ReadBoolean();
+        ReadInt64();
+        ReadString();
 
-        var mapCount = reader.ReadInt32();
+        var mapCount = ReadInt32();
 
         minBeatMaps.Capacity = mapCount;
         int? prevId = null;
@@ -48,156 +45,156 @@ public class OsuDbReader : BinaryReader
         for (var i = 1; i < mapCount; i++)
         {
             if (flag)
-                reader.ReadInt32(); //btlen
+                ReadInt32(); //btlen
 
             if (prevId != null)
             {
-                var length = CalculateMapLength(reader, out var newSetId, out _);
+                var length = CalculateMapLength(out var newSetId, out _);
                 if (prevId == newSetId)
                 {
                     prevId = newSetId;
                     continue;
                 }
 
-                reader.BaseStream.Seek(-length, SeekOrigin.Current);
+                BaseStream.Seek(-length, SeekOrigin.Current);
             }
 
             var minBeatMap = new DbMapEntryBase
             {
-                DbOffset = reader.BaseStream.Position
+                DbOffset = BaseStream.Position
             };
 
-            ReadFromStream(reader, osuPath, ref minBeatMap);
+            ReadFromStream(ref minBeatMap);
             prevId = minBeatMap.BeatmapSetId;
             minBeatMaps.Add(minBeatMap);
         }
 
-        reader.ReadInt32(); //account rank
+        ReadInt32(); //account rank
 
-        await file.FlushAsync();
-        reader.Dispose();
-        return minBeatMaps;
+        Dispose();
+        return Task.FromResult(minBeatMaps);
     }
 
-    /// <summary>
-    /// Reads all difficulties from the osu!.db with hashes and set ids
-    /// </summary>
-    /// <param name="osuPath">the osu! root path where the osu!.db is located</param>
-    /// <returns>
-    /// a <see cref="Dictionary{TKey,TValue}" /> where the <b>TKey</b> is the beatmap hash and the <b>TValue</b> is
-    /// the set id
-    /// </returns>
-    public static async Task<Dictionary<string, int>?> ReadAllDiffs(string osuPath)
+    public Task<Dictionary<string, int>> GetBeatmapHashes()
     {
         var hashes = new Dictionary<string, int>();
-        var dbLoc = Path.Combine(osuPath, "osu!.db");
 
-        if (!File.Exists(dbLoc)) return null;
-
-        await using var file = File.OpenRead(dbLoc);
-        using var reader = new OsuDbReader(file);
-
-        var ver = reader.ReadInt32();
+        var ver = ReadInt32();
         OsuDbVersion = ver;
         var flag = ver is >= 20160408 and < 20191107;
 
-        reader.ReadInt32();
-        reader.ReadBoolean();
-        reader.ReadInt64();
-        reader.ReadString();
+        ReadInt32();
+        ReadBoolean();
+        ReadInt64();
+        ReadString();
 
-        var mapCount = reader.ReadInt32();
+        var mapCount = ReadInt32();
 
         for (var i = 1; i < mapCount; i++)
         {
             if (flag)
-                reader.ReadInt32(); //btlen
+                ReadInt32(); //btlen
 
-            CalculateMapLength(reader, out var setId, out var hash);
+            CalculateMapLength(out var setId, out var hash);
 
             if (hashes.Keys.Contains(hash)) continue;
 
             hashes.Add(hash, setId);
         }
 
-        reader.ReadInt32(); //account rank
+        ReadInt32(); //account rank
 
-        await file.FlushAsync();
-        reader.Dispose();
-        return hashes;
+        Dispose();
+        return Task.FromResult(hashes);
+    }
+
+    public async Task<List<Collection>?> GetCollections(string path)
+    {
+        return await OsuCollectionReader.Read(path);
+    }
+
+    public static async Task<List<IMapEntryBase>?> Read(string path)
+    {
+        var dbLoc = Path.Combine(path, "osu!.db");
+
+        if (!File.Exists(dbLoc)) return null;
+
+        var file = File.OpenRead(dbLoc);
+
+        var reader = new OsuDbReader(file, path);
+
+        return await reader.ReadBeatmaps();
     }
 
     /// <summary>
     /// Reads a osu!.db map entry and fills a <see cref="DbMapEntryBase" /> with needed data
     /// </summary>
-    /// <param name="r">the <see cref="OsuDbReader" /> instance of the stream</param>
-    /// <param name="osuPath">the osu! root path where the osu!.db is located</param>
     /// <param name="dbMapEntryBase">a reference of a <see cref="DbMapEntryBase" /> to read the data to</param>
-    private static void ReadFromStream(OsuDbReader r, string osuPath, ref DbMapEntryBase dbMapEntryBase)
+    private void ReadFromStream(ref DbMapEntryBase dbMapEntryBase)
     {
-        dbMapEntryBase.Artist = string.Intern(r.ReadString());
+        dbMapEntryBase.Artist = string.Intern(ReadString());
 
         if (dbMapEntryBase.Artist.Length == 0)
             dbMapEntryBase.Artist = "Unknown Artist";
 
         if (OsuDbVersion >= 20121008)
-            r.ReadString(true);
+            ReadString(true);
 
-        dbMapEntryBase.Title = string.Intern(r.ReadString());
+        dbMapEntryBase.Title = string.Intern(ReadString());
 
         if (dbMapEntryBase.Title.Length == 0)
             dbMapEntryBase.Title = "Unknown Title";
 
         if (OsuDbVersion >= 20121008)
-            r.ReadString(true);
+            ReadString(true);
 
-        r.ReadString(true);
-        r.ReadString(true); //Difficulty
-        r.ReadString(true);
+        ReadString(true);
+        ReadString(true); //Difficulty
+        ReadString(true);
 
-        dbMapEntryBase.Hash = r.ReadString();
+        dbMapEntryBase.Hash = ReadString();
 
-        r.ReadString(true); //BeatmapFileName
+        ReadString(true); //BeatmapFileName
 
         if (OsuDbVersion >= 20140609)
-            r.BaseStream.Seek(39, SeekOrigin.Current);
+            BaseStream.Seek(39, SeekOrigin.Current);
         else
-            r.BaseStream.Seek(27, SeekOrigin.Current);
+            BaseStream.Seek(27, SeekOrigin.Current);
 
         if (OsuDbVersion >= 20140609)
         {
-            r.ReadStarRating();
-            r.ReadStarRating();
-            r.ReadStarRating();
-            r.ReadStarRating();
+            ReadStarRating();
+            ReadStarRating();
+            ReadStarRating();
+            ReadStarRating();
         }
 
-        r.ReadInt32(); //DrainTimeSeconds
+        ReadInt32(); //DrainTimeSeconds
 
-        dbMapEntryBase.TotalTime = r.ReadInt32();
+        dbMapEntryBase.TotalTime = ReadInt32();
 
-        r.ReadInt32(); //AudioPreviewTime
+        ReadInt32(); //AudioPreviewTime
 
-        var timingCnt = r.ReadInt32();
+        var timingCnt = ReadInt32();
 
-        r.BaseStream.Seek(17 * timingCnt, SeekOrigin.Current);
-        r.BaseStream.Seek(4, SeekOrigin.Current);
-        dbMapEntryBase.BeatmapSetId = r.ReadInt32();
-        r.BaseStream.Seek(15, SeekOrigin.Current);
+        BaseStream.Seek(17 * timingCnt, SeekOrigin.Current);
+        BaseStream.Seek(4, SeekOrigin.Current);
+        dbMapEntryBase.BeatmapSetId = ReadInt32();
+        BaseStream.Seek(15, SeekOrigin.Current);
 
-        r.ReadString(true); //SongSource
-        r.ReadString(true); //SongTags
-        r.ReadInt16(); //OffsetOnline
-        r.ReadString(true); //TitleFont
-        r.ReadBoolean(); //Unplayed
-        r.ReadDateTime(); //LastPlayed
-        r.ReadBoolean(); //IsOsz2
-        r.ReadString(true);
+        ReadString(true); //SongSource
+        ReadString(true); //SongTags
+        ReadInt16(); //OffsetOnline
+        ReadString(true); //TitleFont
+        ReadBoolean(); //Unplayed
+        ReadDateTime(); //LastPlayed
+        ReadBoolean(); //IsOsz2
+        ReadString(true);
 
         if (OsuDbVersion < 20140609)
-            r.BaseStream.Seek(20, SeekOrigin.Current);
+            BaseStream.Seek(20, SeekOrigin.Current);
         else
-            r.BaseStream.Seek(18, SeekOrigin.Current);
+            BaseStream.Seek(18, SeekOrigin.Current);
     }
 
     /// <summary>
@@ -207,54 +204,54 @@ public class OsuDbReader : BinaryReader
     /// <param name="setId">outputs an <see cref="int" /> of the beatmap set id</param>
     /// <param name="hash">outputs an <see cref="string" /> of the beatmap hash</param>
     /// <returns>a <see cref="long" /> from the byte length of the current map</returns>
-    private static long CalculateMapLength(OsuDbReader r, out int setId, out string hash)
+    private long CalculateMapLength(out int setId, out string hash)
     {
-        var initOffset = r.BaseStream.Position;
+        var initOffset = BaseStream.Position;
 
-        r.ReadString(true);
-        if (OsuDbVersion >= 20121008) r.ReadString(true);
+        ReadString(true);
+        if (OsuDbVersion >= 20121008) ReadString(true);
 
-        r.ReadString(true);
-        if (OsuDbVersion >= 20121008) r.ReadString(true);
+        ReadString(true);
+        if (OsuDbVersion >= 20121008) ReadString(true);
 
-        r.ReadString(true);
-        r.ReadString(true);
-        r.ReadString(true);
-        hash = r.ReadString();
-        r.ReadString(true);
-        r.BaseStream.Seek(15, SeekOrigin.Current);
+        ReadString(true);
+        ReadString(true);
+        ReadString(true);
+        hash = ReadString();
+        ReadString(true);
+        BaseStream.Seek(15, SeekOrigin.Current);
         if (OsuDbVersion >= 20140609)
-            r.BaseStream.Seek(16, SeekOrigin.Current);
+            BaseStream.Seek(16, SeekOrigin.Current);
         else
-            r.BaseStream.Seek(4, SeekOrigin.Current);
+            BaseStream.Seek(4, SeekOrigin.Current);
 
-        r.BaseStream.Seek(8, SeekOrigin.Current);
+        BaseStream.Seek(8, SeekOrigin.Current);
         if (OsuDbVersion >= 20140609)
         {
-            r.ReadStarRating();
-            r.ReadStarRating();
-            r.ReadStarRating();
-            r.ReadStarRating();
+            ReadStarRating();
+            ReadStarRating();
+            ReadStarRating();
+            ReadStarRating();
         }
 
-        r.BaseStream.Seek(12, SeekOrigin.Current);
-        var timingCnt = r.ReadInt32();
-        r.BaseStream.Seek(timingCnt * 17, SeekOrigin.Current);
-        r.BaseStream.Seek(4, SeekOrigin.Current);
-        setId = r.ReadInt32();
-        r.BaseStream.Seek(15, SeekOrigin.Current);
-        r.ReadString(true);
-        r.ReadString(true);
-        r.BaseStream.Seek(2, SeekOrigin.Current);
-        r.ReadString(true);
-        r.BaseStream.Seek(10, SeekOrigin.Current);
-        r.ReadString(true);
+        BaseStream.Seek(12, SeekOrigin.Current);
+        var timingCnt = ReadInt32();
+        BaseStream.Seek(timingCnt * 17, SeekOrigin.Current);
+        BaseStream.Seek(4, SeekOrigin.Current);
+        setId = ReadInt32();
+        BaseStream.Seek(15, SeekOrigin.Current);
+        ReadString(true);
+        ReadString(true);
+        BaseStream.Seek(2, SeekOrigin.Current);
+        ReadString(true);
+        BaseStream.Seek(10, SeekOrigin.Current);
+        ReadString(true);
         if (OsuDbVersion < 20140609)
-            r.BaseStream.Seek(20, SeekOrigin.Current);
+            BaseStream.Seek(20, SeekOrigin.Current);
         else
-            r.BaseStream.Seek(18, SeekOrigin.Current);
+            BaseStream.Seek(18, SeekOrigin.Current);
 
-        return r.BaseStream.Position - initOffset;
+        return BaseStream.Position - initOffset;
     }
 
     /// <summary>
