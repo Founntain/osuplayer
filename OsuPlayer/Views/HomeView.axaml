@@ -8,7 +8,8 @@
              xmlns:dataModels="clr-namespace:OsuPlayer.IO.DbReader.DataModels;assembly=OsuPlayer.IO"
              xmlns:valueConverters="clr-namespace:OsuPlayer.Extensions.ValueConverters;assembly=OsuPlayer.Extensions"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="OsuPlayer.Views.HomeView">
+             x:Class="OsuPlayer.Views.HomeView"
+             FontWeight="{DynamicResource DefaultFontWeight}">
 
     <Design.DataContext>
         <views:HomeViewModel />
@@ -31,7 +32,7 @@
 
             <StackPanel Grid.Column="1" VerticalAlignment="Center">
                 <TextBlock Text="{Binding CurrentUser.Name, Converter={StaticResource UsernameConverter}}"
-                           Foreground="{Binding CurrentUser.RoleColor}" FontSize="28"
+                           Foreground="{Binding CurrentUser.RoleColor}" FontSize="28" FontWeight="{DynamicResource BiggerFontWeight}"
                            TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding CurrentUser.Name}" />
                 <TextBlock Text="{Binding CurrentUser.SongsPlayedString}" FontStyle="Italic"
                            TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding CurrentUser.SongsPlayedString}" />
@@ -85,14 +86,13 @@
                 <ListBox.DataTemplates>
                     <DataTemplate DataType="dataModels:IMapEntryBase">
                         <Grid ColumnDefinitions="*, 100" RowDefinitions="Auto, Auto">
-                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding TitleString}" FontSize="20"
-                                       FontWeight="Medium" />
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding TitleString}" FontSize="20" />
                             <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding ArtistString}"
-                                       FontSize="14" Foreground="#FFCCCCCC" FontWeight="Normal" />
+                                       FontSize="14" Foreground="#FFCCCCCC" FontWeight="{DynamicResource SmallerFontWeight}" />
 
                             <Grid Row="0" RowSpan="2" Column="1" ColumnDefinitions="*">
                                 <TextBlock Grid.Column="0" Text="{Binding TotalTimeString}"
-                                           FontSize="20" FontWeight="Light"
+                                           FontSize="20" FontWeight="{DynamicResource SmallerFontWeight}"
                                            VerticalAlignment="Center" HorizontalAlignment="Center" />
                             </Grid>
 

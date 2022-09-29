@@ -4,6 +4,7 @@ using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Extensions;
+using OsuPlayer.Extensions.Enums;
 using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.IO.Storage.Playlists;
 using ReactiveUI;
@@ -19,6 +20,16 @@ public class PlayerControlViewModel : BaseViewModel
     private readonly Bindable<double> _songTime = new();
     private readonly Bindable<double> _volume = new();
     public readonly Bindable<IMapEntry?> CurrentSong = new();
+
+    public FontWeights SmallerFont
+    {
+        get
+        {
+            using var config = new Config();
+
+            return config.Container.GetSmallerFont();
+        }
+    }
 
     public readonly Player Player;
     private Bitmap? _currentSongImage;

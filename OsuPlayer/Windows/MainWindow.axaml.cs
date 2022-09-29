@@ -5,6 +5,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Extensions;
+using OsuPlayer.Extensions.Enums;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Network;
 using OsuPlayer.Network.Discord;
@@ -34,12 +35,19 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
         using var config = new Config();
         TransparencyLevelHint = config.Container.TransparencyLevelHint;
+        FontWeight = (FontWeight) config.Container.DefaultFontWeight;
 
-        var backgroundColor = config.Container.BackgroundColor?.ToColor() ?? Colors.Black;
+        var backgroundColor = config.Container.BackgroundColor.ToColor();
         
         Background = new SolidColorBrush(backgroundColor);
         
         PlaylistManager.SetLastKnownPlaylistAsCurrentPlaylist();
+        
+        Application.Current!.Resources["SmallerFontWeight"] = config.Container.GetSmallerFont().ToFontWeight();
+        Application.Current!.Resources["DefaultFontWeight"] = config.Container.DefaultFontWeight.ToFontWeight();
+        Application.Current!.Resources["BiggerFontWeight"] = config.Container.GetBiggerFont().ToFontWeight();
+
+        FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
     }
 
     private void InitializeComponent()

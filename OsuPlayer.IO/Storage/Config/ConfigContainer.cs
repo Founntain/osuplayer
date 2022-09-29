@@ -1,6 +1,8 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Media;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Extensions;
+using OsuPlayer.Extensions.Enums;
 using OsuPlayer.Network;
 
 namespace OsuPlayer.IO.Storage.Config;
@@ -24,10 +26,16 @@ public class ConfigContainer : IStorableContainer
     public bool PlaylistEnableOnPlay { get; set; }
     public string? Username { get; set; }
     public ReleaseChannels ReleaseChannel { get; set; } = 0;
-    public KnownColors? BackgroundColor { get; set; }
+    public KnownColors BackgroundColor { get; set; } = KnownColors.Black;
+    public FontWeights DefaultFontWeight { get; set; } = FontWeights.Medium;
+    public string? Font { get; set; }
 
     public IStorableContainer Init()
     {
         return this;
     }
+
+    public FontWeights GetSmallerFont() => DefaultFontWeight.GetNextSmallerFont();
+    
+    public FontWeights GetBiggerFont() => DefaultFontWeight.GetNextBiggerFont();
 }

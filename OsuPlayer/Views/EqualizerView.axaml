@@ -5,7 +5,9 @@
              xmlns:vm="clr-namespace:OsuPlayer.Views"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="OsuPlayer.Views.EqualizerView" FontSize="16">
+             x:Class="OsuPlayer.Views.EqualizerView" 
+             FontWeight="{DynamicResource DefaultFontWeight}"
+             FontSize="16">
     <UserControl.Resources>
         <Color x:Key="PopupBase">#FF2B2B2B</Color>
     </UserControl.Resources>

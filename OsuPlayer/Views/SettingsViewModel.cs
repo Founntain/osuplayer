@@ -1,11 +1,13 @@
+using System.Diagnostics;
 using System.Reactive.Disposables;
-using System.Text.RegularExpressions;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Extensions;
+using OsuPlayer.Extensions.Enums;
 using OsuPlayer.Network;
 using OsuPlayer.Windows;
 using ReactiveUI;
@@ -21,10 +23,12 @@ public class SettingsViewModel : BaseViewModel
     private string _osuLocation;
     private string _patchnotes;
     private KnownColors _selectedBackgroundColors;
+    private FontWeights _selectedFontWeight;
     private ReleaseChannels _selectedReleaseChannel;
     private StartupSong _selectedStartupSong;
     private WindowTransparencyLevel _selectedTransparencyLevel;
     private string _settingsSearchQ;
+    private string? _selectedFont;
 
     public MainWindow? MainWindow;
 
@@ -59,6 +63,50 @@ public class SettingsViewModel : BaseViewModel
     public IEnumerable<WindowTransparencyLevel> WindowTransparencyLevels => Enum.GetValues<WindowTransparencyLevel>();
 
     public IEnumerable<KnownColors> WindowBackgroundColors => Enum.GetValues<KnownColors>();
+
+    public IEnumerable<FontWeights> AvailableFontWeights => Enum.GetValues<FontWeights>();
+
+    public FontWeights SelectedFontWeight
+    {
+        get => _selectedFontWeight;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _selectedFontWeight, value);
+
+            using var config = new Config();
+            config.Container.DefaultFontWeight = value;
+
+            Application.Current!.Resources["SmallerFontWeight"] = config.Container.GetSmallerFont().ToFontWeight();
+            Application.Current!.Resources["DefaultFontWeight"] = value.ToFontWeight();
+            Application.Current!.Resources["BiggerFontWeight"] = config.Container.GetBiggerFont().ToFontWeight();
+
+            Debug.WriteLine("SMALLER FONT: " + config.Container.GetSmallerFont().ToFontWeight().ToString());
+            Debug.WriteLine("NORMAL FONT: " + value.ToFontWeight().ToString());
+            Debug.WriteLine("BIGGER FONT: " + config.Container.GetBiggerFont().ToFontWeight().ToString());
+        }
+    }
+
+    public IEnumerable<string> Fonts => FontManager.Current.GetInstalledFontFamilyNames();
+
+    public string? SelectedFont
+    {
+        get => _selectedFont;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _selectedFont, value);
+
+            if (value == null)
+                return;
+
+            using var config = new Config();
+
+            config.Container.Font = value;
+
+            if (MainWindow == null) return;
+
+            MainWindow.FontFamily = value;
+        }
+    }
 
     public WindowTransparencyLevel SelectedTransparencyLevel
     {
@@ -210,7 +258,9 @@ public class SettingsViewModel : BaseViewModel
         _selectedStartupSong = config.Container.StartupSong;
         _selectedTransparencyLevel = config.Container.TransparencyLevelHint;
         _selectedReleaseChannel = config.Container.ReleaseChannel;
-        _selectedBackgroundColors = config.Container.BackgroundColor ?? KnownColors.Black;
+        _selectedBackgroundColors = config.Container.BackgroundColor;
+        _selectedFontWeight = config.Container.DefaultFontWeight;
+        _selectedFont = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
 
         Player = player;
 
