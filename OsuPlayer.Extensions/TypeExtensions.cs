@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using Avalonia.Media;
 using DynamicData;
+using OsuPlayer.Extensions.Enums;
 using Splat;
 
 namespace OsuPlayer.Extensions;
@@ -77,4 +78,20 @@ public static class Extensions
     }
 
     public static Color ToColor(this KnownColors color) => Color.FromUInt32((uint) color);
+    
+    public static FontWeights GetNextHigherFont(this FontWeights font)
+    {
+        var fontSizes = (FontWeights[]) Enum.GetValues(typeof(FontWeights));    
+        
+        var i = Array.IndexOf(fontSizes, font) + 1;
+        return (fontSizes.Length == i) ? fontSizes[i - 1] : fontSizes[i];
+    }
+    
+    public static FontWeights GetNextSmallerFont(this FontWeights font)
+    {
+        var fontSizes = (FontWeights[]) Enum.GetValues(typeof(FontWeights));    
+        
+        var i = Array.IndexOf(fontSizes, font) - 1;
+        return (i == -1) ? fontSizes[i + 1] : fontSizes[i];
+    }
 }
