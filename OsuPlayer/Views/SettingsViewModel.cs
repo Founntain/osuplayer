@@ -28,9 +28,9 @@ public class SettingsViewModel : BaseViewModel
     private StartupSong _selectedStartupSong;
     private WindowTransparencyLevel _selectedTransparencyLevel;
     private string _settingsSearchQ;
+    private string? _selectedFont;
 
     public MainWindow? MainWindow;
-    private string _selectedFont;
 
     public string Patchnotes
     {
@@ -72,7 +72,7 @@ public class SettingsViewModel : BaseViewModel
         set
         {
             this.RaiseAndSetIfChanged(ref _selectedFontWeight, value);
-            
+
             using var config = new Config();
             config.Container.DefaultFontWeight = value;
 
@@ -88,19 +88,22 @@ public class SettingsViewModel : BaseViewModel
 
     public IEnumerable<string> Fonts => FontManager.Current.GetInstalledFontFamilyNames();
 
-    public string SelectedFont
+    public string? SelectedFont
     {
         get => _selectedFont;
         set
         {
             this.RaiseAndSetIfChanged(ref _selectedFont, value);
 
+            if (value == null)
+                return;
+
             using var config = new Config();
 
             config.Container.Font = value;
 
             if (MainWindow == null) return;
-            
+
             MainWindow.FontFamily = value;
         }
     }
