@@ -6,7 +6,8 @@
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:views="clr-namespace:OsuPlayer.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="OsuPlayer.Views.PlayerControlView">
+             x:Class="OsuPlayer.Views.PlayerControlView"
+             FontWeight="{DynamicResource DefaultFontWeight}">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/SliderStyle.axaml" />
         <StyleInclude Source="/Styles/FlyoutStyle.axaml" />
@@ -55,9 +56,9 @@
                         <TextBlock Text="{Binding SongText}" />
                     </ToolTip.Tip>
                     <TextBlock Name="TitleText" Text="{Binding TitleText}" FontSize="20"
-                               Foreground="White" FontWeight="Medium" TextTrimming="CharacterEllipsis" />
+                               Foreground="White" TextTrimming="CharacterEllipsis" />
                     <TextBlock Name="ArtistText" Text="{Binding ArtistText}" FontSize="16"
-                               Foreground="#FFCCCCCC" FontWeight="Normal" TextTrimming="CharacterEllipsis" />
+                               Foreground="#FFCCCCCC" TextTrimming="CharacterEllipsis" FontWeight="{DynamicResource SmallerFontWeight}" />
                 </StackPanel>
             </Grid>
 

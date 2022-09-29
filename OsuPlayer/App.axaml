@@ -16,6 +16,10 @@
         <Color x:Key="SidemenuButtonsGlow">#FFFFE48A</Color>
         <Color x:Key="SliderThumbColor">#FFFFFFFF</Color>
         <Color x:Key="ButtonBackgroundColor">#7F000000</Color>
+        
+        <FontWeight x:Key="SmallerFontWeight">Medium</FontWeight>
+        <FontWeight x:Key="DefaultFontWeight">SemiBold</FontWeight>
+        <FontWeight x:Key="BiggerFontWeight">Bold</FontWeight>
 
         <SolidColorBrush x:Key="ProgressbarColorBrush" Color="{DynamicResource ProgressbarColor}" />
         <SolidColorBrush x:Key="ButtonBackground" Color="#4C000000" />
@@ -23,6 +27,7 @@
         <Color x:Key="AppBackgroundColor">Black</Color>
 
         <FontFamily x:Key="Montserrat">/Resources/Fonts/#Montserrat</FontFamily>
+        <FontFamily x:Key="MuseoModerno">/Resources/Fonts/#MuseoModerno</FontFamily>
     </Application.Resources>
 
     <Application.Styles>

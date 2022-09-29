@@ -28,13 +28,14 @@ public class ConfigContainer : IStorableContainer
     public ReleaseChannels ReleaseChannel { get; set; } = 0;
     public KnownColors BackgroundColor { get; set; } = KnownColors.Black;
     public FontWeights DefaultFontWeight { get; set; } = FontWeights.Medium;
+    public string? Font { get; set; }
 
     public IStorableContainer Init()
     {
         return this;
     }
 
-    public FontWeights? GetSmallFont() => DefaultFontWeight.GetNextSmallerFont();
+    public FontWeights GetSmallerFont() => DefaultFontWeight.GetNextSmallerFont();
     
-    public FontWeights? GetBiggerFont() => DefaultFontWeight.GetNextBiggerFont();
+    public FontWeights GetBiggerFont() => DefaultFontWeight.GetNextBiggerFont();
 }

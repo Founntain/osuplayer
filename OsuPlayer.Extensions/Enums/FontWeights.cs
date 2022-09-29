@@ -12,6 +12,16 @@ namespace OsuPlayer.Extensions.Enums;
 public enum FontWeights
 {
     /// <summary>
+    /// Specifies a "thin" font weight.
+    /// </summary>
+    Thin = 100,
+    
+    /// <summary>
+    /// Specifies a "extralight" font weight.
+    /// </summary>
+    ExtraLight = 200,
+    
+    /// <summary>
     /// Specifies a "light" font weight.
     /// </summary>
     Light = 300,
@@ -27,6 +37,11 @@ public enum FontWeights
     Medium = 500,
 
     /// <summary>
+    /// Specifies a "semibold" font weight.
+    /// </summary>
+    SemiBold = 600,
+    
+    /// <summary>
     /// Specifies a "bold" font weight.
     /// </summary>
     Bold = 700,
@@ -35,4 +50,9 @@ public enum FontWeights
     /// Specifies an "extra bold" font weight.
     /// </summary>
     ExtraBold = 800,
+    
+    /// <summary>
+    /// Specifies an "black" font weight.
+    /// </summary>
+    Black = 900,
 }

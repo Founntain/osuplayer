@@ -94,4 +94,31 @@ public static class Extensions
         var i = Array.IndexOf(fontSizes, font) - 1;
         return (i == -1) ? fontSizes[i + 1] : fontSizes[i];
     }
+
+    public static FontWeight ToFontWeight(this FontWeights font)
+    {
+        switch (font)
+        {
+            case FontWeights.Black:
+                return FontWeight.Black;
+            case FontWeights.Thin:
+                return FontWeight.Thin;
+            case FontWeights.ExtraLight:
+                return FontWeight.ExtraLight;
+            case FontWeights.Light:
+                return FontWeight.Light;
+            case FontWeights.Regular:
+                return FontWeight.Regular;
+            case FontWeights.Medium:
+                return FontWeight.Medium;
+            case FontWeights.SemiBold:
+                return FontWeight.SemiBold;
+            case FontWeights.Bold:
+                return FontWeight.Bold;
+            case FontWeights.ExtraBold:
+                return FontWeight.ExtraBold;
+            default:
+                return FontWeight.Medium;
+        }
+    }
 }

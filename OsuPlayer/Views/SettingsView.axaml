@@ -9,8 +9,7 @@
              xmlns:ctxt="clr-namespace:ColorTextBlock.Avalonia;assembly=ColorTextBlock.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.SettingsView"
-             Initialized="SettingsView_OnInitialized"
-             FontFamily="Montserrat">
+             Initialized="SettingsView_OnInitialized">
     <UserControl.Resources>
         <valueConverters:SettingsUserConverter x:Key="SettingsUserConverter" />
         <valueConverters:GridFormatter x:Key="GridFormatter" />
@@ -53,25 +52,6 @@
                                       HorizontalAlignment="Stretch" />
                         </StackPanel>
 
-                        <StackPanel Spacing="5" Name="FontWeight">
-                            <TextBlock Text="Font Weight" />
-                            <ComboBox SelectedItem="{Binding SelectedFontWeight}"
-                                      Items="{Binding FontWeights}" HorizontalAlignment="Stretch" />
-                        </StackPanel>
-
-                        
-                        <StackPanel Spacing="5" Name="WindowBlurMethod">
-                            <TextBlock Text="Window Blur Method" />
-                            <ComboBox SelectedItem="{Binding SelectedTransparencyLevel}"
-                                      Items="{Binding WindowTransparencyLevels}" HorizontalAlignment="Stretch" />
-                        </StackPanel>
-                        
-                        <StackPanel Spacing="5" Name="WindowBackgroundColor">
-                            <TextBlock Text="Background Color" />
-                            <AutoCompleteBox SelectedItem="{Binding SelectedBackgroundColors}" Watermark="Type to search for color" FilterMode="ContainsOrdinal" MinimumPrefixLength="0"
-                                      Items="{Binding WindowBackgroundColors}" HorizontalAlignment="Stretch" />
-                        </StackPanel>
-
                         <StackPanel Spacing="5" Name="StartupSong">
                             <TextBlock Text="Startup song" />
                             <ComboBox SelectedItem="{Binding SelectedStartupSong}" Items="{Binding StartupSongs}"
@@ -94,6 +74,38 @@
                             </ToolTip.Tip>
                             <CheckBox IsChecked="{Binding PlaylistEnableOnPlay}"
                                       Content="Enable playlist mode on song play" />
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+                
+                <Grid RowDefinitions="Auto" Margin="10" Name="VisualSettings" Background="{DynamicResource AcrylicBaseColor}">
+
+                    <StackPanel Margin="10" Spacing="10" Name="VisualSettingsPanel">
+                        <TextBlock Text="Visual Settings" FontSize="32" VerticalAlignment="Center"
+                                   HorizontalAlignment="Stretch" />
+
+                        <StackPanel Spacing="5" Name="Font">
+                            <TextBlock Text="Font" />
+                            <ComboBox SelectedItem="{Binding SelectedFont}"
+                                      Items="{Binding Fonts}" HorizontalAlignment="Stretch" />
+                        </StackPanel>
+                        
+                        <StackPanel Spacing="5" Name="FontWeight">
+                            <TextBlock Text="Font Weight" />
+                            <ComboBox SelectedItem="{Binding SelectedFontWeight}"
+                                      Items="{Binding AvailableFontWeights}" HorizontalAlignment="Stretch" />
+                        </StackPanel>
+                        
+                        <StackPanel Spacing="5" Name="WindowBlurMethod">
+                            <TextBlock Text="Window Blur Method" />
+                            <ComboBox SelectedItem="{Binding SelectedTransparencyLevel}"
+                                      Items="{Binding WindowTransparencyLevels}" HorizontalAlignment="Stretch" />
+                        </StackPanel>
+                        
+                        <StackPanel Spacing="5" Name="WindowBackgroundColor">
+                            <TextBlock Text="Background Color" />
+                            <AutoCompleteBox SelectedItem="{Binding SelectedBackgroundColors}" Watermark="Type to search for color" FilterMode="ContainsOrdinal" MinimumPrefixLength="0"
+                                             Items="{Binding WindowBackgroundColors}" HorizontalAlignment="Stretch" />
                         </StackPanel>
                     </StackPanel>
                 </Grid>

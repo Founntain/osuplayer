@@ -42,6 +42,12 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         Background = new SolidColorBrush(backgroundColor);
         
         PlaylistManager.SetLastKnownPlaylistAsCurrentPlaylist();
+        
+        Application.Current!.Resources["SmallerFontWeight"] = config.Container.GetSmallerFont().ToFontWeight();
+        Application.Current!.Resources["DefaultFontWeight"] = config.Container.DefaultFontWeight.ToFontWeight();
+        Application.Current!.Resources["BiggerFontWeight"] = config.Container.GetBiggerFont().ToFontWeight();
+
+        FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
     }
 
     private void InitializeComponent()

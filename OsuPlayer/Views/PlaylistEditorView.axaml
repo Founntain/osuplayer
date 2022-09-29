@@ -8,7 +8,8 @@
              xmlns:views="clr-namespace:OsuPlayer.Views"
              xmlns:dataModels="clr-namespace:OsuPlayer.IO.DbReader.DataModels;assembly=OsuPlayer.IO"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="OsuPlayer.Views.PlaylistEditorView">
+             x:Class="OsuPlayer.Views.PlaylistEditorView"
+             FontWeight="{DynamicResource DefaultFontWeight}">
     <UserControl.Resources>
         <valueConverters:PlaylistValueConverter x:Key="PlaylistValueConverter" />
         <extensions:SourceListValueConverter x:Key="SourceListValueConverter" />
