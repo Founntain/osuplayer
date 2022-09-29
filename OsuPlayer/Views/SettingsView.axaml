@@ -86,7 +86,7 @@
 
                         <StackPanel Spacing="5" Name="Font">
                             <TextBlock Text="Font" />
-                            <ComboBox SelectedItem="{Binding SelectedFont}"
+                            <AutoCompleteBox SelectedItem="{Binding SelectedFont}" MinimumPrefixLength="0"
                                       Items="{Binding Fonts}" HorizontalAlignment="Stretch" />
                         </StackPanel>
                         
