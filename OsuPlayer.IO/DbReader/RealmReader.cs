@@ -1,6 +1,6 @@
 ﻿using OsuPlayer.IO.DbReader.DataModels;
-using OsuPlayer.IO.Storage.Config;
 using OsuPlayer.IO.Storage.LazerModels.Beatmaps;
+using OsuPlayer.IO.Storage.LazerModels.Collections;
 using Realms;
 using Realms.Dynamic;
 
@@ -9,18 +9,17 @@ namespace OsuPlayer.IO.DbReader;
 /// <summary>
 /// A realm reader used for reading the client.realm file from osu!lazer
 /// </summary>
-public class RealmReader
+public class RealmReader : IDatabaseReader
 {
     private readonly IEnumerable<DynamicRealmObject> _beatmapInfos;
+    private readonly string _path;
     private readonly Realm _realm;
 
-    public RealmReader(Config? config = null)
+    public RealmReader(string path)
     {
-        config ??= new Config();
+        _path = path;
 
-        if (string.IsNullOrWhiteSpace(config.Container.OsuPath)) return;
-
-        var realmLoc = Path.Combine(config.Container.OsuPath, "client.realm");
+        var realmLoc = Path.Combine(path, "client.realm");
         var realmConfig = new RealmConfiguration(realmLoc)
         {
             IsDynamic = true,
@@ -31,19 +30,45 @@ public class RealmReader
         _beatmapInfos = _realm.DynamicApi.All("Beatmap").ToList().OfType<DynamicRealmObject>().ToList();
     }
 
-    ~RealmReader()
+    public Task<Dictionary<string, int>> GetBeatmapHashes()
     {
-        _realm.Dispose();
+        var hashes = new Dictionary<string, int>();
+
+        foreach (var dynamicRealmObject in _beatmapInfos)
+        {
+            var hash = dynamicRealmObject.DynamicApi.Get<string>(nameof(BeatmapInfo.MD5Hash));
+            var id = dynamicRealmObject.DynamicApi.Get<RealmObjectBase>(nameof(BeatmapInfo.BeatmapSet)).DynamicApi.Get<int>(nameof(BeatmapSetInfo.OnlineID));
+
+            hashes.Add(hash, id);
+        }
+
+        return Task.FromResult(hashes);
     }
 
-    /// <summary>
-    /// Reads the client.realm file from the <paramref name="path" />
-    /// </summary>
-    /// <param name="path">the path where the client.realm is located</param>
-    /// <returns>an <see cref="IList{T}" /> of <see cref="IMapEntryBase" /> read from the client.realm</returns>
-    public static async Task<List<IMapEntryBase>?> Read(string path)
+    public Task<List<Collection>> GetCollections(string path)
     {
-        var realmLoc = Path.Combine(path, "client.realm");
+        if (File.Exists(Path.Combine(path, "collection.db"))) return OsuCollectionReader.Read(path);
+
+        var dynamicRealmObjects = _realm.DynamicApi.All(nameof(BeatmapCollection)).ToList().OfType<DynamicRealmObject>().ToList();
+
+        var collections = new List<Collection>();
+
+        foreach (var realmObject in dynamicRealmObjects)
+        {
+            var name = realmObject.DynamicApi.Get<string>(nameof(BeatmapCollection.Name));
+            var hashes = realmObject.DynamicApi.GetList<string>(nameof(BeatmapCollection.BeatmapMD5Hashes));
+
+            var col = new Collection(name, hashes.ToList());
+
+            collections.Add(col);
+        }
+
+        return Task.FromResult(collections);
+    }
+
+    public async Task<List<IMapEntryBase>?> ReadBeatmaps()
+    {
+        var realmLoc = Path.Combine(_path, "client.realm");
 
         var realmConfig = new RealmConfiguration(realmLoc)
         {
@@ -86,6 +111,23 @@ public class RealmReader
         realm.Dispose();
 
         return minBeatMaps;
+    }
+
+    ~RealmReader()
+    {
+        _realm.Dispose();
+    }
+
+    /// <summary>
+    /// Reads the client.realm file from the <paramref name="path" />
+    /// </summary>
+    /// <param name="path">the path where the client.realm is located</param>
+    /// <returns>an <see cref="IList{T}" /> of <see cref="IMapEntryBase" /> read from the client.realm</returns>
+    public static async Task<List<IMapEntryBase>?> Read(string path)
+    {
+        var reader = new RealmReader(path);
+
+        return await reader.ReadBeatmaps();
     }
 
     /// <summary>

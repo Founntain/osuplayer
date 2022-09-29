@@ -29,4 +29,11 @@ public interface IMapEntryBase
     /// found.
     /// </returns>
     public Task<IMapEntry?> ReadFullEntry(string path);
+
+    /// <summary>
+    /// Gets the corresponding <see cref="IDatabaseReader"/> of the beatmap
+    /// </summary>
+    /// <param name="path">the osu! path</param>
+    /// <returns>a <see cref="IDatabaseReader"/> instance of the specific database reader implementation</returns>
+    public IDatabaseReader GetReader(string path);
 }

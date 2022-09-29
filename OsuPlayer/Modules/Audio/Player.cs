@@ -12,12 +12,10 @@ using OsuPlayer.Extensions;
 using OsuPlayer.IO;
 using OsuPlayer.IO.DbReader;
 using OsuPlayer.IO.Storage.Blacklist;
-using OsuPlayer.IO.Storage.LazerModels.Beatmaps;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Network.Discord;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
-using Realms;
 using Splat;
 
 namespace OsuPlayer.Modules.Audio;
@@ -199,32 +197,23 @@ public class Player
     public async Task ImportCollectionsAsync()
     {
         var config = new Config();
-        var collections = await OsuCollectionReader.Read(config.Container.OsuPath!);
+
+        var reader = SongSourceList?[0].GetReader(config.Container.OsuPath!);
+
+        if (reader == null) return;
+
+        var collections = await reader.GetCollections(config.Container.OsuPath!);
 
         if (collections != default && collections.Any())
         {
-            RealmReader realmReader = null;
-            Dictionary<string, int> beatmapHashes = null;
-
-            if (SongSourceList?[0] is RealmMapEntryBase)
-                realmReader = new RealmReader(config);
-            else if (SongSourceList?[0] is DbMapEntryBase)
-                beatmapHashes = await OsuDbReader.ReadAllDiffs(config.Container.OsuPath);
+            var beatmapHashes = await reader.GetBeatmapHashes();
 
             foreach (var collection in collections)
             foreach (var hash in collection.BeatmapHashes)
-                if (SongSourceList?[0] is RealmMapEntryBase)
-                {
-                    var foundMap = realmReader?.QueryBeatmap(x => x.DynamicApi.Get<string>(nameof(BeatmapInfo.MD5Hash)) == hash);
-                    var md5Hash = foundMap.DynamicApi.Get<RealmObjectBase>(nameof(BeatmapInfo.BeatmapSet)).DynamicApi.GetList<RealmObjectBase>(nameof(BeatmapSetInfo.Beatmaps)).First().DynamicApi.Get<string>(nameof(BeatmapInfo.MD5Hash));
-      
-                    await PlaylistManager.AddSongToPlaylistAsync(collection.Name, md5Hash);
-                }
-                else if (SongSourceList?[0] is DbMapEntryBase)
-                {
-                    var setId = beatmapHashes?.GetValueOrDefault(hash) ?? -1;
-                    await PlaylistManager.AddSongToPlaylistAsync(collection.Name, SongSourceList.FirstOrDefault(x => x.BeatmapSetId == setId)?.Hash ?? string.Empty);
-                }
+            {
+                var setId = beatmapHashes?.GetValueOrDefault(hash) ?? -1;
+                await PlaylistManager.AddSongToPlaylistAsync(collection.Name, SongSourceList.FirstOrDefault(x => x.BeatmapSetId == setId)?.Hash ?? string.Empty);
+            }
 
             Dispatcher.UIThread.Post(() => MessageBox.Show(Locator.Current.GetService<MainWindow>(), "Import successful. Have fun!", "Import complete!"));
             return;

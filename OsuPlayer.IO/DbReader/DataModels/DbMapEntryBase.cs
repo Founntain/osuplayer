@@ -1,4 +1,5 @@
-﻿using OsuPlayer.Extensions;
+﻿using OsuPlayeIO.DbReader;
+using OsuPlayer.Extensions;
 
 namespace OsuPlayer.IO.DbReader.DataModels;
 
@@ -171,6 +172,17 @@ public class DbMapEntryBase : IMapEntryBase
         mapEntry.FolderPath = Path.Combine(osuPath, "Songs", mapEntry.FolderName);
 
         return mapEntry;
+    }
+
+    public IDatabaseReader GetReader(string path)
+    {
+        var dbLoc = Path.Combine(path, "osu!.db");
+
+        if (!File.Exists(dbLoc)) return null;
+
+        var file = File.OpenRead(dbLoc);
+
+        return new OsuDbReader(file, path);
     }
 
     public override string ToString()
