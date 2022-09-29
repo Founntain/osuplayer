@@ -118,7 +118,7 @@ public static class Extensions
             case FontWeights.ExtraBold:
                 return FontWeight.ExtraBold;
             default:
-                return FontWeight.Medium;
+                return FontWeight.Regular;
         }
     }
 }
