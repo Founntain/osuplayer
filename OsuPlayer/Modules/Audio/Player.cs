@@ -206,12 +206,7 @@ public class Player
 
         if (collections != default && collections.Any())
         {
-            RealmReader realmReader = null;
-            Dictionary<string, int> beatmapHashes = null;
-
-            if (reader is null) return;
-
-            beatmapHashes = await reader.GetBeatmapHashes();
+            var beatmapHashes = await reader.GetBeatmapHashes();
 
             foreach (var collection in collections)
             foreach (var hash in collection.BeatmapHashes)
