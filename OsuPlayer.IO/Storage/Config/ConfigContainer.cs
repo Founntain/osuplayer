@@ -26,11 +26,15 @@ public class ConfigContainer : IStorableContainer
     public bool PlaylistEnableOnPlay { get; set; }
     public string? Username { get; set; }
     public ReleaseChannels ReleaseChannel { get; set; } = 0;
-    public KnownColors? BackgroundColor { get; set; }
-    public FontWeights? DefaultFontWeight { get; set; }
+    public KnownColors BackgroundColor { get; set; } = KnownColors.Black;
+    public FontWeights DefaultFontWeight { get; set; } = FontWeights.Medium;
 
     public IStorableContainer Init()
     {
         return this;
     }
+
+    public FontWeights? GetSmallFont() => DefaultFontWeight.GetNextSmallerFont();
+    
+    public FontWeights? GetBiggerFont() => DefaultFontWeight.GetNextBiggerFont();
 }

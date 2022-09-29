@@ -229,8 +229,8 @@ public class SettingsViewModel : BaseViewModel
         _selectedStartupSong = config.Container.StartupSong;
         _selectedTransparencyLevel = config.Container.TransparencyLevelHint;
         _selectedReleaseChannel = config.Container.ReleaseChannel;
-        _selectedBackgroundColors = config.Container.BackgroundColor ?? KnownColors.Black;
-        _selectedFontWeight = config.Container.DefaultFontWeight ?? Extensions.Enums.FontWeights.Medium;
+        _selectedBackgroundColors = config.Container.BackgroundColor;
+        _selectedFontWeight = config.Container.DefaultFontWeight;
 
         Player = player;
 

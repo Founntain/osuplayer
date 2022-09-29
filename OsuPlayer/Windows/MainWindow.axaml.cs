@@ -35,9 +35,9 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
         using var config = new Config();
         TransparencyLevelHint = config.Container.TransparencyLevelHint;
-        FontWeight = (FontWeight) (config.Container.DefaultFontWeight ?? FontWeights.Medium);
+        FontWeight = (FontWeight) config.Container.DefaultFontWeight;
 
-        var backgroundColor = config.Container.BackgroundColor?.ToColor() ?? Colors.Black;
+        var backgroundColor = config.Container.BackgroundColor.ToColor();
         
         Background = new SolidColorBrush(backgroundColor);
         

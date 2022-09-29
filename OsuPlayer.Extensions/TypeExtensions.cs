@@ -79,7 +79,7 @@ public static class Extensions
 
     public static Color ToColor(this KnownColors color) => Color.FromUInt32((uint) color);
     
-    public static FontWeights GetNextHigherFont(this FontWeights font)
+    public static FontWeights GetNextBiggerFont(this FontWeights font)
     {
         var fontSizes = (FontWeights[]) Enum.GetValues(typeof(FontWeights));    
         

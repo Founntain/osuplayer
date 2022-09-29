@@ -13,7 +13,7 @@ public class FontWeightsTests
     [TestCase(FontWeights.ExtraBold)]
     public void NextHigherFontTest(FontWeights input)
     {
-        var result = input.GetNextHigherFont();
+        var result = input.GetNextBiggerFont();
         
         if(input == FontWeights.ExtraBold)
             Assert.IsTrue(result == input);
