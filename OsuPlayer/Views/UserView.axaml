@@ -8,7 +8,8 @@
              xmlns:valueConverters="clr-namespace:OsuPlayer.Extensions.ValueConverters;assembly=OsuPlayer.Extensions"
              xmlns:avalonia="clr-namespace:LiveChartsCore.SkiaSharpView.Avalonia;assembly=LiveChartsCore.SkiaSharpView.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="OsuPlayer.Views.UserView">
+             x:Class="OsuPlayer.Views.UserView"
+             FontWeight="{DynamicResource DefaultFontWeight}">
 
     <Design.DataContext>
         <views:UserViewModel />
@@ -30,7 +31,7 @@
                      SelectedItem="{Binding SelectedUser}" SelectionChanged="UserList_OnSelectionChanged">
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="online:User">
-                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Foreground="{Binding RoleColor}" />
+                        <TextBlock Text="{Binding Name}" Foreground="{Binding RoleColor}" FontWeight="{DynamicResource BiggerFontWeight}" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
@@ -69,7 +70,7 @@
                         </Border>
 
                         <StackPanel HorizontalAlignment="Stretch" Margin="0 0 0 10">
-                            <TextBlock Text="{Binding SelectedUser.Name}" FontSize="26" FontWeight="SemiBold"
+                            <TextBlock Text="{Binding SelectedUser.Name}" FontSize="26" FontWeight="{DynamicResource BiggerFontWeight}"
                                        HorizontalAlignment="Center" />
                             <TextBlock Text="{Binding SelectedUser.JoinDateString}" FontSize="14" FontStyle="Italic"
                                        FontWeight="SemiBold" HorizontalAlignment="Center" />
@@ -114,9 +115,9 @@
                             </Border>
                             <ScrollViewer Grid.Row="1">
                                 <StackPanel Spacing="5" Margin="10">
-                                    <TextBlock Text="{Binding SelectedUser.DescriptionTitleString}"
+                                    <TextBlock Text="{Binding SelectedUser.DescriptionTitleString}" FontSize="18" FontWeight="{DynamicResource BiggerFontWeight}"
                                                HorizontalAlignment="Center" TextAlignment="Center" />
-                                    <TextBlock Text="{Binding SelectedUser.Description}" FontWeight="Light"
+                                    <TextBlock Text="{Binding SelectedUser.Description}" FontWeight="{DynamicResource SmallerFontWeight}"
                                                HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" />
                                 </StackPanel>
                             </ScrollViewer>
@@ -136,8 +137,8 @@
                                 <ListBox.ItemTemplate>
                                     <DataTemplate DataType="beatmap:BeatmapUserValidityModel">
                                         <StackPanel>
-                                            <TextBlock Text="{Binding GetTitle}" FontWeight="SemiBold" />
-                                            <TextBlock Text="{Binding GetTimesplayed}" FontSize="12" FontWeight="Light" />
+                                            <TextBlock Text="{Binding GetTitle}" />
+                                            <TextBlock Text="{Binding GetTimesplayed}" FontSize="12" FontWeight="{DynamicResource SmallerFontWeight}" />
                                         </StackPanel>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>

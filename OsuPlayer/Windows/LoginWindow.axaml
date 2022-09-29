@@ -7,6 +7,7 @@
         Title="login to osu!player community"
         FontFamily="{DynamicResource Montserrat}"
         FontSize="16"
+        FontWeight="{DynamicResource DefaultFontWeight}"
 
         WindowStartupLocation="CenterScreen"
         MaxWidth="300" MinWidth="300"

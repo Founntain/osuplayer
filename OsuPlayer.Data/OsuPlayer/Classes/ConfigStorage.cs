@@ -5,6 +5,7 @@ namespace OsuPlayer.Data.OsuPlayer.Classes;
 /// <summary>
 /// Contains the values from the config.json
 /// </summary>
+[Obsolete("This class is deprecated, please use ConfigContainer instead")]
 public sealed class ConfigStorage
 {
     public int BlurStrength { get; set; }

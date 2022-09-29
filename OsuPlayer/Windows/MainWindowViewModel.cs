@@ -70,9 +70,9 @@ public class MainWindowViewModel : BaseWindowViewModel
 
         using var config = new Config();
 
-        var backgroundColor = config.Container.BackgroundColor?.ToColor() ?? KnownColors.Black.ToColor();
-
-        PanelMaterial = new()
+        var backgroundColor = config.Container.BackgroundColor.ToColor();
+        
+        PanelMaterial = new ()
         {
             BackgroundSource = AcrylicBackgroundSource.Digger,
             TintColor = backgroundColor,
