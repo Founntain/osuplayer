@@ -12,13 +12,9 @@
 ![](https://img.shields.io/github/contributors/Founntain/osuplayer?color=blueviolet)  
 [![CI](https://github.com/Founntain/osuplayer/actions/workflows/dotnet.yml/badge.svg?branch=master)](https://github.com/Founntain/osuplayer/actions/workflows/dotnet.yml)
 [![.NET Publish](https://github.com/Founntain/osuplayer/actions/workflows/dotnet-publish.yml/badge.svg)](https://github.com/Founntain/osuplayer/actions/workflows/dotnet-publish.yml)
-
-
-This is the *official* **osu!player** (Avalonia) repository and is mainly developed by [@Founntain](https://github.com/Founntain), with help of [@Cesan](https://github.com/Cesan).  
-This repository is a complete rewrite of the osu!player plus, so keep in mind that some stuff is still *work in progress*, with the *ultimate goal to go cross-platform*.  
-So if we speak osu!player in this repository we mean the this (Avalonia) version. If you want to refer to other versions of the osu!player mention them by their name, either *osu!player **plus*** or *osu!player **legacy*** (osu!player versions before the plus).  
  
 osu!player is a music player for *osu!* with the focus of playing your osu! songs **without having to start osu!**.
+This is the *official* **osu!player** repository and is mainly developed by [@Founntain](https://github.com/Founntain), with help of [@Cesan](https://github.com/Cesan).  
 
 If you want to contribute, feel free to fork this repository, read the [contributing information]([https://github.com/Founntain/osuplayer.git](https://github.com/osu-player/osuplayer#-contributing-to-the-project) and head to the [official osu!player discord](https://discord.gg/RJQSc5B) (not mandetory, but helpful). There you can add all valuable ideas and discuss other stuff regarding development.
 
