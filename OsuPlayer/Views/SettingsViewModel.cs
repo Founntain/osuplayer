@@ -9,6 +9,7 @@ using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Extensions;
 using OsuPlayer.Extensions.Enums;
 using OsuPlayer.Network;
+using OsuPlayer.Styles;
 using OsuPlayer.Windows;
 using ReactiveUI;
 
@@ -22,7 +23,8 @@ public class SettingsViewModel : BaseViewModel
     public readonly Player Player;
     private string _osuLocation;
     private string _patchnotes;
-    private KnownColors _selectedBackgroundColors;
+    private KnownColors _selectedBackgroundColor;
+    private KnownColors _selectedAccentColor;
     private FontWeights _selectedFontWeight;
     private ReleaseChannels _selectedReleaseChannel;
     private StartupSong _selectedStartupSong;
@@ -62,7 +64,7 @@ public class SettingsViewModel : BaseViewModel
 
     public IEnumerable<WindowTransparencyLevel> WindowTransparencyLevels => Enum.GetValues<WindowTransparencyLevel>();
 
-    public IEnumerable<KnownColors> WindowBackgroundColors => Enum.GetValues<KnownColors>();
+    public IEnumerable<KnownColors> KnownColors => Enum.GetValues<KnownColors>();
 
     public IEnumerable<FontWeights> AvailableFontWeights => Enum.GetValues<FontWeights>();
 
@@ -123,12 +125,12 @@ public class SettingsViewModel : BaseViewModel
         }
     }
 
-    public KnownColors SelectedBackgroundColors
+    public KnownColors SelectedBackgroundColor
     {
-        get => _selectedBackgroundColors;
+        get => _selectedBackgroundColor;
         set
         {
-            this.RaiseAndSetIfChanged(ref _selectedBackgroundColors, value);
+            this.RaiseAndSetIfChanged(ref _selectedBackgroundColor, value);
 
             if (MainWindow == null) return;
 
@@ -145,6 +147,20 @@ public class SettingsViewModel : BaseViewModel
 
             using var config = new Config();
             config.Container.BackgroundColor = value;
+        }
+    }
+
+    public KnownColors SelectedAccentColor
+    {
+        get => _selectedAccentColor;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _selectedAccentColor, value);
+
+            ColorSetter.SetColor(value.ToColor());
+
+            using var config = new Config();
+            config.Container.AccentColor = value;
         }
     }
 
@@ -258,7 +274,8 @@ public class SettingsViewModel : BaseViewModel
         _selectedStartupSong = config.Container.StartupSong;
         _selectedTransparencyLevel = config.Container.TransparencyLevelHint;
         _selectedReleaseChannel = config.Container.ReleaseChannel;
-        _selectedBackgroundColors = config.Container.BackgroundColor;
+        _selectedBackgroundColor = config.Container.BackgroundColor;
+        _selectedAccentColor = config.Container.AccentColor;
         _selectedFontWeight = config.Container.DefaultFontWeight;
         _selectedFont = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
 

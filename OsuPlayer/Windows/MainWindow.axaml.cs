@@ -9,6 +9,7 @@ using OsuPlayer.Extensions.Enums;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Network;
 using OsuPlayer.Network.Discord;
+using OsuPlayer.Styles;
 using OsuPlayer.Views;
 using ReactiveUI;
 
@@ -37,10 +38,17 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         TransparencyLevelHint = config.Container.TransparencyLevelHint;
         FontWeight = (FontWeight) config.Container.DefaultFontWeight;
 
-        var backgroundColor = config.Container.BackgroundColor.ToColor();
-        
-        Background = new SolidColorBrush(backgroundColor);
-        
+        var backgroundColor = config.Container.BackgroundColor;
+
+        Background = new SolidColorBrush(backgroundColor.ToColor());
+
+        var accentColor = config.Container.AccentColor;
+
+        ColorSetter.SetColor(accentColor.ToColor());
+
+        config.Container.BackgroundColor = backgroundColor;
+        config.Container.AccentColor = accentColor;
+
         PlaylistManager.SetLastKnownPlaylistAsCurrentPlaylist();
         
         Application.Current!.Resources["SmallerFontWeight"] = config.Container.GetSmallerFont().ToFontWeight();

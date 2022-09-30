@@ -13,7 +13,7 @@
         FontWeight="{DynamicResource DefaultFontWeight}"
         FontSize="16"
 
-        Background="DeepPink"
+        Background="Transparent"
         TransparencyLevelHint="None"
         ExtendClientAreaToDecorationsHint="True"
         ExtendClientAreaChromeHints="PreferSystemChrome"

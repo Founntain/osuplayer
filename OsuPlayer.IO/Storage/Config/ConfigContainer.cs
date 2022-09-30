@@ -27,6 +27,7 @@ public class ConfigContainer : IStorableContainer
     public string? Username { get; set; }
     public ReleaseChannels ReleaseChannel { get; set; } = 0;
     public KnownColors BackgroundColor { get; set; } = KnownColors.Black;
+    public KnownColors AccentColor { get; set; } = KnownColors.White;
     public FontWeights DefaultFontWeight { get; set; } = FontWeights.Medium;
     public string? Font { get; set; }
 
