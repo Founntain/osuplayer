@@ -142,12 +142,6 @@ public class Player : IPlayer
         }
     }
 
-    /// <summary>
-    /// Picks the <see cref="IMapEntryBase" /> property to sort maps on
-    /// </summary>
-    /// <param name="map">the <see cref="IMapEntryBase" /> to be sorted</param>
-    /// <param name="sortingMode">the <see cref="SortingMode" /> to decide how to sort</param>
-    /// <returns>an <see cref="IComparable" /> containing the property to compare on</returns>
     public IComparable CustomSorter(IMapEntryBase map, SortingMode sortingMode)
     {
         switch (sortingMode)
@@ -200,28 +194,16 @@ public class Player : IPlayer
         SongSource.Value = SongSource.Value.Items.OrderBy(x => CustomSorter(x, sortingMode)).ThenBy(x => x.Title).ToSourceList();
     }
 
-    /// <summary>
-    /// Triggers if the playlist got changed
-    /// </summary>
-    /// <param name="e"></param>
     public void TriggerPlaylistChanged(PropertyChangedEventArgs e)
     {
         PlaylistChanged?.Invoke(this, e);
     }
 
-    /// <summary>
-    /// Triggers if the blacklist got changed
-    /// </summary>
-    /// <param name="e"></param>
     public void TriggerBlacklistChanged(PropertyChangedEventArgs e)
     {
         BlacklistChanged?.Invoke(this, e);
     }
 
-    /// <summary>
-    /// Sets the playback speed globally (including pitch)
-    /// </summary>
-    /// <param name="speed">The speed to set</param>
     public void SetPlaybackSpeed(double speed)
     {
         _bassEngine.SetPlaybackSpeed(speed);
@@ -281,11 +263,6 @@ public class Player : IPlayer
         return SongSourceList!.FirstOrDefault(x => x.BeatmapSetId == setId);
     }
 
-    /// <summary>
-    /// Gets the map entry from the beatmap hash
-    /// </summary>
-    /// <param name="hash">the beatmap hash to get the map from</param>
-    /// <returns>an <see cref="IMapEntryBase" /> of the found map or null if it doesn't exist</returns>
     public IMapEntryBase? GetMapEntryFromHash(string hash)
     {
         return SongSourceList!.FirstOrDefault(x => x.Hash == hash);
@@ -301,11 +278,6 @@ public class Player : IPlayer
         return SongSourceList!.Where(x => setId.Contains(x.BeatmapSetId)).ToList();
     }
 
-    /// <summary>
-    /// Gets all Songs from a specific beatmap hash
-    /// </summary>
-    /// <param name="hash">The beatmap hash</param>
-    /// <returns>A list of <see cref="IMapEntryBase" /></returns>
     public List<IMapEntryBase> GetMapEntriesFromHash(IEnumerable<string> hash)
     {
         return hash.Select(x => SongSourceList!.Find(y => y.Hash == x)).ToList();
@@ -316,9 +288,6 @@ public class Player : IPlayer
         _discordClient?.DeInitialize();
     }
 
-    /// <summary>
-    /// Pauses the current song if playing or plays again if paused
-    /// </summary>
     public async void PlayPause()
     {
         if (!IsPlaying.Value)
@@ -339,27 +308,18 @@ public class Player : IPlayer
         }
     }
 
-    /// <summary>
-    /// Sets the playing state to Playing
-    /// </summary>
     public void Play()
     {
         _bassEngine.Play();
         IsPlaying.Value = true;
     }
 
-    /// <summary>
-    /// Sets the playing state to Pause
-    /// </summary>
     public void Pause()
     {
         _bassEngine.Pause();
         IsPlaying.Value = false;
     }
 
-    /// <summary>
-    /// Toggles mute of the volume
-    /// </summary>
     public void ToggleMute()
     {
         if (!_isMuted)
@@ -375,9 +335,6 @@ public class Player : IPlayer
         }
     }
 
-    /// <summary>
-    /// Plays the previous song or the last song if we are the beginning
-    /// </summary>
     public async void PreviousSong()
     {
         if (SongSourceList == null || !SongSourceList.Any())
@@ -417,9 +374,6 @@ public class Player : IPlayer
         await TryPlaySongAsync(SongSourceList[prevIndex < 0 ? prevIndex + SongSourceList!.Count : prevIndex], PlayDirection.Backwards);
     }
 
-    /// <summary>
-    /// Plays the next song in the list. Or the first if we are at the end
-    /// </summary>
     public async void NextSong()
     {
         if (SongSourceList == null || !SongSourceList.Any())
@@ -525,11 +479,6 @@ public class Player : IPlayer
         _bassEngine.Stop();
     }
 
-    /// <summary>
-    /// Enqueues a specific song to play
-    /// </summary>
-    /// <param name="song">The song to enqueue</param>
-    /// <param name="playDirection">The direction we went in the playlist. Mostly used by the Next and Prev method</param>
     public async Task TryPlaySongAsync(IMapEntryBase? song, PlayDirection playDirection = PlayDirection.Normal)
     {
         if (SongSourceList == default || !SongSourceList.Any())

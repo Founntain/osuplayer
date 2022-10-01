@@ -11,5 +11,10 @@ public interface IHasPlaylists
     public Bindable<bool> PlaylistEnableOnPlay { get; }
 
     public event PropertyChangedEventHandler? PlaylistChanged;
+
+    /// <summary>
+    /// Triggers if the playlist got changed
+    /// </summary>
+    /// <param name="e"></param>
     public void TriggerPlaylistChanged(PropertyChangedEventArgs e);
 }
