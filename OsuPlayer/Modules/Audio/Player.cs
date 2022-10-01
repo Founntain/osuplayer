@@ -32,7 +32,7 @@ public class Player
     private readonly int?[] _shuffleHistory = new int?[10];
 
     public Bindable<SourceList<IMapEntryBase>> SongSource { get; } = new();
-    public List<IMapEntryBase>? SongSourceList => SongSource.Value.Items.ToList();
+    public List<IMapEntryBase>? SongSourceList { get; private set; }
 
     public Bindable<bool> BlacklistSkip { get; } = new();
 
@@ -140,6 +140,11 @@ public class Player
         ActivePlaylistId = config.Container.ActivePlaylistId;
 
         SortingModeBindable.BindValueChanged(d => UpdateSorting(d.NewValue));
+        
+        SongSource.BindValueChanged(d =>
+        {
+            SongSourceList = d.NewValue.Items.ToList();
+        }, true);
 
         SongSource.Value = new SourceList<IMapEntryBase>();
 
