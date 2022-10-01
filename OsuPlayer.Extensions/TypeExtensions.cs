@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Reflection;
 using Avalonia.Media;
 using DynamicData;
 using OsuPlayer.Extensions.Enums;
@@ -78,24 +79,24 @@ public static class Extensions
     }
 
     public static Color ToColor(this KnownColors color) => Color.FromUInt32((uint) color);
-    
+
     public static float GetPerceivedBrightness(this System.Drawing.Color color)
     {
-        return (color.R * 0.299f + color.G * 0.587f + color.B *0.114f) / 256f;
+        return (color.R * 0.299f + color.G * 0.587f + color.B * 0.114f) / 256f;
     }
-    
+
     public static FontWeights GetNextBiggerFont(this FontWeights font)
     {
-        var fontSizes = (FontWeights[]) Enum.GetValues(typeof(FontWeights));    
-        
+        var fontSizes = (FontWeights[]) Enum.GetValues(typeof(FontWeights));
+
         var i = Array.IndexOf(fontSizes, font) + 1;
         return (fontSizes.Length == i) ? fontSizes[i - 1] : fontSizes[i];
     }
-    
+
     public static FontWeights GetNextSmallerFont(this FontWeights font)
     {
-        var fontSizes = (FontWeights[]) Enum.GetValues(typeof(FontWeights));    
-        
+        var fontSizes = (FontWeights[]) Enum.GetValues(typeof(FontWeights));
+
         var i = Array.IndexOf(fontSizes, font) - 1;
         return (i == -1) ? fontSizes[i + 1] : fontSizes[i];
     }
@@ -125,5 +126,14 @@ public static class Extensions
             default:
                 return FontWeight.Regular;
         }
+    }
+
+    public static string ToVersionString(this Assembly? assembly)
+    {
+        var version = assembly?.GetName().Version;
+
+        if (version == null) return string.Empty;
+
+        return $"{version.Major}.{version.Minor}.{version.Build}";
     }
 }
