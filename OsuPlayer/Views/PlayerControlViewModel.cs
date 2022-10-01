@@ -151,7 +151,7 @@ public class PlayerControlViewModel : BaseViewModel
         _songLength.BindTo(bassEngine.ChannelLengthB);
         _songLength.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongLength)));
 
-        CurrentSong.BindTo(Player.CurrentSongBinding);
+        CurrentSong.BindTo(Player.CurrentSong);
         CurrentSong.BindValueChanged(d =>
         {
             this.RaisePropertyChanged(nameof(TitleText));

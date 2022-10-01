@@ -98,9 +98,9 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
 
     private async void Favorite_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (ViewModel.Player.CurrentSongBinding.Value != null)
+        if (ViewModel.Player.CurrentSong.Value != null)
         {
-            await PlaylistManager.ToggleSongOfCurrentPlaylist(ViewModel.Player.CurrentSongBinding.Value);
+            await PlaylistManager.ToggleSongOfCurrentPlaylist(ViewModel.Player.CurrentSong.Value);
             ViewModel.Player.TriggerPlaylistChanged(new PropertyChangedEventArgs("Fav"));
         }
 
