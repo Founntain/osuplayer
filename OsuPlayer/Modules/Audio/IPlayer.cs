@@ -47,20 +47,6 @@ public interface IPlayer : ICanImportSongs, ISortableSongs, IPlayState, IHasPlay
     /// <param name="song">The song to enqueue</param>
     /// <param name="playDirection">The direction we went in the playlist. Mostly used by the Next and Prev method</param>
     public Task TryPlaySongAsync(IMapEntryBase? song, PlayDirection playDirection = PlayDirection.Normal);
-
-    /// <summary>
-    /// Gets the map entry from the beatmap hash
-    /// </summary>
-    /// <param name="hash">the beatmap hash to get the map from</param>
-    /// <returns>the found <see cref="IMapEntryBase" /> or null if it doesn't exist</returns>
-    public IMapEntryBase? GetMapEntryFromHash(string hash);
-
-    /// <summary>
-    /// Gets all Songs from a specific beatmap hash
-    /// </summary>
-    /// <param name="hash">The beatmap hash</param>
-    /// <returns>a list of <see cref="IMapEntryBase" />s</returns>
-    public List<IMapEntryBase> GetMapEntriesFromHash(IEnumerable<string> hash);
 }
 
 public interface IPlayState

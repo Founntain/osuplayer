@@ -253,12 +253,7 @@ public class Player : IPlayer
         UserDataChanged?.Invoke(this, new PropertyChangedEventArgs("SongsPlayed"));
     }
 
-    /// <summary>
-    /// Gets the map entry from the beatmap set id
-    /// </summary>
-    /// <param name="setId">the beatmap set id to get the map from</param>
-    /// <returns>an <see cref="IMapEntryBase" /> of the found map or null if it doesn't exist</returns>
-    private IMapEntryBase? GetMapEntryFromSetId(int setId)
+    public IMapEntryBase? GetMapEntryFromSetId(int setId)
     {
         return SongSourceList!.FirstOrDefault(x => x.BeatmapSetId == setId);
     }
@@ -268,11 +263,6 @@ public class Player : IPlayer
         return SongSourceList!.FirstOrDefault(x => x.Hash == hash);
     }
 
-    /// <summary>
-    /// Gets all Songs from a specific beatmap set ID
-    /// </summary>
-    /// <param name="setId">The beatmap set ID</param>
-    /// <returns>A list of <see cref="IMapEntryBase" /></returns>
     public List<IMapEntryBase> GetMapEntriesFromSetId(IEnumerable<int> setId)
     {
         return SongSourceList!.Where(x => setId.Contains(x.BeatmapSetId)).ToList();
