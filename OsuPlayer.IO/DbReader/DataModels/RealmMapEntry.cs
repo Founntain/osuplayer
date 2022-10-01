@@ -19,6 +19,14 @@ internal class RealmMapEntry : RealmMapEntryBase, IMapEntry
     public string FullPath { get; set; }
     public bool UseUnicode { get; set; }
 
+    public override string GetSongName()
+    {
+        if (UseUnicode && !string.IsNullOrEmpty(ArtistUnicode) && !string.IsNullOrEmpty(TitleUnicode))
+            return $"{ArtistUnicode} - {TitleUnicode}";
+
+        return $"{Artist} - {Title}";
+    }
+
     public async Task<Bitmap?> FindBackground()
     {
         if (File.Exists(BackgroundFileLocation))

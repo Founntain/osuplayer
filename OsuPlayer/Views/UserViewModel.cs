@@ -20,7 +20,7 @@ namespace OsuPlayer.Views;
 
 public class UserViewModel : BaseViewModel
 {
-    public readonly Player Player;
+    public readonly IPlayer Player;
     private ObservableCollection<IControl> _badges;
     private CancellationTokenSource? _bannerCancellationTokenSource;
     private Bitmap? _currentProfileBanner;
@@ -131,7 +131,7 @@ public class UserViewModel : BaseViewModel
         }
     }
 
-    public UserViewModel(Player player)
+    public UserViewModel(IPlayer player)
     {
         Player = player;
 

@@ -82,13 +82,14 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
 
         var osuFolder = Path.GetDirectoryName(path);
 
-        using (var config = new Config())
+        await using (var config = new Config())
         {
             (await config.ReadAsync()).OsuPath = osuFolder!;
             ViewModel.OsuLocation = osuFolder!;
         }
 
-        SongImporter.ImportSongsAsync(ViewModel.Player);
+        var player = ViewModel.Player;
+        await Task.Run(() => SongImporter.ImportSongsAsync(player, player));
         //await Task.Run(ViewModel.Player.ImportSongsAsync);
     }
 

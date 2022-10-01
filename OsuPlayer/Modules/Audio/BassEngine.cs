@@ -12,7 +12,7 @@ namespace OsuPlayer.Modules.Audio;
 /// <summary>
 /// Audio engine for the osu!player using <see cref="ManagedBass" />
 /// </summary>
-public sealed class BassEngine : INotifyPropertyChanged
+public sealed class BassEngine : INotifyPropertyChanged, IHasEffects
 {
     private const int KRepeatThreshold = 200;
     private readonly SyncProcedure _endTrackSyncProc;
@@ -35,7 +35,7 @@ public sealed class BassEngine : INotifyPropertyChanged
     public Collection<AudioDevice> AvailableAudioDevices;
     public Bindable<double> ChannelLengthB = new();
     public Bindable<double> ChannelPositionB = new();
-    public BindableArray<decimal> EqGains = new(10, 1);
+    public BindableArray<decimal> EqGains { get; } = new(10, 1);
     public Bindable<double> VolumeB = new();
 
     public int ActiveStreamHandle
@@ -248,7 +248,7 @@ public sealed class BassEngine : INotifyPropertyChanged
     /// Sets the speed of the current <see cref="FxStream" />
     /// </summary>
     /// <param name="speed">a 0 based offset for the speed</param>
-    public void SetSpeed(double speed)
+    public void SetPlaybackSpeed(double speed)
     {
         Bass.ChannelSetAttribute(FxStream, ChannelAttribute.TempoFrequency,
             _sampleFrequency * (1 + speed));

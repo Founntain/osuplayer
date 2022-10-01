@@ -12,7 +12,7 @@ namespace OsuPlayer.Views;
 public class SearchViewModel : BaseViewModel
 {
     private readonly IObservable<Func<IMapEntryBase, bool>> _filter;
-    public readonly Player Player;
+    public readonly IPlayer Player;
 
     private ReadOnlyObservableCollection<IMapEntryBase>? _filteredSongEntries;
     private string _filterText;
@@ -25,7 +25,7 @@ public class SearchViewModel : BaseViewModel
 
     public ReadOnlyObservableCollection<IMapEntryBase>? FilteredSongEntries => _filteredSongEntries;
 
-    public SearchViewModel(Player player)
+    public SearchViewModel(IPlayer player)
     {
         Player = player;
 

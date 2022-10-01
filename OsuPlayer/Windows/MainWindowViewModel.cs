@@ -9,7 +9,7 @@ namespace OsuPlayer.Windows;
 public class MainWindowViewModel : BaseWindowViewModel
 {
     public readonly BassEngine BassEngine;
-    public readonly Player Player;
+    public readonly IPlayer Player;
     private bool _isPaneOpen;
 
     private BaseViewModel _mainView;
@@ -47,7 +47,7 @@ public class MainWindowViewModel : BaseWindowViewModel
         set => _panelMaterial = value;
     }
 
-    public MainWindowViewModel(BassEngine engine, Player player)
+    public MainWindowViewModel(BassEngine engine, IPlayer player)
     {
         BassEngine = engine;
         Player = player;

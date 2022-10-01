@@ -15,25 +15,9 @@ public class HomeViewModel : BaseViewModel
 {
     private readonly Bindable<bool> _songsLoading = new();
 
-    public readonly Player Player;
-    private List<ObservableValue> _graphValues;
+    public readonly IPlayer Player;
+    private readonly BindableList<ObservableValue> _graphValues = new();
     private Bitmap? _profilePicture;
-
-    public List<ObservableValue> GraphValues
-    {
-        get => _graphValues;
-        private set
-        {
-            if (Series != default)
-            {
-                Series.First().Values = value;
-                this.RaisePropertyChanged(nameof(Series));
-            }
-
-            this.RaisePropertyChanged(nameof(CurrentUser));
-            this.RaiseAndSetIfChanged(ref _graphValues, value);
-        }
-    }
 
     public ObservableCollection<ISeries> Series { get; set; }
 
@@ -61,19 +45,24 @@ public class HomeViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _profilePicture, value);
     }
 
-    public HomeViewModel(Player player)
+    public HomeViewModel(IPlayer player)
     {
         Player = player;
 
         _songsLoading.BindTo(Player.SongsLoading);
         _songsLoading.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongsLoading)));
 
-        Player.GraphValues.BindValueChanged(d => GraphValues = d.NewValue, true);
+        _graphValues.BindTo(Player.GraphValues);
+        _graphValues.BindCollectionChanged(((sender, args) =>
+        {
+            Series!.First().Values = _graphValues;
+            
+            this.RaisePropertyChanged(nameof(Series));
+        }));
+
         Player.SongSource.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongEntries)), true);
 
-        Player.UserChanged += (sender, args) => this.RaisePropertyChanged(nameof(CurrentUser));
-
-        GraphValues = new List<ObservableValue>();
+        Player.UserDataChanged += (sender, args) => this.RaisePropertyChanged(nameof(CurrentUser));
 
         Activator = new ViewModelActivator();
         this.WhenActivated(Block);
@@ -98,7 +87,7 @@ public class HomeViewModel : BaseViewModel
             new LineSeries<ObservableValue>
             {
                 Name = "XP gained",
-                Values = GraphValues,
+                Values = _graphValues,
                 Fill = new LinearGradientPaint(new[]
                 {
                     new SKColor(128, 0, 128, 0),

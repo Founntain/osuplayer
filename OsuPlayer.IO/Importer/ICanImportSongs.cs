@@ -9,6 +9,5 @@ public interface ICanImportSongs : ISongSource
 {
     public Bindable<bool> SongsLoading { get; }
 
-    public IComparable CustomSorter(IMapEntryBase map, SortingMode sortingMode);
     public void OnSongImportFinished();
 }

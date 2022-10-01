@@ -20,7 +20,7 @@ public class PlayerControlViewModel : BaseViewModel
     private readonly Bindable<double> _volume = new();
     public readonly Bindable<IMapEntry?> CurrentSong = new();
 
-    public readonly Player Player;
+    public readonly IPlayer Player;
     private Bitmap? _currentSongImage;
     private string _currentSongLength = "00:00";
 
@@ -140,7 +140,7 @@ public class PlayerControlViewModel : BaseViewModel
 
     public string ActivePlaylist => $"Active playlist: {Player.ActivePlaylist?.Name ?? "none"}";
 
-    public PlayerControlViewModel(Player player, BassEngine bassEngine)
+    public PlayerControlViewModel(IPlayer player, BassEngine bassEngine)
     {
         Player = player;
 

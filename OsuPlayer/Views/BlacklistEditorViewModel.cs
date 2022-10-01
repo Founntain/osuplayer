@@ -18,7 +18,7 @@ public class BlacklistEditorViewModel : BaseViewModel
     private ReadOnlyObservableCollection<IMapEntryBase>? _filteredSongEntries;
     private string _filterText;
 
-    public Player Player;
+    public readonly IPlayer Player;
 
     public List<IMapEntryBase>? SelectedSongListItems { get; set; }
     public List<IMapEntryBase>? SelectedBlacklistItems { get; set; }
@@ -37,7 +37,7 @@ public class BlacklistEditorViewModel : BaseViewModel
 
     public ReadOnlyObservableCollection<IMapEntryBase>? FilteredSongEntries => _filteredSongEntries;
 
-    public BlacklistEditorViewModel(Player player)
+    public BlacklistEditorViewModel(IPlayer player)
     {
         Activator = new ViewModelActivator();
 

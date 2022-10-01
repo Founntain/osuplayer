@@ -47,7 +47,7 @@ public partial class PlaylistView : ReactiveControl<PlaylistViewModel>
 
         if (new Config().Container.PlaylistEnableOnPlay)
         {
-            ViewModel.Player.Repeat = RepeatMode.Playlist;
+            ViewModel.Player.RepeatMode.Value = RepeatMode.Playlist;
             ViewModel.Player.ActivePlaylistId = ViewModel.SelectedPlaylist?.Id;
         }
 
@@ -59,7 +59,7 @@ public partial class PlaylistView : ReactiveControl<PlaylistViewModel>
         if (sender is not Control {DataContext: Playlist playlist}) return;
 
         ViewModel.Player.ActivePlaylistId = playlist.Id;
-        ViewModel.Player.Repeat = RepeatMode.Playlist;
+        ViewModel.Player.RepeatMode.Value = RepeatMode.Playlist;
 
         await ViewModel.Player.TryPlaySongAsync(ViewModel.Player.GetMapEntryFromHash(playlist.Songs.First()));
     }

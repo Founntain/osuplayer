@@ -18,7 +18,7 @@ public class SettingsViewModel : BaseViewModel
     private readonly Bindable<bool> _blacklistSkip = new();
     private readonly Bindable<bool> _playlistEnableOnPlay = new();
     private readonly Bindable<SortingMode> _sortingMode = new();
-    public readonly Player Player;
+    public readonly IPlayer Player;
     private string _osuLocation;
     private string _patchnotes;
     private KnownColors _selectedAccentColor;
@@ -265,8 +265,10 @@ public class SettingsViewModel : BaseViewModel
 
     public ObservableCollection<AudioDevice> OutputDeviceComboboxItems { get; set; }
 
-    public SettingsViewModel(Player player)
+    public SettingsViewModel(IPlayer player)
     {
+        Player = player;
+
         var config = new Config();
 
         _selectedStartupSong = config.Container.StartupSong;
@@ -276,8 +278,6 @@ public class SettingsViewModel : BaseViewModel
         _selectedAccentColor = config.Container.AccentColor;
         _selectedFontWeight = config.Container.DefaultFontWeight;
         _selectedFont = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
-
-        Player = player;
 
         _sortingMode.BindTo(Player.SortingModeBindable);
         _sortingMode.BindValueChanged(d => this.RaisePropertyChanged(nameof(SelectedSortingMode)));

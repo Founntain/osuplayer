@@ -112,7 +112,7 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
         switch ((sender as Control)?.Name)
         {
             case "Repeat":
-                ViewModel.Player.Repeat = ViewModel.Player.Repeat.Next();
+                ViewModel.Player.RepeatMode.Value = ViewModel.Player.RepeatMode.Value.Next();
                 break;
             case "Previous":
                 ViewModel.Player.PreviousSong();

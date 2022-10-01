@@ -13,7 +13,7 @@ namespace OsuPlayer.Views;
 public class PlaylistViewModel : BaseViewModel
 {
     private readonly IObservable<Func<IMapEntryBase, bool>> _filter;
-    public readonly Player Player;
+    public readonly IPlayer Player;
 
     private IDisposable _currentBind;
     private ReadOnlyObservableCollection<IMapEntryBase>? _filteredSongEntries;
@@ -56,7 +56,7 @@ public class PlaylistViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _filterText, value);
     }
 
-    public PlaylistViewModel(Player player)
+    public PlaylistViewModel(IPlayer player)
     {
         Activator = new ViewModelActivator();
 

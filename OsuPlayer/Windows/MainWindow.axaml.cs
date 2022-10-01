@@ -31,7 +31,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
         _player = player;
 
-        Task.Run(() => SongImporter.ImportSongsAsync(_player));
+        Task.Run(() => SongImporter.ImportSongsAsync(_player, _player));
 
         InitializeComponent();
 
@@ -78,7 +78,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
         config.Container.Volume = ViewModel.BassEngine.Volume;
         config.Container.Username = ProfileManager.User?.Name;
-        config.Container.RepeatMode = ViewModel.Player.Repeat;
+        config.Container.RepeatMode = ViewModel.Player.RepeatMode.Value;
         config.Container.IsShuffle = ViewModel.Player.IsShuffle.Value;
         config.Container.ActivePlaylistId = ViewModel.Player.ActivePlaylistId;
 

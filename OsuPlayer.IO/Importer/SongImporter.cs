@@ -18,7 +18,7 @@ public static class SongImporter
     /// Also plays the first song depending on the <see cref="StartupSong" /> config.
     /// <seealso cref="DoImportAsync" />
     /// </summary>
-    public static async Task ImportSongsAsync(ICanImportSongs importSongsDestination)
+    public static async Task ImportSongsAsync(ICanImportSongs importSongsDestination, ISortableSongs songSorter)
     {
         importSongsDestination.SongsLoading.Value = true;
 
@@ -28,7 +28,7 @@ public static class SongImporter
 
             if (songEntries == null) return;
 
-            importSongsDestination.SongSource.Value = songEntries.OrderBy(x => importSongsDestination.CustomSorter(x, config.Container.SortingMode)).ThenBy(x => x.Title).ToSourceList();
+            importSongsDestination.SongSource.Value = songEntries.OrderBy(x => songSorter.CustomSorter(x, config.Container.SortingMode)).ThenBy(x => x.Title).ToSourceList();
 
             importSongsDestination.SongsLoading.Value = false;
 
@@ -44,7 +44,7 @@ public static class SongImporter
     /// </summary>
     /// <param name="path">the path to the osu!(lazer) root folder</param>
     /// <returns>an <see cref="ICollection{T}" /> of <see cref="IMapEntryBase" /> containing the imported songs</returns>
-    public static async Task<ICollection<IMapEntryBase>?> DoImportAsync(string path)
+    private static async Task<ICollection<IMapEntryBase>?> DoImportAsync(string path)
     {
         if (string.IsNullOrEmpty(path))
             return null;

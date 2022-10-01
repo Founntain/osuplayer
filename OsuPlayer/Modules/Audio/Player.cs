@@ -9,7 +9,6 @@ using OsuPlayer.Data.API.Enums;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.Extensions;
-using OsuPlayer.IO.Importer;
 using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Network.Discord;
@@ -21,32 +20,28 @@ namespace OsuPlayer.Modules.Audio;
 /// This class is a wrapper for our <see cref="BassEngine" />.
 /// You can play, pause, stop and etc. from this class. Custom logic should also be implemented here
 /// </summary>
-public class Player : ICanImportSongs
+public class Player : IPlayer
 {
     private readonly BassEngine _bassEngine;
     private readonly Stopwatch _currentSongTimer;
     private readonly DiscordClient? _discordClient;
-    private readonly int?[] _shuffleHistory = new int?[10];
+    private readonly SongShuffler _songShuffler;
 
     private bool _isMuted;
     private double _oldVolume;
 
-    private PlayState _playState;
-    private int _shuffleHistoryIndex;
-
-    public Bindable<bool> BlacklistSkip { get; } = new();
+    public Bindable<SourceList<IMapEntryBase>> SongSource { get; } = new();
+    public List<IMapEntryBase>? SongSourceList { get; private set; }
 
     public Bindable<IMapEntry?> CurrentSong { get; } = new();
-
     public Bindable<Bitmap?> CurrentSongImage { get; } = new();
 
-    public Bindable<List<ObservableValue>?> GraphValues { get; } = new();
+    public BindableList<ObservableValue> GraphValues { get; } = new();
 
     public Bindable<bool> IsPlaying { get; } = new();
-
     public Bindable<bool> IsShuffle { get; } = new();
+    public Bindable<bool> BlacklistSkip { get; } = new();
     public Bindable<bool> PlaylistEnableOnPlay { get; } = new();
-
     public Bindable<RepeatMode> RepeatMode { get; } = new();
 
     public Bindable<Playlist?> SelectedPlaylist { get; } = new();
@@ -55,23 +50,7 @@ public class Player : ICanImportSongs
 
     public BindableArray<decimal> EqGains => _bassEngine.EqGains;
 
-    private PlayState PlayState
-    {
-        get => _playState;
-        set
-        {
-            IsPlaying.Value = value == PlayState.Playing;
-            _playState = value;
-        }
-    }
-
-    private int CurrentIndex { get; set; }
-
-    public RepeatMode Repeat
-    {
-        get => RepeatMode.Value;
-        set => RepeatMode.Value = value;
-    }
+    public int CurrentIndex { get; set; }
 
     public bool IsEqEnabled
     {
@@ -80,7 +59,7 @@ public class Player : ICanImportSongs
     }
 
     public Playlist? ActivePlaylist => ActivePlaylistId != default
-        ? PlaylistManager.GetAllPlaylists().First(x => x.Id == ActivePlaylistId)
+        ? PlaylistManager.GetAllPlaylists()?.First(x => x.Id == ActivePlaylistId)
         : default;
 
     public Guid? ActivePlaylistId { get; set; }
@@ -98,6 +77,7 @@ public class Player : ICanImportSongs
         };
 
         _discordClient = new DiscordClient().Initialize();
+        _songShuffler = new SongShuffler(this);
 
         var config = new Config();
 
@@ -106,7 +86,7 @@ public class Player : ICanImportSongs
         SortingModeBindable.Value = config.Container.SortingMode;
         BlacklistSkip.Value = config.Container.BlacklistSkip;
         PlaylistEnableOnPlay.Value = config.Container.PlaylistEnableOnPlay;
-        Repeat = config.Container.RepeatMode;
+        RepeatMode.Value = config.Container.RepeatMode;
         IsShuffle.Value = config.Container.IsShuffle;
         ActivePlaylistId = config.Container.ActivePlaylistId;
 
@@ -130,20 +110,23 @@ public class Player : ICanImportSongs
 
             // _mainWindow.ViewModel!.PlayerControl.CurrentSongImage = Task.Run(value!.FindBackground).Result;
         }, true);
+        
+        RepeatMode.BindValueChanged(d =>
+        {
+            using var cfg = new Config();
+            cfg.Container.RepeatMode = d.NewValue;
+        }, true);
 
         SongSource.Value = new SourceList<IMapEntryBase>();
 
         _currentSongTimer = new Stopwatch();
     }
 
-    public Bindable<SourceList<IMapEntryBase>> SongSource { get; } = new();
-    public List<IMapEntryBase>? SongSourceList { get; private set; }
-
     public Bindable<bool> SongsLoading { get; } = new();
 
     public async void OnSongImportFinished()
     {
-        await using var config = new Config();
+        var config = new Config();
 
         switch (config.Container.StartupSong)
         {
@@ -182,6 +165,7 @@ public class Player : ICanImportSongs
 
     public event PropertyChangedEventHandler? PlaylistChanged;
     public event PropertyChangedEventHandler? BlacklistChanged;
+    public event PropertyChangedEventHandler? UserDataChanged;
 
     /// <summary>
     /// Plays the last played song read from the <see cref="ConfigContainer" /> and defaults to the
@@ -240,7 +224,7 @@ public class Player : ICanImportSongs
     /// <param name="speed">The speed to set</param>
     public void SetPlaybackSpeed(double speed)
     {
-        _bassEngine.SetSpeed(speed);
+        _bassEngine.SetPlaybackSpeed(speed);
     }
 
     /// <summary>
@@ -267,14 +251,8 @@ public class Player : ICanImportSongs
 
         var xpEarned = response.TotalXp - currentTotalXp;
 
-        var values = GraphValues.Value?.ToList() ?? new List<ObservableValue>();
-
-        values.Add(new ObservableValue(xpEarned));
-
-        GraphValues.Value = values;
+        GraphValues.Add(new ObservableValue(xpEarned));
     }
-
-    public event PropertyChangedEventHandler UserChanged;
 
     /// <summary>
     /// Updates the songs played count of the user
@@ -290,7 +268,7 @@ public class Player : ICanImportSongs
 
         ProfileManager.User = response;
 
-        UserChanged.Invoke(this, new PropertyChangedEventArgs("SongsPlayed"));
+        UserDataChanged?.Invoke(this, new PropertyChangedEventArgs("SongsPlayed"));
     }
 
     /// <summary>
@@ -318,7 +296,7 @@ public class Player : ICanImportSongs
     /// </summary>
     /// <param name="setId">The beatmap set ID</param>
     /// <returns>A list of <see cref="IMapEntryBase" /></returns>
-    public List<IMapEntryBase> GetMapEntriesFromSetId(ICollection<int> setId)
+    public List<IMapEntryBase> GetMapEntriesFromSetId(IEnumerable<int> setId)
     {
         return SongSourceList!.Where(x => setId.Contains(x.BeatmapSetId)).ToList();
     }
@@ -328,7 +306,7 @@ public class Player : ICanImportSongs
     /// </summary>
     /// <param name="hash">The beatmap hash</param>
     /// <returns>A list of <see cref="IMapEntryBase" /></returns>
-    public List<IMapEntryBase> GetMapEntriesFromHash(ICollection<string> hash)
+    public List<IMapEntryBase> GetMapEntriesFromHash(IEnumerable<string> hash)
     {
         return hash.Select(x => SongSourceList!.Find(y => y.Hash == x)).ToList();
     }
@@ -338,7 +316,46 @@ public class Player : ICanImportSongs
         _discordClient?.DeInitialize();
     }
 
-    #region Player
+    /// <summary>
+    /// Pauses the current song if playing or plays again if paused
+    /// </summary>
+    public async void PlayPause()
+    {
+        if (!IsPlaying.Value)
+        {
+            _bassEngine.Play();
+            _currentSongTimer.Start();
+            IsPlaying.Value = true;
+
+            await ApiAsync.SetUserOnlineStatus(UserOnlineStatusType.Listening, CurrentSong.Value?.ToString(), CurrentSong.Value?.Hash);
+        }
+        else
+        {
+            _bassEngine.Pause();
+            _currentSongTimer.Stop();
+            IsPlaying.Value = false;
+
+            await ApiAsync.SetUserOnlineStatus(UserOnlineStatusType.Idle);
+        }
+    }
+
+    /// <summary>
+    /// Sets the playing state to Playing
+    /// </summary>
+    public void Play()
+    {
+        _bassEngine.Play();
+        IsPlaying.Value = true;
+    }
+
+    /// <summary>
+    /// Sets the playing state to Pause
+    /// </summary>
+    public void Pause()
+    {
+        _bassEngine.Pause();
+        IsPlaying.Value = false;
+    }
 
     /// <summary>
     /// Toggles mute of the volume
@@ -359,47 +376,6 @@ public class Player : ICanImportSongs
     }
 
     /// <summary>
-    /// Pauses the current song if playing or plays again if paused
-    /// </summary>
-    public async void PlayPause()
-    {
-        if (PlayState == PlayState.Paused)
-        {
-            _bassEngine.Play();
-            _currentSongTimer.Start();
-            PlayState = PlayState.Playing;
-
-            await ApiAsync.SetUserOnlineStatus(UserOnlineStatusType.Listening, CurrentSong.Value?.ToString(), CurrentSong.Value?.Hash);
-        }
-        else
-        {
-            _bassEngine.Pause();
-            _currentSongTimer.Stop();
-            PlayState = PlayState.Paused;
-
-            await ApiAsync.SetUserOnlineStatus(UserOnlineStatusType.Idle);
-        }
-    }
-
-    /// <summary>
-    /// Sets the playing state to Playing
-    /// </summary>
-    public void Play()
-    {
-        _bassEngine.Play();
-        PlayState = PlayState.Playing;
-    }
-
-    /// <summary>
-    /// Sets the playing state to Pause
-    /// </summary>
-    public void Pause()
-    {
-        _bassEngine.Pause();
-        PlayState = PlayState.Paused;
-    }
-
-    /// <summary>
     /// Plays the previous song or the last song if we are the beginning
     /// </summary>
     public async void PreviousSong()
@@ -413,7 +389,7 @@ public class Player : ICanImportSongs
             return;
         }
 
-        if (Repeat == Data.OsuPlayer.Enums.RepeatMode.SingleSong)
+        if (RepeatMode.Value == Data.OsuPlayer.Enums.RepeatMode.SingleSong)
         {
             await TryStartSongAsync(SongSourceList[CurrentIndex]);
             return;
@@ -421,11 +397,11 @@ public class Player : ICanImportSongs
 
         if (IsShuffle.Value)
         {
-            await TryPlaySongAsync(DoShuffle(ShuffleDirection.Backwards), PlayDirection.Backwards);
+            await TryPlaySongAsync(_songShuffler.DoShuffle(ShuffleDirection.Backwards), PlayDirection.Backwards);
             return;
         }
 
-        if (Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist)
+        if (RepeatMode.Value == Data.OsuPlayer.Enums.RepeatMode.Playlist)
         {
             await EnqueuePlaylistAsync(PlayDirection.Backwards);
             return;
@@ -438,7 +414,7 @@ public class Player : ICanImportSongs
         }
 
         var prevIndex = (CurrentIndex - 1) % SongSourceList!.Count;
-        await TryEnqueueAsync(SongSourceList[prevIndex < 0 ? prevIndex + SongSourceList!.Count : prevIndex], PlayDirection.Backwards);
+        await TryPlaySongAsync(SongSourceList[prevIndex < 0 ? prevIndex + SongSourceList!.Count : prevIndex], PlayDirection.Backwards);
     }
 
     /// <summary>
@@ -449,7 +425,7 @@ public class Player : ICanImportSongs
         if (SongSourceList == null || !SongSourceList.Any())
             return;
 
-        if (Repeat == Data.OsuPlayer.Enums.RepeatMode.SingleSong)
+        if (RepeatMode.Value == Data.OsuPlayer.Enums.RepeatMode.SingleSong)
         {
             await TryStartSongAsync(SongSourceList[CurrentIndex]);
             return;
@@ -457,11 +433,11 @@ public class Player : ICanImportSongs
 
         if (IsShuffle.Value)
         {
-            await TryPlaySongAsync(DoShuffle(ShuffleDirection.Forward));
+            await TryPlaySongAsync(_songShuffler.DoShuffle(ShuffleDirection.Forward));
             return;
         }
 
-        if (Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist)
+        if (RepeatMode.Value == Data.OsuPlayer.Enums.RepeatMode.Playlist)
         {
             await EnqueuePlaylistAsync(PlayDirection.Forward);
             return;
@@ -474,7 +450,7 @@ public class Player : ICanImportSongs
         }
 
         var nextIndex = (CurrentIndex + 1) % SongSourceList!.Count;
-        await TryEnqueueAsync(SongSourceList[nextIndex < 0 ? nextIndex + SongSourceList!.Count : nextIndex], PlayDirection.Forward);
+        await TryPlaySongAsync(SongSourceList[nextIndex < 0 ? nextIndex + SongSourceList!.Count : nextIndex], PlayDirection.Forward);
     }
 
     /// <summary>
@@ -498,7 +474,7 @@ public class Player : ICanImportSongs
         {
             // OsuPlayerMessageBox.Show(
             //    OsuPlayer.LanguageService.LoadControlLanguageWithKey("message.noPlaylistSelected"));
-            Repeat = Data.OsuPlayer.Enums.RepeatMode.NoRepeat;
+            RepeatMode.Value = Data.OsuPlayer.Enums.RepeatMode.NoRepeat;
 
             if (SongSourceList!.IsInBounds(CurrentIndex + offset))
                 await TryPlaySongAsync(SongSourceList[CurrentIndex + offset], direction);
@@ -550,90 +526,40 @@ public class Player : ICanImportSongs
     }
 
     /// <summary>
-    /// Enqueues a song with a given <paramref name="direction" /> and ignores all songs with the same name as the currently
-    /// playing song
-    /// </summary>
-    /// <param name="song">
-    /// the song that should be played when the <paramref name="direction" /> is
-    /// <see cref="PlayDirection.Normal" />
-    /// </param>
-    /// <param name="direction">a <see cref="PlayDirection" /> to indicate in which direction the next song should be</param>
-    /// <returns>a <see cref="Task" /> from the enqueue try <seealso cref="TryStartSongAsync" /></returns>
-    private async Task<Task> TryEnqueueIgnoreSameNameAsync(IMapEntryBase song, PlayDirection direction)
-    {
-        if (CurrentSong.Value == default)
-            return Task.FromException(new NullReferenceException());
-
-        if (RepeatMode.Value == Data.OsuPlayer.Enums.RepeatMode.Playlist)
-            return TryStartSongAsync(song);
-
-        var offset = direction switch
-        {
-            PlayDirection.Backwards => -1,
-            PlayDirection.Forward => 1,
-            _ => 0
-        };
-
-        if (offset == 0)
-            return await TryStartSongAsync(song);
-
-        if (CurrentSong.Value.SongName == song.SongName)
-        {
-            CurrentSong.Value = await song.ReadFullEntry(new Config().Container.OsuPath!);
-            switch (direction)
-            {
-                case PlayDirection.Forward:
-                    NextSong();
-                    return Task.CompletedTask;
-                case PlayDirection.Backwards:
-                    PreviousSong();
-                    return Task.CompletedTask;
-            }
-        }
-
-        for (var i = CurrentIndex + offset; i < SongSourceList?.Count; i += offset)
-        {
-            if (SongSourceList[i].SongName == CurrentSong.Value.SongName) continue;
-
-            return await TryStartSongAsync(SongSourceList[i]);
-        }
-
-        return Task.FromException(new InvalidOperationException("There is no song with a different name"));
-    }
-
-    /// <summary>
     /// Enqueues a specific song to play
     /// </summary>
     /// <param name="song">The song to enqueue</param>
     /// <param name="playDirection">The direction we went in the playlist. Mostly used by the Next and Prev method</param>
     public async Task TryPlaySongAsync(IMapEntryBase? song, PlayDirection playDirection = PlayDirection.Normal)
     {
-        if ((await TryEnqueueAsync(song, playDirection)).IsFaulted)
-        {
-            if (!SongSourceList?.Any() ?? true)
-                return;
-
-            await TryStartSongAsync(SongSourceList[0]);
-        }
-    }
-
-    /// <summary>
-    /// Enqueues a specific song to play
-    /// </summary>
-    /// <param name="song">The song to enqueue</param>
-    /// <param name="playDirection">The direction we went in the playlist. Mostly used by the Next and Prev method</param>
-    private async Task<Task> TryEnqueueAsync(IMapEntryBase? song, PlayDirection playDirection = PlayDirection.Normal)
-    {
         if (SongSourceList == default || !SongSourceList.Any())
-            return Task.FromException(new NullReferenceException());
+            throw new NullReferenceException();
 
         if (song == default)
-            return await TryStartSongAsync(SongSourceList[^1]);
+        {
+            await TryStartSongAsync(SongSourceList[0]);
+            return;
+        }
 
-        if ((await new Config().ReadAsync()).IgnoreSongsWithSameNameCheckBox)
-            return await TryEnqueueIgnoreSameNameAsync(song, playDirection);
+        if ((await new Config().ReadAsync()).IgnoreSongsWithSameNameCheckBox && string.Equals(CurrentSong.Value?.SongName, song.SongName, StringComparison.OrdinalIgnoreCase))
+        {
+            switch (playDirection)
+            {
+                case PlayDirection.Forward:
+                    CurrentIndex++;
+                    NextSong();
+                    return;
+                case PlayDirection.Backwards:
+                    CurrentIndex--;
+                    PreviousSong();
+                    return;
+                default:
+                    await TryStartSongAsync(song);
+                    return;
+            }
+        }
 
-        return await TryStartSongAsync(song);
+        await TryStartSongAsync(song);
     }
 
     /// <summary>
@@ -641,10 +567,12 @@ public class Player : ICanImportSongs
     /// </summary>
     /// <param name="song">a <see cref="IMapEntryBase" /> to play next</param>
     /// <returns>a <see cref="Task" /> with the resulting state</returns>
-    private async Task<Task> TryStartSongAsync(IMapEntryBase song)
+    private async Task TryStartSongAsync(IMapEntryBase song)
     {
         if (SongSourceList == null || !SongSourceList.Any())
-            return Task.FromException(new NullReferenceException($"{nameof(SongSourceList)} can't be null or empty"));
+        {
+            throw new NullReferenceException($"{nameof(SongSourceList)} can't be null or empty");
+        }
 
         var config = new Config();
 
@@ -653,7 +581,9 @@ public class Player : ICanImportSongs
         var fullMapEntry = await song.ReadFullEntry(config.Container.OsuPath!);
 
         if (fullMapEntry == default)
-            return Task.FromException(new NullReferenceException());
+        {
+            throw new NullReferenceException();
+        }
 
         fullMapEntry.UseUnicode = config.Container.UseSongNameUnicode;
         var findBackgroundTask = fullMapEntry.FindBackground();
@@ -675,14 +605,14 @@ public class Player : ICanImportSongs
             _bassEngine.OpenFile(fullMapEntry.FullPath!);
             //_bassEngine.SetAllEq(Core.Instance.Config.Eq);
             _bassEngine.Play();
-            PlayState = PlayState.Playing;
+            IsPlaying.Value = true;
 
             _currentSongTimer.Restart();
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex.ToString());
-            return Task.FromException(ex);
+            return;
         }
 
         CurrentSong.Value = fullMapEntry;
@@ -699,151 +629,5 @@ public class Player : ICanImportSongs
         }
 
         CurrentSongImage.Value = await findBackgroundTask;
-
-        return Task.CompletedTask;
     }
-
-    #endregion
-
-    #region Shuffle
-
-    /// <summary>
-    /// Implements the shuffle logic <seealso cref="GetNextShuffledIndex" />
-    /// </summary>
-    /// <param name="direction">the <see cref="ShuffleDirection" /> to shuffle to</param>
-    /// <returns>a random/shuffled <see cref="IMapEntryBase" /></returns>
-    private IMapEntryBase? DoShuffle(ShuffleDirection direction)
-    {
-        if (CurrentSong.Value == default || SongSourceList == default)
-            throw new NullReferenceException();
-
-        if (Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist && ActivePlaylist == default) ActivePlaylistId = (PlaylistManager.GetAllPlaylists() as List<Playlist>)?.Find(x => x.Name == "Favorites")?.Id;
-
-        switch (direction)
-        {
-            case ShuffleDirection.Forward:
-            {
-                // Next index if not at array end
-                if (_shuffleHistoryIndex < _shuffleHistory.Length - 1)
-                {
-                    GetNextShuffledIndex();
-                }
-                // Move array one down if at the top of the array
-                else
-                {
-                    Array.Copy(_shuffleHistory, 1, _shuffleHistory, 0, _shuffleHistory.Length - 1);
-
-                    _shuffleHistory[_shuffleHistoryIndex] = GenerateShuffledIndex();
-                }
-
-                break;
-            }
-            case ShuffleDirection.Backwards:
-            {
-                // Prev index if index greater than zero
-                if (_shuffleHistoryIndex > 0)
-                {
-                    GetPreviousShuffledIndex();
-                }
-                // Move array one up if at the start of the array
-                else
-                {
-                    Array.Copy(_shuffleHistory, 0, _shuffleHistory, 1, _shuffleHistory.Length - 1);
-
-                    _shuffleHistory[_shuffleHistoryIndex] = GenerateShuffledIndex();
-                }
-
-                break;
-            }
-        }
-
-        Debug.WriteLine("ShuffleHistory: " + _shuffleHistoryIndex);
-
-        // ReSharper disable once PossibleInvalidOperationException
-        var shuffleIndex = (int) _shuffleHistory[_shuffleHistoryIndex];
-
-        return Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist && ActivePlaylist != default
-            ? GetMapEntryFromHash(ActivePlaylist!.Songs[shuffleIndex])
-            : SongSourceList![shuffleIndex];
-    }
-
-    /// <summary>
-    /// Generates the next shuffled index in <see cref="_shuffleHistory" />
-    /// <seealso cref="GenerateShuffledIndex" />
-    /// </summary>
-    private void GetNextShuffledIndex()
-    {
-        // If there is no "next" song generate new shuffled index
-        if (_shuffleHistory[_shuffleHistoryIndex + 1] == null)
-        {
-            _shuffleHistory[_shuffleHistoryIndex] = Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist
-                ? ActivePlaylist?.Songs.IndexOf(CurrentSong.Value!.Hash)
-                : CurrentIndex;
-            _shuffleHistory[++_shuffleHistoryIndex] = GenerateShuffledIndex();
-        }
-        // There is a "next" song in the history
-        else
-        {
-            // Check if next song index is in allowed boundary
-            if (_shuffleHistory[_shuffleHistoryIndex + 1] < (Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist
-                    ? ActivePlaylist?.Songs.Count
-                    : SongSourceList!.Count))
-                _shuffleHistoryIndex++;
-            // Generate new shuffled index when not
-            else
-                _shuffleHistory[++_shuffleHistoryIndex] = GenerateShuffledIndex();
-        }
-    }
-
-    /// <summary>
-    /// Generates the previous shuffled index in <see cref="_shuffleHistory" />
-    /// <seealso cref="GenerateShuffledIndex" />
-    /// </summary>
-    private void GetPreviousShuffledIndex()
-    {
-        // If there is no "prev" song generate new shuffled index
-        if (_shuffleHistory[_shuffleHistoryIndex - 1] == null)
-        {
-            _shuffleHistory[_shuffleHistoryIndex] = Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist
-                ? ActivePlaylist?.Songs.IndexOf(CurrentSong.Value!.Hash)
-                : CurrentIndex;
-            _shuffleHistory[--_shuffleHistoryIndex] = GenerateShuffledIndex();
-        }
-        // There is a "prev" song in history
-        else
-        {
-            // Check if next song index is in allowed boundary
-            if (_shuffleHistory[_shuffleHistoryIndex - 1] < (Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist
-                    ? ActivePlaylist?.Songs.Count
-                    : SongSourceList!.Count))
-                _shuffleHistoryIndex--;
-            // Generate new shuffled index when not
-            else
-                _shuffleHistory[--_shuffleHistoryIndex] = GenerateShuffledIndex();
-        }
-    }
-
-    /// <summary>
-    /// Generates a new random/shuffled index of available songs in either the <see cref="SongSourceList" /> or
-    /// <see cref="ActivePlaylist" /> songs
-    /// </summary>
-    /// <returns>the index of the new shuffled index</returns>
-    private int GenerateShuffledIndex()
-    {
-        var rdm = new Random();
-        var shuffleIndex = rdm.Next(0, Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist
-            ? ActivePlaylist!.Songs.Count
-            : SongSourceList!.Count);
-
-        while (shuffleIndex == (Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist
-                   ? ActivePlaylist?.Songs.IndexOf(CurrentSong.Value!.Hash)
-                   : CurrentIndex)) // || OsuPlayer.Blacklist.IsSongInBlacklist(Songs[shuffleIndex]))
-            shuffleIndex = rdm.Next(0, Repeat == Data.OsuPlayer.Enums.RepeatMode.Playlist
-                ? ActivePlaylist!.Songs.Count
-                : SongSourceList!.Count);
-
-        return shuffleIndex;
-    }
-
-    #endregion
 }

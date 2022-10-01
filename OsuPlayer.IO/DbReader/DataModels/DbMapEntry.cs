@@ -89,6 +89,7 @@ internal class DbMapEntry : DbMapEntryBase, IMapEntry
     {
         if (UseUnicode && !string.IsNullOrEmpty(ArtistUnicode) && !string.IsNullOrEmpty(TitleUnicode))
             return $"{ArtistUnicode} - {TitleUnicode}";
+
         return $"{Artist} - {Title}";
     }
 
