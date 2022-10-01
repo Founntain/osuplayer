@@ -31,27 +31,29 @@ public class Player
     private readonly DiscordClient? _discordClient;
     private readonly int?[] _shuffleHistory = new int?[10];
 
-    public readonly Bindable<bool> BlacklistSkip = new();
+    public Bindable<SourceList<IMapEntryBase>> SongSource { get; } = new();
+    public List<IMapEntryBase>? SongSourceList => SongSource.Value.Items.ToList();
 
-    public readonly Bindable<IMapEntry?> CurrentSongBinding = new();
+    public Bindable<bool> BlacklistSkip { get; } = new();
 
-    public readonly Bindable<Bitmap?> CurrentSongImage = new();
+    public Bindable<IMapEntry?> CurrentSongBinding { get; } = new();
 
-    public readonly Bindable<List<ObservableValue>?> GraphValues = new();
+    public Bindable<Bitmap?> CurrentSongImage { get; } = new();
 
-    public readonly Bindable<bool> IsPlaying = new();
+    public Bindable<List<ObservableValue>?> GraphValues { get; } = new();
 
-    public readonly Bindable<bool> IsShuffle = new();
-    public readonly Bindable<bool> PlaylistEnableOnPlay = new();
+    public Bindable<bool> IsPlaying { get; } = new();
 
-    public readonly Bindable<RepeatMode> RepeatMode = new();
+    public Bindable<bool> IsShuffle { get; } = new();
+    public Bindable<bool> PlaylistEnableOnPlay { get; } = new();
 
-    public readonly Bindable<Playlist?> SelectedPlaylist = new();
+    public Bindable<RepeatMode> RepeatMode { get; } = new();
 
-    public readonly Bindable<bool> SongsLoading = new();
-    public readonly Bindable<SourceList<IMapEntryBase>> SongSource = new();
+    public Bindable<Playlist?> SelectedPlaylist { get; } = new();
 
-    public readonly Bindable<SortingMode> SortingModeBindable = new();
+    public Bindable<bool> SongsLoading { get; } = new();
+
+    public Bindable<SortingMode> SortingModeBindable { get; } = new();
 
     private bool _isMuted;
     private double _oldVolume;
@@ -81,8 +83,6 @@ public class Player
             // _mainWindow.ViewModel!.PlayerControl.CurrentSongImage = Task.Run(value!.FindBackground).Result;
         }
     }
-
-    public List<IMapEntryBase>? SongSourceList => SongSource.Value.Items.ToList();
 
     public BindableArray<decimal> EqGains => _bassEngine.EqGains;
 
