@@ -145,4 +145,22 @@ public partial class ApiAsync
 
         return await ApiRequestAsync<UserOnlineStatusModel>("users", "setUserOnlineStatus", data);
     }
+    
+    public static async void SetUserOnlineStatusNonBlock(UserOnlineStatusType statusType, string? song = null, string? checksum = null)
+    {
+        var username = ProfileManager.User?.Name;
+
+        if (string.IsNullOrWhiteSpace(username))
+            return;
+
+        var data = new UserOnlineStatusModel
+        {
+            Username = username,
+            StatusType = statusType,
+            Song = song,
+            SongChecksum = checksum
+        };
+
+        await ApiRequestAsync<UserOnlineStatusModel>("users", "setUserOnlineStatus", data);
+    }
 }

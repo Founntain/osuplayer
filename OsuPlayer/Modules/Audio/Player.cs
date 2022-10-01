@@ -74,7 +74,7 @@ public class Player
 
             config.Container.LastPlayedSong = value?.Hash;
 
-            ApiAsync.SetUserOnlineStatus(UserOnlineStatusType.Listening, value?.ToString(), value?.Hash);
+            ApiAsync.SetUserOnlineStatusNonBlock(UserOnlineStatusType.Listening, value?.ToString(), value?.Hash);
 
             if (_discordClient is null || CurrentSong is null) return;
 
