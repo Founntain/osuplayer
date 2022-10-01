@@ -5,6 +5,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
 using OsuPlayer.Controls;
 using OsuPlayer.Extensions;
+using OsuPlayer.IO.Importer;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
 using ReactiveUI;
@@ -87,12 +88,16 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
             ViewModel.OsuLocation = osuFolder!;
         }
 
-        await Task.Run(ViewModel.Player.ImportSongsAsync);
+        SongImporter.ImportSongsAsync(ViewModel.Player);
+        //await Task.Run(ViewModel.Player.ImportSongsAsync);
     }
 
     public async void ImportCollectionsClick(object? sender, RoutedEventArgs routedEventArgs)
     {
-        await Task.Run(ViewModel.Player.ImportCollectionsAsync);
+        var player = ViewModel.Player;
+        var success = await Task.Run(() => CollectionImporter.ImportCollectionsAsync(player));
+
+        MessageBox.Show(_mainWindow, success ? "Import successful. Have fun!" : "There are no collections in osu!", "Import complete!");
     }
 
     public async void LoginClick(object? sender, RoutedEventArgs routedEventArgs)

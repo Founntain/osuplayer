@@ -9,14 +9,11 @@ using OsuPlayer.Data.API.Enums;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Extensions;
-using OsuPlayer.IO;
-using OsuPlayer.IO.DbReader;
+using OsuPlayer.IO.Importer;
 using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Network.Discord;
 using OsuPlayer.UI_Extensions;
-using OsuPlayer.Windows;
-using Splat;
 
 namespace OsuPlayer.Modules.Audio;
 
@@ -24,15 +21,18 @@ namespace OsuPlayer.Modules.Audio;
 /// This class is a wrapper for our <see cref="BassEngine" />.
 /// You can play, pause, stop and etc. from this class. Custom logic should also be implemented here
 /// </summary>
-public class Player
+public class Player : ICanImportSongs
 {
     private readonly BassEngine _bassEngine;
     private readonly Stopwatch _currentSongTimer;
     private readonly DiscordClient? _discordClient;
     private readonly int?[] _shuffleHistory = new int?[10];
 
-    public Bindable<SourceList<IMapEntryBase>> SongSource { get; } = new();
-    public List<IMapEntryBase>? SongSourceList { get; private set; }
+    private bool _isMuted;
+    private double _oldVolume;
+
+    private PlayState _playState;
+    private int _shuffleHistoryIndex;
 
     public Bindable<bool> BlacklistSkip { get; } = new();
 
@@ -51,15 +51,7 @@ public class Player
 
     public Bindable<Playlist?> SelectedPlaylist { get; } = new();
 
-    public Bindable<bool> SongsLoading { get; } = new();
-
     public Bindable<SortingMode> SortingModeBindable { get; } = new();
-
-    private bool _isMuted;
-    private double _oldVolume;
-
-    private PlayState _playState;
-    private int _shuffleHistoryIndex;
 
     public BindableArray<decimal> EqGains => _bassEngine.EqGains;
 
@@ -109,6 +101,8 @@ public class Player
 
         var config = new Config();
 
+        _bassEngine.Volume = config.Container.Volume;
+
         SortingModeBindable.Value = config.Container.SortingMode;
         BlacklistSkip.Value = config.Container.BlacklistSkip;
         PlaylistEnableOnPlay.Value = config.Container.PlaylistEnableOnPlay;
@@ -117,12 +111,9 @@ public class Player
         ActivePlaylistId = config.Container.ActivePlaylistId;
 
         SortingModeBindable.BindValueChanged(d => UpdateSorting(d.NewValue));
-        
-        SongSource.BindValueChanged(d =>
-        {
-            SongSourceList = d.NewValue.Items.ToList();
-        }, true);
-        
+
+        SongSource.BindValueChanged(d => { SongSourceList = d.NewValue.Items.ToList(); }, true);
+
         CurrentSong.BindValueChanged(d =>
         {
             CurrentIndex = SongSourceList!.FindIndex(x => x.Hash == d.NewValue!.Hash);
@@ -145,81 +136,52 @@ public class Player
         _currentSongTimer = new Stopwatch();
     }
 
-    public event PropertyChangedEventHandler? PlaylistChanged;
-    public event PropertyChangedEventHandler? BlacklistChanged;
+    public Bindable<SourceList<IMapEntryBase>> SongSource { get; } = new();
+    public List<IMapEntryBase>? SongSourceList { get; private set; }
 
-    /// <summary>
-    /// Imports the songs from either the osu!.db or client.realm using the <see cref="SongImporter" />. <br />
-    /// Imported songs are stored in <see cref="SongSource" />. <br />
-    /// Also plays the first song depending on the <see cref="StartupSong" /> config.
-    /// <seealso cref="SongImporter.ImportSongsAsync" />
-    /// </summary>
-    public async Task ImportSongsAsync()
+    public Bindable<bool> SongsLoading { get; } = new();
+
+    public async void OnSongImportFinished()
     {
-        SongsLoading.Value = true;
+        await using var config = new Config();
 
-        ConfigContainer configContainer;
-
-        await using (var config = new Config())
-        {
-            var songEntries = await SongImporter.ImportSongsAsync((await config.ReadAsync()).OsuPath!);
-
-            if (songEntries == null) return;
-
-            SongSource.Value = songEntries.OrderBy(x => CustomSorter(x, config.Container.SortingMode)).ThenBy(x => x.Title).ToSourceList();
-
-            SongsLoading.Value = false;
-
-            if (SongSourceList == null || !SongSourceList.Any()) return;
-
-            configContainer = config.Container;
-            _bassEngine.Volume = config.Container.Volume;
-        }
-
-        switch (configContainer.StartupSong)
+        switch (config.Container.StartupSong)
         {
             case StartupSong.FirstSong:
-                await TryPlaySongAsync(SongSourceList[0]);
+                await TryPlaySongAsync(SongSourceList?[0]);
                 break;
             case StartupSong.LastPlayed:
-                await PlayLastPlayedSongAsync(configContainer);
+                await PlayLastPlayedSongAsync(config.Container);
                 break;
             case StartupSong.RandomSong:
-                await TryPlaySongAsync(SongSourceList[new Random().Next(SongSourceList.Count)]);
+                await TryPlaySongAsync(SongSourceList?[new Random().Next(SongSourceList.Count)]);
                 break;
         }
     }
 
     /// <summary>
-    /// Imports the collections found in the osu! collection.db and adds them as playlists
+    /// Picks the <see cref="IMapEntryBase" /> property to sort maps on
     /// </summary>
-    public async Task ImportCollectionsAsync()
+    /// <param name="map">the <see cref="IMapEntryBase" /> to be sorted</param>
+    /// <param name="sortingMode">the <see cref="SortingMode" /> to decide how to sort</param>
+    /// <returns>an <see cref="IComparable" /> containing the property to compare on</returns>
+    public IComparable CustomSorter(IMapEntryBase map, SortingMode sortingMode)
     {
-        var config = new Config();
-
-        var reader = SongSourceList?[0].GetReader(config.Container.OsuPath!);
-
-        if (reader == null) return;
-
-        var collections = await reader.GetCollections(config.Container.OsuPath!);
-
-        if (collections != default && collections.Any())
+        switch (sortingMode)
         {
-            var beatmapHashes = await reader.GetBeatmapHashes();
-
-            foreach (var collection in collections)
-            foreach (var hash in collection.BeatmapHashes)
-            {
-                var setId = beatmapHashes?.GetValueOrDefault(hash) ?? -1;
-                await PlaylistManager.AddSongToPlaylistAsync(collection.Name, SongSourceList.FirstOrDefault(x => x.BeatmapSetId == setId)?.Hash ?? string.Empty);
-            }
-
-            Dispatcher.UIThread.Post(() => MessageBox.Show(Locator.Current.GetService<MainWindow>(), "Import successful. Have fun!", "Import complete!"));
-            return;
+            case SortingMode.Title:
+                return map.Title;
+            case SortingMode.Artist:
+                return map.Artist;
+            case SortingMode.SetId:
+                return map.BeatmapSetId;
+            default:
+                return null!;
         }
-
-        Dispatcher.UIThread.Post(() => MessageBox.Show(Locator.Current.GetService<MainWindow>(), "There are no collections in osu!", "Import complete!"));
     }
+
+    public event PropertyChangedEventHandler? PlaylistChanged;
+    public event PropertyChangedEventHandler? BlacklistChanged;
 
     /// <summary>
     /// Plays the last played song read from the <see cref="ConfigContainer" /> and defaults to the
@@ -270,27 +232,6 @@ public class Player
     public void TriggerBlacklistChanged(PropertyChangedEventArgs e)
     {
         BlacklistChanged?.Invoke(this, e);
-    }
-
-    /// <summary>
-    /// Picks the <see cref="IMapEntryBase" /> property to sort maps on
-    /// </summary>
-    /// <param name="map">the <see cref="IMapEntryBase" /> to be sorted</param>
-    /// <param name="sortingMode">the <see cref="SortingMode" /> to decide how to sort</param>
-    /// <returns>an <see cref="IComparable" /> containing the property to compare on</returns>
-    public IComparable CustomSorter(IMapEntryBase map, SortingMode sortingMode)
-    {
-        switch (sortingMode)
-        {
-            case SortingMode.Title:
-                return map.Title;
-            case SortingMode.Artist:
-                return map.Artist;
-            case SortingMode.SetId:
-                return map.BeatmapSetId;
-            default:
-                return null!;
-        }
     }
 
     /// <summary>

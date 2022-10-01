@@ -1,11 +1,12 @@
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Extensions;
-using OsuPlayer.Extensions.Enums;
+using OsuPlayer.IO.Importer;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Network;
 using OsuPlayer.Network.Discord;
@@ -30,7 +31,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
         _player = player;
 
-        Task.Run(_player.ImportSongsAsync);
+        Task.Run(() => SongImporter.ImportSongsAsync(_player));
 
         InitializeComponent();
 
@@ -50,7 +51,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         config.Container.AccentColor = accentColor;
 
         PlaylistManager.SetLastKnownPlaylistAsCurrentPlaylist();
-        
+
         Application.Current!.Resources["SmallerFontWeight"] = config.Container.GetSmallerFont().ToFontWeight();
         Application.Current!.Resources["DefaultFontWeight"] = config.Container.DefaultFontWeight.ToFontWeight();
         Application.Current!.Resources["BiggerFontWeight"] = config.Container.GetBiggerFont().ToFontWeight();
@@ -89,7 +90,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         var rpc = new DiscordClient();
         rpc.Initialize();
 
-        if (System.Diagnostics.Debugger.IsAttached) return;
+        if (Debugger.IsAttached) return;
 
         await using var config = new Config();
 
