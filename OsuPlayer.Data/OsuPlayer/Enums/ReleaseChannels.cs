@@ -1,4 +1,4 @@
-﻿namespace OsuPlayer.Network;
+﻿namespace OsuPlayer.Data.OsuPlayer.Enums;
 
 public enum ReleaseChannels
 {

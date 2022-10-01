@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using Avalonia.Data.Converters;
 using DynamicData;
-using OsuPlayer.Data.OsuPlayer.Classes;
+using OsuPlayer.Data.OsuPlayer.StorageModels;
 
 namespace OsuPlayer.Extensions.ValueConverters;
 

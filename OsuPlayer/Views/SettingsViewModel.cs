@@ -6,8 +6,6 @@ using Avalonia.Media;
 using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
-using OsuPlayer.Extensions;
-using OsuPlayer.Extensions.Enums;
 using OsuPlayer.Network;
 using OsuPlayer.Styles;
 using OsuPlayer.Windows;
@@ -23,14 +21,14 @@ public class SettingsViewModel : BaseViewModel
     public readonly Player Player;
     private string _osuLocation;
     private string _patchnotes;
-    private KnownColors _selectedBackgroundColor;
     private KnownColors _selectedAccentColor;
+    private KnownColors _selectedBackgroundColor;
+    private string? _selectedFont;
     private FontWeights _selectedFontWeight;
     private ReleaseChannels _selectedReleaseChannel;
     private StartupSong _selectedStartupSong;
     private WindowTransparencyLevel _selectedTransparencyLevel;
     private string _settingsSearchQ;
-    private string? _selectedFont;
 
     public MainWindow? MainWindow;
 

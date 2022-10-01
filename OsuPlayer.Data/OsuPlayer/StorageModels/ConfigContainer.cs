@@ -1,11 +1,7 @@
 ﻿using Avalonia.Controls;
-using Avalonia.Media;
 using OsuPlayer.Data.OsuPlayer.Enums;
-using OsuPlayer.Extensions;
-using OsuPlayer.Extensions.Enums;
-using OsuPlayer.Network;
 
-namespace OsuPlayer.IO.Storage.Config;
+namespace OsuPlayer.Data.OsuPlayer.StorageModels;
 
 public class ConfigContainer : IStorableContainer
 {
@@ -36,7 +32,13 @@ public class ConfigContainer : IStorableContainer
         return this;
     }
 
-    public FontWeights GetSmallerFont() => DefaultFontWeight.GetNextSmallerFont();
-    
-    public FontWeights GetBiggerFont() => DefaultFontWeight.GetNextBiggerFont();
+    public FontWeights GetSmallerFont()
+    {
+        return DefaultFontWeight.GetNextSmallerFont();
+    }
+
+    public FontWeights GetBiggerFont()
+    {
+        return DefaultFontWeight.GetNextBiggerFont();
+    }
 }

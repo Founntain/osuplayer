@@ -1,10 +1,9 @@
 using System.Reactive.Disposables;
 using Avalonia.Media.Imaging;
 using OsuPlayer.Base.ViewModels;
-using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
+using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.Extensions;
-using OsuPlayer.Extensions.Enums;
 using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.IO.Storage.Playlists;
 using ReactiveUI;
@@ -21,6 +20,14 @@ public class PlayerControlViewModel : BaseViewModel
     private readonly Bindable<double> _volume = new();
     public readonly Bindable<IMapEntry?> CurrentSong = new();
 
+    public readonly Player Player;
+    private Bitmap? _currentSongImage;
+    private string _currentSongLength = "00:00";
+
+    private string _currentSongTime = "00:00";
+
+    private double _playbackSpeed;
+
     public FontWeights SmallerFont
     {
         get
@@ -30,14 +37,6 @@ public class PlayerControlViewModel : BaseViewModel
             return config.Container.GetSmallerFont();
         }
     }
-
-    public readonly Player Player;
-    private Bitmap? _currentSongImage;
-    private string _currentSongLength = "00:00";
-
-    private string _currentSongTime = "00:00";
-
-    private double _playbackSpeed;
 
     public bool IsCurrentSongInPlaylist => CurrentSong.Value != null
                                            && PlaylistManager.CurrentPlaylist != null

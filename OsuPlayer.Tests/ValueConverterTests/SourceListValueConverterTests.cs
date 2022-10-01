@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using DynamicData;
 using NUnit.Framework;
-using OsuPlayer.Data.OsuPlayer.Classes;
+using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.Extensions.ValueConverters;
 
 namespace OsuPlayer.Tests;

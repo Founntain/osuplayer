@@ -1,4 +1,4 @@
-﻿using OsuPlayer.Data.OsuPlayer.Classes;
+﻿using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.IO.DbReader.DataModels;
 
 namespace OsuPlayer.IO.Storage.Playlists;

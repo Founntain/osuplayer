@@ -2,7 +2,7 @@
 
 using System.ComponentModel;
 
-namespace OsuPlayer.IO.Storage.Blacklist;
+namespace OsuPlayer.Data.OsuPlayer.StorageModels;
 
 public class BlacklistContainer : IStorableContainer
 {

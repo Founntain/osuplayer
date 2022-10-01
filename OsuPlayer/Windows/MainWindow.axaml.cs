@@ -5,7 +5,7 @@ using Avalonia;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using OsuPlayer.Base.ViewModels;
-using OsuPlayer.Extensions;
+using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Network;

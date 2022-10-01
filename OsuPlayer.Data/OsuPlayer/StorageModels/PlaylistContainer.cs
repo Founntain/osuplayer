@@ -1,6 +1,4 @@
-﻿using OsuPlayer.Data.OsuPlayer.Classes;
-
-namespace OsuPlayer.IO.Storage.Playlists;
+﻿namespace OsuPlayer.Data.OsuPlayer.StorageModels;
 
 /// <summary>
 /// A playlist container with the <see cref="LastSelectedPlaylist" /> and a <see cref="Playlists" /> list

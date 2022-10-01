@@ -2,7 +2,7 @@
 
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 
-namespace OsuPlayer.Data.OsuPlayer.Classes;
+namespace OsuPlayer.Data.OsuPlayer.StorageModels;
 
 /// <summary>
 /// A playlist object containing an <see cref="Id" />, the <see cref="Name" />, the <see cref="CreationTime" /> and a

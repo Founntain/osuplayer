@@ -1,6 +1,6 @@
 using Avalonia.Media;
 using OsuPlayer.Base.ViewModels;
-using OsuPlayer.Extensions;
+using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Views;
 using ReactiveUI;
 
@@ -71,8 +71,8 @@ public class MainWindowViewModel : BaseWindowViewModel
         using var config = new Config();
 
         var backgroundColor = config.Container.BackgroundColor.ToColor();
-        
-        PanelMaterial = new ()
+
+        PanelMaterial = new ExperimentalAcrylicMaterial
         {
             BackgroundSource = AcrylicBackgroundSource.Digger,
             TintColor = backgroundColor,

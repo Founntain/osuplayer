@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.IO.DbReader.DataModels;
 
 namespace OsuPlayer.IO.Storage.Blacklist;

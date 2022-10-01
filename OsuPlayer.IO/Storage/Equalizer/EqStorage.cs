@@ -1,4 +1,6 @@
-﻿namespace OsuPlayer.IO.Storage.Equalizer;
+﻿using OsuPlayer.Data.OsuPlayer.StorageModels;
+
+namespace OsuPlayer.IO.Storage.Equalizer;
 
 public class EqStorage : Storable<EqContainer>
 {

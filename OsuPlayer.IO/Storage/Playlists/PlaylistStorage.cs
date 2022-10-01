@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using OsuPlayer.Data.OsuPlayer.StorageModels;
 
 namespace OsuPlayer.IO.Storage.Playlists;
 

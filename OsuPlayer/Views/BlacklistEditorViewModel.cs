@@ -5,6 +5,7 @@ using DynamicData;
 using DynamicData.Binding;
 using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Data.OsuPlayer.Enums;
+using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.IO.Storage.Blacklist;
 using ReactiveUI;
 
