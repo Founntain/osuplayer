@@ -165,4 +165,14 @@ public class BindableArray<T> : IBindableArray<T>, IBindable
         AddWeakReference(other.WeakReference);
         other.AddWeakReference(WeakReference);
     }
+    
+    IBindable IBindable.CreateInstance() => CreateInstance();
+
+    /// <inheritdoc cref="IBindable.CreateInstance"/>
+    protected virtual IBindable CreateInstance() => new BindableArray<T>();
+
+    IBindable IBindable.GetBoundCopy() => GetBoundCopy();
+
+    /// <inheritdoc cref="IBindable{T}.GetBoundCopy"/>
+    public BindableArray<T> GetBoundCopy() => IBindable.GetBoundCopyImplementation(this);
 }

@@ -196,4 +196,16 @@ public class Bindable<T> : IBindable<T>, IBindable
         UnbindEvents();
         UnbindBindings();
     }
+
+    IBindable IBindable.CreateInstance() => CreateInstance();
+
+    /// <inheritdoc cref="IBindable.CreateInstance"/>
+    protected virtual Bindable<T> CreateInstance() => new Bindable<T>();
+
+    IBindable IBindable.GetBoundCopy() => GetBoundCopy();
+
+    IBindable<T> IBindable<T>.GetBoundCopy() => GetBoundCopy();
+
+    /// <inheritdoc cref="IBindable{T}.GetBoundCopy"/>
+    public Bindable<T> GetBoundCopy() => IBindable.GetBoundCopyImplementation(this);
 }
