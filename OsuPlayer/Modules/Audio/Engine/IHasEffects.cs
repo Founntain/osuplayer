@@ -6,7 +6,7 @@ public interface IHasEffects
     public bool IsEqEnabled { get; set; }
 
     /// <summary>
-    /// Sets the playback speed globally (including pitch)
+    /// Sets the playback speed (including pitch)
     /// </summary>
     /// <param name="speed">The speed to set</param>
     public void SetPlaybackSpeed(double speed);

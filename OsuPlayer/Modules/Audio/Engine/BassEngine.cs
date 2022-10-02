@@ -182,10 +182,6 @@ public sealed class BassEngine : IAudioEngine
         }
     }
 
-    /// <summary>
-    /// Sets the speed of the current <see cref="FxStream" />
-    /// </summary>
-    /// <param name="speed">a 0 based offset for the speed</param>
     public void SetPlaybackSpeed(double speed)
     {
         Bass.ChannelSetAttribute(FxStream, ChannelAttribute.TempoFrequency,
@@ -193,12 +189,6 @@ public sealed class BassEngine : IAudioEngine
         _playbackSpeed = speed;
     }
 
-    /// <summary>
-    /// Opens an audio file and creates an <see cref="FxStream" /> containing the decoded audio stream
-    /// </summary>
-    /// <param name="path">the path to the audio file to be opened</param>
-    /// <returns>true if opening succeeded, false else</returns>
-    /// <exception cref="ArgumentException">if the sync handle could not be created</exception>
     public bool OpenFile(string path)
     {
         Stop();
@@ -209,8 +199,7 @@ public sealed class BassEngine : IAudioEngine
 
         // Create Stream
         ActiveStreamHandle = Bass.CreateStream(path, 0, 0, BassFlags.Decode | BassFlags.Float);
-        FxStream = BassFx.TempoCreate(ActiveStreamHandle,
-            BassFlags.FxFreeSource | BassFlags.Float | BassFlags.Loop);
+        FxStream = BassFx.TempoCreate(ActiveStreamHandle, BassFlags.FxFreeSource | BassFlags.Float);
         ChannelLength.Value = Bass.ChannelBytes2Seconds(FxStream, Bass.ChannelGetLength(FxStream));
 
         if (FxStream != 0)
@@ -227,12 +216,11 @@ public sealed class BassEngine : IAudioEngine
 
     private void DisposeStreamIfNeeded()
     {
-        if (FxStream != 0)
-        {
-            ChannelPosition.Value = 0;
-            Bass.StreamFree(ActiveStreamHandle);
-            Bass.StreamFree(FxStream);
-        }
+        if (FxStream == 0) return;
+
+        ChannelPosition.Value = 0;
+        Bass.StreamFree(ActiveStreamHandle);
+        Bass.StreamFree(FxStream);
     }
 
     private void SetupStream()

@@ -64,7 +64,7 @@ public class RealmMapEntryBase : IMapEntryBase
         var audioFile = (RealmObjectBase) files.FirstOrDefault(x => string.Equals(x.DynamicApi.Get<string>(nameof(RealmNamedFileUsage.Filename)), audioFileName, StringComparison.CurrentCultureIgnoreCase));
         var backgroundFile = (RealmObjectBase) files.FirstOrDefault(x => string.Equals(x.DynamicApi.Get<string>(nameof(RealmNamedFileUsage.Filename)), backgroundFileName, StringComparison.CurrentCultureIgnoreCase));
 
-        if (audioFile == default || backgroundFile == default) throw new NullReferenceException();
+        if (audioFile == null || backgroundFile == null) return null;
 
         var audioHash = audioFile.DynamicApi.Get<RealmObjectBase>(nameof(RealmNamedFileUsage.File)).DynamicApi.Get<string>(nameof(RealmFile.Hash));
         var backgroundHash = backgroundFile.DynamicApi.Get<RealmObjectBase>(nameof(RealmNamedFileUsage.File)).DynamicApi.Get<string>(nameof(RealmFile.Hash));
