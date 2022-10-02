@@ -80,7 +80,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         config.Container.Username = ProfileManager.User?.Name;
         config.Container.RepeatMode = ViewModel.Player.RepeatMode.Value;
         config.Container.IsShuffle = ViewModel.Player.IsShuffle.Value;
-        config.Container.ActivePlaylistId = ViewModel.Player.ActivePlaylistId;
+        config.Container.ActivePlaylistId = ViewModel.Player.ActivePlaylistId.Value;
 
         _player.DisposeDiscordClient();
     }

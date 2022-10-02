@@ -7,7 +7,7 @@ public interface IHasPlaylists
 {
     public Bindable<Playlist?> SelectedPlaylist { get; }
     public Playlist? ActivePlaylist { get; }
-    public Guid? ActivePlaylistId { get; set; }
+    public Bindable<Guid?> ActivePlaylistId { get; }
     public Bindable<bool> PlaylistEnableOnPlay { get; }
 
     public event PropertyChangedEventHandler? PlaylistChanged;
