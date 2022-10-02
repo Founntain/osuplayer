@@ -21,7 +21,7 @@ public interface ISongSource
     /// </summary>
     /// <param name="hash">the beatmap hash to get the map from</param>
     /// <returns>the found <see cref="IMapEntryBase" /> or null if it doesn't exist</returns>
-    public IMapEntryBase? GetMapEntryFromHash(string hash);
+    public IMapEntryBase? GetMapEntryFromHash(string? hash);
 
 
     /// <summary>

@@ -1,35 +1,19 @@
-﻿using System.Diagnostics;
-using OsuPlayer.Data.OsuPlayer.Enums;
-using OsuPlayer.Data.OsuPlayer.StorageModels;
-using OsuPlayer.IO.Storage.Playlists;
+﻿using OsuPlayer.Data.OsuPlayer.Enums;
 
 namespace OsuPlayer.Modules.Audio;
 
-public class SongShuffler
+public class SongShuffler : IShuffleProvider
 {
     private int _shuffleHistoryIndex;
     private readonly int?[] _shuffleHistory = new int?[10];
-    private readonly IPlayer _player;
 
-    public SongShuffler(IPlayer player)
+    private int _rangeMax;
+    private int _currentIndex;
+
+    public int DoShuffle(int currentIndex, ShuffleDirection direction, int rangeMax)
     {
-        _player = player;
-    }
-
-    /// <summary>
-    /// Implements the shuffle logic <seealso cref="GetNextShuffledIndex" />
-    /// </summary>
-    /// <param name="direction">the <see cref="ShuffleDirection" /> to shuffle to</param>
-    /// <returns>a random/shuffled <see cref="IMapEntryBase" /></returns>
-    public IMapEntryBase? DoShuffle(ShuffleDirection direction)
-    {
-        if (_player.CurrentSong.Value == default || _player.SongSourceList == default)
-            throw new NullReferenceException();
-
-        if (_player.RepeatMode.Value == RepeatMode.Playlist && _player.ActivePlaylist == default)
-        {
-            _player.ActivePlaylistId = (PlaylistManager.GetAllPlaylists() as List<Playlist>)?.Find(x => x.Name == "Favorites")?.Id;
-        }
+        _rangeMax = rangeMax;
+        _currentIndex = currentIndex;
 
         switch (direction)
         {
@@ -69,14 +53,9 @@ public class SongShuffler
             }
         }
 
-        Debug.WriteLine("ShuffleHistory: " + _shuffleHistoryIndex);
+        var shuffledIndex = _shuffleHistory[_shuffleHistoryIndex];
 
-        // ReSharper disable once PossibleInvalidOperationException
-        var shuffleIndex = (int) _shuffleHistory[_shuffleHistoryIndex];
-
-        return _player.RepeatMode.Value == RepeatMode.Playlist && _player.ActivePlaylist != default
-            ? _player.GetMapEntryFromHash(_player.ActivePlaylist!.Songs[shuffleIndex])
-            : _player.SongSourceList![shuffleIndex];
+        return shuffledIndex ?? 0;
     }
 
     /// <summary>
@@ -88,18 +67,14 @@ public class SongShuffler
         // If there is no "next" song generate new shuffled index
         if (_shuffleHistory[_shuffleHistoryIndex + 1] == null)
         {
-            _shuffleHistory[_shuffleHistoryIndex] = _player.RepeatMode.Value == RepeatMode.Playlist
-                ? _player.ActivePlaylist?.Songs.IndexOf(_player.CurrentSong.Value!.Hash)
-                : _player.CurrentIndex;
+            _shuffleHistory[_shuffleHistoryIndex] = _currentIndex;
             _shuffleHistory[++_shuffleHistoryIndex] = GenerateShuffledIndex();
         }
         // There is a "next" song in the history
         else
         {
             // Check if next song index is in allowed boundary
-            if (_shuffleHistory[_shuffleHistoryIndex + 1] < (_player.RepeatMode.Value == RepeatMode.Playlist
-                    ? _player.ActivePlaylist?.Songs.Count
-                    : _player.SongSourceList!.Count))
+            if (_shuffleHistory[_shuffleHistoryIndex + 1] < _rangeMax)
                 _shuffleHistoryIndex++;
             // Generate new shuffled index when not
             else
@@ -116,18 +91,14 @@ public class SongShuffler
         // If there is no "prev" song generate new shuffled index
         if (_shuffleHistory[_shuffleHistoryIndex - 1] == null)
         {
-            _shuffleHistory[_shuffleHistoryIndex] = _player.RepeatMode.Value == RepeatMode.Playlist
-                ? _player.ActivePlaylist?.Songs.IndexOf(_player.CurrentSong.Value!.Hash)
-                : _player.CurrentIndex;
+            _shuffleHistory[_shuffleHistoryIndex] = _currentIndex;
             _shuffleHistory[--_shuffleHistoryIndex] = GenerateShuffledIndex();
         }
         // There is a "prev" song in history
         else
         {
             // Check if next song index is in allowed boundary
-            if (_shuffleHistory[_shuffleHistoryIndex - 1] < (_player.RepeatMode.Value == RepeatMode.Playlist
-                    ? _player.ActivePlaylist?.Songs.Count
-                    : _player.SongSourceList!.Count))
+            if (_shuffleHistory[_shuffleHistoryIndex - 1] < _rangeMax)
                 _shuffleHistoryIndex--;
             // Generate new shuffled index when not
             else
@@ -135,24 +106,14 @@ public class SongShuffler
         }
     }
 
-    /// <summary>
-    /// Generates a new random/shuffled index of available songs in either the <see cref="SongSourceList" /> or
-    /// <see cref="ActivePlaylist" /> songs
-    /// </summary>
-    /// <returns>the index of the new shuffled index</returns>
     private int GenerateShuffledIndex()
     {
         var rdm = new Random();
-        var shuffleIndex = rdm.Next(0, _player.RepeatMode.Value == RepeatMode.Playlist
-            ? _player.ActivePlaylist!.Songs.Count
-            : _player.SongSourceList!.Count);
-
-        while (shuffleIndex == (_player.RepeatMode.Value == RepeatMode.Playlist
-                   ? _player.ActivePlaylist?.Songs.IndexOf(_player.CurrentSong.Value!.Hash)
-                   : _player.CurrentIndex)) // || OsuPlayer.Blacklist.IsSongInBlacklist(Songs[shuffleIndex]))
-            shuffleIndex = rdm.Next(0, _player.RepeatMode.Value == RepeatMode.Playlist
-                ? _player.ActivePlaylist!.Songs.Count
-                : _player.SongSourceList!.Count);
+        int shuffleIndex;
+        do
+        {
+            shuffleIndex = rdm.Next(0, _rangeMax);
+        } while (shuffleIndex == _currentIndex);
 
         return shuffleIndex;
     }

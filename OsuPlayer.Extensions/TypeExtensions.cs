@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Reflection;
 using DynamicData;
+using Splat;
 
 namespace OsuPlayer.Extensions;
 
@@ -78,5 +79,15 @@ public static class Extensions
         if (version == null) return string.Empty;
 
         return $"{version.Major}.{version.Minor}.{version.Build}";
+    }
+
+    public static T GetRequiredService<T>(this IReadonlyDependencyResolver resolver)
+    {
+        var service = resolver.GetService<T>();
+
+        if (service == null)
+            throw new InvalidOperationException($"Service of type {typeof(T)} could not be found");
+
+        return service;
     }
 }

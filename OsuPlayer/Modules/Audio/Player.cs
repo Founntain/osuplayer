@@ -27,7 +27,7 @@ public class Player : IPlayer
     private readonly IAudioEngine _audioEngine;
     private readonly Stopwatch _currentSongTimer;
     private readonly DiscordClient? _discordClient;
-    private readonly SongShuffler _songShuffler;
+    private readonly IShuffleProvider _songShuffler;
 
     private bool _isMuted;
     private double _oldVolume;
@@ -70,7 +70,7 @@ public class Player : IPlayer
 
     // private int _shuffleHistoryIndex;
 
-    public Player(IAudioEngine audioEngine)
+    public Player(IAudioEngine audioEngine, IShuffleProvider shuffleProvider)
     {
         _audioEngine = audioEngine;
 
@@ -81,7 +81,7 @@ public class Player : IPlayer
         };
 
         _discordClient = new DiscordClient().Initialize();
-        _songShuffler = new SongShuffler(this);
+        _songShuffler = shuffleProvider;
 
         var config = new Config();
 
@@ -126,8 +126,6 @@ public class Player : IPlayer
         SongSource.Value = new SourceList<IMapEntryBase>();
 
         _currentSongTimer = new Stopwatch();
-
-        var x = _audioEngine.AvailableAudioDevices;
     }
 
     public Bindable<bool> SongsLoading { get; } = new();
@@ -268,7 +266,7 @@ public class Player : IPlayer
         return SongSourceList!.FirstOrDefault(x => x.BeatmapSetId == setId);
     }
 
-    public IMapEntryBase? GetMapEntryFromHash(string hash)
+    public IMapEntryBase? GetMapEntryFromHash(string? hash)
     {
         return SongSourceList!.FirstOrDefault(x => x.Hash == hash);
     }
@@ -352,7 +350,12 @@ public class Player : IPlayer
 
         if (IsShuffle.Value)
         {
-            await TryPlaySongAsync(_songShuffler.DoShuffle(ShuffleDirection.Backwards), PlayDirection.Backwards);
+            var max = RepeatMode.Value == Data.OsuPlayer.Enums.RepeatMode.Playlist ? ActivePlaylist?.Songs.Count ?? SongSourceList.Count : SongSourceList.Count;
+            var shuffledIndex = _songShuffler.DoShuffle(CurrentIndex, ShuffleDirection.Backwards, max);
+            
+            var map = RepeatMode.Value == Data.OsuPlayer.Enums.RepeatMode.Playlist ? GetMapEntryFromHash(ActivePlaylist?.Songs[shuffledIndex]) ?? SongSourceList[shuffledIndex] : SongSourceList[shuffledIndex];
+            
+            await TryPlaySongAsync(map, PlayDirection.Backwards);
             return;
         }
 
@@ -385,7 +388,13 @@ public class Player : IPlayer
 
         if (IsShuffle.Value)
         {
-            await TryPlaySongAsync(_songShuffler.DoShuffle(ShuffleDirection.Forward));
+            var max = RepeatMode.Value == Data.OsuPlayer.Enums.RepeatMode.Playlist ? ActivePlaylist?.Songs.Count ?? SongSourceList.Count : SongSourceList.Count;
+            var shuffledIndex = _songShuffler.DoShuffle(CurrentIndex, ShuffleDirection.Forward, max);
+            
+            var map = RepeatMode.Value == Data.OsuPlayer.Enums.RepeatMode.Playlist ? GetMapEntryFromHash(ActivePlaylist?.Songs[shuffledIndex]) ?? SongSourceList[shuffledIndex] : SongSourceList[shuffledIndex];
+
+            
+            await TryPlaySongAsync(map, PlayDirection.Forward);
             return;
         }
 

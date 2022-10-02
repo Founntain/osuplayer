@@ -64,16 +64,19 @@ internal class Program
     private static void Register(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver)
     {
         services.RegisterLazySingleton<IAudioEngine>(() => new BassEngine());
+        
+        services.Register<IShuffleProvider>(() => new SongShuffler());
 
         services.RegisterLazySingleton<IPlayer>(() => new Player(
-            resolver.GetService<IAudioEngine>()));
+            resolver.GetRequiredService<IAudioEngine>(),
+            resolver.GetRequiredService<IShuffleProvider>()));
 
         services.Register(() => new MainWindowViewModel(
-            resolver.GetService<IAudioEngine>(),
-            resolver.GetService<IPlayer>()));
+            resolver.GetRequiredService<IAudioEngine>(),
+            resolver.GetRequiredService<IPlayer>()));
 
         services.RegisterLazySingleton(() => new MainWindow(
-            resolver.GetService<MainWindowViewModel>(),
-            resolver.GetService<IPlayer>()));
+            resolver.GetRequiredService<MainWindowViewModel>(),
+            resolver.GetRequiredService<IPlayer>()));
     }
 }
