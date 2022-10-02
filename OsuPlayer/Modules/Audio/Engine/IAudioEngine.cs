@@ -2,7 +2,7 @@
 
 namespace OsuPlayer.Modules.Audio.Engine;
 
-public interface IAudioEngine : ICanOpenFiles, IAudioControls, ISettableAudioDevices, IHasEffects
+public interface IAudioEngine : ICanOpenFiles, ICommonFeatures
 {
     public event PropertyChangedEventHandler? PropertyChanged;
 }

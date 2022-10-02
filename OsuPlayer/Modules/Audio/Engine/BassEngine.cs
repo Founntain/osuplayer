@@ -13,7 +13,7 @@ namespace OsuPlayer.Modules.Audio.Engine;
 /// <summary>
 /// Audio engine for the osu!player using <see cref="ManagedBass" />
 /// </summary>
-public sealed class BassEngine : IAudioEngine, INotifyPropertyChanged
+public sealed class BassEngine : IAudioEngine
 {
     private readonly SyncProcedure _endTrackSyncProc;
 
