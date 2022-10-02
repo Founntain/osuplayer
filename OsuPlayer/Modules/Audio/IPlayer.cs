@@ -6,7 +6,7 @@ using OsuPlayer.Modules.Audio.Engine;
 
 namespace OsuPlayer.Modules.Audio;
 
-public interface IPlayer : IAudioControls, ICanImportSongs, ISortableSongs, IPlayModes, IHasPlaylists, IHasBlacklist, IHasEffects, IHasStatistics, IHasDiscordRpc
+public interface IPlayer : IAudioControls, ICanImportSongs, ISortableSongs, IPlayModes, ISettableAudioDevices, IHasPlaylists, IHasBlacklist, IHasEffects, IHasStatistics, IHasDiscordRpc
 {
     public Bindable<IMapEntry> CurrentSong { get; }
     public Bindable<Bitmap?> CurrentSongImage { get; }

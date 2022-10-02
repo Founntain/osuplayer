@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
 using Avalonia.Threading;
+using DynamicData;
 using ManagedBass;
 using ManagedBass.DirectX8;
 using ManagedBass.Fx;
@@ -117,24 +118,17 @@ public sealed class BassEngine : IAudioEngine, INotifyPropertyChanged
     {
         AvailableAudioDevices.Clear();
 
-        var deviceInfos = GetDeviceInfos();
-
         var counter = 1;
 
-        foreach (var deviceInfo in deviceInfos)
+        foreach (var deviceInfo in GetAudioDevices())
         {
-            var audioDevice = new AudioDevice(deviceInfo);
+            var success = Bass.Init(counter);
 
-            var a = Bass.Init(counter);
+            Console.WriteLine($"INIT: {deviceInfo} | {success} | {Bass.LastError}");
 
-            if (a)
+            if (success)
             {
-                Console.WriteLine($"INIT: {audioDevice} | {a} | {Bass.LastError}");
-                AvailableAudioDevices.Add(audioDevice);
-            }
-            else
-            {
-                Console.WriteLine($"INIT: {audioDevice} | {a} | {Bass.LastError}");
+                AvailableAudioDevices.Add(deviceInfo);
             }
 
             counter++;
@@ -253,7 +247,7 @@ public sealed class BassEngine : IAudioEngine, INotifyPropertyChanged
         InitEq();
 
         var config = new Config();
-        SetDeviceInfo(config.Container.SelectedOutputDevice);
+        SetDevice(AvailableAudioDevices[config.Container.SelectedAudioDevice]);
 
         // Set the stream to call Stop() when it ends.
         var syncHandle = Bass.ChannelSetSync(FxStream,
@@ -318,7 +312,7 @@ public sealed class BassEngine : IAudioEngine, INotifyPropertyChanged
     /// Gets all audio device infos
     /// </summary>
     /// <returns>a list of <see cref="DeviceInfo" /> containing the devices</returns>
-    public List<DeviceInfo> GetDeviceInfos()
+    private List<DeviceInfo> GetDeviceInfos()
     {
         var list = new List<DeviceInfo>();
 
@@ -334,29 +328,32 @@ public sealed class BassEngine : IAudioEngine, INotifyPropertyChanged
     /// Sets the output device for the player
     /// <remarks>If the index is -1 sets the output device to the default device set in the os.</remarks>
     /// </summary>
-    /// <param name="index"></param>
-    public void SetDeviceInfo(int index)
+    /// <param name="audioDevice"></param>
+    public void SetDevice(AudioDevice audioDevice)
     {
+        var audioDevices = GetAudioDevices().ToList();
+        var index = audioDevices.IndexOf(audioDevices.FirstOrDefault(x => x.Driver == audioDevice.Driver));
+
         if (index == -1)
         {
-            var counter = 0;
-            foreach (var deviceInfo in GetAudioDevices())
+            for (var i = 0; i < audioDevices.Count; i++)
             {
-                if (deviceInfo.IsDefault)
-                {
-                    Bass.CurrentDevice = counter + 1;
-                    index = counter;
-                    break;
-                }
+                var deviceInfo = audioDevices[i];
 
-                counter++;
+                if (!deviceInfo.IsDefault) continue;
+
+                index = i;
+                break;
             }
         }
 
-        var result = Bass.ChannelSetDevice(FxStream, index + 1);
+        Bass.CurrentDevice = index + 1;
+        Bass.ChannelSetDevice(FxStream, index + 1);
+
+        var result = Bass.LastError == Errors.OK;
 
         using var config = new Config();
-        config.Read().SelectedOutputDevice = index;
+        config.Container.SelectedAudioDevice = index;
 
         Console.WriteLine($"SET: {index} | {result} | {Bass.LastError}");
     }
@@ -365,7 +362,7 @@ public sealed class BassEngine : IAudioEngine, INotifyPropertyChanged
     /// Gets all audio devices
     /// </summary>
     /// <returns>an <see cref="IEnumerable{T}" /> of <see cref="AudioDevice" /> containing all found devices on the computer</returns>
-    public IEnumerable<AudioDevice> GetAudioDevices()
+    private IEnumerable<AudioDevice> GetAudioDevices()
     {
         foreach (var info in GetDeviceInfos()) yield return new AudioDevice(info);
     }

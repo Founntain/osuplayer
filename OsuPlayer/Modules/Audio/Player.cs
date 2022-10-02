@@ -6,6 +6,7 @@ using Avalonia.Threading;
 using DynamicData;
 using LiveChartsCore.Defaults;
 using OsuPlayer.Data.API.Enums;
+using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.Extensions;
@@ -23,7 +24,7 @@ namespace OsuPlayer.Modules.Audio;
 /// </summary>
 public class Player : IPlayer
 {
-    private readonly IAudioEngine _bassEngine;
+    private readonly IAudioEngine _audioEngine;
     private readonly Stopwatch _currentSongTimer;
     private readonly DiscordClient? _discordClient;
     private readonly SongShuffler _songShuffler;
@@ -49,15 +50,16 @@ public class Player : IPlayer
 
     public Bindable<SortingMode> SortingModeBindable { get; } = new();
 
-    public BindableArray<decimal> EqGains => _bassEngine.EqGains;
-    public Bindable<double> Volume => _bassEngine.Volume;
+    public List<AudioDevice> AvailableAudioDevices => _audioEngine.AvailableAudioDevices;
+    public BindableArray<decimal> EqGains => _audioEngine.EqGains;
+    public Bindable<double> Volume => _audioEngine.Volume;
 
     public int CurrentIndex { get; private set; }
 
     public bool IsEqEnabled
     {
-        get => _bassEngine.IsEqEnabled;
-        set => _bassEngine.IsEqEnabled = value;
+        get => _audioEngine.IsEqEnabled;
+        set => _audioEngine.IsEqEnabled = value;
     }
 
     public Playlist? ActivePlaylist => ActivePlaylistId != default
@@ -68,11 +70,11 @@ public class Player : IPlayer
 
     // private int _shuffleHistoryIndex;
 
-    public Player(IAudioEngine bassEngine)
+    public Player(IAudioEngine audioEngine)
     {
-        _bassEngine = bassEngine;
+        _audioEngine = audioEngine;
 
-        _bassEngine.PropertyChanged += (sender, args) =>
+        _audioEngine.PropertyChanged += (sender, args) =>
         {
             if (args.PropertyName == "SongEnd")
                 Dispatcher.UIThread.Post(NextSong);
@@ -92,7 +94,7 @@ public class Player : IPlayer
         IsShuffle.Value = config.Container.IsShuffle;
         ActivePlaylistId = config.Container.ActivePlaylistId;
 
-        IsPlaying.BindTo(_bassEngine.IsPlaying);
+        IsPlaying.BindTo(_audioEngine.IsPlaying);
 
         SortingModeBindable.BindValueChanged(d => UpdateSorting(d.NewValue));
 
@@ -108,7 +110,7 @@ public class Player : IPlayer
 
             ApiAsync.SetUserOnlineStatusNonBlock(UserOnlineStatusType.Listening, d.NewValue?.ToString(), d.NewValue?.Hash);
 
-            if (_discordClient is null || d.NewValue is null) return;
+            if (d.NewValue is null) return;
 
             _discordClient.UpdatePresence(d.NewValue.Title, $"by {d.NewValue.Artist}");
 
@@ -124,6 +126,8 @@ public class Player : IPlayer
         SongSource.Value = new SourceList<IMapEntryBase>();
 
         _currentSongTimer = new Stopwatch();
+
+        var x = _audioEngine.AvailableAudioDevices;
     }
 
     public Bindable<bool> SongsLoading { get; } = new();
@@ -164,6 +168,8 @@ public class Player : IPlayer
     public event PropertyChangedEventHandler? PlaylistChanged;
     public event PropertyChangedEventHandler? BlacklistChanged;
     public event PropertyChangedEventHandler? UserDataChanged;
+
+    public void SetDevice(AudioDevice audioDevice) => _audioEngine.SetDevice(audioDevice);
 
     /// <summary>
     /// Plays the last played song read from the <see cref="ConfigContainer" /> and defaults to the
@@ -210,7 +216,7 @@ public class Player : IPlayer
 
     public void SetPlaybackSpeed(double speed)
     {
-        _bassEngine.SetPlaybackSpeed(speed);
+        _audioEngine.SetPlaybackSpeed(speed);
     }
 
     /// <summary>
@@ -229,7 +235,7 @@ public class Player : IPlayer
         var response = await ApiAsync.UpdateXpFromCurrentUserAsync(
             CurrentSong.Value?.Hash ?? string.Empty,
             time,
-            _bassEngine.ChannelLength.Value);
+            _audioEngine.ChannelLength.Value);
 
         if (response == default) return;
 
@@ -300,24 +306,24 @@ public class Player : IPlayer
 
     public void Play()
     {
-        _bassEngine.Play();
+        _audioEngine.Play();
         _currentSongTimer.Start();
     }
 
     public void Pause()
     {
-        _bassEngine.Pause();
+        _audioEngine.Pause();
         _currentSongTimer.Stop();
     }
 
-    public void Stop() => _bassEngine.Stop();
+    public void Stop() => _audioEngine.Stop();
 
     public void ToggleMute()
     {
         if (!_isMuted)
         {
             _oldVolume = Volume.Value;
-            _bassEngine.Volume.Value = 0;
+            _audioEngine.Volume.Value = 0;
             _isMuted = true;
         }
         else
@@ -332,7 +338,7 @@ public class Player : IPlayer
         if (SongSourceList == null || !SongSourceList.Any())
             return;
 
-        if (_bassEngine.ChannelPosition.Value > 3)
+        if (_audioEngine.ChannelPosition.Value > 3)
         {
             await TryStartSongAsync(SongSourceList[CurrentIndex]);
             return;
@@ -468,7 +474,7 @@ public class Player : IPlayer
         }
 
         MessageBox.Show("There is no song to play!");
-        _bassEngine.Stop();
+        _audioEngine.Stop();
     }
 
     public async Task TryPlaySongAsync(IMapEntryBase? song, PlayDirection playDirection = PlayDirection.Normal)
@@ -543,9 +549,9 @@ public class Player : IPlayer
 
         try
         {
-            _bassEngine.OpenFile(fullMapEntry.FullPath!);
+            _audioEngine.OpenFile(fullMapEntry.FullPath!);
             //_bassEngine.SetAllEq(Core.Instance.Config.Eq);
-            _bassEngine.Play();
+            _audioEngine.Play();
 
             _currentSongTimer.Restart();
         }
