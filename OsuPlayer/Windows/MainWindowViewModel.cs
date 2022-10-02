@@ -1,6 +1,7 @@
 using Avalonia.Media;
 using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Data.OsuPlayer.Enums;
+using OsuPlayer.Modules.Audio.Engine;
 using OsuPlayer.Views;
 using ReactiveUI;
 
@@ -8,7 +9,7 @@ namespace OsuPlayer.Windows;
 
 public class MainWindowViewModel : BaseWindowViewModel
 {
-    public readonly BassEngine BassEngine;
+    public readonly IAudioEngine BassEngine;
     public readonly IPlayer Player;
     private bool _isPaneOpen;
 
@@ -47,7 +48,7 @@ public class MainWindowViewModel : BaseWindowViewModel
         set => _panelMaterial = value;
     }
 
-    public MainWindowViewModel(BassEngine engine, IPlayer player)
+    public MainWindowViewModel(IAudioEngine engine, IPlayer player)
     {
         BassEngine = engine;
         Player = player;

@@ -6,6 +6,7 @@ using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.Extensions;
 using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.IO.Storage.Playlists;
+using OsuPlayer.Modules.Audio.Engine;
 using ReactiveUI;
 
 namespace OsuPlayer.Views;
@@ -140,14 +141,14 @@ public class PlayerControlViewModel : BaseViewModel
 
     public string ActivePlaylist => $"Active playlist: {Player.ActivePlaylist?.Name ?? "none"}";
 
-    public PlayerControlViewModel(IPlayer player, BassEngine bassEngine)
+    public PlayerControlViewModel(IPlayer player, IAudioEngine bassEngine)
     {
         Player = player;
 
-        _songTime.BindTo(bassEngine.ChannelPositionB);
+        _songTime.BindTo(bassEngine.ChannelPosition);
         _songTime.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongTime)));
 
-        _songLength.BindTo(bassEngine.ChannelLengthB);
+        _songLength.BindTo(bassEngine.ChannelLength);
         _songLength.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongLength)));
 
         CurrentSong.BindTo(Player.CurrentSong);
@@ -160,7 +161,7 @@ public class PlayerControlViewModel : BaseViewModel
             this.RaisePropertyChanged(nameof(IsCurrentSongOnBlacklist));
         });
 
-        _volume.BindTo(bassEngine.VolumeB);
+        _volume.BindTo(Player.Volume);
         _volume.BindValueChanged(d => this.RaisePropertyChanged(nameof(Volume)));
 
         _isPlaying.BindTo(Player.IsPlaying);

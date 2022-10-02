@@ -18,14 +18,14 @@ namespace OsuPlayer.Windows;
 
 public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 {
-    private readonly Player _player;
+    private readonly IPlayer _player;
 
     public MainWindow()
     {
         InitializeComponent();
     }
 
-    public MainWindow(MainWindowViewModel viewModel, Player player)
+    public MainWindow(MainWindowViewModel viewModel, IPlayer player)
     {
         ViewModel = viewModel;
 
@@ -76,7 +76,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
         using var config = new Config();
 
-        config.Container.Volume = ViewModel.BassEngine.Volume;
+        config.Container.Volume = ViewModel.BassEngine.Volume.Value;
         config.Container.Username = ProfileManager.User?.Name;
         config.Container.RepeatMode = ViewModel.Player.RepeatMode.Value;
         config.Container.IsShuffle = ViewModel.Player.IsShuffle.Value;

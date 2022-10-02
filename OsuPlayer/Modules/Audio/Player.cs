@@ -11,6 +11,7 @@ using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.Extensions;
 using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.IO.Storage.Playlists;
+using OsuPlayer.Modules.Audio.Engine;
 using OsuPlayer.Network.Discord;
 using OsuPlayer.UI_Extensions;
 
@@ -22,7 +23,7 @@ namespace OsuPlayer.Modules.Audio;
 /// </summary>
 public class Player : IPlayer
 {
-    private readonly BassEngine _bassEngine;
+    private readonly IAudioEngine _bassEngine;
     private readonly Stopwatch _currentSongTimer;
     private readonly DiscordClient? _discordClient;
     private readonly SongShuffler _songShuffler;
@@ -49,8 +50,9 @@ public class Player : IPlayer
     public Bindable<SortingMode> SortingModeBindable { get; } = new();
 
     public BindableArray<decimal> EqGains => _bassEngine.EqGains;
+    public Bindable<double> Volume => _bassEngine.Volume;
 
-    public int CurrentIndex { get; set; }
+    public int CurrentIndex { get; private set; }
 
     public bool IsEqEnabled
     {
@@ -66,7 +68,7 @@ public class Player : IPlayer
 
     // private int _shuffleHistoryIndex;
 
-    public Player(BassEngine bassEngine)
+    public Player(IAudioEngine bassEngine)
     {
         _bassEngine = bassEngine;
 
@@ -81,7 +83,7 @@ public class Player : IPlayer
 
         var config = new Config();
 
-        _bassEngine.Volume = config.Container.Volume;
+        Volume.Value = config.Container.Volume;
 
         SortingModeBindable.Value = config.Container.SortingMode;
         BlacklistSkip.Value = config.Container.BlacklistSkip;
@@ -89,6 +91,8 @@ public class Player : IPlayer
         RepeatMode.Value = config.Container.RepeatMode;
         IsShuffle.Value = config.Container.IsShuffle;
         ActivePlaylistId = config.Container.ActivePlaylistId;
+
+        IsPlaying.BindTo(_bassEngine.IsPlaying);
 
         SortingModeBindable.BindValueChanged(d => UpdateSorting(d.NewValue));
 
@@ -110,7 +114,7 @@ public class Player : IPlayer
 
             // _mainWindow.ViewModel!.PlayerControl.CurrentSongImage = Task.Run(value!.FindBackground).Result;
         }, true);
-        
+
         RepeatMode.BindValueChanged(d =>
         {
             using var cfg = new Config();
@@ -225,7 +229,7 @@ public class Player : IPlayer
         var response = await ApiAsync.UpdateXpFromCurrentUserAsync(
             CurrentSong.Value?.Hash ?? string.Empty,
             time,
-            _bassEngine.ChannelLengthB.Value);
+            _bassEngine.ChannelLength.Value);
 
         if (response == default) return;
 
@@ -282,17 +286,13 @@ public class Player : IPlayer
     {
         if (!IsPlaying.Value)
         {
-            _bassEngine.Play();
-            _currentSongTimer.Start();
-            IsPlaying.Value = true;
+            Play();
 
             await ApiAsync.SetUserOnlineStatus(UserOnlineStatusType.Listening, CurrentSong.Value?.ToString(), CurrentSong.Value?.Hash);
         }
         else
         {
-            _bassEngine.Pause();
-            _currentSongTimer.Stop();
-            IsPlaying.Value = false;
+            Pause();
 
             await ApiAsync.SetUserOnlineStatus(UserOnlineStatusType.Idle);
         }
@@ -301,26 +301,28 @@ public class Player : IPlayer
     public void Play()
     {
         _bassEngine.Play();
-        IsPlaying.Value = true;
+        _currentSongTimer.Start();
     }
 
     public void Pause()
     {
         _bassEngine.Pause();
-        IsPlaying.Value = false;
+        _currentSongTimer.Stop();
     }
+
+    public void Stop() => _bassEngine.Stop();
 
     public void ToggleMute()
     {
         if (!_isMuted)
         {
-            _oldVolume = _bassEngine.Volume;
-            _bassEngine.Volume = 0;
+            _oldVolume = Volume.Value;
+            _bassEngine.Volume.Value = 0;
             _isMuted = true;
         }
         else
         {
-            _bassEngine.Volume = _oldVolume;
+            Volume.Value = _oldVolume;
             _isMuted = false;
         }
     }
@@ -330,7 +332,7 @@ public class Player : IPlayer
         if (SongSourceList == null || !SongSourceList.Any())
             return;
 
-        if (_bassEngine.ChannelPositionB.Value > 3)
+        if (_bassEngine.ChannelPosition.Value > 3)
         {
             await TryStartSongAsync(SongSourceList[CurrentIndex]);
             return;
@@ -544,7 +546,6 @@ public class Player : IPlayer
             _bassEngine.OpenFile(fullMapEntry.FullPath!);
             //_bassEngine.SetAllEq(Core.Instance.Config.Eq);
             _bassEngine.Play();
-            IsPlaying.Value = true;
 
             _currentSongTimer.Restart();
         }

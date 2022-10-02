@@ -3,6 +3,7 @@ using System.Reactive.Disposables;
 using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.IO.Storage.Equalizer;
+using OsuPlayer.Modules.Audio.Engine;
 using ReactiveUI;
 
 namespace OsuPlayer.Views;

@@ -2,30 +2,16 @@
 using Avalonia.Media.Imaging;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.IO.Importer;
+using OsuPlayer.Modules.Audio.Engine;
 
 namespace OsuPlayer.Modules.Audio;
 
-public interface IPlayer : ICanImportSongs, ISortableSongs, IPlayState, IHasPlaylists, IHasBlacklist, IHasEffects, IHasStatistics
+public interface IPlayer : IAudioControls, ICanImportSongs, ISortableSongs, IPlayModes, IHasPlaylists, IHasBlacklist, IHasEffects, IHasStatistics, IHasDiscordRpc
 {
     public Bindable<IMapEntry> CurrentSong { get; }
     public Bindable<Bitmap?> CurrentSongImage { get; }
-    public int CurrentIndex { get; set; }
+    public int CurrentIndex { get; }
 
-    /// <summary>
-    /// Pauses the current song if playing or plays again if paused
-    /// </summary>
-    public void PlayPause();
-    
-    /// <summary>
-    /// Sets the playing state to Playing
-    /// </summary>
-    public void Play();
-    
-    /// <summary>
-    /// Sets the playing state to Pause
-    /// </summary>
-    public void Pause();
-    
     /// <summary>
     /// Toggles mute of the volume
     /// </summary>
@@ -49,9 +35,13 @@ public interface IPlayer : ICanImportSongs, ISortableSongs, IPlayState, IHasPlay
     public Task TryPlaySongAsync(IMapEntryBase? song, PlayDirection playDirection = PlayDirection.Normal);
 }
 
-public interface IPlayState
+public interface IHasDiscordRpc
 {
-    public Bindable<bool> IsPlaying { get; }
+    public void DisposeDiscordClient();
+}
+
+public interface IPlayModes
+{
     public Bindable<bool> IsShuffle { get; }
     public Bindable<RepeatMode> RepeatMode { get; }
 }

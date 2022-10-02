@@ -2,6 +2,7 @@
 using Avalonia;
 using Avalonia.ReactiveUI;
 using OsuPlayer.Extensions;
+using OsuPlayer.Modules.Audio.Engine;
 using OsuPlayer.Windows;
 using Splat;
 
@@ -62,17 +63,17 @@ internal class Program
 
     private static void Register(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver)
     {
-        services.RegisterLazySingleton(() => new BassEngine());
+        services.RegisterLazySingleton<IAudioEngine>(() => new BassEngine());
 
-        services.RegisterLazySingleton(() => new Player(
-            resolver.GetService<BassEngine>()));
+        services.RegisterLazySingleton<IPlayer>(() => new Player(
+            resolver.GetService<IAudioEngine>()));
 
         services.Register(() => new MainWindowViewModel(
-            resolver.GetService<BassEngine>(),
-            resolver.GetService<Player>()));
+            resolver.GetService<IAudioEngine>(),
+            resolver.GetService<IPlayer>()));
 
         services.RegisterLazySingleton(() => new MainWindow(
             resolver.GetService<MainWindowViewModel>(),
-            resolver.GetService<Player>()));
+            resolver.GetService<IPlayer>()));
     }
 }

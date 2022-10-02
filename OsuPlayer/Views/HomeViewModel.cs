@@ -53,16 +53,16 @@ public class HomeViewModel : BaseViewModel
         _songsLoading.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongsLoading)));
 
         _graphValues.BindTo(Player.GraphValues);
-        _graphValues.BindCollectionChanged(((sender, args) =>
+        _graphValues.BindCollectionChanged((sender, args) =>
         {
             Series!.First().Values = _graphValues;
-            
-            this.RaisePropertyChanged(nameof(Series));
-        }));
 
-        Player.SongSource.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongEntries)), true);
+            this.RaisePropertyChanged(nameof(Series));
+        });
 
         Player.UserDataChanged += (sender, args) => this.RaisePropertyChanged(nameof(CurrentUser));
+
+        Player.SongSource.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongEntries)), true);
 
         Activator = new ViewModelActivator();
         this.WhenActivated(Block);

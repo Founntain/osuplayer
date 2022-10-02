@@ -1,4 +1,4 @@
-﻿namespace OsuPlayer.Modules.Audio;
+﻿namespace OsuPlayer.Modules.Audio.Engine;
 
 public interface IHasEffects
 {
