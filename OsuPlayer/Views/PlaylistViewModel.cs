@@ -96,8 +96,8 @@ public class PlaylistViewModel : BaseViewModel
 
             if (Playlists.Count > 0 && SelectedPlaylist == default)
             {
-                var playlistStorage = new PlaylistStorage();
-                SelectedPlaylist = Playlists.FirstOrDefault(x => x.Id == playlistStorage.Container.LastSelectedPlaylist) ?? Playlists[0];
+                var config = new Config();
+                SelectedPlaylist = Playlists.FirstOrDefault(x => x.Id == config.Container.ActivePlaylistId) ?? Playlists[0];
             }
         });
     }
