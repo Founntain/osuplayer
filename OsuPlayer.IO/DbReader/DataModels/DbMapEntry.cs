@@ -11,12 +11,12 @@ namespace OsuPlayer.IO.DbReader.DataModels;
 /// </summary>
 internal class DbMapEntry : DbMapEntryBase, IMapEntry
 {
-    public string ArtistUnicode { get; set; }
-    public string TitleUnicode { get; set; }
-    public string AudioFileName { get; set; }
-    public string FolderName { get; set; }
-    public string FolderPath { get; set; }
-    public string FullPath { get; set; }
+    public string ArtistUnicode { get; set; } = string.Empty;
+    public string TitleUnicode { get; set; } = string.Empty;
+    public string AudioFileName { get; set; } = string.Empty;
+    public string FolderName { get; set; } = string.Empty;
+    public string FolderPath { get; set; } = string.Empty;
+    public string FullPath { get; set; } = string.Empty;
     public bool UseUnicode { get; set; }
 
     public async Task<Bitmap?> FindBackground()
