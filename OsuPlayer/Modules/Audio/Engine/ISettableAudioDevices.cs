@@ -1,5 +1,4 @@
-﻿using ManagedBass;
-using OsuPlayer.Data.OsuPlayer.Classes;
+﻿using OsuPlayer.Data.OsuPlayer.Classes;
 
 namespace OsuPlayer.Modules.Audio.Engine;
 

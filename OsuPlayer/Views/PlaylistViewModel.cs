@@ -19,6 +19,7 @@ public class PlaylistViewModel : BaseViewModel
     private ReadOnlyObservableCollection<IMapEntryBase>? _filteredSongEntries;
     private string _filterText;
     private ObservableCollection<Playlist> _playlists;
+    private Bindable<Playlist?> _selectedPlaylist = new();
 
     public ObservableCollection<Playlist> Playlists
     {
@@ -28,18 +29,16 @@ public class PlaylistViewModel : BaseViewModel
 
     public Playlist? SelectedPlaylist
     {
-        get => Player.SelectedPlaylist.Value;
+        get => _selectedPlaylist.Value;
         set
         {
-            PlaylistManager.SetCurrentPlaylist(value);
-
-            Player.SelectedPlaylist.Value = value;
+            _selectedPlaylist.Value = value;
 
             if (_filteredSongEntries != null)
                 _currentBind.Dispose();
 
-            if (Player.SelectedPlaylist.Value?.Songs != null)
-                _currentBind = Player.GetMapEntriesFromHash(Player.SelectedPlaylist.Value.Songs).ToSourceList().Connect()
+            if (_selectedPlaylist.Value?.Songs != null)
+                _currentBind = Player.GetMapEntriesFromHash(_selectedPlaylist.Value.Songs).ToSourceList().Connect()
                     .Filter(_filter, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
                     .Bind(out _filteredSongEntries).Subscribe();
 
@@ -61,6 +60,8 @@ public class PlaylistViewModel : BaseViewModel
         Activator = new ViewModelActivator();
 
         Player = player;
+        
+        _selectedPlaylist.BindTo(Player.SelectedPlaylist);
 
         _filter = this.WhenAnyValue(x => x.FilterText)
             .Throttle(TimeSpan.FromMilliseconds(20))
@@ -77,10 +78,15 @@ public class PlaylistViewModel : BaseViewModel
 
             this.RaisePropertyChanged(nameof(Playlists));
 
-            Player.SelectedPlaylist.Value = Playlists.First(x => x.Id == selection!.Id);
+            SelectedPlaylist = Playlists.First(x => x.Id == selection!.Id);
 
             this.RaisePropertyChanged(nameof(SelectedPlaylist));
         };
+        
+        _selectedPlaylist.BindValueChanged(d =>
+        {
+            this.RaisePropertyChanged(nameof(SelectedPlaylist));
+        });
 
         this.WhenActivated(disposables =>
         {
@@ -92,8 +98,6 @@ public class PlaylistViewModel : BaseViewModel
             {
                 var playlistStorage = new PlaylistStorage();
                 SelectedPlaylist = Playlists.FirstOrDefault(x => x.Id == playlistStorage.Container.LastSelectedPlaylist) ?? Playlists[0];
-
-                PlaylistManager.SetCurrentPlaylist(SelectedPlaylist);
             }
         });
     }

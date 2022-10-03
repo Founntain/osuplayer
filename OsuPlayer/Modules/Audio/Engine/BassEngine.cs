@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
 using Avalonia.Threading;
-using DynamicData;
 using ManagedBass;
 using ManagedBass.DirectX8;
 using ManagedBass.Fx;

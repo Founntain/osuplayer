@@ -75,7 +75,7 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
         return Task.FromResult(minBeatMaps);
     }
 
-    public Task<Dictionary<string, int>> GetBeatmapHashes()
+    public Dictionary<string, int> GetBeatmapHashes()
     {
         var hashes = new Dictionary<string, int>();
 
@@ -105,7 +105,7 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
         ReadInt32(); //account rank
 
         Dispose();
-        return Task.FromResult(hashes);
+        return hashes;
     }
 
     public async Task<List<Collection>?> GetCollections(string path)

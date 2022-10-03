@@ -7,7 +7,6 @@ using Avalonia.Media;
 using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.IO.Importer;
-using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Network;
 using OsuPlayer.Network.Discord;
 using OsuPlayer.Styles;
@@ -50,8 +49,6 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         config.Container.BackgroundColor = backgroundColor;
         config.Container.AccentColor = accentColor;
 
-        PlaylistManager.SetLastKnownPlaylistAsCurrentPlaylist();
-
         Application.Current!.Resources["SmallerFontWeight"] = config.Container.GetSmallerFont().ToFontWeight();
         Application.Current!.Resources["DefaultFontWeight"] = config.Container.DefaultFontWeight.ToFontWeight();
         Application.Current!.Resources["BiggerFontWeight"] = config.Container.GetBiggerFont().ToFontWeight();
@@ -80,7 +77,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         config.Container.Username = ProfileManager.User?.Name;
         config.Container.RepeatMode = ViewModel.Player.RepeatMode.Value;
         config.Container.IsShuffle = ViewModel.Player.IsShuffle.Value;
-        config.Container.ActivePlaylistId = ViewModel.Player.ActivePlaylistId.Value;
+        config.Container.ActivePlaylistId = ViewModel.Player.SelectedPlaylist.Value?.Id;
 
         _player.DisposeDiscordClient();
     }

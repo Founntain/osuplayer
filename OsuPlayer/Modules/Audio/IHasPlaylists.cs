@@ -6,8 +6,6 @@ namespace OsuPlayer.Modules.Audio;
 public interface IHasPlaylists
 {
     public Bindable<Playlist?> SelectedPlaylist { get; }
-    public Playlist? ActivePlaylist { get; }
-    public Bindable<Guid?> ActivePlaylistId { get; }
     public Bindable<bool> PlaylistEnableOnPlay { get; }
 
     public event PropertyChangedEventHandler? PlaylistChanged;

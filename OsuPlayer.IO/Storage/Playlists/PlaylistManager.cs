@@ -9,42 +9,6 @@ namespace OsuPlayer.IO.Storage.Playlists;
 /// </summary>
 public static class PlaylistManager
 {
-    public static Playlist? CurrentPlaylist { get; private set; }
-
-    /// <summary>
-    /// Sets a specific playlist as the current playlist globally in the application
-    /// </summary>
-    /// <param name="playlist">The playlist to set</param>
-    public static void SetCurrentPlaylist(Playlist? playlist)
-    {
-        if (playlist == default) return;
-
-        CurrentPlaylist = playlist;
-
-        using (var storage = new PlaylistStorage())
-        {
-            storage.Container.LastSelectedPlaylist = CurrentPlaylist.Id;
-        }
-    }
-
-    /// <summary>
-    /// Sets a specific playlist as the current playlist globally in the application asynchronously
-    /// </summary>
-    /// <param name="playlist">The playlist to set</param>
-    public static async Task SetCurrentPlaylistAsync(Playlist? playlist)
-    {
-        if (playlist == default) return;
-
-        CurrentPlaylist = playlist;
-
-        await using (var storage = new PlaylistStorage())
-        {
-            await storage.ReadAsync();
-
-            storage.Container.LastSelectedPlaylist = CurrentPlaylist.Id;
-        }
-    }
-
     /// <summary>
     /// Gets all stored playlists
     /// </summary>
@@ -94,41 +58,6 @@ public static class PlaylistManager
     }
 
     /// <summary>
-    /// Replace a playlist with the same name
-    /// </summary>
-    /// <param name="playlist">The playlist to replace</param>
-    public static async Task ReplacePlaylistAsync(Playlist? playlist)
-    {
-        if (playlist == default) return;
-
-        await using (var storage = new PlaylistStorage())
-        {
-            await storage.ReadAsync();
-
-            var playlistToRemove = storage.Container.Playlists?
-                .FirstOrDefault(x => x.Name == playlist.Name);
-
-            storage.Container.Playlists?.Remove(playlistToRemove);
-
-            storage.Container.Playlists?.Add(playlist);
-        }
-    }
-
-    /// <summary>
-    /// Replace a playlist with the same name asynchronously
-    /// </summary>
-    /// <param name="playlists">The playlist to replace</param>
-    public static async Task ReplacePlaylistsAsync(IList<Playlist> playlists)
-    {
-        await using (var storage = new PlaylistStorage())
-        {
-            await storage.ReadAsync();
-
-            storage.Container.Playlists = playlists;
-        }
-    }
-
-    /// <summary>
     /// Renames a playlist. Gets the stored playlist by its <see cref="Guid" /> and changes the the name of it
     /// </summary>
     /// <param name="playlist">The playlist with the new name</param>
@@ -140,22 +69,9 @@ public static class PlaylistManager
 
             var p = storage.Container.Playlists?.FirstOrDefault(x => x == playlist);
 
-            storage.Container.Playlists?.Remove(p);
+            if (p == null) return;
 
             p.Name = playlist.Name;
-
-            storage.Container.Playlists?.Add(p);
-        }
-    }
-
-    /// <summary>
-    /// Save all playlists on the hard drive
-    /// </summary>
-    public static async Task SavePlaylistsAsync()
-    {
-        await using (var storage = new PlaylistStorage())
-        {
-            await storage.ReadAsync();
         }
     }
 
@@ -182,83 +98,44 @@ public static class PlaylistManager
     /// Toggles a song from the playlist asynchronously
     /// <remarks>If the song is not in the playlist, the song gets added, otherwise the song gets removed</remarks>
     /// </summary>
+    /// <param name="playlist">The playlist to toggle the song in</param>
     /// <param name="mapEntry">The song to toggle</param>
-    public static async Task ToggleSongOfCurrentPlaylist(IMapEntryBase mapEntry)
+    public static async Task ToggleSongOfCurrentPlaylist(Playlist? playlist, IMapEntryBase mapEntry)
     {
-        if (CurrentPlaylist == default)
+        if (playlist == default)
             return;
 
-        if (CurrentPlaylist.Songs.Contains(mapEntry.Hash))
-            await RemoveSongToCurrentPlaylist(mapEntry);
+        if (playlist.Songs.Contains(mapEntry.Hash))
+            await RemoveSongFromPlaylist(playlist, mapEntry);
         else
-            await AddSongToCurrentPlaylistAsync(mapEntry);
+            await AddSongToPlaylistAsync(playlist, mapEntry);
     }
 
     /// <summary>
     /// Adds a song to the playlist asynchronously
     /// </summary>
+    /// <param name="playlist">The playlist to add the song to</param>
     /// <param name="mapEntry">The song to add</param>
-    public static async Task AddSongToCurrentPlaylistAsync(IMapEntryBase mapEntry)
+    public static async Task AddSongToPlaylistAsync(Playlist playlist, IMapEntryBase mapEntry)
     {
-        CurrentPlaylist?.Songs.Add(mapEntry.Hash);
+        await using var playlistStorage = new PlaylistStorage();
 
-        await ReplacePlaylistAsync(CurrentPlaylist);
+        await playlistStorage.ReadAsync();
+
+        playlistStorage.Container.Playlists?.FirstOrDefault(x => x == playlist)?.Songs.Add(mapEntry.Hash);
     }
 
     /// <summary>
-    /// Removes a song to the playlist asynchronously
+    /// Removes a song from the playlist asynchronously
     /// </summary>
+    /// <param name="playlist">The playlist to remove the song from</param>
     /// <param name="mapEntry">The song to remove</param>
-    public static async Task RemoveSongToCurrentPlaylist(IMapEntryBase mapEntry)
+    public static async Task RemoveSongFromPlaylist(Playlist playlist, IMapEntryBase mapEntry)
     {
-        CurrentPlaylist?.Songs.Remove(mapEntry.Hash);
+        await using var playlistStorage = new PlaylistStorage();
 
-        await ReplacePlaylistAsync(CurrentPlaylist);
-    }
+        await playlistStorage.ReadAsync();
 
-    /// <summary>
-    /// Selects the last used playlist after existing the player to its current playlist globally
-    /// </summary>
-    public static void SetLastKnownPlaylistAsCurrentPlaylist()
-    {
-        using (var storage = new PlaylistStorage())
-        {
-            var container = storage.Read();
-
-            var playlist = container.Playlists?.FirstOrDefault(x => x.Id == container.LastSelectedPlaylist);
-
-            if (playlist == default) return;
-
-            CurrentPlaylist = playlist;
-        }
-    }
-
-    /// <summary>
-    /// Adds a song to a playlist and creates it if it doesn't exist already
-    /// </summary>
-    /// <param name="playlistName">the name of the playlist to add the song to</param>
-    /// <param name="hash">the beatmap set id of the song</param>
-    public static async Task AddSongToPlaylistAsync(string playlistName, string hash)
-    {
-        if (string.IsNullOrWhiteSpace(hash)) return;
-
-        Playlist playlist;
-
-        if ((playlist = (await GetAllPlaylistsAsync()).FirstOrDefault(x => x.Name == playlistName)) != default)
-        {
-            if (!playlist.Songs.Contains(hash))
-                playlist.Songs.Add(hash);
-
-            await ReplacePlaylistAsync(playlist);
-            return;
-        }
-
-        playlist = new Playlist
-        {
-            Name = playlistName
-        };
-        playlist.Songs.Add(hash);
-
-        await AddPlaylistAsync(playlist);
+        playlistStorage.Container.Playlists?.FirstOrDefault(x => x == playlist)?.Songs.Remove(mapEntry.Hash);
     }
 }

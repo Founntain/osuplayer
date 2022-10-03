@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
@@ -34,6 +33,7 @@ public class Player : IPlayer
 
     public Bindable<SourceList<IMapEntryBase>> SongSource { get; } = new();
     public List<IMapEntryBase>? SongSourceList { get; private set; }
+    public Bindable<bool> SongsLoading { get; } = new();
 
     public Bindable<IMapEntry?> CurrentSong { get; } = new();
     public Bindable<Bitmap?> CurrentSongImage { get; } = new();
@@ -45,8 +45,6 @@ public class Player : IPlayer
     public Bindable<bool> BlacklistSkip { get; } = new();
     public Bindable<bool> PlaylistEnableOnPlay { get; } = new();
     public Bindable<RepeatMode> RepeatMode { get; } = new();
-
-    public Bindable<Playlist?> SelectedPlaylist { get; } = new();
 
     public Bindable<SortingMode> SortingModeBindable { get; } = new();
 
@@ -62,10 +60,8 @@ public class Player : IPlayer
         set => _audioEngine.IsEqEnabled = value;
     }
 
-    public Playlist? ActivePlaylist { get; private set; }
+    public Bindable<Playlist?> SelectedPlaylist { get; } = new();
     private List<IMapEntryBase> ActivePlaylistSongs { get; set; }
-
-    public Bindable<Guid?> ActivePlaylistId { get; } = new();
 
     public Player(IAudioEngine audioEngine, IShuffleProvider shuffleProvider)
     {
@@ -107,8 +103,6 @@ public class Player : IPlayer
             if (d.NewValue is null) return;
 
             _discordClient.UpdatePresence(d.NewValue.Title, $"by {d.NewValue.Artist}");
-
-            // _mainWindow.ViewModel!.PlayerControl.CurrentSongImage = Task.Run(value!.FindBackground).Result;
         }, true);
 
         RepeatMode.BindValueChanged(d =>
@@ -117,25 +111,25 @@ public class Player : IPlayer
             cfg.Container.RepeatMode = d.NewValue;
         }, true);
 
-        ActivePlaylistId.BindValueChanged(d =>
+        SelectedPlaylist.BindValueChanged(d =>
         {
-            var playlists = PlaylistManager.GetAllPlaylists();
-            ActivePlaylist = playlists?.FirstOrDefault(x => x.Id == d.NewValue);
+            using var cfg = new Config();
+            cfg.Container.ActivePlaylistId = d.NewValue?.Id;
+            
+            if (d.NewValue == null) return;
 
-            if (ActivePlaylist == null) return;
-
-            ActivePlaylistSongs = GetMapEntriesFromHash(ActivePlaylist.Songs);
+            ActivePlaylistSongs = GetMapEntriesFromHash(d.NewValue.Songs);
         }, true);
 
         SongSource.Value = new SourceList<IMapEntryBase>();
     }
 
-    public Bindable<bool> SongsLoading { get; } = new();
-
     public async void OnSongImportFinished()
     {
         var config = new Config();
-        ActivePlaylistId.Value = config.Container.ActivePlaylistId;
+        var playlists = new PlaylistStorage();
+
+        SelectedPlaylist.Value = playlists.Container.Playlists?.FirstOrDefault(x => x.Id == config.Container.ActivePlaylistId) ?? playlists.Container.Playlists?.First(y => y.Name == "Favorites");
 
         switch (config.Container.StartupSong)
         {
@@ -153,17 +147,13 @@ public class Player : IPlayer
 
     public IComparable CustomSorter(IMapEntryBase map, SortingMode sortingMode)
     {
-        switch (sortingMode)
+        return sortingMode switch
         {
-            case SortingMode.Title:
-                return map.Title;
-            case SortingMode.Artist:
-                return map.Artist;
-            case SortingMode.SetId:
-                return map.BeatmapSetId;
-            default:
-                return null!;
-        }
+            SortingMode.Title => map.Title,
+            SortingMode.Artist => map.Artist,
+            SortingMode.SetId => map.BeatmapSetId,
+            _ => ""
+        };
     }
 
     public event PropertyChangedEventHandler? PlaylistChanged;
@@ -282,7 +272,7 @@ public class Player : IPlayer
     public List<IMapEntryBase> GetMapEntriesFromHash(IEnumerable<string> hash)
     {
         //return SongSourceList!.FindAll(x => hash.Contains(x.Hash));
-        return hash.Select(x => SongSourceList!.Find(map => map.Hash == x)).ToList();
+        return hash.Select(x => SongSourceList!.FirstOrDefault(map => map.Hash == x)).ToList();
     }
 
     public void DisposeDiscordClient()
@@ -406,7 +396,7 @@ public class Player : IPlayer
             {
                 case PlayDirection.Forward:
                 case PlayDirection.Backwards:
-                    CurrentIndex += (int)playDirection;
+                    CurrentIndex += (int) playDirection;
                     NextSong(playDirection);
                     return;
                 default:

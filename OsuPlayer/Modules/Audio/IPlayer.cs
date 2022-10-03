@@ -2,13 +2,12 @@
 using Avalonia.Media.Imaging;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.IO.Importer;
-using OsuPlayer.Modules.Audio.Engine;
 
 namespace OsuPlayer.Modules.Audio;
 
 public interface IPlayer : ICommonFeatures, ICanImportSongs, ISortableSongs, IPlayModes, IHasPlaylists, IHasBlacklist, IHasStatistics, IHasDiscordRpc
 {
-    public Bindable<IMapEntry> CurrentSong { get; }
+    public Bindable<IMapEntry?> CurrentSong { get; }
     public Bindable<Bitmap?> CurrentSongImage { get; }
     public int CurrentIndex { get; }
 
@@ -18,8 +17,9 @@ public interface IPlayer : ICommonFeatures, ICanImportSongs, ISortableSongs, IPl
     public void ToggleMute();
 
     /// <summary>
-    /// Plays the next song in the list. Or the first if we are at the end
+    /// Plays the next song in the list.
     /// </summary>
+    /// <param name="playDirection">The <see cref="PlayDirection"/> for the next song</param>
     public void NextSong(PlayDirection playDirection);
 
     /// <summary>

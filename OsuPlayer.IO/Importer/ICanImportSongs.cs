@@ -1,7 +1,4 @@
-﻿using DynamicData;
-using OsuPlayer.Data.OsuPlayer.Enums;
-using OsuPlayer.Extensions.Bindables;
-using OsuPlayer.IO.DbReader.DataModels;
+﻿using OsuPlayer.Extensions.Bindables;
 
 namespace OsuPlayer.IO.Importer;
 

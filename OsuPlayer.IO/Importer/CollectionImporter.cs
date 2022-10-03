@@ -1,7 +1,6 @@
-﻿using Avalonia.Threading;
+﻿using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.IO.Storage.Config;
 using OsuPlayer.IO.Storage.Playlists;
-using Splat;
 
 namespace OsuPlayer.IO.Importer;
 
@@ -24,13 +23,30 @@ public static class CollectionImporter
 
         if (collections != default && collections.Any())
         {
-            var beatmapHashes = await reader.GetBeatmapHashes();
+            var beatmapHashes = reader.GetBeatmapHashes();
+
+            await using var playlistStorage = new PlaylistStorage();
+            await playlistStorage.ReadAsync();
 
             foreach (var collection in collections)
             foreach (var hash in collection.BeatmapHashes)
             {
-                var setId = beatmapHashes?.GetValueOrDefault(hash) ?? -1;
-                await PlaylistManager.AddSongToPlaylistAsync(collection.Name, source.SongSourceList.FirstOrDefault(x => x.BeatmapSetId == setId)?.Hash ?? string.Empty);
+                var setId = beatmapHashes.GetValueOrDefault(hash);
+                var songHash = source.SongSourceList.FirstOrDefault(x => x.BeatmapSetId == setId)?.Hash ?? string.Empty;
+
+                if (playlistStorage.Container.Playlists?.FirstOrDefault(x => x.Name == collection.Name) is { } playlist)
+                {
+                    playlist.Songs.Add(songHash);
+                    continue;
+                }
+
+                playlist = new Playlist
+                {
+                    Name = collection.Name
+                };
+                playlist.Songs.Add(songHash);
+
+                playlistStorage.Container.Playlists?.Add(playlist);
             }
 
             return true;

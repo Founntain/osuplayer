@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+﻿
 
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 
@@ -17,12 +17,12 @@ public class Playlist
     /// <summary>
     /// Contains the hashes of the songs in the <see cref="Playlist" />
     /// </summary>
-    public BindingList<string> Songs { get; set; } = new();
+    public HashSet<string> Songs { get; set; } = new();
 
     private bool Equals(Playlist other)
     {
         return Id.Equals(other.Id) && Name == other.Name && CreationTime.Equals(other.CreationTime) &&
-               Songs.Equals(other.Songs);
+               Songs.SequenceEqual(other.Songs);
     }
 
     public override bool Equals(object? obj)

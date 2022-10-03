@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using NUnit.Framework;
 using OsuPlayer.Data.API.Enums;
 using OsuPlayer.Network.Online;

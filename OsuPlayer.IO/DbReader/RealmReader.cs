@@ -30,7 +30,7 @@ public class RealmReader : IDatabaseReader
         _beatmapInfos = _realm.DynamicApi.All("Beatmap").ToList().OfType<DynamicRealmObject>().ToList();
     }
 
-    public Task<Dictionary<string, int>> GetBeatmapHashes()
+    public Dictionary<string, int> GetBeatmapHashes()
     {
         var hashes = new Dictionary<string, int>();
 
@@ -42,7 +42,7 @@ public class RealmReader : IDatabaseReader
             hashes.Add(hash, id);
         }
 
-        return Task.FromResult(hashes);
+        return hashes;
     }
 
     public Task<List<Collection>> GetCollections(string path)

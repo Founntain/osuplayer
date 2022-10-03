@@ -16,7 +16,7 @@ public interface IDatabaseReader
     /// </summary>
     /// <remarks>This is primarily used for the collection import. </remarks>
     /// <returns>a dictionary with the hashes as the key and the beatmap set id as value</returns>
-    public Task<Dictionary<string, int>> GetBeatmapHashes();
+    public Dictionary<string, int> GetBeatmapHashes();
     
     /// <summary>
     /// Reads the osu! collections from the database.

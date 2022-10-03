@@ -6,6 +6,7 @@ using DynamicData.Binding;
 using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
+using OsuPlayer.Extensions;
 using OsuPlayer.IO.Storage.Playlists;
 using ReactiveUI;
 
@@ -62,7 +63,6 @@ public class PlaylistEditorViewModel : BaseViewModel
             _currentSelectedPlaylist = value;
             this.RaisePropertyChanged();
             this.RaisePropertyChanged(nameof(Playlists));
-            PlaylistManager.SetCurrentPlaylist(value);
         }
     }
 
@@ -88,15 +88,22 @@ public class PlaylistEditorViewModel : BaseViewModel
 
         Player.SortingModeBindable.BindValueChanged(d => UpdateSorting(d.NewValue), true);
 
+        Playlists = PlaylistManager.GetAllPlaylists().ToSourceList();
+
+        Player.PlaylistChanged += (sender, args) =>
+        {
+            Playlists = PlaylistManager.GetAllPlaylists().ToSourceList();
+        };
+
         Activator = new ViewModelActivator();
 
         this.WhenActivated(disposables =>
         {
             Disposable.Create(() => { }).DisposeWith(disposables);
 
-            var playlistStorage = new PlaylistStorage();
+            var config = new Config();
 
-            CurrentSelectedPlaylist = Playlists.Items.FirstOrDefault(x => x.Id == playlistStorage.Container.LastSelectedPlaylist) ?? Playlists.Items.ElementAt(0);
+            CurrentSelectedPlaylist = Playlists.Items.FirstOrDefault(x => x.Id == config.Container.ActivePlaylistId) ?? Playlists.Items.ElementAt(0);
 
             if (_filteredSongEntries == default)
                 Player.SongSource.Value.Connect().Sort(SortExpressionComparer<IMapEntryBase>.Ascending(x => Player.CustomSorter(x, Player.SortingModeBindable.Value)))

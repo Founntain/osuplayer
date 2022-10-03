@@ -41,8 +41,6 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
 
             RepeatButton.AddHandler(PointerReleasedEvent, Repeat_OnPointerReleased, RoutingStrategies.Tunnel);
 
-            PlaylistManager.SetLastKnownPlaylistAsCurrentPlaylist();
-
             ViewModel.RaisePropertyChanged(nameof(ViewModel.IsAPlaylistSelected));
             ViewModel.RaisePropertyChanged(nameof(ViewModel.IsCurrentSongInPlaylist));
             ViewModel.RaisePropertyChanged(nameof(ViewModel.IsCurrentSongOnBlacklist));
@@ -101,7 +99,7 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
     {
         if (ViewModel.Player.CurrentSong.Value != null)
         {
-            await PlaylistManager.ToggleSongOfCurrentPlaylist(ViewModel.Player.CurrentSong.Value);
+            await PlaylistManager.ToggleSongOfCurrentPlaylist(ViewModel.Player.SelectedPlaylist.Value, ViewModel.Player.CurrentSong.Value);
             ViewModel.Player.TriggerPlaylistChanged(new PropertyChangedEventArgs("Fav"));
         }
 
@@ -142,6 +140,6 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
 
     private void RepeatContextMenu_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        ViewModel.Player.ActivePlaylistId.Value = ((Playlist) (sender as ContextMenu)?.SelectedItem)?.Id;
+        ViewModel.Player.SelectedPlaylist.Value = (Playlist) (sender as ContextMenu)?.SelectedItem;
     }
 }
