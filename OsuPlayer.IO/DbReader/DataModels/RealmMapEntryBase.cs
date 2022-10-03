@@ -74,6 +74,7 @@ public class RealmMapEntryBase : IMapEntryBase
 
         var newMap = new RealmMapEntry
         {
+            Id = Id,
             Artist = Artist,
             ArtistUnicode = metadata.Get<string>(nameof(BeatmapMetadata.ArtistUnicode)),
             Title = Title,
@@ -95,5 +96,10 @@ public class RealmMapEntryBase : IMapEntryBase
     public IDatabaseReader GetReader(string path)
     {
         return new RealmReader(path);
+    }
+
+    public bool Equals(IMapEntryBase? other)
+    {
+        return Hash == other?.Hash;
     }
 }

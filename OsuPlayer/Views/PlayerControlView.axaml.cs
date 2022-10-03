@@ -4,6 +4,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
+using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.Extensions;
 using OsuPlayer.IO.Storage.Blacklist;
@@ -88,7 +89,7 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
                 blacklist.Container.Songs.Add(currentHash);
 
                 if (ViewModel.Player.BlacklistSkip.Value)
-                    ViewModel.Player.NextSong();
+                    ViewModel.Player.NextSong(PlayDirection.Forward);
             }
         }
 
@@ -115,13 +116,13 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
                 ViewModel.Player.RepeatMode.Value = ViewModel.Player.RepeatMode.Value.Next();
                 break;
             case "Previous":
-                ViewModel.Player.PreviousSong();
+                ViewModel.Player.NextSong(PlayDirection.Backwards);
                 break;
             case "PlayPause":
                 ViewModel.Player.PlayPause();
                 break;
             case "Next":
-                ViewModel.Player.NextSong();
+                ViewModel.Player.NextSong(PlayDirection.Forward);
                 break;
             case "Shuffle":
                 ViewModel.IsShuffle = !ViewModel.IsShuffle;

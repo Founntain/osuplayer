@@ -2,7 +2,7 @@
 
 namespace OsuPlayer.IO.DbReader.DataModels;
 
-public interface IMapEntryBase
+public interface IMapEntryBase : IEquatable<IMapEntryBase>
 {
     public string Artist { get; set; }
     public string Title { get; set; }

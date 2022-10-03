@@ -189,4 +189,9 @@ public class DbMapEntryBase : IMapEntryBase
     {
         return GetSongName();
     }
+
+    public bool Equals(IMapEntryBase? other)
+    {
+        return Hash == other?.Hash;
+    }
 }

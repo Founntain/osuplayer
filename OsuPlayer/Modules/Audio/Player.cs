@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
@@ -14,7 +15,6 @@ using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules.Audio.Engine;
 using OsuPlayer.Network.Discord;
-using OsuPlayer.UI_Extensions;
 
 namespace OsuPlayer.Modules.Audio;
 
@@ -63,10 +63,9 @@ public class Player : IPlayer
     }
 
     public Playlist? ActivePlaylist { get; private set; }
+    private List<IMapEntryBase> ActivePlaylistSongs { get; set; }
 
     public Bindable<Guid?> ActivePlaylistId { get; } = new();
-
-    // private int _shuffleHistoryIndex;
 
     public Player(IAudioEngine audioEngine, IShuffleProvider shuffleProvider)
     {
@@ -75,7 +74,7 @@ public class Player : IPlayer
         _audioEngine.PropertyChanged += (sender, args) =>
         {
             if (args.PropertyName == "SongEnd")
-                Dispatcher.UIThread.Post(NextSong);
+                Dispatcher.UIThread.Post(() => NextSong(PlayDirection.Forward));
         };
 
         _discordClient = new DiscordClient().Initialize();
@@ -99,8 +98,6 @@ public class Player : IPlayer
 
         CurrentSong.BindValueChanged(d =>
         {
-            CurrentIndex = SongSourceList!.FindIndex(x => x.Hash == d.NewValue!.Hash);
-
             using var cfg = new Config();
 
             cfg.Container.LastPlayedSong = d.NewValue?.Hash;
@@ -119,15 +116,18 @@ public class Player : IPlayer
             using var cfg = new Config();
             cfg.Container.RepeatMode = d.NewValue;
         }, true);
-        
+
         ActivePlaylistId.BindValueChanged(d =>
         {
             var playlists = PlaylistManager.GetAllPlaylists();
             ActivePlaylist = playlists?.FirstOrDefault(x => x.Id == d.NewValue);
+
+            if (ActivePlaylist == null) return;
+
+            ActivePlaylistSongs = GetMapEntriesFromHash(ActivePlaylist.Songs);
         }, true);
 
         SongSource.Value = new SourceList<IMapEntryBase>();
-        ActivePlaylistId.Value = config.Container.ActivePlaylistId;
     }
 
     public Bindable<bool> SongsLoading { get; } = new();
@@ -135,6 +135,7 @@ public class Player : IPlayer
     public async void OnSongImportFinished()
     {
         var config = new Config();
+        ActivePlaylistId.Value = config.Container.ActivePlaylistId;
 
         switch (config.Container.StartupSong)
         {
@@ -280,7 +281,8 @@ public class Player : IPlayer
 
     public List<IMapEntryBase> GetMapEntriesFromHash(IEnumerable<string> hash)
     {
-        return hash.Select(x => SongSourceList!.Find(y => y.Hash == x)).ToList();
+        //return SongSourceList!.FindAll(x => hash.Contains(x.Hash));
+        return hash.Select(x => SongSourceList!.Find(map => map.Hash == x)).ToList();
     }
 
     public void DisposeDiscordClient()
@@ -333,159 +335,58 @@ public class Player : IPlayer
         }
     }
 
-    public async void PreviousSong()
+    public async void NextSong(PlayDirection playDirection)
     {
         if (SongSourceList == null || !SongSourceList.Any())
             return;
 
-        if (_audioEngine.ChannelPosition.Value > 3)
+        if (playDirection == PlayDirection.Backwards && _audioEngine.ChannelPosition.Value > 3)
         {
-            await TryStartSongAsync(SongSourceList[CurrentIndex]);
+            await TryStartSongAsync(CurrentSong.Value ?? SongSourceList[0]);
             return;
         }
 
-        if (RepeatMode.Value == Data.OsuPlayer.Enums.RepeatMode.SingleSong)
+        switch (RepeatMode.Value)
         {
-            await TryStartSongAsync(SongSourceList[CurrentIndex]);
-            return;
+            case Data.OsuPlayer.Enums.RepeatMode.NoRepeat:
+                await TryPlaySongAsync(GetNextSongToPlay(SongSourceList, CurrentIndex, playDirection), playDirection);
+                return;
+            case Data.OsuPlayer.Enums.RepeatMode.Playlist:
+                await TryPlaySongAsync(GetNextSongToPlay(ActivePlaylistSongs, CurrentIndex, playDirection), playDirection);
+                return;
+            case Data.OsuPlayer.Enums.RepeatMode.SingleSong:
+                await TryStartSongAsync(CurrentSong.Value!);
+                return;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
+    }
+
+    private IMapEntryBase GetNextSongToPlay(IList<IMapEntryBase> songSource, int currentIndex, PlayDirection playDirection)
+    {
+        IMapEntryBase songToPlay;
+        var offset = (int) playDirection;
+
+        currentIndex = songSource.IndexOf(SongSourceList![currentIndex]);
 
         if (IsShuffle.Value)
         {
-            var max = RepeatMode.Value == Data.OsuPlayer.Enums.RepeatMode.Playlist ? ActivePlaylist?.Songs.Count ?? SongSourceList.Count : SongSourceList.Count;
-            var shuffledIndex = _songShuffler.DoShuffle(CurrentIndex, ShuffleDirection.Backwards, max);
-
-            var map = RepeatMode.Value == Data.OsuPlayer.Enums.RepeatMode.Playlist ? GetMapEntryFromHash(ActivePlaylist?.Songs[shuffledIndex]) ?? SongSourceList[shuffledIndex] : SongSourceList[shuffledIndex];
-
-            await TryPlaySongAsync(map, PlayDirection.Backwards);
-            return;
+            songToPlay = songSource[_songShuffler.DoShuffle(currentIndex, (ShuffleDirection) playDirection, songSource.Count)];
         }
-
-        if (RepeatMode.Value == Data.OsuPlayer.Enums.RepeatMode.Playlist)
-        {
-            await EnqueuePlaylistAsync(PlayDirection.Backwards);
-            return;
-        }
-
-        if (BlacklistSkip.Value)
-        {
-            await EnqueueBlacklistAsync(PlayDirection.Backwards);
-            return;
-        }
-
-        var prevIndex = (CurrentIndex - 1) % SongSourceList!.Count;
-        await TryPlaySongAsync(SongSourceList[prevIndex < 0 ? prevIndex + SongSourceList!.Count : prevIndex], PlayDirection.Backwards);
-    }
-
-    public async void NextSong()
-    {
-        if (SongSourceList == null || !SongSourceList.Any())
-            return;
-
-        if (RepeatMode.Value == Data.OsuPlayer.Enums.RepeatMode.SingleSong)
-        {
-            await TryStartSongAsync(SongSourceList[CurrentIndex]);
-            return;
-        }
-
-        if (IsShuffle.Value)
-        {
-            var max = RepeatMode.Value == Data.OsuPlayer.Enums.RepeatMode.Playlist ? ActivePlaylist?.Songs.Count ?? SongSourceList.Count : SongSourceList.Count;
-            var shuffledIndex = _songShuffler.DoShuffle(CurrentIndex, ShuffleDirection.Forward, max);
-
-            var map = RepeatMode.Value == Data.OsuPlayer.Enums.RepeatMode.Playlist ? GetMapEntryFromHash(ActivePlaylist?.Songs[shuffledIndex]) ?? SongSourceList[shuffledIndex] : SongSourceList[shuffledIndex];
-
-
-            await TryPlaySongAsync(map, PlayDirection.Forward);
-            return;
-        }
-
-        if (RepeatMode.Value == Data.OsuPlayer.Enums.RepeatMode.Playlist)
-        {
-            await EnqueuePlaylistAsync(PlayDirection.Forward);
-            return;
-        }
-
-        if (BlacklistSkip.Value)
-        {
-            await EnqueueBlacklistAsync(PlayDirection.Forward);
-            return;
-        }
-
-        var nextIndex = (CurrentIndex + 1) % SongSourceList!.Count;
-        await TryPlaySongAsync(SongSourceList[nextIndex < 0 ? nextIndex + SongSourceList!.Count : nextIndex], PlayDirection.Forward);
-    }
-
-    /// <summary>
-    /// Enqueues a song in the current active <see cref="Playlist" />.
-    /// Called only if the current <see cref="RepeatMode" /> is <see cref="Data.OsuPlayer.Enums.RepeatMode.Playlist" />
-    /// </summary>
-    /// <param name="direction">in what direction the next song should be</param>
-    private async Task EnqueuePlaylistAsync(PlayDirection direction = PlayDirection.Normal)
-    {
-        var offset = direction switch
-        {
-            PlayDirection.Backwards => -1,
-            PlayDirection.Forward => 1,
-            _ => 0
-        };
-
-        if (offset == 0)
-            throw new InvalidOperationException();
-
-        if (ActivePlaylist == default || ActivePlaylist.Songs.Count == 0)
-        {
-            // OsuPlayerMessageBox.Show(
-            //    OsuPlayer.LanguageService.LoadControlLanguageWithKey("message.noPlaylistSelected"));
-            RepeatMode.Value = Data.OsuPlayer.Enums.RepeatMode.NoRepeat;
-
-            if (SongSourceList!.IsInBounds(CurrentIndex + offset))
-                await TryPlaySongAsync(SongSourceList[CurrentIndex + offset], direction);
-            else
-                await TryPlaySongAsync(direction == PlayDirection.Forward ? SongSourceList.First() : SongSourceList.Last(), direction);
-
-            return;
-        }
-
-        var currentPlaylistIndex = ActivePlaylist.Songs.IndexOf(CurrentSong.Value!.Hash);
-
-        if (ActivePlaylist.Songs.IsInBounds(currentPlaylistIndex + offset))
-            await TryPlaySongAsync(GetMapEntryFromHash(ActivePlaylist.Songs[currentPlaylistIndex + offset]), direction);
         else
-            await TryPlaySongAsync(GetMapEntryFromHash(direction == PlayDirection.Forward ? ActivePlaylist.Songs.First() : ActivePlaylist.Songs.Last()));
-    }
-
-    /// <summary>
-    /// Enqueues a song ignoring all songs in the <see cref="Blacklist" />.
-    /// Called only if the <see cref="BlacklistSkip" /> is true
-    /// </summary>
-    /// <param name="direction">in what direction the next song should be</param>
-    private async Task EnqueueBlacklistAsync(PlayDirection direction = PlayDirection.Normal)
-    {
-        var offset = direction switch
         {
-            PlayDirection.Backwards => -1,
-            PlayDirection.Forward => 1,
-            _ => 0
-        };
+            var x = (currentIndex + offset) % songSource!.Count;
+            currentIndex = x < 0 ? x + songSource!.Count : x;
 
-        if (offset == 0)
-            throw new InvalidOperationException();
-
-        var blacklist = new Blacklist();
-        for (var i = CurrentIndex + offset; i != CurrentIndex - offset; i += offset)
-        {
-            var x = i % SongSourceList!.Count;
-            i = x < 0 ? x + SongSourceList!.Count : x;
-
-            if (blacklist.Contains(SongSourceList[i])) continue;
-
-            await TryPlaySongAsync(SongSourceList[i], direction);
-            return;
+            songToPlay = songSource[currentIndex];
         }
 
-        MessageBox.Show("There is no song to play!");
-        _audioEngine.Stop();
+        if (BlacklistSkip.Value && new Blacklist().Container.Songs.Contains(songToPlay.Hash))
+        {
+            songToPlay = GetNextSongToPlay(songSource, currentIndex, playDirection);
+        }
+
+        return songToPlay;
     }
 
     public async Task TryPlaySongAsync(IMapEntryBase? song, PlayDirection playDirection = PlayDirection.Normal)
@@ -504,12 +405,9 @@ public class Player : IPlayer
             switch (playDirection)
             {
                 case PlayDirection.Forward:
-                    CurrentIndex++;
-                    NextSong();
-                    return;
                 case PlayDirection.Backwards:
-                    CurrentIndex--;
-                    PreviousSong();
+                    CurrentIndex += (int)playDirection;
+                    NextSong(playDirection);
                     return;
                 default:
                     await TryStartSongAsync(song);
@@ -573,6 +471,7 @@ public class Player : IPlayer
         }
 
         CurrentSong.Value = fullMapEntry;
+        CurrentIndex = SongSourceList.IndexOf(fullMapEntry);
 
         //Same as update XP mentioned Above
         try

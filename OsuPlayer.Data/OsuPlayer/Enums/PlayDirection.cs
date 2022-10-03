@@ -2,7 +2,7 @@
 
 public enum PlayDirection
 {
-    Normal,
-    Backwards,
-    Forward
+    Backwards = -1,
+    Normal = 0,
+    Forward = 1
 }

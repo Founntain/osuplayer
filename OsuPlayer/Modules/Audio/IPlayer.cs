@@ -18,15 +18,10 @@ public interface IPlayer : ICommonFeatures, ICanImportSongs, ISortableSongs, IPl
     public void ToggleMute();
 
     /// <summary>
-    /// Plays the previous song or the last song if we are the beginning
-    /// </summary>
-    public void PreviousSong();
-    
-    /// <summary>
     /// Plays the next song in the list. Or the first if we are at the end
     /// </summary>
-    public void NextSong();
-    
+    public void NextSong(PlayDirection playDirection);
+
     /// <summary>
     /// Enqueues a specific song to play
     /// </summary>
