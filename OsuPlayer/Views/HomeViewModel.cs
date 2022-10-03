@@ -6,8 +6,10 @@ using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using OsuPlayer.Base.ViewModels;
+using OsuPlayer.Modules;
 using ReactiveUI;
 using SkiaSharp;
+using Splat;
 
 namespace OsuPlayer.Views;
 
@@ -18,6 +20,7 @@ public class HomeViewModel : BaseViewModel
     public readonly IPlayer Player;
     private readonly BindableList<ObservableValue> _graphValues = new();
     private Bitmap? _profilePicture;
+    private readonly IStatisticsProvider? _statisticsProvider;
 
     public ObservableCollection<ISeries> Series { get; set; }
 
@@ -48,19 +51,23 @@ public class HomeViewModel : BaseViewModel
     public HomeViewModel(IPlayer player)
     {
         Player = player;
+        _statisticsProvider = Locator.Current.GetService<IStatisticsProvider>();
 
         _songsLoading.BindTo(Player.SongsLoading);
         _songsLoading.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongsLoading)));
 
-        _graphValues.BindTo(Player.GraphValues);
-        _graphValues.BindCollectionChanged((sender, args) =>
+        if (_statisticsProvider != null)
         {
-            Series!.First().Values = _graphValues;
+            _graphValues.BindTo(_statisticsProvider.GraphValues);
+            _graphValues.BindCollectionChanged((sender, args) =>
+            {
+                Series!.First().Values = _graphValues;
 
-            this.RaisePropertyChanged(nameof(Series));
-        });
+                this.RaisePropertyChanged(nameof(Series));
+            });
 
-        Player.UserDataChanged += (sender, args) => this.RaisePropertyChanged(nameof(CurrentUser));
+            _statisticsProvider.UserDataChanged += (sender, args) => this.RaisePropertyChanged(nameof(CurrentUser));
+        }
 
         Player.SongSource.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongEntries)), true);
 

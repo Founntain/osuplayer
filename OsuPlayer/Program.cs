@@ -2,6 +2,7 @@
 using Avalonia;
 using Avalonia.ReactiveUI;
 using OsuPlayer.Extensions;
+using OsuPlayer.Modules;
 using OsuPlayer.Modules.Audio.Engine;
 using OsuPlayer.Windows;
 using Splat;
@@ -66,10 +67,12 @@ internal class Program
         services.RegisterLazySingleton<IAudioEngine>(() => new BassEngine());
         
         services.Register<IShuffleProvider>(() => new SongShuffler());
+        services.RegisterLazySingleton<IStatisticsProvider>(() => new ApiStatisticsProvider());
 
         services.RegisterLazySingleton<IPlayer>(() => new Player(
             resolver.GetRequiredService<IAudioEngine>(),
-            resolver.GetRequiredService<IShuffleProvider>()));
+            resolver.GetRequiredService<IShuffleProvider>(),
+            resolver.GetRequiredService<IStatisticsProvider>()));
 
         services.Register(() => new MainWindowViewModel(
             resolver.GetRequiredService<IAudioEngine>(),

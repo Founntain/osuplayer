@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using DynamicData;
-using LiveChartsCore.Defaults;
 using OsuPlayer.Data.API.Enums;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
@@ -26,7 +25,8 @@ public class Player : IPlayer
     private readonly IAudioEngine _audioEngine;
     private readonly Stopwatch _currentSongTimer = new();
     private readonly DiscordClient? _discordClient;
-    private readonly IShuffleProvider _songShuffler;
+    private readonly IShuffleProvider? _songShuffler;
+    private readonly IStatisticsProvider? _statisticsProvider;
 
     private bool _isMuted;
     private double _oldVolume;
@@ -37,8 +37,6 @@ public class Player : IPlayer
 
     public Bindable<IMapEntry?> CurrentSong { get; } = new();
     public Bindable<Bitmap?> CurrentSongImage { get; } = new();
-
-    public BindableList<ObservableValue> GraphValues { get; } = new();
 
     public Bindable<bool> IsPlaying { get; } = new();
     public Bindable<bool> IsShuffle { get; } = new();
@@ -63,7 +61,7 @@ public class Player : IPlayer
     public Bindable<Playlist?> SelectedPlaylist { get; } = new();
     private List<IMapEntryBase> ActivePlaylistSongs { get; set; }
 
-    public Player(IAudioEngine audioEngine, IShuffleProvider shuffleProvider)
+    public Player(IAudioEngine audioEngine, IShuffleProvider? shuffleProvider = null, IStatisticsProvider? statisticsProvider = null)
     {
         _audioEngine = audioEngine;
 
@@ -74,7 +72,9 @@ public class Player : IPlayer
         };
 
         _discordClient = new DiscordClient().Initialize();
+
         _songShuffler = shuffleProvider;
+        _statisticsProvider = statisticsProvider;
 
         var config = new Config();
 
@@ -115,7 +115,7 @@ public class Player : IPlayer
         {
             using var cfg = new Config();
             cfg.Container.ActivePlaylistId = d.NewValue?.Id;
-            
+
             if (d.NewValue == null) return;
 
             ActivePlaylistSongs = GetMapEntriesFromHash(d.NewValue.Songs);
@@ -158,7 +158,6 @@ public class Player : IPlayer
 
     public event PropertyChangedEventHandler? PlaylistChanged;
     public event PropertyChangedEventHandler? BlacklistChanged;
-    public event PropertyChangedEventHandler? UserDataChanged;
 
     public void SetDevice(AudioDevice audioDevice) => _audioEngine.SetDevice(audioDevice);
 
@@ -210,50 +209,6 @@ public class Player : IPlayer
         _audioEngine.SetPlaybackSpeed(speed);
     }
 
-    /// <summary>
-    /// Updates the user xp on the api
-    /// </summary>
-    private async void UpdateXp()
-    {
-        if (ProfileManager.User == default) return;
-
-        var currentTotalXp = ProfileManager.User.TotalXp;
-
-        _currentSongTimer.Stop();
-
-        var time = (double) _currentSongTimer.ElapsedMilliseconds / 1000;
-
-        var response = await ApiAsync.UpdateXpFromCurrentUserAsync(
-            CurrentSong.Value?.Hash ?? string.Empty,
-            time,
-            _audioEngine.ChannelLength.Value);
-
-        if (response == default) return;
-
-        ProfileManager.User = response;
-
-        var xpEarned = response.TotalXp - currentTotalXp;
-
-        GraphValues.Add(new ObservableValue(xpEarned));
-    }
-
-    /// <summary>
-    /// Updates the songs played count of the user
-    /// </summary>
-    /// <param name="beatmapSetId">the beatmap set id of the map that was played</param>
-    private async void UpdateSongsPlayed(int beatmapSetId)
-    {
-        if (ProfileManager.User == default) return;
-
-        var response = await ApiAsync.UpdateSongsPlayedForCurrentUserAsync(1, beatmapSetId);
-
-        if (response == default) return;
-
-        ProfileManager.User = response;
-
-        UserDataChanged?.Invoke(this, new PropertyChangedEventArgs("SongsPlayed"));
-    }
-
     public IMapEntryBase? GetMapEntryFromSetId(int setId)
     {
         return SongSourceList!.FirstOrDefault(x => x.BeatmapSetId == setId);
@@ -280,19 +235,19 @@ public class Player : IPlayer
         _discordClient?.DeInitialize();
     }
 
-    public async void PlayPause()
+    public void PlayPause()
     {
         if (!IsPlaying.Value)
         {
             Play();
 
-            await ApiAsync.SetUserOnlineStatus(UserOnlineStatusType.Listening, CurrentSong.Value?.ToString(), CurrentSong.Value?.Hash);
+            _statisticsProvider?.UpdateOnlineStatus(UserOnlineStatusType.Listening, CurrentSong.Value?.ToString(), CurrentSong.Value?.Hash);
         }
         else
         {
             Pause();
 
-            await ApiAsync.SetUserOnlineStatus(UserOnlineStatusType.Idle);
+            _statisticsProvider?.UpdateOnlineStatus(UserOnlineStatusType.Idle);
         }
     }
 
@@ -359,7 +314,7 @@ public class Player : IPlayer
 
         currentIndex = songSource.IndexOf(SongSourceList![currentIndex]);
 
-        if (IsShuffle.Value)
+        if (IsShuffle.Value && _songShuffler != null)
         {
             songToPlay = songSource[_songShuffler.DoShuffle(currentIndex, (ShuffleDirection) playDirection, songSource.Count)];
         }
@@ -434,12 +389,14 @@ public class Player : IPlayer
         fullMapEntry.UseUnicode = config.Container.UseSongNameUnicode;
         var findBackgroundTask = fullMapEntry.FindBackground();
 
+        _currentSongTimer.Stop();
+
         //We put the XP update to an own try catch because if the API fails or is not available,
         //that the whole TryEnqueue does not fail
         try
         {
             if (CurrentSong.Value != default)
-                UpdateXp();
+                _statisticsProvider?.UpdateXp(fullMapEntry.Hash, _currentSongTimer.ElapsedMilliseconds, _audioEngine.ChannelLength.Value);
         }
         catch (Exception e)
         {
@@ -467,7 +424,7 @@ public class Player : IPlayer
         try
         {
             if (CurrentSong.Value != default)
-                UpdateSongsPlayed(fullMapEntry.BeatmapSetId);
+                _statisticsProvider?.UpdateSongsPlayed(fullMapEntry.BeatmapSetId);
         }
         catch (Exception e)
         {
