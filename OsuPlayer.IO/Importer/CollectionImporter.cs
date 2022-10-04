@@ -1,6 +1,7 @@
 ﻿using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.IO.Storage.Config;
 using OsuPlayer.IO.Storage.Playlists;
+using OsuPlayer.Modules.Services;
 
 namespace OsuPlayer.IO.Importer;
 
@@ -9,13 +10,13 @@ public static class CollectionImporter
     /// <summary>
     /// Imports the collections found in the osu! collection.db and adds them as playlists
     /// </summary>
-    /// <param name="source">a <see cref="ISongSource"/> to perform the collection import on</param>
+    /// <param name="sourceProvider">a <see cref="ISongSourceProvider"/> to perform the collection import on</param>
     /// <returns>a bool indicating import success</returns>
-    public static async Task<bool> ImportCollectionsAsync(ISongSource source)
+    public static async Task<bool> ImportCollectionsAsync(ISongSourceProvider sourceProvider)
     {
         var config = new Config();
 
-        var reader = source.SongSourceList?[0].GetReader(config.Container.OsuPath!);
+        var reader = sourceProvider.SongSourceList?[0].GetReader(config.Container.OsuPath!);
 
         if (reader == null) return false;
 
@@ -32,7 +33,7 @@ public static class CollectionImporter
             foreach (var hash in collection.BeatmapHashes)
             {
                 var setId = beatmapHashes.GetValueOrDefault(hash);
-                var songHash = source.SongSourceList.FirstOrDefault(x => x.BeatmapSetId == setId)?.Hash ?? string.Empty;
+                var songHash = sourceProvider.SongSourceList.FirstOrDefault(x => x.BeatmapSetId == setId)?.Hash ?? string.Empty;
 
                 if (playlistStorage.Container.Playlists?.FirstOrDefault(x => x.Name == collection.Name) is { } playlist)
                 {

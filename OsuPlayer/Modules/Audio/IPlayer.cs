@@ -1,11 +1,13 @@
 ﻿using System.Threading.Tasks;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.IO.Importer;
+using OsuPlayer.Modules.Services;
 
 namespace OsuPlayer.Modules.Audio;
 
-public interface IPlayer : ICommonFeatures, ICanImportSongs, ISortableSongs, IPlayModes, IHasPlaylists, IHasBlacklist, IHasDiscordRpc
+public interface IPlayer : ICommonFeatures, IImportNotifications, IPlayModes, IHasPlaylists, IHasBlacklist, IHasDiscordRpc
 {
+    public ISongSourceProvider SongSourceProvider { get; }
     public Bindable<IMapEntry?> CurrentSong { get; }
     public Bindable<string?> CurrentSongImage { get; }
     public int CurrentIndex { get; }

@@ -2,9 +2,10 @@
 
 namespace OsuPlayer.IO.Importer;
 
-public interface ICanImportSongs : ISongSource
+public interface IImportNotifications
 {
     public Bindable<bool> SongsLoading { get; }
 
-    public void OnSongImportFinished();
+    public void OnImportStarted();
+    public void OnImportFinished();
 }

@@ -5,6 +5,8 @@ using Avalonia.Layout;
 using Avalonia.Markup.Xaml;
 using OsuPlayer.Data.API.Models.Beatmap;
 using OsuPlayer.Extensions;
+using OsuPlayer.Modules.Services;
+using Splat;
 
 namespace OsuPlayer.Views;
 
@@ -51,9 +53,9 @@ public partial class UserView : ReactiveControl<UserViewModel>
 
         var beatmapModel = (BeatmapUserValidityModel) listBox.SelectedItem;
 
-        if (beatmapModel == default || ViewModel.Player.SongSourceList == default) return;
+        if (beatmapModel == default || ViewModel.Player.SongSourceProvider.SongSourceList == default) return;
 
-        var mapEntry = ViewModel.Player.SongSourceList.FirstOrDefault(x =>
+        var mapEntry = ViewModel.Player.SongSourceProvider.SongSourceList.FirstOrDefault(x =>
             x.BeatmapSetId == beatmapModel.Beatmap.BeatmapSetId ||
             (x.Artist == beatmapModel.Beatmap.Artist && x.Title == beatmapModel.Beatmap.Title));
 

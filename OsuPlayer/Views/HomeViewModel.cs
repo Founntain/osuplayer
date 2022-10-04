@@ -1,16 +1,17 @@
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
+using Avalonia.Threading;
+using DynamicData;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using OsuPlayer.Base.ViewModels;
-using OsuPlayer.Modules;
 using OsuPlayer.Modules.Services;
 using ReactiveUI;
 using SkiaSharp;
-using Splat;
 
 namespace OsuPlayer.Views;
 
@@ -19,10 +20,12 @@ public class HomeViewModel : BaseViewModel
     private readonly Bindable<bool> _songsLoading = new();
 
     public readonly IPlayer Player;
+    private readonly ReadOnlyObservableCollection<IMapEntryBase>? _sortedSongEntries;
     private readonly BindableList<ObservableValue> _graphValues = new();
     private Bitmap? _profilePicture;
     private readonly IStatisticsProvider? _statisticsProvider;
 
+    public ReadOnlyObservableCollection<IMapEntryBase>? SortedSongEntries => _sortedSongEntries;
     public ObservableCollection<ISeries> Series { get; set; }
 
     public Axis[] Axes { get; set; } =
@@ -33,8 +36,6 @@ public class HomeViewModel : BaseViewModel
             Labels = null
         }
     };
-
-    public List<IMapEntryBase> SongEntries => Player.SongSourceList!;
 
     public bool IsUserNotLoggedIn => CurrentUser == default || CurrentUser?.Id == Guid.Empty;
     public bool IsUserLoggedIn => CurrentUser != default && CurrentUser?.Id != Guid.Empty;
@@ -49,10 +50,10 @@ public class HomeViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _profilePicture, value);
     }
 
-    public HomeViewModel(IPlayer player)
+    public HomeViewModel(IPlayer player, IStatisticsProvider? statisticsProvider, ISortProvider? sortProvider)
     {
         Player = player;
-        _statisticsProvider = Locator.Current.GetService<IStatisticsProvider>();
+        _statisticsProvider = statisticsProvider;
 
         _songsLoading.BindTo(Player.SongsLoading);
         _songsLoading.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongsLoading)));
@@ -70,9 +71,12 @@ public class HomeViewModel : BaseViewModel
             _statisticsProvider.UserDataChanged += (sender, args) => this.RaisePropertyChanged(nameof(CurrentUser));
         }
 
-        Player.SongSource.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongEntries)), true);
+        sortProvider?.SortedSongs?.ObserveOn(AvaloniaScheduler.Instance).Bind(out _sortedSongEntries).Subscribe();
+
+        this.RaisePropertyChanged(nameof(SortedSongEntries));
 
         Activator = new ViewModelActivator();
+
         this.WhenActivated(Block);
     }
 
@@ -130,5 +134,25 @@ public class HomeViewModel : BaseViewModel
         {
             return await Task.Run(() => new Bitmap(stream));
         }
+    }
+
+    /// <summary>
+    /// Builds the filter to search songs from the song's <see cref="SourceList{T}" />
+    /// </summary>
+    /// <param name="searchText">the search text to search songs for</param>
+    /// <returns>a function with input <see cref="IMapEntryBase" /> and output <see cref="bool" /> to select found songs</returns>
+    private Func<IMapEntryBase, bool> BuildFilter(string searchText)
+    {
+        if (string.IsNullOrEmpty(searchText))
+            return _ => true;
+
+        var searchQs = searchText.Split(' ');
+
+        return song =>
+        {
+            return searchQs.All(x =>
+                song.Title.Contains(x, StringComparison.OrdinalIgnoreCase) ||
+                song.Artist.Contains(x, StringComparison.OrdinalIgnoreCase));
+        };
     }
 }

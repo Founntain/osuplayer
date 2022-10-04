@@ -2,7 +2,6 @@
 using Avalonia;
 using Avalonia.ReactiveUI;
 using OsuPlayer.Extensions;
-using OsuPlayer.Modules;
 using OsuPlayer.Modules.Audio.Engine;
 using OsuPlayer.Modules.Services;
 using OsuPlayer.Windows;
@@ -66,21 +65,22 @@ internal class Program
     private static void Register(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver)
     {
         services.RegisterLazySingleton<IAudioEngine>(() => new BassEngine());
-        
+
         services.Register<IShuffleProvider>(() => new SongShuffler());
         services.RegisterLazySingleton<IStatisticsProvider>(() => new ApiStatisticsProvider());
+        services.RegisterLazySingleton<ISortProvider>(() => new SortProvider());
+        services.RegisterLazySingleton<ISongSourceProvider>(() => new OsuSongSourceProvider(resolver.GetService<ISortProvider>()));
 
         services.RegisterLazySingleton<IPlayer>(() => new Player(
             resolver.GetRequiredService<IAudioEngine>(),
-            resolver.GetRequiredService<IShuffleProvider>(),
-            resolver.GetRequiredService<IStatisticsProvider>()));
+            resolver.GetRequiredService<ISongSourceProvider>(),
+            resolver.GetService<IShuffleProvider>(),
+            resolver.GetService<IStatisticsProvider>(),
+            resolver.GetService<ISortProvider>()));
 
-        services.Register(() => new MainWindowViewModel(
-            resolver.GetRequiredService<IAudioEngine>(),
-            resolver.GetRequiredService<IPlayer>()));
+        services.Register(() => new MainWindowViewModel());
 
         services.RegisterLazySingleton(() => new MainWindow(
-            resolver.GetRequiredService<MainWindowViewModel>(),
-            resolver.GetRequiredService<IPlayer>()));
+            resolver.GetRequiredService<MainWindowViewModel>()));
     }
 }

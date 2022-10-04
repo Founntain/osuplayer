@@ -6,6 +6,7 @@ using Avalonia.Media;
 using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
+using OsuPlayer.Modules.Services;
 using OsuPlayer.Network;
 using OsuPlayer.Styles;
 using OsuPlayer.Windows;
@@ -265,7 +266,7 @@ public class SettingsViewModel : BaseViewModel
 
     public ObservableCollection<AudioDevice> OutputDeviceComboboxItems { get; set; }
 
-    public SettingsViewModel(IPlayer player)
+    public SettingsViewModel(IPlayer player, ISortProvider? sortProvider)
     {
         Player = player;
 
@@ -279,8 +280,11 @@ public class SettingsViewModel : BaseViewModel
         _selectedFontWeight = config.Container.DefaultFontWeight;
         _selectedFont = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
 
-        _sortingMode.BindTo(Player.SortingModeBindable);
-        _sortingMode.BindValueChanged(d => this.RaisePropertyChanged(nameof(SelectedSortingMode)));
+        if (sortProvider != null)
+        {
+            _sortingMode.BindTo(sortProvider.SortingModeBindable);
+            _sortingMode.BindValueChanged(d => this.RaisePropertyChanged(nameof(SelectedSortingMode)));
+        }
 
         _blacklistSkip.BindTo(Player.BlacklistSkip);
         _blacklistSkip.BindValueChanged(d => this.RaisePropertyChanged(nameof(BlacklistSkip)));

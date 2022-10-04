@@ -1,12 +1,10 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using DynamicData;
 using OsuPlayer.Data.API.Enums;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
-using OsuPlayer.Extensions;
 using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules.Audio.Engine;
@@ -30,8 +28,9 @@ public class Player : IPlayer
     private bool _isMuted;
     private double _oldVolume;
 
-    public Bindable<SourceList<IMapEntryBase>> SongSource { get; } = new();
-    public List<IMapEntryBase>? SongSourceList { get; private set; }
+    private List<IMapEntryBase>? SongSourceList => SongSourceProvider.SongSourceList;
+
+    public ISongSourceProvider SongSourceProvider { get; }
     public Bindable<bool> SongsLoading { get; } = new();
 
     public Bindable<IMapEntry?> CurrentSong { get; } = new();
@@ -42,8 +41,6 @@ public class Player : IPlayer
     public Bindable<bool> BlacklistSkip { get; } = new();
     public Bindable<bool> PlaylistEnableOnPlay { get; } = new();
     public Bindable<RepeatMode> RepeatMode { get; } = new();
-
-    public Bindable<SortingMode> SortingModeBindable { get; } = new();
 
     public List<AudioDevice> AvailableAudioDevices => _audioEngine.AvailableAudioDevices;
     public BindableArray<decimal> EqGains => _audioEngine.EqGains;
@@ -60,7 +57,7 @@ public class Player : IPlayer
     public Bindable<Playlist?> SelectedPlaylist { get; } = new();
     private List<IMapEntryBase> ActivePlaylistSongs { get; set; }
 
-    public Player(IAudioEngine audioEngine, IShuffleProvider? shuffleProvider = null, IStatisticsProvider? statisticsProvider = null)
+    public Player(IAudioEngine audioEngine, ISongSourceProvider songSourceProvider, IShuffleProvider? shuffleProvider = null, IStatisticsProvider? statisticsProvider = null, ISortProvider? sortProvider = null)
     {
         _audioEngine = audioEngine;
 
@@ -68,24 +65,25 @@ public class Player : IPlayer
 
         _discordClient = new DiscordClient().Initialize();
 
+        SongSourceProvider = songSourceProvider;
         _songShuffler = shuffleProvider;
         _statisticsProvider = statisticsProvider;
+
+        IsPlaying.BindTo(_audioEngine.IsPlaying);
 
         var config = new Config();
 
         Volume.Value = config.Container.Volume;
 
-        SortingModeBindable.Value = config.Container.SortingMode;
         BlacklistSkip.Value = config.Container.BlacklistSkip;
         PlaylistEnableOnPlay.Value = config.Container.PlaylistEnableOnPlay;
         RepeatMode.Value = config.Container.RepeatMode;
         IsShuffle.Value = config.Container.IsShuffle;
 
-        IsPlaying.BindTo(_audioEngine.IsPlaying);
-
-        SortingModeBindable.BindValueChanged(d => UpdateSorting(d.NewValue));
-
-        SongSource.BindValueChanged(d => { SongSourceList = d.NewValue.Items.ToList(); }, true);
+        if (sortProvider != null)
+        {
+            sortProvider.SortingModeBindable.Value = config.Container.SortingMode;
+        }
 
         CurrentSong.BindValueChanged(d =>
         {
@@ -93,7 +91,7 @@ public class Player : IPlayer
 
             cfg.Container.LastPlayedSong = d.NewValue?.Hash;
 
-            ApiAsync.SetUserOnlineStatusNonBlock(UserOnlineStatusType.Listening, d.NewValue?.ToString(), d.NewValue?.Hash);
+            _statisticsProvider?.UpdateOnlineStatus(UserOnlineStatusType.Listening, d.NewValue?.ToString(), d.NewValue?.Hash);
 
             if (d.NewValue is null) return;
 
@@ -113,14 +111,16 @@ public class Player : IPlayer
 
             if (d.NewValue == null) return;
 
-            ActivePlaylistSongs = GetMapEntriesFromHash(d.NewValue.Songs);
+            ActivePlaylistSongs = SongSourceProvider.GetMapEntriesFromHash(d.NewValue.Songs);
         }, true);
-
-        SongSource.Value = new SourceList<IMapEntryBase>();
     }
 
-    public async void OnSongImportFinished()
+    public void OnImportStarted() => SongsLoading.Value = true;
+
+    public async void OnImportFinished()
     {
+        SongsLoading.Value = false;
+
         var config = new Config();
         var playlists = new PlaylistStorage();
 
@@ -137,18 +137,9 @@ public class Player : IPlayer
             case StartupSong.RandomSong:
                 await TryPlaySongAsync(SongSourceList?[new Random().Next(SongSourceList.Count)]);
                 break;
+            default:
+                throw new ArgumentOutOfRangeException($"Startup song type {config.Container.StartupSong} is not supported!");
         }
-    }
-
-    public IComparable CustomSorter(IMapEntryBase map, SortingMode sortingMode)
-    {
-        return sortingMode switch
-        {
-            SortingMode.Title => map.Title,
-            SortingMode.Artist => map.Artist,
-            SortingMode.SetId => map.BeatmapSetId,
-            _ => ""
-        };
     }
 
     public event PropertyChangedEventHandler? PlaylistChanged;
@@ -173,20 +164,11 @@ public class Player : IPlayer
 
         if (!string.IsNullOrWhiteSpace(config.LastPlayedSong))
         {
-            await TryPlaySongAsync(GetMapEntryFromHash(config.LastPlayedSong));
+            await TryPlaySongAsync(SongSourceProvider.GetMapEntryFromHash(config.LastPlayedSong));
             return;
         }
 
         await TryPlaySongAsync(SongSourceList?[0]);
-    }
-
-    /// <summary>
-    /// Updates the <see cref="SongSource" /> according to the <paramref name="sortingMode" />
-    /// </summary>
-    /// <param name="sortingMode">the <see cref="SortingMode" /> of the song list</param>
-    private void UpdateSorting(SortingMode sortingMode = SortingMode.Title)
-    {
-        SongSource.Value = SongSource.Value.Items.OrderBy(x => CustomSorter(x, sortingMode)).ThenBy(x => x.Title).ToSourceList();
     }
 
     public void TriggerPlaylistChanged(PropertyChangedEventArgs e)
@@ -202,27 +184,6 @@ public class Player : IPlayer
     public void SetPlaybackSpeed(double speed)
     {
         _audioEngine.SetPlaybackSpeed(speed);
-    }
-
-    public IMapEntryBase? GetMapEntryFromSetId(int setId)
-    {
-        return SongSourceList!.FirstOrDefault(x => x.BeatmapSetId == setId);
-    }
-
-    public IMapEntryBase? GetMapEntryFromHash(string? hash)
-    {
-        return SongSourceList!.FirstOrDefault(x => x.Hash == hash);
-    }
-
-    public List<IMapEntryBase> GetMapEntriesFromSetId(IEnumerable<int> setId)
-    {
-        return SongSourceList!.Where(x => setId.Contains(x.BeatmapSetId)).ToList();
-    }
-
-    public List<IMapEntryBase> GetMapEntriesFromHash(IEnumerable<string> hash)
-    {
-        //return SongSourceList!.FindAll(x => hash.Contains(x.Hash));
-        return hash.Select(x => SongSourceList!.FirstOrDefault(map => map.Hash == x)).ToList();
     }
 
     public void DisposeDiscordClient()

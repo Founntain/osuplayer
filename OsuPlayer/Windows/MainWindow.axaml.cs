@@ -17,20 +17,17 @@ namespace OsuPlayer.Windows;
 
 public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 {
-    private readonly IPlayer _player;
-
     public MainWindow()
     {
         InitializeComponent();
     }
 
-    public MainWindow(MainWindowViewModel viewModel, IPlayer player)
+    public MainWindow(MainWindowViewModel viewModel)
     {
         ViewModel = viewModel;
 
-        _player = player;
-
-        Task.Run(() => SongImporter.ImportSongsAsync(_player, _player));
+        var player = ViewModel.Player;
+        Task.Run(() => SongImporter.ImportSongsAsync(player.SongSourceProvider, player));
 
         InitializeComponent();
 
@@ -79,7 +76,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         config.Container.IsShuffle = ViewModel.Player.IsShuffle.Value;
         config.Container.ActivePlaylistId = ViewModel.Player.SelectedPlaylist.Value?.Id;
 
-        _player.DisposeDiscordClient();
+        ViewModel.Player.DisposeDiscordClient();
     }
 
     private async void Window_OnInitialized(object? sender, EventArgs e)

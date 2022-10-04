@@ -70,13 +70,13 @@ public class RealmMapEntryBase : IMapEntryBase
         var audioFile = (RealmObjectBase) files.FirstOrDefault(x => string.Equals(x.DynamicApi.Get<string>(nameof(RealmNamedFileUsage.Filename)), audioFileName, StringComparison.CurrentCultureIgnoreCase));
         var backgroundFile = (RealmObjectBase) files.FirstOrDefault(x => string.Equals(x.DynamicApi.Get<string>(nameof(RealmNamedFileUsage.Filename)), backgroundFileName, StringComparison.CurrentCultureIgnoreCase));
 
-        if (audioFile == null || backgroundFile == null) return null;
+        if (audioFile == null) return null;
 
         var audioHash = audioFile.DynamicApi.Get<RealmObjectBase>(nameof(RealmNamedFileUsage.File)).DynamicApi.Get<string>(nameof(RealmFile.Hash));
-        var backgroundHash = backgroundFile.DynamicApi.Get<RealmObjectBase>(nameof(RealmNamedFileUsage.File)).DynamicApi.Get<string>(nameof(RealmFile.Hash));
+        var backgroundHash = backgroundFile?.DynamicApi.Get<RealmObjectBase>(nameof(RealmNamedFileUsage.File)).DynamicApi.Get<string>(nameof(RealmFile.Hash));
 
         var audioFolderName = Path.Combine($"{audioHash[0]}", $"{audioHash[0]}{audioHash[1]}");
-        var backgroundFolderName = Path.Combine($"{backgroundHash[0]}", $"{backgroundHash[0]}{backgroundHash[1]}");
+        var backgroundFolderName = Path.Combine($"{backgroundHash?[0]}", $"{backgroundHash?[0]}{backgroundHash?[1]}");
 
         var newMap = new RealmMapEntry
         {
@@ -86,7 +86,7 @@ public class RealmMapEntryBase : IMapEntryBase
             Title = Title,
             TitleUnicode = metadata.Get<string>(nameof(BeatmapMetadata.TitleUnicode)),
             AudioFileName = audioFileName,
-            BackgroundFileLocation = string.IsNullOrEmpty(backgroundFolderName) ? string.Empty : Path.Combine(path, "files", backgroundFolderName, backgroundHash),
+            BackgroundFileLocation = string.IsNullOrEmpty(backgroundFolderName) ? string.Empty : Path.Combine(path, "files", backgroundFolderName, backgroundHash!),
             Hash = Hash,
             BeatmapSetId = BeatmapSetId,
             FolderName = audioFolderName,
@@ -117,6 +117,11 @@ public class RealmMapEntryBase : IMapEntryBase
     public bool Equals(IMapEntryBase? other)
     {
         return Hash == other?.Hash;
+    }
+
+    public int CompareTo(IMapEntryBase? other)
+    {
+        return string.Compare(Hash, other?.Hash, StringComparison.OrdinalIgnoreCase);
     }
 
     public override bool Equals(object? other)

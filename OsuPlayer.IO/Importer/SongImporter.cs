@@ -1,8 +1,8 @@
 ﻿using OsuPlayer.Data.OsuPlayer.Enums;
-using OsuPlayer.Extensions;
 using OsuPlayer.IO.DbReader;
 using OsuPlayer.IO.DbReader.DataModels;
 using OsuPlayer.IO.Storage.Config;
+using OsuPlayer.Modules.Services;
 
 namespace OsuPlayer.IO.Importer;
 
@@ -13,13 +13,15 @@ public static class SongImporter
 {
     /// <summary>
     /// Imports the songs from either the osu!.db or client.realm using the <see cref="SongImporter" />. <br />
-    /// Imported songs are stored in <see cref="SongSource" />. <br />
+    /// Imported songs are stored in <see cref="ISongSourceProvider.SongSource" />. <br />
     /// Also plays the first song depending on the <see cref="StartupSong" /> config.
     /// <seealso cref="DoImportAsync" />
     /// </summary>
-    public static async Task ImportSongsAsync(ICanImportSongs importSongsDestination, ISortableSongs songSorter)
+    /// <param name="songSourceProvider">The <see cref="ISongSourceProvider"/> which will provide the songs</param>
+    /// <param name="importNotificationsDestination">The <see cref="IImportNotifications"/> to handle import events</param>
+    public static async Task ImportSongsAsync(ISongSourceProvider songSourceProvider, IImportNotifications? importNotificationsDestination = null)
     {
-        importSongsDestination.SongsLoading.Value = true;
+        importNotificationsDestination?.OnImportStarted();
 
         await using (var config = new Config())
         {
@@ -27,14 +29,12 @@ public static class SongImporter
 
             if (songEntries == null) return;
 
-            importSongsDestination.SongSource.Value = songEntries.OrderBy(x => songSorter.CustomSorter(x, config.Container.SortingMode)).ThenBy(x => x.Title).ToSourceList();
+            songSourceProvider.SongSource.Edit(list => { list.AddRange(songEntries.OrderBy(x => x.Title)); });
 
-            importSongsDestination.SongsLoading.Value = false;
-
-            if (importSongsDestination.SongSourceList == null || !importSongsDestination.SongSourceList.Any()) return;
+            if (songSourceProvider.SongSourceList == null || !songSourceProvider.SongSourceList.Any()) return;
         }
 
-        importSongsDestination.OnSongImportFinished();
+        importNotificationsDestination?.OnImportFinished();
     }
 
     /// <summary>
@@ -43,7 +43,7 @@ public static class SongImporter
     /// </summary>
     /// <param name="path">the path to the osu!(lazer) root folder</param>
     /// <returns>an <see cref="ICollection{T}" /> of <see cref="IMapEntryBase" /> containing the imported songs</returns>
-    private static async Task<ICollection<IMapEntryBase>?> DoImportAsync(string path)
+    private static async Task<IEnumerable<IMapEntryBase>?> DoImportAsync(string path)
     {
         if (string.IsNullOrEmpty(path))
             return null;

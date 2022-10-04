@@ -89,14 +89,14 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
         }
 
         var player = ViewModel.Player;
-        await Task.Run(() => SongImporter.ImportSongsAsync(player, player));
+        await Task.Run(() => SongImporter.ImportSongsAsync(player.SongSourceProvider, player));
         //await Task.Run(ViewModel.Player.ImportSongsAsync);
     }
 
     public async void ImportCollectionsClick(object? sender, RoutedEventArgs routedEventArgs)
     {
         var player = ViewModel.Player;
-        var success = await Task.Run(() => CollectionImporter.ImportCollectionsAsync(player));
+        var success = await Task.Run(() => CollectionImporter.ImportCollectionsAsync(player.SongSourceProvider));
 
         MessageBox.Show(_mainWindow, success ? "Import successful. Have fun!" : "There are no collections in osu!", "Import complete!");
     }

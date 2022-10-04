@@ -6,6 +6,7 @@ using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.Extensions;
 using OsuPlayer.IO.Storage.Playlists;
+using OsuPlayer.Modules.Services;
 using ReactiveUI;
 
 namespace OsuPlayer.Views;
@@ -38,7 +39,7 @@ public class PlaylistViewModel : BaseViewModel
                 _currentBind.Dispose();
 
             if (_selectedPlaylist.Value?.Songs != null)
-                _currentBind = Player.GetMapEntriesFromHash(_selectedPlaylist.Value.Songs).ToSourceList().Connect()
+                _currentBind = Player.SongSourceProvider.GetMapEntriesFromHash(_selectedPlaylist.Value.Songs).ToSourceList().Connect()
                     .Filter(_filter, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
                     .Bind(out _filteredSongEntries).Subscribe();
 
@@ -57,8 +58,6 @@ public class PlaylistViewModel : BaseViewModel
 
     public PlaylistViewModel(IPlayer player)
     {
-        Activator = new ViewModelActivator();
-
         Player = player;
         
         _selectedPlaylist.BindTo(Player.SelectedPlaylist);
@@ -87,6 +86,8 @@ public class PlaylistViewModel : BaseViewModel
         {
             this.RaisePropertyChanged(nameof(SelectedPlaylist));
         });
+        
+        Activator = new ViewModelActivator();
 
         this.WhenActivated(disposables =>
         {
