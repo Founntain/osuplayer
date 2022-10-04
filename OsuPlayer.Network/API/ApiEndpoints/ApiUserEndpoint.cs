@@ -64,10 +64,10 @@ public partial class ApiAsync
     /// </summary>
     /// <param name="songChecksum">The song the user played</param>
     /// <param name="elapsedMilliseconds">How long the user played it</param>
-    /// <param name="channellength">The total song length</param>
+    /// <param name="channelLength">The total song length</param>
     /// <returns>The updated <see cref="User" /></returns>
     public static async Task<User?> UpdateXpFromCurrentUserAsync(string songChecksum, double elapsedMilliseconds,
-        double channellength)
+        double channelLength)
     {
         if (ProfileManager.User?.Name == default) return default;
 
@@ -76,7 +76,7 @@ public partial class ApiAsync
             Username = ProfileManager.User.Name,
             SongChecksum = songChecksum,
             ElapsedMilliseconds = elapsedMilliseconds,
-            ChannelLength = channellength
+            ChannelLength = channelLength
         };
 
         return await ApiRequestAsync<User>("users", "updateXp", updateXpModel);

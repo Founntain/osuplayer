@@ -5,11 +5,11 @@ namespace OsuPlayer.Modules.Audio;
 public interface IShuffleProvider
 {
     /// <summary>
-    /// Implements the shuffle logic <seealso cref="SongShuffler.GetNextShuffledIndex" />
+    /// Provides a method to generate a shuffled index based on simple parameters.
     /// </summary>
-    /// <param name="currentIndex"></param>
-    /// <param name="direction">the <see cref="ShuffleDirection" /> to shuffle to</param>
-    /// <param name="rangeMax"></param>
-    /// <returns>a random/shuffled <see cref="IMapEntryBase" /></returns>
+    /// <param name="currentIndex">The current song index the shuffle algorithm is based on</param>
+    /// <param name="direction">The <see cref="ShuffleDirection" /> to shuffle to</param>
+    /// <param name="rangeMax">The maximum allowed index for the shuffle algorithm</param>
+    /// <returns>a random generated (shuffled) index</returns>
     int DoShuffle(int currentIndex, ShuffleDirection direction, int rangeMax);
 }

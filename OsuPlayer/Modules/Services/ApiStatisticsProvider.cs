@@ -35,6 +35,8 @@ public class ApiStatisticsProvider : IStatisticsProvider
         var xpEarned = response.TotalXp - currentTotalXp;
 
         GraphValues.Add(new ObservableValue(xpEarned));
+
+        UserDataChanged?.Invoke(this, new PropertyChangedEventArgs("Xp"));
     }
 
     public async Task UpdateSongsPlayed(int beatmapSetId)
