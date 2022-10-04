@@ -9,7 +9,6 @@ namespace OsuPlayer.Windows;
 
 public class MainWindowViewModel : BaseWindowViewModel
 {
-    public readonly IAudioEngine BassEngine;
     public readonly IPlayer Player;
     private bool _isPaneOpen;
 
@@ -50,12 +49,11 @@ public class MainWindowViewModel : BaseWindowViewModel
 
     public MainWindowViewModel(IAudioEngine engine, IPlayer player)
     {
-        BassEngine = engine;
         Player = player;
 
         //Generate new ViewModels here
         TopBar = new TopBarViewModel();
-        PlayerControl = new PlayerControlViewModel(Player, BassEngine);
+        PlayerControl = new PlayerControlViewModel(Player, engine);
 
         SearchView = new SearchViewModel(Player);
         PlaylistView = new PlaylistViewModel(Player);

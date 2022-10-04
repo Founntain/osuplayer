@@ -73,7 +73,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
         using var config = new Config();
 
-        config.Container.Volume = ViewModel.BassEngine.Volume.Value;
+        config.Container.Volume = ViewModel.Player.Volume.Value;
         config.Container.Username = ProfileManager.User?.Name;
         config.Container.RepeatMode = ViewModel.Player.RepeatMode.Value;
         config.Container.IsShuffle = ViewModel.Player.IsShuffle.Value;

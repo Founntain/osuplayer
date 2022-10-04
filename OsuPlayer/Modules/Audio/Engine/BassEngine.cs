@@ -104,7 +104,7 @@ public sealed class BassEngine : IAudioEngine
             {
                 Debug.WriteLine(ex.ToString());
             }
-        }, true);
+        }, true, true);
 
         IsPlaying.BindValueChanged(d => NotifyPropertyChanged("PlayState"), true);
 
