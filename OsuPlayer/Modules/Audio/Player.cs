@@ -28,8 +28,6 @@ public class Player : IPlayer
     private bool _isMuted;
     private double _oldVolume;
 
-    private List<IMapEntryBase>? SongSourceList => SongSourceProvider.SongSourceList;
-
     public ISongSourceProvider SongSourceProvider { get; }
     public Bindable<bool> SongsLoading { get; } = new();
 
@@ -129,13 +127,13 @@ public class Player : IPlayer
         switch (config.Container.StartupSong)
         {
             case StartupSong.FirstSong:
-                await TryPlaySongAsync(SongSourceList?[0]);
+                await TryPlaySongAsync(SongSourceProvider.SongSourceList?[0]);
                 break;
             case StartupSong.LastPlayed:
                 await PlayLastPlayedSongAsync(config.Container);
                 break;
             case StartupSong.RandomSong:
-                await TryPlaySongAsync(SongSourceList?[new Random().Next(SongSourceList.Count)]);
+                await TryPlaySongAsync(SongSourceProvider.SongSourceList?[new Random().Next(SongSourceProvider.SongSourceList.Count)]);
                 break;
             default:
                 throw new ArgumentOutOfRangeException($"Startup song type {config.Container.StartupSong} is not supported!");
@@ -149,7 +147,7 @@ public class Player : IPlayer
 
     /// <summary>
     /// Plays the last played song read from the <see cref="ConfigContainer" /> and defaults to the
-    /// first song in the <see cref="SongSourceList" /> if null
+    /// first song in the <see cref="ISongSourceProvider.SongSourceList" /> if null
     /// </summary>
     /// <param name="config">optional parameter defaults to null. Used to avoid duplications of config instances</param>
     private async Task PlayLastPlayedSongAsync(ConfigContainer? config = null)
@@ -168,7 +166,7 @@ public class Player : IPlayer
             return;
         }
 
-        await TryPlaySongAsync(SongSourceList?[0]);
+        await TryPlaySongAsync(SongSourceProvider.SongSourceList?[0]);
     }
 
     public void TriggerPlaylistChanged(PropertyChangedEventArgs e)
@@ -238,19 +236,19 @@ public class Player : IPlayer
 
     public async void NextSong(PlayDirection playDirection)
     {
-        if (SongSourceList == null || !SongSourceList.Any())
+        if (SongSourceProvider.SongSourceList == null || !SongSourceProvider.SongSourceList.Any())
             return;
 
         if (playDirection == PlayDirection.Backwards && _audioEngine.ChannelPosition.Value > 3)
         {
-            await TryStartSongAsync(CurrentSong.Value ?? SongSourceList[0]);
+            await TryStartSongAsync(CurrentSong.Value ?? SongSourceProvider.SongSourceList[0]);
             return;
         }
 
         switch (RepeatMode.Value)
         {
             case Data.OsuPlayer.Enums.RepeatMode.NoRepeat:
-                await TryPlaySongAsync(GetNextSongToPlay(SongSourceList, CurrentIndex, playDirection), playDirection);
+                await TryPlaySongAsync(GetNextSongToPlay(SongSourceProvider.SongSourceList, CurrentIndex, playDirection), playDirection);
                 return;
             case Data.OsuPlayer.Enums.RepeatMode.Playlist:
                 await TryPlaySongAsync(GetNextSongToPlay(ActivePlaylistSongs, CurrentIndex, playDirection), playDirection);
@@ -268,7 +266,7 @@ public class Player : IPlayer
         IMapEntryBase songToPlay;
         var offset = (int) playDirection;
 
-        currentIndex = songSource.IndexOf(SongSourceList![currentIndex]);
+        currentIndex = songSource.IndexOf(SongSourceProvider.SongSourceList![currentIndex]);
 
         if (IsShuffle.Value && _songShuffler != null)
         {
@@ -292,12 +290,12 @@ public class Player : IPlayer
 
     public async Task TryPlaySongAsync(IMapEntryBase? song, PlayDirection playDirection = PlayDirection.Normal)
     {
-        if (SongSourceList == default || !SongSourceList.Any())
+        if (SongSourceProvider.SongSourceList == default || !SongSourceProvider.SongSourceList.Any())
             throw new NullReferenceException();
 
         if (song == default)
         {
-            await TryStartSongAsync(SongSourceList[0]);
+            await TryStartSongAsync(SongSourceProvider.SongSourceList[0]);
             return;
         }
 
@@ -326,9 +324,9 @@ public class Player : IPlayer
     /// <returns>a <see cref="Task" /> with the resulting state</returns>
     private async Task TryStartSongAsync(IMapEntryBase song)
     {
-        if (SongSourceList == null || !SongSourceList.Any())
+        if (SongSourceProvider.SongSourceList == null || !SongSourceProvider.SongSourceList.Any())
         {
-            throw new NullReferenceException($"{nameof(SongSourceList)} can't be null or empty");
+            throw new NullReferenceException($"{nameof(SongSourceProvider.SongSourceList)} can't be null or empty");
         }
 
         var config = new Config();
@@ -374,7 +372,7 @@ public class Player : IPlayer
         }
 
         CurrentSong.Value = fullMapEntry;
-        CurrentIndex = SongSourceList.IndexOf(fullMapEntry);
+        CurrentIndex = SongSourceProvider.SongSourceList.IndexOf(fullMapEntry);
 
         //Same as update XP mentioned Above
         try
