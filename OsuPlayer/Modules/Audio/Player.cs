@@ -66,11 +66,7 @@ public class Player : IPlayer
     {
         _audioEngine = audioEngine;
 
-        _audioEngine.PropertyChanged += (sender, args) =>
-        {
-            if (args.PropertyName == "SongEnd")
-                Dispatcher.UIThread.Post(() => NextSong(PlayDirection.Forward));
-        };
+        _audioEngine.ChannelReachedEnd = () => NextSong(PlayDirection.Forward);
 
         _discordClient = new DiscordClient().Initialize();
 

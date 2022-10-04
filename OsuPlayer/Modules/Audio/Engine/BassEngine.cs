@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Avalonia.Threading;
 using ManagedBass;
 using ManagedBass.DirectX8;
@@ -17,43 +16,22 @@ public sealed class BassEngine : IAudioEngine
     private readonly SyncProcedure _endTrackSyncProc;
 
     private readonly DispatcherTimer _positionTimer = new(DispatcherPriority.ApplicationIdle);
-    private int _activeStream;
     private bool _inChannelSet;
     private bool _inChannelTimerUpdate;
     private bool _isEqEnabled;
     private DXParamEQ? _paramEq;
     private double _playbackSpeed;
     private int _sampleFrequency = 44100;
-    private int _streamFx;
     public List<AudioDevice> AvailableAudioDevices { get; } = new();
     public Bindable<double> ChannelLength { get; } = new();
     public Bindable<double> ChannelPosition { get; } = new();
+    public IAudioEngine.ChannelReachedEndHandler? ChannelReachedEnd { private get; set; }
     public BindableArray<decimal> EqGains { get; } = new(10, 1);
     public Bindable<double> Volume { get; } = new();
 
-    private int ActiveStreamHandle
-    {
-        get => _activeStream;
-        set
-        {
-            var oldValue = _activeStream;
-            _activeStream = value;
-            if (oldValue != _activeStream)
-                NotifyPropertyChanged("ActiveStreamHandle");
-        }
-    }
+    private int ActiveStreamHandle { get; set; }
 
-    private int FxStream
-    {
-        get => _streamFx;
-        set
-        {
-            var oldValue = _streamFx;
-            _streamFx = value;
-            if (oldValue != _streamFx)
-                NotifyPropertyChanged("FXStream");
-        }
-    }
+    private int FxStream { get; set; }
 
     public Bindable<bool> IsPlaying { get; } = new();
 
@@ -66,7 +44,6 @@ public sealed class BassEngine : IAudioEngine
             _isEqEnabled = value;
             if (oldValue != _isEqEnabled)
             {
-                NotifyPropertyChanged("EqEnabled");
                 SetAllEq();
             }
         }
@@ -106,8 +83,6 @@ public sealed class BassEngine : IAudioEngine
             }
         }, true, true);
 
-        IsPlaying.BindValueChanged(d => NotifyPropertyChanged("PlayState"), true);
-
         EqGains.BindCollectionChanged((sender, args) => SetAllEq());
 
         InitAudioDevices();
@@ -136,14 +111,7 @@ public sealed class BassEngine : IAudioEngine
 
     private void EndTrack(int handle, int channel, int data, IntPtr user)
     {
-        NotifyPropertyChanged("SongEnd");
-    }
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    private void NotifyPropertyChanged(string info)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
+        ChannelReachedEnd?.Invoke();
     }
 
     public void Stop()
