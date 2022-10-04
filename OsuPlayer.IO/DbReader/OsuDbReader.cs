@@ -43,11 +43,9 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
             if (flag)
                 ReadInt32(); //bt length
 
-            var hash = string.Empty;
-
             if (prevId != null)
             {
-                var length = CalculateMapLength(out var newSetId, out hash);
+                var length = CalculateMapLength(out var newSetId, out _);
                 if (prevId == newSetId)
                 {
                     prevId = newSetId;
@@ -57,13 +55,8 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
                 BaseStream.Seek(-length, SeekOrigin.Current);
             }
 
-            var minBeatMap = new DbMapEntryBase
-            {
-                DbOffset = BaseStream.Position,
-                Hash = hash
-            };
 
-            ReadFromStream(ref minBeatMap);
+            ReadFromStream(out var minBeatMap);
             prevId = minBeatMap.BeatmapSetId;
             minBeatMaps.Add(minBeatMap);
         }
@@ -128,21 +121,22 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
     /// <summary>
     /// Reads a osu!.db map entry and fills a <see cref="DbMapEntryBase" /> with needed data
     /// </summary>
-    /// <param name="dbMapEntryBase">a reference of a <see cref="DbMapEntryBase" /> to read the data to</param>
-    private void ReadFromStream(ref DbMapEntryBase dbMapEntryBase)
+    /// <param name="minBeatmap">A <see cref="DbMapEntryBase"/> as an out parameter</param>
+    private void ReadFromStream(out DbMapEntryBase minBeatmap)
     {
-        dbMapEntryBase.Artist = string.Intern(ReadString());
+        var dbOffset = BaseStream.Position;
+        var artist = string.Intern(ReadString());
 
-        if (dbMapEntryBase.Artist.Length == 0)
-            dbMapEntryBase.Artist = "Unknown Artist";
+        if (artist.Length == 0)
+            artist = "Unknown Artist";
 
         if (OsuDbVersion >= 20121008)
             ReadString(true);
 
-        dbMapEntryBase.Title = string.Intern(ReadString());
+        var title = string.Intern(ReadString());
 
-        if (dbMapEntryBase.Title.Length == 0)
-            dbMapEntryBase.Title = "Unknown Title";
+        if (title.Length == 0)
+            title = "Unknown Title";
 
         if (OsuDbVersion >= 20121008)
             ReadString(true);
@@ -151,7 +145,7 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
         ReadString(true); //Difficulty
         ReadString(true);
 
-        ReadString(true); //Hash
+        var hash = ReadString(); //Hash
 
         ReadString(true); //BeatmapFileName
 
@@ -167,7 +161,7 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
 
         ReadInt32(); //DrainTimeSeconds
 
-        dbMapEntryBase.TotalTime = ReadInt32();
+        var totalTime = ReadInt32();
 
         ReadInt32(); //AudioPreviewTime
 
@@ -175,7 +169,7 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
 
         BaseStream.Seek(17 * timingCnt, SeekOrigin.Current);
         BaseStream.Seek(4, SeekOrigin.Current);
-        dbMapEntryBase.BeatmapSetId = ReadInt32();
+        var beatmapSetId = ReadInt32();
         BaseStream.Seek(15, SeekOrigin.Current);
 
         ReadString(true); //SongSource
@@ -188,6 +182,16 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
         ReadString(true);
 
         BaseStream.Seek(OsuDbVersion < 20140609 ? 20 : 18, SeekOrigin.Current);
+
+        minBeatmap = new DbMapEntryBase
+        {
+            Artist = artist,
+            Title = title,
+            BeatmapSetId = beatmapSetId,
+            DbOffset = dbOffset,
+            Hash = hash,
+            TotalTime = totalTime
+        };
     }
 
     /// <summary>

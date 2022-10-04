@@ -2,12 +2,12 @@
 
 public interface IMapEntry : IMapEntryBase
 {
-    public string ArtistUnicode { get; set; }
-    public string TitleUnicode { get; set; }
-    public string AudioFileName { get; set; }
-    public string FolderName { get; set; }
-    public string FolderPath { get; set; }
-    public string FullPath { get; set; }
+    public string ArtistUnicode { get; }
+    public string TitleUnicode { get; }
+    public string AudioFileName { get; }
+    public string FolderName { get; }
+    public string FolderPath { get; }
+    public string FullPath { get; }
     public bool UseUnicode { get; set; }
 
     /// <summary>

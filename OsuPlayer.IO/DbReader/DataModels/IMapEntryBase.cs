@@ -2,13 +2,13 @@
 
 namespace OsuPlayer.IO.DbReader.DataModels;
 
-public interface IMapEntryBase : IEquatable<IMapEntryBase>
+public interface IMapEntryBase : IEquatable<IMapEntryBase>, IComparable<IMapEntryBase>
 {
-    public string Artist { get; set; }
-    public string Title { get; set; }
+    public string Artist { get; }
+    public string Title { get; }
     public string Hash { get; }
-    public int BeatmapSetId { get; set; }
-    public int TotalTime { get; set; }
+    public int BeatmapSetId { get; }
+    public int TotalTime { get; }
     public string TotalTimeString => TimeSpan.FromMilliseconds(TotalTime).FormatTime();
     public string SongName => GetSongName();
     public string ArtistString => GetArtist();

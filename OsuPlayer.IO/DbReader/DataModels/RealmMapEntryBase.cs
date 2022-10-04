@@ -14,11 +14,11 @@ namespace OsuPlayer.IO.DbReader.DataModels;
 public class RealmMapEntryBase : IMapEntryBase
 {
     public Guid Id { get; init; }
-    public string Artist { get; set; } = string.Empty;
-    public string Title { get; set; } = string.Empty;
+    public string Artist { get; init; } = string.Empty;
+    public string Title { get; init; } = string.Empty;
     public string Hash { get; init; } = string.Empty;
-    public int BeatmapSetId { get; set; }
-    public int TotalTime { get; set; }
+    public int BeatmapSetId { get; init; }
+    public int TotalTime { get; init; }
     public string TotalTimeString => TimeSpan.FromMilliseconds(TotalTime).FormatTime();
     public string SongName => GetSongName();
     public string ArtistString => GetArtist();

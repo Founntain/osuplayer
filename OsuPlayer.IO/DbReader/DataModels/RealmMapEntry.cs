@@ -7,12 +7,12 @@
 internal class RealmMapEntry : RealmMapEntryBase, IMapEntry
 {
     public string BackgroundFileLocation { get; init; } = string.Empty;
-    public string ArtistUnicode { get; set; } = string.Empty;
-    public string TitleUnicode { get; set; } = string.Empty;
-    public string AudioFileName { get; set; } = string.Empty;
-    public string FolderName { get; set; } = string.Empty;
-    public string FolderPath { get; set; } = string.Empty;
-    public string FullPath { get; set; } = string.Empty;
+    public string ArtistUnicode { get; init; } = string.Empty;
+    public string TitleUnicode { get; init; } = string.Empty;
+    public string AudioFileName { get; init; } = string.Empty;
+    public string FolderName { get; init; } = string.Empty;
+    public string FolderPath { get; init; } = string.Empty;
+    public string FullPath { get; init; } = string.Empty;
     public bool UseUnicode { get; set; }
 
     public override string GetArtist()
