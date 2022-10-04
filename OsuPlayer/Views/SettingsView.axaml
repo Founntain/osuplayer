@@ -92,7 +92,7 @@
                                              Items="{Binding Fonts}" HorizontalAlignment="Stretch" />
                         </StackPanel>
 
-                        <StackPanel Spacing="5" Name="FontWeight">
+                        <StackPanel Spacing="5" Name="FontWeightSelect">
                             <TextBlock Text="Font Weight" />
                             <ComboBox SelectedItem="{Binding SelectedFontWeight}"
                                       Items="{Binding AvailableFontWeights}" HorizontalAlignment="Stretch" />

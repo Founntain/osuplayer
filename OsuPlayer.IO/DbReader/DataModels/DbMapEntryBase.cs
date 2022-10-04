@@ -1,4 +1,4 @@
-﻿using OsuPlayeIO.DbReader;
+﻿using System.Text;
 using OsuPlayer.Extensions;
 
 namespace OsuPlayer.IO.DbReader.DataModels;
@@ -9,10 +9,10 @@ namespace OsuPlayer.IO.DbReader.DataModels;
 /// </summary>
 public class DbMapEntryBase : IMapEntryBase
 {
-    public long DbOffset { get; set; }
+    public long DbOffset { get; init; }
     public string Artist { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
-    public string Hash { get; set; } = string.Empty;
+    public string Hash { get; init; } = string.Empty;
     public int BeatmapSetId { get; set; }
     public int TotalTime { get; set; }
     public string TotalTimeString => TimeSpan.FromMilliseconds(TotalTime).FormatTime();
@@ -40,14 +40,14 @@ public class DbMapEntryBase : IMapEntryBase
         return Title;
     }
 
-    /// <summary>
-    /// Gets a formatted version of artist and title
-    /// <remarks>may be overridden for usage with <see cref="DbMapEntry.UseUnicode" /></remarks>
-    /// </summary>
-    /// <returns>the formatted song name</returns>
-    public virtual string GetSongName()
+    public string GetSongName()
     {
-        return $"{Artist} - {Title}";
+        return $"{GetArtist()} - {GetTitle()}";
+    }
+
+    public override string ToString()
+    {
+        return GetSongName();
     }
 
     /// <summary>
@@ -69,29 +69,23 @@ public class DbMapEntryBase : IMapEntryBase
 
         r.BaseStream.Seek(DbOffset, SeekOrigin.Begin);
 
-        var mapEntry = new DbMapEntry();
+        r.ReadString(true); //Artist
 
-        mapEntry.DbOffset = DbOffset;
-        mapEntry.Artist = string.Intern(r.ReadString());
-
-        if (mapEntry.Artist.Length == 0)
-            mapEntry.Artist = "Unknown Artist";
-
+        var artistUnicode = "Unknown Artist";
         if (version >= 20121008)
-            mapEntry.ArtistUnicode = r.ReadString();
+            artistUnicode = r.ReadString();
 
-        mapEntry.Title = r.ReadString();
+        r.ReadString(true); //Title
 
-        if (mapEntry.Title.Length == 0)
-            mapEntry.Title = "Unknown Title";
+        var titleUnicode = "Unknown Title";
         if (version >= 20121008)
-            mapEntry.TitleUnicode = r.ReadString();
+            titleUnicode = r.ReadString();
 
         r.ReadString(true); //Creator
         r.ReadString(true); //Difficulty
 
-        mapEntry.AudioFileName = r.ReadString();
-        mapEntry.Hash = r.ReadString();
+        var audioFileName = r.ReadString();
+        r.ReadString(true); //Hash
 
         r.ReadString(true); //BeatmapFileName
         r.ReadByte(); //RankedStatus
@@ -105,7 +99,7 @@ public class DbMapEntryBase : IMapEntryBase
             r.ReadSingle(); //ApproachRate
             r.ReadSingle(); //CircleSize
             r.ReadSingle(); //HPDrainRate
-            r.ReadSingle(); //OveralDifficulty
+            r.ReadSingle(); //OverallDifficulty
         }
         else
         {
@@ -113,7 +107,7 @@ public class DbMapEntryBase : IMapEntryBase
             r.ReadByte(); //ApproachRate
             r.ReadByte(); //CircleSize
             r.ReadByte(); //HPDrainRate
-            r.ReadByte(); //OveralDifficulty
+            r.ReadByte(); //OverallDifficulty
         }
 
         r.ReadDouble(); //SliderVelocity
@@ -127,15 +121,15 @@ public class DbMapEntryBase : IMapEntryBase
         }
 
         r.ReadInt32(); //DrainTimeSeconds
-        mapEntry.TotalTime = r.ReadInt32();
+        r.ReadInt32(); //TotalTimeSeconds
 
         r.ReadInt32(); //AudioPreviewTime
-        var timingCnt = r.ReadInt32();
+        var timingCount = r.ReadInt32();
 
-        r.BaseStream.Position += 17 * timingCnt;
+        r.BaseStream.Position += 17 * timingCount;
 
         r.ReadInt32();
-        mapEntry.BeatmapSetId = r.ReadInt32();
+        r.ReadInt32(); //beatmapSetId
 
         r.ReadInt32(); //ThreadId
         r.ReadByte(); //GradeStandard
@@ -153,7 +147,7 @@ public class DbMapEntryBase : IMapEntryBase
         r.ReadDateTime(); //LastPlayed
         r.ReadBoolean(); //IsOsz2
 
-        mapEntry.FolderName = r.ReadString();
+        var folderName = r.ReadString();
 
         r.ReadDateTime(); //LastCheckAgainstOsuRepo
         r.ReadBoolean(); //IgnoreBeatmapSounds
@@ -168,13 +162,27 @@ public class DbMapEntryBase : IMapEntryBase
         r.ReadInt32(); //LastEditTime
         r.ReadByte(); //ManiaScrollSpeed
 
-        mapEntry.FullPath = Path.Combine(osuPath, "Songs", mapEntry.FolderName, mapEntry.AudioFileName);
-        mapEntry.FolderPath = Path.Combine(osuPath, "Songs", mapEntry.FolderName);
+        var fullPath = Path.Combine(osuPath, "Songs", folderName, audioFileName);
+        var folderPath = Path.Combine(osuPath, "Songs", folderName);
 
-        return mapEntry;
+        return new DbMapEntry
+        {
+            Artist = Artist,
+            ArtistUnicode = artistUnicode,
+            Title = Title,
+            TitleUnicode = titleUnicode,
+            AudioFileName = audioFileName,
+            BeatmapSetId = BeatmapSetId,
+            DbOffset = DbOffset,
+            FolderName = folderName,
+            FolderPath = folderPath,
+            FullPath = fullPath,
+            Hash = Hash,
+            TotalTime = TotalTime
+        };
     }
 
-    public IDatabaseReader GetReader(string path)
+    public IDatabaseReader? GetReader(string path)
     {
         var dbLoc = Path.Combine(path, "osu!.db");
 
@@ -185,13 +193,31 @@ public class DbMapEntryBase : IMapEntryBase
         return new OsuDbReader(file, path);
     }
 
-    public override string ToString()
+    public static bool operator ==(DbMapEntryBase? left, IMapEntryBase? right)
     {
-        return GetSongName();
+        return left?.Hash == right?.Hash;
+    }
+
+    public static bool operator !=(DbMapEntryBase? left, IMapEntryBase? right)
+    {
+        return left?.Hash != right?.Hash;
     }
 
     public bool Equals(IMapEntryBase? other)
     {
         return Hash == other?.Hash;
+    }
+
+    public override bool Equals(object? other)
+    {
+        if (other is IMapEntryBase map)
+            return Hash == map.Hash;
+
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return BitConverter.ToInt32(Encoding.UTF8.GetBytes(Hash));
     }
 }

@@ -1,5 +1,4 @@
-﻿using OsuPlayeIO.DbReader;
-using OsuPlayer.Data.OsuPlayer.Enums;
+﻿using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Extensions;
 using OsuPlayer.IO.DbReader;
 using OsuPlayer.IO.DbReader.DataModels;

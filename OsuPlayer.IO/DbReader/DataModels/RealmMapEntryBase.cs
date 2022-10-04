@@ -1,4 +1,5 @@
-﻿using OsuPlayer.Extensions;
+﻿using System.Text;
+using OsuPlayer.Extensions;
 using OsuPlayer.IO.Storage.LazerModels.Beatmaps;
 using OsuPlayer.IO.Storage.LazerModels.Files;
 using Realms;
@@ -12,10 +13,10 @@ namespace OsuPlayer.IO.DbReader.DataModels;
 /// </summary>
 public class RealmMapEntryBase : IMapEntryBase
 {
-    public Guid Id { get; set; }
-    public string Artist { get; set; }
-    public string Title { get; set; }
-    public string Hash { get; set; }
+    public Guid Id { get; init; }
+    public string Artist { get; set; } = string.Empty;
+    public string Title { get; set; } = string.Empty;
+    public string Hash { get; init; } = string.Empty;
     public int BeatmapSetId { get; set; }
     public int TotalTime { get; set; }
     public string TotalTimeString => TimeSpan.FromMilliseconds(TotalTime).FormatTime();
@@ -35,7 +36,12 @@ public class RealmMapEntryBase : IMapEntryBase
 
     public virtual string GetSongName()
     {
-        return $"{Artist} - {Title}";
+        return $"{GetArtist()} - {GetTitle()}";
+    }
+
+    public override string ToString()
+    {
+        return GetSongName();
     }
 
     public async Task<IMapEntry?> ReadFullEntry(string path)
@@ -98,8 +104,31 @@ public class RealmMapEntryBase : IMapEntryBase
         return new RealmReader(path);
     }
 
+    public static bool operator ==(RealmMapEntryBase? left, IMapEntryBase? right)
+    {
+        return left?.Hash == right?.Hash;
+    }
+
+    public static bool operator !=(RealmMapEntryBase? left, IMapEntryBase? right)
+    {
+        return left?.Hash != right?.Hash;
+    }
+
     public bool Equals(IMapEntryBase? other)
     {
         return Hash == other?.Hash;
+    }
+
+    public override bool Equals(object? other)
+    {
+        if (other is IMapEntryBase map)
+            return Hash == map.Hash;
+
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return BitConverter.ToInt32(Encoding.UTF8.GetBytes(Hash));
     }
 }

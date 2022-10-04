@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace OsuPlayer.IO.DbReader.DataModels;
+﻿namespace OsuPlayer.IO.DbReader.DataModels;
 
 /// <summary>
 /// a full beatmap entry with optionally used data
@@ -73,40 +71,5 @@ internal class DbMapEntry : DbMapEntryBase, IMapEntry
         if (UseUnicode)
             return string.IsNullOrEmpty(TitleUnicode) ? Artist : TitleUnicode;
         return Title;
-    }
-
-    public override string GetSongName()
-    {
-        if (UseUnicode && !string.IsNullOrEmpty(ArtistUnicode) && !string.IsNullOrEmpty(TitleUnicode))
-            return $"{ArtistUnicode} - {TitleUnicode}";
-
-        return $"{Artist} - {Title}";
-    }
-
-    public override string ToString()
-    {
-        return GetSongName();
-    }
-
-    public static bool operator ==(DbMapEntry? left, DbMapEntry? right)
-    {
-        return left?.SongName == right?.SongName;
-    }
-
-    public static bool operator !=(DbMapEntry? left, DbMapEntry? right)
-    {
-        return left?.SongName != right?.SongName;
-    }
-
-    public override bool Equals(object? obj)
-    {
-        if (obj is DbMapEntry other) return Hash == other.Hash;
-
-        return false;
-    }
-
-    public override int GetHashCode()
-    {
-        return BitConverter.ToInt32(Encoding.UTF8.GetBytes(Hash));
     }
 }

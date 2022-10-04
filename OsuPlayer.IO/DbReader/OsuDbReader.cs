@@ -1,19 +1,16 @@
 using System.Text;
-using OsuPlayer.IO.DbReader;
 using OsuPlayer.IO.DbReader.DataModels;
 
-namespace OsuPlayeIO.DbReader;
+namespace OsuPlayer.IO.DbReader;
 
 /// <summary>
 /// A <see cref="BinaryReader" /> to read the osu!.db to extract their beatmap data or to read from the collection.db
 /// </summary>
 public class OsuDbReader : BinaryReader, IDatabaseReader
 {
-    public static int OsuDbVersion;
+    public static int OsuDbVersion { get; private set; }
 
     private readonly byte[] _buf = new byte[512];
-
-    private readonly string _path;
 
     public OsuDbReader(Stream input) : base(input)
     {
@@ -21,7 +18,6 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
 
     public OsuDbReader(Stream input, string path) : base(input)
     {
-        _path = path;
     }
 
     public Task<List<IMapEntryBase>?> ReadBeatmaps()
@@ -45,11 +41,13 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
         for (var i = 1; i < mapCount; i++)
         {
             if (flag)
-                ReadInt32(); //btlen
+                ReadInt32(); //bt length
+
+            var hash = string.Empty;
 
             if (prevId != null)
             {
-                var length = CalculateMapLength(out var newSetId, out _);
+                var length = CalculateMapLength(out var newSetId, out hash);
                 if (prevId == newSetId)
                 {
                     prevId = newSetId;
@@ -61,7 +59,8 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
 
             var minBeatMap = new DbMapEntryBase
             {
-                DbOffset = BaseStream.Position
+                DbOffset = BaseStream.Position,
+                Hash = hash
             };
 
             ReadFromStream(ref minBeatMap);
@@ -93,7 +92,7 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
         for (var i = 1; i < mapCount; i++)
         {
             if (flag)
-                ReadInt32(); //btlen
+                ReadInt32(); //bt length
 
             CalculateMapLength(out var setId, out var hash);
 
@@ -152,14 +151,11 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
         ReadString(true); //Difficulty
         ReadString(true);
 
-        dbMapEntryBase.Hash = ReadString();
+        ReadString(true); //Hash
 
         ReadString(true); //BeatmapFileName
 
-        if (OsuDbVersion >= 20140609)
-            BaseStream.Seek(39, SeekOrigin.Current);
-        else
-            BaseStream.Seek(27, SeekOrigin.Current);
+        BaseStream.Seek(OsuDbVersion >= 20140609 ? 39 : 27, SeekOrigin.Current);
 
         if (OsuDbVersion >= 20140609)
         {
@@ -191,16 +187,12 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
         ReadBoolean(); //IsOsz2
         ReadString(true);
 
-        if (OsuDbVersion < 20140609)
-            BaseStream.Seek(20, SeekOrigin.Current);
-        else
-            BaseStream.Seek(18, SeekOrigin.Current);
+        BaseStream.Seek(OsuDbVersion < 20140609 ? 20 : 18, SeekOrigin.Current);
     }
 
     /// <summary>
     /// Reads a osu!.db map entry and calculates the map length in bytes
     /// </summary>
-    /// <param name="r">the current <see cref="OsuDbReader" /> instance of the stream</param>
     /// <param name="setId">outputs an <see cref="int" /> of the beatmap set id</param>
     /// <param name="hash">outputs an <see cref="string" /> of the beatmap hash</param>
     /// <returns>a <see cref="long" /> from the byte length of the current map</returns>
@@ -220,10 +212,7 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
         hash = ReadString();
         ReadString(true);
         BaseStream.Seek(15, SeekOrigin.Current);
-        if (OsuDbVersion >= 20140609)
-            BaseStream.Seek(16, SeekOrigin.Current);
-        else
-            BaseStream.Seek(4, SeekOrigin.Current);
+        BaseStream.Seek(OsuDbVersion >= 20140609 ? 16 : 4, SeekOrigin.Current);
 
         BaseStream.Seek(8, SeekOrigin.Current);
         if (OsuDbVersion >= 20140609)
@@ -246,10 +235,7 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
         ReadString(true);
         BaseStream.Seek(10, SeekOrigin.Current);
         ReadString(true);
-        if (OsuDbVersion < 20140609)
-            BaseStream.Seek(20, SeekOrigin.Current);
-        else
-            BaseStream.Seek(18, SeekOrigin.Current);
+        BaseStream.Seek(OsuDbVersion < 20140609 ? 20 : 18, SeekOrigin.Current);
 
         return BaseStream.Position - initOffset;
     }
@@ -273,7 +259,7 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
                 var strLen = Read7BitEncodedInt();
                 if (!ignore)
                 {
-                    BaseStream.Read(_buf, 0, strLen);
+                    _ = BaseStream.Read(_buf, 0, strLen);
                     return Encoding.UTF8.GetString(_buf, 0, strLen);
                 }
 

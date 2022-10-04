@@ -6,7 +6,7 @@
 /// </summary>
 internal class RealmMapEntry : RealmMapEntryBase, IMapEntry
 {
-    public string BackgroundFileLocation { get; set; } = string.Empty;
+    public string BackgroundFileLocation { get; init; } = string.Empty;
     public string ArtistUnicode { get; set; } = string.Empty;
     public string TitleUnicode { get; set; } = string.Empty;
     public string AudioFileName { get; set; } = string.Empty;
@@ -15,12 +15,18 @@ internal class RealmMapEntry : RealmMapEntryBase, IMapEntry
     public string FullPath { get; set; } = string.Empty;
     public bool UseUnicode { get; set; }
 
-    public override string GetSongName()
+    public override string GetArtist()
     {
-        if (UseUnicode && !string.IsNullOrEmpty(ArtistUnicode) && !string.IsNullOrEmpty(TitleUnicode))
-            return $"{ArtistUnicode} - {TitleUnicode}";
+        if (UseUnicode)
+            return string.IsNullOrEmpty(ArtistUnicode) ? Artist : ArtistUnicode;
+        return Artist;
+    }
 
-        return $"{Artist} - {Title}";
+    public override string GetTitle()
+    {
+        if (UseUnicode)
+            return string.IsNullOrEmpty(TitleUnicode) ? Artist : TitleUnicode;
+        return Title;
     }
 
     public Task<string?> FindBackground()

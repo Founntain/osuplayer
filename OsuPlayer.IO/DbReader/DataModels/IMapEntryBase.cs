@@ -6,7 +6,7 @@ public interface IMapEntryBase : IEquatable<IMapEntryBase>
 {
     public string Artist { get; set; }
     public string Title { get; set; }
-    public string Hash { get; set; }
+    public string Hash { get; }
     public int BeatmapSetId { get; set; }
     public int TotalTime { get; set; }
     public string TotalTimeString => TimeSpan.FromMilliseconds(TotalTime).FormatTime();
@@ -18,7 +18,14 @@ public interface IMapEntryBase : IEquatable<IMapEntryBase>
 
     public string GetTitle();
 
-    public string GetSongName();
+    /// <summary>
+    /// Gets a formatted version of artist and title
+    /// </summary>
+    /// <returns>the formatted song name</returns>
+    public virtual string GetSongName()
+    {
+        return $"{GetArtist()} - {GetTitle()}";
+    }
 
     /// <summary>
     /// Reads the full <see cref="IMapEntry" /> from this <see cref="IMapEntryBase" />
