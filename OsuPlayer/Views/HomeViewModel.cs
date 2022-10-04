@@ -7,6 +7,7 @@ using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Modules;
+using OsuPlayer.Modules.Services;
 using ReactiveUI;
 using SkiaSharp;
 using Splat;

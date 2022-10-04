@@ -4,6 +4,7 @@ using Avalonia.ReactiveUI;
 using OsuPlayer.Extensions;
 using OsuPlayer.Modules;
 using OsuPlayer.Modules.Audio.Engine;
+using OsuPlayer.Modules.Services;
 using OsuPlayer.Windows;
 using Splat;
 

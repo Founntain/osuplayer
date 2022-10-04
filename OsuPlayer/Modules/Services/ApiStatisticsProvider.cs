@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using LiveChartsCore.Defaults;
 using OsuPlayer.Data.API.Enums;
 
-namespace OsuPlayer.Modules.Audio;
+namespace OsuPlayer.Modules.Services;
 
 public class ApiStatisticsProvider : IStatisticsProvider
 {
