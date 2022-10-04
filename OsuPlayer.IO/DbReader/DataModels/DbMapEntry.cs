@@ -1,7 +1,4 @@
 ﻿using System.Text;
-using Avalonia;
-using Avalonia.Media.Imaging;
-using Avalonia.Platform;
 
 namespace OsuPlayer.IO.DbReader.DataModels;
 
@@ -19,7 +16,7 @@ internal class DbMapEntry : DbMapEntryBase, IMapEntry
     public string FullPath { get; set; } = string.Empty;
     public bool UseUnicode { get; set; }
 
-    public async Task<Bitmap?> FindBackground()
+    public async Task<string?> FindBackground()
     {
         var eventCount = 0;
 
@@ -59,16 +56,9 @@ internal class DbMapEntry : DbMapEntryBase, IMapEntry
             return null;
 
         var fileName = background.Split(',')[2].Replace("\"", string.Empty);
+        var path = Path.Combine(FolderPath, fileName);
 
-        if (File.Exists(Path.Combine(FolderPath, fileName)))
-        {
-            await using var stream = File.OpenRead(Path.Combine(FolderPath, fileName));
-            return await Task.Run(() => new Bitmap(stream));
-        }
-
-        var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
-        var asset = assets?.Open(new Uri("avares://OsuPlayer/Resources/defaultBg.jpg"));
-        return new Bitmap(asset);
+        return File.Exists(path) ? path : null;
     }
 
     public override string GetArtist()

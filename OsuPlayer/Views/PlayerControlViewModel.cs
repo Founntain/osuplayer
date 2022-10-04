@@ -173,7 +173,10 @@ public class PlayerControlViewModel : BaseViewModel
         _isShuffle.BindTo(Player.IsShuffle);
         _isShuffle.BindValueChanged(d => this.RaisePropertyChanged(nameof(IsShuffle)));
 
-        Player.CurrentSongImage.BindValueChanged(d => CurrentSongImage = d.NewValue, true);
+        Player.CurrentSongImage.BindValueChanged(d =>
+        {
+            CurrentSongImage = new Bitmap(d.NewValue);
+        }, true);
 
         Player.SelectedPlaylist.BindValueChanged(_ =>
         {

@@ -1,8 +1,4 @@
-﻿using Avalonia;
-using Avalonia.Media.Imaging;
-using Avalonia.Platform;
-
-namespace OsuPlayer.IO.DbReader.DataModels;
+﻿namespace OsuPlayer.IO.DbReader.DataModels;
 
 /// <summary>
 /// a full beatmap entry with optionally used data
@@ -27,16 +23,8 @@ internal class RealmMapEntry : RealmMapEntryBase, IMapEntry
         return $"{Artist} - {Title}";
     }
 
-    public async Task<Bitmap?> FindBackground()
+    public Task<string?> FindBackground()
     {
-        if (File.Exists(BackgroundFileLocation))
-        {
-            await using var stream = File.OpenRead(BackgroundFileLocation);
-            return await Task.Run(() => new Bitmap(stream));
-        }
-
-        var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
-
-        return new Bitmap(assets?.Open(new Uri("avares://OsuPlayer/Resources/defaultBg.jpg")));
+        return Task.FromResult(File.Exists(BackgroundFileLocation) ? BackgroundFileLocation : null);
     }
 }

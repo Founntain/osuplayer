@@ -1,8 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Avalonia.Media.Imaging;
-using Avalonia.Threading;
 using DynamicData;
 using OsuPlayer.Data.API.Enums;
 using OsuPlayer.Data.OsuPlayer.Classes;
@@ -37,7 +35,7 @@ public class Player : IPlayer
     public Bindable<bool> SongsLoading { get; } = new();
 
     public Bindable<IMapEntry?> CurrentSong { get; } = new();
-    public Bindable<Bitmap?> CurrentSongImage { get; } = new();
+    public Bindable<string?> CurrentSongImage { get; } = new();
 
     public Bindable<bool> IsPlaying { get; } = new();
     public Bindable<bool> IsShuffle { get; } = new();

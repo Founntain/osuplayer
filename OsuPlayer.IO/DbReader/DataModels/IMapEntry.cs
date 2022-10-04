@@ -1,6 +1,4 @@
-﻿using Avalonia.Media.Imaging;
-
-namespace OsuPlayer.IO.DbReader.DataModels;
+﻿namespace OsuPlayer.IO.DbReader.DataModels;
 
 public interface IMapEntry : IMapEntryBase
 {
@@ -15,6 +13,6 @@ public interface IMapEntry : IMapEntryBase
     /// <summary>
     /// Gets the background image of this <see cref="IMapEntry" />
     /// </summary>
-    /// <returns>a <see cref="Bitmap" /> of the background found. Returns null if the map doesn't have a background</returns>
-    public Task<Bitmap?> FindBackground();
+    /// <returns>the path of the background found. Returns null if the map doesn't have a background</returns>
+    public Task<string?> FindBackground();
 }
