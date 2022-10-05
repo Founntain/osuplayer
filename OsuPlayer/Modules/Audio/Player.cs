@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using DynamicData;
 using OsuPlayer.Data.API.Enums;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
@@ -83,6 +84,8 @@ public class Player : IPlayer, IImportNotifications
         {
             sortProvider.SortingModeBindable.Value = config.Container.SortingMode;
         }
+
+        songSourceProvider.Songs?.Bind(out var songs).Subscribe(next => CurrentIndex = songs.IndexOf(CurrentSong.Value));
 
         CurrentSong.BindValueChanged(d =>
         {
