@@ -284,6 +284,7 @@ public class SettingsViewModel : BaseViewModel
         {
             _sortingMode.BindTo(sortProvider.SortingModeBindable);
             _sortingMode.BindValueChanged(d => this.RaisePropertyChanged(nameof(SelectedSortingMode)));
+            _sortingMode.Value = config.Container.SortingMode;
         }
 
         _blacklistSkip.BindTo(Player.BlacklistSkip);
