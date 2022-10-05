@@ -1,10 +1,12 @@
 ﻿using DynamicData;
+using OsuPlayer.IO.Importer;
 
 namespace OsuPlayer.Modules.Services;
 
 public class OsuSongSourceProvider : ISongSourceProvider
 {
     public SourceList<IMapEntryBase> SongSource { get; } = new();
+    public IObservable<IChangeSet<IMapEntryBase>>? Songs { get; }
     public List<IMapEntryBase>? SongSourceList { get; private set; }
 
     public OsuSongSourceProvider(ISortProvider? sortProvider = null)
@@ -12,12 +14,16 @@ public class OsuSongSourceProvider : ISongSourceProvider
         if (sortProvider != null)
         {
             sortProvider.SortedSongs = SongSource.Connect().Sort(sortProvider.SortingModeObservable);
+
+            Songs = sortProvider.SortedSongs;
             
             sortProvider.SortedSongs.Bind(out var sortedSongs).Subscribe(next => SongSourceList = sortedSongs.ToList());
         }
         else
         {
-            SongSource.Connect().Subscribe(next => SongSourceList = SongSource.Items.ToList());
+            Songs = SongSource.Connect();
+            
+            Songs.Subscribe(next => SongSourceList = SongSource.Items.ToList());
         }
     }
     

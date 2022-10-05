@@ -5,8 +5,6 @@ using Avalonia.Layout;
 using Avalonia.Markup.Xaml;
 using OsuPlayer.Data.API.Models.Beatmap;
 using OsuPlayer.Extensions;
-using OsuPlayer.Modules.Services;
-using Splat;
 
 namespace OsuPlayer.Views;
 

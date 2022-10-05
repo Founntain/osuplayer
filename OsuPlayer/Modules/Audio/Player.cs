@@ -5,6 +5,7 @@ using OsuPlayer.Data.API.Enums;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
+using OsuPlayer.IO.Importer;
 using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules.Audio.Engine;
@@ -17,7 +18,7 @@ namespace OsuPlayer.Modules.Audio;
 /// This class is a wrapper for our <see cref="BassEngine" />.
 /// You can play, pause, stop and etc. from this class. Custom logic should also be implemented here
 /// </summary>
-public class Player : IPlayer
+public class Player : IPlayer, IImportNotifications
 {
     private readonly IAudioEngine _audioEngine;
     private readonly Stopwatch _currentSongTimer = new();

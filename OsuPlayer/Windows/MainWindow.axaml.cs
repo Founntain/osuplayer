@@ -27,7 +27,9 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         ViewModel = viewModel;
 
         var player = ViewModel.Player;
-        Task.Run(() => SongImporter.ImportSongsAsync(player.SongSourceProvider, player));
+        var notification = (IImportNotifications) player;
+
+        Task.Run(() => SongImporter.ImportSongsAsync(player.SongSourceProvider, notification));
 
         InitializeComponent();
 

@@ -6,9 +6,7 @@ using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.Extensions;
 using OsuPlayer.IO.Storage.Playlists;
-using OsuPlayer.Modules.Services;
 using ReactiveUI;
-using Splat;
 
 namespace OsuPlayer.Views;
 
@@ -16,13 +14,13 @@ public class PlaylistEditorViewModel : BaseViewModel
 {
     public readonly IPlayer Player;
     private Playlist? _currentSelectedPlaylist;
-    private ReadOnlyObservableCollection<IMapEntryBase>? _filteredSongEntries;
-    private string _filterText;
+    private readonly ReadOnlyObservableCollection<IMapEntryBase>? _filteredSongEntries;
+    private string _filterText = string.Empty;
     private bool _isDeletePlaylistPopupOpen;
     private bool _isNewPlaylistPopupOpen;
     private bool _isRenamePlaylistPopupOpen;
-    private string _newPlaylistNameText;
-    private SourceList<Playlist> _playlists;
+    private string _newPlaylistNameText = string.Empty;
+    private SourceList<Playlist>? _playlists;
 
     public string FilterText
     {
@@ -65,7 +63,7 @@ public class PlaylistEditorViewModel : BaseViewModel
         }
     }
 
-    public SourceList<Playlist> Playlists
+    public SourceList<Playlist>? Playlists
     {
         get => _playlists;
         set => this.RaiseAndSetIfChanged(ref _playlists, value);
@@ -80,7 +78,6 @@ public class PlaylistEditorViewModel : BaseViewModel
     public PlaylistEditorViewModel(IPlayer player)
     {
         Player = player;
-        var sortProvider = Locator.Current.GetRequiredService<ISortProvider>();
 
         var filter = this.WhenAnyValue(x => x.FilterText)
             .Throttle(TimeSpan.FromMilliseconds(20))
@@ -91,7 +88,7 @@ public class PlaylistEditorViewModel : BaseViewModel
 
         Player.PlaylistChanged += (sender, args) => { Playlists = PlaylistManager.GetAllPlaylists().ToSourceList(); };
 
-        sortProvider.SortedSongs?.Filter(filter, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
+        player.SongSourceProvider.Songs?.Filter(filter, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
             .Bind(out _filteredSongEntries).Subscribe();
 
         this.RaisePropertyChanged(nameof(FilteredSongEntries));
@@ -104,7 +101,7 @@ public class PlaylistEditorViewModel : BaseViewModel
 
             var config = new Config();
 
-            CurrentSelectedPlaylist = Playlists.Items.FirstOrDefault(x => x.Id == config.Container.ActivePlaylistId) ?? Playlists.Items.ElementAt(0);
+            CurrentSelectedPlaylist = Playlists?.Items.FirstOrDefault(x => x.Id == config.Container.ActivePlaylistId) ?? Playlists?.Items.ElementAt(0);
         });
     }
 

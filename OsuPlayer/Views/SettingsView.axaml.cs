@@ -89,7 +89,7 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
         }
 
         var player = ViewModel.Player;
-        await Task.Run(() => SongImporter.ImportSongsAsync(player.SongSourceProvider, player));
+        await Task.Run(() => SongImporter.ImportSongsAsync(player.SongSourceProvider, (IImportNotifications)player));
         //await Task.Run(ViewModel.Player.ImportSongsAsync);
     }
 

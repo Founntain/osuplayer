@@ -5,16 +5,15 @@ using DynamicData;
 using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.IO.Storage.Blacklist;
-using OsuPlayer.Modules.Services;
 using ReactiveUI;
 
 namespace OsuPlayer.Views;
 
 public class BlacklistEditorViewModel : BaseViewModel
 {
-    private BlacklistContainer _blacklist;
-    private ReadOnlyObservableCollection<IMapEntryBase>? _filteredSongEntries;
-    private string _filterText;
+    private BlacklistContainer? _blacklist;
+    private readonly ReadOnlyObservableCollection<IMapEntryBase>? _filteredSongEntries;
+    private string _filterText = string.Empty;
 
     public readonly IPlayer Player;
 
@@ -27,7 +26,7 @@ public class BlacklistEditorViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _filterText, value);
     }
 
-    public BlacklistContainer Blacklist
+    public BlacklistContainer? Blacklist
     {
         get => _blacklist;
         set => this.RaiseAndSetIfChanged(ref _blacklist, value);
@@ -35,7 +34,7 @@ public class BlacklistEditorViewModel : BaseViewModel
 
     public ReadOnlyObservableCollection<IMapEntryBase>? FilteredSongEntries => _filteredSongEntries;
 
-    public BlacklistEditorViewModel(IPlayer player, ISortProvider? sortProvider)
+    public BlacklistEditorViewModel(IPlayer player)
     {
         Activator = new ViewModelActivator();
 
@@ -48,7 +47,7 @@ public class BlacklistEditorViewModel : BaseViewModel
             .Throttle(TimeSpan.FromMilliseconds(20))
             .Select(BuildFilter);
 
-        sortProvider?.SortedSongs?.Filter(filter, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
+        player.SongSourceProvider.Songs?.Filter(filter, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
             .Bind(out _filteredSongEntries).Subscribe();
 
         this.RaisePropertyChanged(nameof(FilteredSongEntries));

@@ -1,11 +1,12 @@
 ﻿using DynamicData;
 using OsuPlayer.IO.DbReader.DataModels;
 
-namespace OsuPlayer.Modules.Services;
+namespace OsuPlayer.IO.Importer;
 
 public interface ISongSourceProvider
 {
-    public SourceList<IMapEntryBase> SongSource { get; }
+    SourceList<IMapEntryBase> SongSource { get; }
+    public IObservable<IChangeSet<IMapEntryBase>>? Songs { get; }
     public List<IMapEntryBase>? SongSourceList { get; }
 
     public IMapEntryBase? GetMapEntryFromHash(string? hash);

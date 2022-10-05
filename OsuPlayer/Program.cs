@@ -2,6 +2,7 @@
 using Avalonia;
 using Avalonia.ReactiveUI;
 using OsuPlayer.Extensions;
+using OsuPlayer.IO.Importer;
 using OsuPlayer.Modules.Audio.Engine;
 using OsuPlayer.Modules.Services;
 using OsuPlayer.Windows;
@@ -9,7 +10,7 @@ using Splat;
 
 namespace OsuPlayer;
 
-internal class Program
+internal static class Program
 {
     // Initialization code. Don't use any Avalonia, third-party APIs or any
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
@@ -48,7 +49,7 @@ internal class Program
     }
 
     // Avalonia configuration, don't remove; also used by visual designer.
-    public static AppBuilder BuildAvaloniaApp()
+    private static AppBuilder BuildAvaloniaApp()
     {
         return AppBuilder.Configure<App>()
             .UsePlatformDetect()
@@ -78,7 +79,11 @@ internal class Program
             resolver.GetService<IStatisticsProvider>(),
             resolver.GetService<ISortProvider>()));
 
-        services.Register(() => new MainWindowViewModel());
+        services.Register(() => new MainWindowViewModel(
+            resolver.GetRequiredService<IAudioEngine>(),
+            resolver.GetRequiredService<IPlayer>(),
+            resolver.GetService<IStatisticsProvider>(),
+            resolver.GetService<ISortProvider>()));
 
         services.RegisterLazySingleton(() => new MainWindow(
             resolver.GetRequiredService<MainWindowViewModel>()));

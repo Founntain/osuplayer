@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using Avalonia.Data.Converters;
 using OsuPlayer.Extensions;
-using OsuPlayer.Modules.Services;
+using OsuPlayer.IO.Importer;
 using Splat;
 
 namespace OsuPlayer.ValueConverters;

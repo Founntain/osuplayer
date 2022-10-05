@@ -2,7 +2,6 @@
 using OsuPlayer.IO.DbReader;
 using OsuPlayer.IO.DbReader.DataModels;
 using OsuPlayer.IO.Storage.Config;
-using OsuPlayer.Modules.Services;
 
 namespace OsuPlayer.IO.Importer;
 
@@ -28,8 +27,12 @@ public static class SongImporter
             var songEntries = await DoImportAsync((await config.ReadAsync()).OsuPath!);
 
             if (songEntries == null) return;
-
-            songSourceProvider.SongSource.Edit(list => { list.AddRange(songEntries.OrderBy(x => x.Title)); });
+            
+            songSourceProvider.SongSource.Edit(list =>
+            {
+                list.Clear();
+                list.AddRange(songEntries.OrderBy(x => x.Title));
+            });
 
             if (songSourceProvider.SongSourceList == null || !songSourceProvider.SongSourceList.Any()) return;
         }
@@ -57,12 +60,10 @@ public static class SongImporter
 
         if (readMaps == null) return null;
 
-        var maps = readMaps?.DistinctBy(x => x.Hash).OrderBy(x => x.BeatmapSetId)
+        var maps = readMaps.DistinctBy(x => x.Hash).OrderBy(x => x.BeatmapSetId)
             //.DistinctBy(x => x.Title)
             .Where(x => !string.IsNullOrEmpty(x.Title)).ToArray();
 
-        if (!maps.Any()) return null;
-
-        return maps;
+        return !maps.Any() ? null : maps;
     }
 }

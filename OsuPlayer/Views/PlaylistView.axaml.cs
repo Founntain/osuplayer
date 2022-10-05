@@ -4,11 +4,8 @@ using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
-using OsuPlayer.Extensions;
-using OsuPlayer.Modules.Services;
 using OsuPlayer.Windows;
 using ReactiveUI;
-using Splat;
 
 namespace OsuPlayer.Views;
 

@@ -1,12 +1,10 @@
 using Avalonia.Media;
 using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Data.OsuPlayer.Enums;
-using OsuPlayer.Extensions;
 using OsuPlayer.Modules.Audio.Engine;
 using OsuPlayer.Modules.Services;
 using OsuPlayer.Views;
 using ReactiveUI;
-using Splat;
 
 namespace OsuPlayer.Windows;
 
@@ -50,22 +48,19 @@ public class MainWindowViewModel : BaseWindowViewModel
         set => _panelMaterial = value;
     }
 
-    public MainWindowViewModel()
+    public MainWindowViewModel(IAudioEngine engine, IPlayer player, IStatisticsProvider? statisticsProvider = null, ISortProvider? sortProvider = null)
     {
-        var engine = Locator.Current.GetRequiredService<IAudioEngine>();
-        Player = Locator.Current.GetRequiredService<IPlayer>();
-        var statisticsProvider = Locator.Current.GetService<IStatisticsProvider>();
-        var sortProvider = Locator.Current.GetService<ISortProvider>();
+        Player = player;
 
         //Generate new ViewModels here
         TopBar = new TopBarViewModel();
         PlayerControl = new PlayerControlViewModel(Player, engine);
 
-        SearchView = new SearchViewModel(Player, sortProvider);
+        SearchView = new SearchViewModel(Player);
         PlaylistView = new PlaylistViewModel(Player);
         PlaylistEditorView = new PlaylistEditorViewModel(Player);
-        BlacklistEditorView = new BlacklistEditorViewModel(Player, sortProvider);
-        HomeView = new HomeViewModel(Player, statisticsProvider, sortProvider);
+        BlacklistEditorView = new BlacklistEditorViewModel(Player);
+        HomeView = new HomeViewModel(Player, statisticsProvider);
         UserView = new UserViewModel(Player);
         EditUserView = new EditUserViewModel();
         PartyView = new PartyViewModel();

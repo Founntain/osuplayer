@@ -3,7 +3,6 @@ using System.Reactive.Linq;
 using Avalonia.Threading;
 using DynamicData;
 using OsuPlayer.Base.ViewModels;
-using OsuPlayer.Modules.Services;
 using ReactiveUI;
 
 namespace OsuPlayer.Views;
@@ -11,7 +10,7 @@ namespace OsuPlayer.Views;
 public class SearchViewModel : BaseViewModel
 {
     public readonly IPlayer Player;
-    private ReadOnlyObservableCollection<IMapEntryBase>? _filteredSongEntries;
+    private readonly ReadOnlyObservableCollection<IMapEntryBase>? _filteredSongEntries;
     private string _filterText = string.Empty;
 
     public string FilterText
@@ -22,7 +21,7 @@ public class SearchViewModel : BaseViewModel
 
     public ReadOnlyObservableCollection<IMapEntryBase>? FilteredSongEntries => _filteredSongEntries;
 
-    public SearchViewModel(IPlayer player, ISortProvider? sortProvider)
+    public SearchViewModel(IPlayer player)
     {
         Player = player;
 
@@ -30,7 +29,7 @@ public class SearchViewModel : BaseViewModel
             .Throttle(TimeSpan.FromMilliseconds(20))
             .Select(BuildFilter);
 
-        sortProvider?.SortedSongs?.Filter(filter, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
+        player.SongSourceProvider.Songs?.Filter(filter, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
             .Bind(out _filteredSongEntries).Subscribe();
 
         this.RaisePropertyChanged(nameof(FilteredSongEntries));
