@@ -30,17 +30,15 @@ public interface IMapEntryBase : IEquatable<IMapEntryBase>, IComparable<IMapEntr
     /// <summary>
     /// Reads the full <see cref="IMapEntry" /> from this <see cref="IMapEntryBase" />
     /// </summary>
-    /// <param name="path">the path to the osu! map</param>
     /// <returns>
     /// a full <see cref="IMapEntry" /> for extended usage. Returns null if the path doesn't exist or the map was not
     /// found.
     /// </returns>
-    public Task<IMapEntry?> ReadFullEntry(string path);
+    public Task<IMapEntry?> ReadFullEntry();
 
     /// <summary>
     /// Gets the corresponding <see cref="IDatabaseReader"/> of the beatmap
     /// </summary>
-    /// <param name="path">the osu! path</param>
     /// <returns>a <see cref="IDatabaseReader"/> instance of the specific database reader implementation</returns>
-    public IDatabaseReader GetReader(string path);
+    public IDatabaseReader GetReader();
 }

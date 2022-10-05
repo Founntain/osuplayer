@@ -11,6 +11,7 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
     public static int OsuDbVersion { get; private set; }
 
     private readonly byte[] _buf = new byte[512];
+    private string _path = string.Empty;
 
     public OsuDbReader(Stream input) : base(input)
     {
@@ -18,6 +19,7 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
 
     public OsuDbReader(Stream input, string path) : base(input)
     {
+        _path = string.Intern(path);
     }
 
     public Task<List<IMapEntryBase>?> ReadBeatmaps()
@@ -185,6 +187,7 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
 
         minBeatmap = new DbMapEntryBase
         {
+            OsuPath = string.Intern(_path),
             Artist = artist,
             Title = title,
             BeatmapSetId = beatmapSetId,

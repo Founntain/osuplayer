@@ -24,10 +24,10 @@ public static class SongImporter
 
         await using (var config = new Config())
         {
-            var songEntries = await DoImportAsync((await config.ReadAsync()).OsuPath!);
+            var songEntries = (await DoImportAsync((await config.ReadAsync()).OsuPath!))?.ToList();
 
-            if (songEntries == null) return;
-            
+            if (songEntries == null || !songEntries.Any()) return;
+
             songSourceProvider.SongSource.Edit(list =>
             {
                 list.Clear();

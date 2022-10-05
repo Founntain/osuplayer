@@ -10,6 +10,7 @@ namespace OsuPlayer.IO.DbReader.DataModels;
 public class DbMapEntryBase : IMapEntryBase
 {
     public long DbOffset { get; init; }
+    public string? OsuPath { get; init; }
     public string Artist { get; init; } = string.Empty;
     public string Title { get; init; } = string.Empty;
     public string Hash { get; init; } = string.Empty;
@@ -53,13 +54,14 @@ public class DbMapEntryBase : IMapEntryBase
     /// <summary>
     /// Reads a osu!.db map entry and fills a full <see cref="DbMapEntry" /> with data
     /// </summary>
-    /// <param name="osuPath">a <see cref="string" /> of the osu! path</param>
     /// <returns>a new <see cref="DbMapEntry" /> generated from osu!.db data</returns>
-    public async Task<IMapEntry?> ReadFullEntry(string osuPath)
+    public async Task<IMapEntry?> ReadFullEntry()
     {
+        if (OsuPath == null) return null;
+
         var version = OsuDbReader.OsuDbVersion;
 
-        var dbLoc = Path.Combine(osuPath, "osu!.db");
+        var dbLoc = Path.Combine(OsuPath, "osu!.db");
 
         if (!File.Exists(dbLoc)) return null;
 
@@ -162,18 +164,19 @@ public class DbMapEntryBase : IMapEntryBase
         r.ReadInt32(); //LastEditTime
         r.ReadByte(); //ManiaScrollSpeed
 
-        var fullPath = Path.Combine(osuPath, "Songs", folderName, audioFileName);
-        var folderPath = Path.Combine(osuPath, "Songs", folderName);
+        var fullPath = Path.Combine(OsuPath, "Songs", folderName, audioFileName);
+        var folderPath = Path.Combine(OsuPath, "Songs", folderName);
 
         return new DbMapEntry
         {
+            DbOffset = DbOffset,
+            OsuPath = OsuPath,
             Artist = Artist,
             ArtistUnicode = artistUnicode,
             Title = Title,
             TitleUnicode = titleUnicode,
             AudioFileName = audioFileName,
             BeatmapSetId = BeatmapSetId,
-            DbOffset = DbOffset,
             FolderName = folderName,
             FolderPath = folderPath,
             FullPath = fullPath,
@@ -182,15 +185,17 @@ public class DbMapEntryBase : IMapEntryBase
         };
     }
 
-    public IDatabaseReader? GetReader(string path)
+    public IDatabaseReader? GetReader()
     {
-        var dbLoc = Path.Combine(path, "osu!.db");
+        if (OsuPath == null) return null;
+
+        var dbLoc = Path.Combine(OsuPath, "osu!.db");
 
         if (!File.Exists(dbLoc)) return null;
 
         var file = File.OpenRead(dbLoc);
 
-        return new OsuDbReader(file, path);
+        return new OsuDbReader(file, OsuPath);
     }
 
     public static bool operator ==(DbMapEntryBase? left, IMapEntryBase? right)

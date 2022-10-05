@@ -15,7 +15,7 @@ public static class CollectionImporter
     {
         var config = new Config();
 
-        var reader = sourceProvider.SongSourceList?[0].GetReader(config.Container.OsuPath!);
+        using var reader = sourceProvider.SongSourceList?[0].GetReader();
 
         if (reader == null) return false;
 

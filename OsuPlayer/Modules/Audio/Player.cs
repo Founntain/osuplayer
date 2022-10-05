@@ -332,7 +332,7 @@ public class Player : IPlayer, IImportNotifications
 
         await config.ReadAsync();
 
-        var fullMapEntry = await song.ReadFullEntry(config.Container.OsuPath!);
+        var fullMapEntry = await song.ReadFullEntry();
 
         if (fullMapEntry == default)
         {

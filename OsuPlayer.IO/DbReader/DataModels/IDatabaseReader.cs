@@ -3,7 +3,7 @@
 /// <summary>
 /// Interface used by the database readers used to read the osu databases.
 /// </summary>
-public interface IDatabaseReader
+public interface IDatabaseReader : IDisposable
 {
     /// <summary>
     /// Reads all beatmaps from the database.

@@ -14,6 +14,7 @@ namespace OsuPlayer.IO.DbReader.DataModels;
 public class RealmMapEntryBase : IMapEntryBase
 {
     public Guid Id { get; init; }
+    public string? OsuPath { get; init; }
     public string Artist { get; init; } = string.Empty;
     public string Title { get; init; } = string.Empty;
     public string Hash { get; init; } = string.Empty;
@@ -44,9 +45,11 @@ public class RealmMapEntryBase : IMapEntryBase
         return GetSongName();
     }
 
-    public async Task<IMapEntry?> ReadFullEntry(string path)
+    public async Task<IMapEntry?> ReadFullEntry()
     {
-        var realmLoc = Path.Combine(path, "client.realm");
+        if (OsuPath == null) return null;
+
+        var realmLoc = Path.Combine(OsuPath, "client.realm");
 
         var realmConfig = new RealmConfiguration(realmLoc)
         {
@@ -81,17 +84,18 @@ public class RealmMapEntryBase : IMapEntryBase
         var newMap = new RealmMapEntry
         {
             Id = Id,
-            Artist = Artist,
+            OsuPath = string.Intern(OsuPath),
+            Artist = string.Intern(Artist),
             ArtistUnicode = metadata.Get<string>(nameof(BeatmapMetadata.ArtistUnicode)),
             Title = Title,
             TitleUnicode = metadata.Get<string>(nameof(BeatmapMetadata.TitleUnicode)),
             AudioFileName = audioFileName,
-            BackgroundFileLocation = string.IsNullOrEmpty(backgroundFolderName) ? string.Empty : Path.Combine(path, "files", backgroundFolderName, backgroundHash!),
+            BackgroundFileLocation = string.IsNullOrEmpty(backgroundFolderName) ? string.Empty : Path.Combine(OsuPath, "files", backgroundFolderName, backgroundHash!),
             Hash = Hash,
             BeatmapSetId = BeatmapSetId,
             FolderName = audioFolderName,
             FolderPath = Path.Combine("files", audioFolderName),
-            FullPath = Path.Combine(path, "files", audioFolderName, audioHash)
+            FullPath = Path.Combine(OsuPath, "files", audioFolderName, audioHash)
         };
 
         realm.Dispose();
@@ -99,9 +103,11 @@ public class RealmMapEntryBase : IMapEntryBase
         return newMap;
     }
 
-    public IDatabaseReader GetReader(string path)
+    public IDatabaseReader? GetReader()
     {
-        return new RealmReader(path);
+        if (OsuPath == null) return null;
+
+        return new RealmReader(OsuPath);
     }
 
     public static bool operator ==(RealmMapEntryBase? left, IMapEntryBase? right)

@@ -17,9 +17,9 @@ public class RealmReader : IDatabaseReader
 
     public RealmReader(string path)
     {
-        _path = path;
+        _path = string.Intern(path);
 
-        var realmLoc = Path.Combine(path, "client.realm");
+        var realmLoc = Path.Combine(_path, "client.realm");
         var realmConfig = new RealmConfiguration(realmLoc)
         {
             IsDynamic = true,
@@ -91,15 +91,16 @@ public class RealmReader : IDatabaseReader
             var metadata = firstBeatmap.Get<DynamicRealmObject>(nameof(BeatmapInfo.Metadata)).DynamicApi;
             var artist = metadata.Get<string>(nameof(BeatmapMetadata.Artist));
             var hash = firstBeatmap.Get<string>(nameof(BeatmapInfo.MD5Hash));
-            var beatmapSetId = dynamicBeatmap.DynamicApi.Get<int>(nameof(BeatmapInfo.OnlineID));
+            var beatmapSetId = dynamicBeatmap.DynamicApi.Get<int>(nameof(BeatmapSetInfo.OnlineID));
             var title = metadata.Get<string>(nameof(BeatmapMetadata.Title));
 
-            var totalTime = Enumerable.Max(infos.Select(x => x.DynamicApi.Get<double>(nameof(BeatmapInfo.Length))));
+            var totalTime = infos.Select(x => x.DynamicApi.Get<double>(nameof(BeatmapInfo.Length))).Max();
             var id = dynamicBeatmap.DynamicApi.Get<Guid>(nameof(BeatmapSetInfo.ID));
 
             minBeatMaps.Add(new RealmMapEntryBase
             {
-                Artist = artist,
+                OsuPath = string.Intern(_path),
+                Artist = string.Intern(artist),
                 Hash = hash,
                 BeatmapSetId = beatmapSetId,
                 Title = title,
@@ -118,6 +119,11 @@ public class RealmReader : IDatabaseReader
         _realm.Dispose();
     }
 
+    public void Dispose()
+    {
+        _realm.Dispose();
+    }
+
     /// <summary>
     /// Reads the client.realm file from the <paramref name="path" />
     /// </summary>
@@ -125,7 +131,7 @@ public class RealmReader : IDatabaseReader
     /// <returns>an <see cref="IList{T}" /> of <see cref="IMapEntryBase" /> read from the client.realm</returns>
     public static async Task<List<IMapEntryBase>?> Read(string path)
     {
-        var reader = new RealmReader(path);
+        using var reader = new RealmReader(path);
 
         return await reader.ReadBeatmaps();
     }
