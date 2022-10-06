@@ -8,7 +8,6 @@ using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.Network;
-using OsuPlayer.Network.Discord;
 using OsuPlayer.Styles;
 using OsuPlayer.Views;
 using ReactiveUI;

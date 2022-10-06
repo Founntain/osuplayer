@@ -175,8 +175,14 @@ public class PlayerControlViewModel : BaseViewModel
 
         Player.CurrentSongImage.BindValueChanged(d =>
         {
+            CurrentSongImage?.Dispose();
             if (!string.IsNullOrEmpty(d.NewValue) && File.Exists(d.NewValue))
+            {
                 CurrentSongImage = new Bitmap(d.NewValue);
+                return;
+            }
+
+            CurrentSongImage = null;
         }, true);
 
         Player.SelectedPlaylist.BindValueChanged(_ =>

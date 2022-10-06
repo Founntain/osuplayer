@@ -5,9 +5,11 @@ namespace OsuPlayer.Modules.Services;
 
 public class OsuSongSourceProvider : ISongSourceProvider
 {
+    private readonly ReadOnlyObservableCollection<IMapEntryBase>? _songSourceList;
+
     public SourceList<IMapEntryBase> SongSource { get; } = new();
     public IObservable<IChangeSet<IMapEntryBase>>? Songs { get; }
-    public List<IMapEntryBase>? SongSourceList { get; private set; }
+    public ReadOnlyObservableCollection<IMapEntryBase>? SongSourceList => _songSourceList;
 
     public OsuSongSourceProvider(ISortProvider? sortProvider = null)
     {
@@ -16,17 +18,17 @@ public class OsuSongSourceProvider : ISongSourceProvider
             sortProvider.SortedSongs = SongSource.Connect().Sort(sortProvider.SortingModeObservable);
 
             Songs = sortProvider.SortedSongs;
-            
-            sortProvider.SortedSongs.Bind(out var sortedSongs).Subscribe(next => SongSourceList = sortedSongs.ToList());
+
+            Songs.Bind(out _songSourceList).Subscribe();
         }
         else
         {
             Songs = SongSource.Connect();
-            
-            Songs.Subscribe(next => SongSourceList = SongSource.Items.ToList());
+
+            Songs.Bind(out _songSourceList).Subscribe();
         }
     }
-    
+
     public IMapEntryBase? GetMapEntryFromHash(string? hash)
     {
         return SongSourceList!.FirstOrDefault(x => x.Hash == hash);
