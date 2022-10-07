@@ -103,7 +103,7 @@ public class Player : IPlayer, IImportNotifications
         SelectedPlaylist.BindValueChanged(d =>
         {
             using var cfg = new Config();
-            cfg.Container.ActivePlaylistId = d.NewValue?.Id;
+            cfg.Container.SelectedPlaylist = d.NewValue?.Id;
 
             if (d.NewValue == null) return;
 
@@ -120,7 +120,7 @@ public class Player : IPlayer, IImportNotifications
         var config = new Config();
         var playlists = new PlaylistStorage();
 
-        SelectedPlaylist.Value = playlists.Container.Playlists?.FirstOrDefault(x => x.Id == config.Container.ActivePlaylistId) ?? playlists.Container.Playlists?.First(y => y.Name == "Favorites");
+        SelectedPlaylist.Value = playlists.Container.Playlists?.FirstOrDefault(x => x.Id == config.Container.SelectedPlaylist) ?? playlists.Container.Playlists?.First(y => y.Name == "Favorites");
 
         switch (config.Container.StartupSong)
         {

@@ -26,9 +26,8 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         ViewModel = viewModel;
 
         var player = ViewModel.Player;
-        var notification = (IImportNotifications) player;
 
-        Task.Run(() => SongImporter.ImportSongsAsync(player.SongSourceProvider, notification));
+        Task.Run(() => SongImporter.ImportSongsAsync(player.SongSourceProvider, player as IImportNotifications));
 
         InitializeComponent();
 
@@ -75,7 +74,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         config.Container.Username = ProfileManager.User?.Name;
         config.Container.RepeatMode = ViewModel.Player.RepeatMode.Value;
         config.Container.IsShuffle = ViewModel.Player.IsShuffle.Value;
-        config.Container.ActivePlaylistId = ViewModel.Player.SelectedPlaylist.Value?.Id;
+        config.Container.SelectedPlaylist = ViewModel.Player.SelectedPlaylist.Value?.Id;
 
         ViewModel.Player.DisposeDiscordClient();
     }

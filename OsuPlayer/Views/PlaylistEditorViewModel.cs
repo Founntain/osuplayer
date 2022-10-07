@@ -101,7 +101,7 @@ public class PlaylistEditorViewModel : BaseViewModel
 
             var config = new Config();
 
-            CurrentSelectedPlaylist = Playlists?.Items.FirstOrDefault(x => x.Id == config.Container.ActivePlaylistId) ?? Playlists?.Items.ElementAt(0);
+            CurrentSelectedPlaylist = Playlists?.Items.FirstOrDefault(x => x.Id == config.Container.SelectedPlaylist) ?? Playlists?.Items.ElementAt(0);
         });
     }
 

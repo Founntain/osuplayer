@@ -14,7 +14,7 @@ public class ConfigContainer : IStorableContainer
     public StartupSong StartupSong { get; set; } = StartupSong.FirstSong;
     public SortingMode SortingMode { get; set; } = SortingMode.Title;
     public RepeatMode RepeatMode { get; set; } = RepeatMode.NoRepeat;
-    public Guid? ActivePlaylistId { get; set; }
+    public Guid? SelectedPlaylist { get; set; }
     public bool IsShuffle { get; set; }
     public string? LastPlayedSong { get; set; }
     public bool IgnoreSongsWithSameNameCheckBox { get; set; }
