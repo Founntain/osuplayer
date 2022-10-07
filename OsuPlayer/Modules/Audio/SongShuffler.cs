@@ -7,12 +7,12 @@ public class SongShuffler : IShuffleProvider
     private int _shuffleHistoryIndex;
     private readonly int?[] _shuffleHistory = new int?[10];
 
-    private int _rangeMax;
+    private int _maxRange;
     private int _currentIndex;
 
-    public int DoShuffle(int currentIndex, ShuffleDirection direction, int rangeMax)
+    public int DoShuffle(int currentIndex, ShuffleDirection direction, int maxRange)
     {
-        _rangeMax = rangeMax;
+        _maxRange = maxRange;
         _currentIndex = currentIndex;
 
         switch (direction)
@@ -74,7 +74,7 @@ public class SongShuffler : IShuffleProvider
         else
         {
             // Check if next song index is in allowed boundary
-            if (_shuffleHistory[_shuffleHistoryIndex + 1] < _rangeMax)
+            if (_shuffleHistory[_shuffleHistoryIndex + 1] < _maxRange)
                 _shuffleHistoryIndex++;
             // Generate new shuffled index when not
             else
@@ -98,7 +98,7 @@ public class SongShuffler : IShuffleProvider
         else
         {
             // Check if next song index is in allowed boundary
-            if (_shuffleHistory[_shuffleHistoryIndex - 1] < _rangeMax)
+            if (_shuffleHistory[_shuffleHistoryIndex - 1] < _maxRange)
                 _shuffleHistoryIndex--;
             // Generate new shuffled index when not
             else
@@ -112,7 +112,7 @@ public class SongShuffler : IShuffleProvider
         int shuffleIndex;
         do
         {
-            shuffleIndex = rdm.Next(0, _rangeMax);
+            shuffleIndex = rdm.Next(0, _maxRange);
         } while (shuffleIndex == _currentIndex);
 
         return shuffleIndex;
