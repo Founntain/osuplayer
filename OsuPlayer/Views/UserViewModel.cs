@@ -13,6 +13,7 @@ using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Data.API.Enums;
 using OsuPlayer.Data.API.Models.Beatmap;
 using OsuPlayer.Extensions;
+using OsuPlayer.Modules.Audio.Interfaces;
 using ReactiveUI;
 using SkiaSharp;
 

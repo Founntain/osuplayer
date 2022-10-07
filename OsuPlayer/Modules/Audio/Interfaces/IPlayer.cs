@@ -2,7 +2,7 @@
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.IO.Importer;
 
-namespace OsuPlayer.Modules.Audio;
+namespace OsuPlayer.Modules.Audio.Interfaces;
 
 public interface IPlayer : ICommonFeatures, IPlayModes, IHasPlaylists, IHasBlacklist, IHasDiscordRpc
 {
@@ -28,15 +28,4 @@ public interface IPlayer : ICommonFeatures, IPlayModes, IHasPlaylists, IHasBlack
     /// <param name="song">The song to enqueue</param>
     /// <param name="playDirection">The direction we went in the playlist. Mostly used by the Next and Prev method</param>
     public Task TryPlaySongAsync(IMapEntryBase? song, PlayDirection playDirection = PlayDirection.Normal);
-}
-
-public interface IHasDiscordRpc
-{
-    public void DisposeDiscordClient();
-}
-
-public interface IPlayModes
-{
-    public Bindable<bool> IsShuffle { get; }
-    public Bindable<RepeatMode> RepeatMode { get; }
 }

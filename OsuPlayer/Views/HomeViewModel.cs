@@ -10,6 +10,7 @@ using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using OsuPlayer.Base.ViewModels;
 using OsuPlayer.IO.Importer;
+using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Modules.Services;
 using ReactiveUI;
 using SkiaSharp;

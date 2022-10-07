@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
 
-namespace OsuPlayer.Modules.Audio;
+namespace OsuPlayer.Modules.Audio.Interfaces;
 
 public interface IHasPlaylists
 {

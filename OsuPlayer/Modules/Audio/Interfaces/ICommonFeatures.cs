@@ -1,6 +1,4 @@
-﻿using OsuPlayer.Modules.Audio.Engine;
-
-namespace OsuPlayer.Modules.Audio;
+﻿namespace OsuPlayer.Modules.Audio.Interfaces;
 
 public interface ICommonFeatures : IAudioControls, ISettableAudioDevices, IHasEffects
 {

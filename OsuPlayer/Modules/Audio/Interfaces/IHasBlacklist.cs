@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace OsuPlayer.Modules.Audio;
+namespace OsuPlayer.Modules.Audio.Interfaces;
 
 public interface IHasBlacklist
 {

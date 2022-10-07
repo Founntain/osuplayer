@@ -3,6 +3,7 @@ using System.Reactive.Linq;
 using Avalonia.Threading;
 using DynamicData;
 using OsuPlayer.Base.ViewModels;
+using OsuPlayer.Modules.Audio.Interfaces;
 using ReactiveUI;
 
 namespace OsuPlayer.Views;

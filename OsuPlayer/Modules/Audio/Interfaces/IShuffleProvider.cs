@@ -1,6 +1,6 @@
 ﻿using OsuPlayer.Data.OsuPlayer.Enums;
 
-namespace OsuPlayer.Modules.Audio;
+namespace OsuPlayer.Modules.Audio.Interfaces;
 
 public interface IShuffleProvider
 {

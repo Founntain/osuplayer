@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using LiveChartsCore.Defaults;
 
-namespace OsuPlayer.Modules.Audio;
+namespace OsuPlayer.Modules.Audio.Interfaces;
 
 public interface IHasStatistics
 {

@@ -1,6 +1,6 @@
 ﻿using OsuPlayer.Data.OsuPlayer.Classes;
 
-namespace OsuPlayer.Modules.Audio.Engine;
+namespace OsuPlayer.Modules.Audio.Interfaces;
 
 public interface ISettableAudioDevices
 {
