@@ -38,6 +38,21 @@ public sealed class User : UserModel
         return Name;
     }
 
+    public override int GetHashCode()
+    {
+        return Name.GetHashCode();
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is User user)
+        {
+            return user.Name.Equals(Name);
+        }
+
+        return false;
+    }
+
     public int GetXpNeededForNextLevel()
     {
         return (int) Math.Round(0.04 * Math.Pow(Level, 3) + 0.8 * Math.Pow(Level, 2) + 2 * Level);

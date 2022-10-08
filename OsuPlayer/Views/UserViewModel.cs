@@ -35,7 +35,7 @@ public class UserViewModel : BaseViewModel
     private ObservableCollection<User> _users;
     private List<ObservableValue> _xpGainedGraphValues;
 
-    public ObservableCollection<ISeries> Series { get; set; }
+    public ObservableCollection<ISeries>? Series { get; set; }
 
     public Axis[] YAxes { get; set; } =
     {
@@ -88,7 +88,7 @@ public class UserViewModel : BaseViewModel
         }
     }
 
-    public ObservableCollection<BeatmapUserValidityModel> TopSongsOfCurrentUser
+    public ObservableCollection<BeatmapUserValidityModel>? TopSongsOfCurrentUser
     {
         get => _topSongsOfCurrentUser;
         set => this.RaiseAndSetIfChanged(ref _topSongsOfCurrentUser, value);
@@ -123,12 +123,13 @@ public class UserViewModel : BaseViewModel
         get => _selectedUser;
         set
         {
+            if (Equals(_selectedUser, value)) return;
+
             this.RaiseAndSetIfChanged(ref _selectedUser, value);
 
-            LoadTopSongs();
-            LoadProfilePicture();
-            LoadProfileBanner();
-            LoadStats();
+            if (value == null) return;
+
+            ReloadStats();
         }
     }
 
@@ -202,9 +203,11 @@ public class UserViewModel : BaseViewModel
             }
         };
 
+        if (SelectedUser?.Name != default) return;
+
         var user = ProfileManager.User;
 
-        if (user == default || user.Id == Guid.Empty)
+        if (user?.Name == null)
         {
             if (Users == default) return;
 
@@ -214,6 +217,14 @@ public class UserViewModel : BaseViewModel
         }
 
         SelectedUser = user;
+    }
+
+    private void ReloadStats()
+    {
+        LoadTopSongs();
+        LoadProfilePicture();
+        LoadProfileBanner();
+        LoadStats();
     }
 
     private async void LoadTopSongs()
@@ -356,7 +367,7 @@ public class UserViewModel : BaseViewModel
         foreach (var item in data)
             try
             {
-                XAxes.First().Labels.Add(item.Item1);
+                XAxes.First().Labels?.Add(item.Item1);
 
                 songsPlayedValues.Add(new ObservableValue(item.Item2));
                 xpGainedValues.Add(new ObservableValue(item.Item3));
@@ -373,7 +384,7 @@ public class UserViewModel : BaseViewModel
         this.RaisePropertyChanged(nameof(XAxes));
     }
 
-    public IEnumerable<IControl> LoadBadges(User currentUser)
+    public IEnumerable<IControl> LoadBadges(User? currentUser)
     {
         if (currentUser == default) return default!;
 

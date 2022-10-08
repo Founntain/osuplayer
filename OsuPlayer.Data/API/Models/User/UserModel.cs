@@ -5,7 +5,7 @@ namespace OsuPlayer.Data.API.Models.User;
 public class UserModel
 {
     public Guid Id { get; set; }
-    public string Name { get; set; }
+    public string? Name { get; set; }
     public string Description { get; set; }
     public UserRole Role { get; set; }
     public DateTime JoinDate { get; set; }
