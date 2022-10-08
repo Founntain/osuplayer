@@ -110,7 +110,9 @@ public class SongShuffler : IShuffleProvider
     private int GenerateShuffledIndex()
     {
         var rdm = new Random();
+        
         int shuffleIndex;
+        
         do
         {
             shuffleIndex = rdm.Next(0, _maxRange);
