@@ -3,7 +3,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
-using OsuPlayer.Data.OsuPlayer.Classes;
+using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.Extensions;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.UI_Extensions;
@@ -41,23 +41,18 @@ public partial class PlaylistEditorView : ReactiveControl<PlaylistEditorViewMode
                 return;
         }
 
-        var playlist = ViewModel.CurrentSelectedPlaylist!.Songs;
-
-        if (ViewModel.SelectedSongListItems == default) return;
+        if (ViewModel.SelectedSongListItems == default || ViewModel.CurrentSelectedPlaylist == default) return;
 
         foreach (var song in ViewModel.SelectedSongListItems)
         {
-            if (playlist.Contains(song.Hash))
-                continue;
-
-            playlist.Add(song.Hash);
+            await PlaylistManager.AddSongToPlaylistAsync(ViewModel.CurrentSelectedPlaylist, song);
+            ViewModel.CurrentSelectedPlaylist.Songs.Add(song.Hash);
         }
 
-        ViewModel.SelectedSongListItems = new List<IMapEntryBase>();
-
-        await PlaylistManager.ReplacePlaylistAsync(ViewModel.CurrentSelectedPlaylist);
+        ViewModel.SelectedSongListItems.Clear();
 
         ViewModel.RaisePropertyChanged(nameof(ViewModel.Playlists));
+        ViewModel.RaisePropertyChanged(nameof(ViewModel.CurrentSelectedPlaylist));
         ViewModel.RaisePropertyChanged(nameof(ViewModel.SelectedSongListItems));
     }
 
@@ -71,23 +66,19 @@ public partial class PlaylistEditorView : ReactiveControl<PlaylistEditorViewMode
                 return;
         }
 
-        var playlist = ViewModel.CurrentSelectedPlaylist!.Songs;
-
-        if (ViewModel.SelectedPlaylistItems == null) return;
+        if (ViewModel.SelectedPlaylistItems == null || ViewModel.CurrentSelectedPlaylist == default) return;
 
         foreach (var song in ViewModel.SelectedPlaylistItems)
         {
-            if (!playlist.Contains(song.Hash))
-                continue;
-
-            playlist.Remove(song.Hash);
+            await PlaylistManager.RemoveSongFromPlaylist(ViewModel.CurrentSelectedPlaylist, song);
+            ViewModel.CurrentSelectedPlaylist.Songs.Remove(song.Hash);
         }
 
-        ViewModel.SelectedPlaylistItems = new List<IMapEntryBase>();
-
-        await PlaylistManager.ReplacePlaylistAsync(ViewModel.CurrentSelectedPlaylist);
+        ViewModel.SelectedPlaylistItems.Clear();
 
         ViewModel.RaisePropertyChanged(nameof(ViewModel.Playlists));
+        ViewModel.RaisePropertyChanged(nameof(ViewModel.CurrentSelectedPlaylist));
+        ViewModel.RaisePropertyChanged(nameof(ViewModel.SelectedPlaylistItems));
     }
 
     private void SongList_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -138,9 +129,9 @@ public partial class PlaylistEditorView : ReactiveControl<PlaylistEditorViewMode
 
     private async void ConfirmRenamePlaylist_OnClick(object? sender, RoutedEventArgs e)
     {
-        await PlaylistManager.RenamePlaylist(ViewModel.CurrentSelectedPlaylist);
+        if (ViewModel.CurrentSelectedPlaylist == null) return;
 
-        await PlaylistManager.SavePlaylistsAsync();
+        await PlaylistManager.RenamePlaylist(ViewModel.CurrentSelectedPlaylist);
 
         var playlists = await PlaylistManager.GetAllPlaylistsAsync();
 
@@ -158,6 +149,8 @@ public partial class PlaylistEditorView : ReactiveControl<PlaylistEditorViewMode
 
     private async void ConfirmDeletePlaylist_OnClick(object? sender, RoutedEventArgs e)
     {
+        if (ViewModel.CurrentSelectedPlaylist == null) return;
+
         if (ViewModel.CurrentSelectedPlaylist.Name == "Favorites")
         {
             await MessageBox.ShowDialogAsync(_mainWindow, "No you can't delete your favorites! Sorry :(");

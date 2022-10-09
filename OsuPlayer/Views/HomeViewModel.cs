@@ -1,11 +1,17 @@
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
+using Avalonia.Threading;
+using DynamicData;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using OsuPlayer.Base.ViewModels;
+using OsuPlayer.IO.Importer;
+using OsuPlayer.Modules.Audio.Interfaces;
+using OsuPlayer.Modules.Services;
 using ReactiveUI;
 using SkiaSharp;
 
@@ -15,26 +21,12 @@ public class HomeViewModel : BaseViewModel
 {
     private readonly Bindable<bool> _songsLoading = new();
 
-    public readonly Player Player;
-    private List<ObservableValue> _graphValues;
+    public readonly IPlayer Player;
+    private readonly ReadOnlyObservableCollection<IMapEntryBase>? _sortedSongEntries;
+    private readonly BindableList<ObservableValue> _graphValues = new();
     private Bitmap? _profilePicture;
 
-    public List<ObservableValue> GraphValues
-    {
-        get => _graphValues;
-        private set
-        {
-            if (Series != default)
-            {
-                Series.First().Values = value;
-                this.RaisePropertyChanged(nameof(Series));
-            }
-
-            this.RaisePropertyChanged(nameof(CurrentUser));
-            this.RaiseAndSetIfChanged(ref _graphValues, value);
-        }
-    }
-
+    public ReadOnlyObservableCollection<IMapEntryBase>? SortedSongEntries => _sortedSongEntries;
     public ObservableCollection<ISeries> Series { get; set; }
 
     public Axis[] Axes { get; set; } =
@@ -45,8 +37,6 @@ public class HomeViewModel : BaseViewModel
             Labels = null
         }
     };
-
-    public List<IMapEntryBase> SongEntries => Player.SongSourceList!;
 
     public bool IsUserNotLoggedIn => CurrentUser == default || CurrentUser?.Id == Guid.Empty;
     public bool IsUserLoggedIn => CurrentUser != default && CurrentUser?.Id != Guid.Empty;
@@ -61,30 +51,34 @@ public class HomeViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _profilePicture, value);
     }
 
-    public HomeViewModel(Player player)
+    public HomeViewModel(IPlayer player, IStatisticsProvider? statisticsProvider)
     {
         Player = player;
+        var statisticsProvider1 = statisticsProvider;
 
-        _songsLoading.BindTo(Player.SongsLoading);
+        _songsLoading.BindTo(((IImportNotifications)Player).SongsLoading);
         _songsLoading.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongsLoading)));
 
-        Player.GraphValues.BindValueChanged(d => GraphValues = d.NewValue, true);
-        Player.SongSource.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongEntries)), true);
+        if (statisticsProvider1 != null)
+        {
+            _graphValues.BindTo(statisticsProvider1.GraphValues);
+            _graphValues.BindCollectionChanged((sender, args) =>
+            {
+                Series!.First().Values = _graphValues;
 
-        Player.UserChanged += (sender, args) => this.RaisePropertyChanged(nameof(CurrentUser));
+                this.RaisePropertyChanged(nameof(Series));
+            });
 
-        GraphValues = new List<ObservableValue>();
+            statisticsProvider1.UserDataChanged += (sender, args) => this.RaisePropertyChanged(nameof(CurrentUser));
+        }
+
+        player.SongSourceProvider.Songs?.ObserveOn(AvaloniaScheduler.Instance).Bind(out _sortedSongEntries).Subscribe();
+
+        this.RaisePropertyChanged(nameof(SortedSongEntries));
 
         Activator = new ViewModelActivator();
+
         this.WhenActivated(Block);
-    }
-
-    private IEnumerable<double> GetValues()
-    {
-        var rdm = new Random();
-
-        for (var x = 0; x < 25; x++)
-            yield return rdm.Next(25, 50);
     }
 
     private async void Block(CompositeDisposable disposables)
@@ -98,7 +92,7 @@ public class HomeViewModel : BaseViewModel
             new LineSeries<ObservableValue>
             {
                 Name = "XP gained",
-                Values = GraphValues,
+                Values = _graphValues,
                 Fill = new LinearGradientPaint(new[]
                 {
                     new SKColor(128, 0, 128, 0),

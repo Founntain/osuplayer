@@ -3,13 +3,15 @@ using System.Reactive.Disposables;
 using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.IO.Storage.Equalizer;
+using OsuPlayer.Modules.Audio.Engine;
+using OsuPlayer.Modules.Audio.Interfaces;
 using ReactiveUI;
 
 namespace OsuPlayer.Views;
 
 public class EqualizerViewModel : BaseViewModel
 {
-    private readonly Player _player;
+    private readonly IHasEffects _player;
     public readonly BindableArray<decimal> Frequencies = new(10, 1);
     private List<EqPreset>? _eqPresets = new EqStorage().Container.EqPresets;
     private bool _isDeleteEqPresetPopupOpen;
@@ -99,7 +101,7 @@ public class EqualizerViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _isRenameEqPresetPopupOpen, value);
     }
 
-    public EqualizerViewModel(Player player)
+    public EqualizerViewModel(IHasEffects player)
     {
         Activator = new ViewModelActivator();
         _player = player;

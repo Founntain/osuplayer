@@ -3,6 +3,7 @@ using System.Reflection;
 using DiscordRPC;
 using DiscordRPC.Logging;
 using DiscordRPC.Message;
+using OsuPlayer.Extensions;
 using OsuPlayer.Network.Online;
 
 namespace OsuPlayer.Network.Discord;
@@ -24,7 +25,7 @@ public class DiscordClient
         _defaultAssets = new Assets
         {
             LargeImageKey = "logo",
-            LargeImageText = "osu!player v" + FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion
+            LargeImageText = $"osu!player v{Assembly.GetEntryAssembly().ToVersionString()}"
         };
     }
 

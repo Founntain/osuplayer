@@ -9,3 +9,6 @@ global using OsuPlayer.IO.Storage.Config;
 global using OsuPlayer.Modules.Audio;
 global using OsuPlayer.Network.API.ApiEndpoints;
 global using OsuPlayer.Network.Online;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("OsuPlayer.Tests")]

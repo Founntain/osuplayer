@@ -1,4 +1,6 @@
-﻿namespace OsuPlayer.Extensions;
+﻿using Avalonia.Media;
+
+namespace OsuPlayer.Data.OsuPlayer.Enums;
 
 public enum KnownColors : uint
 {
@@ -144,4 +146,12 @@ public enum KnownColors : uint
     WhiteSmoke = 0xfff5f5f5,
     Yellow = 0xffffff00,
     YellowGreen = 0xff9acd32
+}
+
+public static class KnownColorsExtensions
+{
+    public static Color ToColor(this KnownColors color)
+    {
+        return Color.FromUInt32((uint) color);
+    }
 }

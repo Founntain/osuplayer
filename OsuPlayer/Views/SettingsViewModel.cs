@@ -6,8 +6,8 @@ using Avalonia.Media;
 using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
-using OsuPlayer.Extensions;
-using OsuPlayer.Extensions.Enums;
+using OsuPlayer.Modules.Audio.Interfaces;
+using OsuPlayer.Modules.Services;
 using OsuPlayer.Network;
 using OsuPlayer.Styles;
 using OsuPlayer.Windows;
@@ -20,17 +20,17 @@ public class SettingsViewModel : BaseViewModel
     private readonly Bindable<bool> _blacklistSkip = new();
     private readonly Bindable<bool> _playlistEnableOnPlay = new();
     private readonly Bindable<SortingMode> _sortingMode = new();
-    public readonly Player Player;
+    public readonly IPlayer Player;
     private string _osuLocation;
     private string _patchnotes;
-    private KnownColors _selectedBackgroundColor;
     private KnownColors _selectedAccentColor;
+    private KnownColors _selectedBackgroundColor;
+    private string? _selectedFont;
     private FontWeights _selectedFontWeight;
     private ReleaseChannels _selectedReleaseChannel;
     private StartupSong _selectedStartupSong;
     private WindowTransparencyLevel _selectedTransparencyLevel;
     private string _settingsSearchQ;
-    private string? _selectedFont;
 
     public MainWindow? MainWindow;
 
@@ -267,8 +267,10 @@ public class SettingsViewModel : BaseViewModel
 
     public ObservableCollection<AudioDevice> OutputDeviceComboboxItems { get; set; }
 
-    public SettingsViewModel(Player player)
+    public SettingsViewModel(IPlayer player, ISortProvider? sortProvider)
     {
+        Player = player;
+
         var config = new Config();
 
         _selectedStartupSong = config.Container.StartupSong;
@@ -279,10 +281,12 @@ public class SettingsViewModel : BaseViewModel
         _selectedFontWeight = config.Container.DefaultFontWeight;
         _selectedFont = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
 
-        Player = player;
-
-        _sortingMode.BindTo(Player.SortingModeBindable);
-        _sortingMode.BindValueChanged(d => this.RaisePropertyChanged(nameof(SelectedSortingMode)));
+        if (sortProvider != null)
+        {
+            _sortingMode.BindTo(sortProvider.SortingModeBindable);
+            _sortingMode.BindValueChanged(d => this.RaisePropertyChanged(nameof(SelectedSortingMode)));
+            _sortingMode.Value = config.Container.SortingMode;
+        }
 
         _blacklistSkip.BindTo(Player.BlacklistSkip);
         _blacklistSkip.BindValueChanged(d => this.RaisePropertyChanged(nameof(BlacklistSkip)));

@@ -1,14 +1,10 @@
-﻿using OsuPlayer.Data.OsuPlayer.Classes;
-
-namespace OsuPlayer.IO.Storage.Playlists;
+﻿namespace OsuPlayer.Data.OsuPlayer.StorageModels;
 
 /// <summary>
-/// A playlist container with the <see cref="LastSelectedPlaylist" /> and a <see cref="Playlists" /> list
+/// A playlist container with a <see cref="Playlists" /> list
 /// </summary>
 public class PlaylistContainer : IStorableContainer
 {
-    public Guid LastSelectedPlaylist { get; set; }
-
     public IList<Playlist>? Playlists { get; set; }
 
     /// <summary>

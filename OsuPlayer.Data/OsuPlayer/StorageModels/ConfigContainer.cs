@@ -1,24 +1,20 @@
 ﻿using Avalonia.Controls;
-using Avalonia.Media;
 using OsuPlayer.Data.OsuPlayer.Enums;
-using OsuPlayer.Extensions;
-using OsuPlayer.Extensions.Enums;
-using OsuPlayer.Network;
 
-namespace OsuPlayer.IO.Storage.Config;
+namespace OsuPlayer.Data.OsuPlayer.StorageModels;
 
 public class ConfigContainer : IStorableContainer
 {
     public string? OsuPath { get; set; }
     public double Volume { get; set; }
     public bool UseSongNameUnicode { get; set; } = false;
-    public int SelectedOutputDevice { get; set; }
+    public int SelectedAudioDevice { get; set; } = 0;
     public bool IsEqEnabled { get; set; } = false;
     public WindowTransparencyLevel TransparencyLevelHint { get; set; } = WindowTransparencyLevel.AcrylicBlur;
     public StartupSong StartupSong { get; set; } = StartupSong.FirstSong;
     public SortingMode SortingMode { get; set; } = SortingMode.Title;
     public RepeatMode RepeatMode { get; set; } = RepeatMode.NoRepeat;
-    public Guid? ActivePlaylistId { get; set; }
+    public Guid? SelectedPlaylist { get; set; }
     public bool IsShuffle { get; set; }
     public string? LastPlayedSong { get; set; }
     public bool IgnoreSongsWithSameNameCheckBox { get; set; }
@@ -36,7 +32,13 @@ public class ConfigContainer : IStorableContainer
         return this;
     }
 
-    public FontWeights GetSmallerFont() => DefaultFontWeight.GetNextSmallerFont();
-    
-    public FontWeights GetBiggerFont() => DefaultFontWeight.GetNextBiggerFont();
+    public FontWeights GetSmallerFont()
+    {
+        return DefaultFontWeight.GetNextSmallerFont();
+    }
+
+    public FontWeights GetBiggerFont()
+    {
+        return DefaultFontWeight.GetNextBiggerFont();
+    }
 }

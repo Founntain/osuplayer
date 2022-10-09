@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using Avalonia.Data.Converters;
 using Avalonia.Media;
-using OsuPlayer.Extensions.Enums;
+using OsuPlayer.Data.OsuPlayer.Enums;
 
 namespace OsuPlayer.Extensions.ValueConverters;
 

@@ -51,10 +51,6 @@ public class ColorSetter
 
         public Color ToColor()
         {
-            byte r;
-            byte g;
-            byte b;
-
             if (S == 0)
             {
                 var l = (byte) (L * 255);

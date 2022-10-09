@@ -2,20 +2,17 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Avalonia.Threading;
 using DynamicData;
-using DynamicData.Binding;
 using OsuPlayer.Base.ViewModels;
-using OsuPlayer.Data.OsuPlayer.Enums;
+using OsuPlayer.Modules.Audio.Interfaces;
 using ReactiveUI;
 
 namespace OsuPlayer.Views;
 
 public class SearchViewModel : BaseViewModel
 {
-    private readonly IObservable<Func<IMapEntryBase, bool>> _filter;
-    public readonly Player Player;
-
-    private ReadOnlyObservableCollection<IMapEntryBase>? _filteredSongEntries;
-    private string _filterText;
+    public readonly IPlayer Player;
+    private readonly ReadOnlyObservableCollection<IMapEntryBase>? _filteredSongEntries;
+    private string _filterText = string.Empty;
 
     public string FilterText
     {
@@ -25,40 +22,22 @@ public class SearchViewModel : BaseViewModel
 
     public ReadOnlyObservableCollection<IMapEntryBase>? FilteredSongEntries => _filteredSongEntries;
 
-    public SearchViewModel(Player player)
+    public SearchViewModel(IPlayer player)
     {
         Player = player;
 
-        _filter = this.WhenAnyValue(x => x.FilterText)
+        var filter = this.WhenAnyValue(x => x.FilterText)
             .Throttle(TimeSpan.FromMilliseconds(20))
             .Select(BuildFilter);
 
-        Player.SortingModeBindable.BindValueChanged(d => UpdateSorting(d.NewValue), true);
+        player.SongSourceProvider.Songs?.Filter(filter, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
+            .Bind(out _filteredSongEntries).Subscribe();
+
+        this.RaisePropertyChanged(nameof(FilteredSongEntries));
 
         Activator = new ViewModelActivator();
 
-        this.WhenActivated(disposables =>
-        {
-            Disposable.Create(() => { }).DisposeWith(disposables);
-
-            if (_filteredSongEntries == default)
-                Player.SongSource.Value.Connect().Sort(SortExpressionComparer<IMapEntryBase>.Ascending(x => Player.CustomSorter(x, Player.SortingModeBindable.Value)))
-                    .Filter(_filter, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
-                    .Bind(out _filteredSongEntries).Subscribe();
-
-            this.RaisePropertyChanged(nameof(FilteredSongEntries));
-        });
-    }
-
-    /// <summary>
-    /// Updates the <see cref="FilteredSongEntries" /> according to the <paramref name="sortingMode" />
-    /// </summary>
-    /// <param name="sortingMode">the <see cref="SortingMode" /> of the song list</param>
-    private void UpdateSorting(SortingMode sortingMode = SortingMode.Title)
-    {
-        Player.SongSource.Value.Connect().Sort(SortExpressionComparer<IMapEntryBase>.Ascending(x => Player.CustomSorter(x, sortingMode)))
-            .Filter(_filter, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
-            .Bind(out _filteredSongEntries).Subscribe();
+        this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
     }
 
     /// <summary>

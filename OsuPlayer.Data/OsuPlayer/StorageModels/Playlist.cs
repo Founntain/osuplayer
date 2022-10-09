@@ -1,8 +1,8 @@
-﻿using System.ComponentModel;
+﻿
 
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 
-namespace OsuPlayer.Data.OsuPlayer.Classes;
+namespace OsuPlayer.Data.OsuPlayer.StorageModels;
 
 /// <summary>
 /// A playlist object containing an <see cref="Id" />, the <see cref="Name" />, the <see cref="CreationTime" /> and a
@@ -17,12 +17,12 @@ public class Playlist
     /// <summary>
     /// Contains the hashes of the songs in the <see cref="Playlist" />
     /// </summary>
-    public BindingList<string> Songs { get; set; } = new();
+    public HashSet<string> Songs { get; set; } = new();
 
     private bool Equals(Playlist other)
     {
         return Id.Equals(other.Id) && Name == other.Name && CreationTime.Equals(other.CreationTime) &&
-               Songs.Equals(other.Songs);
+               Songs.SequenceEqual(other.Songs);
     }
 
     public override bool Equals(object? obj)

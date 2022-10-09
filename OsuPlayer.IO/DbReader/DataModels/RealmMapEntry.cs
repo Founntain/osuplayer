@@ -1,8 +1,4 @@
-﻿using Avalonia;
-using Avalonia.Media.Imaging;
-using Avalonia.Platform;
-
-namespace OsuPlayer.IO.DbReader.DataModels;
+﻿namespace OsuPlayer.IO.DbReader.DataModels;
 
 /// <summary>
 /// a full beatmap entry with optionally used data
@@ -10,25 +6,31 @@ namespace OsuPlayer.IO.DbReader.DataModels;
 /// </summary>
 internal class RealmMapEntry : RealmMapEntryBase, IMapEntry
 {
-    public string BackgroundFileLocation { get; set; }
-    public string ArtistUnicode { get; set; }
-    public string TitleUnicode { get; set; }
-    public string AudioFileName { get; set; }
-    public string FolderName { get; set; }
-    public string FolderPath { get; set; }
-    public string FullPath { get; set; }
+    public string BackgroundFileLocation { get; init; } = string.Empty;
+    public string ArtistUnicode { get; init; } = string.Empty;
+    public string TitleUnicode { get; init; } = string.Empty;
+    public string AudioFileName { get; init; } = string.Empty;
+    public string FolderName { get; init; } = string.Empty;
+    public string FolderPath { get; init; } = string.Empty;
+    public string FullPath { get; init; } = string.Empty;
     public bool UseUnicode { get; set; }
 
-    public async Task<Bitmap?> FindBackground()
+    public override string GetArtist()
     {
-        if (File.Exists(BackgroundFileLocation))
-        {
-            await using var stream = File.OpenRead(BackgroundFileLocation);
-            return await Task.Run(() => new Bitmap(stream));
-        }
+        if (UseUnicode)
+            return string.IsNullOrEmpty(ArtistUnicode) ? Artist : ArtistUnicode;
+        return Artist;
+    }
 
-        var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
+    public override string GetTitle()
+    {
+        if (UseUnicode)
+            return string.IsNullOrEmpty(TitleUnicode) ? Artist : TitleUnicode;
+        return Title;
+    }
 
-        return new Bitmap(assets?.Open(new Uri("avares://OsuPlayer/Resources/defaultBg.jpg")));
+    public Task<string?> FindBackground()
+    {
+        return Task.FromResult(File.Exists(BackgroundFileLocation) ? BackgroundFileLocation : null);
     }
 }

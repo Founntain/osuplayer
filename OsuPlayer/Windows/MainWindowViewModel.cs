@@ -1,6 +1,9 @@
 using Avalonia.Media;
 using OsuPlayer.Base.ViewModels;
-using OsuPlayer.Extensions;
+using OsuPlayer.Data.OsuPlayer.Enums;
+using OsuPlayer.Modules.Audio.Engine;
+using OsuPlayer.Modules.Audio.Interfaces;
+using OsuPlayer.Modules.Services;
 using OsuPlayer.Views;
 using ReactiveUI;
 
@@ -8,8 +11,7 @@ namespace OsuPlayer.Windows;
 
 public class MainWindowViewModel : BaseWindowViewModel
 {
-    public readonly BassEngine BassEngine;
-    public readonly Player Player;
+    public readonly IPlayer Player;
     private bool _isPaneOpen;
 
     private BaseViewModel _mainView;
@@ -47,32 +49,31 @@ public class MainWindowViewModel : BaseWindowViewModel
         set => _panelMaterial = value;
     }
 
-    public MainWindowViewModel(BassEngine engine, Player player)
+    public MainWindowViewModel(IAudioEngine engine, IPlayer player, IStatisticsProvider? statisticsProvider = null, ISortProvider? sortProvider = null)
     {
-        BassEngine = engine;
         Player = player;
 
         //Generate new ViewModels here
         TopBar = new TopBarViewModel();
-        PlayerControl = new PlayerControlViewModel(Player, BassEngine);
+        PlayerControl = new PlayerControlViewModel(Player, engine);
 
         SearchView = new SearchViewModel(Player);
         PlaylistView = new PlaylistViewModel(Player);
         PlaylistEditorView = new PlaylistEditorViewModel(Player);
         BlacklistEditorView = new BlacklistEditorViewModel(Player);
-        HomeView = new HomeViewModel(Player);
+        HomeView = new HomeViewModel(Player, statisticsProvider);
         UserView = new UserViewModel(Player);
         EditUserView = new EditUserViewModel();
         PartyView = new PartyViewModel();
-        SettingsView = new SettingsViewModel(Player);
+        SettingsView = new SettingsViewModel(Player, sortProvider);
         EqualizerView = new EqualizerViewModel(Player);
         UpdateView = new UpdateViewModel();
 
         using var config = new Config();
 
         var backgroundColor = config.Container.BackgroundColor.ToColor();
-        
-        PanelMaterial = new ()
+
+        PanelMaterial = new ExperimentalAcrylicMaterial
         {
             BackgroundSource = AcrylicBackgroundSource.Digger,
             TintColor = backgroundColor,

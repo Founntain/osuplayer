@@ -11,30 +11,28 @@ namespace OsuPlayer.IO.DbReader;
 /// </summary>
 public class RealmReader : IDatabaseReader
 {
-    private readonly IEnumerable<DynamicRealmObject> _beatmapInfos;
     private readonly string _path;
     private readonly Realm _realm;
 
     public RealmReader(string path)
     {
-        _path = path;
+        _path = string.Intern(path);
 
-        var realmLoc = Path.Combine(path, "client.realm");
+        var realmLoc = Path.Combine(_path, "client.realm");
         var realmConfig = new RealmConfiguration(realmLoc)
         {
             IsDynamic = true,
             IsReadOnly = true
         };
 
-        _realm = Realm.GetInstance(realmConfig).Freeze();
-        _beatmapInfos = _realm.DynamicApi.All("Beatmap").ToList().OfType<DynamicRealmObject>().ToList();
+        _realm = Realm.GetInstance(realmConfig);
     }
 
-    public Task<Dictionary<string, int>> GetBeatmapHashes()
+    public Dictionary<string, int> GetBeatmapHashes()
     {
         var hashes = new Dictionary<string, int>();
 
-        foreach (var dynamicRealmObject in _beatmapInfos)
+        foreach (var dynamicRealmObject in _realm.DynamicApi.All("Beatmap").ToList().OfType<DynamicRealmObject>().ToList())
         {
             var hash = dynamicRealmObject.DynamicApi.Get<string>(nameof(BeatmapInfo.MD5Hash));
             var id = dynamicRealmObject.DynamicApi.Get<RealmObjectBase>(nameof(BeatmapInfo.BeatmapSet)).DynamicApi.Get<int>(nameof(BeatmapSetInfo.OnlineID));
@@ -42,7 +40,7 @@ public class RealmReader : IDatabaseReader
             hashes.Add(hash, id);
         }
 
-        return Task.FromResult(hashes);
+        return hashes;
     }
 
     public Task<List<Collection>> GetCollections(string path)
@@ -66,23 +64,11 @@ public class RealmReader : IDatabaseReader
         return Task.FromResult(collections);
     }
 
-    public async Task<List<IMapEntryBase>?> ReadBeatmaps()
+    public Task<List<IMapEntryBase>?> ReadBeatmaps()
     {
-        var realmLoc = Path.Combine(_path, "client.realm");
-
-        var realmConfig = new RealmConfiguration(realmLoc)
-        {
-            IsDynamic = true,
-            IsReadOnly = true
-        };
-
         var minBeatMaps = new List<IMapEntryBase>();
 
-        var realm = await Realm.GetInstanceAsync(realmConfig);
-
-        var objects = realm.DynamicApi.All("BeatmapSet").ToList();
-
-        var beatmaps = objects.OfType<DynamicRealmObject>().ToList();
+        var beatmaps = _realm.DynamicApi.All("BeatmapSet").ToList().OfType<DynamicRealmObject>().ToList();
 
         foreach (var dynamicBeatmap in beatmaps)
         {
@@ -91,15 +77,16 @@ public class RealmReader : IDatabaseReader
             var metadata = firstBeatmap.Get<DynamicRealmObject>(nameof(BeatmapInfo.Metadata)).DynamicApi;
             var artist = metadata.Get<string>(nameof(BeatmapMetadata.Artist));
             var hash = firstBeatmap.Get<string>(nameof(BeatmapInfo.MD5Hash));
-            var beatmapSetId = dynamicBeatmap.DynamicApi.Get<int>(nameof(BeatmapInfo.OnlineID));
+            var beatmapSetId = dynamicBeatmap.DynamicApi.Get<int>(nameof(BeatmapSetInfo.OnlineID));
             var title = metadata.Get<string>(nameof(BeatmapMetadata.Title));
 
-            var totalTime = Enumerable.Max(infos.Select(x => x.DynamicApi.Get<double>(nameof(BeatmapInfo.Length))));
+            var totalTime = infos.Select(x => x.DynamicApi.Get<double>(nameof(BeatmapInfo.Length))).Max();
             var id = dynamicBeatmap.DynamicApi.Get<Guid>(nameof(BeatmapSetInfo.ID));
 
             minBeatMaps.Add(new RealmMapEntryBase
             {
-                Artist = artist,
+                OsuPath = string.Intern(_path),
+                Artist = string.Intern(artist),
                 Hash = hash,
                 BeatmapSetId = beatmapSetId,
                 Title = title,
@@ -108,12 +95,15 @@ public class RealmReader : IDatabaseReader
             });
         }
 
-        realm.Dispose();
-
-        return minBeatMaps;
+        return Task.FromResult(minBeatMaps);
     }
 
     ~RealmReader()
+    {
+        _realm.Dispose();
+    }
+
+    public void Dispose()
     {
         _realm.Dispose();
     }
@@ -125,24 +115,8 @@ public class RealmReader : IDatabaseReader
     /// <returns>an <see cref="IList{T}" /> of <see cref="IMapEntryBase" /> read from the client.realm</returns>
     public static async Task<List<IMapEntryBase>?> Read(string path)
     {
-        var reader = new RealmReader(path);
+        using var reader = new RealmReader(path);
 
         return await reader.ReadBeatmaps();
-    }
-
-    /// <summary>
-    /// Queries all beatmaps in the realm
-    /// </summary>
-    /// <param name="query">
-    /// a <see cref="Func{T, TResult}" /> where the query input is a <see cref="BeatmapInfo" /> and the
-    /// query result is a <see cref="bool" />
-    /// </param>
-    /// <returns>
-    /// the first <see cref="BeatmapInfo" /> where the <paramref name="query" /> returns true, or null if no map was
-    /// found
-    /// </returns>
-    public DynamicRealmObject? QueryBeatmap(Func<DynamicRealmObject, bool> query)
-    {
-        return _beatmapInfos.FirstOrDefault(query);
     }
 }

@@ -2,6 +2,6 @@
 
 public enum ShuffleDirection
 {
-    Forward,
-    Backwards
+    Backwards = -1,
+    Forward = 1
 }

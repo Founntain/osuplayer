@@ -1,6 +1,6 @@
 ﻿using OsuPlayer.Data.OsuPlayer.Classes;
 
-namespace OsuPlayer.IO.Storage.Equalizer;
+namespace OsuPlayer.Data.OsuPlayer.StorageModels;
 
 public class EqContainer : IStorableContainer
 {

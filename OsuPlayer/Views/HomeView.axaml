@@ -81,7 +81,7 @@
                 <TextBlock Text="your songs" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Center" />
             </Border>
 
-            <ListBox Grid.Row="1" Items="{Binding SongEntries}" Background="Transparent"
+            <ListBox Grid.Row="1" Items="{Binding SortedSongEntries}" Background="Transparent"
                      DoubleTapped="InputElement_OnDoubleTapped" SelectedItem="{Binding SelectedSong}">
                 <ListBox.DataTemplates>
                     <DataTemplate DataType="dataModels:IMapEntryBase">

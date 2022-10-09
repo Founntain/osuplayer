@@ -1,9 +1,4 @@
-﻿using System.Text;
-using Avalonia;
-using Avalonia.Media.Imaging;
-using Avalonia.Platform;
-
-namespace OsuPlayer.IO.DbReader.DataModels;
+﻿namespace OsuPlayer.IO.DbReader.DataModels;
 
 /// <summary>
 /// a full beatmap entry with optionally used data
@@ -11,15 +6,15 @@ namespace OsuPlayer.IO.DbReader.DataModels;
 /// </summary>
 internal class DbMapEntry : DbMapEntryBase, IMapEntry
 {
-    public string ArtistUnicode { get; set; }
-    public string TitleUnicode { get; set; }
-    public string AudioFileName { get; set; }
-    public string FolderName { get; set; }
-    public string FolderPath { get; set; }
-    public string FullPath { get; set; }
+    public string ArtistUnicode { get; init; } = string.Empty;
+    public string TitleUnicode { get; init; } = string.Empty;
+    public string AudioFileName { get; init; } = string.Empty;
+    public string FolderName { get; init; } = string.Empty;
+    public string FolderPath { get; init; } = string.Empty;
+    public string FullPath { get; init; } = string.Empty;
     public bool UseUnicode { get; set; }
 
-    public async Task<Bitmap?> FindBackground()
+    public async Task<string?> FindBackground()
     {
         var eventCount = 0;
 
@@ -59,16 +54,9 @@ internal class DbMapEntry : DbMapEntryBase, IMapEntry
             return null;
 
         var fileName = background.Split(',')[2].Replace("\"", string.Empty);
+        var path = Path.Combine(FolderPath, fileName);
 
-        if (File.Exists(Path.Combine(FolderPath, fileName)))
-        {
-            await using var stream = File.OpenRead(Path.Combine(FolderPath, fileName));
-            return await Task.Run(() => new Bitmap(stream));
-        }
-
-        var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
-        var asset = assets?.Open(new Uri("avares://OsuPlayer/Resources/defaultBg.jpg"));
-        return new Bitmap(asset);
+        return File.Exists(path) ? path : null;
     }
 
     public override string GetArtist()
@@ -83,39 +71,5 @@ internal class DbMapEntry : DbMapEntryBase, IMapEntry
         if (UseUnicode)
             return string.IsNullOrEmpty(TitleUnicode) ? Artist : TitleUnicode;
         return Title;
-    }
-
-    public override string GetSongName()
-    {
-        if (UseUnicode && !string.IsNullOrEmpty(ArtistUnicode) && !string.IsNullOrEmpty(TitleUnicode))
-            return $"{ArtistUnicode} - {TitleUnicode}";
-        return $"{Artist} - {Title}";
-    }
-
-    public override string ToString()
-    {
-        return GetSongName();
-    }
-
-    public static bool operator ==(DbMapEntry? left, DbMapEntry? right)
-    {
-        return left?.SongName == right?.SongName;
-    }
-
-    public static bool operator !=(DbMapEntry? left, DbMapEntry? right)
-    {
-        return left?.SongName != right?.SongName;
-    }
-
-    public override bool Equals(object? obj)
-    {
-        if (obj is DbMapEntry other) return Hash == other.Hash;
-
-        return false;
-    }
-
-    public override int GetHashCode()
-    {
-        return BitConverter.ToInt32(Encoding.UTF8.GetBytes(Hash));
     }
 }

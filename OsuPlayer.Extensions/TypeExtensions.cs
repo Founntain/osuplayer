@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
-using Avalonia.Media;
+using System.Drawing;
+using System.Reflection;
 using DynamicData;
-using OsuPlayer.Extensions.Enums;
 using Splat;
 
 namespace OsuPlayer.Extensions;
@@ -53,16 +53,6 @@ public static class Extensions
         return true;
     }
 
-    public static TService GetRequiredService<TService>(this IReadonlyDependencyResolver resolver)
-    {
-        var service = resolver.GetService<TService>();
-
-        if (service is null)
-            throw new InvalidOperationException($"No service with type of {typeof(TService)}");
-
-        return service;
-    }
-
     public static T Next<T>(this T src) where T : struct
     {
         if (!typeof(T).IsEnum) throw new ArgumentException($"Argument {typeof(T).FullName} is not an Enum");
@@ -77,53 +67,27 @@ public static class Extensions
         return index >= 0 && index < enumerable.Count();
     }
 
-    public static Color ToColor(this KnownColors color) => Color.FromUInt32((uint) color);
-    
-    public static float GetPerceivedBrightness(this System.Drawing.Color color)
+    public static float GetPerceivedBrightness(this Color color)
     {
-        return (color.R * 0.299f + color.G * 0.587f + color.B *0.114f) / 256f;
-    }
-    
-    public static FontWeights GetNextBiggerFont(this FontWeights font)
-    {
-        var fontSizes = (FontWeights[]) Enum.GetValues(typeof(FontWeights));    
-        
-        var i = Array.IndexOf(fontSizes, font) + 1;
-        return (fontSizes.Length == i) ? fontSizes[i - 1] : fontSizes[i];
-    }
-    
-    public static FontWeights GetNextSmallerFont(this FontWeights font)
-    {
-        var fontSizes = (FontWeights[]) Enum.GetValues(typeof(FontWeights));    
-        
-        var i = Array.IndexOf(fontSizes, font) - 1;
-        return (i == -1) ? fontSizes[i + 1] : fontSizes[i];
+        return (color.R * 0.299f + color.G * 0.587f + color.B * 0.114f) / 256f;
     }
 
-    public static FontWeight ToFontWeight(this FontWeights font)
+    public static string ToVersionString(this Assembly? assembly)
     {
-        switch (font)
-        {
-            case FontWeights.Black:
-                return FontWeight.Black;
-            case FontWeights.Thin:
-                return FontWeight.Thin;
-            case FontWeights.ExtraLight:
-                return FontWeight.ExtraLight;
-            case FontWeights.Light:
-                return FontWeight.Light;
-            case FontWeights.Regular:
-                return FontWeight.Regular;
-            case FontWeights.Medium:
-                return FontWeight.Medium;
-            case FontWeights.SemiBold:
-                return FontWeight.SemiBold;
-            case FontWeights.Bold:
-                return FontWeight.Bold;
-            case FontWeights.ExtraBold:
-                return FontWeight.ExtraBold;
-            default:
-                return FontWeight.Regular;
-        }
+        var version = assembly?.GetName().Version;
+
+        if (version == null) return string.Empty;
+
+        return $"{version.Major}.{version.Minor}.{version.Build}";
+    }
+
+    public static T GetRequiredService<T>(this IReadonlyDependencyResolver resolver)
+    {
+        var service = resolver.GetService<T>();
+
+        if (service == null)
+            throw new InvalidOperationException($"Service of type {typeof(T)} could not be found");
+
+        return service;
     }
 }

@@ -2,12 +2,16 @@
 using Avalonia;
 using Avalonia.ReactiveUI;
 using OsuPlayer.Extensions;
+using OsuPlayer.IO.Importer;
+using OsuPlayer.Modules.Audio.Engine;
+using OsuPlayer.Modules.Audio.Interfaces;
+using OsuPlayer.Modules.Services;
 using OsuPlayer.Windows;
 using Splat;
 
 namespace OsuPlayer;
 
-internal class Program
+internal static class Program
 {
     // Initialization code. Don't use any Avalonia, third-party APIs or any
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
@@ -46,7 +50,7 @@ internal class Program
     }
 
     // Avalonia configuration, don't remove; also used by visual designer.
-    public static AppBuilder BuildAvaloniaApp()
+    private static AppBuilder BuildAvaloniaApp()
     {
         return AppBuilder.Configure<App>()
             .UsePlatformDetect()
@@ -62,17 +66,27 @@ internal class Program
 
     private static void Register(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver)
     {
-        services.RegisterLazySingleton(() => new BassEngine());
+        services.RegisterLazySingleton<IAudioEngine>(() => new BassEngine());
 
-        services.RegisterLazySingleton(() => new Player(
-            resolver.GetService<BassEngine>()));
+        services.Register<IShuffleProvider>(() => new SongShuffler());
+        services.RegisterLazySingleton<IStatisticsProvider>(() => new ApiStatisticsProvider());
+        services.RegisterLazySingleton<ISortProvider>(() => new SortProvider());
+        services.RegisterLazySingleton<ISongSourceProvider>(() => new OsuSongSourceProvider(resolver.GetService<ISortProvider>()));
+
+        services.RegisterLazySingleton<IPlayer>(() => new Player(
+            resolver.GetRequiredService<IAudioEngine>(),
+            resolver.GetRequiredService<ISongSourceProvider>(),
+            resolver.GetService<IShuffleProvider>(),
+            resolver.GetService<IStatisticsProvider>(),
+            resolver.GetService<ISortProvider>()));
 
         services.Register(() => new MainWindowViewModel(
-            resolver.GetService<BassEngine>(),
-            resolver.GetService<Player>()));
+            resolver.GetRequiredService<IAudioEngine>(),
+            resolver.GetRequiredService<IPlayer>(),
+            resolver.GetService<IStatisticsProvider>(),
+            resolver.GetService<ISortProvider>()));
 
         services.RegisterLazySingleton(() => new MainWindow(
-            resolver.GetService<MainWindowViewModel>(),
-            resolver.GetService<Player>()));
+            resolver.GetRequiredService<MainWindowViewModel>()));
     }
 }

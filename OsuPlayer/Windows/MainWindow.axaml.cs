@@ -1,14 +1,13 @@
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using OsuPlayer.Base.ViewModels;
-using OsuPlayer.Extensions;
-using OsuPlayer.Extensions.Enums;
-using OsuPlayer.IO.Storage.Playlists;
+using OsuPlayer.Data.OsuPlayer.Enums;
+using OsuPlayer.IO.Importer;
 using OsuPlayer.Network;
-using OsuPlayer.Network.Discord;
 using OsuPlayer.Styles;
 using OsuPlayer.Views;
 using ReactiveUI;
@@ -17,20 +16,18 @@ namespace OsuPlayer.Windows;
 
 public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 {
-    private readonly Player _player;
-
     public MainWindow()
     {
         InitializeComponent();
     }
 
-    public MainWindow(MainWindowViewModel viewModel, Player player)
+    public MainWindow(MainWindowViewModel viewModel)
     {
         ViewModel = viewModel;
 
-        _player = player;
+        var player = ViewModel.Player;
 
-        Task.Run(_player.ImportSongsAsync);
+        Task.Run(() => SongImporter.ImportSongsAsync(player.SongSourceProvider, player as IImportNotifications));
 
         InitializeComponent();
 
@@ -49,8 +46,6 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         config.Container.BackgroundColor = backgroundColor;
         config.Container.AccentColor = accentColor;
 
-        PlaylistManager.SetLastKnownPlaylistAsCurrentPlaylist();
-        
         Application.Current!.Resources["SmallerFontWeight"] = config.Container.GetSmallerFont().ToFontWeight();
         Application.Current!.Resources["DefaultFontWeight"] = config.Container.DefaultFontWeight.ToFontWeight();
         Application.Current!.Resources["BiggerFontWeight"] = config.Container.GetBiggerFont().ToFontWeight();
@@ -75,21 +70,21 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
         using var config = new Config();
 
-        config.Container.Volume = ViewModel.BassEngine.Volume;
+        config.Container.Volume = ViewModel.Player.Volume.Value;
         config.Container.Username = ProfileManager.User?.Name;
-        config.Container.RepeatMode = ViewModel.Player.Repeat;
+        config.Container.RepeatMode = ViewModel.Player.RepeatMode.Value;
         config.Container.IsShuffle = ViewModel.Player.IsShuffle.Value;
-        config.Container.ActivePlaylistId = ViewModel.Player.ActivePlaylistId;
+        config.Container.SelectedPlaylist = ViewModel.Player.SelectedPlaylist.Value?.Id;
 
-        _player.DisposeDiscordClient();
+        ViewModel.Player.DisposeDiscordClient();
     }
 
     private async void Window_OnInitialized(object? sender, EventArgs e)
     {
-        var rpc = new DiscordClient();
-        rpc.Initialize();
+        // var rpc = new DiscordClient();
+        // rpc.Initialize();
 
-        if (System.Diagnostics.Debugger.IsAttached) return;
+        if (Debugger.IsAttached) return;
 
         await using var config = new Config();
 

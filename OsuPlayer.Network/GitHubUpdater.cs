@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Octokit;
+using OsuPlayer.Data.OsuPlayer.Enums;
 
 namespace OsuPlayer.Network;
 

@@ -3,9 +3,10 @@ using System.Reactive.Linq;
 using Avalonia.Threading;
 using DynamicData;
 using OsuPlayer.Base.ViewModels;
-using OsuPlayer.Data.OsuPlayer.Classes;
+using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.Extensions;
 using OsuPlayer.IO.Storage.Playlists;
+using OsuPlayer.Modules.Audio.Interfaces;
 using ReactiveUI;
 
 namespace OsuPlayer.Views;
@@ -13,12 +14,13 @@ namespace OsuPlayer.Views;
 public class PlaylistViewModel : BaseViewModel
 {
     private readonly IObservable<Func<IMapEntryBase, bool>> _filter;
-    public readonly Player Player;
+    public readonly IPlayer Player;
 
     private IDisposable _currentBind;
     private ReadOnlyObservableCollection<IMapEntryBase>? _filteredSongEntries;
     private string _filterText;
     private ObservableCollection<Playlist> _playlists;
+    private Bindable<Playlist?> _selectedPlaylist = new();
 
     public ObservableCollection<Playlist> Playlists
     {
@@ -28,18 +30,16 @@ public class PlaylistViewModel : BaseViewModel
 
     public Playlist? SelectedPlaylist
     {
-        get => Player.SelectedPlaylist.Value;
+        get => _selectedPlaylist.Value;
         set
         {
-            PlaylistManager.SetCurrentPlaylist(value);
-
-            Player.SelectedPlaylist.Value = value;
+            _selectedPlaylist.Value = value;
 
             if (_filteredSongEntries != null)
                 _currentBind.Dispose();
 
-            if (Player.SelectedPlaylist.Value?.Songs != null)
-                _currentBind = Player.GetMapEntriesFromHash(Player.SelectedPlaylist.Value.Songs).ToSourceList().Connect()
+            if (_selectedPlaylist.Value?.Songs != null)
+                _currentBind = Player.SongSourceProvider.GetMapEntriesFromHash(_selectedPlaylist.Value.Songs).ToSourceList().Connect()
                     .Filter(_filter, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
                     .Bind(out _filteredSongEntries).Subscribe();
 
@@ -56,11 +56,11 @@ public class PlaylistViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _filterText, value);
     }
 
-    public PlaylistViewModel(Player player)
+    public PlaylistViewModel(IPlayer player)
     {
-        Activator = new ViewModelActivator();
-
         Player = player;
+        
+        _selectedPlaylist.BindTo(Player.SelectedPlaylist);
 
         _filter = this.WhenAnyValue(x => x.FilterText)
             .Throttle(TimeSpan.FromMilliseconds(20))
@@ -77,10 +77,17 @@ public class PlaylistViewModel : BaseViewModel
 
             this.RaisePropertyChanged(nameof(Playlists));
 
-            Player.SelectedPlaylist.Value = Playlists.First(x => x.Id == selection!.Id);
+            SelectedPlaylist = Playlists.First(x => x.Id == selection!.Id);
 
             this.RaisePropertyChanged(nameof(SelectedPlaylist));
         };
+        
+        _selectedPlaylist.BindValueChanged(d =>
+        {
+            this.RaisePropertyChanged(nameof(SelectedPlaylist));
+        });
+        
+        Activator = new ViewModelActivator();
 
         this.WhenActivated(disposables =>
         {
@@ -90,10 +97,8 @@ public class PlaylistViewModel : BaseViewModel
 
             if (Playlists.Count > 0 && SelectedPlaylist == default)
             {
-                var playlistStorage = new PlaylistStorage();
-                SelectedPlaylist = Playlists.FirstOrDefault(x => x.Id == playlistStorage.Container.LastSelectedPlaylist) ?? Playlists[0];
-
-                PlaylistManager.SetCurrentPlaylist(SelectedPlaylist);
+                var config = new Config();
+                SelectedPlaylist = Playlists.FirstOrDefault(x => x.Id == config.Container.SelectedPlaylist) ?? Playlists[0];
             }
         });
     }

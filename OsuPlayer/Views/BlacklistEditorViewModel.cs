@@ -2,22 +2,21 @@
 using System.Reactive.Linq;
 using Avalonia.Threading;
 using DynamicData;
-using DynamicData.Binding;
 using OsuPlayer.Base.ViewModels;
-using OsuPlayer.Data.OsuPlayer.Enums;
+using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.IO.Storage.Blacklist;
+using OsuPlayer.Modules.Audio.Interfaces;
 using ReactiveUI;
 
 namespace OsuPlayer.Views;
 
 public class BlacklistEditorViewModel : BaseViewModel
 {
-    private readonly IObservable<Func<IMapEntryBase, bool>> _filter;
-    private BlacklistContainer _blacklist;
-    private ReadOnlyObservableCollection<IMapEntryBase>? _filteredSongEntries;
-    private string _filterText;
+    private BlacklistContainer? _blacklist;
+    private readonly ReadOnlyObservableCollection<IMapEntryBase>? _filteredSongEntries;
+    private string _filterText = string.Empty;
 
-    public Player Player;
+    public readonly IPlayer Player;
 
     public List<IMapEntryBase>? SelectedSongListItems { get; set; }
     public List<IMapEntryBase>? SelectedBlacklistItems { get; set; }
@@ -28,7 +27,7 @@ public class BlacklistEditorViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _filterText, value);
     }
 
-    public BlacklistContainer Blacklist
+    public BlacklistContainer? Blacklist
     {
         get => _blacklist;
         set => this.RaiseAndSetIfChanged(ref _blacklist, value);
@@ -36,7 +35,7 @@ public class BlacklistEditorViewModel : BaseViewModel
 
     public ReadOnlyObservableCollection<IMapEntryBase>? FilteredSongEntries => _filteredSongEntries;
 
-    public BlacklistEditorViewModel(Player player)
+    public BlacklistEditorViewModel(IPlayer player)
     {
         Activator = new ViewModelActivator();
 
@@ -44,36 +43,22 @@ public class BlacklistEditorViewModel : BaseViewModel
 
         Player.BlacklistChanged += (sender, args) => Blacklist = new Blacklist().Container;
 
-        Player.SortingModeBindable.BindValueChanged(d => UpdateSorting(d.NewValue), true);
-
-        _filter = this.WhenAnyValue(x => x.FilterText)
+        //_sortProvider.SortingModeBindable.BindValueChanged(d => UpdateSorting(d.NewValue), true);
+        var filter = this.WhenAnyValue(x => x.FilterText)
             .Throttle(TimeSpan.FromMilliseconds(20))
             .Select(BuildFilter);
+
+        player.SongSourceProvider.Songs?.Filter(filter, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
+            .Bind(out _filteredSongEntries).Subscribe();
+
+        this.RaisePropertyChanged(nameof(FilteredSongEntries));
 
         this.WhenActivated(disposables =>
         {
             Disposable.Create(() => { }).DisposeWith(disposables);
 
             Blacklist = new Blacklist().Container;
-
-            if (_filteredSongEntries == default)
-                Player.SongSource.Value.Connect().Sort(SortExpressionComparer<IMapEntryBase>.Ascending(x => Player.CustomSorter(x, Player.SortingModeBindable.Value)))
-                    .Filter(_filter, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
-                    .Bind(out _filteredSongEntries).Subscribe();
-
-            this.RaisePropertyChanged(nameof(FilteredSongEntries));
         });
-    }
-
-    /// <summary>
-    /// Updates the <see cref="FilteredSongEntries" /> according to the <paramref name="sortingMode" />
-    /// </summary>
-    /// <param name="sortingMode">the <see cref="SortingMode" /> of the song list</param>
-    private void UpdateSorting(SortingMode sortingMode = SortingMode.Title)
-    {
-        Player.SongSource.Value.Connect().Sort(SortExpressionComparer<IMapEntryBase>.Ascending(x => Player.CustomSorter(x, sortingMode)))
-            .Filter(_filter, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
-            .Bind(out _filteredSongEntries).Subscribe();
     }
 
     /// <summary>

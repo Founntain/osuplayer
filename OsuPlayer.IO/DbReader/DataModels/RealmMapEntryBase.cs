@@ -1,4 +1,5 @@
-﻿using OsuPlayer.Extensions;
+﻿using System.Text;
+using OsuPlayer.Extensions;
 using OsuPlayer.IO.Storage.LazerModels.Beatmaps;
 using OsuPlayer.IO.Storage.LazerModels.Files;
 using Realms;
@@ -12,12 +13,13 @@ namespace OsuPlayer.IO.DbReader.DataModels;
 /// </summary>
 public class RealmMapEntryBase : IMapEntryBase
 {
-    public Guid Id { get; set; }
-    public string Artist { get; set; }
-    public string Title { get; set; }
-    public string Hash { get; set; }
-    public int BeatmapSetId { get; set; }
-    public int TotalTime { get; set; }
+    public Guid Id { get; init; }
+    public string? OsuPath { get; init; }
+    public string Artist { get; init; } = string.Empty;
+    public string Title { get; init; } = string.Empty;
+    public string Hash { get; init; } = string.Empty;
+    public int BeatmapSetId { get; init; }
+    public int TotalTime { get; init; }
     public string TotalTimeString => TimeSpan.FromMilliseconds(TotalTime).FormatTime();
     public string SongName => GetSongName();
     public string ArtistString => GetArtist();
@@ -35,12 +37,19 @@ public class RealmMapEntryBase : IMapEntryBase
 
     public virtual string GetSongName()
     {
-        return $"{Artist} - {Title}";
+        return $"{GetArtist()} - {GetTitle()}";
     }
 
-    public async Task<IMapEntry?> ReadFullEntry(string path)
+    public override string ToString()
     {
-        var realmLoc = Path.Combine(path, "client.realm");
+        return GetSongName();
+    }
+
+    public async Task<IMapEntry?> ReadFullEntry()
+    {
+        if (OsuPath == null) return null;
+
+        var realmLoc = Path.Combine(OsuPath, "client.realm");
 
         var realmConfig = new RealmConfiguration(realmLoc)
         {
@@ -64,27 +73,29 @@ public class RealmMapEntryBase : IMapEntryBase
         var audioFile = (RealmObjectBase) files.FirstOrDefault(x => string.Equals(x.DynamicApi.Get<string>(nameof(RealmNamedFileUsage.Filename)), audioFileName, StringComparison.CurrentCultureIgnoreCase));
         var backgroundFile = (RealmObjectBase) files.FirstOrDefault(x => string.Equals(x.DynamicApi.Get<string>(nameof(RealmNamedFileUsage.Filename)), backgroundFileName, StringComparison.CurrentCultureIgnoreCase));
 
-        if (audioFile == default || backgroundFile == default) throw new NullReferenceException();
+        if (audioFile == null) return null;
 
         var audioHash = audioFile.DynamicApi.Get<RealmObjectBase>(nameof(RealmNamedFileUsage.File)).DynamicApi.Get<string>(nameof(RealmFile.Hash));
-        var backgroundHash = backgroundFile.DynamicApi.Get<RealmObjectBase>(nameof(RealmNamedFileUsage.File)).DynamicApi.Get<string>(nameof(RealmFile.Hash));
+        var backgroundHash = backgroundFile?.DynamicApi.Get<RealmObjectBase>(nameof(RealmNamedFileUsage.File)).DynamicApi.Get<string>(nameof(RealmFile.Hash));
 
         var audioFolderName = Path.Combine($"{audioHash[0]}", $"{audioHash[0]}{audioHash[1]}");
-        var backgroundFolderName = Path.Combine($"{backgroundHash[0]}", $"{backgroundHash[0]}{backgroundHash[1]}");
+        var backgroundFolderName = Path.Combine($"{backgroundHash?[0]}", $"{backgroundHash?[0]}{backgroundHash?[1]}");
 
         var newMap = new RealmMapEntry
         {
-            Artist = Artist,
+            Id = Id,
+            OsuPath = string.Intern(OsuPath),
+            Artist = string.Intern(Artist),
             ArtistUnicode = metadata.Get<string>(nameof(BeatmapMetadata.ArtistUnicode)),
             Title = Title,
             TitleUnicode = metadata.Get<string>(nameof(BeatmapMetadata.TitleUnicode)),
             AudioFileName = audioFileName,
-            BackgroundFileLocation = string.IsNullOrEmpty(backgroundFolderName) ? string.Empty : Path.Combine(path, "files", backgroundFolderName, backgroundHash),
+            BackgroundFileLocation = string.IsNullOrEmpty(backgroundFolderName) ? string.Empty : Path.Combine(OsuPath, "files", backgroundFolderName, backgroundHash!),
             Hash = Hash,
             BeatmapSetId = BeatmapSetId,
             FolderName = audioFolderName,
             FolderPath = Path.Combine("files", audioFolderName),
-            FullPath = Path.Combine(path, "files", audioFolderName, audioHash)
+            FullPath = Path.Combine(OsuPath, "files", audioFolderName, audioHash)
         };
 
         realm.Dispose();
@@ -92,8 +103,43 @@ public class RealmMapEntryBase : IMapEntryBase
         return newMap;
     }
 
-    public IDatabaseReader GetReader(string path)
+    public IDatabaseReader? GetReader()
     {
-        return new RealmReader(path);
+        if (OsuPath == null) return null;
+
+        return new RealmReader(OsuPath);
+    }
+
+    public static bool operator ==(RealmMapEntryBase? left, IMapEntryBase? right)
+    {
+        return left?.Hash == right?.Hash;
+    }
+
+    public static bool operator !=(RealmMapEntryBase? left, IMapEntryBase? right)
+    {
+        return left?.Hash != right?.Hash;
+    }
+
+    public bool Equals(IMapEntryBase? other)
+    {
+        return Hash == other?.Hash;
+    }
+
+    public int CompareTo(IMapEntryBase? other)
+    {
+        return string.Compare(Hash, other?.Hash, StringComparison.OrdinalIgnoreCase);
+    }
+
+    public override bool Equals(object? other)
+    {
+        if (other is IMapEntryBase map)
+            return Hash == map.Hash;
+
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return BitConverter.ToInt32(Encoding.UTF8.GetBytes(Hash));
     }
 }

@@ -2,9 +2,8 @@
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
-using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
-using OsuPlayer.Extensions;
+using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.Windows;
 using ReactiveUI;
 
@@ -31,8 +30,6 @@ public partial class PlaylistView : ReactiveControl<PlaylistViewModel>
 
     private void OpenPlaylistEditor_OnClick(object? sender, RoutedEventArgs e)
     {
-        _mainWindow.ViewModel!.PlaylistEditorView.Playlists = ViewModel.Playlists.ToSourceList();
-
         _mainWindow.ViewModel!.MainView = _mainWindow.ViewModel.PlaylistEditorView;
     }
 
@@ -47,8 +44,8 @@ public partial class PlaylistView : ReactiveControl<PlaylistViewModel>
 
         if (new Config().Container.PlaylistEnableOnPlay)
         {
-            ViewModel.Player.Repeat = RepeatMode.Playlist;
-            ViewModel.Player.ActivePlaylistId = ViewModel.SelectedPlaylist?.Id;
+            ViewModel.Player.RepeatMode.Value = RepeatMode.Playlist;
+            ViewModel.Player.SelectedPlaylist.Value = ViewModel.SelectedPlaylist;
         }
 
         await ViewModel.Player.TryPlaySongAsync(song);
@@ -58,9 +55,9 @@ public partial class PlaylistView : ReactiveControl<PlaylistViewModel>
     {
         if (sender is not Control {DataContext: Playlist playlist}) return;
 
-        ViewModel.Player.ActivePlaylistId = playlist.Id;
-        ViewModel.Player.Repeat = RepeatMode.Playlist;
+        ViewModel.Player.SelectedPlaylist.Value = playlist;
+        ViewModel.Player.RepeatMode.Value = RepeatMode.Playlist;
 
-        await ViewModel.Player.TryPlaySongAsync(ViewModel.Player.GetMapEntryFromHash(playlist.Songs.First()));
+        await ViewModel.Player.TryPlaySongAsync(ViewModel.Player.SongSourceProvider.GetMapEntryFromHash(playlist.Songs.First()));
     }
 }

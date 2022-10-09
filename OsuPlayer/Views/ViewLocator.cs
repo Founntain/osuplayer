@@ -2,6 +2,8 @@ using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Layout;
 using OsuPlayer.Base.ViewModels;
+using OsuPlayer.Extensions;
+using Splat;
 
 namespace OsuPlayer.Views;
 
@@ -11,17 +13,38 @@ public class ViewLocator : IDataTemplate
 
     public IControl Build(object data)
     {
-        var name = data.GetType().FullName.Replace("ViewModel", "View");
+        var name = data.GetType().FullName?.Replace("ViewModel", "View");
+
+        if (name == null)
+            return OnFail("");
+
         var type = Type.GetType(name);
 
-        if (type != null) return (Control) Activator.CreateInstance(type);
+        if (Locator.Current.GetService(type) is Control serviceView)
+        {
+            return serviceView;
+        }
 
-        return new Button
+        if (type != null && Activator.CreateInstance(type) is Control view)
+        {
+            return view;
+        }
+
+        return OnFail(name);
+    }
+
+    private IControl OnFail(string name)
+    {
+        var button = new Button
         {
             Content = $"Not Found: {name}, please buy at founntain.dev",
             VerticalAlignment = VerticalAlignment.Center,
             HorizontalAlignment = HorizontalAlignment.Center
         };
+
+        button.Click += (sender, args) => GeneralExtensions.OpenUrl(@"https://founntain.dev");
+
+        return button;
     }
 
     public bool Match(object data)

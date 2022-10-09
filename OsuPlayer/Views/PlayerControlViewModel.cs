@@ -1,12 +1,13 @@
 using System.Reactive.Disposables;
 using Avalonia.Media.Imaging;
 using OsuPlayer.Base.ViewModels;
-using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
+using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.Extensions;
-using OsuPlayer.Extensions.Enums;
 using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.IO.Storage.Playlists;
+using OsuPlayer.Modules.Audio.Engine;
+using OsuPlayer.Modules.Audio.Interfaces;
 using ReactiveUI;
 
 namespace OsuPlayer.Views;
@@ -21,6 +22,14 @@ public class PlayerControlViewModel : BaseViewModel
     private readonly Bindable<double> _volume = new();
     public readonly Bindable<IMapEntry?> CurrentSong = new();
 
+    public readonly IPlayer Player;
+    private Bitmap? _currentSongImage;
+    private string _currentSongLength = "00:00";
+
+    private string _currentSongTime = "00:00";
+
+    private double _playbackSpeed;
+
     public FontWeights SmallerFont
     {
         get
@@ -31,19 +40,11 @@ public class PlayerControlViewModel : BaseViewModel
         }
     }
 
-    public readonly Player Player;
-    private Bitmap? _currentSongImage;
-    private string _currentSongLength = "00:00";
-
-    private string _currentSongTime = "00:00";
-
-    private double _playbackSpeed;
-
     public bool IsCurrentSongInPlaylist => CurrentSong.Value != null
-                                           && PlaylistManager.CurrentPlaylist != null
-                                           && PlaylistManager.CurrentPlaylist.Songs.Contains(CurrentSong.Value.Hash);
+                                           && Player.SelectedPlaylist.Value != null
+                                           && Player.SelectedPlaylist.Value.Songs.Contains(CurrentSong.Value.Hash);
 
-    public bool IsAPlaylistSelected => PlaylistManager.CurrentPlaylist != default;
+    public bool IsAPlaylistSelected => Player.SelectedPlaylist.Value != default;
 
     public bool IsCurrentSongOnBlacklist => new Blacklist().Contains(CurrentSong.Value);
 
@@ -137,21 +138,21 @@ public class PlayerControlViewModel : BaseViewModel
         }
     }
 
-    public IEnumerable<Playlist> Playlists => PlaylistManager.GetAllPlaylists().Where(x => x.Songs.Count > 0);
+    public IEnumerable<Playlist>? Playlists => PlaylistManager.GetAllPlaylists()?.Where(x => x.Songs.Count > 0);
 
-    public string ActivePlaylist => $"Active playlist: {Player.ActivePlaylist?.Name ?? "none"}";
+    public string ActivePlaylist => $"Active playlist: {Player.SelectedPlaylist.Value?.Name ?? "none"}";
 
-    public PlayerControlViewModel(Player player, BassEngine bassEngine)
+    public PlayerControlViewModel(IPlayer player, IAudioEngine bassEngine)
     {
         Player = player;
 
-        _songTime.BindTo(bassEngine.ChannelPositionB);
+        _songTime.BindTo(bassEngine.ChannelPosition);
         _songTime.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongTime)));
 
-        _songLength.BindTo(bassEngine.ChannelLengthB);
+        _songLength.BindTo(bassEngine.ChannelLength);
         _songLength.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongLength)));
 
-        CurrentSong.BindTo(Player.CurrentSongBinding);
+        CurrentSong.BindTo(Player.CurrentSong);
         CurrentSong.BindValueChanged(d =>
         {
             this.RaisePropertyChanged(nameof(TitleText));
@@ -161,7 +162,7 @@ public class PlayerControlViewModel : BaseViewModel
             this.RaisePropertyChanged(nameof(IsCurrentSongOnBlacklist));
         });
 
-        _volume.BindTo(bassEngine.VolumeB);
+        _volume.BindTo(Player.Volume);
         _volume.BindValueChanged(d => this.RaisePropertyChanged(nameof(Volume)));
 
         _isPlaying.BindTo(Player.IsPlaying);
@@ -173,7 +174,17 @@ public class PlayerControlViewModel : BaseViewModel
         _isShuffle.BindTo(Player.IsShuffle);
         _isShuffle.BindValueChanged(d => this.RaisePropertyChanged(nameof(IsShuffle)));
 
-        Player.CurrentSongImage.BindValueChanged(d => CurrentSongImage = d.NewValue, true);
+        Player.CurrentSongImage.BindValueChanged(d =>
+        {
+            CurrentSongImage?.Dispose();
+            if (!string.IsNullOrEmpty(d.NewValue) && File.Exists(d.NewValue))
+            {
+                CurrentSongImage = new Bitmap(d.NewValue);
+                return;
+            }
+
+            CurrentSongImage = null;
+        }, true);
 
         Player.SelectedPlaylist.BindValueChanged(_ =>
         {

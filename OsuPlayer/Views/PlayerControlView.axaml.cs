@@ -4,7 +4,8 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
-using OsuPlayer.Data.OsuPlayer.Classes;
+using OsuPlayer.Data.OsuPlayer.Enums;
+using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.Extensions;
 using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.IO.Storage.Playlists;
@@ -39,8 +40,6 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
                 RoutingStrategies.Tunnel);
 
             RepeatButton.AddHandler(PointerReleasedEvent, Repeat_OnPointerReleased, RoutingStrategies.Tunnel);
-
-            PlaylistManager.SetLastKnownPlaylistAsCurrentPlaylist();
 
             ViewModel.RaisePropertyChanged(nameof(ViewModel.IsAPlaylistSelected));
             ViewModel.RaisePropertyChanged(nameof(ViewModel.IsCurrentSongInPlaylist));
@@ -88,7 +87,7 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
                 blacklist.Container.Songs.Add(currentHash);
 
                 if (ViewModel.Player.BlacklistSkip.Value)
-                    ViewModel.Player.NextSong();
+                    ViewModel.Player.NextSong(PlayDirection.Forward);
             }
         }
 
@@ -98,9 +97,9 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
 
     private async void Favorite_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (ViewModel.Player.CurrentSongBinding.Value != null)
+        if (ViewModel.Player.CurrentSong.Value != null)
         {
-            await PlaylistManager.ToggleSongOfCurrentPlaylist(ViewModel.Player.CurrentSongBinding.Value);
+            await PlaylistManager.ToggleSongOfCurrentPlaylist(ViewModel.Player.SelectedPlaylist.Value, ViewModel.Player.CurrentSong.Value);
             ViewModel.Player.TriggerPlaylistChanged(new PropertyChangedEventArgs("Fav"));
         }
 
@@ -112,16 +111,16 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
         switch ((sender as Control)?.Name)
         {
             case "Repeat":
-                ViewModel.Player.Repeat = ViewModel.Player.Repeat.Next();
+                ViewModel.Player.RepeatMode.Value = ViewModel.Player.RepeatMode.Value.Next();
                 break;
             case "Previous":
-                ViewModel.Player.PreviousSong();
+                ViewModel.Player.NextSong(PlayDirection.Backwards);
                 break;
             case "PlayPause":
                 ViewModel.Player.PlayPause();
                 break;
             case "Next":
-                ViewModel.Player.NextSong();
+                ViewModel.Player.NextSong(PlayDirection.Forward);
                 break;
             case "Shuffle":
                 ViewModel.IsShuffle = !ViewModel.IsShuffle;
@@ -141,6 +140,6 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
 
     private void RepeatContextMenu_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        ViewModel.Player.ActivePlaylistId = ((Playlist) (sender as ContextMenu)?.SelectedItem)?.Id;
+        ViewModel.Player.SelectedPlaylist.Value = (Playlist) (sender as ContextMenu)?.SelectedItem;
     }
 }

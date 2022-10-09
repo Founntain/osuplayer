@@ -1,4 +1,6 @@
-﻿namespace OsuPlayer.IO.Storage.Config;
+﻿using OsuPlayer.Data.OsuPlayer.StorageModels;
+
+namespace OsuPlayer.IO.Storage.Config;
 
 public class Config : Storable<ConfigContainer>
 {
