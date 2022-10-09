@@ -17,6 +17,9 @@ public sealed class BassEngine : IAudioEngine
     private readonly SyncProcedure _endTrackSyncProc;
     private readonly DispatcherTimer _positionTimer = new(DispatcherPriority.ApplicationIdle);
 
+    private int _decodeStreamHandle;
+    private int _fxStream;
+
     private bool _inChannelSet;
     private bool _inChannelTimerUpdate;
     private bool _isEqEnabled;
@@ -27,9 +30,6 @@ public sealed class BassEngine : IAudioEngine
     public List<AudioDevice> AvailableAudioDevices { get; } = new();
     public IAudioEngine.ChannelReachedEndHandler? ChannelReachedEnd { private get; set; }
     public BindableArray<decimal> EqGains { get; } = new(10, 1);
-
-    private int DecodeStreamHandle { get; set; }
-    private int FxStream { get; set; }
 
     public Bindable<double> ChannelLength { get; } = new();
     public Bindable<double> ChannelPosition { get; } = new();
@@ -69,7 +69,7 @@ public sealed class BassEngine : IAudioEngine
             _inChannelSet = true; // Avoid recursion
 
             if (!_inChannelTimerUpdate)
-                Bass.ChannelSetPosition(FxStream, Bass.ChannelSeconds2Bytes(FxStream, d.NewValue));
+                Bass.ChannelSetPosition(_fxStream, Bass.ChannelSeconds2Bytes(_fxStream, d.NewValue));
 
             _inChannelSet = false;
         });
@@ -126,7 +126,7 @@ public sealed class BassEngine : IAudioEngine
 
     public void Pause()
     {
-        if (Bass.ChannelPause(FxStream))
+        if (Bass.ChannelPause(_fxStream))
             IsPlaying.Value = false;
     }
 
@@ -139,7 +139,7 @@ public sealed class BassEngine : IAudioEngine
     {
         if (IsPlaying.Value)
         {
-            if (Bass.ChannelPause(FxStream))
+            if (Bass.ChannelPause(_fxStream))
                 IsPlaying.Value = false;
         }
         else
@@ -150,7 +150,7 @@ public sealed class BassEngine : IAudioEngine
 
     public void SetPlaybackSpeed(double speed)
     {
-        Bass.ChannelSetAttribute(FxStream, ChannelAttribute.TempoFrequency,
+        Bass.ChannelSetAttribute(_fxStream, ChannelAttribute.TempoFrequency,
             _sampleFrequency * (1 + speed));
 
         _playbackSpeed = speed;
@@ -163,28 +163,28 @@ public sealed class BassEngine : IAudioEngine
         if (!File.Exists(path)) return false;
 
         // Create Stream
-        DecodeStreamHandle = Bass.CreateStream(path, 0, 0, BassFlags.Decode | BassFlags.Float);
-        FxStream = BassFx.TempoCreate(DecodeStreamHandle, BassFlags.FxFreeSource | BassFlags.Float);
-        ChannelLength.Value = Bass.ChannelBytes2Seconds(FxStream, Bass.ChannelGetLength(FxStream));
+        _decodeStreamHandle = Bass.CreateStream(path, 0, 0, BassFlags.Decode | BassFlags.Float);
+        _fxStream = BassFx.TempoCreate(_decodeStreamHandle, BassFlags.FxFreeSource | BassFlags.Float);
+        ChannelLength.Value = Bass.ChannelBytes2Seconds(_fxStream, Bass.ChannelGetLength(_fxStream));
 
-        if (FxStream != 0)
+        if (_fxStream != 0)
         {
             SetupStream();
             return true;
         }
 
-        DecodeStreamHandle = 0;
-        FxStream = 0;
+        _decodeStreamHandle = 0;
+        _fxStream = 0;
 
         return false;
     }
 
     public void CloseFile()
     {
-        if (FxStream == 0) return;
+        if (_fxStream == 0) return;
 
-        Bass.ChannelStop(FxStream);
-        Bass.StreamFree(DecodeStreamHandle);
+        Bass.ChannelStop(_fxStream);
+        Bass.StreamFree(_decodeStreamHandle);
 
         ChannelPosition.Value = 0;
     }
@@ -192,14 +192,14 @@ public sealed class BassEngine : IAudioEngine
     private void SetupStream()
     {
         // Obtain the sample rate of the stream
-        var info = Bass.ChannelGetInfo(FxStream);
+        var info = Bass.ChannelGetInfo(_fxStream);
 
         _sampleFrequency = info.Frequency;
 
         //SetEqBands();
 
         var speed = _sampleFrequency * (1 + _playbackSpeed);
-        Bass.ChannelSetAttribute(FxStream, ChannelAttribute.TempoFrequency, speed);
+        Bass.ChannelSetAttribute(_fxStream, ChannelAttribute.TempoFrequency, speed);
 
         InitEq();
 
@@ -207,7 +207,7 @@ public sealed class BassEngine : IAudioEngine
         SetDevice(AvailableAudioDevices[config.Container.SelectedAudioDevice]);
 
         // Set the stream to call Stop() when it ends.
-        var syncHandle = Bass.ChannelSetSync(FxStream,
+        var syncHandle = Bass.ChannelSetSync(_fxStream,
             SyncFlags.End,
             0,
             _endTrackSyncProc,
@@ -220,19 +220,19 @@ public sealed class BassEngine : IAudioEngine
     private bool PlayCurrentStream()
     {
         // Play Stream
-        if (FxStream != 0 && Bass.ChannelPlay(FxStream)) return true;
+        if (_fxStream != 0 && Bass.ChannelPlay(_fxStream)) return true;
 
         return false;
     }
 
     /// <summary>
-    /// Inits the eq on the <see cref="FxStream" />
+    /// Inits the eq on the <see cref="_fxStream" />
     /// </summary>
     private void InitEq()
     {
-        if (FxStream == 0) return;
+        if (_fxStream == 0) return;
 
-        _paramEq = new DXParamEQ(FxStream);
+        _paramEq = new DXParamEQ(_fxStream);
 
         _paramEq.AddBand(80);
         _paramEq.AddBand(125);
@@ -305,7 +305,7 @@ public sealed class BassEngine : IAudioEngine
         }
 
         Bass.CurrentDevice = index + 1;
-        Bass.ChannelSetDevice(FxStream, index + 1);
+        Bass.ChannelSetDevice(_fxStream, index + 1);
 
         var result = Bass.LastError == Errors.OK;
 
@@ -327,14 +327,14 @@ public sealed class BassEngine : IAudioEngine
     private void PositionTimer_Tick(object sender, EventArgs e)
     {
         if (!IsPlaying.Value) return;
-        if (FxStream == 0)
+        if (_fxStream == 0)
         {
             ChannelPosition.Value = 0;
         }
         else
         {
             _inChannelTimerUpdate = true;
-            ChannelPosition.Value = Bass.ChannelBytes2Seconds(FxStream, Bass.ChannelGetPosition(FxStream));
+            ChannelPosition.Value = Bass.ChannelBytes2Seconds(_fxStream, Bass.ChannelGetPosition(_fxStream));
             _inChannelTimerUpdate = false;
         }
     }
