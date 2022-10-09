@@ -2,6 +2,9 @@
 
 namespace OsuPlayer.Modules.Audio.Interfaces;
 
+/// <summary>
+/// This interface is used a service provider for shuffling songs.
+/// </summary>
 public interface IShuffleProvider
 {
     /// <summary>

@@ -16,19 +16,19 @@ public sealed class BassEngine : IAudioEngine
 {
     private readonly SyncProcedure _endTrackSyncProc;
     private readonly DispatcherTimer _positionTimer = new(DispatcherPriority.ApplicationIdle);
-    
+
     private bool _inChannelSet;
     private bool _inChannelTimerUpdate;
     private bool _isEqEnabled;
     private DXParamEQ? _paramEq;
     private double _playbackSpeed;
     private int _sampleFrequency = 44100;
-    
+
     public List<AudioDevice> AvailableAudioDevices { get; } = new();
     public IAudioEngine.ChannelReachedEndHandler? ChannelReachedEnd { private get; set; }
     public BindableArray<decimal> EqGains { get; } = new(10, 1);
 
-    private int ActiveStreamHandle { get; set; }
+    private int DecodeStreamHandle { get; set; }
     private int FxStream { get; set; }
 
     public Bindable<double> ChannelLength { get; } = new();
@@ -42,9 +42,9 @@ public sealed class BassEngine : IAudioEngine
         set
         {
             var oldValue = _isEqEnabled;
-            
+
             _isEqEnabled = value;
-            
+
             if (oldValue != _isEqEnabled)
             {
                 SetAllEq();
@@ -120,14 +120,8 @@ public sealed class BassEngine : IAudioEngine
     public void Stop()
     {
         ChannelPosition.Value = ChannelLength.Value;
-        
-        if (FxStream != 0)
-        {
-            Bass.ChannelStop(FxStream);
-            Bass.ChannelSetPosition(FxStream, (long) ChannelPosition.Value);
-            
-            IsPlaying.Value = false;
-        }
+
+        CloseFile();
     }
 
     public void Pause()
@@ -158,7 +152,7 @@ public sealed class BassEngine : IAudioEngine
     {
         Bass.ChannelSetAttribute(FxStream, ChannelAttribute.TempoFrequency,
             _sampleFrequency * (1 + speed));
-        
+
         _playbackSpeed = speed;
     }
 
@@ -166,13 +160,11 @@ public sealed class BassEngine : IAudioEngine
     {
         Stop();
 
-        DisposeStreamIfNeeded();
-
         if (!File.Exists(path)) return false;
 
         // Create Stream
-        ActiveStreamHandle = Bass.CreateStream(path, 0, 0, BassFlags.Decode | BassFlags.Float);
-        FxStream = BassFx.TempoCreate(ActiveStreamHandle, BassFlags.FxFreeSource | BassFlags.Float);
+        DecodeStreamHandle = Bass.CreateStream(path, 0, 0, BassFlags.Decode | BassFlags.Float);
+        FxStream = BassFx.TempoCreate(DecodeStreamHandle, BassFlags.FxFreeSource | BassFlags.Float);
         ChannelLength.Value = Bass.ChannelBytes2Seconds(FxStream, Bass.ChannelGetLength(FxStream));
 
         if (FxStream != 0)
@@ -181,31 +173,31 @@ public sealed class BassEngine : IAudioEngine
             return true;
         }
 
-        ActiveStreamHandle = 0;
+        DecodeStreamHandle = 0;
         FxStream = 0;
 
         return false;
     }
 
-    private void DisposeStreamIfNeeded()
+    public void CloseFile()
     {
         if (FxStream == 0) return;
 
+        Bass.ChannelStop(FxStream);
+        Bass.StreamFree(DecodeStreamHandle);
+
         ChannelPosition.Value = 0;
-        
-        Bass.StreamFree(ActiveStreamHandle);
-        Bass.StreamFree(FxStream);
     }
 
     private void SetupStream()
     {
         // Obtain the sample rate of the stream
         var info = Bass.ChannelGetInfo(FxStream);
-        
+
         _sampleFrequency = info.Frequency;
-        
+
         //SetEqBands();
-        
+
         var speed = _sampleFrequency * (1 + _playbackSpeed);
         Bass.ChannelSetAttribute(FxStream, ChannelAttribute.TempoFrequency, speed);
 

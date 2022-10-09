@@ -3,6 +3,9 @@ using OsuPlayer.Data.OsuPlayer.StorageModels;
 
 namespace OsuPlayer.Modules.Audio.Interfaces;
 
+/// <summary>
+/// This interface provides playlist capability.
+/// </summary>
 public interface IHasPlaylists
 {
     public Bindable<Playlist?> SelectedPlaylist { get; }

@@ -1,5 +1,8 @@
 ﻿namespace OsuPlayer.Modules.Audio.Interfaces;
 
+/// <summary>
+/// This interface provides method(s) regarding opening and closing audio files.
+/// </summary>
 public interface ICanOpenFiles
 {
     /// <summary>
@@ -9,4 +12,9 @@ public interface ICanOpenFiles
     /// <returns>true if opening succeeded, false else</returns>
     /// <exception cref="ArgumentException">if the sync handle could not be created</exception>
     public bool OpenFile(string path);
+
+    /// <summary>
+    /// Closes the current audio file stream handle
+    /// </summary>
+    public void CloseFile();
 }

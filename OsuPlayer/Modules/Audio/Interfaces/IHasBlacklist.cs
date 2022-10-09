@@ -2,6 +2,9 @@
 
 namespace OsuPlayer.Modules.Audio.Interfaces;
 
+/// <summary>
+/// This interface provides blacklist capability.
+/// </summary>
 public interface IHasBlacklist
 {
     public Bindable<bool> BlacklistSkip { get; }

@@ -1,5 +1,8 @@
 ﻿namespace OsuPlayer.Modules.Audio.Interfaces;
 
+/// <summary>
+/// This interface provides audio effects capability.
+/// </summary>
 public interface IHasEffects
 {
     public BindableArray<decimal> EqGains { get; }
