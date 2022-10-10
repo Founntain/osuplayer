@@ -1,10 +1,9 @@
 ﻿using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Extensions;
-using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Modules.ShuffleImpl;
 using Splat;
 
-namespace OsuPlayer.Modules.Audio;
+namespace OsuPlayer.Modules.Services;
 
 public class ShuffleServiceProvider : IShuffleServiceProvider
 {
@@ -19,7 +18,7 @@ public class ShuffleServiceProvider : IShuffleServiceProvider
         ShuffleAlgorithms = AppDomain.CurrentDomain.GetAssemblies().SelectMany(s => s.GetTypes()).Where(p => shuffleType.IsAssignableFrom(p)).Select(x => new ShuffleAlgorithm(x)).ToList();
         ShuffleAlgorithms.RemoveAll(x => x.Type == shuffleType);
 
-        var shuffleAlgo = ShuffleAlgorithms.FirstOrDefault(x => x.Type.Name == config.Container.ShuffleAlgorithm);
+        var shuffleAlgo = ShuffleAlgorithms.FirstOrDefault(x => string.Equals(x.Type.Name, config.Container.ShuffleAlgorithm, StringComparison.InvariantCultureIgnoreCase));
 
         if (shuffleAlgo != null)
         {

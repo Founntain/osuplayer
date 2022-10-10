@@ -1,7 +1,7 @@
 ﻿using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Modules.ShuffleImpl;
 
-namespace OsuPlayer.Modules.Audio.Interfaces;
+namespace OsuPlayer.Modules.Services;
 
 public interface IShuffleServiceProvider
 {
