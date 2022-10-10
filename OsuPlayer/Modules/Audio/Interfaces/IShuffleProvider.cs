@@ -7,6 +7,10 @@ namespace OsuPlayer.Modules.Audio.Interfaces;
 /// </summary>
 public interface IShuffleProvider
 {
+    /// <summary>
+    /// Inits the shuffler with the given parameters.
+    /// </summary>
+    /// <param name="maxRange">The max index range the shuffler will return with <see cref="DoShuffle"/></param>
     void Init(int maxRange);
 
     /// <summary>

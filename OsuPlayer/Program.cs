@@ -68,7 +68,7 @@ internal static class Program
     {
         services.RegisterLazySingleton<IAudioEngine>(() => new BassEngine());
 
-        services.Register<IShuffleProvider>(() => new SongShuffler());
+        services.RegisterLazySingleton<IShuffleProvider>(() => new AltSongShuffler());
         services.RegisterLazySingleton<IStatisticsProvider>(() => new ApiStatisticsProvider());
         services.RegisterLazySingleton<ISortProvider>(() => new SortProvider());
         services.RegisterLazySingleton<ISongSourceProvider>(() => new OsuSongSourceProvider(resolver.GetService<ISortProvider>()));
