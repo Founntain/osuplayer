@@ -15,7 +15,7 @@ public class ConfigContainer : IStorableContainer
     public SortingMode SortingMode { get; set; } = SortingMode.Title;
     public RepeatMode RepeatMode { get; set; } = RepeatMode.NoRepeat;
     public Guid? SelectedPlaylist { get; set; }
-    public string? ShuffleAlgorithm { get; set; } = "SongShuffler";
+    public string? ShuffleAlgorithm { get; set; } = "RngShuffler";
     public bool IsShuffle { get; set; }
     public string? LastPlayedSong { get; set; }
     public bool IgnoreSongsWithSameNameCheckBox { get; set; }

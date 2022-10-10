@@ -8,7 +8,7 @@ namespace OsuPlayer.Modules.ShuffleImpl;
 public interface IShuffleImpl
 {
     /// <summary>
-    /// Inits the shuffler with the given parameters.
+    /// Inits the shuffler with the given parameters. This must be called before <see cref="DoShuffle"/> each time to ensure the shuffler is initialized with valid params.
     /// </summary>
     /// <param name="maxRange">The max index range the shuffler will return with <see cref="DoShuffle"/></param>
     void Init(int maxRange);
