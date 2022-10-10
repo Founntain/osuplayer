@@ -1,11 +1,11 @@
 ﻿using OsuPlayer.Data.OsuPlayer.Enums;
 
-namespace OsuPlayer.Modules.Audio.Interfaces;
+namespace OsuPlayer.Modules.ShuffleImpl;
 
 /// <summary>
 /// This interface is used a service provider for shuffling songs.
 /// </summary>
-public interface IShuffleProvider
+public interface IShuffleImpl
 {
     /// <summary>
     /// Inits the shuffler with the given parameters.

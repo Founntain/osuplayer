@@ -1,9 +1,10 @@
 ﻿using OsuPlayer.Data.OsuPlayer.Enums;
-using OsuPlayer.Modules.Audio.Interfaces;
+using OsuPlayer.Extensions;
 
-namespace OsuPlayer.Modules.Audio;
+namespace OsuPlayer.Modules.ShuffleImpl;
 
-public class SongShuffler : IShuffleProvider
+[DefaultImplAttr]
+public class SongShuffler : IShuffleImpl
 {
     private int _shuffleHistoryIndex;
     private readonly int?[] _shuffleHistory = new int?[10];

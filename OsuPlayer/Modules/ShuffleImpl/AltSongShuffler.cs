@@ -2,9 +2,9 @@
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Modules.Audio.Interfaces;
 
-namespace OsuPlayer.Modules.Audio;
+namespace OsuPlayer.Modules.ShuffleImpl;
 
-public class AltSongShuffler : IShuffleProvider
+public class AltSongShuffler : IShuffleImpl
 {
     private int[] _shuffledIndexes = Array.Empty<int>();
     private int _currentIndex;

@@ -65,6 +65,12 @@
                                       HorizontalAlignment="Stretch" />
                         </StackPanel>
 
+                        <StackPanel Spacing="5" Name="ShuffleAlgorithm">
+                            <TextBlock Text="Shuffle Algorithm" />
+                            <ComboBox SelectedItem="{Binding SelectedShuffleAlgorithm}" Items="{Binding ShuffleAlgorithms}"
+                                      HorizontalAlignment="Stretch" />
+                        </StackPanel>
+
                         <StackPanel Spacing="5" Name="BlacklistSkip">
                             <CheckBox IsChecked="{Binding BlacklistSkip}" Content="Blacklist skipping" />
                         </StackPanel>

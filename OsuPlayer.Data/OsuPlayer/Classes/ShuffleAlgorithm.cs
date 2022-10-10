@@ -2,7 +2,7 @@
 
 namespace OsuPlayer.Data.OsuPlayer.Classes;
 
-public readonly struct ShuffleAlgorithm
+public class ShuffleAlgorithm
 {
     public Type Type { get; }
     private readonly string _formattedName;
