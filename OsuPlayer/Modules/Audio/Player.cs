@@ -101,6 +101,8 @@ public class Player : IPlayer, IImportNotifications
             cfg.Container.RepeatMode = d.NewValue;
         }, true);
 
+        IsShuffle.BindValueChanged(d => _songShuffler?.Init(0));
+
         SelectedPlaylist.BindValueChanged(d =>
         {
             using var cfg = new Config();
