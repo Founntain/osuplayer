@@ -269,7 +269,8 @@ public class Player : IPlayer, IImportNotifications
 
         if (IsShuffle.Value && _songShuffler != null)
         {
-            songToPlay = songSource[_songShuffler.DoShuffle(currentIndex, (ShuffleDirection) playDirection, songSource.Count)];
+            _songShuffler.Init(songSource.Count);
+            songToPlay = songSource[_songShuffler.DoShuffle(currentIndex, (ShuffleDirection) playDirection)];
         }
         else
         {

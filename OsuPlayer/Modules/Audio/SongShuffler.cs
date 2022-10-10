@@ -8,12 +8,18 @@ public class SongShuffler : IShuffleProvider
     private int _shuffleHistoryIndex;
     private readonly int?[] _shuffleHistory = new int?[10];
 
-    private int _maxRange;
+    private int _maxRange = -1;
     private int _currentIndex;
 
-    public int DoShuffle(int currentIndex, ShuffleDirection direction, int maxRange)
+    public void Init(int maxRange)
     {
         _maxRange = maxRange;
+    }
+
+    public int DoShuffle(int currentIndex, ShuffleDirection direction)
+    {
+        if (_maxRange == -1) return -1;
+
         _currentIndex = currentIndex;
 
         switch (direction)
@@ -110,9 +116,9 @@ public class SongShuffler : IShuffleProvider
     private int GenerateShuffledIndex()
     {
         var rdm = new Random();
-        
+
         int shuffleIndex;
-        
+
         do
         {
             shuffleIndex = rdm.Next(0, _maxRange);
