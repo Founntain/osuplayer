@@ -17,6 +17,9 @@ public class AltSongShuffler : IShuffleProvider
 
         _maxRange = maxRange;
         _currentIndex = 0;
+
+        if (_maxRange == 0) return;
+
         _shuffledIndexes = new int[_maxRange];
 
         GenerateRandomIndexes();
