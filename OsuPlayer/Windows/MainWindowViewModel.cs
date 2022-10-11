@@ -49,7 +49,7 @@ public class MainWindowViewModel : BaseWindowViewModel
         set => _panelMaterial = value;
     }
 
-    public MainWindowViewModel(IAudioEngine engine, IPlayer player, IStatisticsProvider? statisticsProvider = null, ISortProvider? sortProvider = null)
+    public MainWindowViewModel(IAudioEngine engine, IPlayer player, IShuffleServiceProvider? shuffleServiceProvider = null, IStatisticsProvider? statisticsProvider = null, ISortProvider? sortProvider = null)
     {
         Player = player;
 
@@ -65,7 +65,7 @@ public class MainWindowViewModel : BaseWindowViewModel
         UserView = new UserViewModel(Player);
         EditUserView = new EditUserViewModel();
         PartyView = new PartyViewModel();
-        SettingsView = new SettingsViewModel(Player, sortProvider);
+        SettingsView = new SettingsViewModel(Player, sortProvider, shuffleServiceProvider);
         EqualizerView = new EqualizerViewModel(Player);
         UpdateView = new UpdateViewModel();
 

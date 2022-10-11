@@ -8,13 +8,14 @@ public class ConfigContainer : IStorableContainer
     public string? OsuPath { get; set; }
     public double Volume { get; set; }
     public bool UseSongNameUnicode { get; set; } = false;
-    public int SelectedAudioDevice { get; set; } = 0;
-    public bool IsEqEnabled { get; set; } = false;
+    public int SelectedAudioDevice { get; set; }
+    public bool IsEqEnabled { get; set; }
     public WindowTransparencyLevel TransparencyLevelHint { get; set; } = WindowTransparencyLevel.AcrylicBlur;
     public StartupSong StartupSong { get; set; } = StartupSong.FirstSong;
     public SortingMode SortingMode { get; set; } = SortingMode.Title;
     public RepeatMode RepeatMode { get; set; } = RepeatMode.NoRepeat;
     public Guid? SelectedPlaylist { get; set; }
+    public string? ShuffleAlgorithm { get; set; } = "RngShuffler";
     public bool IsShuffle { get; set; }
     public string? LastPlayedSong { get; set; }
     public bool IgnoreSongsWithSameNameCheckBox { get; set; }

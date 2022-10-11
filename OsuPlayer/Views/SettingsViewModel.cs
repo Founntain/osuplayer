@@ -8,10 +8,12 @@ using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Modules.Services;
+using OsuPlayer.Modules.ShuffleImpl;
 using OsuPlayer.Network;
 using OsuPlayer.Styles;
 using OsuPlayer.Windows;
 using ReactiveUI;
+using Splat;
 
 namespace OsuPlayer.Views;
 
@@ -21,6 +23,7 @@ public class SettingsViewModel : BaseViewModel
     private readonly Bindable<bool> _playlistEnableOnPlay = new();
     private readonly Bindable<SortingMode> _sortingMode = new();
     public readonly IPlayer Player;
+    private IShuffleServiceProvider? _shuffleServiceProvider;
     private string _osuLocation;
     private string _patchnotes;
     private KnownColors _selectedAccentColor;
@@ -30,6 +33,7 @@ public class SettingsViewModel : BaseViewModel
     private ReleaseChannels _selectedReleaseChannel;
     private StartupSong _selectedStartupSong;
     private WindowTransparencyLevel _selectedTransparencyLevel;
+    private IShuffleImpl? _selectedShuffleAlgorithm;
     private string _settingsSearchQ;
 
     public MainWindow? MainWindow;
@@ -193,6 +197,21 @@ public class SettingsViewModel : BaseViewModel
         }
     }
 
+    public List<IShuffleImpl>? ShuffleAlgorithms => _shuffleServiceProvider?.ShuffleAlgorithms;
+
+    public IShuffleImpl? SelectedShuffleAlgorithm
+    {
+        get => _selectedShuffleAlgorithm;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _selectedShuffleAlgorithm, value);
+
+            _shuffleServiceProvider?.SetShuffleImpl(value);
+        }
+    }
+
+    public string SelectedShuffleAlgorithmInfoText => $"{SelectedShuffleAlgorithm?.Name} - {SelectedShuffleAlgorithm?.Description}";
+
     public bool BlacklistSkip
     {
         get => _blacklistSkip.Value;
@@ -267,9 +286,10 @@ public class SettingsViewModel : BaseViewModel
 
     public ObservableCollection<AudioDevice> OutputDeviceComboboxItems { get; set; }
 
-    public SettingsViewModel(IPlayer player, ISortProvider? sortProvider)
+    public SettingsViewModel(IPlayer player, ISortProvider? sortProvider, IShuffleServiceProvider? shuffleServiceProvider)
     {
         Player = player;
+        _shuffleServiceProvider = shuffleServiceProvider;
 
         var config = new Config();
 
@@ -280,6 +300,7 @@ public class SettingsViewModel : BaseViewModel
         _selectedAccentColor = config.Container.AccentColor;
         _selectedFontWeight = config.Container.DefaultFontWeight;
         _selectedFont = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
+        _selectedShuffleAlgorithm = ShuffleAlgorithms?.FirstOrDefault(x => x == _shuffleServiceProvider?.ShuffleImpl);
 
         if (sortProvider != null)
         {

@@ -6,6 +6,7 @@ using OsuPlayer.IO.Importer;
 using OsuPlayer.Modules.Audio.Engine;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Modules.Services;
+using OsuPlayer.Modules.ShuffleImpl;
 using OsuPlayer.Windows;
 using Splat;
 
@@ -68,7 +69,7 @@ internal static class Program
     {
         services.RegisterLazySingleton<IAudioEngine>(() => new BassEngine());
 
-        services.Register<IShuffleProvider>(() => new SongShuffler());
+        services.RegisterLazySingleton<IShuffleServiceProvider>(() => new ShuffleServiceProvider());
         services.RegisterLazySingleton<IStatisticsProvider>(() => new ApiStatisticsProvider());
         services.RegisterLazySingleton<ISortProvider>(() => new SortProvider());
         services.RegisterLazySingleton<ISongSourceProvider>(() => new OsuSongSourceProvider(resolver.GetService<ISortProvider>()));
@@ -76,13 +77,14 @@ internal static class Program
         services.RegisterLazySingleton<IPlayer>(() => new Player(
             resolver.GetRequiredService<IAudioEngine>(),
             resolver.GetRequiredService<ISongSourceProvider>(),
-            resolver.GetService<IShuffleProvider>(),
+            resolver.GetService<IShuffleServiceProvider>(),
             resolver.GetService<IStatisticsProvider>(),
             resolver.GetService<ISortProvider>()));
 
         services.Register(() => new MainWindowViewModel(
             resolver.GetRequiredService<IAudioEngine>(),
             resolver.GetRequiredService<IPlayer>(),
+            resolver.GetService<IShuffleServiceProvider>(),
             resolver.GetService<IStatisticsProvider>(),
             resolver.GetService<ISortProvider>()));
 

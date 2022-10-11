@@ -11,7 +11,9 @@ using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules.Audio.Engine;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Modules.Services;
+using OsuPlayer.Modules.ShuffleImpl;
 using OsuPlayer.Network.Discord;
+using Splat;
 
 namespace OsuPlayer.Modules.Audio;
 
@@ -24,7 +26,7 @@ public class Player : IPlayer, IImportNotifications
     private readonly IAudioEngine _audioEngine;
     private readonly Stopwatch _currentSongTimer = new();
     private readonly DiscordClient? _discordClient;
-    private readonly IShuffleProvider? _songShuffler;
+    private readonly IShuffleServiceProvider? _shuffleProvider;
     private readonly IStatisticsProvider? _statisticsProvider;
 
     private bool _isMuted;
@@ -57,7 +59,7 @@ public class Player : IPlayer, IImportNotifications
     public Bindable<Playlist?> SelectedPlaylist { get; } = new();
     private List<IMapEntryBase> ActivePlaylistSongs { get; set; }
 
-    public Player(IAudioEngine audioEngine, ISongSourceProvider songSourceProvider, IShuffleProvider? shuffleProvider = null, IStatisticsProvider? statisticsProvider = null, ISortProvider? sortProvider = null)
+    public Player(IAudioEngine audioEngine, ISongSourceProvider songSourceProvider, IShuffleServiceProvider? shuffleProvider = null, IStatisticsProvider? statisticsProvider = null, ISortProvider? sortProvider = null)
     {
         _audioEngine = audioEngine;
 
@@ -66,7 +68,7 @@ public class Player : IPlayer, IImportNotifications
         _discordClient = new DiscordClient().Initialize();
 
         SongSourceProvider = songSourceProvider;
-        _songShuffler = shuffleProvider;
+        _shuffleProvider = shuffleProvider;
         _statisticsProvider = statisticsProvider;
 
         IsPlaying.BindTo(_audioEngine.IsPlaying);
@@ -100,6 +102,8 @@ public class Player : IPlayer, IImportNotifications
             using var cfg = new Config();
             cfg.Container.RepeatMode = d.NewValue;
         }, true);
+
+        IsShuffle.BindValueChanged(d => _shuffleProvider?.ShuffleImpl?.Init(0));
 
         SelectedPlaylist.BindValueChanged(d =>
         {
@@ -267,9 +271,10 @@ public class Player : IPlayer, IImportNotifications
 
         currentIndex = songSource.IndexOf(SongSourceProvider.SongSourceList![currentIndex]);
 
-        if (IsShuffle.Value && _songShuffler != null)
+        if (IsShuffle.Value && _shuffleProvider?.ShuffleImpl != null)
         {
-            songToPlay = songSource[_songShuffler.DoShuffle(currentIndex, (ShuffleDirection) playDirection, songSource.Count)];
+            _shuffleProvider.ShuffleImpl.Init(songSource.Count);
+            songToPlay = songSource[_shuffleProvider.ShuffleImpl.DoShuffle(currentIndex, (ShuffleDirection) playDirection)];
         }
         else
         {
