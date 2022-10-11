@@ -2,6 +2,10 @@
 
 namespace OsuPlayer.Modules.ShuffleImpl;
 
+/// <summary>
+/// This shuffle implementation is mostly the same as <see cref="RngShuffler"/> but adds a 10 depth history buffer so one can go back to the previous song.<br/>
+/// This also has a security check to prevent the same song from being played twice in a row.
+/// </summary>
 public class RngHistoryShuffler : IShuffleImpl
 {
     private int _shuffleHistoryIndex;

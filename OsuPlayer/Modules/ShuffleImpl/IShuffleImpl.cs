@@ -3,7 +3,7 @@
 namespace OsuPlayer.Modules.ShuffleImpl;
 
 /// <summary>
-/// This interface is used a service provider for shuffling songs.
+/// This interface is used as a base for all shuffle algorithm implementations.
 /// </summary>
 public interface IShuffleImpl
 {

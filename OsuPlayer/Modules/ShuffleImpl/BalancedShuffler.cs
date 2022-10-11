@@ -3,6 +3,9 @@ using OsuPlayer.Data.OsuPlayer.Enums;
 
 namespace OsuPlayer.Modules.ShuffleImpl;
 
+/// <summary>
+/// This shuffle algorithm performs a full reshuffle of the song list so there aren't any duplicates and biases.
+/// </summary>
 public class BalancedShuffler : IShuffleImpl
 {
     private int[] _shuffledIndexes = Array.Empty<int>();

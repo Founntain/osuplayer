@@ -5,6 +5,9 @@ using Splat;
 
 namespace OsuPlayer.Modules.Services;
 
+/// <summary>
+/// Provides a service for shuffle implementation registering the services using Splat.
+/// </summary>
 public class ShuffleServiceProvider : IShuffleServiceProvider
 {
     public List<ShuffleAlgorithm> ShuffleAlgorithms { get; }

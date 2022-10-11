@@ -3,6 +3,9 @@ using OsuPlayer.Extensions;
 
 namespace OsuPlayer.Modules.ShuffleImpl;
 
+/// <summary>
+/// This shuffle implementation will randomly select a song each time with no further logic.
+/// </summary>
 [DefaultImplAttr]
 public class RngShuffler : IShuffleImpl
 {
