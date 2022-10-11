@@ -69,13 +69,14 @@
                         <StackPanel Spacing="5" Name="ShuffleAlgorithm">
                             <TextBlock Text="Shuffle Algorithm" />
                             <DockPanel LastChildFill="True">
-                                <Button Height="24" Width="24" CornerRadius="40" Background="Transparent" DockPanel.Dock="Right">
+                                <Button Height="24" Width="24" CornerRadius="40" Background="Transparent" DockPanel.Dock="Right"
+                                        Margin="5,0,0,0">
                                     <icons:MaterialIcon Kind="InformationOutline" Height="24"
                                                         Width="24" />
                                     <Button.Flyout>
                                         <Flyout ShowMode="TransientWithDismissOnPointerMoveAway">
-                                            <TextBlock TextWrapping="Wrap" FontSize="12"
-                                                Text="{Binding SelectedShuffleAlgorithm.Description, FallbackValue=AA}"/>
+                                            <TextBlock TextWrapping="Wrap" FontSize="12" MaxWidth="400"
+                                                Text="{Binding SelectedShuffleAlgorithmInfoText, FallbackValue=AA}"/>
                                         </Flyout>
                                     </Button.Flyout>
                                 </Button>

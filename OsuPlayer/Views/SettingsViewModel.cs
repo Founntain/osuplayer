@@ -210,6 +210,8 @@ public class SettingsViewModel : BaseViewModel
         }
     }
 
+    public string SelectedShuffleAlgorithmInfoText => $"{SelectedShuffleAlgorithm?.Name} - {SelectedShuffleAlgorithm?.Description}";
+
     public bool BlacklistSkip
     {
         get => _blacklistSkip.Value;
