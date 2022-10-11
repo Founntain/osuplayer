@@ -1,5 +1,4 @@
-﻿using DynamicData;
-using OsuPlayer.Data.OsuPlayer.Enums;
+﻿using OsuPlayer.Data.OsuPlayer.Enums;
 
 namespace OsuPlayer.Modules.ShuffleImpl;
 
@@ -8,7 +7,7 @@ namespace OsuPlayer.Modules.ShuffleImpl;
 /// </summary>
 public class BalancedShuffler : IShuffleImpl
 {
-    private List<int> _shuffledIndexes = new();
+    private readonly List<int> _shuffledIndexes = new();
     private int _currentIndex;
 
     private int _maxRange;
