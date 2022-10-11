@@ -1,4 +1,5 @@
 ﻿using DynamicData;
+using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
 
 namespace OsuPlayer.Modules.ShuffleImpl;
@@ -6,6 +7,7 @@ namespace OsuPlayer.Modules.ShuffleImpl;
 /// <summary>
 /// This shuffle algorithm performs a full reshuffle of the song list so there aren't any duplicates and biases.
 /// </summary>
+[ImplInfoAttr("Balanced Shuffle", "Shuffles the entire list of songs so there aren't any duplicates and biases.")]
 public class BalancedShuffler : IShuffleImpl
 {
     private int[] _shuffledIndexes = Array.Empty<int>();

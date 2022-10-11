@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace OsuPlayer.Data.OsuPlayer.Classes;
 
@@ -8,16 +9,19 @@ namespace OsuPlayer.Data.OsuPlayer.Classes;
 public class ShuffleAlgorithm
 {
     public Type Type { get; }
-    private readonly string _formattedName;
+    public string Name { get; }
+    public string Description { get; }
 
     public override string ToString()
     {
-        return _formattedName;
+        return Name;
     }
 
     public ShuffleAlgorithm(Type type)
     {
         Type = type;
-        _formattedName = Regex.Replace(type.Name, "([A-Z])", " $1", RegexOptions.Compiled).Trim();
+        var info = type.GetCustomAttribute<ImplInfoAttr>();
+        Name = info?.Name ?? Regex.Replace(type.Name, "([A-Z])", " $1").Trim();
+        Description = info?.Description ?? "";
     }
 }

@@ -1,4 +1,5 @@
-﻿using OsuPlayer.Data.OsuPlayer.Enums;
+﻿using OsuPlayer.Data.OsuPlayer.Classes;
+using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Extensions;
 
 namespace OsuPlayer.Modules.ShuffleImpl;
@@ -7,6 +8,7 @@ namespace OsuPlayer.Modules.ShuffleImpl;
 /// This shuffle implementation will randomly select a song each time with no further logic.
 /// </summary>
 [DefaultImplAttr]
+[ImplInfoAttr("Random Shuffle", "Randomly select a song each time with no further logic.")]
 public class RngShuffler : IShuffleImpl
 {
     private int _maxRange = -1;
