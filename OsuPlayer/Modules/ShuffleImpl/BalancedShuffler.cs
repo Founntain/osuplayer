@@ -8,7 +8,7 @@ namespace OsuPlayer.Modules.ShuffleImpl;
 /// </summary>
 public class BalancedShuffler : IShuffleImpl
 {
-    private int[] _shuffledIndexes = Array.Empty<int>();
+    private List<int> _shuffledIndexes = new();
     private int _currentIndex;
 
     private int _maxRange;
@@ -25,7 +25,8 @@ public class BalancedShuffler : IShuffleImpl
 
         if (_maxRange == 0) return;
 
-        _shuffledIndexes = new int[_maxRange];
+        _shuffledIndexes.Clear();
+        _shuffledIndexes.Capacity = _maxRange;
 
         GenerateRandomIndexes();
     }
@@ -47,9 +48,9 @@ public class BalancedShuffler : IShuffleImpl
 
     private void GenerateRandomIndexes()
     {
-        for (var i = 0; i < _shuffledIndexes.Length; i++)
+        for (var i = 0; i < _maxRange; i++)
         {
-            _shuffledIndexes[i] = i;
+            _shuffledIndexes.Add(i);
         }
 
         var random = new Random();
