@@ -8,16 +8,17 @@ namespace OsuPlayer.Modules.Services;
 /// </summary>
 public class ShuffleServiceProvider : IShuffleServiceProvider
 {
-    public List<IShuffleImpl> ShuffleAlgorithms { get; } = new();
+    public List<IShuffleImpl> ShuffleAlgorithms { get; }
     public IShuffleImpl? ShuffleImpl { get; private set; }
 
     public ShuffleServiceProvider()
     {
         using var config = new Config();
 
-        ShuffleAlgorithms.Add(new RngShuffler());
-        ShuffleAlgorithms.Add(new RngHistoryShuffler());
-        ShuffleAlgorithms.Add(new BalancedShuffler());
+        var shuffleType = typeof(IShuffleImpl);
+        var types = AppDomain.CurrentDomain.GetAssemblies().SelectMany(s => s.GetTypes()).Where(p => shuffleType.IsAssignableFrom(p) && p != shuffleType);
+
+        ShuffleAlgorithms = types.Select(x => Activator.CreateInstance(x) as IShuffleImpl).ToList();
 
         ShuffleAlgorithms.Sort((a, b) => string.Compare(a.Name, b.Name, StringComparison.InvariantCulture));
 
