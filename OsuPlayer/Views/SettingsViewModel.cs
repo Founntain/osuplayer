@@ -33,7 +33,7 @@ public class SettingsViewModel : BaseViewModel
     private ReleaseChannels _selectedReleaseChannel;
     private StartupSong _selectedStartupSong;
     private WindowTransparencyLevel _selectedTransparencyLevel;
-    private ShuffleAlgorithm? _selectedShuffleAlgorithm;
+    private IShuffleImpl? _selectedShuffleAlgorithm;
     private string _settingsSearchQ;
 
     public MainWindow? MainWindow;
@@ -197,9 +197,9 @@ public class SettingsViewModel : BaseViewModel
         }
     }
 
-    public List<ShuffleAlgorithm>? ShuffleAlgorithms => _shuffleServiceProvider?.ShuffleAlgorithms;
+    public List<IShuffleImpl>? ShuffleAlgorithms => _shuffleServiceProvider?.ShuffleAlgorithms;
 
-    public ShuffleAlgorithm? SelectedShuffleAlgorithm
+    public IShuffleImpl? SelectedShuffleAlgorithm
     {
         get => _selectedShuffleAlgorithm;
         set
@@ -298,7 +298,7 @@ public class SettingsViewModel : BaseViewModel
         _selectedAccentColor = config.Container.AccentColor;
         _selectedFontWeight = config.Container.DefaultFontWeight;
         _selectedFont = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
-        _selectedShuffleAlgorithm = ShuffleAlgorithms?.FirstOrDefault(x => x.Type == _shuffleServiceProvider?.ShuffleImpl?.GetType());
+        _selectedShuffleAlgorithm = ShuffleAlgorithms?.FirstOrDefault(x => x == _shuffleServiceProvider?.ShuffleImpl);
 
         if (sortProvider != null)
         {

@@ -1,5 +1,4 @@
-﻿using OsuPlayer.Data.OsuPlayer.Classes;
-using OsuPlayer.Data.OsuPlayer.Enums;
+﻿using OsuPlayer.Data.OsuPlayer.Enums;
 
 namespace OsuPlayer.Modules.ShuffleImpl;
 
@@ -7,7 +6,6 @@ namespace OsuPlayer.Modules.ShuffleImpl;
 /// This shuffle implementation is mostly the same as <see cref="RngShuffler"/> but adds a 10 depth history buffer so one can go back to the previous song.<br/>
 /// This also has a security check to prevent the same song from being played twice in a row.
 /// </summary>
-[ImplInfoAttr("Random Shuffle (with history)", "Randomly picks a song from the list with a history buffer of 10 songs.")]
 public class RngHistoryShuffler : IShuffleImpl
 {
     private int _shuffleHistoryIndex;
@@ -15,6 +13,9 @@ public class RngHistoryShuffler : IShuffleImpl
 
     private int _maxRange = -1;
     private int _currentIndex;
+
+    public string Name => "Random Shuffle (with history)";
+    public string Description => "Randomly picks a song from the list with a history buffer of 10 songs.";
 
     public void Init(int maxRange)
     {
@@ -131,4 +132,6 @@ public class RngHistoryShuffler : IShuffleImpl
 
         return shuffleIndex;
     }
+
+    public override string ToString() => Name;
 }

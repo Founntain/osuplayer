@@ -6,6 +6,7 @@
              xmlns:valueConverters="clr-namespace:OsuPlayer.Extensions.ValueConverters;assembly=OsuPlayer.Extensions"
              xmlns:controls="clr-namespace:OsuPlayer.Controls"
              xmlns:avalonia="clr-namespace:Markdown.Avalonia;assembly=Markdown.Avalonia"
+             xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:ctxt="clr-namespace:ColorTextBlock.Avalonia;assembly=ColorTextBlock.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.SettingsView"
@@ -67,8 +68,21 @@
 
                         <StackPanel Spacing="5" Name="ShuffleAlgorithm">
                             <TextBlock Text="Shuffle Algorithm" />
-                            <ComboBox SelectedItem="{Binding SelectedShuffleAlgorithm}" Items="{Binding ShuffleAlgorithms}"
-                                      HorizontalAlignment="Stretch" />
+                            <DockPanel LastChildFill="True">
+                                <Button Height="24" Width="24" CornerRadius="40" Background="Transparent" DockPanel.Dock="Right">
+                                    <icons:MaterialIcon Kind="InformationOutline" Height="24"
+                                                        Width="24" />
+                                    <Button.Flyout>
+                                        <Flyout ShowMode="TransientWithDismissOnPointerMoveAway">
+                                            <TextBlock TextWrapping="Wrap" FontSize="12"
+                                                Text="{Binding SelectedShuffleAlgorithm.Description, FallbackValue=AA}"/>
+                                        </Flyout>
+                                    </Button.Flyout>
+                                </Button>
+                                <ComboBox SelectedItem="{Binding SelectedShuffleAlgorithm}"
+                                          Items="{Binding ShuffleAlgorithms}"
+                                          HorizontalAlignment="Stretch" />
+                            </DockPanel>
                         </StackPanel>
 
                         <StackPanel Spacing="5" Name="BlacklistSkip">

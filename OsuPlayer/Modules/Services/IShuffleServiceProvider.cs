@@ -1,5 +1,4 @@
-﻿using OsuPlayer.Data.OsuPlayer.Classes;
-using OsuPlayer.Modules.ShuffleImpl;
+﻿using OsuPlayer.Modules.ShuffleImpl;
 
 namespace OsuPlayer.Modules.Services;
 
@@ -8,12 +7,12 @@ namespace OsuPlayer.Modules.Services;
 /// </summary>
 public interface IShuffleServiceProvider
 {
-    public List<ShuffleAlgorithm> ShuffleAlgorithms { get; }
+    public List<IShuffleImpl> ShuffleAlgorithms { get; }
     public IShuffleImpl? ShuffleImpl { get; }
 
     /// <summary>
     /// Sets the shuffle algorithm.
     /// </summary>
     /// <param name="algorithm">The <see cref="ShuffleAlgorithm"/> to set.</param>
-    public void SetShuffleImpl(ShuffleAlgorithm? algorithm);
+    public void SetShuffleImpl(IShuffleImpl? algorithm);
 }
