@@ -119,8 +119,6 @@ public sealed class BassEngine : IAudioEngine
 
     public void Stop()
     {
-        ChannelPosition.Value = ChannelLength.Value;
-
         CloseFile();
     }
 
@@ -185,6 +183,9 @@ public sealed class BassEngine : IAudioEngine
 
         Bass.ChannelStop(_fxStream);
         Bass.StreamFree(_decodeStreamHandle);
+
+        _fxStream = 0;
+        _decodeStreamHandle = 0;
 
         ChannelPosition.Value = 0;
     }
@@ -334,7 +335,12 @@ public sealed class BassEngine : IAudioEngine
         else
         {
             _inChannelTimerUpdate = true;
-            ChannelPosition.Value = Bass.ChannelBytes2Seconds(_fxStream, Bass.ChannelGetPosition(_fxStream));
+
+            var bytes = Bass.ChannelGetPosition(_fxStream);
+
+            if (bytes >= 0)
+                ChannelPosition.Value = Bass.ChannelBytes2Seconds(_fxStream, bytes);
+
             _inChannelTimerUpdate = false;
         }
     }
