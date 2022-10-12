@@ -123,6 +123,7 @@ public static class PlaylistManager
         await playlistStorage.ReadAsync();
 
         playlistStorage.Container.Playlists?.FirstOrDefault(x => x == playlist)?.Songs.Add(mapEntry.Hash);
+        playlist.Songs.Add(mapEntry.Hash);
     }
 
     /// <summary>
@@ -137,5 +138,6 @@ public static class PlaylistManager
         await playlistStorage.ReadAsync();
 
         playlistStorage.Container.Playlists?.FirstOrDefault(x => x == playlist)?.Songs.Remove(mapEntry.Hash);
+        playlist.Songs.Remove(mapEntry.Hash);
     }
 }
