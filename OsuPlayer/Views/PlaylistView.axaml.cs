@@ -63,7 +63,7 @@ public partial class PlaylistView : ReactiveControl<PlaylistViewModel>
         await ViewModel.Player.TryPlaySongAsync(ViewModel.Player.SongSourceProvider.GetMapEntryFromHash(playlist.Songs.First()));
     }
 
-    private void Visual_OnAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
+    private void PlaylistItemLoaded(object? sender, VisualTreeAttachmentEventArgs e)
     {
         if (sender is not Grid grid) return;
 

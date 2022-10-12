@@ -33,7 +33,7 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="storageModels:Playlist">
                         <Grid ColumnDefinitions="Auto,*,Auto" Margin="10 0"
-                              AttachedToVisualTree="Visual_OnAttachedToVisualTree">
+                              AttachedToVisualTree="PlaylistItemLoaded">
                             <avalonia:MaterialIcon Grid.Column="0" Kind="MusicNoteEighth" Margin="0,0,10,0" />
                             <TextBlock Grid.Column="1" Text="{Binding Name}" FontWeight="SemiBold"
                                        VerticalAlignment="Center" Margin="0 10" />
