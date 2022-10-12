@@ -2,6 +2,7 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Avalonia.Threading;
 using DynamicData;
+using Material.Icons.Avalonia;
 using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.Extensions;
@@ -14,6 +15,7 @@ namespace OsuPlayer.Views;
 public class PlaylistViewModel : BaseViewModel
 {
     private readonly IObservable<Func<IMapEntryBase, bool>> _filter;
+    private readonly List<MaterialIcon> _materialIcons = new();
     public readonly IPlayer Player;
 
     private IDisposable _currentBind;
@@ -64,6 +66,14 @@ public class PlaylistViewModel : BaseViewModel
             .Throttle(TimeSpan.FromMilliseconds(20))
             .Select(BuildFilter);
 
+        Player.SelectedPlaylist.BindValueChanged(d =>
+        {
+            for (var i = 0; i < _materialIcons.Count; i++)
+            {
+                _materialIcons[i].IsVisible = Player.SelectedPlaylist.Value?.Id == Playlists?[i].Id;
+            }
+        }, true);
+
         Player.PlaylistChanged += (sender, args) =>
         {
             var selection = Player.SelectedPlaylist.Value;
@@ -86,6 +96,8 @@ public class PlaylistViewModel : BaseViewModel
         {
             Disposable.Create(() => { }).DisposeWith(disposables);
 
+            _materialIcons.Clear();
+
             if (Playlists != null) return;
 
             Playlists = PlaylistManager.GetAllPlaylists()?.OrderBy(x => x.Name).ToObservableCollection() ?? new ObservableCollection<Playlist>();
@@ -96,6 +108,14 @@ public class PlaylistViewModel : BaseViewModel
                 SelectedPlaylist = Playlists.FirstOrDefault(x => x.Id == config.Container.SelectedPlaylist) ?? Playlists[0];
             }
         });
+    }
+
+    public void AddIcon(MaterialIcon icon)
+    {
+        _materialIcons.Add(icon);
+
+        var indexOf = _materialIcons.IndexOf(icon);
+        icon.IsVisible = Player.SelectedPlaylist.Value?.Id == Playlists?[indexOf].Id;
     }
 
     /// <summary>
