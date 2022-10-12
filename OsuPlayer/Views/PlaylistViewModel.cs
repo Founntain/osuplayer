@@ -20,7 +20,7 @@ public class PlaylistViewModel : BaseViewModel
     private ReadOnlyObservableCollection<IMapEntryBase>? _filteredSongEntries;
     private string _filterText;
     private ObservableCollection<Playlist> _playlists;
-    private Bindable<Playlist?> _selectedPlaylist = new();
+    private Playlist? _selectedPlaylist;
 
     public ObservableCollection<Playlist> Playlists
     {
@@ -30,16 +30,16 @@ public class PlaylistViewModel : BaseViewModel
 
     public Playlist? SelectedPlaylist
     {
-        get => _selectedPlaylist.Value;
+        get => _selectedPlaylist;
         set
         {
-            _selectedPlaylist.Value = value;
+            _selectedPlaylist = value;
 
             if (_filteredSongEntries != null)
                 _currentBind.Dispose();
 
-            if (_selectedPlaylist.Value?.Songs != null)
-                _currentBind = Player.SongSourceProvider.GetMapEntriesFromHash(_selectedPlaylist.Value.Songs).ToSourceList().Connect()
+            if (_selectedPlaylist?.Songs != null)
+                _currentBind = Player.SongSourceProvider.GetMapEntriesFromHash(_selectedPlaylist.Songs).ToSourceList().Connect()
                     .Filter(_filter, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
                     .Bind(out _filteredSongEntries).Subscribe();
 
@@ -59,12 +59,18 @@ public class PlaylistViewModel : BaseViewModel
     public PlaylistViewModel(IPlayer player)
     {
         Player = player;
-        
-        _selectedPlaylist.BindTo(Player.SelectedPlaylist);
 
         _filter = this.WhenAnyValue(x => x.FilterText)
             .Throttle(TimeSpan.FromMilliseconds(20))
             .Select(BuildFilter);
+
+        Playlists = PlaylistManager.GetAllPlaylists()?.OrderBy(x => x.Name).ToObservableCollection() ?? new ObservableCollection<Playlist>();
+
+        if (Playlists.Count > 0 && SelectedPlaylist == default)
+        {
+            var config = new Config();
+            SelectedPlaylist = Playlists.FirstOrDefault(x => x.Id == config.Container.SelectedPlaylist) ?? Playlists[0];
+        }
 
         Player.PlaylistChanged += (sender, args) =>
         {
@@ -81,26 +87,10 @@ public class PlaylistViewModel : BaseViewModel
 
             this.RaisePropertyChanged(nameof(SelectedPlaylist));
         };
-        
-        _selectedPlaylist.BindValueChanged(d =>
-        {
-            this.RaisePropertyChanged(nameof(SelectedPlaylist));
-        });
-        
+
         Activator = new ViewModelActivator();
 
-        this.WhenActivated(disposables =>
-        {
-            Disposable.Create(() => { }).DisposeWith(disposables);
-
-            Playlists = PlaylistManager.GetAllPlaylists()?.OrderBy(x => x.Name).ToObservableCollection() ?? new ObservableCollection<Playlist>();
-
-            if (Playlists.Count > 0 && SelectedPlaylist == default)
-            {
-                var config = new Config();
-                SelectedPlaylist = Playlists.FirstOrDefault(x => x.Id == config.Container.SelectedPlaylist) ?? Playlists[0];
-            }
-        });
+        this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
     }
 
     /// <summary>
