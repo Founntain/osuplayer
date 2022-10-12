@@ -34,7 +34,7 @@
                     <DataTemplate DataType="storageModels:Playlist">
                         <Grid ColumnDefinitions="Auto,*,Auto" Margin="10 0"
                               AttachedToVisualTree="Visual_OnAttachedToVisualTree">
-                            <avalonia:MaterialIcon Grid.Column="0" Kind="MusicNoteSixteenth" Margin="0,0,10,0" />
+                            <avalonia:MaterialIcon Grid.Column="0" Kind="MusicNoteEighth" Margin="0,0,10,0" />
                             <TextBlock Grid.Column="1" Text="{Binding Name}" FontWeight="SemiBold"
                                        VerticalAlignment="Center" Margin="0 10" />
                             <Button Grid.Column="2" Name="PlayPlaylist" Height="30" Width="30" CornerRadius="30"
