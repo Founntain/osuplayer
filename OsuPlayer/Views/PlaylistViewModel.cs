@@ -122,7 +122,7 @@ public class PlaylistViewModel : BaseViewModel
 
         var indexOf = _materialIcons.IndexOf(icon);
 
-        if (Player.RepeatMode.Value != RepeatMode.Playlist)
+        if (Player.RepeatMode.Value != RepeatMode.Playlist || indexOf >= Playlists?.Count)
         {
             icon.IsVisible = false;
             return;
