@@ -22,7 +22,7 @@ public class PlaylistViewModel : BaseViewModel
     private ObservableCollection<Playlist> _playlists;
     private Playlist? _selectedPlaylist;
 
-    public ObservableCollection<Playlist> Playlists
+    public ObservableCollection<Playlist>? Playlists
     {
         get => _playlists;
         set => this.RaiseAndSetIfChanged(ref _playlists, value);
@@ -64,14 +64,6 @@ public class PlaylistViewModel : BaseViewModel
             .Throttle(TimeSpan.FromMilliseconds(20))
             .Select(BuildFilter);
 
-        Playlists = PlaylistManager.GetAllPlaylists()?.OrderBy(x => x.Name).ToObservableCollection() ?? new ObservableCollection<Playlist>();
-
-        if (Playlists.Count > 0 && SelectedPlaylist == default)
-        {
-            var config = new Config();
-            SelectedPlaylist = Playlists.FirstOrDefault(x => x.Id == config.Container.SelectedPlaylist) ?? Playlists[0];
-        }
-
         Player.PlaylistChanged += (sender, args) =>
         {
             var selection = Player.SelectedPlaylist.Value;
@@ -90,7 +82,20 @@ public class PlaylistViewModel : BaseViewModel
 
         Activator = new ViewModelActivator();
 
-        this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
+        this.WhenActivated(disposables =>
+        {
+            Disposable.Create(() => { }).DisposeWith(disposables);
+
+            if (Playlists != null) return;
+
+            Playlists = PlaylistManager.GetAllPlaylists()?.OrderBy(x => x.Name).ToObservableCollection() ?? new ObservableCollection<Playlist>();
+
+            if (Playlists.Count > 0 && SelectedPlaylist == default)
+            {
+                var config = new Config();
+                SelectedPlaylist = Playlists.FirstOrDefault(x => x.Id == config.Container.SelectedPlaylist) ?? Playlists[0];
+            }
+        });
     }
 
     /// <summary>
