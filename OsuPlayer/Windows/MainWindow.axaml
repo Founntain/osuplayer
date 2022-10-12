@@ -37,7 +37,11 @@
         </Panel>
 
         <ContentControl Name="TopBarPanel" Grid.Row="0" Content="{Binding TopBar}" />
-        <ContentControl Name="MainViewPanel" Grid.Row="1" Content="{Binding MainView}" />
+        <TransitioningContentControl Name="MainViewPanel" Grid.Row="1" Content="{Binding MainView}">
+            <TransitioningContentControl.PageTransition>
+                <CrossFade Duration="0:00:00.150" />
+            </TransitioningContentControl.PageTransition>
+        </TransitioningContentControl>
         <ContentControl Name="PlayerControlPanel" Grid.Row="2" Content="{Binding PlayerControl}" />
     </Grid>
 </Window>
