@@ -36,7 +36,7 @@ public class ApiStatisticsProvider : IStatisticsProvider
 
         GraphValues.Add(new ObservableValue(xpEarned));
 
-        UserDataChanged?.Invoke(this, new PropertyChangedEventArgs("Xp"));
+        await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() => UserDataChanged?.Invoke(this, new PropertyChangedEventArgs("Xp")));
     }
 
     public async Task UpdateSongsPlayed(int beatmapSetId)
@@ -49,6 +49,6 @@ public class ApiStatisticsProvider : IStatisticsProvider
 
         ProfileManager.User = response;
 
-        UserDataChanged?.Invoke(this, new PropertyChangedEventArgs("SongsPlayed"));
+        await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() => UserDataChanged?.Invoke(this, new PropertyChangedEventArgs("SongsPlayed")));
     }
 }
