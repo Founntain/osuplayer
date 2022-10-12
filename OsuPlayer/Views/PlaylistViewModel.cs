@@ -4,6 +4,7 @@ using Avalonia.Threading;
 using DynamicData;
 using Material.Icons.Avalonia;
 using OsuPlayer.Base.ViewModels;
+using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.Extensions;
 using OsuPlayer.IO.Storage.Playlists;
@@ -74,6 +75,20 @@ public class PlaylistViewModel : BaseViewModel
             }
         }, true);
 
+        Player.RepeatMode.BindValueChanged(d =>
+        {
+            if (d.NewValue != RepeatMode.Playlist)
+            {
+                _materialIcons.ForEach(x => x.IsVisible = false);
+                return;
+            }
+
+            for (var i = 0; i < _materialIcons.Count; i++)
+            {
+                _materialIcons[i].IsVisible = Player.SelectedPlaylist.Value?.Id == Playlists?[i].Id;
+            }
+        }, true);
+
         Player.PlaylistChanged += (sender, args) =>
         {
             var selection = Player.SelectedPlaylist.Value;
@@ -115,6 +130,13 @@ public class PlaylistViewModel : BaseViewModel
         _materialIcons.Add(icon);
 
         var indexOf = _materialIcons.IndexOf(icon);
+
+        if (Player.RepeatMode.Value != RepeatMode.Playlist)
+        {
+            icon.IsVisible = false;
+            return;
+        }
+
         icon.IsVisible = Player.SelectedPlaylist.Value?.Id == Playlists?[indexOf].Id;
     }
 
