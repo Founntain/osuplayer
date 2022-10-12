@@ -334,7 +334,9 @@ public sealed class BassEngine : IAudioEngine
         else
         {
             _inChannelTimerUpdate = true;
-            ChannelPosition.Value = Bass.ChannelBytes2Seconds(_fxStream, Bass.ChannelGetPosition(_fxStream));
+            var bytes = Bass.ChannelGetPosition(_fxStream);
+            if (bytes >= 0)
+                ChannelPosition.Value = Bass.ChannelBytes2Seconds(_fxStream, bytes);
             _inChannelTimerUpdate = false;
         }
     }
