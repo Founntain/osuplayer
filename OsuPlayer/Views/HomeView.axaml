@@ -103,13 +103,6 @@
                         <MenuItem Header="Add to blacklist" Click="AddToBlacklist_OnClick"/>
                     </ContextMenu>
                 </ListBox.ContextMenu>
-                <!-- <ListBox.Resources> -->
-                <!-- </ListBox.Resources> -->
-                <!-- <ListBox.Styles> -->
-                <!--     <Style Selector="ListBoxItem"> -->
-                <!--         <Setter Property="ContextMenu" Value="{StaticResource ContextMenu}" /> -->
-                <!--     </Style> -->
-                <!-- </ListBox.Styles> -->
                 <ListBox.DataTemplates>
                     <DataTemplate DataType="dataModels:IMapEntryBase">
                         <Grid ColumnDefinitions="*, 100" RowDefinitions="Auto, Auto">
