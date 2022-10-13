@@ -1,6 +1,7 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using OsuPlayer.IO.Storage.Blacklist;
 using ReactiveUI;
 
 namespace OsuPlayer.Views;
@@ -23,5 +24,11 @@ public partial class SearchView : ReactiveControl<SearchViewModel>
         var list = sender as ListBox;
         var song = list!.SelectedItem as IMapEntryBase;
         await ViewModel.Player.TryPlaySongAsync(song);
+    }
+
+    private void MenuItem_OnClick(object? sender, RoutedEventArgs e)
+    {
+        using var blacklist = new Blacklist();
+        blacklist.Container.Songs.Add(ViewModel.SelectedSong?.Hash);
     }
 }
