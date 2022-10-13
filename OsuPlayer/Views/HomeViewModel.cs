@@ -11,6 +11,7 @@ using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using OsuPlayer.Base.ViewModels;
+using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.IO.Storage.Playlists;
@@ -154,17 +155,5 @@ public class HomeViewModel : BaseViewModel
         {
             return await Task.Run(() => new Bitmap(stream));
         }
-    }
-}
-
-public class AddToPlaylistContextMenuEntry
-{
-    public string Name { get; set; }
-    public Action<string> Action { get; set; }
-
-    public AddToPlaylistContextMenuEntry(string name, Action<string> action)
-    {
-        Name = name;
-        Action = action;
     }
 }
