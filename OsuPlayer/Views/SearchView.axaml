@@ -30,7 +30,7 @@
                             </Style>
                         </MenuItem.Styles>
                     </MenuItem>
-                    <MenuItem Header="Add to blacklist" Click="MenuItem_OnClick" />
+                    <MenuItem Header="Add to blacklist" Click="AddToBlacklist_OnClick" />
                 </ContextMenu>
             </ListBox.ContextMenu>
             <ListBox.DataTemplates>

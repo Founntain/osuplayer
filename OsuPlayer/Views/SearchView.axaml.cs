@@ -26,7 +26,7 @@ public partial class SearchView : ReactiveControl<SearchViewModel>
         await ViewModel.Player.TryPlaySongAsync(song);
     }
 
-    private void MenuItem_OnClick(object? sender, RoutedEventArgs e)
+    private void AddToBlacklist_OnClick(object? sender, RoutedEventArgs e)
     {
         using var blacklist = new Blacklist();
         blacklist.Container.Songs.Add(ViewModel.SelectedSong?.Hash);

@@ -71,7 +71,7 @@ public partial class HomeView : ReactiveControl<HomeViewModel>
         _mainWindow.ViewModel.MainView = _mainWindow.ViewModel.EditUserView;
     }
 
-    private void MenuItem_OnClick(object? sender, RoutedEventArgs e)
+    private void AddToBlacklist_OnClick(object? sender, RoutedEventArgs e)
     {
         using var blacklist = new Blacklist();
         blacklist.Container.Songs.Add(ViewModel.SelectedSong?.Hash);
