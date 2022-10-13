@@ -100,7 +100,7 @@ public class HomeViewModel : BaseViewModel
         Disposable.Create(() => { }).DisposeWith(disposables);
 
         _playlists = (await PlaylistManager.GetAllPlaylistsAsync())?.ToList();
-        PlaylistContextMenuEntries = _playlists?.Select(x => new AddToPlaylistContextMenuEntry(x.Name, Action)).ToList();
+        PlaylistContextMenuEntries = _playlists?.Select(x => new AddToPlaylistContextMenuEntry(x.Name, AddToPlaylist)).ToList();
 
         ProfilePicture = await LoadProfilePicture();
 
@@ -132,7 +132,7 @@ public class HomeViewModel : BaseViewModel
         };
     }
 
-    private async void Action(string name)
+    private async void AddToPlaylist(string name)
     {
         var playlist = _playlists?.FirstOrDefault(x => x.Name == name);
 

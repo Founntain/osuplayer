@@ -95,7 +95,7 @@
                             <MenuItem.Styles>
                                 <Style Selector="MenuItem.SubItems MenuItem">
                                     <Setter Property="Header" Value="{Binding Name}" />
-                                    <Setter Property="Command" Value="{Binding Action}" />
+                                    <Setter Property="Command" Value="{Binding AddToPlaylist}" />
                                     <Setter Property="CommandParameter" Value="{Binding Name}" />
                                 </Style>
                             </MenuItem.Styles>
