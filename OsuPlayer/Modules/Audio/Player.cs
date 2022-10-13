@@ -113,6 +113,11 @@ public class Player : IPlayer, IImportNotifications
             if (d.NewValue == null) return;
 
             ActivePlaylistSongs = SongSourceProvider.GetMapEntriesFromHash(d.NewValue.Songs);
+
+            if (RepeatMode.Value != Data.OsuPlayer.Enums.RepeatMode.Playlist || CurrentSong.Value == null) return;
+
+            if (!ActivePlaylistSongs.Contains(CurrentSong.Value))
+                NextSong(PlayDirection.Forward);
         }, true);
     }
 

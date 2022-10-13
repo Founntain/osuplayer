@@ -32,12 +32,14 @@
                 </ListBox.Styles>
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="storageModels:Playlist">
-                        <Grid ColumnDefinitions="*,Auto" Margin="10 0">
-                            <TextBlock Grid.Column="0" Text="{Binding Name}" FontWeight="SemiBold"
+                        <Grid ColumnDefinitions="Auto,*,Auto" Margin="10 0"
+                              AttachedToVisualTree="PlaylistItemLoaded">
+                            <avalonia:MaterialIcon Grid.Column="0" Kind="MusicNoteEighth" Margin="0,0,10,0" />
+                            <TextBlock Grid.Column="1" Text="{Binding Name}" FontWeight="SemiBold"
                                        VerticalAlignment="Center" Margin="0 10" />
-                            <Button Grid.Column="1" Name="PlayPlaylist" Height="30" Width="30" CornerRadius="30"
+                            <Button Grid.Column="2" Name="PlayPlaylist" Height="30" Width="30" CornerRadius="30"
                                     Click="PlayPlaylist_OnClick" Margin="0" VerticalAlignment="Center"
-                                    IsVisible="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}, AncestorLevel=1}, Path=IsSelected}">
+                                    Background="Transparent">
                                 <avalonia:MaterialIcon Kind="PlayArrow" Height="20" Width="20" />
                             </Button>
                         </Grid>
