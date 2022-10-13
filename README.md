@@ -134,4 +134,6 @@ Thanks for reading and have fun with the player, cheers.
 ## 🖼️ Screenshots
 
 ![](https://7.founntain.dev/xR5yZCvY.png)
-![](https://7.founntain.dev/JZvjRNY4.png)
+![](https://7.founntain.dev/JZvjRNY4.png)  
+### Miniplayer  
+![](https://7.founntain.dev/ThrcgojY.png)

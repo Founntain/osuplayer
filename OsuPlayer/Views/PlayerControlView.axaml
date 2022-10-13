@@ -31,7 +31,6 @@
             <SolidColorBrush Color="{DynamicResource AcrylicSecondaryColor}" />
         </Grid.Background>
 
-
         <Grid Grid.Row="0" ColumnDefinitions="60, *, 60">
 
             <TextBlock x:Name="CurrentSongTimeText" Text="{Binding CurrentSongTime}" VerticalAlignment="Center"
@@ -122,6 +121,11 @@
                         Height="19" Width="19" />
                 </Button>
 
+                <Button Name="OpenMiniPlayer" Width="42" Height="42" CornerRadius="50" Click="OpenMiniPlayer_OnClick"
+                        Background="Transparent" ToolTip.Tip="open miniplayer">
+                    <avalonia:MaterialIcon Kind="ImageSizeSelectSmall" Height="32" Width="32" />
+                </Button>
+                
                 <Button Name="Settings" Width="42" Height="42" CornerRadius="50" Click="Settings_OnClick"
                         Background="Transparent">
                     <avalonia:MaterialIcon Kind="Settings" Height="32" Width="32" />

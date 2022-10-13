@@ -9,7 +9,7 @@
         WindowStartupLocation="CenterScreen" CanResize="True"
         Foreground="White"
         
-        FontFamily="MuseoModerno"
+        FontFamily="Montserrat"
         FontWeight="{DynamicResource DefaultFontWeight}"
         FontSize="16"
 

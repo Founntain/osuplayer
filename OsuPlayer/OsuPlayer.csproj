@@ -110,6 +110,9 @@
         <Compile Update="Views\BlacklistEditorViewModel.cs">
             <DependentUpon>BlacklistEditorView.axaml</DependentUpon>
         </Compile>
+        <Compile Update="Windows\MiniplayerViewModel.cs">
+          <DependentUpon>Miniplayer.axaml</DependentUpon>
+        </Compile>
     </ItemGroup>
     <ItemGroup>
       <UpToDateCheckInput Remove="Resources\profiles\cesan.jpg" />
