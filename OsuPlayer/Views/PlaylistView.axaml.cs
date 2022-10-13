@@ -1,4 +1,5 @@
-﻿using Avalonia;
+﻿using System.ComponentModel;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
@@ -6,6 +7,7 @@ using Avalonia.VisualTree;
 using Material.Icons.Avalonia;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
+using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Windows;
 using ReactiveUI;
 
@@ -72,5 +74,14 @@ public partial class PlaylistView : ReactiveControl<PlaylistViewModel>
         if (icon == null) return;
 
         ViewModel.AddIcon(icon);
+    }
+
+    private async void MenuItem_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (ViewModel.SelectedPlaylist == null || ViewModel.SelectedSong == null) return;
+
+        await PlaylistManager.RemoveSongFromPlaylist(ViewModel.SelectedPlaylist, ViewModel.SelectedSong);
+
+        ViewModel.Player.TriggerPlaylistChanged(new PropertyChangedEventArgs(ViewModel.SelectedPlaylist.Name));
     }
 }

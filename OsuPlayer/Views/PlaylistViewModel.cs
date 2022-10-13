@@ -52,6 +52,7 @@ public class PlaylistViewModel : BaseViewModel
     }
 
     public ReadOnlyObservableCollection<IMapEntryBase>? FilteredSongEntries => _filteredSongEntries;
+    public IMapEntryBase? SelectedSong { get; set; }
 
     public string FilterText
     {
@@ -91,9 +92,8 @@ public class PlaylistViewModel : BaseViewModel
 
             this.RaisePropertyChanged(nameof(Playlists));
 
-            SelectedPlaylist = Playlists.First(x => x.Id == selection!.Id);
-
-            this.RaisePropertyChanged(nameof(SelectedPlaylist));
+            if (SelectedPlaylist == null)
+                SelectedPlaylist = Playlists.First(x => x.Id == selection!.Id);
         };
 
         Activator = new ViewModelActivator();
