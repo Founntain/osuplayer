@@ -16,7 +16,7 @@
 osu!player is a music player for *osu!* with the focus of playing your osu! songs **without having to start osu!**.
 This is the *official* **osu!player** repository and is mainly developed by [@Founntain](https://github.com/Founntain), with help of [@Cesan](https://github.com/Cesan).  
 
-If you want to contribute, feel free to fork this repository, read the [contributing information]([https://github.com/Founntain/osuplayer.git](https://github.com/osu-player/osuplayer#-contributing-to-the-project) and head to the [official osu!player discord](https://discord.gg/RJQSc5B) (not mandetory, but helpful). There you can add all valuable ideas and discuss other stuff regarding development.
+If you want to contribute, feel free to fork this repository, read the [contributing information](https://github.com/osu-player/osuplayer#-contributing-to-the-project) and head to the [official osu!player discord](https://discord.gg/RJQSc5B) (not mandetory, but helpful). There you can add all valuable ideas and discuss other stuff regarding development.
 
 ## ☝️ Requirements
 
