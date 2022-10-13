@@ -4,41 +4,39 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
-using Newtonsoft.Json.Linq;
 using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.Extensions;
 using OsuPlayer.Modules.Audio.Interfaces;
-using ReactiveUI;
 
 namespace OsuPlayer.Windows;
 
 public partial class Miniplayer : ReactiveWindow<MiniplayerViewModel>
 {
     private readonly MainWindow _mainWindow;
-    
+
     public Miniplayer()
     {
         InitializeComponent();
 
         LoadSettings();
-        
+
 #if DEBUG
         this.AttachDevTools();
 #endif
     }
-    
+
     public Miniplayer(MainWindow mainWindow, IPlayer player, IAudioEngine engine)
     {
         InitializeComponent();
 
-        this._mainWindow = mainWindow;
-        
+        _mainWindow = mainWindow;
+
         DataContext = new MiniplayerViewModel(player, engine);
-        
+
         LoadSettings();
-        
+
 #if DEBUG
         this.AttachDevTools();
 #endif
@@ -55,7 +53,7 @@ public partial class Miniplayer : ReactiveWindow<MiniplayerViewModel>
     {
         AvaloniaXamlLoader.Load(this);
     }
-    
+
     private void SongControl(object? sender, RoutedEventArgs e)
     {
         switch ((sender as Control)?.Name)
@@ -77,7 +75,7 @@ public partial class Miniplayer : ReactiveWindow<MiniplayerViewModel>
                 break;
         }
     }
-    
+
     private void RepeatContextMenu_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
         ViewModel.Player.SelectedPlaylist.Value = (Playlist) (sender as ContextMenu)?.SelectedItem;

@@ -31,7 +31,7 @@
         Topmost="True"
 
         Icon="avares://OsuPlayer/Resources/x96.ico"
-        
+
         Closed="Miniplayer_OnClosed">
 
     <Window.Resources>
@@ -46,8 +46,8 @@
     </Design.DataContext>
 
     <Grid RowDefinitions="35, Auto, Auto, *">
-        <Border Grid.Row="0" Grid.RowSpan="4" >
-            <Image Source="{Binding CurrentSongImage}" Stretch="UniformToFill" />    
+        <Border Grid.Row="0" Grid.RowSpan="4">
+            <Image Source="{Binding CurrentSongImage}" Stretch="UniformToFill" />
         </Border>
 
         <Border Grid.Row="0" Background="{DynamicResource AcrylicBaseColor}" Grid.RowSpan="4" />

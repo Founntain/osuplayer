@@ -12,7 +12,7 @@ namespace OsuPlayer.Windows;
 
 public class MiniplayerViewModel : BaseWindowViewModel
 {
-   private readonly Bindable<bool> _isPlaying = new();
+    private readonly Bindable<bool> _isPlaying = new();
     private readonly Bindable<RepeatMode> _isRepeating = new();
     private readonly Bindable<bool> _isShuffle = new();
     private readonly Bindable<double> _songLength = new();
