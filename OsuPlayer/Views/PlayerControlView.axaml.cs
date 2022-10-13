@@ -9,14 +9,16 @@ using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.Extensions;
 using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.IO.Storage.Playlists;
+using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Windows;
 using ReactiveUI;
+using Splat;
 
 namespace OsuPlayer.Views;
 
 public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
 {
-    private MainWindow _mainWindow;
+    public MainWindow _mainWindow;
 
     private Slider ProgressSlider => this.FindControl<Slider>("SongProgressSlider");
     private Button RepeatButton => this.FindControl<Button>("Repeat");
@@ -141,5 +143,17 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
     private void RepeatContextMenu_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
         ViewModel.Player.SelectedPlaylist.Value = (Playlist) (sender as ContextMenu)?.SelectedItem;
+    }
+
+    private void OpenMiniPlayer_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (_mainWindow.Miniplayer != null)
+            return;
+
+        _mainWindow.Miniplayer = new Miniplayer(_mainWindow, ViewModel.Player, Locator.Current.GetRequiredService<IAudioEngine>());
+
+        _mainWindow.Miniplayer.Show();
+
+        _mainWindow.WindowState = WindowState.Minimized;
     }
 }

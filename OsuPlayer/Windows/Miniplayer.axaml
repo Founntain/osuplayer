@@ -1,0 +1,164 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        xmlns:cv="clr-namespace:OsuPlayer.Extensions.ValueConverters;assembly=OsuPlayer.Extensions"
+        xmlns:views="clr-namespace:OsuPlayer.Windows"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="OsuPlayer.Windows.Miniplayer"
+        Title="osu!player miniplayer"
+
+        MinWidth="285"
+        Width="480"
+        MaxWidth="500"
+        MinHeight="175"
+        Height="175"
+        MaxHeight="200"
+
+        WindowStartupLocation="CenterScreen"
+        Foreground="White"
+
+        FontFamily="Montserrat"
+        FontWeight="{DynamicResource DefaultFontWeight}"
+        FontSize="16"
+
+        Background="Transparent"
+        TransparencyLevelHint="None"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="PreferSystemChrome"
+
+        Topmost="True"
+
+        Icon="avares://OsuPlayer/Resources/x96.ico"
+        
+        Closed="Miniplayer_OnClosed">
+
+    <Window.Resources>
+        <cv:PlayPauseConverter x:Key="PlayPauseConverter" />
+        <cv:ShuffleConverter x:Key="ShuffleConverter" />
+        <cv:RepeatConverter x:Key="RepeatConverter" />
+        <cv:VolumeConverter x:Key="VolumeConverter" />
+    </Window.Resources>
+
+    <Design.DataContext>
+        <views:MiniplayerViewModel />
+    </Design.DataContext>
+
+    <Grid RowDefinitions="35, Auto, Auto, *">
+        <Border Grid.Row="0" Grid.RowSpan="4" >
+            <Image Source="{Binding CurrentSongImage}" Stretch="UniformToFill" />    
+        </Border>
+
+        <Border Grid.Row="0" Background="{DynamicResource AcrylicBaseColor}" Grid.RowSpan="4" />
+
+        <Border Grid.Row="0" Background="Transparent" PointerPressed="TopBarGrid_PointerPressed" />
+
+        <StackPanel Grid.Row="1" HorizontalAlignment="Stretch">
+            <TextBlock Margin="10 0" Text="{Binding TitleText}" HorizontalAlignment="Center" FontSize="18"
+                       FontWeight="{DynamicResource BiggerFontWeight}" TextTrimming="CharacterEllipsis" />
+            <TextBlock Margin="10 0" Text="{Binding ArtistText}" FontWeight="{DynamicResource SmallerFontWeight}"
+                       HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" />
+        </StackPanel>
+
+        <Grid Grid.Row="2" ColumnDefinitions="60, *, 60">
+
+            <TextBlock x:Name="CurrentSongTimeText" Text="{Binding CurrentSongTime}" VerticalAlignment="Center"
+                       Margin="8 0" Grid.Column="0" FontSize="12" HorizontalAlignment="Center" />
+
+            <Slider Name="SongProgressSlider" VerticalAlignment="Center"
+                    Value="{Binding SongTime}"
+                    Maximum="{Binding SongLength}"
+                    Margin="4 0 " UseLayoutRounding="False" Grid.Column="1" />
+
+            <TextBlock Name="CurrentSongTimeLeft" Text="{Binding CurrentSongLength}" VerticalAlignment="Center"
+                       Grid.Column="2" Margin="8 0" FontSize="12" HorizontalAlignment="Center" />
+
+        </Grid>
+
+        <Border Background="{DynamicResource AcrylicBaseColor}" Grid.Row="3" />
+
+        <DockPanel Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Panel>
+                <Button Name="PlaybackSpeed" Width="38" Height="38" CornerRadius="50"
+                        Background="Transparent">
+                    <avalonia:MaterialIcon Kind="PlaySpeed" Height="19" Width="19" />
+                    <Button.Flyout>
+                        <Flyout>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Name="PlaybackSpeedFly" Width="38" Height="38" CornerRadius="50"
+                                        Background="Transparent" Click="PlaybackSpeed_OnClick">
+                                    <avalonia:MaterialIcon Kind="PlaySpeed" Height="19" Width="19" />
+                                </Button>
+                                <Slider VerticalAlignment="Center" HorizontalAlignment="Center" Minimum="-0.25"
+                                        Maximum="0.25"
+                                        Value="{Binding PlaybackSpeed}"
+                                        Orientation="Horizontal" Width="100" Margin="6" />
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+            </Panel>
+
+            <Button Name="Repeat" Width="38" Height="38" CornerRadius="50" Click="SongControl"
+                    Background="Transparent">
+                <Button.ContextMenu>
+                    <ContextMenu IsVisible="{Binding IsRepeating, Converter={StaticResource RepeatConverter}}"
+                                 Items="{Binding Playlists}" PointerReleased="RepeatContextMenu_OnPointerReleased" />
+                </Button.ContextMenu>
+                <Panel>
+                    <avalonia:MaterialIcon Kind="{Binding IsRepeating, Converter={StaticResource RepeatConverter}}"
+                                           Height="19" Width="19" />
+                    <ToolTip IsVisible="{Binding IsRepeating, Converter={StaticResource RepeatConverter}}">
+                        <ToolTip.Tip>
+                            <TextBlock Text="{Binding ActivePlaylist}" />
+                        </ToolTip.Tip>
+                    </ToolTip>
+                </Panel>
+            </Button>
+
+            <Button Name="Previous" Width="38" Height="38" CornerRadius="50" Click="SongControl"
+                    Background="Transparent">
+                <avalonia:MaterialIcon Kind="SkipBackward" Height="19" Width="19" />
+            </Button>
+
+            <Button Name="PlayPause" Width="50" Height="50" CornerRadius="50" Click="SongControl">
+                <avalonia:MaterialIcon Kind="{Binding IsPlaying, Converter={StaticResource PlayPauseConverter}}"
+                                       Height="40" Width="40" />
+            </Button>
+
+            <Button Name="Next" Width="38" Height="38" CornerRadius="50" Click="SongControl"
+                    Background="Transparent">
+                <avalonia:MaterialIcon Kind="SkipForward" Height="19" Width="19" />
+            </Button>
+
+            <Button Name="Shuffle" Width="38" Height="38" CornerRadius="50" Click="SongControl"
+                    Background="Transparent">
+                <avalonia:MaterialIcon Kind="{Binding IsShuffle, Converter={StaticResource ShuffleConverter}}"
+                                       Height="19" Width="19" />
+            </Button>
+
+            <Panel HorizontalAlignment="Right">
+                <Button Name="Volume" Width="38" Height="38" CornerRadius="50" Background="Transparent">
+                    <avalonia:MaterialIcon Kind="{Binding Volume, Converter={StaticResource VolumeConverter}}"
+                                           Height="19" Width="19" />
+                    <Button.Flyout>
+                        <Flyout>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Name="VolumeFly" Width="38" Height="38" CornerRadius="50"
+                                        Background="Transparent" Click="Volume_OnClick">
+                                    <avalonia:MaterialIcon
+                                        Kind="{Binding Volume, Converter={StaticResource VolumeConverter}}"
+                                        Height="19" Width="19" />
+                                </Button>
+                                <Slider VerticalAlignment="Center" HorizontalAlignment="Center"
+                                        Minimum="0" Maximum="100" Value="{Binding Volume}" Orientation="Horizontal"
+                                        Width="100" Margin="6" />
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+            </Panel>
+        </DockPanel>
+    </Grid>
+</Window>
