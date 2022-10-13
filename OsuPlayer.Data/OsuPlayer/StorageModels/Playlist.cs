@@ -21,8 +21,7 @@ public class Playlist
 
     private bool Equals(Playlist other)
     {
-        return Id.Equals(other.Id) && Name == other.Name && CreationTime.Equals(other.CreationTime) &&
-               Songs.SequenceEqual(other.Songs);
+        return Id.Equals(other.Id) && Name == other.Name && CreationTime.Equals(other.CreationTime);
     }
 
     public override bool Equals(object? obj)
