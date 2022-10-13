@@ -1,6 +1,8 @@
+using System.ComponentModel;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using DynamicData;
@@ -9,7 +11,9 @@ using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using OsuPlayer.Base.ViewModels;
+using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.IO.Importer;
+using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Modules.Services;
 using ReactiveUI;
@@ -25,8 +29,11 @@ public class HomeViewModel : BaseViewModel
     private readonly ReadOnlyObservableCollection<IMapEntryBase>? _sortedSongEntries;
     private readonly BindableList<ObservableValue> _graphValues = new();
     private Bitmap? _profilePicture;
+    private List<Playlist>? _playlists;
+    private List<AddToPlaylistContextMenuEntry> _playlistContextMenuEntries;
 
     public ReadOnlyObservableCollection<IMapEntryBase>? SortedSongEntries => _sortedSongEntries;
+    public IMapEntryBase? SelectedSong { get; set; }
     public ObservableCollection<ISeries> Series { get; set; }
 
     public Axis[] Axes { get; set; } =
@@ -51,12 +58,18 @@ public class HomeViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _profilePicture, value);
     }
 
+    public List<AddToPlaylistContextMenuEntry>? PlaylistContextMenuEntries
+    {
+        get => _playlistContextMenuEntries;
+        set => this.RaiseAndSetIfChanged(ref _playlistContextMenuEntries, value);
+    }
+
     public HomeViewModel(IPlayer player, IStatisticsProvider? statisticsProvider)
     {
         Player = player;
         var statisticsProvider1 = statisticsProvider;
 
-        _songsLoading.BindTo(((IImportNotifications)Player).SongsLoading);
+        _songsLoading.BindTo(((IImportNotifications) Player).SongsLoading);
         _songsLoading.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongsLoading)));
 
         if (statisticsProvider1 != null)
@@ -84,6 +97,9 @@ public class HomeViewModel : BaseViewModel
     private async void Block(CompositeDisposable disposables)
     {
         Disposable.Create(() => { }).DisposeWith(disposables);
+
+        _playlists = (await PlaylistManager.GetAllPlaylistsAsync())?.ToList();
+        PlaylistContextMenuEntries = _playlists?.Select(x => new AddToPlaylistContextMenuEntry(x.Name, Action)).ToList();
 
         ProfilePicture = await LoadProfilePicture();
 
@@ -115,6 +131,17 @@ public class HomeViewModel : BaseViewModel
         };
     }
 
+    private async void Action(string name)
+    {
+        var playlist = _playlists?.FirstOrDefault(x => x.Name == name);
+
+        if (playlist == null || SelectedSong == null) return;
+
+        await PlaylistManager.AddSongToPlaylistAsync(playlist, SelectedSong);
+
+        Player.TriggerPlaylistChanged(new PropertyChangedEventArgs(name));
+    }
+
     internal async Task<Bitmap?> LoadProfilePicture()
     {
         if (CurrentUser == default) return default;
@@ -127,5 +154,17 @@ public class HomeViewModel : BaseViewModel
         {
             return await Task.Run(() => new Bitmap(stream));
         }
+    }
+}
+
+public class AddToPlaylistContextMenuEntry
+{
+    public string Name { get; set; }
+    public Action<string> Action { get; set; }
+
+    public AddToPlaylistContextMenuEntry(string name, Action<string> action)
+    {
+        Name = name;
+        Action = action;
     }
 }

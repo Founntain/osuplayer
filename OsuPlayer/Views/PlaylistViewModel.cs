@@ -104,7 +104,7 @@ public class PlaylistViewModel : BaseViewModel
 
             _materialIcons.Clear();
 
-            if (Playlists != null) return;
+            //if (Playlists != null) return;
 
             Playlists = PlaylistManager.GetAllPlaylists()?.OrderBy(x => x.Name).ToObservableCollection() ?? new ObservableCollection<Playlist>();
 

@@ -6,7 +6,7 @@ namespace OsuPlayer.Data.OsuPlayer.StorageModels;
 
 public class BlacklistContainer : IStorableContainer
 {
-    public BindingList<string> Songs { get; set; } = new();
+    public HashSet<string> Songs { get; set; } = new();
 
     public IStorableContainer Init()
     {

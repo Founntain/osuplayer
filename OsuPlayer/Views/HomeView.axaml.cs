@@ -2,6 +2,7 @@
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
+using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
 using ReactiveUI;
@@ -68,5 +69,11 @@ public partial class HomeView : ReactiveControl<HomeViewModel>
     private void EditBtn_OnClick(object? sender, RoutedEventArgs e)
     {
         _mainWindow.ViewModel.MainView = _mainWindow.ViewModel.EditUserView;
+    }
+
+    private void MenuItem_OnClick(object? sender, RoutedEventArgs e)
+    {
+        using var blacklist = new Blacklist();
+        blacklist.Container.Songs.Add(ViewModel.SelectedSong?.Hash);
     }
 }
