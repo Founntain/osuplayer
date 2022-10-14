@@ -16,16 +16,34 @@
         <!-- <AutoCompleteBox Margin="0 2" Grid.Row="0" Text="{Binding FilterText}" Items="{Binding $parent[Window].DataContext.FilteredSongEntries}"/> -->
 
         <ListBox Grid.Row="1" Items="{Binding FilteredSongEntries}" Background="{DynamicResource AcrylicBaseColor}"
-                 DoubleTapped="InputElement_OnDoubleTapped">
+                 DoubleTapped="InputElement_OnDoubleTapped" SelectedItem="{Binding SelectedSong}">
+            <ListBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Add to playlist"
+                              Items="{Binding PlaylistContextMenuEntries}"
+                              Classes="SubItems">
+                        <MenuItem.Styles>
+                            <Style Selector="MenuItem.SubItems MenuItem">
+                                <Setter Property="Header" Value="{Binding Name}" />
+                                <Setter Property="Command" Value="{Binding Action}" />
+                                <Setter Property="CommandParameter" Value="{Binding Name}" />
+                            </Style>
+                        </MenuItem.Styles>
+                    </MenuItem>
+                    <MenuItem Header="Add to blacklist" Click="AddToBlacklist_OnClick" />
+                </ContextMenu>
+            </ListBox.ContextMenu>
             <ListBox.DataTemplates>
                 <DataTemplate DataType="dataModels:IMapEntryBase">
                     <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto">
                         <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding TitleString}" FontSize="20"
                                    FontWeight="SemiBold" />
                         <TextBlock Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Text="{Binding TotalTimeString}"
-                                   FontSize="20" VerticalAlignment="Center" FontWeight="{DynamicResource SmallerFontWeight}" />
+                                   FontSize="20" VerticalAlignment="Center"
+                                   FontWeight="{DynamicResource SmallerFontWeight}" />
                         <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding ArtistString}"
-                                   FontSize="14" Foreground="#FFCCCCCC" FontWeight="{DynamicResource SmallerFontWeight}" />
+                                   FontSize="14" Foreground="#FFCCCCCC"
+                                   FontWeight="{DynamicResource SmallerFontWeight}" />
                     </Grid>
                 </DataTemplate>
             </ListBox.DataTemplates>

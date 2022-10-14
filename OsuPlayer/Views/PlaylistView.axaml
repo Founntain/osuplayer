@@ -58,8 +58,13 @@
 
         <Grid Column="1" Margin="10" RowDefinitions="Auto, *" Background="{DynamicResource AcrylicBaseColor}">
             <TextBox Grid.Row="0" Margin="10" Text="{Binding FilterText}" Watermark="type to search..." />
-            <ListBox Grid.Row="1" Background="Transparent"
-                     Items="{Binding FilteredSongEntries}">
+            <ListBox Grid.Row="1" Background="Transparent" Items="{Binding FilteredSongEntries}"
+                     SelectedItem="{Binding SelectedSong}">
+                <ListBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Remove from playlist" Click="MenuItem_OnClick" />
+                    </ContextMenu>
+                </ListBox.ContextMenu>
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="dataModels:IMapEntryBase">
                         <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto" DoubleTapped="PlaySong"

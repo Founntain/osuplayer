@@ -1,8 +1,12 @@
+using System.ComponentModel;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Avalonia.Threading;
 using DynamicData;
 using OsuPlayer.Base.ViewModels;
+using OsuPlayer.Data.OsuPlayer.Classes;
+using OsuPlayer.Data.OsuPlayer.StorageModels;
+using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules.Audio.Interfaces;
 using ReactiveUI;
 
@@ -13,6 +17,8 @@ public class SearchViewModel : BaseViewModel
     public readonly IPlayer Player;
     private readonly ReadOnlyObservableCollection<IMapEntryBase>? _filteredSongEntries;
     private string _filterText = string.Empty;
+    private List<AddToPlaylistContextMenuEntry> _playlistContextMenuEntries;
+    private List<Playlist>? _playlists;
 
     public string FilterText
     {
@@ -21,6 +27,13 @@ public class SearchViewModel : BaseViewModel
     }
 
     public ReadOnlyObservableCollection<IMapEntryBase>? FilteredSongEntries => _filteredSongEntries;
+    public IMapEntryBase? SelectedSong { get; set; }
+
+    public List<AddToPlaylistContextMenuEntry>? PlaylistContextMenuEntries
+    {
+        get => _playlistContextMenuEntries;
+        set => this.RaiseAndSetIfChanged(ref _playlistContextMenuEntries, value);
+    }
 
     public SearchViewModel(IPlayer player)
     {
@@ -37,7 +50,26 @@ public class SearchViewModel : BaseViewModel
 
         Activator = new ViewModelActivator();
 
-        this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
+        this.WhenActivated(Block);
+    }
+
+    private async void Block(CompositeDisposable disposables)
+    {
+        Disposable.Create(() => { }).DisposeWith(disposables);
+
+        _playlists = (await PlaylistManager.GetAllPlaylistsAsync())?.ToList();
+        PlaylistContextMenuEntries = _playlists?.Select(x => new AddToPlaylistContextMenuEntry(x.Name, AddToPlaylist)).ToList();
+    }
+
+    private async void AddToPlaylist(string name)
+    {
+        var playlist = _playlists?.FirstOrDefault(x => x.Name == name);
+
+        if (playlist == null || SelectedSong == null) return;
+
+        await PlaylistManager.AddSongToPlaylistAsync(playlist, SelectedSong);
+
+        Player.TriggerPlaylistChanged(new PropertyChangedEventArgs(name));
     }
 
     /// <summary>
