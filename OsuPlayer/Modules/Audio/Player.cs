@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Avalonia;
+using Avalonia.Platform;
 using OsuPlayer.Data.API.Enums;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
@@ -11,9 +13,7 @@ using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules.Audio.Engine;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Modules.Services;
-using OsuPlayer.Modules.ShuffleImpl;
 using OsuPlayer.Network.Discord;
-using Splat;
 
 namespace OsuPlayer.Modules.Audio;
 
@@ -28,6 +28,7 @@ public class Player : IPlayer, IImportNotifications
     private readonly DiscordClient? _discordClient;
     private readonly IShuffleServiceProvider? _shuffleProvider;
     private readonly IStatisticsProvider? _statisticsProvider;
+    private readonly WindowsMediaTransportControls? _wmtc;
 
     private bool _isMuted;
     private double _oldVolume;
@@ -62,6 +63,11 @@ public class Player : IPlayer, IImportNotifications
     public Player(IAudioEngine audioEngine, ISongSourceProvider songSourceProvider, IShuffleServiceProvider? shuffleProvider = null, IStatisticsProvider? statisticsProvider = null, ISortProvider? sortProvider = null)
     {
         _audioEngine = audioEngine;
+
+        var runtimePlatform = AvaloniaLocator.Current.GetRequiredService<IRuntimePlatform>();
+
+        if (runtimePlatform.GetRuntimeInfo().OperatingSystem == OperatingSystemType.WinNT)
+            _wmtc = new WindowsMediaTransportControls(this);
 
         _audioEngine.ChannelReachedEnd = () => NextSong(PlayDirection.Forward);
 
@@ -217,12 +223,16 @@ public class Player : IPlayer, IImportNotifications
     {
         _audioEngine.Play();
         _currentSongTimer.Start();
+
+        _wmtc?.UpdatePlayingStatus(true);
     }
 
     public void Pause()
     {
         _audioEngine.Pause();
         _currentSongTimer.Stop();
+
+        _wmtc?.UpdatePlayingStatus(false);
     }
 
     public void Stop() => _audioEngine.Stop();
@@ -366,11 +376,15 @@ public class Player : IPlayer, IImportNotifications
             Debug.WriteLine($"Could not update XP error => {e}");
         }
 
+        CurrentSongImage.Value = await findBackgroundTask;
+
         try
         {
             _audioEngine.OpenFile(fullMapEntry.FullPath!);
-            //_bassEngine.SetAllEq(Core.Instance.Config.Eq);
             _audioEngine.Play();
+
+            _wmtc?.UpdatePlayingStatus(true);
+            _wmtc?.SetMetadata(fullMapEntry);
 
             _currentSongTimer.Restart();
         }
@@ -393,7 +407,5 @@ public class Player : IPlayer, IImportNotifications
         {
             Debug.WriteLine($"Could not update Songs Played error => {e}");
         }
-
-        CurrentSongImage.Value = await findBackgroundTask;
     }
 }
