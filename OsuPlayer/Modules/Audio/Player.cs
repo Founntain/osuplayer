@@ -28,7 +28,7 @@ public class Player : IPlayer, IImportNotifications
     private readonly DiscordClient? _discordClient;
     private readonly IShuffleServiceProvider? _shuffleProvider;
     private readonly IStatisticsProvider? _statisticsProvider;
-    private readonly WindowsMediaTransportControls? _wmtc;
+    private readonly WindowsMediaTransportControls? _winMediaControls;
 
     private bool _isMuted;
     private double _oldVolume;
@@ -67,7 +67,7 @@ public class Player : IPlayer, IImportNotifications
         var runtimePlatform = AvaloniaLocator.Current.GetRequiredService<IRuntimePlatform>();
 
         if (runtimePlatform.GetRuntimeInfo().OperatingSystem == OperatingSystemType.WinNT)
-            _wmtc = new WindowsMediaTransportControls(this);
+            _winMediaControls = new WindowsMediaTransportControls(this);
 
         _audioEngine.ChannelReachedEnd = () => NextSong(PlayDirection.Forward);
 
@@ -224,7 +224,7 @@ public class Player : IPlayer, IImportNotifications
         _audioEngine.Play();
         _currentSongTimer.Start();
 
-        _wmtc?.UpdatePlayingStatus(true);
+        _winMediaControls?.UpdatePlayingStatus(true);
     }
 
     public void Pause()
@@ -232,7 +232,7 @@ public class Player : IPlayer, IImportNotifications
         _audioEngine.Pause();
         _currentSongTimer.Stop();
 
-        _wmtc?.UpdatePlayingStatus(false);
+        _winMediaControls?.UpdatePlayingStatus(false);
     }
 
     public void Stop() => _audioEngine.Stop();
@@ -383,8 +383,8 @@ public class Player : IPlayer, IImportNotifications
             _audioEngine.OpenFile(fullMapEntry.FullPath!);
             _audioEngine.Play();
 
-            _wmtc?.UpdatePlayingStatus(true);
-            _wmtc?.SetMetadata(fullMapEntry);
+            _winMediaControls?.UpdatePlayingStatus(true);
+            _winMediaControls?.SetMetadata(fullMapEntry);
 
             _currentSongTimer.Restart();
         }
