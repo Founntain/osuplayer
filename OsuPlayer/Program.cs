@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Avalonia;
+using Avalonia.Platform;
 using Avalonia.ReactiveUI;
 using OsuPlayer.Extensions;
 using OsuPlayer.IO.Importer;
@@ -22,10 +23,11 @@ internal static class Program
     {
         try
         {
-            Register(Locator.CurrentMutable, Locator.Current);
+            var builder = BuildAvaloniaApp();
 
-            BuildAvaloniaApp()
-                .StartWithClassicDesktopLifetime(args);
+            Register(Locator.CurrentMutable, Locator.Current, builder.RuntimePlatform);
+
+            builder.StartWithClassicDesktopLifetime(args);
         }
         catch (Exception ex) //If we have an unhandled exception we catch it here
         {
@@ -65,7 +67,7 @@ internal static class Program
             });
     }
 
-    private static void Register(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver)
+    private static void Register(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver, IRuntimePlatform platform)
     {
         services.RegisterLazySingleton<IAudioEngine>(() => new BassEngine());
 
