@@ -6,6 +6,7 @@
         <!--Avalonia doesen't support TrimMode=link currently,but we are working on that https://github.com/AvaloniaUI/Avalonia/issues/6892 -->
         <TrimMode>copyused</TrimMode>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+        <EnableWindowsTargeting>true</EnableWindowsTargeting>
         <Version Condition="'$(RELEASE_VERSION)' != ''">$(RELEASE_VERSION)</Version>
         <VersionPrefix Condition="'$(RELEASE_VERSION)' == ''">$([System.DateTime]::UtcNow.ToString(`yyyy.Mdd`))</VersionPrefix>
         <ApplicationIcon>Resources\x96.ico</ApplicationIcon>
