@@ -67,7 +67,16 @@ public class Player : IPlayer, IImportNotifications
         var runtimePlatform = AvaloniaLocator.Current.GetRequiredService<IRuntimePlatform>();
 
         if (runtimePlatform.GetRuntimeInfo().OperatingSystem == OperatingSystemType.WinNT)
-            _winMediaControls = new WindowsMediaTransportControls(this);
+        {
+            try
+            {
+                _winMediaControls = new WindowsMediaTransportControls(this);
+            }
+            catch
+            {
+                _winMediaControls = null;
+            }
+        }
 
         _audioEngine.ChannelReachedEnd = () => NextSong(PlayDirection.Forward);
 
