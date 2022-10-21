@@ -10,17 +10,17 @@ namespace OsuPlayer.Modules.Audio;
 public class WindowsMediaTransportControls
 {
     private readonly IPlayer _player;
-    private readonly MediaPlayer _mediaPlayer;
     private readonly SystemMediaTransportControls _mediaTransportControls;
 
     public WindowsMediaTransportControls(IPlayer player)
     {
         _player = player;
 
-        _mediaPlayer = new MediaPlayer();
-        _mediaTransportControls = _mediaPlayer.SystemMediaTransportControls;
-        _mediaPlayer.CommandManager.IsEnabled = false;
-        _mediaPlayer.Play();
+        var mediaPlayer = new MediaPlayer();
+
+        _mediaTransportControls = mediaPlayer.SystemMediaTransportControls;
+        mediaPlayer.CommandManager.IsEnabled = false;
+        mediaPlayer.Play();
 
         _mediaTransportControls.IsEnabled = true;
         _mediaTransportControls.IsPlayEnabled = true;
@@ -63,6 +63,7 @@ public class WindowsMediaTransportControls
     public async void SetMetadata(IMapEntry fullMapEntry)
     {
         var metadata = _mediaTransportControls.DisplayUpdater;
+
         metadata.Type = MediaPlaybackType.Music;
         metadata.MusicProperties.Title = fullMapEntry.Title;
         metadata.MusicProperties.Artist = fullMapEntry.Artist;
