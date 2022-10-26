@@ -10,10 +10,10 @@ using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Modules.Services;
 using OsuPlayer.Modules.ShuffleImpl;
 using OsuPlayer.Network;
+using OsuPlayer.Network.Data;
 using OsuPlayer.Styles;
 using OsuPlayer.Windows;
 using ReactiveUI;
-using Splat;
 
 namespace OsuPlayer.Views;
 
@@ -23,7 +23,7 @@ public class SettingsViewModel : BaseViewModel
     private readonly Bindable<bool> _playlistEnableOnPlay = new();
     private readonly Bindable<SortingMode> _sortingMode = new();
     public readonly IPlayer Player;
-    private IShuffleServiceProvider? _shuffleServiceProvider;
+    private List<OsuPlayerContributer> _contributers;
     private string _osuLocation;
     private string _patchnotes;
     private KnownColors _selectedAccentColor;
@@ -31,12 +31,19 @@ public class SettingsViewModel : BaseViewModel
     private string? _selectedFont;
     private FontWeights _selectedFontWeight;
     private ReleaseChannels _selectedReleaseChannel;
+    private IShuffleImpl? _selectedShuffleAlgorithm;
     private StartupSong _selectedStartupSong;
     private WindowTransparencyLevel _selectedTransparencyLevel;
-    private IShuffleImpl? _selectedShuffleAlgorithm;
     private string _settingsSearchQ;
+    private IShuffleServiceProvider? _shuffleServiceProvider;
 
     public MainWindow? MainWindow;
+
+    public List<OsuPlayerContributer> Contributers
+    {
+        get => _contributers;
+        set => this.RaiseAndSetIfChanged(ref _contributers, value);
+    }
 
     public string Patchnotes
     {
@@ -323,10 +330,12 @@ public class SettingsViewModel : BaseViewModel
     {
         Disposable.Create(() => { }).DisposeWith(disposables);
 
-        var latestPatchNotes = await GitHubUpdater.GetLatestPatchNotes(_selectedReleaseChannel);
+        var latestPatchNotes = await GitHub.GetLatestPatchNotes(_selectedReleaseChannel);
 
         if (string.IsNullOrWhiteSpace(latestPatchNotes)) return;
 
         Patchnotes = latestPatchNotes;
+
+        Contributers = await GitHub.GetContributers() ?? new ();
     }
 }

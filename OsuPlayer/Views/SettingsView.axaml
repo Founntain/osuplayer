@@ -8,6 +8,7 @@
              xmlns:avalonia="clr-namespace:Markdown.Avalonia;assembly=Markdown.Avalonia"
              xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:ctxt="clr-namespace:ColorTextBlock.Avalonia;assembly=ColorTextBlock.Avalonia"
+             xmlns:data="clr-namespace:OsuPlayer.Network.Data;assembly=OsuPlayer.Network"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.SettingsView"
              Initialized="SettingsView_OnInitialized">
@@ -195,6 +196,7 @@
                         </avalonia:MarkdownScrollViewer>
                     </StackPanel>
                 </Grid>
+                
                 <Grid RowDefinitions="Auto" Margin="10" Name="HelpAndFeedbackSettings"
                       Background="{DynamicResource AcrylicBaseColor}">
 
@@ -207,6 +209,38 @@
                                 HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
                         <Button Content="contact us" Click="ContactUs_OnClick" HorizontalAlignment="Stretch"
                                 HorizontalContentAlignment="Center" />
+                    </StackPanel>
+                </Grid>
+                
+                <Grid RowDefinitions="Auto" Margin="10" Name="ContributeSettings"
+                      Background="{DynamicResource AcrylicBaseColor}">
+
+                    <StackPanel Margin="10" Spacing="10" Name="ContributePanel">
+                        <TextBlock Text="Contributers" FontSize="32" VerticalAlignment="Center"
+                                   HorizontalAlignment="Stretch" />
+                        <ItemsRepeater Items="{Binding Contributers}">
+                            <ItemsRepeater.Layout>
+                                <StackLayout Spacing="5" Orientation="Horizontal"/>
+                            </ItemsRepeater.Layout>
+                            
+                            <ItemsRepeater.ItemTemplate>
+                                <DataTemplate DataType="data:OsuPlayerContributer">
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <Border CornerRadius="100" Width="50" Height="50" VerticalAlignment="Center" 
+                                                BorderBrush="White" BorderThickness="2">
+                                            <Border.Background>
+                                                <ImageBrush Source="{Binding avatar}" BitmapInterpolationMode="MediumQuality"/>
+                                            </Border.Background>
+                                        </Border>
+                                    
+                                        <TextBlock Text="{Binding name}" FontSize="20" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsRepeater.ItemTemplate>
+                        </ItemsRepeater>
+                        
+                        <TextBlock Text="Want to help or implement something? Head to our repository for project building info and guidelines. We would be happy to see your Pull-Request!" 
+                                   TextAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
                     </StackPanel>
                 </Grid>
             </controls:CascadingWrapPanel>
