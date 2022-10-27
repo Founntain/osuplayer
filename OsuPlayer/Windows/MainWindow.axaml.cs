@@ -95,7 +95,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
         await using var config = new Config();
 
-        var result = await GitHubUpdater.CheckForUpdates(config.Container.ReleaseChannel);
+        var result = await GitHub.CheckForUpdates(config.Container.ReleaseChannel);
 
         if (result.IsNewVersionAvailable)
         {

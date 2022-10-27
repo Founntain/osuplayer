@@ -1,17 +1,22 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
+using Avalonia.Media.Imaging;
+using Newtonsoft.Json;
 using Octokit;
 using OsuPlayer.Data.OsuPlayer.Enums;
+using OsuPlayer.Network.Data;
 
 namespace OsuPlayer.Network;
 
 /// <summary>
-/// A static class to help us provide updates for the osu!player and check if updates are available by checking our
+/// A static class to help us access various GitHub Repository data
+/// Also it helps us provide updates for the osu!player and check if updates are available by checking our
 /// GitHub-Repository releases
 /// </summary>
-public static class GitHubUpdater
+public static class GitHub
 {
     /// <summary>
     /// Checks if an older version is running and if so it will notify the user.
@@ -110,6 +115,47 @@ public static class GitHubUpdater
         {
             Debug.WriteLine($"Can't check for updates rate limit exceeded! + {ex.Message}");
             return "**No patch-notes found, due to GitHub rate limit exceeded**";
+        }
+    }
+
+    public static async Task<List<OsuPlayerContributer>?> GetContributers()
+    {
+        try
+        {
+            var github = new GitHubClient(new ProductHeaderValue("osu!player"));
+
+            var githubData = await github.Repository.GetAllContributors("Founntain", "osuplayer");
+
+            var result = new List<OsuPlayerContributer>();
+
+            foreach (var user in githubData)
+            {
+                using var client = new HttpClient();
+
+                Bitmap? image = null;
+
+                try
+                {
+                    var data = await client.GetByteArrayAsync(new Uri(user.AvatarUrl));
+                
+                    await using var stream = new MemoryStream(data);
+                
+                    image = await Task.Run(() => new Bitmap(stream));
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                }
+
+                result.Add(new OsuPlayerContributer(user.Login, image));
+            }
+
+            return result;
+        }
+        catch (RateLimitExceededException ex)
+        {
+            Debug.WriteLine($"Can't check for updates rate limit exceeded! + {ex.Message}");
+            return default;
         }
     }
 }
