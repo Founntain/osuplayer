@@ -220,7 +220,7 @@
                                    HorizontalAlignment="Stretch" />
                         <ItemsRepeater Items="{Binding Contributers}">
                             <ItemsRepeater.Layout>
-                                <StackLayout Spacing="5" Orientation="Horizontal"/>
+                                <WrapLayout HorizontalSpacing="5" VerticalSpacing="5" Orientation="Horizontal"/>
                             </ItemsRepeater.Layout>
                             
                             <ItemsRepeater.ItemTemplate>
