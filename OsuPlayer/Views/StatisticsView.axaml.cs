@@ -1,3 +1,4 @@
+using System.Reactive.Disposables;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
@@ -15,5 +16,12 @@ public partial class StatisticsView : ReactiveControl<StatisticsViewModel>
     private void InitializeComponent()
     {
         AvaloniaXamlLoader.Load(this);
+        
+        this.WhenActivated(Block);
+    }
+
+    private void Block(CompositeDisposable disposables)
+    {
+        Disposable.Create(() => { }).DisposeWith(disposables);
     }
 }
