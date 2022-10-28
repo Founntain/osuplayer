@@ -5,9 +5,15 @@
              xmlns:views="clr-namespace:OsuPlayer.Views"
              xmlns:dataModels="clr-namespace:OsuPlayer.IO.DbReader.DataModels;assembly=OsuPlayer.IO"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="OsuPlayer.Views.SearchView"
+             x:Class="OsuPlayer.Views.StatisticsView"
              FontWeight="{DynamicResource DefaultFontWeight}">
     <Design.DataContext>
         <views:StatisticsViewModel />
     </Design.DataContext>
+    
+    <Grid RowDefinitions="Auto, *">
+        <TextBlock Text="Col0Row0:"/>
+        <TextBlock Text="Col0Row1:"/>
+        <TextBlock Text="Col0Row2:"/>
+    </Grid>
 </UserControl>

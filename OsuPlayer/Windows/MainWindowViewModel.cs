@@ -35,6 +35,7 @@ public class MainWindowViewModel : BaseWindowViewModel
     public UpdateViewModel UpdateView { get; }
     public PlayerControlViewModel PlayerControl { get; }
     public EqualizerViewModel EqualizerView { get; }
+    public StatisticsViewModel StatisticsView { get;  }
 
     public BaseViewModel MainView
     {
@@ -67,6 +68,7 @@ public class MainWindowViewModel : BaseWindowViewModel
         SettingsView = new SettingsViewModel(Player, sortProvider, shuffleServiceProvider);
         EqualizerView = new EqualizerViewModel(Player);
         UpdateView = new UpdateViewModel();
+        StatisticsView = new StatisticsViewModel();
 
         using var config = new Config();
 

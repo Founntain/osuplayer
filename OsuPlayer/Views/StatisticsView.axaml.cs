@@ -5,7 +5,7 @@ using ReactiveUI;
 
 namespace OsuPlayer.Views;
 
-public partial class StatisticsView : UserControl
+public partial class StatisticsView : ReactiveControl<StatisticsViewModel>
 {
     public StatisticsView()
     {
