@@ -125,7 +125,7 @@ When I joined the development team of the osu!player, I mostly did design stuff 
 Thanks for reading and have fun with the player, cheers.
 
 ## 📫 Contact
-- ✉️ 7@founntain.dev
+- [✉️ 7@founntain.dev](mailto:7@founntain.dev)
 - 📣 [Discord](https://discord.gg/RJQSc5B)
 
 ## ❤️ Supported by
