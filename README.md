@@ -23,7 +23,7 @@ If you want to contribute, feel free to fork this repository, read the [contribu
 #### osu!player requirements
 ✔️ A working computer  
 ✔️ .NET 6 or later installed  
-✔️ osu! installed with an **osu!.db file** or **osu!lazer client.realm** *(Beat maps imported in osu!)*  
+✔️ osu! installed with an **osu!.db file** or **osu!lazer client.realm** *(Beatmaps imported in osu!)*  
 ✔️ An internet connection if you want to use your osu!player plus profile
 
 #### Download osu!player
@@ -76,7 +76,7 @@ A rule of thumb is: If you want a new feature, discuss it with us and if people 
 - [ ] Hotkey support  
 - [ ] Export songs to the directory  
 - [ ] Custom themes 
-- [ ] Mini player to save some space  
+- [ ] Miniplayer to save some space  
 - [ ] Synced play via osu!player API  
 
 #### 🎱 Stop asking for it
