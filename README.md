@@ -14,9 +14,9 @@
 [![.NET Publish](https://github.com/Founntain/osuplayer/actions/workflows/dotnet-publish.yml/badge.svg)](https://github.com/Founntain/osuplayer/actions/workflows/dotnet-publish.yml)
  
 osu!player is a music player for *osu!* with the focus of playing your osu! songs **without having to start osu!**.
-This is the *official* **osu!player** repository and is mainly developed by [@Founntain](https://github.com/Founntain), with help of [@Cesan](https://github.com/Cesan).  
+This is the *official* **osu!player** repository and is mainly developed by [@Founntain](https://github.com/Founntain), with the help of [@Cesan](https://github.com/Cesan).  
 
-If you want to contribute, feel free to fork this repository, read the [contributing information](https://github.com/osu-player/osuplayer#-contributing-to-the-project) and head to the [official osu!player discord](https://discord.gg/RJQSc5B) (not mandetory, but helpful). There you can add all valuable ideas and discuss other stuff regarding development.
+If you want to contribute, feel free to fork this repository, read the [contributing information](https://github.com/osu-player/osuplayer#-contributing-to-the-project) and head to the [official osu!player discord](https://discord.gg/RJQSc5B) (not mandatory, but helpful). There you can add all valuable ideas and discuss other stuff regarding development.
 
 ## ☝️ Requirements
 
@@ -41,18 +41,18 @@ You can also build the project for yourself; see the section below!
  - .NET 6 SDK
  - [Avalonia .NET Templates](https://github.com/AvaloniaUI/avalonia-dotnet-templates)
  - [Check out the Avalonia getting started](https://github.com/AvaloniaUI/Avalonia#-getting-started)
- - *Have a **decent understanding of the internal osu!** stucture and have knownledge of osu! (the game) aswell.*
+ - *Have a **decent understanding of the internal osu!** structure and know osu! (the game) as well.*
 
 #### 🚀 How to contribute
  - Make a fork of this repository
  - Implement your ideas and features
  - Make a pull request (PR) on this repository
- - Pray that I accept your PR 😂 (I'm obviously joking)
+ - Pray that I accept your PR 😂 (I'm joking)
  - Profit 📈
 
 #### ⚠️ Please keep in mind
-You should implement features that are asked for and not once you like or think will be good additions.
-Best practice is, that we discuss (new) features and if they are needed. So don't be afraid to ask.  
+You should implement features that are asked for and not ones you like or think will be good additions.
+A rule of thumb is: If you want a new feature, discuss it with us and if people want it, the feature may be added. So don't be afraid to ask!
 **We appreciate your ideas and feedback!**
 
 ## 📦 Dependencies
@@ -66,7 +66,7 @@ Best practice is, that we discuss (new) features and if they are needed. So don'
 ## ✨ Special thanks
 - ***SourRaindrop***: for creating a lot of custom images and assets like our logo
 
-## 🪛 Features that are missing to have the full osu!player plus feature set
+## 🪛 Features that are missing to have the full osu!player plus a feature set
 
 #### 🔧 Features with lower priority
 - [x] Audio-Equalizer 
@@ -74,7 +74,7 @@ Best practice is, that we discuss (new) features and if they are needed. So don'
 - [ ] Language Editor 
 - [ ] Language Manager to upload and download translations   
 - [ ] Hotkey support  
-- [ ] Export songs to directory  
+- [ ] Export songs to the directory  
 - [ ] Custom themes 
 - [ ] Miniplayer to save some space  
 - [ ] Synced play via osu!player API  
@@ -89,23 +89,23 @@ Best practice is, that we discuss (new) features and if they are needed. So don'
 <a href="https://github.com/Founntain">
   <img style="border-radius: 50%;" align="right" width=200 height=200 src="https://osuplayer.founntain.dev/api/users/getProfilePicture?username=Founntain" />
 </a>
-Hey there my name is Founntain!
-A bit about myself. I'm currently `currentYear - 1999` years old and from Germany. 
-Currently I'm working for a medium sized software developing company as Software Consultant.
+Hey, there my name is Founntain!
+A bit about myself: I'm currently `currentYear - 1999` years old and from Germany. 
+Currently, I am working for a medium-sized software development company as Software Consultant.
 
 **Languages I use:**
 + C# *(For most of my projects)*
 + HTML, CSS and Typescript *(for web stuff)*
 + Java *(mostly for Minecraft plugin development)*
 
-In 2016 I had my first programming contact in my IT-School. There we mostly developed in Java, but all stuff that we programmed in Java I tried to implement in C#
+In 2016 I had my first programming contact at my IT-School. There we mostly developed in Java, but all stuff that we programmed in Java I tried to implement in C#
 while learning it on my own.  
 
-In 2017 I started development on the first versions of the osu!player in WPF and .NET-Framework 4.6. It looked bad, it feeled bad and had bad performance.
-But let's be honest what do expect from someone who never used WPF at all and had not much C# experience. 
-On 1st of November 2017, the first version of the osu!player was released on the osu! forum.  
+In 2017 I started development on the first versions of the osu!player in WPF and .NET-Framework 4.6. It looked bad, it felt bad and badly performed.
+But let's be honest what do expect from someone who never used WPF at all and did not have much C# experience? 
+On the 1st of November 2017, the first version of the osu!player was released on the osu! forum.  
 
-After a while Cesan joined me and we started working on it together until now and I'm really greatful for that. *Thanks buddy*
+After a while, Cesan joined me and we started working on it together now and I'm grateful for that. *Thanks buddy*
 
 ### 🌸 Cesan
 
@@ -114,13 +114,13 @@ After a while Cesan joined me and we started working on it together until now an
 </a>
 Hi, I'm Cesan. You can also call me Caro if you want ^^
 
-I'm a self taught C# dev and currently studying Applied Computer Sciences at University.
-I also work as an embedded C dev in the mean time.
+I'm a self-taught C# dev and currently studying Applied Computer Sciences at University.
+I also work as an embedded C dev in the meantime.
 
 I mostly use C# for everything I do because I think it's the most versatile and practical language for desktop development.
-In university I learned C and Java altough I would never use Java personally.
+In university, I learned C and Java. However I would never use Java personally.
 
-As I joined development of the osu!player I mostly did design stuff in WPF as I understood it best, but now we both do more or less the same stuff because we have quite some experience with the osu!player by now, to make the player look and feel like how it is today.
+When I joined the development team of the osu!player, I mostly did design stuff in WPF as I understood it best, but now we both do more or less the same stuff because we have quite some experience with the osu!player by now, to make the player look and feel like how it is today.
 
 Thanks for reading and have fun with the player, cheers.
 
