@@ -114,6 +114,9 @@
         <Compile Update="Windows\MiniplayerViewModel.cs">
           <DependentUpon>Miniplayer.axaml</DependentUpon>
         </Compile>
+        <Compile Update="Views\StatisticsViewModel.cs">
+          <DependentUpon>StatisticsView.axaml</DependentUpon>
+        </Compile>
     </ItemGroup>
     <ItemGroup>
       <UpToDateCheckInput Remove="Resources\profiles\cesan.jpg" />
