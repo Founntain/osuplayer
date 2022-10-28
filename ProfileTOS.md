@@ -50,7 +50,7 @@ If your profile was deleted, you will still be able to create a new profile if y
 
 ## 📫 Contact us
 If you wish to contact us for any reason please contact us using the links below
-- ✉️ 7@founntain.dev
+- [✉️ 7@founntain.dev](mailto:7@founntain.dev)
 - 📣 [Discord](https://discord.gg/RJQSc5B)
 
 That's all. Amazing that you read this far here is a nice flower for you 🌺
