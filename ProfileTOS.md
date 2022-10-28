@@ -41,8 +41,10 @@ Your profile picture will also be deleted when you delete your profile.
 ### ☝️ Some rules
 Don't post anything NSFW, hate-/harmful in your description or somewhere else in the client. This also includes your profile picture. *(sorry about that, but no anime titties as profile picture)*  
 
-If you create a profile and don't reach level 2 in 24 hours **we have the right to delete your profile**. Please only create an account if you intend to use the player and its user feature as intended.  
-You don't need a profile if you do not want to use the user features, such as collecting XP and statistics! If your profile was deleted, you will still be able to create a new profile if you believe you will use it as intended.
+If you create a profile and don't reach level 2 in 24 hours **we have the right to delete your profile**.  
+Please only create an account if you intend to use the player and its user feature as intended.  
+You don't need a profile if you do not want to use the user features, such as collecting XP and statistics!  
+If your profile was deleted, you will still be able to create a new profile if you believe you will use it as intended.
 
 ## 📫 Contact us
 If you wish to contact us for any reason please contact us using the links below
