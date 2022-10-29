@@ -7,6 +7,12 @@ namespace OsuPlayer.IO.Storage.LazerModels;
 // See the LICENCE file in the repository root for full licence text.
 public class RealmUser : EmbeddedObject, IUser, IEquatable<RealmUser>
 {
+    public int OnlineID { get; set; } = 1;
+
+    public string Username { get; set; } = string.Empty;
+
+    public bool IsBot => false;
+
     public bool Equals(RealmUser other)
     {
         if (ReferenceEquals(null, other)) return false;
@@ -14,10 +20,4 @@ public class RealmUser : EmbeddedObject, IUser, IEquatable<RealmUser>
 
         return OnlineID == other.OnlineID && Username == other.Username;
     }
-
-    public int OnlineID { get; set; } = 1;
-
-    public string Username { get; set; } = string.Empty;
-
-    public bool IsBot => false;
 }

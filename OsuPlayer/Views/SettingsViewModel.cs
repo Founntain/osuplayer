@@ -336,6 +336,6 @@ public class SettingsViewModel : BaseViewModel
 
         Patchnotes = latestPatchNotes;
 
-        Contributers = await GitHub.GetContributers() ?? new ();
+        Contributers = await GitHub.GetContributers() ?? new List<OsuPlayerContributer>();
     }
 }

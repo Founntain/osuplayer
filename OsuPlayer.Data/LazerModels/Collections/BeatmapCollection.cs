@@ -34,6 +34,8 @@ public class BeatmapCollection : RealmObject, IHasGuidPrimaryKey
     /// </summary>
     public DateTimeOffset LastModified { get; set; }
 
+    [PrimaryKey] public Guid ID { get; set; }
+
     public BeatmapCollection(string? name = null, IList<string>? beatmapMD5Hashes = null)
     {
         ID = Guid.NewGuid();
@@ -47,6 +49,4 @@ public class BeatmapCollection : RealmObject, IHasGuidPrimaryKey
     private BeatmapCollection()
     {
     }
-
-    [PrimaryKey] public Guid ID { get; set; }
 }

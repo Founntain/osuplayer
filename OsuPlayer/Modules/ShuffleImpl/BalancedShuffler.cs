@@ -32,10 +32,7 @@ public class BalancedShuffler : IShuffleImpl
 
     public int DoShuffle(int currentIndex, ShuffleDirection direction)
     {
-        if (_shuffledIndexes[_currentIndex] != currentIndex)
-        {
-            _currentIndex = _shuffledIndexes.IndexOf(currentIndex);
-        }
+        if (_shuffledIndexes[_currentIndex] != currentIndex) _currentIndex = _shuffledIndexes.IndexOf(currentIndex);
 
         _currentIndex += (int) direction;
 
@@ -47,10 +44,7 @@ public class BalancedShuffler : IShuffleImpl
 
     private void GenerateRandomIndexes()
     {
-        for (var i = 0; i < _maxRange; i++)
-        {
-            _shuffledIndexes.Add(i);
-        }
+        for (var i = 0; i < _maxRange; i++) _shuffledIndexes.Add(i);
 
         var random = new Random();
         var n = _maxRange - 1;
@@ -62,5 +56,8 @@ public class BalancedShuffler : IShuffleImpl
         }
     }
 
-    public override string ToString() => Name;
+    public override string ToString()
+    {
+        return Name;
+    }
 }

@@ -9,7 +9,7 @@ public static class CollectionImporter
     /// <summary>
     /// Imports the collections found in the osu! collection.db and adds them as playlists
     /// </summary>
-    /// <param name="sourceProvider">a <see cref="ISongSourceProvider"/> to perform the collection import on</param>
+    /// <param name="sourceProvider">a <see cref="ISongSourceProvider" /> to perform the collection import on</param>
     /// <returns>a bool indicating import success</returns>
     public static async Task<bool> ImportCollectionsAsync(ISongSourceProvider sourceProvider)
     {

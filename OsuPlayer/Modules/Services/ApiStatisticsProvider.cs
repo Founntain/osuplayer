@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Threading.Tasks;
+using Avalonia.Threading;
 using LiveChartsCore.Defaults;
 using OsuPlayer.Data.API.Enums;
 
@@ -36,7 +37,7 @@ public class ApiStatisticsProvider : IStatisticsProvider
 
         GraphValues.Add(new ObservableValue(xpEarned));
 
-        await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() => UserDataChanged?.Invoke(this, new PropertyChangedEventArgs("Xp")));
+        await Dispatcher.UIThread.InvokeAsync(() => UserDataChanged?.Invoke(this, new PropertyChangedEventArgs("Xp")));
     }
 
     public async Task UpdateSongsPlayed(int beatmapSetId)
@@ -49,6 +50,6 @@ public class ApiStatisticsProvider : IStatisticsProvider
 
         ProfileManager.User = response;
 
-        await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() => UserDataChanged?.Invoke(this, new PropertyChangedEventArgs("SongsPlayed")));
+        await Dispatcher.UIThread.InvokeAsync(() => UserDataChanged?.Invoke(this, new PropertyChangedEventArgs("SongsPlayed")));
     }
 }

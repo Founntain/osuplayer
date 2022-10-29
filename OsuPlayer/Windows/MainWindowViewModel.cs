@@ -35,7 +35,7 @@ public class MainWindowViewModel : BaseWindowViewModel
     public UpdateViewModel UpdateView { get; }
     public PlayerControlViewModel PlayerControl { get; }
     public EqualizerViewModel EqualizerView { get; }
-    public StatisticsViewModel StatisticsView { get;  }
+    public StatisticsViewModel StatisticsView { get; }
 
     public BaseViewModel MainView
     {

@@ -3,8 +3,8 @@
     <Style.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceInclude Source="avares://OsuPlayer/Styles/Accents/Base.axaml"/>
-                <ResourceInclude Source="avares://OsuPlayer/Styles/Accents/BaseDark.axaml"/>
+                <ResourceInclude Source="avares://OsuPlayer/Styles/Accents/Base.axaml" />
+                <ResourceInclude Source="avares://OsuPlayer/Styles/Accents/BaseDark.axaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
         <!-- Resources for Button.xaml -->
@@ -311,7 +311,8 @@
                         ResourceKey="SystemControlHighlightBaseHighBrush" />
         <StaticResource x:Key="CheckBoxCheckBackgroundStrokeUncheckedDisabled"
                         ResourceKey="SystemControlDisabledBaseMediumLowBrush" />
-        <StaticResource x:Key="CheckBoxCheckBackgroundStrokeCheckedPointerOver" ResourceKey="SystemAccentColorDark1Brush" />
+        <StaticResource x:Key="CheckBoxCheckBackgroundStrokeCheckedPointerOver"
+                        ResourceKey="SystemAccentColorDark1Brush" />
         <StaticResource x:Key="CheckBoxCheckBackgroundStrokeCheckedPressed" ResourceKey="SystemAccentColorLight1Brush" />
         <StaticResource x:Key="CheckBoxCheckBackgroundStrokeCheckedDisabled"
                         ResourceKey="SystemControlTransparentBrush" />
@@ -319,7 +320,8 @@
                         ResourceKey="SystemControlForegroundAccentBrush" />
         <StaticResource x:Key="CheckBoxCheckBackgroundStrokeIndeterminatePointerOver"
                         ResourceKey="SystemAccentColorLight1Brush" />
-        <StaticResource x:Key="CheckBoxCheckBackgroundStrokeIndeterminatePressed" ResourceKey="SystemAccentColorDark1Brush" />
+        <StaticResource x:Key="CheckBoxCheckBackgroundStrokeIndeterminatePressed"
+                        ResourceKey="SystemAccentColorDark1Brush" />
         <StaticResource x:Key="CheckBoxCheckBackgroundStrokeIndeterminateDisabled"
                         ResourceKey="SystemControlTransparentBrush" />
         <StaticResource x:Key="CheckBoxCheckBackgroundFillUnchecked" ResourceKey="SystemControlTransparentBrush" />
@@ -330,7 +332,8 @@
         <StaticResource x:Key="CheckBoxCheckBackgroundFillUncheckedDisabled"
                         ResourceKey="SystemControlTransparentBrush" />
         <StaticResource x:Key="CheckBoxCheckBackgroundFillChecked" ResourceKey="SystemControlHighlightAccentBrush" />
-        <StaticResource x:Key="CheckBoxCheckBackgroundFillCheckedPointerOver" ResourceKey="SystemAccentColorLight1Brush" />
+        <StaticResource x:Key="CheckBoxCheckBackgroundFillCheckedPointerOver"
+                        ResourceKey="SystemAccentColorLight1Brush" />
         <StaticResource x:Key="CheckBoxCheckBackgroundFillCheckedPressed" ResourceKey="SystemAccentColorDark1Brush" />
         <StaticResource x:Key="CheckBoxCheckBackgroundFillCheckedDisabled"
                         ResourceKey="SystemControlBackgroundBaseMediumLowBrush" />
@@ -338,7 +341,8 @@
                         ResourceKey="SystemControlHighlightAccentBrush" />
         <StaticResource x:Key="CheckBoxCheckBackgroundFillIndeterminatePointerOver"
                         ResourceKey="SystemAccentColorLight1Brush" />
-        <StaticResource x:Key="CheckBoxCheckBackgroundFillIndeterminatePressed" ResourceKey="SystemAccentColorDark1Brush" />
+        <StaticResource x:Key="CheckBoxCheckBackgroundFillIndeterminatePressed"
+                        ResourceKey="SystemAccentColorDark1Brush" />
         <StaticResource x:Key="CheckBoxCheckBackgroundFillIndeterminateDisabled"
                         ResourceKey="SystemControlBackgroundBaseMediumLowBrush" />
         <StaticResource x:Key="CheckBoxCheckGlyphForegroundUnchecked"
@@ -433,12 +437,14 @@
                         ResourceKey="SystemControlBackgroundBaseMediumLowBrush" />
         <StaticResource x:Key="RadioButtonOuterEllipseFillDisabled" ResourceKey="SystemControlTransparentBrush" />
         <StaticResource x:Key="RadioButtonOuterEllipseCheckedStroke" ResourceKey="SystemControlHighlightAccentBrush" />
-        <StaticResource x:Key="RadioButtonOuterEllipseCheckedStrokePointerOver" ResourceKey="SystemAccentColorLight1Brush" />
+        <StaticResource x:Key="RadioButtonOuterEllipseCheckedStrokePointerOver"
+                        ResourceKey="SystemAccentColorLight1Brush" />
         <StaticResource x:Key="RadioButtonOuterEllipseCheckedStrokePressed" ResourceKey="SystemAccentColorDark1Brush" />
         <StaticResource x:Key="RadioButtonOuterEllipseCheckedStrokeDisabled"
                         ResourceKey="SystemControlDisabledBaseMediumLowBrush" />
         <StaticResource x:Key="RadioButtonOuterEllipseCheckedFill" ResourceKey="SystemControlHighlightAccentBrush" />
-        <StaticResource x:Key="RadioButtonOuterEllipseCheckedFillPointerOver" ResourceKey="SystemAccentColorLight1Brush" />
+        <StaticResource x:Key="RadioButtonOuterEllipseCheckedFillPointerOver"
+                        ResourceKey="SystemAccentColorLight1Brush" />
         <StaticResource x:Key="RadioButtonOuterEllipseCheckedFillPressed" ResourceKey="SystemAccentColorDark1Brush" />
         <StaticResource x:Key="RadioButtonOuterEllipseCheckedFillDisabled"
                         ResourceKey="SystemControlBackgroundBaseMediumLowBrush" />

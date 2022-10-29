@@ -12,6 +12,6 @@ public interface ISettableAudioDevices
     /// <summary>
     /// Set the audio device to use as the output.
     /// </summary>
-    /// <param name="audioDevice">The <see cref="AudioDevice"/> to use</param>
+    /// <param name="audioDevice">The <see cref="AudioDevice" /> to use</param>
     public void SetDevice(AudioDevice audioDevice);
 }

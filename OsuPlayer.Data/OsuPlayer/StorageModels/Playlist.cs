@@ -1,6 +1,4 @@
-﻿
-
-// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+﻿// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 
 namespace OsuPlayer.Data.OsuPlayer.StorageModels;
 

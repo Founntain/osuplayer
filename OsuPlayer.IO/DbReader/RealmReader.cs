@@ -98,12 +98,12 @@ public class RealmReader : IDatabaseReader
         return Task.FromResult(minBeatMaps);
     }
 
-    ~RealmReader()
+    public void Dispose()
     {
         _realm.Dispose();
     }
 
-    public void Dispose()
+    ~RealmReader()
     {
         _realm.Dispose();
     }

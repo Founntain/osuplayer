@@ -14,16 +14,6 @@ public class BeatmapMetadata : RealmObject, IBeatmapMetadataInfo
 {
     public RealmUser Author { get; set; } = null!;
 
-    public BeatmapMetadata(RealmUser? user = null)
-    {
-        Author = user ?? new RealmUser();
-    }
-
-    [UsedImplicitly] // Realm
-    private BeatmapMetadata()
-    {
-    }
-
     public string Title { get; set; } = string.Empty;
 
     [JsonProperty("title_unicode")] public string TitleUnicode { get; set; } = string.Empty;
@@ -46,6 +36,16 @@ public class BeatmapMetadata : RealmObject, IBeatmapMetadataInfo
     public string BackgroundFile { get; set; } = string.Empty;
 
     IUser IBeatmapMetadataInfo.Author => Author;
+
+    public BeatmapMetadata(RealmUser? user = null)
+    {
+        Author = user ?? new RealmUser();
+    }
+
+    [UsedImplicitly] // Realm
+    private BeatmapMetadata()
+    {
+    }
 
     public override string ToString()
     {

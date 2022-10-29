@@ -3,60 +3,71 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:OsuPlayer.Views"
-             xmlns:dataModels="clr-namespace:OsuPlayer.IO.DbReader.DataModels;assembly=OsuPlayer.IO"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.StatisticsView"
              FontWeight="{DynamicResource DefaultFontWeight}">
     <Design.DataContext>
         <views:StatisticsViewModel />
     </Design.DataContext>
-    
+
     <Grid RowDefinitions="25*, 25*, 25*, 25*" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <!-- Statistics Top 6 -->
         <!-- HorizontalAlignment="Center" VerticalAlignment="Center" Background="{DynamicResource AcrylicBaseColor}" -->
-        <StackPanel Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="5" Orientation="Horizontal" >
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Background="{DynamicResource AcrylicBaseColor}">
-                <TextBlock Text="Users:" Margin="10"/>
-                <TextBlock Text="{Binding Users}" Margin="10"/>
+        <StackPanel Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="5"
+                    Orientation="Horizontal">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Background="{DynamicResource AcrylicBaseColor}">
+                <TextBlock Text="Users:" Margin="10" />
+                <TextBlock Text="{Binding Users}" Margin="10" />
             </StackPanel>
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Background="{DynamicResource AcrylicBaseColor}">
-                <TextBlock Text="Translators:" Margin="10"/>
-                <TextBlock Text="{Binding Translators}" Margin="10"/>
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Background="{DynamicResource AcrylicBaseColor}">
+                <TextBlock Text="Translators:" Margin="10" />
+                <TextBlock Text="{Binding Translators}" Margin="10" />
             </StackPanel>
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Background="{DynamicResource AcrylicBaseColor}">
-                <TextBlock Text="Songs Played:" Margin="10"/>
-                <TextBlock Text="{Binding SongsPlayed}" Margin="10"/>
-            </StackPanel>
-        </StackPanel>
-        
-        <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="5" Orientation="Horizontal">
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Background="{DynamicResource AcrylicBaseColor}">
-                <TextBlock Text="XP earned:" Margin="10"/>
-                <TextBlock Text="{Binding XpEarned}" Margin="10"/>
-            </StackPanel>
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Background="{DynamicResource AcrylicBaseColor}">
-                <TextBlock Text="Community Level:" Margin="10"/>
-                <TextBlock Text="{Binding CommunityLevel}" Margin="10"/>
-            </StackPanel>
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Background="{DynamicResource AcrylicBaseColor}">
-                <TextBlock Text="XP left:" Margin="10"/>
-                <TextBlock Text="{Binding XpLeft}" Margin="10"/>
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Background="{DynamicResource AcrylicBaseColor}">
+                <TextBlock Text="Songs Played:" Margin="10" />
+                <TextBlock Text="{Binding SongsPlayed}" Margin="10" />
             </StackPanel>
         </StackPanel>
-        
-        <StackPanel Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="5" Orientation="Horizontal">
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Background="{DynamicResource AcrylicBaseColor}">
-                <TextBlock Text="Beatmaps Tracked" Margin="10"/>
-                <TextBlock Text="{Binding BeatmapsTracked}" Margin="10"/>
+
+        <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="5"
+                    Orientation="Horizontal">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Background="{DynamicResource AcrylicBaseColor}">
+                <TextBlock Text="XP earned:" Margin="10" />
+                <TextBlock Text="{Binding XpEarned}" Margin="10" />
             </StackPanel>
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Background="{DynamicResource AcrylicBaseColor}">
-                <TextBlock Text="MB used" Margin="10"/>
-                <TextBlock Text="{Binding MbUsed}" Margin="10"/>
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Background="{DynamicResource AcrylicBaseColor}">
+                <TextBlock Text="Community Level:" Margin="10" />
+                <TextBlock Text="{Binding CommunityLevel}" Margin="10" />
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Background="{DynamicResource AcrylicBaseColor}">
+                <TextBlock Text="XP left:" Margin="10" />
+                <TextBlock Text="{Binding XpLeft}" Margin="10" />
             </StackPanel>
         </StackPanel>
-        <StackPanel Margin="10" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{DynamicResource AcrylicBaseColor}">
-            <TextBlock Text="Player Age:" Margin="10"/>
-            <TextBlock Text="{Binding PlayerAge}" Margin="10"/>
+
+        <StackPanel Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="5"
+                    Orientation="Horizontal">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Background="{DynamicResource AcrylicBaseColor}">
+                <TextBlock Text="Beatmaps Tracked" Margin="10" />
+                <TextBlock Text="{Binding BeatmapsTracked}" Margin="10" />
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Background="{DynamicResource AcrylicBaseColor}">
+                <TextBlock Text="MB used" Margin="10" />
+                <TextBlock Text="{Binding MbUsed}" Margin="10" />
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Margin="10" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Background="{DynamicResource AcrylicBaseColor}">
+            <TextBlock Text="Player Age:" Margin="10" />
+            <TextBlock Text="{Binding PlayerAge}" Margin="10" />
         </StackPanel>
     </Grid>
 </UserControl>

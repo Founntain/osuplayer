@@ -45,10 +45,7 @@ public sealed class User : UserModel
 
     public override bool Equals(object? obj)
     {
-        if (obj is User user)
-        {
-            return user.Name.Equals(Name);
-        }
+        if (obj is User user) return user.Name.Equals(Name);
 
         return false;
     }

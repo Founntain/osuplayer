@@ -20,17 +20,16 @@ public class ViewLocator : IDataTemplate
 
         var type = Type.GetType(name);
 
-        if (Locator.Current.GetService(type) is Control serviceView)
-        {
-            return serviceView;
-        }
+        if (Locator.Current.GetService(type) is Control serviceView) return serviceView;
 
-        if (type != null && Activator.CreateInstance(type) is Control view)
-        {
-            return view;
-        }
+        if (type != null && Activator.CreateInstance(type) is Control view) return view;
 
         return OnFail(name);
+    }
+
+    public bool Match(object data)
+    {
+        return data is BaseViewModel;
     }
 
     private IControl OnFail(string name)
@@ -45,10 +44,5 @@ public class ViewLocator : IDataTemplate
         button.Click += (sender, args) => GeneralExtensions.OpenUrl(@"https://founntain.dev");
 
         return button;
-    }
-
-    public bool Match(object data)
-    {
-        return data is BaseViewModel;
     }
 }

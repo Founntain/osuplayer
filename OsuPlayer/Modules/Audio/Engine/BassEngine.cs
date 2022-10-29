@@ -45,10 +45,7 @@ public sealed class BassEngine : IAudioEngine
 
             _isEqEnabled = value;
 
-            if (oldValue != _isEqEnabled)
-            {
-                SetAllEq();
-            }
+            if (oldValue != _isEqEnabled) SetAllEq();
         }
     }
 
@@ -89,32 +86,6 @@ public sealed class BassEngine : IAudioEngine
         EqGains.BindCollectionChanged((sender, args) => SetAllEq());
 
         InitAudioDevices();
-    }
-
-    private void InitAudioDevices()
-    {
-        AvailableAudioDevices.Clear();
-
-        var counter = 1;
-
-        foreach (var deviceInfo in GetAudioDevices())
-        {
-            var success = Bass.Init(counter);
-
-            Console.WriteLine($"INIT: {deviceInfo} | {success} | {Bass.LastError}");
-
-            if (success)
-            {
-                AvailableAudioDevices.Add(deviceInfo);
-            }
-
-            counter++;
-        }
-    }
-
-    private void EndTrack(int handle, int channel, int data, IntPtr user)
-    {
-        ChannelReachedEnd?.Invoke();
     }
 
     public void Stop()
@@ -188,6 +159,61 @@ public sealed class BassEngine : IAudioEngine
         _decodeStreamHandle = 0;
 
         ChannelPosition.Value = 0;
+    }
+
+    /// <summary>
+    /// Sets the output device for the player
+    /// <remarks>If the index is -1 sets the output device to the default device set in the os.</remarks>
+    /// </summary>
+    /// <param name="audioDevice"></param>
+    public void SetDevice(AudioDevice audioDevice)
+    {
+        var audioDevices = GetAudioDevices().ToList();
+        var index = audioDevices.IndexOf(audioDevices.FirstOrDefault(x => x.Driver == audioDevice.Driver));
+
+        if (index == -1)
+            for (var i = 0; i < audioDevices.Count; i++)
+            {
+                var deviceInfo = audioDevices[i];
+
+                if (!deviceInfo.IsDefault) continue;
+
+                index = i;
+                break;
+            }
+
+        Bass.CurrentDevice = index + 1;
+        Bass.ChannelSetDevice(_fxStream, index + 1);
+
+        var result = Bass.LastError == Errors.OK;
+
+        using var config = new Config();
+        config.Container.SelectedAudioDevice = index;
+
+        Console.WriteLine($"SET: {index} | {result} | {Bass.LastError}");
+    }
+
+    private void InitAudioDevices()
+    {
+        AvailableAudioDevices.Clear();
+
+        var counter = 1;
+
+        foreach (var deviceInfo in GetAudioDevices())
+        {
+            var success = Bass.Init(counter);
+
+            Console.WriteLine($"INIT: {deviceInfo} | {success} | {Bass.LastError}");
+
+            if (success) AvailableAudioDevices.Add(deviceInfo);
+
+            counter++;
+        }
+    }
+
+    private void EndTrack(int handle, int channel, int data, IntPtr user)
+    {
+        ChannelReachedEnd?.Invoke();
     }
 
     private void SetupStream()
@@ -280,40 +306,6 @@ public sealed class BassEngine : IAudioEngine
         list.RemoveAt(0);
 
         return list;
-    }
-
-    /// <summary>
-    /// Sets the output device for the player
-    /// <remarks>If the index is -1 sets the output device to the default device set in the os.</remarks>
-    /// </summary>
-    /// <param name="audioDevice"></param>
-    public void SetDevice(AudioDevice audioDevice)
-    {
-        var audioDevices = GetAudioDevices().ToList();
-        var index = audioDevices.IndexOf(audioDevices.FirstOrDefault(x => x.Driver == audioDevice.Driver));
-
-        if (index == -1)
-        {
-            for (var i = 0; i < audioDevices.Count; i++)
-            {
-                var deviceInfo = audioDevices[i];
-
-                if (!deviceInfo.IsDefault) continue;
-
-                index = i;
-                break;
-            }
-        }
-
-        Bass.CurrentDevice = index + 1;
-        Bass.ChannelSetDevice(_fxStream, index + 1);
-
-        var result = Bass.LastError == Errors.OK;
-
-        using var config = new Config();
-        config.Container.SelectedAudioDevice = index;
-
-        Console.WriteLine($"SET: {index} | {result} | {Bass.LastError}");
     }
 
     /// <summary>

@@ -24,5 +24,8 @@ public class RngShuffler : IShuffleImpl
         return Random.Shared.Next(_maxRange);
     }
 
-    public override string ToString() => Name;
+    public override string ToString()
+    {
+        return Name;
+    }
 }

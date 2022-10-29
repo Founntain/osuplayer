@@ -12,11 +12,11 @@ namespace OsuPlayer.Views;
 
 public class BlacklistEditorViewModel : BaseViewModel
 {
-    private BlacklistContainer? _blacklist;
     private readonly ReadOnlyObservableCollection<IMapEntryBase>? _filteredSongEntries;
-    private string _filterText = string.Empty;
 
     public readonly IPlayer Player;
+    private BlacklistContainer? _blacklist;
+    private string _filterText = string.Empty;
 
     public List<IMapEntryBase>? SelectedSongListItems { get; set; }
     public List<IMapEntryBase>? SelectedBlacklistItems { get; set; }

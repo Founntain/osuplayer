@@ -13,13 +13,6 @@ public class ReactiveControl<TViewModel> : UserControl, IViewFor<TViewModel> whe
     public static readonly StyledProperty<TViewModel> ViewModelProperty = AvaloniaProperty
         .Register<ReactiveControl<TViewModel>, TViewModel>(nameof(ViewModel));
 
-    public ReactiveControl()
-    {
-        this.WhenActivated(disposables => { });
-        var x = this.GetObservable(ViewModelProperty);
-        x.Subscribe(OnViewModelChanged);
-    }
-
     object? IViewFor.ViewModel
     {
         get => GetValue(ViewModelProperty);
@@ -30,6 +23,13 @@ public class ReactiveControl<TViewModel> : UserControl, IViewFor<TViewModel> whe
     {
         get => GetValue(ViewModelProperty);
         set => SetValue(ViewModelProperty, value);
+    }
+
+    public ReactiveControl()
+    {
+        this.WhenActivated(disposables => { });
+        var x = this.GetObservable(ViewModelProperty);
+        x.Subscribe(OnViewModelChanged);
     }
 
     protected override void OnDataContextChanged(EventArgs e)

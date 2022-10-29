@@ -70,14 +70,15 @@
                         <StackPanel Spacing="5" Name="ShuffleAlgorithm">
                             <TextBlock Text="Shuffle Algorithm" />
                             <DockPanel LastChildFill="True">
-                                <Button Height="24" Width="24" CornerRadius="40" Background="Transparent" DockPanel.Dock="Right"
+                                <Button Height="24" Width="24" CornerRadius="40" Background="Transparent"
+                                        DockPanel.Dock="Right"
                                         Margin="5,0,0,0">
                                     <icons:MaterialIcon Kind="InformationOutline" Height="24"
                                                         Width="24" />
                                     <Button.Flyout>
                                         <Flyout ShowMode="TransientWithDismissOnPointerMoveAway">
                                             <TextBlock TextWrapping="Wrap" FontSize="12" MaxWidth="400"
-                                                Text="{Binding SelectedShuffleAlgorithmInfoText, FallbackValue=AA}"/>
+                                                       Text="{Binding SelectedShuffleAlgorithmInfoText, FallbackValue=AA}" />
                                         </Flyout>
                                     </Button.Flyout>
                                 </Button>
@@ -196,7 +197,7 @@
                         </avalonia:MarkdownScrollViewer>
                     </StackPanel>
                 </Grid>
-                
+
                 <Grid RowDefinitions="Auto" Margin="10" Name="HelpAndFeedbackSettings"
                       Background="{DynamicResource AcrylicBaseColor}">
 
@@ -211,7 +212,7 @@
                                 HorizontalContentAlignment="Center" />
                     </StackPanel>
                 </Grid>
-                
+
                 <Grid RowDefinitions="Auto" Margin="10" Name="ContributeSettings"
                       Background="{DynamicResource AcrylicBaseColor}">
 
@@ -220,27 +221,30 @@
                                    HorizontalAlignment="Stretch" />
                         <ItemsRepeater Items="{Binding Contributers}">
                             <ItemsRepeater.Layout>
-                                <WrapLayout HorizontalSpacing="5" VerticalSpacing="5" Orientation="Horizontal"/>
+                                <WrapLayout HorizontalSpacing="5" VerticalSpacing="5" Orientation="Horizontal" />
                             </ItemsRepeater.Layout>
-                            
+
                             <ItemsRepeater.ItemTemplate>
                                 <DataTemplate DataType="data:OsuPlayerContributer">
                                     <StackPanel Orientation="Horizontal" Spacing="5">
-                                        <Border CornerRadius="100" Width="50" Height="50" VerticalAlignment="Center" 
+                                        <Border CornerRadius="100" Width="50" Height="50" VerticalAlignment="Center"
                                                 BorderBrush="White" BorderThickness="2">
                                             <Border.Background>
-                                                <ImageBrush Source="{Binding avatar}" BitmapInterpolationMode="MediumQuality"/>
+                                                <ImageBrush Source="{Binding avatar}"
+                                                            BitmapInterpolationMode="MediumQuality" />
                                             </Border.Background>
                                         </Border>
-                                    
-                                        <TextBlock Text="{Binding name}" FontSize="20" VerticalAlignment="Center"/>
+
+                                        <TextBlock Text="{Binding name}" FontSize="20" VerticalAlignment="Center" />
                                     </StackPanel>
                                 </DataTemplate>
                             </ItemsRepeater.ItemTemplate>
                         </ItemsRepeater>
-                        
-                        <TextBlock Text="Want to help or implement something? Head to our repository for project building info and guidelines. We would be happy to see your Pull-Request!" 
-                                   TextAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
+
+                        <TextBlock
+                            Text="Want to help or implement something? Head to our repository for project building info and guidelines. We would be happy to see your Pull-Request!"
+                            TextAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center"
+                            HorizontalAlignment="Stretch" />
                     </StackPanel>
                 </Grid>
             </controls:CascadingWrapPanel>

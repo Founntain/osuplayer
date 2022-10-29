@@ -37,8 +37,8 @@ public interface IMapEntryBase : IEquatable<IMapEntryBase>, IComparable<IMapEntr
     public Task<IMapEntry?> ReadFullEntry();
 
     /// <summary>
-    /// Gets the corresponding <see cref="IDatabaseReader"/> of the beatmap
+    /// Gets the corresponding <see cref="IDatabaseReader" /> of the beatmap
     /// </summary>
-    /// <returns>a <see cref="IDatabaseReader"/> instance of the specific database reader implementation</returns>
+    /// <returns>a <see cref="IDatabaseReader" /> instance of the specific database reader implementation</returns>
     public IDatabaseReader GetReader();
 }

@@ -57,7 +57,8 @@
                     <TextBlock Name="TitleText" Text="{Binding TitleText}" FontSize="20"
                                Foreground="White" TextTrimming="CharacterEllipsis" />
                     <TextBlock Name="ArtistText" Text="{Binding ArtistText}" FontSize="16"
-                               Foreground="#FFCCCCCC" TextTrimming="CharacterEllipsis" FontWeight="{DynamicResource SmallerFontWeight}" />
+                               Foreground="#FFCCCCCC" TextTrimming="CharacterEllipsis"
+                               FontWeight="{DynamicResource SmallerFontWeight}" />
                 </StackPanel>
             </Grid>
 
@@ -125,7 +126,7 @@
                         Background="Transparent" ToolTip.Tip="open miniplayer">
                     <avalonia:MaterialIcon Kind="ImageSizeSelectSmall" Height="32" Width="32" />
                 </Button>
-                
+
                 <Button Name="Settings" Width="42" Height="42" CornerRadius="50" Click="Settings_OnClick"
                         Background="Transparent">
                     <avalonia:MaterialIcon Kind="Settings" Height="32" Width="32" />

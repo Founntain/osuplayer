@@ -7,7 +7,6 @@ using OsuPlayer.IO.Importer;
 using OsuPlayer.Modules.Audio.Engine;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Modules.Services;
-using OsuPlayer.Modules.ShuffleImpl;
 using OsuPlayer.Windows;
 using Splat;
 

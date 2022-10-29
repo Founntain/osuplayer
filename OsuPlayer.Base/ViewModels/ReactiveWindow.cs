@@ -13,13 +13,6 @@ public class ReactiveWindow<TViewModel> : Window, IViewFor<TViewModel> where TVi
     public static readonly StyledProperty<TViewModel> ViewModelProperty = AvaloniaProperty
         .Register<ReactiveWindow<TViewModel>, TViewModel>(nameof(ViewModel));
 
-    public ReactiveWindow()
-    {
-        this.WhenActivated(disposables => { });
-        this.GetObservable(DataContextProperty).Subscribe(OnDataContextChanged);
-        this.GetObservable(ViewModelProperty).Subscribe(OnViewModelChanged);
-    }
-
     object IViewFor.ViewModel
     {
         get => ViewModel;
@@ -30,6 +23,13 @@ public class ReactiveWindow<TViewModel> : Window, IViewFor<TViewModel> where TVi
     {
         get => GetValue(ViewModelProperty);
         set => SetValue(ViewModelProperty, value);
+    }
+
+    public ReactiveWindow()
+    {
+        this.WhenActivated(disposables => { });
+        this.GetObservable(DataContextProperty).Subscribe(OnDataContextChanged);
+        this.GetObservable(ViewModelProperty).Subscribe(OnViewModelChanged);
     }
 
     private void OnDataContextChanged(object? value)

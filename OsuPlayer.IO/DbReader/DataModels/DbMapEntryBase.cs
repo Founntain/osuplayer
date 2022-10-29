@@ -46,11 +46,6 @@ public class DbMapEntryBase : IMapEntryBase
         return $"{GetArtist()} - {GetTitle()}";
     }
 
-    public override string ToString()
-    {
-        return GetSongName();
-    }
-
     /// <summary>
     /// Reads a osu!.db map entry and fills a full <see cref="DbMapEntry" /> with data
     /// </summary>
@@ -198,6 +193,21 @@ public class DbMapEntryBase : IMapEntryBase
         return new OsuDbReader(file, OsuPath);
     }
 
+    public bool Equals(IMapEntryBase? other)
+    {
+        return Hash == other?.Hash;
+    }
+
+    public int CompareTo(IMapEntryBase? other)
+    {
+        return string.Compare(Hash, other?.Hash, StringComparison.OrdinalIgnoreCase);
+    }
+
+    public override string ToString()
+    {
+        return GetSongName();
+    }
+
     public static bool operator ==(DbMapEntryBase? left, IMapEntryBase? right)
     {
         return left?.Hash == right?.Hash;
@@ -208,22 +218,12 @@ public class DbMapEntryBase : IMapEntryBase
         return left?.Hash != right?.Hash;
     }
 
-    public bool Equals(IMapEntryBase? other)
-    {
-        return Hash == other?.Hash;
-    }
-
     public override bool Equals(object? other)
     {
         if (other is IMapEntryBase map)
             return Hash == map.Hash;
 
         return false;
-    }
-
-    public int CompareTo(IMapEntryBase? other)
-    {
-        return string.Compare(Hash, other?.Hash, StringComparison.OrdinalIgnoreCase);
     }
 
     public override int GetHashCode()

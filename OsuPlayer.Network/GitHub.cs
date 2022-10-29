@@ -1,10 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
 using Avalonia.Media.Imaging;
-using Newtonsoft.Json;
 using Octokit;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Network.Data;
@@ -137,9 +135,9 @@ public static class GitHub
                 try
                 {
                     var data = await client.GetByteArrayAsync(new Uri(user.AvatarUrl));
-                
+
                     await using var stream = new MemoryStream(data);
-                
+
                     image = await Task.Run(() => new Bitmap(stream));
                 }
                 catch (Exception ex)

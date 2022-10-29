@@ -146,7 +146,7 @@ public partial class ApiAsync
 
         return await ApiRequestAsync<UserOnlineStatusModel>("users", "setUserOnlineStatus", data);
     }
-    
+
     public static async void SetUserOnlineStatusNonBlock(UserOnlineStatusType statusType, string? song = null, string? checksum = null)
     {
         var username = ProfileManager.User?.Name;
@@ -183,7 +183,7 @@ public partial class ApiAsync
     {
         return await GetRequestAsync<int>("beatmaps", "getBeatmapsCount");
     }
-    
+
     /// <summary>
     /// Gets the amount of storage used on the database
     /// </summary>

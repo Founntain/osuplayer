@@ -13,9 +13,9 @@ namespace OsuPlayer.Views;
 
 public class PlaylistEditorViewModel : BaseViewModel
 {
+    private readonly ReadOnlyObservableCollection<IMapEntryBase>? _filteredSongEntries;
     public readonly IPlayer Player;
     private Playlist? _currentSelectedPlaylist;
-    private readonly ReadOnlyObservableCollection<IMapEntryBase>? _filteredSongEntries;
     private string _filterText = string.Empty;
     private bool _isDeletePlaylistPopupOpen;
     private bool _isNewPlaylistPopupOpen;
