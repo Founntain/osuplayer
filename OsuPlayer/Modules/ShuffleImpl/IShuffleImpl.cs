@@ -11,9 +11,10 @@ public interface IShuffleImpl
     public string Description { get; }
 
     /// <summary>
-    /// Inits the shuffler with the given parameters. This must be called before <see cref="DoShuffle"/> each time to ensure the shuffler is initialized with valid params.
+    /// Inits the shuffler with the given parameters. This must be called before <see cref="DoShuffle" /> each time to ensure
+    /// the shuffler is initialized with valid params.
     /// </summary>
-    /// <param name="maxRange">The max index range the shuffler will return with <see cref="DoShuffle"/></param>
+    /// <param name="maxRange">The max index range the shuffler will return with <see cref="DoShuffle" /></param>
     void Init(int maxRange);
 
     /// <summary>

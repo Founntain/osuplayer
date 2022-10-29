@@ -16,8 +16,8 @@ public static class SongImporter
     /// Also plays the first song depending on the <see cref="StartupSong" /> config.
     /// <seealso cref="DoImportAsync" />
     /// </summary>
-    /// <param name="songSourceProvider">The <see cref="ISongSourceProvider"/> which will provide the songs</param>
-    /// <param name="importNotificationsDestination">The <see cref="IImportNotifications"/> to handle import events</param>
+    /// <param name="songSourceProvider">The <see cref="ISongSourceProvider" /> which will provide the songs</param>
+    /// <param name="importNotificationsDestination">The <see cref="IImportNotifications" /> to handle import events</param>
     public static async Task ImportSongsAsync(ISongSourceProvider songSourceProvider, IImportNotifications? importNotificationsDestination = null)
     {
         importNotificationsDestination?.OnImportStarted();

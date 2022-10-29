@@ -33,6 +33,27 @@ public class BeatmapInfo : RealmObject, IHasGuidPrimaryKey, IBeatmapInfo, IEquat
 
     [JsonIgnore] public bool Hidden { get; set; }
 
+    public string DifficultyName { get; set; } = string.Empty;
+
+    [Indexed] public int OnlineID { get; set; } = -1;
+
+    public double Length { get; set; }
+
+    public double BPM { get; set; }
+
+    public string Hash { get; set; } = string.Empty;
+
+    public double StarRating { get; set; }
+
+    public string MD5Hash { get; set; } = string.Empty;
+
+    IBeatmapMetadataInfo IBeatmapInfo.Metadata => Metadata;
+    IBeatmapSetInfo? IBeatmapInfo.BeatmapSet => BeatmapSet;
+    IRulesetInfo IBeatmapInfo.Ruleset => Ruleset;
+    IBeatmapDifficultyInfo IBeatmapInfo.Difficulty => Difficulty;
+
+    [PrimaryKey] public Guid ID { get; set; }
+
     public BeatmapInfo(RulesetInfo? ruleset = null, BeatmapDifficulty? difficulty = null, BeatmapMetadata? metadata = null)
     {
         ID = Guid.NewGuid();
@@ -52,29 +73,10 @@ public class BeatmapInfo : RealmObject, IHasGuidPrimaryKey, IBeatmapInfo, IEquat
     {
     }
 
-    public string DifficultyName { get; set; } = string.Empty;
-
-    [Indexed] public int OnlineID { get; set; } = -1;
-
-    public double Length { get; set; }
-
-    public double BPM { get; set; }
-
-    public string Hash { get; set; } = string.Empty;
-
-    public double StarRating { get; set; }
-
-    public string MD5Hash { get; set; } = string.Empty;
-
     public bool Equals(IBeatmapInfo? other)
     {
         return other is BeatmapInfo b && Equals(b);
     }
-
-    IBeatmapMetadataInfo IBeatmapInfo.Metadata => Metadata;
-    IBeatmapSetInfo? IBeatmapInfo.BeatmapSet => BeatmapSet;
-    IRulesetInfo IBeatmapInfo.Ruleset => Ruleset;
-    IBeatmapDifficultyInfo IBeatmapInfo.Difficulty => Difficulty;
 
     public bool Equals(BeatmapInfo? other)
     {
@@ -83,8 +85,6 @@ public class BeatmapInfo : RealmObject, IHasGuidPrimaryKey, IBeatmapInfo, IEquat
 
         return ID == other.ID;
     }
-
-    [PrimaryKey] public Guid ID { get; set; }
 
     public override string ToString()
     {

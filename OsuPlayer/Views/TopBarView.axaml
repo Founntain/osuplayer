@@ -39,6 +39,11 @@
                     Background="Transparent">
                 <avalonia:MaterialIcon Kind="PartyPopper" Height="24" Width="24" />
             </Button>
+            <!--Statistics Button-->
+            <Button Name="StatisticsNavigation" Width="32" Height="32" CornerRadius="50" Click="Navigation_Clicked"
+                    Background="Transparent">
+                <avalonia:MaterialIcon Kind="ChartBar" Height="24" Width="24" />
+            </Button>
         </DockPanel>
 
         <!--Window Buttons-->

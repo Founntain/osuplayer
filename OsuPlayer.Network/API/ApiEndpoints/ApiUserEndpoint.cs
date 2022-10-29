@@ -1,6 +1,7 @@
 ﻿using Avalonia.Media.Imaging;
 using OsuPlayer.Data.API.Enums;
 using OsuPlayer.Data.API.Models.Beatmap;
+using OsuPlayer.Data.API.Models.Statistic;
 using OsuPlayer.Data.API.Models.User;
 using OsuPlayer.Network.Online;
 
@@ -145,7 +146,7 @@ public partial class ApiAsync
 
         return await ApiRequestAsync<UserOnlineStatusModel>("users", "setUserOnlineStatus", data);
     }
-    
+
     public static async void SetUserOnlineStatusNonBlock(UserOnlineStatusType statusType, string? song = null, string? checksum = null)
     {
         var username = ProfileManager.User?.Name;

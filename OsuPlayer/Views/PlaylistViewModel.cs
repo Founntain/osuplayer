@@ -135,10 +135,7 @@ public class PlaylistViewModel : BaseViewModel
     {
         if (_materialIcons.Count != Playlists?.Count) return;
 
-        for (var i = 0; i < _materialIcons.Count; i++)
-        {
-            _materialIcons[i].IsVisible = Player.SelectedPlaylist.Value?.Id == Playlists?[i].Id;
-        }
+        for (var i = 0; i < _materialIcons.Count; i++) _materialIcons[i].IsVisible = Player.SelectedPlaylist.Value?.Id == Playlists?[i].Id;
     }
 
     /// <summary>

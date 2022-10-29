@@ -1,7 +1,5 @@
 ﻿// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 
-using System.ComponentModel;
-
 namespace OsuPlayer.Data.OsuPlayer.StorageModels;
 
 public class BlacklistContainer : IStorableContainer

@@ -67,7 +67,6 @@ public class Player : IPlayer, IImportNotifications
         var runtimePlatform = AvaloniaLocator.Current.GetRequiredService<IRuntimePlatform>();
 
         if (runtimePlatform.GetRuntimeInfo().OperatingSystem == OperatingSystemType.WinNT)
-        {
             try
             {
                 _winMediaControls = new WindowsMediaTransportControls(this);
@@ -76,7 +75,6 @@ public class Player : IPlayer, IImportNotifications
             {
                 _winMediaControls = null;
             }
-        }
 
         _audioEngine.ChannelReachedEnd = () => NextSong(PlayDirection.Forward);
 
@@ -136,7 +134,10 @@ public class Player : IPlayer, IImportNotifications
         }, true);
     }
 
-    public void OnImportStarted() => SongsLoading.Value = true;
+    public void OnImportStarted()
+    {
+        SongsLoading.Value = true;
+    }
 
     public async void OnImportFinished()
     {
@@ -166,30 +167,9 @@ public class Player : IPlayer, IImportNotifications
     public event PropertyChangedEventHandler? PlaylistChanged;
     public event PropertyChangedEventHandler? BlacklistChanged;
 
-    public void SetDevice(AudioDevice audioDevice) => _audioEngine.SetDevice(audioDevice);
-
-    /// <summary>
-    /// Plays the last played song read from the <see cref="ConfigContainer" /> and defaults to the
-    /// first song in the <see cref="ISongSourceProvider.SongSourceList" /> if null
-    /// </summary>
-    /// <param name="config">optional parameter defaults to null. Used to avoid duplications of config instances</param>
-    private async Task PlayLastPlayedSongAsync(ConfigContainer? config = null)
+    public void SetDevice(AudioDevice audioDevice)
     {
-        config ??= new Config().Container;
-
-        if (config.LastPlayedSong == null)
-        {
-            await TryPlaySongAsync(null);
-            return;
-        }
-
-        if (!string.IsNullOrWhiteSpace(config.LastPlayedSong))
-        {
-            await TryPlaySongAsync(SongSourceProvider.GetMapEntryFromHash(config.LastPlayedSong));
-            return;
-        }
-
-        await TryPlaySongAsync(SongSourceProvider.SongSourceList?[0]);
+        _audioEngine.SetDevice(audioDevice);
     }
 
     public void TriggerPlaylistChanged(PropertyChangedEventArgs e)
@@ -244,7 +224,10 @@ public class Player : IPlayer, IImportNotifications
         _winMediaControls?.UpdatePlayingStatus(false);
     }
 
-    public void Stop() => _audioEngine.Stop();
+    public void Stop()
+    {
+        _audioEngine.Stop();
+    }
 
     public void ToggleMute()
     {
@@ -288,6 +271,57 @@ public class Player : IPlayer, IImportNotifications
         }
     }
 
+    public async Task TryPlaySongAsync(IMapEntryBase? song, PlayDirection playDirection = PlayDirection.Normal)
+    {
+        if (SongSourceProvider.SongSourceList == default || !SongSourceProvider.SongSourceList.Any())
+            throw new NullReferenceException();
+
+        if (song == default)
+        {
+            await TryStartSongAsync(SongSourceProvider.SongSourceList[0]);
+            return;
+        }
+
+        if ((await new Config().ReadAsync()).IgnoreSongsWithSameNameCheckBox && string.Equals(CurrentSong.Value?.SongName, song.SongName, StringComparison.OrdinalIgnoreCase))
+            switch (playDirection)
+            {
+                case PlayDirection.Forward:
+                case PlayDirection.Backwards:
+                    CurrentIndex += (int) playDirection;
+                    NextSong(playDirection);
+                    return;
+                default:
+                    await TryStartSongAsync(song);
+                    return;
+            }
+
+        await TryStartSongAsync(song);
+    }
+
+    /// <summary>
+    /// Plays the last played song read from the <see cref="ConfigContainer" /> and defaults to the
+    /// first song in the <see cref="ISongSourceProvider.SongSourceList" /> if null
+    /// </summary>
+    /// <param name="config">optional parameter defaults to null. Used to avoid duplications of config instances</param>
+    private async Task PlayLastPlayedSongAsync(ConfigContainer? config = null)
+    {
+        config ??= new Config().Container;
+
+        if (config.LastPlayedSong == null)
+        {
+            await TryPlaySongAsync(null);
+            return;
+        }
+
+        if (!string.IsNullOrWhiteSpace(config.LastPlayedSong))
+        {
+            await TryPlaySongAsync(SongSourceProvider.GetMapEntryFromHash(config.LastPlayedSong));
+            return;
+        }
+
+        await TryPlaySongAsync(SongSourceProvider.SongSourceList?[0]);
+    }
+
     private IMapEntryBase GetNextSongToPlay(IList<IMapEntryBase> songSource, int currentIndex, PlayDirection playDirection)
     {
         IMapEntryBase songToPlay;
@@ -308,41 +342,9 @@ public class Player : IPlayer, IImportNotifications
             songToPlay = songSource[currentIndex];
         }
 
-        if (BlacklistSkip.Value && new Blacklist().Container.Songs.Contains(songToPlay.Hash))
-        {
-            songToPlay = GetNextSongToPlay(songSource, currentIndex, playDirection);
-        }
+        if (BlacklistSkip.Value && new Blacklist().Container.Songs.Contains(songToPlay.Hash)) songToPlay = GetNextSongToPlay(songSource, currentIndex, playDirection);
 
         return songToPlay;
-    }
-
-    public async Task TryPlaySongAsync(IMapEntryBase? song, PlayDirection playDirection = PlayDirection.Normal)
-    {
-        if (SongSourceProvider.SongSourceList == default || !SongSourceProvider.SongSourceList.Any())
-            throw new NullReferenceException();
-
-        if (song == default)
-        {
-            await TryStartSongAsync(SongSourceProvider.SongSourceList[0]);
-            return;
-        }
-
-        if ((await new Config().ReadAsync()).IgnoreSongsWithSameNameCheckBox && string.Equals(CurrentSong.Value?.SongName, song.SongName, StringComparison.OrdinalIgnoreCase))
-        {
-            switch (playDirection)
-            {
-                case PlayDirection.Forward:
-                case PlayDirection.Backwards:
-                    CurrentIndex += (int) playDirection;
-                    NextSong(playDirection);
-                    return;
-                default:
-                    await TryStartSongAsync(song);
-                    return;
-            }
-        }
-
-        await TryStartSongAsync(song);
     }
 
     /// <summary>
@@ -352,10 +354,7 @@ public class Player : IPlayer, IImportNotifications
     /// <returns>a <see cref="Task" /> with the resulting state</returns>
     private async Task TryStartSongAsync(IMapEntryBase song)
     {
-        if (SongSourceProvider.SongSourceList == null || !SongSourceProvider.SongSourceList.Any())
-        {
-            throw new NullReferenceException($"{nameof(SongSourceProvider.SongSourceList)} can't be null or empty");
-        }
+        if (SongSourceProvider.SongSourceList == null || !SongSourceProvider.SongSourceList.Any()) throw new NullReferenceException($"{nameof(SongSourceProvider.SongSourceList)} can't be null or empty");
 
         var config = new Config();
 
@@ -363,10 +362,7 @@ public class Player : IPlayer, IImportNotifications
 
         var fullMapEntry = await song.ReadFullEntry();
 
-        if (fullMapEntry == default)
-        {
-            throw new NullReferenceException();
-        }
+        if (fullMapEntry == default) throw new NullReferenceException();
 
         fullMapEntry.UseUnicode = config.Container.UseSongNameUnicode;
         var findBackgroundTask = fullMapEntry.FindBackground();

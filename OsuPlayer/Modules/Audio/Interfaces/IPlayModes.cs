@@ -1,5 +1,4 @@
 ﻿using OsuPlayer.Data.OsuPlayer.Enums;
-using OsuPlayer.Modules.ShuffleImpl;
 
 namespace OsuPlayer.Modules.Audio.Interfaces;
 

@@ -8,10 +8,9 @@ namespace OsuPlayer.IO.DbReader;
 /// </summary>
 public class OsuDbReader : BinaryReader, IDatabaseReader
 {
-    public static int OsuDbVersion { get; private set; }
-
     private readonly byte[] _buf = new byte[512];
     private string _path = string.Empty;
+    public static int OsuDbVersion { get; private set; }
 
     public OsuDbReader(Stream input) : base(input)
     {
@@ -56,8 +55,7 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
 
                 BaseStream.Seek(-length, SeekOrigin.Current);
             }
-
-
+            
             ReadFromStream(out var minBeatMap);
             prevId = minBeatMap.BeatmapSetId;
             minBeatMaps.Add(minBeatMap);
@@ -123,7 +121,7 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
     /// <summary>
     /// Reads a osu!.db map entry and fills a <see cref="DbMapEntryBase" /> with needed data
     /// </summary>
-    /// <param name="minBeatmap">A <see cref="DbMapEntryBase"/> as an out parameter</param>
+    /// <param name="minBeatmap">A <see cref="DbMapEntryBase" /> as an out parameter</param>
     private void ReadFromStream(out DbMapEntryBase minBeatmap)
     {
         var dbOffset = BaseStream.Position;

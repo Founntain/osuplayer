@@ -23,14 +23,14 @@ namespace OsuPlayer.Views;
 
 public class HomeViewModel : BaseViewModel
 {
+    private readonly BindableList<ObservableValue> _graphValues = new();
     private readonly Bindable<bool> _songsLoading = new();
+    private readonly ReadOnlyObservableCollection<IMapEntryBase>? _sortedSongEntries;
 
     public readonly IPlayer Player;
-    private readonly ReadOnlyObservableCollection<IMapEntryBase>? _sortedSongEntries;
-    private readonly BindableList<ObservableValue> _graphValues = new();
-    private Bitmap? _profilePicture;
-    private List<Playlist>? _playlists;
     private List<AddToPlaylistContextMenuEntry> _playlistContextMenuEntries;
+    private List<Playlist>? _playlists;
+    private Bitmap? _profilePicture;
 
     public ReadOnlyObservableCollection<IMapEntryBase>? SortedSongEntries => _sortedSongEntries;
     public IMapEntryBase? SelectedSong { get; set; }

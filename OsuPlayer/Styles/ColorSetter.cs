@@ -59,8 +59,8 @@ public class ColorSetter
 
             var h = H / 360f;
 
-            var max = L < 0.5f ? L * (1 + S) : (L + S) - (L * S);
-            var min = (L * 2f) - max;
+            var max = L < 0.5f ? L * (1 + S) : L + S - L * S;
+            var min = L * 2f - max;
 
             return Color.FromArgb(255, (byte) (255 * HueToRgb(min, max, h + 1 / 3f)),
                 (byte) (255 * HueToRgb(min, max, h)),
@@ -75,14 +75,14 @@ public class ColorSetter
             if (vH > 1)
                 vH -= 1;
 
-            if ((6 * vH) < 1)
-                return (v1 + (v2 - v1) * 6 * vH);
+            if (6 * vH < 1)
+                return v1 + (v2 - v1) * 6 * vH;
 
-            if ((2 * vH) < 1)
+            if (2 * vH < 1)
                 return v2;
 
-            if ((3 * vH) < 2)
-                return (v1 + (v2 - v1) * ((2.0f / 3) - vH) * 6);
+            if (3 * vH < 2)
+                return v1 + (v2 - v1) * (2.0f / 3 - vH) * 6;
 
             return v1;
         }

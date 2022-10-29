@@ -46,6 +46,9 @@ internal partial class TopBarView : ReactiveControl<TopBarViewModel>
             case "PartyNavigation":
                 _mainWindow.ViewModel!.MainView = _mainWindow.ViewModel.PartyView;
                 break;
+            case "StatisticsNavigation":
+                _mainWindow.ViewModel!.MainView = _mainWindow.ViewModel.StatisticsView;
+                break;
         }
     }
 

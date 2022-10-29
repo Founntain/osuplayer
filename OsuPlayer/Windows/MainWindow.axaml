@@ -8,7 +8,7 @@
         Title="osu!player" Width="1280" Height="720"
         WindowStartupLocation="CenterScreen" CanResize="True"
         Foreground="White"
-        
+
         FontFamily="Montserrat"
         FontWeight="{DynamicResource DefaultFontWeight}"
         FontSize="16"

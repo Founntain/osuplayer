@@ -14,7 +14,7 @@ public interface IStatisticsProvider
     /// <summary>
     /// Updates the online status of the user.
     /// </summary>
-    /// <param name="statusType">The <see cref="UserOnlineStatusType"/> to be set</param>
+    /// <param name="statusType">The <see cref="UserOnlineStatusType" /> to be set</param>
     /// <param name="song">the currently playing song name</param>
     /// <param name="checksum">the md5 hash of the playing song</param>
     /// <returns></returns>

@@ -13,6 +13,6 @@ public interface IShuffleServiceProvider
     /// <summary>
     /// Sets the shuffle algorithm.
     /// </summary>
-    /// <param name="algorithm">The <see cref="IShuffleImpl"/> to set.</param>
+    /// <param name="algorithm">The <see cref="IShuffleImpl" /> to set.</param>
     public void SetShuffleImpl(IShuffleImpl? algorithm);
 }

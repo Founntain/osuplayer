@@ -40,11 +40,6 @@ public class RealmMapEntryBase : IMapEntryBase
         return $"{GetArtist()} - {GetTitle()}";
     }
 
-    public override string ToString()
-    {
-        return GetSongName();
-    }
-
     public async Task<IMapEntry?> ReadFullEntry()
     {
         if (OsuPath == null) return null;
@@ -110,16 +105,6 @@ public class RealmMapEntryBase : IMapEntryBase
         return new RealmReader(OsuPath);
     }
 
-    public static bool operator ==(RealmMapEntryBase? left, IMapEntryBase? right)
-    {
-        return left?.Hash == right?.Hash;
-    }
-
-    public static bool operator !=(RealmMapEntryBase? left, IMapEntryBase? right)
-    {
-        return left?.Hash != right?.Hash;
-    }
-
     public bool Equals(IMapEntryBase? other)
     {
         return Hash == other?.Hash;
@@ -128,6 +113,21 @@ public class RealmMapEntryBase : IMapEntryBase
     public int CompareTo(IMapEntryBase? other)
     {
         return string.Compare(Hash, other?.Hash, StringComparison.OrdinalIgnoreCase);
+    }
+
+    public override string ToString()
+    {
+        return GetSongName();
+    }
+
+    public static bool operator ==(RealmMapEntryBase? left, IMapEntryBase? right)
+    {
+        return left?.Hash == right?.Hash;
+    }
+
+    public static bool operator !=(RealmMapEntryBase? left, IMapEntryBase? right)
+    {
+        return left?.Hash != right?.Hash;
     }
 
     public override bool Equals(object? other)

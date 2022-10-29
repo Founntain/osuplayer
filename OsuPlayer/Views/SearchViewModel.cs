@@ -14,8 +14,8 @@ namespace OsuPlayer.Views;
 
 public class SearchViewModel : BaseViewModel
 {
-    public readonly IPlayer Player;
     private readonly ReadOnlyObservableCollection<IMapEntryBase>? _filteredSongEntries;
+    public readonly IPlayer Player;
     private string _filterText = string.Empty;
     private List<AddToPlaylistContextMenuEntry> _playlistContextMenuEntries;
     private List<Playlist>? _playlists;
@@ -49,6 +49,13 @@ public class SearchViewModel : BaseViewModel
         this.RaisePropertyChanged(nameof(FilteredSongEntries));
 
         Activator = new ViewModelActivator();
+
+        var bday = new DateTime(2017, 11, 1);
+        var now = DateTime.UtcNow;
+
+        var difference = now - bday;
+
+        var differenceDate = new DateTime(difference.Ticks);
 
         this.WhenActivated(Block);
     }

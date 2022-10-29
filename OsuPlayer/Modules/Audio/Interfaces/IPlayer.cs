@@ -5,7 +5,7 @@ using OsuPlayer.IO.Importer;
 namespace OsuPlayer.Modules.Audio.Interfaces;
 
 /// <summary>
-/// This interface represents an audio player which should use the <see cref="IAudioEngine"/> as an underlying base.
+/// This interface represents an audio player which should use the <see cref="IAudioEngine" /> as an underlying base.
 /// </summary>
 public interface IPlayer : ICommonFeatures, IPlayModes, IHasPlaylists, IHasBlacklist, IHasDiscordRpc
 {
@@ -22,7 +22,7 @@ public interface IPlayer : ICommonFeatures, IPlayModes, IHasPlaylists, IHasBlack
     /// <summary>
     /// Plays the next song in the list.
     /// </summary>
-    /// <param name="playDirection">The <see cref="PlayDirection"/> for the next song</param>
+    /// <param name="playDirection">The <see cref="PlayDirection" /> for the next song</param>
     public void NextSong(PlayDirection playDirection);
 
     /// <summary>

@@ -24,20 +24,18 @@ public class ObservableSorter : IObservable<IComparer<IMapEntryBase>>
     public void UpdateComparer(IComparer<IMapEntryBase>? comparer)
     {
         foreach (var observer in _observers)
-        {
             if (comparer == null)
                 observer.OnError(new NullReferenceException());
             else
                 observer.OnNext(comparer);
-        }
 
         _lastComparer = comparer;
     }
 
     private class Unsubscribe : IDisposable
     {
-        private readonly List<IObserver<IComparer<IMapEntryBase>>> _observers;
         private readonly IObserver<IComparer<IMapEntryBase>>? _observer;
+        private readonly List<IObserver<IComparer<IMapEntryBase>>> _observers;
 
         public Unsubscribe(List<IObserver<IComparer<IMapEntryBase>>> observers, IObserver<IComparer<IMapEntryBase>> observer)
         {

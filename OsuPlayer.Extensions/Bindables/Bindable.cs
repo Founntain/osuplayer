@@ -18,19 +18,6 @@ public class Bindable<T> : IBindable<T>, IBindable
 
     protected LockedWeakList<Bindable<T>>? Bindings { get; private set; }
 
-    void IBindable.BindTo(IBindable other)
-    {
-        if (!(other is Bindable<T> otherB))
-            throw new InvalidCastException($"Can't bind to a bindable of type {other.GetType()} from a bindable of type {GetType()}.");
-
-        BindTo(otherB);
-    }
-
-    /// <summary>
-    /// An event raised when <see cref="Value" /> has changed
-    /// </summary>
-    public event Action<ValueChangedEvent<T>>? ValueChanged;
-
     public virtual T Value
     {
         get => _value;
@@ -41,6 +28,29 @@ public class Bindable<T> : IBindable<T>, IBindable
             SetValue(_value, value, _ignoreSource);
         }
     }
+
+    void IBindable.BindTo(IBindable other)
+    {
+        if (!(other is Bindable<T> otherB))
+            throw new InvalidCastException($"Can't bind to a bindable of type {other.GetType()} from a bindable of type {GetType()}.");
+
+        BindTo(otherB);
+    }
+
+    IBindable IBindable.CreateInstance()
+    {
+        return CreateInstance();
+    }
+
+    IBindable IBindable.GetBoundCopy()
+    {
+        return GetBoundCopy();
+    }
+
+    /// <summary>
+    /// An event raised when <see cref="Value" /> has changed
+    /// </summary>
+    public event Action<ValueChangedEvent<T>>? ValueChanged;
 
     /// <summary>
     /// Binds a <see cref="IBindable{T}" /> to this <see cref="Bindable{T}" /> if it's the same type
@@ -91,6 +101,25 @@ public class Bindable<T> : IBindable<T>, IBindable
 
         RemoveReference(otherB.WeakReference);
         otherB.RemoveReference(WeakReference);
+    }
+
+    /// <summary>
+    /// Binds a <see cref="ValueChangedEvent{T}" /> to a <see cref="Bindable{T}" />
+    /// </summary>
+    /// <param name="onChange">the <see cref="Action{T}" /> that should be executed</param>
+    /// <param name="ignoreSource">whether to ignore the trigger source</param>
+    /// <param name="runOnceImmediately">whether to run the <paramref name="onChange" /> action once immediately</param>
+    public void BindValueChanged(Action<ValueChangedEvent<T>> onChange, bool ignoreSource = false, bool runOnceImmediately = false)
+    {
+        ValueChanged += onChange;
+        _ignoreSource = ignoreSource;
+        if (runOnceImmediately)
+            onChange(new ValueChangedEvent<T>(Value, Value));
+    }
+
+    IBindable<T> IBindable<T>.GetBoundCopy()
+    {
+        return GetBoundCopy();
     }
 
     /// <summary>
@@ -155,20 +184,6 @@ public class Bindable<T> : IBindable<T>, IBindable
     }
 
     /// <summary>
-    /// Binds a <see cref="ValueChangedEvent{T}" /> to a <see cref="Bindable{T}" />
-    /// </summary>
-    /// <param name="onChange">the <see cref="Action{T}" /> that should be executed</param>
-    /// <param name="ignoreSource">whether to ignore the trigger source</param>
-    /// <param name="runOnceImmediately">whether to run the <paramref name="onChange" /> action once immediately</param>
-    public void BindValueChanged(Action<ValueChangedEvent<T>> onChange, bool ignoreSource = false, bool runOnceImmediately = false)
-    {
-        ValueChanged += onChange;
-        _ignoreSource = ignoreSource;
-        if (runOnceImmediately)
-            onChange(new ValueChangedEvent<T>(Value, Value));
-    }
-
-    /// <summary>
     /// Adds a reference to <see cref="Bindings" />
     /// </summary>
     /// <param name="reference">the <see cref="Bindable{T}" /> to add a reference to</param>
@@ -197,15 +212,15 @@ public class Bindable<T> : IBindable<T>, IBindable
         UnbindBindings();
     }
 
-    IBindable IBindable.CreateInstance() => CreateInstance();
+    /// <inheritdoc cref="IBindable.CreateInstance" />
+    protected virtual Bindable<T> CreateInstance()
+    {
+        return new();
+    }
 
-    /// <inheritdoc cref="IBindable.CreateInstance"/>
-    protected virtual Bindable<T> CreateInstance() => new Bindable<T>();
-
-    IBindable IBindable.GetBoundCopy() => GetBoundCopy();
-
-    IBindable<T> IBindable<T>.GetBoundCopy() => GetBoundCopy();
-
-    /// <inheritdoc cref="IBindable{T}.GetBoundCopy"/>
-    public Bindable<T> GetBoundCopy() => IBindable.GetBoundCopyImplementation(this);
+    /// <inheritdoc cref="IBindable{T}.GetBoundCopy" />
+    public Bindable<T> GetBoundCopy()
+    {
+        return IBindable.GetBoundCopyImplementation(this);
+    }
 }

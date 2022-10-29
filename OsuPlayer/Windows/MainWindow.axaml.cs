@@ -20,7 +20,7 @@ namespace OsuPlayer.Windows;
 public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 {
     public Miniplayer? Miniplayer;
-    
+
     public MainWindow()
     {
         InitializeComponent();

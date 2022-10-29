@@ -31,7 +31,8 @@
                      SelectedItem="{Binding SelectedUser}" SelectionChanged="UserList_OnSelectionChanged">
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="online:User">
-                        <TextBlock Text="{Binding Name}" Foreground="{Binding RoleColor}" FontWeight="{DynamicResource BiggerFontWeight}" />
+                        <TextBlock Text="{Binding Name}" Foreground="{Binding RoleColor}"
+                                   FontWeight="{DynamicResource BiggerFontWeight}" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
@@ -70,7 +71,8 @@
                         </Border>
 
                         <StackPanel HorizontalAlignment="Stretch" Margin="0 0 0 10">
-                            <TextBlock Text="{Binding SelectedUser.Name}" FontSize="26" FontWeight="{DynamicResource BiggerFontWeight}"
+                            <TextBlock Text="{Binding SelectedUser.Name}" FontSize="26"
+                                       FontWeight="{DynamicResource BiggerFontWeight}"
                                        HorizontalAlignment="Center" />
                             <TextBlock Text="{Binding SelectedUser.JoinDateString}" FontSize="14" FontStyle="Italic"
                                        FontWeight="SemiBold" HorizontalAlignment="Center" />
@@ -115,9 +117,11 @@
                             </Border>
                             <ScrollViewer Grid.Row="1">
                                 <StackPanel Spacing="5" Margin="10">
-                                    <TextBlock Text="{Binding SelectedUser.DescriptionTitleString}" FontSize="18" FontWeight="{DynamicResource BiggerFontWeight}"
+                                    <TextBlock Text="{Binding SelectedUser.DescriptionTitleString}" FontSize="18"
+                                               FontWeight="{DynamicResource BiggerFontWeight}"
                                                HorizontalAlignment="Center" TextAlignment="Center" />
-                                    <TextBlock Text="{Binding SelectedUser.Description}" FontWeight="{DynamicResource SmallerFontWeight}"
+                                    <TextBlock Text="{Binding SelectedUser.Description}"
+                                               FontWeight="{DynamicResource SmallerFontWeight}"
                                                HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" />
                                 </StackPanel>
                             </ScrollViewer>
@@ -138,7 +142,8 @@
                                     <DataTemplate DataType="beatmap:BeatmapUserValidityModel">
                                         <StackPanel>
                                             <TextBlock Text="{Binding GetTitle}" />
-                                            <TextBlock Text="{Binding GetTimesplayed}" FontSize="12" FontWeight="{DynamicResource SmallerFontWeight}" />
+                                            <TextBlock Text="{Binding GetTimesplayed}" FontSize="12"
+                                                       FontWeight="{DynamicResource SmallerFontWeight}" />
                                         </StackPanel>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>

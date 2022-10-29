@@ -6,7 +6,7 @@
 public class DefaultImplAttr : Attribute
 {
     /// <summary>
-    /// Creates a new instance of the <see cref="DefaultImplAttr"/> class.
+    /// Creates a new instance of the <see cref="DefaultImplAttr" /> class.
     /// </summary>
     public DefaultImplAttr()
     {

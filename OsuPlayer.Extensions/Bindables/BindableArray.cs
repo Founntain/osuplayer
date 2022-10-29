@@ -34,6 +34,16 @@ public class BindableArray<T> : IBindableArray<T>, IBindable
         BindTo(otherB);
     }
 
+    IBindable IBindable.CreateInstance()
+    {
+        return CreateInstance();
+    }
+
+    IBindable IBindable.GetBoundCopy()
+    {
+        return GetBoundCopy();
+    }
+
     public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
     public void UnbindEvents()
@@ -165,14 +175,16 @@ public class BindableArray<T> : IBindableArray<T>, IBindable
         AddWeakReference(other.WeakReference);
         other.AddWeakReference(WeakReference);
     }
-    
-    IBindable IBindable.CreateInstance() => CreateInstance();
 
-    /// <inheritdoc cref="IBindable.CreateInstance"/>
-    protected virtual IBindable CreateInstance() => new BindableArray<T>();
+    /// <inheritdoc cref="IBindable.CreateInstance" />
+    protected virtual IBindable CreateInstance()
+    {
+        return new BindableArray<T>();
+    }
 
-    IBindable IBindable.GetBoundCopy() => GetBoundCopy();
-
-    /// <inheritdoc cref="IBindable{T}.GetBoundCopy"/>
-    public BindableArray<T> GetBoundCopy() => IBindable.GetBoundCopyImplementation(this);
+    /// <inheritdoc cref="IBindable{T}.GetBoundCopy" />
+    public BindableArray<T> GetBoundCopy()
+    {
+        return IBindable.GetBoundCopyImplementation(this);
+    }
 }

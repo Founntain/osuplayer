@@ -1,5 +1,4 @@
-﻿using Avalonia.Controls.Templates;
-using Avalonia.Media.Imaging;
+﻿using Avalonia.Media.Imaging;
 
 namespace OsuPlayer.Network.Data;
 

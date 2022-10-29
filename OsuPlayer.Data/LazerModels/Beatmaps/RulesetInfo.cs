@@ -10,6 +10,14 @@ public class RulesetInfo : RealmObject, IEquatable<RulesetInfo>, IComparable<Rul
 {
     public bool Available { get; set; }
 
+    [PrimaryKey] public string ShortName { get; set; } = string.Empty;
+
+    [Indexed] public int OnlineID { get; set; } = -1;
+
+    public string Name { get; set; } = string.Empty;
+
+    public string InstantiationInfo { get; set; } = string.Empty;
+
     public RulesetInfo(string shortName, string name, string instantiationInfo, int onlineID)
     {
         ShortName = shortName;
@@ -44,14 +52,6 @@ public class RulesetInfo : RealmObject, IEquatable<RulesetInfo>, IComparable<Rul
 
         return ShortName == other.ShortName;
     }
-
-    [PrimaryKey] public string ShortName { get; set; } = string.Empty;
-
-    [Indexed] public int OnlineID { get; set; } = -1;
-
-    public string Name { get; set; } = string.Empty;
-
-    public string InstantiationInfo { get; set; } = string.Empty;
 
     public bool Equals(IRulesetInfo? other)
     {
