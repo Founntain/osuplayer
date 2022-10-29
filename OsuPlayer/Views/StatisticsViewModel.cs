@@ -10,7 +10,7 @@ public class StatisticsViewModel : BaseViewModel
     private int _beatmapsTracked;
     private uint _communityLevel;
     private float _mbUsed;
-    private string _playerAge;
+    private string _playerAge = string.Empty;
     private ulong _songsPlayed;
     private uint _translators;
 
@@ -111,7 +111,7 @@ public class StatisticsViewModel : BaseViewModel
     private async Task UpdateApiStatistics()
     {
         var statistics = await ApiAsync.GetApiStatistics();
-        
+
         Users = statistics.TotalUserCount;
         Translators = statistics.TranslatorCount;
         XpEarned = statistics.CommunityTotalXp;
