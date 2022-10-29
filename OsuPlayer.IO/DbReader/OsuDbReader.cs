@@ -55,8 +55,7 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
 
                 BaseStream.Seek(-length, SeekOrigin.Current);
             }
-
-
+            
             ReadFromStream(out var minBeatMap);
             prevId = minBeatMap.BeatmapSetId;
             minBeatMaps.Add(minBeatMap);

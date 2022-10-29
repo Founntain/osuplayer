@@ -48,30 +48,3 @@ public class Cached<T>
         return false;
     }
 }
-
-public class Cached
-{
-    public bool IsValid { get; private set; }
-
-    /// <summary>
-    /// Invalidate the cache of this object.
-    /// </summary>
-    /// <returns>True if we invalidated from a valid state.</returns>
-    public bool Invalidate()
-    {
-        if (IsValid)
-        {
-            IsValid = false;
-            //FrameStatistics.Increment(StatisticsCounterType.Invalidations);
-            return true;
-        }
-
-        return false;
-    }
-
-    public void Validate()
-    {
-        IsValid = true;
-        //FrameStatistics.Increment(StatisticsCounterType.Refreshes);
-    }
-}
