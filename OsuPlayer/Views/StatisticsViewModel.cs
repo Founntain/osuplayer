@@ -1,4 +1,5 @@
 using System.Reactive.Disposables;
+using System.Threading.Tasks;
 using OsuPlayer.Base.ViewModels;
 using ReactiveUI;
 
@@ -6,16 +7,16 @@ namespace OsuPlayer.Views;
 
 public class StatisticsViewModel : BaseViewModel
 {
-    private int _beatmapsTracked = 1234;
-    private uint _communityLevel = 1234;
-    private float _mbUsed = 1234f;
-    private string _playerAge = "1234";
-    private ulong _songsPlayed = 1234;
-    private uint _translators = 1234;
+    private int _beatmapsTracked;
+    private uint _communityLevel;
+    private float _mbUsed;
+    private string _playerAge;
+    private ulong _songsPlayed;
+    private uint _translators;
 
-    private uint _users = 1234;
-    private ulong _xpEarned = 1234;
-    private ulong _xpLeft = 1234;
+    private uint _users;
+    private ulong _xpEarned;
+    private ulong _xpLeft;
 
     public uint Users
     {
@@ -78,12 +79,13 @@ public class StatisticsViewModel : BaseViewModel
         this.WhenActivated(Block);
     }
 
-    private void Block(CompositeDisposable disposable)
+    private async void Block(CompositeDisposable disposable)
     {
-        // done separately so they can fail independently
-        UpdateApiStatistics();
-        UpdateBeatmapCount();
-        UpdateStorageAmount();
+        // Done separately so they can fail independently
+        await UpdateApiStatistics();
+        await UpdateBeatmapCount();
+        await UpdateStorageAmount();
+        
         UpdateDate();
     }
 
@@ -101,9 +103,10 @@ public class StatisticsViewModel : BaseViewModel
         PlayerAge = $"{years} years, {months} months, {days} days, {timeSince.Hours}:{timeSince.Minutes}:{timeSince.Seconds} old";
     }
 
-    private async void UpdateApiStatistics()
+    private async Task UpdateApiStatistics()
     {
         var statistics = await ApiAsync.GetApiStatistics();
+        
         Users = statistics.TotalUserCount;
         Translators = statistics.TranslatorCount;
         XpEarned = statistics.CommunityTotalXp;
@@ -111,12 +114,12 @@ public class StatisticsViewModel : BaseViewModel
         XpLeft = statistics.CommunityXpLeft;
     }
 
-    private async void UpdateStorageAmount()
+    private async Task UpdateStorageAmount()
     {
         MbUsed = await ApiAsync.GetStorageAmount();
     }
 
-    private async void UpdateBeatmapCount()
+    private async Task UpdateBeatmapCount()
     {
         BeatmapsTracked = await ApiAsync.GetBeatmapsCount();
     }
