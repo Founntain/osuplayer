@@ -82,10 +82,15 @@ public class StatisticsViewModel : BaseViewModel
     private async void Block(CompositeDisposable disposable)
     {
         // Done separately so they can fail independently
-        await UpdateApiStatistics();
-        await UpdateBeatmapCount();
-        await UpdateStorageAmount();
-        
+        var tasks = new[]
+        {
+            UpdateApiStatistics(),
+            UpdateBeatmapCount(),
+            UpdateStorageAmount()
+        };
+
+        await Task.WhenAll(tasks);
+
         UpdateDate();
     }
 
