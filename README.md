@@ -22,7 +22,7 @@ If you want to contribute, feel free to fork this repository, read the [contribu
 
 #### osu!player requirements
 ✔️ A working computer  
-✔️ .NET 6 or later installed  
+✔️ .NET 7 or later installed
 ✔️ osu! installed with an **osu!.db file** or **osu!lazer client.realm** *(Beatmaps imported in osu!)*  
 ✔️ An internet connection if you want to use your osu!player plus profile
 
