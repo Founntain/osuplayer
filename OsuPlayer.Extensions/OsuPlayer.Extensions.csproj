@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>annotations</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="0.10.18" />
-        <PackageReference Include="DynamicData" Version="7.10.2" />
+        <PackageReference Include="DynamicData" Version="7.12.1" />
         <PackageReference Include="Material.Icons.Avalonia" Version="1.1.10" />
         <PackageReference Include="Splat" Version="14.4.1" />
     </ItemGroup>
