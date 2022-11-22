@@ -38,8 +38,7 @@ You can also build the project for yourself; see the section below!
 
 ## 👋 Contributing to the project
 #### ☝️Requirements
- - .NET 6 SDK
-    > You need at least version 6.0.4xx to build on platforms other than Windows
+ - .NET 7 SDK
  - [Avalonia .NET Templates](https://github.com/AvaloniaUI/avalonia-dotnet-templates)
  - [Check out the Avalonia getting started](https://github.com/AvaloniaUI/Avalonia#-getting-started)
  - *Have a **decent understanding of the internal osu!** structure and know osu! (the game) as well.*
