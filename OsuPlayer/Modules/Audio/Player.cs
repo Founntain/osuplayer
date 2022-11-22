@@ -88,7 +88,6 @@ public class Player : IPlayer, IImportNotifications
 
         IsPlaying.BindTo(_audioEngine.IsPlaying);
 
-
         Volume.Value = config.Container.Volume;
 
         BlacklistSkip.Value = config.Container.BlacklistSkip;
