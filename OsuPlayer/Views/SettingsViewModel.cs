@@ -38,6 +38,7 @@ public class SettingsViewModel : BaseViewModel
     private IShuffleServiceProvider? _shuffleServiceProvider;
 
     public MainWindow? MainWindow;
+    private bool _useDiscordRpc;
 
     public List<OsuPlayerContributer> Contributers
     {
@@ -232,6 +233,19 @@ public class SettingsViewModel : BaseViewModel
         }
     }
 
+    public bool UseDiscordRpc
+    {
+        get => _useDiscordRpc;
+        set
+        {
+            _useDiscordRpc = value;
+            this.RaisePropertyChanged();
+
+            using var cfg = new Config();
+            cfg.Container.UseDiscordRpc = value;
+        }
+    }
+
     public bool PlaylistEnableOnPlay
     {
         get => _playlistEnableOnPlay.Value;
@@ -308,7 +322,8 @@ public class SettingsViewModel : BaseViewModel
         _selectedFontWeight = config.Container.DefaultFontWeight;
         _selectedFont = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
         _selectedShuffleAlgorithm = ShuffleAlgorithms?.FirstOrDefault(x => x == _shuffleServiceProvider?.ShuffleImpl);
-
+        _useDiscordRpc = config.Container.UseDiscordRpc;
+        
         if (sortProvider != null)
         {
             _sortingMode.BindTo(sortProvider.SortingModeBindable);

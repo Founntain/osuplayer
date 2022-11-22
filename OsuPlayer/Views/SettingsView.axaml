@@ -99,6 +99,14 @@
                             <CheckBox IsChecked="{Binding PlaylistEnableOnPlay}"
                                       Content="Enable playlist mode on song play" />
                         </StackPanel>
+                        
+                        <StackPanel Spacing="5" Name="UseDiscordRpc">
+                            <ToolTip.Tip>
+                                Whether or not to use Discord Rich Presence.
+                            </ToolTip.Tip>
+                            <ToggleSwitch IsChecked="{Binding UseDiscordRpc}"
+                                          Content="Use Discord RPC (requires restart)"/>
+                        </StackPanel>
                     </StackPanel>
                 </Grid>
 
