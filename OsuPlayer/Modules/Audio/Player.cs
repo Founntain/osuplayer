@@ -78,15 +78,15 @@ public class Player : IPlayer, IImportNotifications
 
         _audioEngine.ChannelReachedEnd = () => NextSong(PlayDirection.Forward);
 
-        _discordClient = new DiscordClient().Initialize();
+        var config = new Config();
+        
+        _discordClient = new DiscordClient().Initialize(config.Container.UseDiscordRpc);
 
         SongSourceProvider = songSourceProvider;
         _shuffleProvider = shuffleProvider;
         _statisticsProvider = statisticsProvider;
 
         IsPlaying.BindTo(_audioEngine.IsPlaying);
-
-        var config = new Config();
 
         Volume.Value = config.Container.Volume;
 

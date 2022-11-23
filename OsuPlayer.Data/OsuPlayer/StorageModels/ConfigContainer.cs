@@ -27,6 +27,7 @@ public class ConfigContainer : IStorableContainer
     public KnownColors AccentColor { get; set; } = KnownColors.White;
     public FontWeights DefaultFontWeight { get; set; } = FontWeights.Medium;
     public string? Font { get; set; }
+    public bool UseDiscordRpc { get; set; }
 
     public IStorableContainer Init()
     {

@@ -33,8 +33,13 @@ public class DiscordClient
     /// Initializes the Discord Client and prepares all events
     /// </summary>
     /// <returns>itself</returns>
-    public DiscordClient Initialize()
+    public DiscordClient? Initialize(bool useDiscord)
     {
+        if (!useDiscord)
+        {
+            return null;
+        }
+        
         _client.Logger = new ConsoleLogger
         {
             Level = LogLevel.Warning
