@@ -36,6 +36,7 @@ public class MainWindowViewModel : BaseWindowViewModel
     public PlayerControlViewModel PlayerControl { get; }
     public EqualizerViewModel EqualizerView { get; }
     public StatisticsViewModel StatisticsView { get; }
+    public SymmetricalViewModel SymmetricalView { get; }
 
     public BaseViewModel MainView
     {
@@ -69,6 +70,7 @@ public class MainWindowViewModel : BaseWindowViewModel
         EqualizerView = new EqualizerViewModel(Player);
         UpdateView = new UpdateViewModel();
         StatisticsView = new StatisticsViewModel();
+        SymmetricalView = new SymmetricalViewModel();
 
         using var config = new Config();
 

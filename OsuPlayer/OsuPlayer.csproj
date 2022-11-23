@@ -117,6 +117,9 @@
         <Compile Update="Views\StatisticsViewModel.cs">
             <DependentUpon>StatisticsView.axaml</DependentUpon>
         </Compile>
+        <Compile Update="Views\SymmetricalViewModel.cs">
+          <DependentUpon>SymmetricalView.axaml</DependentUpon>
+        </Compile>
     </ItemGroup>
     <ItemGroup>
         <UpToDateCheckInput Remove="Resources\profiles\cesan.jpg" />

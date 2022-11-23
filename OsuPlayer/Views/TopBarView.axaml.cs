@@ -31,6 +31,9 @@ internal partial class TopBarView : ReactiveControl<TopBarViewModel>
     {
         switch ((sender as Control)?.Name)
         {
+            case "SymmetricalNavigation":
+                _mainWindow.ViewModel!.MainView = _mainWindow.ViewModel.SymmetricalView;
+                break;
             case "SearchNavigation":
                 _mainWindow.ViewModel!.MainView = _mainWindow.ViewModel.SearchView;
                 break;
