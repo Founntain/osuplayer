@@ -114,11 +114,16 @@ public abstract class Storable<T> : IDisposable, IAsyncDisposable where T : ISto
 
         Directory.CreateDirectory("data");
 
+        TrySave(container);
+    }
+
+    private void TrySave(T container)
+    {
         for (var i = 0; i < 3; i++)
         {
             try
             {
-                File.WriteAllText(Path, JsonConvert.SerializeObject(container, SerializerSettings));
+                File.WriteAllText(Path!, JsonConvert.SerializeObject(container, SerializerSettings));
                 break;
             }
             catch (Exception e)
@@ -141,11 +146,16 @@ public abstract class Storable<T> : IDisposable, IAsyncDisposable where T : ISto
 
         Directory.CreateDirectory("data");
 
+        await TrySaveAsync(container);
+    }
+
+    private async Task TrySaveAsync(T container)
+    {
         for (var i = 0; i < 3; i++)
         {
             try
             {
-                await File.WriteAllTextAsync(Path, JsonConvert.SerializeObject(container, SerializerSettings));
+                await File.WriteAllTextAsync(Path!, JsonConvert.SerializeObject(container, SerializerSettings));
             }
             catch (Exception e)
             {
