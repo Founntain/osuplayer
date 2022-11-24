@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Avalonia;
@@ -79,8 +79,8 @@ public class Player : IPlayer, IImportNotifications
         _audioEngine.ChannelReachedEnd = () => NextSong(PlayDirection.Forward);
 
         var config = new Config();
-        
-        _discordClient = new DiscordClient().Initialize(config.Container.UseDiscordRpc);
+
+        _discordClient = config.Container.UseDiscordRpc ? new DiscordClient().Initialize() : null;
 
         SongSourceProvider = songSourceProvider;
         _shuffleProvider = shuffleProvider;
@@ -107,7 +107,7 @@ public class Player : IPlayer, IImportNotifications
 
             if (d.NewValue is null) return;
 
-            _discordClient.UpdatePresence(d.NewValue.Title, $"by {d.NewValue.Artist}");
+            _discordClient?.UpdatePresence(d.NewValue.Title, $"by {d.NewValue.Artist}");
         }, true);
 
         RepeatMode.BindValueChanged(d =>
