@@ -238,8 +238,7 @@ public class SettingsViewModel : BaseViewModel
         get => _useDiscordRpc;
         set
         {
-            _useDiscordRpc = value;
-            this.RaisePropertyChanged();
+            this.RaiseAndSetIfChanged(ref _useDiscordRpc, value);
 
             using var cfg = new Config();
             cfg.Container.UseDiscordRpc = value;

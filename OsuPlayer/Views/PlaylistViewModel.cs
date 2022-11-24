@@ -42,7 +42,7 @@ public class PlaylistViewModel : BaseViewModel
                 _currentBind.Dispose();
 
             if (_selectedPlaylist?.Songs != null)
-                _currentBind = Player.SongSourceProvider.GetMapEntriesFromHash(_selectedPlaylist.Songs).ToSourceList().Connect()
+                _currentBind = Player.SongSourceProvider.GetMapEntriesFromHash(_selectedPlaylist.Songs, out _).ToSourceList().Connect()
                     .Filter(_filter, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
                     .Bind(out _filteredSongEntries).Subscribe();
 

@@ -55,14 +55,12 @@ public partial class PlaylistView : ReactiveControl<PlaylistViewModel>
         await ViewModel.Player.TryPlaySongAsync(song);
     }
 
-    private async void PlayPlaylist_OnClick(object? sender, RoutedEventArgs e)
+    private void PlayPlaylist_OnClick(object? sender, RoutedEventArgs e)
     {
         if (sender is not Control {DataContext: Playlist playlist}) return;
 
-        ViewModel.Player.SelectedPlaylist.Value = playlist;
         ViewModel.Player.RepeatMode.Value = RepeatMode.Playlist;
-
-        await ViewModel.Player.TryPlaySongAsync(ViewModel.Player.SongSourceProvider.GetMapEntryFromHash(playlist.Songs.First()));
+        ViewModel.Player.SelectedPlaylist.Value = playlist;
     }
 
     private void PlaylistItemLoaded(object? sender, VisualTreeAttachmentEventArgs e)
