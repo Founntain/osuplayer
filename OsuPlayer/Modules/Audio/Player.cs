@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Avalonia;
@@ -125,7 +125,16 @@ public class Player : IPlayer, IImportNotifications
 
             if (d.NewValue == null) return;
 
-            ActivePlaylistSongs = SongSourceProvider.GetMapEntriesFromHash(d.NewValue.Songs);
+            ActivePlaylistSongs = SongSourceProvider.GetMapEntriesFromHash(d.NewValue.Songs, out var invalidHashes);
+
+            if (invalidHashes.Any())
+            {
+                using var playlists = new PlaylistStorage();
+
+                var playlist = playlists.Container.Playlists?.First(x => x.Id == d.NewValue.Id);
+
+                playlist?.Songs.RemoveWhere(song => invalidHashes.Contains(song));
+            }
 
             if (RepeatMode.Value != Data.OsuPlayer.Enums.RepeatMode.Playlist || CurrentSong.Value == null) return;
 

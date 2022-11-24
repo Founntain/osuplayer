@@ -23,10 +23,11 @@ public interface ISongSourceProvider
     /// <summary>
     /// Gets the <see cref="IMapEntryBase" />s by a md5 hash enumerable
     /// </summary>
-    /// <param name="hash">The md5 hashes to find the entries for</param>
+    /// <param name="hashes">The md5 hashes to find the entries for</param>
+    /// <param name="invalidHashes">The md5 hashes that could not be mapped to a map entry</param>
     /// <returns>
     /// A <see cref="List{T}" /> of <see cref="IMapEntryBase" />s which contain all found entries. The list will be
     /// empty of none found
     /// </returns>
-    public List<IMapEntryBase> GetMapEntriesFromHash(IEnumerable<string> hash);
+    public List<IMapEntryBase> GetMapEntriesFromHash(ICollection<string> hashes, out ICollection<string> invalidHashes);
 }
