@@ -114,7 +114,19 @@ public abstract class Storable<T> : IDisposable, IAsyncDisposable where T : ISto
 
         Directory.CreateDirectory("data");
 
-        File.WriteAllText(Path, JsonConvert.SerializeObject(container, SerializerSettings));
+        for (var i = 0; i < 3; i++)
+        {
+            try
+            {
+                File.WriteAllText(Path, JsonConvert.SerializeObject(container, SerializerSettings));
+                break;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Thread.Sleep(50);
+            }
+        }
     }
 
     /// <summary>
@@ -129,6 +141,17 @@ public abstract class Storable<T> : IDisposable, IAsyncDisposable where T : ISto
 
         Directory.CreateDirectory("data");
 
-        await File.WriteAllTextAsync(Path, JsonConvert.SerializeObject(container, SerializerSettings));
+        for (var i = 0; i < 3; i++)
+        {
+            try
+            {
+                await File.WriteAllTextAsync(Path, JsonConvert.SerializeObject(container, SerializerSettings));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Thread.Sleep(50);
+            }
+        }
     }
 }
