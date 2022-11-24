@@ -15,12 +15,9 @@ public static class PlaylistManager
     /// <returns>an <see cref="IList{T}" /> containing all playlists</returns>
     public static IList<Playlist>? GetAllPlaylists()
     {
-        using (var storage = new PlaylistStorage())
-        {
-            storage.Read();
+        var storage = new PlaylistStorage();
 
-            return storage.Container.Playlists;
-        }
+        return storage.Container.Playlists;
     }
 
     /// <summary>
@@ -29,12 +26,11 @@ public static class PlaylistManager
     /// <returns>an <see cref="IList{T}" /> containing all playlists</returns>
     public static async Task<IList<Playlist>?> GetAllPlaylistsAsync()
     {
-        await using (var storage = new PlaylistStorage())
-        {
-            await storage.ReadAsync();
+        var storage = new PlaylistStorage();
 
-            return storage.Container.Playlists;
-        }
+        await storage.ReadAsync();
+
+        return storage.Container.Playlists;
     }
 
     /// <summary>
