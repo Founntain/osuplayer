@@ -65,6 +65,7 @@ A rule of thumb is: If you want a new feature, discuss it with us and if people 
 
 ## ✨ Special thanks
 - ***SourRaindrop***: for creating a lot of custom images and assets like our logo
+- ***To you, the user***: for using this project and helping us improving it and simply enjoying your osu! music
 
 ## 🪛 Features that are missing to have the full osu!player plus a feature set
 
