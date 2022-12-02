@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using System.Timers;
@@ -106,7 +107,7 @@ public class StatisticsViewModel : BaseViewModel
         UpdateDate();
 
         _timer = new Timer(1000);
-        _timer.Elapsed += (sender, args) => UpdateDateNonApi();
+        _timer.Elapsed += (_, _) => UpdateDateNonApi();
         _timer.Start();
     }
 
@@ -119,7 +120,7 @@ public class StatisticsViewModel : BaseViewModel
 
     private void UpdateDateNonApi()
     {
-        _playerAgeTime += TimeSpan.FromSeconds(1);
+        UpdateDate();
 
         this.RaisePropertyChanged(nameof(PlayerAge));
     }
