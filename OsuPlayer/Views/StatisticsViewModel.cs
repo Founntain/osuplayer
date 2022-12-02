@@ -1,5 +1,6 @@
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
+using System.Timers;
 using OsuPlayer.Base.ViewModels;
 using ReactiveUI;
 
@@ -10,6 +11,7 @@ public class StatisticsViewModel : BaseViewModel
     private int _beatmapsTracked;
     private uint _communityLevel;
     private float _mbUsed;
+    private TimeSpan _playerAgeTime;
     private string _playerAge = string.Empty;
     private ulong _songsPlayed;
     private uint _translators;
@@ -17,6 +19,8 @@ public class StatisticsViewModel : BaseViewModel
     private uint _users;
     private ulong _xpEarned;
     private ulong _xpLeft;
+
+    private Timer? _timer;
 
     public uint Users
     {
@@ -68,7 +72,15 @@ public class StatisticsViewModel : BaseViewModel
 
     public string PlayerAge
     {
-        get => _playerAge;
+        get
+        {
+            var years = (int) Math.Floor(_playerAgeTime.Days / 365D);
+            var days = _playerAgeTime.Days % 365;
+            var months = (int) Math.Floor(days / 30D);
+            days %= 30;
+
+            return $"{years} years, {months} months, {days} days, {_playerAgeTime.Hours}:{_playerAgeTime.Minutes}:{_playerAgeTime.Seconds} old";
+        }
         set => this.RaiseAndSetIfChanged(ref _playerAge, value);
     }
 
@@ -81,31 +93,35 @@ public class StatisticsViewModel : BaseViewModel
 
     private async void Block(CompositeDisposable disposable)
     {
+        Disposable.Create(() => { _timer?.Close(); }).DisposeWith(disposable);
+
         // Done separately so they can fail independently
         var tasks = new[]
         {
-            UpdateApiStatistics(),
-            UpdateBeatmapCount(),
-            UpdateStorageAmount()
+            UpdateApiStatistics(), UpdateBeatmapCount(), UpdateStorageAmount()
         };
 
         await Task.WhenAll(tasks);
 
         UpdateDate();
+
+        _timer = new Timer(1000);
+        _timer.Elapsed += (sender, args) => UpdateDateNonApi();
+        _timer.Start();
     }
 
     private void UpdateDate()
     {
-        var timeSince = DateTime.Now.Subtract(new DateTime(2017, 11, 1));
+        _playerAgeTime = DateTime.Now.Subtract(new DateTime(2017, 11, 1));
 
-        var time = DateTime.MinValue + timeSince;
+        this.RaisePropertyChanged(nameof(PlayerAge));
+    }
 
-        // note: MinValue is 1/1/1 so we have to subtract...
-        var years = time.Year - 1;
-        var months = time.Month - 1;
-        var days = time.Day - 1;
+    private void UpdateDateNonApi()
+    {
+        _playerAgeTime += TimeSpan.FromSeconds(1);
 
-        PlayerAge = $"{years} years, {months} months, {days} days, {timeSince.Hours}:{timeSince.Minutes}:{timeSince.Seconds} old";
+        this.RaisePropertyChanged(nameof(PlayerAge));
     }
 
     private async Task UpdateApiStatistics()
