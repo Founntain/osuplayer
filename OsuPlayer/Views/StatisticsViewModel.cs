@@ -114,6 +114,7 @@ public class StatisticsViewModel : BaseViewModel
 
         Users = statistics.TotalUserCount;
         Translators = statistics.TranslatorCount;
+        SongsPlayed = statistics.TotalSongsPlayed;
         XpEarned = statistics.CommunityTotalXp;
         CommunityLevel = statistics.CommunityLevel;
         XpLeft = statistics.CommunityXpLeft;
