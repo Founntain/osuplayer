@@ -107,20 +107,13 @@ public class StatisticsViewModel : BaseViewModel
         UpdateDate();
 
         _timer = new Timer(1000);
-        _timer.Elapsed += (_, _) => UpdateDateNonApi();
+        _timer.Elapsed += (_, _) => UpdateDate();
         _timer.Start();
     }
 
     private void UpdateDate()
     {
         _playerAgeTime = DateTime.Now.Subtract(new DateTime(2017, 11, 1));
-
-        this.RaisePropertyChanged(nameof(PlayerAge));
-    }
-
-    private void UpdateDateNonApi()
-    {
-        UpdateDate();
 
         this.RaisePropertyChanged(nameof(PlayerAge));
     }
