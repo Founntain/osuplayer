@@ -3,9 +3,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:OsuPlayer.Views"
+             xmlns:valueConverters="clr-namespace:OsuPlayer.Extensions.ValueConverters;assembly=OsuPlayer.Extensions"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.StatisticsView"
              FontWeight="{DynamicResource DefaultFontWeight}">
+    <UserControl.Resources>
+        <valueConverters:DecimalFormatter x:Key="DecimalFormatter" />
+    </UserControl.Resources>
     <Design.DataContext>
         <views:StatisticsViewModel />
     </Design.DataContext>
@@ -17,49 +21,49 @@
               Background="{DynamicResource AcrylicBaseColor}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <TextBlock Text="Users" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" />
-                <TextBlock Text="{Binding Users}" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" />
+                <TextBlock Text="{Binding Users, Converter={StaticResource DecimalFormatter}}" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" />
             </StackPanel>
         </Panel>
 
         <Panel Grid.Row="0" Grid.Column="1" Margin="5" Background="{DynamicResource AcrylicBaseColor}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <TextBlock Text="Translators" Margin="10" HorizontalAlignment="Center" FontSize="20" />
-                <TextBlock Text="{Binding Translators}" Margin="10" HorizontalAlignment="Center" FontSize="20" />
+                <TextBlock Text="{Binding Translators, Converter={StaticResource DecimalFormatter}}" Margin="10" HorizontalAlignment="Center" FontSize="20" />
             </StackPanel>
         </Panel>
 
         <Panel Grid.Row="0" Grid.Column="2" Margin="5" Background="{DynamicResource AcrylicBaseColor}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <TextBlock Text="Songs Played" Margin="10" HorizontalAlignment="Center" FontSize="20" />
-                <TextBlock Text="{Binding SongsPlayed}" Margin="10" HorizontalAlignment="Center" FontSize="20" />
+                <TextBlock Text="{Binding SongsPlayed, Converter={StaticResource DecimalFormatter}}" Margin="10" HorizontalAlignment="Center" FontSize="20" />
             </StackPanel>
         </Panel>
 
         <Panel Grid.Row="1" Grid.Column="0" Margin="5" Background="{DynamicResource AcrylicBaseColor}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <TextBlock Text="XP earned" Margin="10" HorizontalAlignment="Center" FontSize="20" />
-                <TextBlock Text="{Binding XpEarned}" Margin="10" HorizontalAlignment="Center" FontSize="20" />
+                <TextBlock Text="{Binding XpEarned, Converter={StaticResource DecimalFormatter}}" Margin="10" HorizontalAlignment="Center" FontSize="20" />
             </StackPanel>
         </Panel>
 
         <Panel Grid.Row="1" Grid.Column="1" Margin="5" Background="{DynamicResource AcrylicBaseColor}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <TextBlock Text="Community Level" Margin="10" HorizontalAlignment="Center" FontSize="20" />
-                <TextBlock Text="{Binding CommunityLevel}" Margin="10" HorizontalAlignment="Center" FontSize="20" />
+                <TextBlock Text="{Binding CommunityLevel, Converter={StaticResource DecimalFormatter}}" Margin="10" HorizontalAlignment="Center" FontSize="20" />
             </StackPanel>
         </Panel>
 
         <Panel Grid.Row="1" Grid.Column="2" Margin="5" Background="{DynamicResource AcrylicBaseColor}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <TextBlock Text="XP left" Margin="10" HorizontalAlignment="Center" FontSize="20" />
-                <TextBlock Text="{Binding XpLeft}" Margin="10" HorizontalAlignment="Center" FontSize="20" />
+                <TextBlock Text="{Binding XpLeft, Converter={StaticResource DecimalFormatter}}" Margin="10" HorizontalAlignment="Center" FontSize="20" />
             </StackPanel>
         </Panel>
 
         <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="5" ColumnDefinitions="50*, 50*" Background="{DynamicResource AcrylicBaseColor}">
             <StackPanel Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <TextBlock Text="Beatmaps Tracked" Margin="10" HorizontalAlignment="Center" FontSize="20" />
-                <TextBlock Text="{Binding BeatmapsTracked}" Margin="10" HorizontalAlignment="Center" FontSize="20" />
+                <TextBlock Text="{Binding BeatmapsTracked, Converter={StaticResource DecimalFormatter}}" Margin="10" HorizontalAlignment="Center" FontSize="20" />
             </StackPanel>
             <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <TextBlock Text="MB used" Margin="10" HorizontalAlignment="Center" FontSize="20" />
