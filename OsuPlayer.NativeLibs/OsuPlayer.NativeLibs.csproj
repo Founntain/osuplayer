@@ -8,6 +8,7 @@
         <RepositoryUrl>https://github.com/Founntain/osuplayer</RepositoryUrl>
         <Authors>Founntain</Authors>
         <PackageVersion>1.0.4</PackageVersion>
+        <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     </PropertyGroup>
 
     <PropertyGroup Label="Nuget">
