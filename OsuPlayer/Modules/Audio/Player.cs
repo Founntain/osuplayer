@@ -337,7 +337,7 @@ public class Player : IPlayer, IImportNotifications
         IMapEntryBase songToPlay;
         var offset = (int) playDirection;
 
-        if (!SongSourceProvider.SongSourceList?.Any() ?? true) 
+        if (SongSourceProvider.SongSourceList == null || !SongSourceProvider.SongSourceList.Any())
             throw new NullReferenceException("SongSourceList is null or empty");
 
         if (!SongSourceProvider.SongSourceList.IsInBounds(currentIndex))
@@ -370,7 +370,8 @@ public class Player : IPlayer, IImportNotifications
     /// <returns>a <see cref="Task" /> with the resulting state</returns>
     private async Task TryStartSongAsync(IMapEntryBase song)
     {
-        if (SongSourceProvider.SongSourceList == null || !SongSourceProvider.SongSourceList.Any()) throw new NullReferenceException($"{nameof(SongSourceProvider.SongSourceList)} can't be null or empty");
+        if (SongSourceProvider.SongSourceList == null || !SongSourceProvider.SongSourceList.Any())
+            throw new NullReferenceException($"{nameof(SongSourceProvider.SongSourceList)} can't be null or empty");
 
         var config = new Config();
 
