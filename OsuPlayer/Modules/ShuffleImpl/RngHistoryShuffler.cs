@@ -27,6 +27,9 @@ public class RngHistoryShuffler : IShuffleImpl
     {
         if (_maxRange == -1) return -1;
 
+        if (currentIndex < 0)
+            currentIndex = GenerateShuffledIndex();
+
         _currentIndex = currentIndex;
 
         switch (direction)
