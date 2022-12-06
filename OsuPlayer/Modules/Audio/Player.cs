@@ -284,7 +284,7 @@ public class Player : IPlayer, IImportNotifications
     public async Task TryPlaySongAsync(IMapEntryBase? song, PlayDirection playDirection = PlayDirection.Normal)
     {
         if (SongSourceProvider.SongSourceList == default || !SongSourceProvider.SongSourceList.Any())
-            throw new NullReferenceException();
+            throw new NullOrEmptyException($"{nameof(SongSourceProvider.SongSourceList)} can't be null or empty");
 
         if (song == default)
         {
@@ -338,7 +338,7 @@ public class Player : IPlayer, IImportNotifications
         var offset = (int) playDirection;
 
         if (SongSourceProvider.SongSourceList == null || !SongSourceProvider.SongSourceList.Any())
-            throw new NullReferenceException("SongSourceList is null or empty");
+            throw new NullOrEmptyException($"{nameof(SongSourceProvider.SongSourceList)} can't be null or empty");
 
         if (!SongSourceProvider.SongSourceList.IsInBounds(currentIndex))
             currentIndex = 0;
@@ -371,7 +371,7 @@ public class Player : IPlayer, IImportNotifications
     private async Task TryStartSongAsync(IMapEntryBase song)
     {
         if (SongSourceProvider.SongSourceList == null || !SongSourceProvider.SongSourceList.Any())
-            throw new NullReferenceException($"{nameof(SongSourceProvider.SongSourceList)} can't be null or empty");
+            throw new NullOrEmptyException($"{nameof(SongSourceProvider.SongSourceList)} can't be null or empty");
 
         var config = new Config();
 
