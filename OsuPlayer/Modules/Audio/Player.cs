@@ -7,6 +7,7 @@ using OsuPlayer.Data.API.Enums;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
+using OsuPlayer.Extensions;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.IO.Storage.Playlists;
@@ -336,7 +337,13 @@ public class Player : IPlayer, IImportNotifications
         IMapEntryBase songToPlay;
         var offset = (int) playDirection;
 
-        currentIndex = songSource.IndexOf(SongSourceProvider.SongSourceList![currentIndex]);
+        if (!SongSourceProvider.SongSourceList?.Any() ?? true) 
+            throw new NullReferenceException("SongSourceList is null or empty");
+
+        if (!SongSourceProvider.SongSourceList.IsInBounds(currentIndex))
+            currentIndex = 0;
+
+        currentIndex = songSource.IndexOf(SongSourceProvider.SongSourceList[currentIndex]);
 
         if (IsShuffle.Value && _shuffleProvider?.ShuffleImpl != null)
         {
