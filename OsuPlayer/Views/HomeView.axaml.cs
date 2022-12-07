@@ -55,7 +55,7 @@ public partial class HomeView : ReactiveControl<HomeViewModel>
     {
         if (ViewModel == default) return;
 
-        var loginWindow = new LoginWindow(_mainWindow);
+        var loginWindow = new LoginWindow();
 
         await loginWindow.ShowDialog(_mainWindow);
 
