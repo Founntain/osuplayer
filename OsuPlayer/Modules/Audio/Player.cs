@@ -7,6 +7,7 @@ using OsuPlayer.Data.API.Enums;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
+using OsuPlayer.Extensions;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.IO.Storage.Playlists;
@@ -283,7 +284,7 @@ public class Player : IPlayer, IImportNotifications
     public async Task TryPlaySongAsync(IMapEntryBase? song, PlayDirection playDirection = PlayDirection.Normal)
     {
         if (SongSourceProvider.SongSourceList == default || !SongSourceProvider.SongSourceList.Any())
-            throw new NullReferenceException();
+            throw new NullOrEmptyException($"{nameof(SongSourceProvider.SongSourceList)} can't be null or empty");
 
         if (song == default)
         {
@@ -336,7 +337,13 @@ public class Player : IPlayer, IImportNotifications
         IMapEntryBase songToPlay;
         var offset = (int) playDirection;
 
-        currentIndex = songSource.IndexOf(SongSourceProvider.SongSourceList![currentIndex]);
+        if (SongSourceProvider.SongSourceList == null || !SongSourceProvider.SongSourceList.Any())
+            throw new NullOrEmptyException($"{nameof(SongSourceProvider.SongSourceList)} can't be null or empty");
+
+        if (!SongSourceProvider.SongSourceList.IsInBounds(currentIndex))
+            currentIndex = 0;
+
+        currentIndex = songSource.IndexOf(SongSourceProvider.SongSourceList[currentIndex]);
 
         if (IsShuffle.Value && _shuffleProvider?.ShuffleImpl != null)
         {
@@ -363,7 +370,8 @@ public class Player : IPlayer, IImportNotifications
     /// <returns>a <see cref="Task" /> with the resulting state</returns>
     private async Task TryStartSongAsync(IMapEntryBase song)
     {
-        if (SongSourceProvider.SongSourceList == null || !SongSourceProvider.SongSourceList.Any()) throw new NullReferenceException($"{nameof(SongSourceProvider.SongSourceList)} can't be null or empty");
+        if (SongSourceProvider.SongSourceList == null || !SongSourceProvider.SongSourceList.Any())
+            throw new NullOrEmptyException($"{nameof(SongSourceProvider.SongSourceList)} can't be null or empty");
 
         var config = new Config();
 
