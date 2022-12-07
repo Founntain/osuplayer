@@ -14,11 +14,9 @@
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
         <PlatformTarget>AnyCPU</PlatformTarget>
-        <Prefer32bit>true</Prefer32bit>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <PlatformTarget>AnyCPU</PlatformTarget>
-        <Prefer32bit>true</Prefer32bit>
     </PropertyGroup>
     <ItemGroup>
         <None Remove=".gitignore" />
