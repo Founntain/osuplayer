@@ -10,17 +10,18 @@ namespace OsuPlayer.Modules.Audio;
 public class WindowsMediaTransportControls
 {
     private readonly SystemMediaTransportControls _mediaTransportControls;
+    private readonly MediaPlayer _mediaPlayer;
     private readonly IPlayer _player;
 
     public WindowsMediaTransportControls(IPlayer player)
     {
         _player = player;
 
-        var mediaPlayer = new MediaPlayer();
+        _mediaPlayer = new MediaPlayer();
 
-        _mediaTransportControls = mediaPlayer.SystemMediaTransportControls;
-        mediaPlayer.CommandManager.IsEnabled = false;
-        mediaPlayer.Play();
+        _mediaTransportControls = _mediaPlayer.SystemMediaTransportControls;
+        _mediaPlayer.CommandManager.IsEnabled = false;
+        _mediaPlayer.Play();
 
         _mediaTransportControls.IsEnabled = true;
         _mediaTransportControls.IsPlayEnabled = true;
@@ -37,9 +38,11 @@ public class WindowsMediaTransportControls
         {
             case SystemMediaTransportControlsButton.Play:
                 _player.Play();
+                _mediaPlayer.Play();
                 break;
             case SystemMediaTransportControlsButton.Pause:
                 _player.Pause();
+                _mediaPlayer.Pause();
                 break;
             case SystemMediaTransportControlsButton.Stop:
                 _player.Stop();
@@ -57,7 +60,16 @@ public class WindowsMediaTransportControls
 
     public void UpdatePlayingStatus(bool isPlaying)
     {
-        _mediaTransportControls.PlaybackStatus = isPlaying ? MediaPlaybackStatus.Playing : MediaPlaybackStatus.Paused;
+        if (isPlaying)
+        {
+            _mediaPlayer.Play();
+            _mediaTransportControls.PlaybackStatus = MediaPlaybackStatus.Playing;
+        }
+        else
+        {
+            _mediaPlayer.Pause();
+            _mediaTransportControls.PlaybackStatus = MediaPlaybackStatus.Paused;
+        }
     }
 
     public async void SetMetadata(IMapEntry fullMapEntry)
@@ -79,5 +91,7 @@ public class WindowsMediaTransportControls
         }
 
         metadata.Update();
+
+        _mediaPlayer.Play();
     }
 }
