@@ -12,18 +12,14 @@ namespace OsuPlayer.Windows;
 
 public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
 {
-    private readonly MainWindow _mainWindow;
-
     public LoginWindow()
     {
         Init();
     }
 
-    public LoginWindow(MainWindow mainWindow, string username)
+    public LoginWindow(string username)
     {
         Init();
-
-        _mainWindow = mainWindow;
 
         if (ViewModel == default) return;
 
@@ -63,7 +59,7 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
 
         if (user == default)
         {
-            await MessageBox.ShowDialogAsync(_mainWindow, "Login failed, please try again!", "Login failed");
+            await MessageBox.ShowDialogAsync(this, "Login failed, please try again!", "Login failed");
 
             ViewModel.Password = string.Empty;
 
@@ -72,7 +68,7 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
 
         if (user.Name != ViewModel.Username)
         {
-            await MessageBox.ShowDialogAsync(_mainWindow, "Could not retrieve the correct user from the API! Please try again later!", "Login failed");
+            await MessageBox.ShowDialogAsync(this, "Could not retrieve the correct user from the API! Please try again later!", "Login failed");
 
             ViewModel.Password = string.Empty;
 
