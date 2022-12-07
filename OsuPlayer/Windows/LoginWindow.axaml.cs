@@ -19,6 +19,13 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
         Init();
     }
 
+    public LoginWindow(MainWindow mainWindow)
+    {
+        Init();
+
+        _mainWindow = mainWindow;
+    }
+    
     public LoginWindow(MainWindow mainWindow, string username)
     {
         Init();
