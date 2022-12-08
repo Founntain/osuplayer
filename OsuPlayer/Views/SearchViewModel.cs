@@ -56,19 +56,12 @@ public class SearchViewModel : BaseViewModel
 
         Activator = new ViewModelActivator();
 
-        var bday = new DateTime(2017, 11, 1);
-        var now = DateTime.UtcNow;
-
-        var difference = now - bday;
-
-        var differenceDate = new DateTime(difference.Ticks);
-
         this.WhenActivated(Block);
     }
 
     private async void Block(CompositeDisposable disposables)
     {
-        Disposable.Create(() => { }).DisposeWith(disposables);
+        Disposable.Create(() => { SelectedSong = null; }).DisposeWith(disposables);
 
         _playlists = (await PlaylistManager.GetAllPlaylistsAsync())?.ToList();
         PlaylistContextMenuEntries = _playlists?.Select(x => new AddToPlaylistContextMenuEntry(x.Name, AddToPlaylist)).ToList();

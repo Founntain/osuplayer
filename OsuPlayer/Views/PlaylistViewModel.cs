@@ -106,7 +106,7 @@ public class PlaylistViewModel : BaseViewModel
 
         this.WhenActivated(disposables =>
         {
-            Disposable.Create(() => { }).DisposeWith(disposables);
+            Disposable.Create(() => { SelectedSong = null; }).DisposeWith(disposables);
 
             _materialIcons.Clear();
 
