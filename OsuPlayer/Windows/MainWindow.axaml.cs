@@ -57,7 +57,9 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
         FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
 
-        var engine = Locator.Current.GetRequiredService<IAudioEngine>();
+#if DEBUG
+        this.AttachDevTools();
+#endif
     }
 
     private void InitializeComponent()

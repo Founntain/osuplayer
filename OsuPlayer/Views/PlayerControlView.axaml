@@ -54,8 +54,13 @@
                     <ToolTip.Tip>
                         <TextBlock Text="{Binding SongText}" />
                     </ToolTip.Tip>
-                    <TextBlock Name="TitleText" Text="{Binding TitleText}" FontSize="20"
-                               Foreground="White" TextTrimming="CharacterEllipsis" />
+                    <Button Name="CurrentSongLabel" Background="Transparent" Cursor="Hand" Click="CurrentSongLabel_OnClick">
+                        <Button.Styles>
+                            <StyleInclude Source="/Styles/HyperlinkButtonStyle.axaml" />
+                        </Button.Styles>
+                        <TextBlock Name="TitleText" Text="{Binding TitleText}" FontSize="20"
+                                   Foreground="White" TextTrimming="CharacterEllipsis" />
+                    </Button>
                     <TextBlock Name="ArtistText" Text="{Binding ArtistText}" FontSize="16"
                                Foreground="#FFCCCCCC" TextTrimming="CharacterEllipsis"
                                FontWeight="{DynamicResource SmallerFontWeight}" />

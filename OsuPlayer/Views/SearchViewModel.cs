@@ -19,6 +19,7 @@ public class SearchViewModel : BaseViewModel
     private string _filterText = string.Empty;
     private List<AddToPlaylistContextMenuEntry> _playlistContextMenuEntries;
     private List<Playlist>? _playlists;
+    private IMapEntryBase? _selectedSong;
 
     public string FilterText
     {
@@ -27,7 +28,12 @@ public class SearchViewModel : BaseViewModel
     }
 
     public ReadOnlyObservableCollection<IMapEntryBase>? FilteredSongEntries => _filteredSongEntries;
-    public IMapEntryBase? SelectedSong { get; set; }
+
+    public IMapEntryBase? SelectedSong
+    {
+        get => _selectedSong;
+        set => this.RaiseAndSetIfChanged(ref _selectedSong, value);
+    }
 
     public List<AddToPlaylistContextMenuEntry>? PlaylistContextMenuEntries
     {
@@ -50,19 +56,12 @@ public class SearchViewModel : BaseViewModel
 
         Activator = new ViewModelActivator();
 
-        var bday = new DateTime(2017, 11, 1);
-        var now = DateTime.UtcNow;
-
-        var difference = now - bday;
-
-        var differenceDate = new DateTime(difference.Ticks);
-
         this.WhenActivated(Block);
     }
 
     private async void Block(CompositeDisposable disposables)
     {
-        Disposable.Create(() => { }).DisposeWith(disposables);
+        Disposable.Create(() => { SelectedSong = null; }).DisposeWith(disposables);
 
         _playlists = (await PlaylistManager.GetAllPlaylistsAsync())?.ToList();
         PlaylistContextMenuEntries = _playlists?.Select(x => new AddToPlaylistContextMenuEntry(x.Name, AddToPlaylist)).ToList();
