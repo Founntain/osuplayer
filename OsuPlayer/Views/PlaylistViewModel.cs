@@ -24,6 +24,7 @@ public class PlaylistViewModel : BaseViewModel
     private string _filterText;
     private ObservableCollection<Playlist> _playlists;
     private Playlist? _selectedPlaylist;
+    private IMapEntryBase? _selectedSong;
 
     public ObservableCollection<Playlist>? Playlists
     {
@@ -52,7 +53,12 @@ public class PlaylistViewModel : BaseViewModel
     }
 
     public ReadOnlyObservableCollection<IMapEntryBase>? FilteredSongEntries => _filteredSongEntries;
-    public IMapEntryBase? SelectedSong { get; set; }
+
+    public IMapEntryBase? SelectedSong
+    {
+        get => _selectedSong;
+        set => this.RaiseAndSetIfChanged(ref _selectedSong, value);
+    }
 
     public string FilterText
     {

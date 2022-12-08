@@ -31,9 +31,16 @@ public class HomeViewModel : BaseViewModel
     private List<AddToPlaylistContextMenuEntry> _playlistContextMenuEntries;
     private List<Playlist>? _playlists;
     private Bitmap? _profilePicture;
+    private IMapEntryBase? _selectedSong;
 
     public ReadOnlyObservableCollection<IMapEntryBase>? SortedSongEntries => _sortedSongEntries;
-    public IMapEntryBase? SelectedSong { get; set; }
+
+    public IMapEntryBase? SelectedSong
+    {
+        get => _selectedSong;
+        set => this.RaiseAndSetIfChanged(ref _selectedSong, value);
+    }
+
     public ObservableCollection<ISeries> Series { get; set; }
 
     public Axis[] Axes { get; set; } =

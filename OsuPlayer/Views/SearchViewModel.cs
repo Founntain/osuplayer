@@ -19,6 +19,7 @@ public class SearchViewModel : BaseViewModel
     private string _filterText = string.Empty;
     private List<AddToPlaylistContextMenuEntry> _playlistContextMenuEntries;
     private List<Playlist>? _playlists;
+    private IMapEntryBase? _selectedSong;
 
     public string FilterText
     {
@@ -27,7 +28,12 @@ public class SearchViewModel : BaseViewModel
     }
 
     public ReadOnlyObservableCollection<IMapEntryBase>? FilteredSongEntries => _filteredSongEntries;
-    public IMapEntryBase? SelectedSong { get; set; }
+
+    public IMapEntryBase? SelectedSong
+    {
+        get => _selectedSong;
+        set => this.RaiseAndSetIfChanged(ref _selectedSong, value);
+    }
 
     public List<AddToPlaylistContextMenuEntry>? PlaylistContextMenuEntries
     {
