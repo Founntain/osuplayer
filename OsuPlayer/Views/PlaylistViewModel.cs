@@ -71,7 +71,7 @@ public class PlaylistViewModel : BaseViewModel
         Player = player;
 
         _filter = this.WhenAnyValue(x => x.FilterText)
-            .Throttle(TimeSpan.FromMilliseconds(20))
+            //.Throttle(TimeSpan.FromMilliseconds(20))
             .Select(BuildFilter);
 
         Player.SelectedPlaylist.BindValueChanged(d => RefreshAllIcons(), true);
