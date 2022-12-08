@@ -156,4 +156,30 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
 
         _mainWindow.WindowState = WindowState.Minimized;
     }
+
+    private void CurrentSongLabel_OnClick(object? sender, RoutedEventArgs e)
+    {
+        var player = ViewModel.Player;
+
+        if (player.RepeatMode.Value != RepeatMode.Playlist)
+        {
+            switch (_mainWindow.ViewModel.MainView)
+            {
+                case SearchViewModel:
+                    _mainWindow.ViewModel.SearchView.SelectedSong = player.CurrentSong.Value;
+                    _mainWindow.ViewModel.MainView = _mainWindow.ViewModel.SearchView;
+                    break;
+                default:
+                    _mainWindow.ViewModel.HomeView.SelectedSong = player.CurrentSong.Value;
+                    _mainWindow.ViewModel.MainView = _mainWindow.ViewModel.HomeView;
+                    break;
+            }
+        }
+        else
+        {
+            _mainWindow.ViewModel.PlaylistView.SelectedPlaylist = player.SelectedPlaylist.Value;
+            _mainWindow.ViewModel.PlaylistView.SelectedSong = player.CurrentSong.Value;
+            _mainWindow.ViewModel.MainView = _mainWindow.ViewModel.PlaylistView;
+        }
+    }
 }
