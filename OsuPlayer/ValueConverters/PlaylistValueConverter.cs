@@ -14,9 +14,7 @@ public class PlaylistValueConverter : IValueConverter
 {
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value == default) return default;
-
-        return Locator.Current.GetRequiredService<ISongSourceProvider>().GetMapEntriesFromHash((ICollection<string>) value, out _);
+        return value != default ? Locator.Current.GetRequiredService<ISongSourceProvider>().GetMapEntriesFromHash((ICollection<string>) value, out _) : default;
     }
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
