@@ -187,8 +187,8 @@ public class WeakList<T> : IWeakList<T>, IEnumerable<T> where T : class
 
     public struct ValidItemsEnumerator : IEnumerator<T>
     {
-        private readonly WeakList<T> weakList;
-        private int currentItemIndex;
+        private readonly WeakList<T> _weakList;
+        private int _currentItemIndex;
 
         /// <summary>
         /// Creates a new <see cref="ValidItemsEnumerator" />.
@@ -196,9 +196,9 @@ public class WeakList<T> : IWeakList<T>, IEnumerable<T> where T : class
         /// <param name="weakList">The <see cref="WeakList{T}" /> to enumerate over.</param>
         internal ValidItemsEnumerator(WeakList<T> weakList)
         {
-            this.weakList = weakList;
+            _weakList = weakList;
 
-            currentItemIndex = weakList._listStart - 1; // The first MoveNext() should bring the iterator to the start
+            _currentItemIndex = weakList._listStart - 1; // The first MoveNext() should bring the iterator to the start
             Current = default!;
         }
 
@@ -206,13 +206,13 @@ public class WeakList<T> : IWeakList<T>, IEnumerable<T> where T : class
         {
             while (true)
             {
-                ++currentItemIndex;
+                ++_currentItemIndex;
 
                 // Check whether we're still within the valid range of the list.
-                if (currentItemIndex >= weakList._listEnd)
+                if (_currentItemIndex >= _weakList._listEnd)
                     return false;
 
-                var weakReference = weakList._list[currentItemIndex].Reference;
+                var weakReference = _weakList._list[_currentItemIndex].Reference;
 
                 // Check whether the reference exists.
                 if (weakReference == null || !weakReference.TryGetTarget(out var obj))
@@ -226,7 +226,7 @@ public class WeakList<T> : IWeakList<T>, IEnumerable<T> where T : class
 
         public void Reset()
         {
-            currentItemIndex = weakList._listStart - 1;
+            _currentItemIndex = _weakList._listStart - 1;
             Current = default!;
         }
 

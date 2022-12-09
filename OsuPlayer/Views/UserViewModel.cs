@@ -22,18 +22,17 @@ namespace OsuPlayer.Views;
 public class UserViewModel : BaseViewModel
 {
     public readonly IPlayer Player;
-    private ObservableCollection<IControl> _badges;
+    private ObservableCollection<IControl>? _badges;
     private CancellationTokenSource? _bannerCancellationTokenSource;
     private Bitmap? _currentProfileBanner;
     private Bitmap? _currentProfilePicture;
     private CancellationTokenSource? _profilePictureCancellationTokenSource;
     private User? _selectedUser;
-    private List<ObservableValue> _songsPlayedGraphValues;
+    private List<ObservableValue>? _songsPlayedGraphValues;
     private CancellationTokenSource? _topSongsCancellationTokenSource;
-    private ObservableCollection<BeatmapUserValidityModel> _topSongsOfCurrentUser;
-
-    private ObservableCollection<User> _users;
-    private List<ObservableValue> _xpGainedGraphValues;
+    private ObservableCollection<BeatmapUserValidityModel>? _topSongsOfCurrentUser;
+    private ObservableCollection<User>? _users;
+    private List<ObservableValue>? _xpGainedGraphValues;
 
     public ObservableCollection<ISeries>? Series { get; set; }
 
@@ -58,7 +57,7 @@ public class UserViewModel : BaseViewModel
 
     public List<ObservableValue> XpGainedGraphValues
     {
-        get => _xpGainedGraphValues;
+        get => _xpGainedGraphValues ?? new List<ObservableValue>();
         private set
         {
             if (Series != default)
@@ -74,7 +73,7 @@ public class UserViewModel : BaseViewModel
 
     public List<ObservableValue> SongsPlayedGraphValues
     {
-        get => _songsPlayedGraphValues;
+        get => _songsPlayedGraphValues ?? new List<ObservableValue>();
         private set
         {
             if (Series != default)
@@ -96,7 +95,7 @@ public class UserViewModel : BaseViewModel
 
     public ObservableCollection<IControl> Badges
     {
-        get => _badges;
+        get => _badges ?? new ObservableCollection<IControl>();
         set => this.RaiseAndSetIfChanged(ref _badges, value);
     }
 
@@ -114,7 +113,7 @@ public class UserViewModel : BaseViewModel
 
     public ObservableCollection<User> Users
     {
-        get => _users;
+        get => _users ?? new ObservableCollection<User>();
         set => this.RaiseAndSetIfChanged(ref _users, value);
     }
 
@@ -229,7 +228,7 @@ public class UserViewModel : BaseViewModel
 
     private async void LoadTopSongs()
     {
-        if (SelectedUser == default)
+        if (SelectedUser == default || string.IsNullOrWhiteSpace(SelectedUser.Name))
         {
             TopSongsOfCurrentUser = default;
             return;
@@ -261,7 +260,7 @@ public class UserViewModel : BaseViewModel
 
     private async void LoadProfilePicture()
     {
-        if (SelectedUser == default)
+        if (SelectedUser == default || string.IsNullOrWhiteSpace(SelectedUser.Name))
         {
             CurrentProfilePicture = default;
             return;
@@ -288,21 +287,20 @@ public class UserViewModel : BaseViewModel
                 return;
             }
 
-            await using (var stream = new MemoryStream(Convert.FromBase64String(profilePicture)))
+            await using var stream = new MemoryStream(Convert.FromBase64String(profilePicture));
+
+            try
             {
-                try
-                {
-                    var bitmap = new Bitmap(stream);
+                var bitmap = new Bitmap(stream);
 
-                    CurrentProfilePicture = bitmap;
+                CurrentProfilePicture = bitmap;
 
-                    Debug.WriteLine(bitmap.ToString());
-                }
-                catch (Exception)
-                {
-                    CurrentProfilePicture = default;
-                    Debug.WriteLine("Could not convert ProfilePicture MemoryStream to Bitmap");
-                }
+                Debug.WriteLine(bitmap.ToString());
+            }
+            catch (Exception)
+            {
+                CurrentProfilePicture = default;
+                Debug.WriteLine("Could not convert ProfilePicture MemoryStream to Bitmap");
             }
         }
         catch (OperationCanceledException)
@@ -353,7 +351,7 @@ public class UserViewModel : BaseViewModel
 
     private async void LoadStats()
     {
-        if (SelectedUser == default) return;
+        if (SelectedUser == default || string.IsNullOrWhiteSpace(SelectedUser.Name)) return;
 
         var data = await ApiAsync.GetActivityOfUser(SelectedUser.Name);
 

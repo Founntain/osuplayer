@@ -1,11 +1,12 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
+// THIS CODE WAS REFACTORED, TO RESOLVE ISSUES WITH PROJECT WARNINGS!
 
 namespace OsuPlayer.Extensions.Bindables;
 
 public class Cached<T>
 {
-    private T value;
+    private T _value;
 
     public T Value
     {
@@ -14,12 +15,12 @@ public class Cached<T>
             if (!IsValid)
                 throw new InvalidOperationException($"May not query {nameof(Value)} of an invalid {nameof(Cached<T>)}.");
 
-            return value;
+            return _value;
         }
 
         set
         {
-            this.value = value;
+            _value = value;
             IsValid = true;
             //FrameStatistics.Increment(StatisticsCounterType.Refreshes);
         }
@@ -38,13 +39,10 @@ public class Cached<T>
     /// <returns>True if we invalidated from a valid state.</returns>
     public bool Invalidate()
     {
-        if (IsValid)
-        {
-            IsValid = false;
-            //FrameStatistics.Increment(StatisticsCounterType.Invalidations);
-            return true;
-        }
+        if (!IsValid) return false;
 
-        return false;
+        IsValid = false;
+        //FrameStatistics.Increment(StatisticsCounterType.Invalidations);
+        return true;
     }
 }

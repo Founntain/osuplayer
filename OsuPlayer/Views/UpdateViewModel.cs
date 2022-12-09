@@ -7,9 +7,9 @@ namespace OsuPlayer.Views;
 
 public class UpdateViewModel : BaseViewModel
 {
-    private UpdateResponse _update;
+    private UpdateResponse? _update;
 
-    public UpdateResponse Update
+    public UpdateResponse? Update
     {
         get => _update;
         set => this.RaiseAndSetIfChanged(ref _update, value);

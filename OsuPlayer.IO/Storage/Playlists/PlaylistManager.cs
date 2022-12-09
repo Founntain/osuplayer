@@ -40,17 +40,16 @@ public static class PlaylistManager
     /// <returns>all playlists including the newly added one</returns>
     public static async Task<IList<Playlist>?> AddPlaylistAsync(Playlist playlist)
     {
-        await using (var storage = new PlaylistStorage())
-        {
-            await storage.ReadAsync();
+        await using var storage = new PlaylistStorage();
 
-            if (storage.Container.Playlists?.Any(x => x == playlist) ?? true)
-                return storage.Container.Playlists;
+        await storage.ReadAsync();
 
-            storage.Container.Playlists?.Add(playlist);
-
+        if (storage.Container.Playlists?.Any(x => x == playlist) ?? true)
             return storage.Container.Playlists;
-        }
+
+        storage.Container.Playlists?.Add(playlist);
+
+        return storage.Container.Playlists;
     }
 
     /// <summary>
@@ -59,16 +58,15 @@ public static class PlaylistManager
     /// <param name="playlist">The playlist with the new name</param>
     public static async Task RenamePlaylist(Playlist playlist)
     {
-        await using (var storage = new PlaylistStorage())
-        {
-            await storage.ReadAsync();
+        await using var storage = new PlaylistStorage();
 
-            var p = storage.Container.Playlists?.FirstOrDefault(x => x == playlist);
+        await storage.ReadAsync();
 
-            if (p == null) return;
+        var p = storage.Container.Playlists?.FirstOrDefault(x => x == playlist);
 
-            p.Name = playlist.Name;
-        }
+        if (p == null) return;
+
+        p.Name = playlist.Name;
     }
 
     /// <summary>
@@ -78,16 +76,15 @@ public static class PlaylistManager
     /// <returns>all playlists after deletion</returns>
     public static async Task<IList<Playlist>?> DeletePlaylistAsync(Playlist playlist)
     {
-        await using (var storage = new PlaylistStorage())
-        {
-            await storage.ReadAsync();
+        await using var storage = new PlaylistStorage();
 
-            var p = storage.Container.Playlists?.First(x => x == playlist);
+        await storage.ReadAsync();
 
-            storage.Container.Playlists?.Remove(p);
+        var p = storage.Container.Playlists?.First(x => x == playlist);
 
-            return storage.Container.Playlists;
-        }
+        storage.Container.Playlists?.Remove(p);
+
+        return storage.Container.Playlists;
     }
 
     /// <summary>

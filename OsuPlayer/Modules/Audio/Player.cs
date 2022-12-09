@@ -8,6 +8,7 @@ using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.Extensions;
+using OsuPlayer.Extensions.Exceptions;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.IO.Storage.Playlists;
@@ -68,7 +69,6 @@ public class Player : IPlayer, IImportNotifications
         var runtimePlatform = AvaloniaLocator.Current.GetRequiredService<IRuntimePlatform>();
 
         if (runtimePlatform.GetRuntimeInfo().OperatingSystem == OperatingSystemType.WinNT)
-        {
             try
             {
                 _winMediaControls = new WindowsMediaTransportControls(this);
@@ -77,7 +77,6 @@ public class Player : IPlayer, IImportNotifications
             {
                 _winMediaControls = null;
             }
-        }
 
         _audioEngine.ChannelReachedEnd = () => NextSong(PlayDirection.Forward);
 
@@ -98,7 +97,7 @@ public class Player : IPlayer, IImportNotifications
         RepeatMode.Value = config.Container.RepeatMode;
         IsShuffle.Value = config.Container.IsShuffle;
 
-        songSourceProvider.Songs?.Subscribe(next => CurrentIndex = songSourceProvider.SongSourceList?.IndexOf(CurrentSong.Value) ?? -1);
+        songSourceProvider.Songs?.Subscribe(_ => CurrentIndex = songSourceProvider.SongSourceList?.IndexOf(CurrentSong.Value) ?? -1);
 
         CurrentSong.BindValueChanged(d =>
         {
@@ -116,14 +115,16 @@ public class Player : IPlayer, IImportNotifications
         RepeatMode.BindValueChanged(d =>
         {
             using var cfg = new Config();
+
             cfg.Container.RepeatMode = d.NewValue;
         }, true);
 
-        IsShuffle.BindValueChanged(d => _shuffleProvider?.ShuffleImpl?.Init(0));
+        IsShuffle.BindValueChanged(_ => _shuffleProvider?.ShuffleImpl?.Init(0));
 
         SelectedPlaylist.BindValueChanged(d =>
         {
             using var cfg = new Config();
+
             cfg.Container.SelectedPlaylist = d.NewValue?.Id;
 
             if (d.NewValue == null) return;
@@ -337,6 +338,7 @@ public class Player : IPlayer, IImportNotifications
     private IMapEntryBase GetNextSongToPlay(IList<IMapEntryBase> songSource, int currentIndex, PlayDirection playDirection)
     {
         IMapEntryBase songToPlay;
+
         var offset = (int) playDirection;
 
         if (SongSourceProvider.SongSourceList == null || !SongSourceProvider.SongSourceList.Any())
@@ -384,6 +386,7 @@ public class Player : IPlayer, IImportNotifications
         if (fullMapEntry == default) throw new NullReferenceException();
 
         fullMapEntry.UseUnicode = config.Container.UseSongNameUnicode;
+
         var findBackgroundTask = fullMapEntry.FindBackground();
 
         _currentSongTimer.Stop();

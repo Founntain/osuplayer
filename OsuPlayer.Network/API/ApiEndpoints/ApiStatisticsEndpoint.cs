@@ -10,7 +10,7 @@ public partial class ApiAsync
     /// <returns>Statistics as an <see cref="ApiStatisticsV3Model" /></returns>
     public static async Task<ApiStatisticsV3Model> GetApiStatistics()
     {
-        // default is new value due to possible null
+        // Default is new value due to possible null
         return await GetRequestAsync<ApiStatisticsV3Model>("statistics", "getApiStatisticsV2") ?? new ApiStatisticsV3Model();
     }
 

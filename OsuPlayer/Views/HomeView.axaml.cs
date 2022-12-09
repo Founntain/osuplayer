@@ -11,7 +11,7 @@ namespace OsuPlayer.Views;
 
 public partial class HomeView : ReactiveControl<HomeViewModel>
 {
-    private MainWindow _mainWindow;
+    private MainWindow? _mainWindow;
 
     public HomeView()
     {
@@ -20,7 +20,7 @@ public partial class HomeView : ReactiveControl<HomeViewModel>
 
     private void InitializeComponent()
     {
-        this.WhenActivated(disposables =>
+        this.WhenActivated(_ =>
         {
             if (this.GetVisualRoot() is MainWindow mainWindow)
                 _mainWindow = mainWindow;
@@ -33,6 +33,8 @@ public partial class HomeView : ReactiveControl<HomeViewModel>
 
     private async void HomeViewInitialized()
     {
+        if (_mainWindow == default) return;
+
         var config = new Config();
         var osuPath = (await config.ReadAsync()).OsuPath;
 
@@ -68,6 +70,8 @@ public partial class HomeView : ReactiveControl<HomeViewModel>
 
     private void EditBtn_OnClick(object? sender, RoutedEventArgs e)
     {
+        if (_mainWindow?.ViewModel == default) return;
+
         _mainWindow.ViewModel.MainView = _mainWindow.ViewModel.EditUserView;
     }
 

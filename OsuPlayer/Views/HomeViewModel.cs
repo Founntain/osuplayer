@@ -28,7 +28,7 @@ public class HomeViewModel : BaseViewModel
     private readonly ReadOnlyObservableCollection<IMapEntryBase>? _sortedSongEntries;
 
     public readonly IPlayer Player;
-    private List<AddToPlaylistContextMenuEntry> _playlistContextMenuEntries;
+    private List<AddToPlaylistContextMenuEntry>? _playlistContextMenuEntries;
     private List<Playlist>? _playlists;
     private Bitmap? _profilePicture;
     private IMapEntryBase? _selectedSong;
@@ -77,19 +77,19 @@ public class HomeViewModel : BaseViewModel
         var statisticsProvider1 = statisticsProvider;
 
         _songsLoading.BindTo(((IImportNotifications) Player).SongsLoading);
-        _songsLoading.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongsLoading)));
+        _songsLoading.BindValueChanged(_ => this.RaisePropertyChanged(nameof(SongsLoading)));
 
         if (statisticsProvider1 != null)
         {
             _graphValues.BindTo(statisticsProvider1.GraphValues);
-            _graphValues.BindCollectionChanged((sender, args) =>
+            _graphValues.BindCollectionChanged((_, _) =>
             {
                 Series!.First().Values = _graphValues;
 
                 this.RaisePropertyChanged(nameof(Series));
             });
 
-            statisticsProvider1.UserDataChanged += (sender, args) => this.RaisePropertyChanged(nameof(CurrentUser));
+            statisticsProvider1.UserDataChanged += (_, _) => this.RaisePropertyChanged(nameof(CurrentUser));
         }
 
         player.SongSourceProvider.Songs?.ObserveOn(AvaloniaScheduler.Instance).Bind(out _sortedSongEntries).Subscribe();
@@ -151,15 +151,13 @@ public class HomeViewModel : BaseViewModel
 
     internal async Task<Bitmap?> LoadProfilePicture()
     {
-        if (CurrentUser == default) return default;
+        if (CurrentUser == default || string.IsNullOrWhiteSpace(CurrentUser.Name)) return default;
 
         var profilePicture = await ApiAsync.GetProfilePictureAsync(CurrentUser.Name);
 
         if (profilePicture == default) return default;
 
-        await using (var stream = new MemoryStream(Convert.FromBase64String(profilePicture)))
-        {
-            return await Task.Run(() => new Bitmap(stream));
-        }
+        await using var stream = new MemoryStream(Convert.FromBase64String(profilePicture));
+        return await Task.Run(() => new Bitmap(stream));
     }
 }

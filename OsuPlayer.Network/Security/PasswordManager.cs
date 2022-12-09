@@ -6,7 +6,7 @@
 public static class PasswordManager
 {
     /// <summary>
-    /// Checks if the given password meets our password requierements
+    /// Checks if the given password meets our password requirements
     /// </summary>
     /// <param name="password"></param>
     /// <returns></returns>
@@ -24,18 +24,16 @@ public static class PasswordManager
         if (!(textCharArray.Any(char.IsUpper) && textCharArray.Any(char.IsLower)))
             errorMessages.Add("At least one uppercase and one lowercase character");
 
-        if (errorMessages.Count > 0)
-        {
-            var s = "Your password needs to meet the following requirements:\n";
+        if (errorMessages.Count <= 0) return true;
 
-            foreach (var errorMessage in errorMessages) s += errorMessage + "\n";
+        var s = "Your password needs to meet the following requirements:\n";
 
-            // OsuPlayerMessageBox.Show(s, "Fix password errors");
+        foreach (var errorMessage in errorMessages)
+            s += errorMessage + "\n";
 
-            return false;
-        }
+        // OsuPlayerMessageBox.Show(s, "Fix password errors");
 
-        return true;
+        return false;
     }
 
     /// <summary>
@@ -57,17 +55,15 @@ public static class PasswordManager
         if (!(textCharArray.Any(char.IsUpper) && textCharArray.Any(char.IsLower)))
             errorMessages.Add("At least one uppercase and one lowercase character");
 
-        if (errorMessages.Count > 0)
-        {
-            var s = "Your password needs to meet the following requirements:\n";
+        if (errorMessages.Count <= 0) return (true, null);
 
-            foreach (var errorMessage in errorMessages) s += errorMessage + "\n";
+        var s = "Your password needs to meet the following requirements:\n";
 
-            // OsuPlayerMessageBox.Show(s, "Fix password errors");
+        foreach (var errorMessage in errorMessages)
+            s += errorMessage + "\n";
 
-            return (false, s);
-        }
+        // OsuPlayerMessageBox.Show(s, "Fix password errors");
 
-        return (true, null);
+        return (false, s);
     }
 }

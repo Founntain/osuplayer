@@ -87,7 +87,7 @@ public class PlaylistEditorViewModel : BaseViewModel
         //Player.SortingModeBindable.BindValueChanged(d => UpdateSorting(d.NewValue), true);
         Playlists = PlaylistManager.GetAllPlaylists().ToSourceList();
 
-        Player.PlaylistChanged += (sender, args) => { Playlists = PlaylistManager.GetAllPlaylists().ToSourceList(); };
+        Player.PlaylistChanged += (_, _) => { Playlists = PlaylistManager.GetAllPlaylists().ToSourceList(); };
 
         player.SongSourceProvider.Songs?.Filter(filter, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
             .Bind(out _filteredSongEntries).Subscribe();

@@ -11,10 +11,10 @@ namespace OsuPlayer.Windows;
 public class MainWindowViewModel : BaseWindowViewModel
 {
     public readonly IPlayer Player;
-    private bool _isPaneOpen;
 
-    private BaseViewModel _mainView;
-    private ExperimentalAcrylicMaterial _panelMaterial;
+    private bool _isPaneOpen;
+    private BaseViewModel? _mainView;
+    private ExperimentalAcrylicMaterial? _panelMaterial;
 
     public bool IsPaneOpen
     {
@@ -38,13 +38,13 @@ public class MainWindowViewModel : BaseWindowViewModel
     public StatisticsViewModel StatisticsView { get; }
     public SymmetricalViewModel SymmetricalView { get; }
 
-    public BaseViewModel MainView
+    public BaseViewModel? MainView
     {
         get => _mainView;
         set => this.RaiseAndSetIfChanged(ref _mainView, value);
     }
 
-    public ExperimentalAcrylicMaterial PanelMaterial
+    public ExperimentalAcrylicMaterial? PanelMaterial
     {
         get => _panelMaterial;
         set => _panelMaterial = value;

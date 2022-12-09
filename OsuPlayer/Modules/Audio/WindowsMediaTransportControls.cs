@@ -9,8 +9,8 @@ namespace OsuPlayer.Modules.Audio;
 
 public class WindowsMediaTransportControls
 {
-    private readonly SystemMediaTransportControls _mediaTransportControls;
     private readonly MediaPlayer _mediaPlayer;
+    private readonly SystemMediaTransportControls _mediaTransportControls;
     private readonly IPlayer _player;
 
     public WindowsMediaTransportControls(IPlayer player)

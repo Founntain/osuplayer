@@ -54,7 +54,8 @@
                     <ToolTip.Tip>
                         <TextBlock Text="{Binding SongText}" />
                     </ToolTip.Tip>
-                    <Button Name="CurrentSongLabel" Background="Transparent" Cursor="Hand" Click="CurrentSongLabel_OnClick">
+                    <Button Name="CurrentSongLabel" Background="Transparent" Cursor="Hand"
+                            Click="CurrentSongLabel_OnClick">
                         <Button.Styles>
                             <StyleInclude Source="/Styles/HyperlinkButtonStyle.axaml" />
                         </Button.Styles>

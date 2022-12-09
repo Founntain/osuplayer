@@ -97,15 +97,15 @@
                                 This will enable the playlist mode when you play a song directly from the playlist viewer.
                             </ToolTip.Tip>
                             <ToggleSwitch IsChecked="{Binding PlaylistEnableOnPlay}"
-                                      Content="Enable playlist mode on song play" />
+                                          Content="Enable playlist mode on song play" />
                         </StackPanel>
-                        
+
                         <StackPanel Spacing="5" Name="UseDiscordRpc">
                             <ToolTip.Tip>
                                 Whether or not to use Discord Rich Presence.
                             </ToolTip.Tip>
                             <ToggleSwitch IsChecked="{Binding UseDiscordRpc}"
-                                          Content="Use Discord RPC (requires restart)"/>
+                                          Content="Use Discord RPC (requires restart)" />
                         </StackPanel>
                     </StackPanel>
                 </Grid>
@@ -227,23 +227,23 @@
                     <StackPanel Margin="10" Spacing="10" Name="ContributePanel">
                         <TextBlock Text="Contributers" FontSize="32" VerticalAlignment="Center"
                                    HorizontalAlignment="Stretch" />
-                        <ItemsRepeater Items="{Binding Contributers}">
+                        <ItemsRepeater Items="{Binding Contributors}">
                             <ItemsRepeater.Layout>
                                 <WrapLayout HorizontalSpacing="5" VerticalSpacing="5" Orientation="Horizontal" />
                             </ItemsRepeater.Layout>
 
                             <ItemsRepeater.ItemTemplate>
-                                <DataTemplate DataType="data:OsuPlayerContributer">
+                                <DataTemplate DataType="data:OsuPlayerContributor">
                                     <StackPanel Orientation="Horizontal" Spacing="5">
                                         <Border CornerRadius="100" Width="50" Height="50" VerticalAlignment="Center"
                                                 BorderBrush="White" BorderThickness="2">
                                             <Border.Background>
-                                                <ImageBrush Source="{Binding avatar}"
+                                                <ImageBrush Source="{Binding Avatar}"
                                                             BitmapInterpolationMode="MediumQuality" />
                                             </Border.Background>
                                         </Border>
 
-                                        <TextBlock Text="{Binding name}" FontSize="20" VerticalAlignment="Center" />
+                                        <TextBlock Text="{Binding Name}" FontSize="20" VerticalAlignment="Center" />
                                     </StackPanel>
                                 </DataTemplate>
                             </ItemsRepeater.ItemTemplate>

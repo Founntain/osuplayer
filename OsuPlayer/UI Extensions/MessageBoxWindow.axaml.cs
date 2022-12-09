@@ -36,7 +36,7 @@ public partial class MessageBoxWindow : ReactiveWindow<MessageBoxViewModel>
 
     private void InitializeComponent()
     {
-        this.WhenActivated(disposables => { });
+        this.WhenActivated(_ => { });
 
         AvaloniaXamlLoader.Load(this);
     }

@@ -91,14 +91,14 @@ public class DiscordClient
 
     private Button[]? GetButtons()
     {
-        var buttons = new List<Button>();
-
-        buttons.Add(new Button
+        var buttons = new List<Button>
+        {
+            new()
             {
                 Label = "osu!player GitHub",
                 Url = "https://github.com/osu-player/osuplayer"
             }
-        );
+        };
 
         if (ProfileManager.User is null || string.IsNullOrWhiteSpace(ProfileManager.User.Name)) return buttons.ToArray();
 

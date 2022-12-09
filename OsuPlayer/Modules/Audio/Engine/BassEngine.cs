@@ -83,7 +83,7 @@ public sealed class BassEngine : IAudioEngine
             }
         }, true, true);
 
-        EqGains.BindCollectionChanged((sender, args) => SetAllEq());
+        EqGains.BindCollectionChanged((_, _) => SetAllEq());
 
         InitAudioDevices();
     }
@@ -272,13 +272,13 @@ public sealed class BassEngine : IAudioEngine
         _paramEq.AddBand(8000);
         _paramEq.AddBand(16000);
 
-        using (var eqStorage = new EqStorage())
-        {
-            eqStorage.Container.LastUsedEqId ??= eqStorage.Container.EqPresets?.First().Id;
+        using var eqStorage = new EqStorage();
 
-            EqGains.Set(eqStorage.Container.EqPresets?.FirstOrDefault(x => x.Id == eqStorage.Container.LastUsedEqId)?.Gain);
-            SetAllEq();
-        }
+        eqStorage.Container.LastUsedEqId ??= eqStorage.Container.EqPresets?.First().Id;
+
+        EqGains.Set(eqStorage.Container.EqPresets?.FirstOrDefault(x => x.Id == eqStorage.Container.LastUsedEqId)?.Gain);
+
+        SetAllEq();
     }
 
     /// <summary>

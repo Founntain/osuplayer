@@ -33,7 +33,7 @@ public sealed class User : UserModel
         Role = UserRole.Unknown;
     }
 
-    public override string ToString()
+    public override string? ToString()
     {
         return Name;
     }

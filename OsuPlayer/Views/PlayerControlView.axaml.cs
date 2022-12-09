@@ -18,7 +18,7 @@ namespace OsuPlayer.Views;
 
 public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
 {
-    public MainWindow _mainWindow;
+    public MainWindow? _mainWindow;
 
     private Slider ProgressSlider => this.FindControl<Slider>("SongProgressSlider");
     private Button RepeatButton => this.FindControl<Button>("Repeat");
@@ -30,7 +30,7 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
 
     private void InitializeComponent()
     {
-        this.WhenActivated(disposables =>
+        this.WhenActivated(_ =>
         {
             if (this.GetVisualRoot() is MainWindow mainWindow)
                 _mainWindow = mainWindow;
@@ -47,6 +47,7 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
             ViewModel.RaisePropertyChanged(nameof(ViewModel.IsCurrentSongInPlaylist));
             ViewModel.RaisePropertyChanged(nameof(ViewModel.IsCurrentSongOnBlacklist));
         });
+
         AvaloniaXamlLoader.Load(this);
     }
 
@@ -68,6 +69,8 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
 
     private void Settings_OnClick(object? sender, RoutedEventArgs e)
     {
+        if (_mainWindow == default) return;
+
         _mainWindow.ViewModel!.MainView = _mainWindow.ViewModel.SettingsView;
         _mainWindow.ViewModel!.IsPaneOpen = true;
     }
@@ -147,6 +150,8 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
 
     private void OpenMiniPlayer_OnClick(object? sender, RoutedEventArgs e)
     {
+        if (_mainWindow == default) return;
+
         if (_mainWindow.Miniplayer != null)
             return;
 
@@ -159,6 +164,8 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
 
     private void CurrentSongLabel_OnClick(object? sender, RoutedEventArgs e)
     {
+        if (_mainWindow?.ViewModel == default) return;
+
         var player = ViewModel.Player;
 
         if (player.RepeatMode.Value != RepeatMode.Playlist)

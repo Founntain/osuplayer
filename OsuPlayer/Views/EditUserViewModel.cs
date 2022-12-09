@@ -12,7 +12,7 @@ namespace OsuPlayer.Views;
 public class EditUserViewModel : BaseViewModel
 {
     private CancellationTokenSource? _bannerCancellationTokenSource;
-    private string _confirmDeletionPassword;
+    private string _confirmDeletionPassword = string.Empty;
     private Bitmap? _currentProfileBanner;
     private Bitmap? _currentProfilePicture;
 
@@ -20,8 +20,8 @@ public class EditUserViewModel : BaseViewModel
     private bool _isDeleteProfilePopupOpen;
     private bool _isNewBannerSelected;
     private bool _isNewProfilePictureSelected;
-    private string _newPassword;
-    private string _password;
+    private string _newPassword = string.Empty;
+    private string _password = string.Empty;
     private CancellationTokenSource? _profilePictureCancellationTokenSource;
     private CancellationTokenSource? _topSongsCancellationTokenSource;
     private ObservableCollection<BeatmapUserValidityModel>? _topSongsOfCurrentUser;
@@ -112,7 +112,7 @@ public class EditUserViewModel : BaseViewModel
 
     private async void LoadTopSongs()
     {
-        if (CurrentUser == default)
+        if (CurrentUser == default || string.IsNullOrWhiteSpace(CurrentUser.Name))
         {
             TopSongsOfCurrentUser = default;
             return;

@@ -19,7 +19,7 @@ public partial class PlaylistView : ReactiveControl<PlaylistViewModel>
 
     public PlaylistView()
     {
-        this.WhenActivated(disposables =>
+        this.WhenActivated(_ =>
         {
             if (this.GetVisualRoot() is MainWindow mainWindow)
                 _mainWindow = mainWindow;
@@ -39,6 +39,8 @@ public partial class PlaylistView : ReactiveControl<PlaylistViewModel>
 
     private void OpenBlacklistEditor_OnClick(object? sender, RoutedEventArgs e)
     {
+        if (_mainWindow.ViewModel == default) return;
+
         _mainWindow.ViewModel.MainView = _mainWindow.ViewModel.BlacklistEditorView;
     }
 

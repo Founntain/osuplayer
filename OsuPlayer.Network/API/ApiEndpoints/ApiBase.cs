@@ -39,12 +39,11 @@ public static partial class ApiAsync
 
         try
         {
-            using (var client = new HttpClient())
-            {
-                var data = await client.GetByteArrayAsync(new Uri($"{Url}{controller}/{action}"));
+            using var client = new HttpClient();
 
-                return JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(data));
-            }
+            var data = await client.GetByteArrayAsync(new Uri($"{Url}{controller}/{action}"));
+
+            return JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(data));
         }
         catch (Exception ex)
         {
@@ -70,17 +69,16 @@ public static partial class ApiAsync
 
         try
         {
-            using (var client = new HttpClient())
-            {
-                var url = new Uri($"{Url}{controller}/{action}");
+            using var client = new HttpClient();
 
-                var req = new HttpRequestMessage(HttpMethod.Post, url);
-                req.Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+            var url = new Uri($"{Url}{controller}/{action}");
 
-                var result = await client.SendAsync(req);
+            var req = new HttpRequestMessage(HttpMethod.Post, url);
+            req.Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
 
-                return JsonConvert.DeserializeObject<T>(await result.Content.ReadAsStringAsync());
-            }
+            var result = await client.SendAsync(req);
+
+            return JsonConvert.DeserializeObject<T>(await result.Content.ReadAsStringAsync());
         }
         catch (Exception ex)
         {
@@ -105,12 +103,11 @@ public static partial class ApiAsync
 
         try
         {
-            using (var client = new HttpClient())
-            {
-                var data = await client.GetByteArrayAsync(new Uri($"{Url}{controller}/{action}?{parameters}"));
+            using var client = new HttpClient();
 
-                return JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(data));
-            }
+            var data = await client.GetByteArrayAsync(new Uri($"{Url}{controller}/{action}?{parameters}"));
+
+            return JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(data));
         }
         catch (Exception ex)
         {
@@ -136,16 +133,15 @@ public static partial class ApiAsync
 
         try
         {
-            using (var client = new HttpClient())
-            {
-                var url = new Uri($"{Url}{controller}/{action}?{parameters}");
+            using var client = new HttpClient();
 
-                var req = new HttpRequestMessage(HttpMethod.Post, url);
+            var url = new Uri($"{Url}{controller}/{action}?{parameters}");
 
-                var result = await client.SendAsync(req);
+            var req = new HttpRequestMessage(HttpMethod.Post, url);
 
-                return JsonConvert.DeserializeObject<T>(await result.Content.ReadAsStringAsync());
-            }
+            var result = await client.SendAsync(req);
+
+            return JsonConvert.DeserializeObject<T>(await result.Content.ReadAsStringAsync());
         }
         catch (Exception ex)
         {

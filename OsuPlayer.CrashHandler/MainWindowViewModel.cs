@@ -5,7 +5,7 @@ namespace OsuPlayer.CrashHandler;
 
 public class MainWindowViewModel : BaseWindowViewModel
 {
-    private string _crashLog;
+    private string _crashLog = string.Empty;
 
     public string CrashLog
     {

@@ -16,7 +16,7 @@ public class EqualizerViewModel : BaseViewModel
     private bool _isDeleteEqPresetPopupOpen;
     private bool _isNewEqPresetPopupOpen;
     private bool _isRenameEqPresetPopupOpen;
-    private string _newEqPresetNameText;
+    private string _newEqPresetNameText = string.Empty;
 
     private EqPreset? _selectedPreset;
 
@@ -125,10 +125,9 @@ public class EqualizerViewModel : BaseViewModel
 
             EqPresets.Insert(0, EqPreset.Flat);
 
-            using (var eqPresets = new EqStorage())
-            {
-                eqPresets.Container.EqPresets = EqPresets;
-            }
+            using var eqPresets = new EqStorage();
+
+            eqPresets.Container.EqPresets = EqPresets;
         }
 
         if (SelectedPreset == default) return;

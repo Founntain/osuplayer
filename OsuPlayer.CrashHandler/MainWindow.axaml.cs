@@ -21,13 +21,15 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
     private void InitializeComponent()
     {
-        this.WhenActivated(disposables => { });
+        this.WhenActivated(_ => { });
 
         AvaloniaXamlLoader.Load(this);
     }
 
     private async void Window_OnActivated(object? sender, EventArgs e)
     {
+        if (ViewModel == default) return;
+
         var files = Directory.GetFiles("logs").Select(x => new FileInfo(x));
 
         var latestLog = files.MaxBy(x => x.CreationTimeUtc);
@@ -43,7 +45,9 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
     {
         if (ViewModel == null) return;
 
-        await Application.Current?.Clipboard?.SetTextAsync(ViewModel.CrashLog);
+        if (Application.Current?.Clipboard == default) return;
+
+        await Application.Current.Clipboard.SetTextAsync(ViewModel.CrashLog);
     }
 
     private void GitHub_OnClick(object? sender, RoutedEventArgs e)

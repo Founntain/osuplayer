@@ -63,7 +63,7 @@ public partial class UserView : ReactiveControl<UserViewModel>
 
     private void WebProfile_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (ViewModel.SelectedUser == default) return;
+        if (ViewModel.SelectedUser == default || string.IsNullOrWhiteSpace(ViewModel.SelectedUser.Name)) return;
 
         GeneralExtensions.OpenUrl($"https://stats.founntain.dev/user/{Uri.EscapeDataString(ViewModel.SelectedUser.Name)}");
     }

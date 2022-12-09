@@ -22,7 +22,7 @@ public interface IMapEntryBase : IEquatable<IMapEntryBase>, IComparable<IMapEntr
     /// Gets a formatted version of artist and title
     /// </summary>
     /// <returns>the formatted song name</returns>
-    public virtual string GetSongName()
+    public string GetSongName()
     {
         return $"{GetArtist()} - {GetTitle()}";
     }

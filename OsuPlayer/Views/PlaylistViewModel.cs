@@ -19,10 +19,10 @@ public class PlaylistViewModel : BaseViewModel
     private readonly List<MaterialIcon> _materialIcons = new();
     public readonly IPlayer Player;
 
-    private IDisposable _currentBind;
+    private IDisposable? _currentBind;
     private ReadOnlyObservableCollection<IMapEntryBase>? _filteredSongEntries;
-    private string _filterText;
-    private ObservableCollection<Playlist> _playlists;
+    private string _filterText = string.Empty;
+    private ObservableCollection<Playlist>? _playlists;
     private Playlist? _selectedPlaylist;
     private IMapEntryBase? _selectedSong;
 
@@ -40,7 +40,7 @@ public class PlaylistViewModel : BaseViewModel
             _selectedPlaylist = value;
 
             if (_filteredSongEntries != null)
-                _currentBind.Dispose();
+                _currentBind?.Dispose();
 
             if (_selectedPlaylist?.Songs != null)
                 _currentBind = Player.SongSourceProvider.GetMapEntriesFromHash(_selectedPlaylist.Songs, out _).ToSourceList().Connect()
@@ -74,7 +74,7 @@ public class PlaylistViewModel : BaseViewModel
             //.Throttle(TimeSpan.FromMilliseconds(20))
             .Select(BuildFilter);
 
-        Player.SelectedPlaylist.BindValueChanged(d => RefreshAllIcons(), true);
+        Player.SelectedPlaylist.BindValueChanged(_ => RefreshAllIcons(), true);
 
         Player.RepeatMode.BindValueChanged(d =>
         {
@@ -87,7 +87,7 @@ public class PlaylistViewModel : BaseViewModel
             RefreshAllIcons();
         }, true);
 
-        Player.PlaylistChanged += (sender, args) =>
+        Player.PlaylistChanged += (_, _) =>
         {
             var selection = Player.SelectedPlaylist.Value;
 

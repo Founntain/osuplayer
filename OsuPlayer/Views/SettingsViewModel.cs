@@ -23,9 +23,9 @@ public class SettingsViewModel : BaseViewModel
     private readonly Bindable<bool> _playlistEnableOnPlay = new();
     private readonly Bindable<SortingMode> _sortingMode = new();
     public readonly IPlayer Player;
-    private List<OsuPlayerContributer> _contributers;
-    private string _osuLocation;
-    private string _patchnotes;
+    private List<OsuPlayerContributor>? _contributors;
+    private string _osuLocation = string.Empty;
+    private string _patchnotes = string.Empty;
     private KnownColors _selectedAccentColor;
     private KnownColors _selectedBackgroundColor;
     private string? _selectedFont;
@@ -34,16 +34,16 @@ public class SettingsViewModel : BaseViewModel
     private IShuffleImpl? _selectedShuffleAlgorithm;
     private StartupSong _selectedStartupSong;
     private WindowTransparencyLevel _selectedTransparencyLevel;
-    private string _settingsSearchQ;
+    private string _settingsSearchQ = string.Empty;
     private IShuffleServiceProvider? _shuffleServiceProvider;
-
-    public MainWindow? MainWindow;
     private bool _useDiscordRpc;
 
-    public List<OsuPlayerContributer> Contributers
+    public MainWindow? MainWindow;
+
+    public List<OsuPlayerContributor>? Contributors
     {
-        get => _contributers;
-        set => this.RaiseAndSetIfChanged(ref _contributers, value);
+        get => _contributors;
+        set => this.RaiseAndSetIfChanged(ref _contributors, value);
     }
 
     public string Patchnotes
@@ -144,7 +144,7 @@ public class SettingsViewModel : BaseViewModel
         {
             this.RaiseAndSetIfChanged(ref _selectedBackgroundColor, value);
 
-            if (MainWindow == null) return;
+            if (MainWindow?.ViewModel == null) return;
 
             MainWindow.ViewModel.PanelMaterial = new ExperimentalAcrylicMaterial
             {
@@ -265,46 +265,49 @@ public class SettingsViewModel : BaseViewModel
         {
             var searchQs = value.Split(' ');
 
+            if (SettingsCategories == default) return;
+
             foreach (var category in SettingsCategories)
-                if (category is Grid settingsCat)
+            {
+                if (category is not Grid settingsCat) continue;
+
+                var settingsPanel =
+                    settingsCat.Children.FirstOrDefault(x => x.Name?.Contains(category.Name) ?? false);
+
+                if (settingsPanel is not StackPanel stackPanel) continue;
+
+                var settings = stackPanel.Children;
+
+                var categoryFound = searchQs.All(x =>
+                    category.Name?.Contains(x, StringComparison.OrdinalIgnoreCase) ?? true);
+
+                if (categoryFound)
                 {
-                    var settingsPanel =
-                        settingsCat.Children.FirstOrDefault(x => x.Name?.Contains(category.Name) ?? false);
+                    category.IsVisible = true;
+                    foreach (var setting in settings) setting.IsVisible = true;
 
-                    if (settingsPanel is StackPanel stackPanel)
-                    {
-                        var settings = stackPanel.Children;
-
-                        var categoryFound = searchQs.All(x =>
-                            category.Name?.Contains(x, StringComparison.OrdinalIgnoreCase) ?? true);
-
-                        if (categoryFound)
-                        {
-                            category.IsVisible = true;
-                            foreach (var setting in settings) setting.IsVisible = true;
-
-                            continue;
-                        }
-
-                        var foundAnySettings = false;
-                        foreach (var setting in settings)
-                        {
-                            setting.IsVisible = searchQs.All(x =>
-                                setting.Name?.Contains(x, StringComparison.OrdinalIgnoreCase) ?? false);
-                            foundAnySettings = foundAnySettings || setting.IsVisible;
-                        }
-
-                        category.IsVisible = foundAnySettings;
-                    }
+                    continue;
                 }
+
+                var foundAnySettings = false;
+
+                foreach (var setting in settings)
+                {
+                    setting.IsVisible = searchQs.All(x =>
+                        setting.Name?.Contains(x, StringComparison.OrdinalIgnoreCase) ?? false);
+                    foundAnySettings = foundAnySettings || setting.IsVisible;
+                }
+
+                category.IsVisible = foundAnySettings;
+            }
 
             this.RaiseAndSetIfChanged(ref _settingsSearchQ, value);
         }
     }
 
-    public Avalonia.Controls.Controls SettingsCategories { get; set; }
+    public Avalonia.Controls.Controls? SettingsCategories { get; set; }
 
-    public ObservableCollection<AudioDevice> OutputDeviceComboboxItems { get; set; }
+    public ObservableCollection<AudioDevice>? OutputDeviceComboboxItems { get; set; }
 
     public SettingsViewModel(IPlayer player, ISortProvider? sortProvider, IShuffleServiceProvider? shuffleServiceProvider)
     {
@@ -322,19 +325,19 @@ public class SettingsViewModel : BaseViewModel
         _selectedFont = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
         _selectedShuffleAlgorithm = ShuffleAlgorithms?.FirstOrDefault(x => x == _shuffleServiceProvider?.ShuffleImpl);
         _useDiscordRpc = config.Container.UseDiscordRpc;
-        
+
         if (sortProvider != null)
         {
             _sortingMode.BindTo(sortProvider.SortingModeBindable);
-            _sortingMode.BindValueChanged(d => this.RaisePropertyChanged(nameof(SelectedSortingMode)));
+            _sortingMode.BindValueChanged(_ => this.RaisePropertyChanged(nameof(SelectedSortingMode)));
             _sortingMode.Value = config.Container.SortingMode;
         }
 
         _blacklistSkip.BindTo(Player.BlacklistSkip);
-        _blacklistSkip.BindValueChanged(d => this.RaisePropertyChanged(nameof(BlacklistSkip)));
+        _blacklistSkip.BindValueChanged(_ => this.RaisePropertyChanged(nameof(BlacklistSkip)));
 
         _playlistEnableOnPlay.BindTo(Player.PlaylistEnableOnPlay);
-        _blacklistSkip.BindValueChanged(d => this.RaisePropertyChanged(nameof(PlaylistEnableOnPlay)));
+        _blacklistSkip.BindValueChanged(_ => this.RaisePropertyChanged(nameof(PlaylistEnableOnPlay)));
 
         Activator = new ViewModelActivator();
         this.WhenActivated(Block);
@@ -350,6 +353,6 @@ public class SettingsViewModel : BaseViewModel
 
         Patchnotes = latestPatchNotes;
 
-        Contributers = await GitHub.GetContributers() ?? new List<OsuPlayerContributer>();
+        Contributors = await GitHub.GetContributers() ?? new List<OsuPlayerContributor>();
     }
 }

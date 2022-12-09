@@ -1,7 +1,6 @@
 ﻿using Avalonia.Media.Imaging;
 using OsuPlayer.Data.API.Enums;
 using OsuPlayer.Data.API.Models.Beatmap;
-using OsuPlayer.Data.API.Models.Statistic;
 using OsuPlayer.Data.API.Models.User;
 using OsuPlayer.Network.Online;
 
@@ -30,21 +29,19 @@ public partial class ApiAsync
     {
         if (string.IsNullOrWhiteSpace(bannerUrl)) return default;
 
-        using (var client = new HttpClient())
-        {
-            try
-            {
-                var data = await client.GetByteArrayAsync(bannerUrl);
+        using var client = new HttpClient();
 
-                await using (var stream = new MemoryStream(data))
-                {
-                    return new Bitmap(stream);
-                }
-            }
-            catch (Exception)
-            {
-                return default;
-            }
+        try
+        {
+            var data = await client.GetByteArrayAsync(bannerUrl);
+
+            await using var stream = new MemoryStream(data);
+
+            return new Bitmap(stream);
+        }
+        catch (Exception)
+        {
+            return default;
         }
     }
 

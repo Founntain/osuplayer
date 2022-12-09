@@ -88,6 +88,7 @@ public class SkiaImage : Control
                 _skiaContext = (ISkiaDrawingContextImpl) skContext;
                 _skiaContext.SkCanvas.Clear(new SKColor(255, 255, 255, 0));
                 _skiaContext.SkCanvas.DrawBitmap(Source, 0, 0, _skPaint);
+
                 InvalidateVisual();
             }
             else if (change.Property == BlurStrengthProperty)
@@ -95,6 +96,7 @@ public class SkiaImage : Control
                 _skPaint.ImageFilter = SKImageFilter.CreateBlur(BlurStrength, BlurStrength);
                 _skiaContext.SkCanvas.Clear(new SKColor(255, 255, 255));
                 _skiaContext.SkCanvas.DrawBitmap(Source, 0, 0, _skPaint);
+
                 InvalidateVisual();
             }
         }

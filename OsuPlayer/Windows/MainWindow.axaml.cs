@@ -6,14 +6,11 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Data.OsuPlayer.Enums;
-using OsuPlayer.Extensions;
 using OsuPlayer.IO.Importer;
-using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Network;
 using OsuPlayer.Styles;
 using OsuPlayer.Views;
 using ReactiveUI;
-using Splat;
 
 namespace OsuPlayer.Windows;
 
@@ -64,7 +61,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
     private void InitializeComponent()
     {
-        this.WhenActivated(disposables =>
+        this.WhenActivated(_ =>
         {
             if (ViewModel != null)
                 ViewModel.MainView = ViewModel.HomeView;
@@ -76,6 +73,8 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
     protected override void OnClosing(CancelEventArgs e)
     {
         base.OnClosing(e);
+
+        if (ViewModel == default) return;
 
         using var config = new Config();
 
@@ -95,19 +94,22 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
         if (Debugger.IsAttached) return;
 
+        if (ViewModel == default) return;
+
         await using var config = new Config();
 
         var result = await GitHub.CheckForUpdates(config.Container.ReleaseChannel);
 
-        if (result.IsNewVersionAvailable)
-        {
-            ViewModel.UpdateView.Update = result;
-            ViewModel!.MainView = ViewModel.UpdateView;
-        }
+        if (!result.IsNewVersionAvailable) return;
+
+        ViewModel.UpdateView.Update = result;
+        ViewModel.MainView = ViewModel.UpdateView;
     }
 
     private void MainSplitView_OnPaneClosed(object? sender, EventArgs e)
     {
+        if (ViewModel == default) return;
+
         ViewModel.IsPaneOpen = false;
     }
 
@@ -123,7 +125,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         await loginWindow.ShowDialog(this);
 
         // We only want to update the user panel, when the home view is already open, to refresh the panel.
-        if (ViewModel.MainView.GetType() != typeof(HomeViewModel)) return;
+        if (ViewModel?.MainView.GetType() != typeof(HomeViewModel)) return;
 
         ViewModel.HomeView.RaisePropertyChanged(nameof(ViewModel.HomeView.IsUserLoggedIn));
         ViewModel.HomeView.RaisePropertyChanged(nameof(ViewModel.HomeView.IsUserNotLoggedIn));

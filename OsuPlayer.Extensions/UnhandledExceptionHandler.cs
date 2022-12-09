@@ -28,7 +28,7 @@ public static class UnhandledExceptionHandler
         var dateString = date.ToString("yyyyMMdd_HHmmss");
 
         //Not using concatenation so it is better readable
-        var crashlog = "A shit, it looks like you did something that the osu!player did not like. If you think this is a bug, please report this crashlog to Founntain by using the buttons below!"
+        var crashlog = "A shit, it looks like you did something that the osu!player did not like. If you think this is a bug, please report this crashlog to Founntain by using the buttons below! (Also please don't forget to state how you achieved the crash e. g. what did you do, click etc.)"
                        + Environment.NewLine
                        + Environment.NewLine
                        + "UTC Time: " + date.ToString("f", new CultureInfo("en-us"))

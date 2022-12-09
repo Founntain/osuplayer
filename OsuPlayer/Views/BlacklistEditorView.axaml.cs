@@ -11,7 +11,7 @@ namespace OsuPlayer.Views;
 
 public partial class BlacklistEditorView : ReactiveControl<BlacklistEditorViewModel>
 {
-    private MainWindow _mainWindow;
+    private MainWindow? _mainWindow;
 
     public BlacklistEditorView()
     {
@@ -20,11 +20,12 @@ public partial class BlacklistEditorView : ReactiveControl<BlacklistEditorViewMo
 
     private void InitializeComponent()
     {
-        this.WhenActivated(disposables =>
+        this.WhenActivated(_ =>
         {
             if (this.GetVisualRoot() is MainWindow mainWindow)
                 _mainWindow = mainWindow;
         });
+
         AvaloniaXamlLoader.Load(this);
     }
 
@@ -43,15 +44,15 @@ public partial class BlacklistEditorView : ReactiveControl<BlacklistEditorViewMo
 
         foreach (var song in ViewModel.SelectedSongListItems)
         {
-            if (ViewModel.Blacklist.Songs.Contains(song.Hash))
+            if (ViewModel.Blacklist?.Songs.Contains(song.Hash) == true)
                 continue;
 
-            ViewModel.Blacklist.Songs.Add(song.Hash);
+            ViewModel.Blacklist?.Songs.Add(song.Hash);
         }
 
         await using (var blacklist = new Blacklist())
         {
-            blacklist.Container.Songs = ViewModel.Blacklist.Songs;
+            blacklist.Container.Songs = ViewModel.Blacklist?.Songs ?? new HashSet<string>();
             ViewModel.Blacklist = blacklist.Container;
         }
 
@@ -65,15 +66,15 @@ public partial class BlacklistEditorView : ReactiveControl<BlacklistEditorViewMo
 
         foreach (var song in ViewModel.SelectedBlacklistItems)
         {
-            if (!ViewModel.Blacklist.Songs.Contains(song.Hash))
+            if (!ViewModel.Blacklist?.Songs.Contains(song.Hash) == true)
                 continue;
 
-            ViewModel.Blacklist.Songs.Remove(song.Hash);
+            ViewModel.Blacklist?.Songs.Remove(song.Hash);
         }
 
         await using (var blacklist = new Blacklist())
         {
-            blacklist.Container.Songs = ViewModel.Blacklist.Songs;
+            blacklist.Container.Songs = ViewModel.Blacklist?.Songs ?? new HashSet<string>();
             ViewModel.Blacklist = blacklist.Container;
         }
 
@@ -86,6 +87,8 @@ public partial class BlacklistEditorView : ReactiveControl<BlacklistEditorViewMo
 
         var songs = listBox.SelectedItems.Cast<IMapEntryBase>().ToList();
 
+        if (_mainWindow == default || _mainWindow.ViewModel == default) return;
+
         _mainWindow.ViewModel.BlacklistEditorView.SelectedSongListItems = songs;
     }
 
@@ -94,6 +97,8 @@ public partial class BlacklistEditorView : ReactiveControl<BlacklistEditorViewMo
         if (sender is not ListBox listBox) return;
 
         var songs = listBox.SelectedItems.Cast<IMapEntryBase>().ToList();
+
+        if (_mainWindow == default || _mainWindow.ViewModel == default) return;
 
         _mainWindow.ViewModel.BlacklistEditorView.SelectedBlacklistItems = songs;
     }

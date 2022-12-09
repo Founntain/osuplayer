@@ -6,8 +6,8 @@ namespace OsuPlayer.Windows;
 public class CreateProfileWindowViewModel : BaseWindowViewModel
 {
     private bool _isTosChecked;
-    private string _password;
-    private string _username;
+    private string _password = string.Empty;
+    private string _username = string.Empty;
 
     public string Username
     {
