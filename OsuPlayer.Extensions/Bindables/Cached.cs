@@ -43,6 +43,5 @@ public class Cached<T>
         IsValid = false;
         //FrameStatistics.Increment(StatisticsCounterType.Invalidations);
         return true;
-
     }
 }
