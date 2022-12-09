@@ -34,7 +34,6 @@ public static class PasswordManager
         // OsuPlayerMessageBox.Show(s, "Fix password errors");
 
         return false;
-
     }
 
     /// <summary>
@@ -66,6 +65,5 @@ public static class PasswordManager
         // OsuPlayerMessageBox.Show(s, "Fix password errors");
 
         return (false, s);
-
     }
 }
