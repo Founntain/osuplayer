@@ -36,35 +36,13 @@ public class RngHistoryShuffler : IShuffleImpl
         {
             case ShuffleDirection.Forward:
             {
-                // Next index if not at array end
-                if (_shuffleHistoryIndex < _shuffleHistory.Length - 1)
-                {
-                    GetNextShuffledIndex();
-                }
-                // Move array one down if at the top of the array
-                else
-                {
-                    Array.Copy(_shuffleHistory, 1, _shuffleHistory, 0, _shuffleHistory.Length - 1);
-
-                    _shuffleHistory[_shuffleHistoryIndex] = GenerateShuffledIndex();
-                }
+                ForwardShuffle();
 
                 break;
             }
             case ShuffleDirection.Backwards:
             {
-                // Prev index if index greater than zero
-                if (_shuffleHistoryIndex > 0)
-                {
-                    GetPreviousShuffledIndex();
-                }
-                // Move array one up if at the start of the array
-                else
-                {
-                    Array.Copy(_shuffleHistory, 0, _shuffleHistory, 1, _shuffleHistory.Length - 1);
-
-                    _shuffleHistory[_shuffleHistoryIndex] = GenerateShuffledIndex();
-                }
+                BackwardShuffle();
 
                 break;
             }
@@ -73,6 +51,44 @@ public class RngHistoryShuffler : IShuffleImpl
         var shuffledIndex = _shuffleHistory[_shuffleHistoryIndex];
 
         return shuffledIndex ?? 0;
+    }
+
+    /// <summary>
+    /// Does a forward shuffle operation
+    /// </summary>
+    private void ForwardShuffle()
+    {
+        // Next index if not at array end
+        if (_shuffleHistoryIndex < _shuffleHistory.Length - 1)
+        {
+            GetNextShuffledIndex();
+        }
+        // Move array one down if at the top of the array
+        else
+        {
+            Array.Copy(_shuffleHistory, 1, _shuffleHistory, 0, _shuffleHistory.Length - 1);
+
+            _shuffleHistory[_shuffleHistoryIndex] = GenerateShuffledIndex();
+        }
+    }
+
+    /// <summary>
+    /// Does a backward shuffle operation
+    /// </summary>
+    private void BackwardShuffle()
+    {
+        // Prev index if index greater than zero
+        if (_shuffleHistoryIndex > 0)
+        {
+            GetPreviousShuffledIndex();
+        }
+        // Move array one up if at the start of the array
+        else
+        {
+            Array.Copy(_shuffleHistory, 0, _shuffleHistory, 1, _shuffleHistory.Length - 1);
+
+            _shuffleHistory[_shuffleHistoryIndex] = GenerateShuffledIndex();
+        }
     }
 
     /// <summary>

@@ -166,6 +166,7 @@ public class CascadingWrapPanel : Panel, INavigableContainer
             }
 
             var line = heights.IndexOf(heights.Min());
+            
             heights[line] += parameters.IsHorizontal ? sz.V : sz.U;
         }
 
