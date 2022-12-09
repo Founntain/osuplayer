@@ -33,8 +33,7 @@ public class UserViewModel : BaseViewModel
     private ObservableCollection<User>? _users;
     private ObservableCollection<IControl>? _badges;
     private ObservableCollection<BeatmapUserValidityModel>? _topSongsOfCurrentUser;
-
-
+    
     public ObservableCollection<ISeries>? Series { get; set; }
 
     public Axis[] YAxes { get; set; } =
