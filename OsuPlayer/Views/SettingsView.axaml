@@ -227,7 +227,7 @@
                     <StackPanel Margin="10" Spacing="10" Name="ContributePanel">
                         <TextBlock Text="Contributers" FontSize="32" VerticalAlignment="Center"
                                    HorizontalAlignment="Stretch" />
-                        <ItemsRepeater Items="{Binding Contributers}">
+                        <ItemsRepeater Items="{Binding Contributors}">
                             <ItemsRepeater.Layout>
                                 <WrapLayout HorizontalSpacing="5" VerticalSpacing="5" Orientation="Horizontal" />
                             </ItemsRepeater.Layout>

@@ -41,7 +41,7 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
 
     private void InitializeComponent()
     {
-        this.WhenActivated(disposables =>
+        this.WhenActivated(_ =>
         {
             if (string.IsNullOrWhiteSpace(ViewModel?.Username)) return;
 

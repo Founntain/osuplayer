@@ -16,7 +16,7 @@ namespace OsuPlayer.Views;
 
 public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 {
-    private MainWindow _mainWindow;
+    private MainWindow? _mainWindow;
 
     public EditUserView()
     {
@@ -25,30 +25,32 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
     private void InitializeComponent()
     {
-        this.WhenActivated(disposables =>
+        this.WhenActivated(_ =>
         {
             if (this.GetVisualRoot() is MainWindow mainWindow)
                 _mainWindow = mainWindow;
         });
+        
         AvaloniaXamlLoader.Load(this);
     }
 
     private async void EditProfilePicture_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (ViewModel?.CurrentUser == default) return;
+        if (_mainWindow == default || ViewModel?.CurrentUser == default) return;
 
-        var dialog = new OpenFileDialog();
-
-        dialog.AllowMultiple = false;
-        dialog.Filters = new List<FileDialogFilter>
+        var dialog = new OpenFileDialog
         {
-            new()
+            AllowMultiple = false,
+            Filters = new List<FileDialogFilter>
             {
-                Extensions = new List<string>
+                new()
                 {
-                    "png",
-                    "jpg",
-                    "jpeg"
+                    Extensions = new List<string>
+                    {
+                        "png",
+                        "jpg",
+                        "jpeg"
+                    }
                 }
             }
         };
@@ -85,20 +87,21 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
     private async void EditBannerPicture_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (ViewModel == default) return;
+        if (_mainWindow == default || ViewModel == default) return;
 
-        var dialog = new OpenFileDialog();
-
-        dialog.AllowMultiple = false;
-        dialog.Filters = new List<FileDialogFilter>
+        var dialog = new OpenFileDialog
         {
-            new()
+            AllowMultiple = false,
+            Filters = new List<FileDialogFilter>
             {
-                Extensions = new List<string>
+                new()
                 {
-                    "png",
-                    "jpg",
-                    "jpeg"
+                    Extensions = new List<string>
+                    {
+                        "png",
+                        "jpg",
+                        "jpeg"
+                    }
                 }
             }
         };
@@ -108,8 +111,6 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
         var file = result?.FirstOrDefault();
 
         if (file == default) return;
-
-        var fileInfo = new FileInfo(file);
 
         var banner = await File.ReadAllBytesAsync(file);
 
@@ -130,7 +131,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
     private async void SaveChanges_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (ViewModel?.CurrentUser == default) return;
+        if (_mainWindow == default || ViewModel?.CurrentUser == default || string.IsNullOrWhiteSpace(ViewModel?.CurrentUser.Name)) return;
 
         var tempUser = await ApiAsync.GetProfileByNameAsync(ViewModel.CurrentUser.Name);
         var changedProfilePicture = ViewModel.IsNewProfilePictureSelected;
@@ -175,9 +176,11 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
         if (ViewModel == null)
         {
-            ProfileManager.User = await ApiAsync.GetProfileByNameAsync(editUserModel.UserModel.Name);
+            if(!string.IsNullOrWhiteSpace(editUserModel.UserModel.Name))
+                ProfileManager.User = await ApiAsync.GetProfileByNameAsync(editUserModel.UserModel.Name);
 
-            if (changedProfilePicture) await MessageBox.ShowDialogAsync(_mainWindow, $"We couldn't update your profile picture, because you left the edit view to early!{Environment.NewLine}If you want to update your profile picture please wait, until you get the message that it's been done!");
+            if (changedProfilePicture) 
+                await MessageBox.ShowDialogAsync(_mainWindow, $"We couldn't update your profile picture, because you left the edit view to early!{Environment.NewLine}If you want to update your profile picture please wait, until you get the message that it's been done!");
         }
         else
         {
@@ -198,6 +201,8 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
     /// <returns>true if the response is a successful one, false otherwise</returns>
     private async Task<bool> HandleResponse(UserResponse response)
     {
+        if (_mainWindow == default) return default;
+        
         switch (response)
         {
             case UserResponse.UserEdited:
@@ -228,33 +233,32 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
     private async Task UpdateProfilePicture()
     {
-        if (ViewModel?.CurrentUser == default || ViewModel?.CurrentProfilePicture == default) return;
+        if (_mainWindow == default || ViewModel?.CurrentUser == default || ViewModel?.CurrentProfilePicture == default) return;
 
-        await using (var stream = new MemoryStream())
+        await using var stream = new MemoryStream();
+        
+        ViewModel.CurrentProfilePicture.Save(stream);
+
+        var profilePicture = Convert.ToBase64String(stream.ToArray());
+
+        var response = await ApiAsync.ApiRequestAsync<UserResponse>("users", "saveProfilePicture", new
         {
-            ViewModel.CurrentProfilePicture.Save(stream);
+            ViewModel.CurrentUser.Name,
+            Picture = profilePicture
+        });
 
-            var profilePicture = Convert.ToBase64String(stream.ToArray());
+        if (response == UserResponse.CantSaveProfilePicture)
+        {
+            await MessageBox.ShowDialogAsync(_mainWindow, "Profile picture could not be saved!");
 
-            var response = await ApiAsync.ApiRequestAsync<UserResponse>("users", "saveProfilePicture", new
-            {
-                ViewModel.CurrentUser.Name,
-                Picture = profilePicture
-            });
+            ViewModel.LoadProfilePicture();
 
-            if (response == UserResponse.CantSaveProfilePicture)
-            {
-                await MessageBox.ShowDialogAsync(_mainWindow, "Profile picture could not be saved!");
-
-                ViewModel.LoadProfilePicture();
-
-                return;
-            }
-
-            await MessageBox.ShowDialogAsync(_mainWindow, "Profile picture changed succesfully!");
-
-            ViewModel.IsNewProfilePictureSelected = false;
+            return;
         }
+
+        await MessageBox.ShowDialogAsync(_mainWindow, "Profile picture changed succesfully!");
+
+        ViewModel.IsNewProfilePictureSelected = false;
     }
 
     private void ResetBannerPicture_OnClick(object? sender, RoutedEventArgs e)
@@ -286,7 +290,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
     private async void ResetBanner_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (ViewModel?.CurrentUser == default) return;
+        if (ViewModel?.CurrentUser == default || string.IsNullOrWhiteSpace(ViewModel.CurrentUser.Name)) return;
 
         var user = await ApiAsync.GetProfileByNameAsync(ViewModel.CurrentUser.Name);
 
@@ -313,7 +317,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
     private async void ConfirmDeleteProfile_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (ProfileManager.User == default || ViewModel == default) return;
+        if (_mainWindow.ViewModel == default || ProfileManager.User == default || ViewModel == default) return;
 
         if (string.IsNullOrWhiteSpace(ViewModel.ConfirmDeletionPassword))
         {

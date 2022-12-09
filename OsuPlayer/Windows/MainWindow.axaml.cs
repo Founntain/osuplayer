@@ -6,14 +6,11 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Data.OsuPlayer.Enums;
-using OsuPlayer.Extensions;
 using OsuPlayer.IO.Importer;
-using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Network;
 using OsuPlayer.Styles;
 using OsuPlayer.Views;
 using ReactiveUI;
-using Splat;
 
 namespace OsuPlayer.Windows;
 
@@ -64,7 +61,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
     private void InitializeComponent()
     {
-        this.WhenActivated(disposables =>
+        this.WhenActivated(_ =>
         {
             if (ViewModel != null)
                 ViewModel.MainView = ViewModel.HomeView;

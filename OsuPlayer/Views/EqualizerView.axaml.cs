@@ -12,7 +12,7 @@ namespace OsuPlayer.Views;
 
 public partial class EqualizerView : ReactiveControl<EqualizerViewModel>
 {
-    private MainWindow _mainWindow;
+    private MainWindow? _mainWindow;
 
     public EqualizerView()
     {
@@ -21,11 +21,12 @@ public partial class EqualizerView : ReactiveControl<EqualizerViewModel>
 
     private void InitializeComponent()
     {
-        this.WhenActivated(disposables =>
+        this.WhenActivated(_ =>
         {
             if (this.GetVisualRoot() is MainWindow mainWindow)
                 _mainWindow = mainWindow;
         });
+        
         AvaloniaXamlLoader.Load(this);
     }
 
@@ -50,25 +51,26 @@ public partial class EqualizerView : ReactiveControl<EqualizerViewModel>
             Gain = (decimal[]) ViewModel.Frequencies.Array.Clone()
         };
 
-        using (var eqStorage = new EqStorage())
-        {
-            if (eqStorage.Container.EqPresets == default) return;
+        using var eqStorage = new EqStorage();
+        
+        if (eqStorage.Container.EqPresets == default) return;
 
-            if (eqStorage.Container.EqPresets.Any(x => x.Name == eqPreset.Name)) return;
+        if (eqStorage.Container.EqPresets.Any(x => x.Name == eqPreset.Name)) return;
 
-            eqStorage.Container.EqPresets.Add(eqPreset);
+        eqStorage.Container.EqPresets.Add(eqPreset);
 
-            ViewModel.IsNewEqPresetPopupOpen = false;
-            ViewModel.EqPresets = eqStorage.Container.EqPresets;
+        ViewModel.IsNewEqPresetPopupOpen = false;
+        ViewModel.EqPresets = eqStorage.Container.EqPresets;
 
-            ViewModel.RaisePropertyChanged(nameof(ViewModel.EqPresets));
+        ViewModel.RaisePropertyChanged(nameof(ViewModel.EqPresets));
 
-            ViewModel.SelectedPreset = ViewModel.EqPresets!.Last();
-        }
+        ViewModel.SelectedPreset = ViewModel.EqPresets!.Last();
     }
 
     private async void DeleteEqPreset_OnClick(object? sender, RoutedEventArgs e)
     {
+        if (_mainWindow == default) return;
+        
         if (ViewModel.SelectedPreset?.Name is "Flat (Default)" or "Custom")
         {
             await MessageBox.ShowDialogAsync(_mainWindow, "No you can't delete the default and custom preset! Sorry :(");
@@ -122,6 +124,8 @@ public partial class EqualizerView : ReactiveControl<EqualizerViewModel>
 
     private async void RenameEqPreset_OnClick(object? sender, RoutedEventArgs e)
     {
+        if (_mainWindow == default) return;
+        
         if (ViewModel.SelectedPreset?.Name is "Flat (Default)" or "Custom")
         {
             await MessageBox.ShowDialogAsync(_mainWindow, "No you can't rename the default and custom preset! Sorry :(");

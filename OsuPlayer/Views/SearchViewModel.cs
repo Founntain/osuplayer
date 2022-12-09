@@ -17,7 +17,7 @@ public class SearchViewModel : BaseViewModel
     private readonly ReadOnlyObservableCollection<IMapEntryBase>? _filteredSongEntries;
     public readonly IPlayer Player;
     private string _filterText = string.Empty;
-    private List<AddToPlaylistContextMenuEntry> _playlistContextMenuEntries;
+    private List<AddToPlaylistContextMenuEntry>? _playlistContextMenuEntries;
     private List<Playlist>? _playlists;
     private IMapEntryBase? _selectedSong;
 

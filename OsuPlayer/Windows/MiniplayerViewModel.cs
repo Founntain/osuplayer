@@ -135,13 +135,13 @@ public class MiniplayerViewModel : BaseWindowViewModel
         Player = player;
 
         _songTime.BindTo(bassEngine.ChannelPosition);
-        _songTime.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongTime)));
+        _songTime.BindValueChanged(_ => this.RaisePropertyChanged(nameof(SongTime)));
 
         _songLength.BindTo(bassEngine.ChannelLength);
-        _songLength.BindValueChanged(d => this.RaisePropertyChanged(nameof(SongLength)));
+        _songLength.BindValueChanged(_ => this.RaisePropertyChanged(nameof(SongLength)));
 
         CurrentSong.BindTo(Player.CurrentSong);
-        CurrentSong.BindValueChanged(d =>
+        CurrentSong.BindValueChanged(_ =>
         {
             this.RaisePropertyChanged(nameof(TitleText));
             this.RaisePropertyChanged(nameof(ArtistText));
@@ -151,16 +151,16 @@ public class MiniplayerViewModel : BaseWindowViewModel
         });
 
         _volume.BindTo(Player.Volume);
-        _volume.BindValueChanged(d => this.RaisePropertyChanged(nameof(Volume)));
+        _volume.BindValueChanged(_ => this.RaisePropertyChanged(nameof(Volume)));
 
         _isPlaying.BindTo(Player.IsPlaying);
-        _isPlaying.BindValueChanged(d => this.RaisePropertyChanged(nameof(IsPlaying)));
+        _isPlaying.BindValueChanged(_ => this.RaisePropertyChanged(nameof(IsPlaying)));
 
         _isRepeating.BindTo(Player.RepeatMode);
-        _isRepeating.BindValueChanged(d => { this.RaisePropertyChanged(nameof(IsRepeating)); });
+        _isRepeating.BindValueChanged(_ => { this.RaisePropertyChanged(nameof(IsRepeating)); });
 
         _isShuffle.BindTo(Player.IsShuffle);
-        _isShuffle.BindValueChanged(d => this.RaisePropertyChanged(nameof(IsShuffle)));
+        _isShuffle.BindValueChanged(_ => this.RaisePropertyChanged(nameof(IsShuffle)));
 
         Player.CurrentSongImage.BindValueChanged(d =>
         {

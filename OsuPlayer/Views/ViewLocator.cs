@@ -41,7 +41,7 @@ public class ViewLocator : IDataTemplate
             HorizontalAlignment = HorizontalAlignment.Center
         };
 
-        button.Click += (sender, args) => GeneralExtensions.OpenUrl(@"https://founntain.dev");
+        button.Click += (_, _) => GeneralExtensions.OpenUrl(@"https://founntain.dev");
 
         return button;
     }
