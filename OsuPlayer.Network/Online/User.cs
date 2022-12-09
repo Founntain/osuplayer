@@ -35,7 +35,7 @@ public sealed class User : UserModel
 
     public override string ToString()
     {
-        return Name;
+        return Name ?? string.Empty;
     }
 
     public override int GetHashCode()

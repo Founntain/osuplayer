@@ -23,7 +23,7 @@ public class SettingsViewModel : BaseViewModel
     private readonly Bindable<bool> _playlistEnableOnPlay = new();
     private readonly Bindable<SortingMode> _sortingMode = new();
     public readonly IPlayer Player;
-    private List<OsuPlayerContributer> _contributers;
+    private List<OsuPlayerContributor> _contributers;
     private string _osuLocation;
     private string _patchnotes;
     private KnownColors _selectedAccentColor;
@@ -40,7 +40,7 @@ public class SettingsViewModel : BaseViewModel
     public MainWindow? MainWindow;
     private bool _useDiscordRpc;
 
-    public List<OsuPlayerContributer> Contributers
+    public List<OsuPlayerContributor> Contributers
     {
         get => _contributers;
         set => this.RaiseAndSetIfChanged(ref _contributers, value);
@@ -350,6 +350,6 @@ public class SettingsViewModel : BaseViewModel
 
         Patchnotes = latestPatchNotes;
 
-        Contributers = await GitHub.GetContributers() ?? new List<OsuPlayerContributer>();
+        Contributers = await GitHub.GetContributers() ?? new List<OsuPlayerContributor>();
     }
 }

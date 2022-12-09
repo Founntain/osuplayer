@@ -6,7 +6,7 @@
 public static class PasswordManager
 {
     /// <summary>
-    /// Checks if the given password meets our password requierements
+    /// Checks if the given password meets our password requirements
     /// </summary>
     /// <param name="password"></param>
     /// <returns></returns>
@@ -24,18 +24,17 @@ public static class PasswordManager
         if (!(textCharArray.Any(char.IsUpper) && textCharArray.Any(char.IsLower)))
             errorMessages.Add("At least one uppercase and one lowercase character");
 
-        if (errorMessages.Count > 0)
-        {
-            var s = "Your password needs to meet the following requirements:\n";
+        if (errorMessages.Count <= 0) return true;
+        
+        var s = "Your password needs to meet the following requirements:\n";
 
-            foreach (var errorMessage in errorMessages) s += errorMessage + "\n";
+        foreach (var errorMessage in errorMessages) 
+            s += errorMessage + "\n";
 
-            // OsuPlayerMessageBox.Show(s, "Fix password errors");
+        // OsuPlayerMessageBox.Show(s, "Fix password errors");
 
-            return false;
-        }
+        return false;
 
-        return true;
     }
 
     /// <summary>
@@ -57,17 +56,16 @@ public static class PasswordManager
         if (!(textCharArray.Any(char.IsUpper) && textCharArray.Any(char.IsLower)))
             errorMessages.Add("At least one uppercase and one lowercase character");
 
-        if (errorMessages.Count > 0)
-        {
-            var s = "Your password needs to meet the following requirements:\n";
+        if (errorMessages.Count <= 0) return (true, null);
+        
+        var s = "Your password needs to meet the following requirements:\n";
 
-            foreach (var errorMessage in errorMessages) s += errorMessage + "\n";
+        foreach (var errorMessage in errorMessages) 
+            s += errorMessage + "\n";
 
-            // OsuPlayerMessageBox.Show(s, "Fix password errors");
+        // OsuPlayerMessageBox.Show(s, "Fix password errors");
 
-            return (false, s);
-        }
+        return (false, s);
 
-        return (true, null);
     }
 }

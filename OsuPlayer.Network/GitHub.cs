@@ -116,7 +116,7 @@ public static class GitHub
         }
     }
 
-    public static async Task<List<OsuPlayerContributer>?> GetContributers()
+    public static async Task<List<OsuPlayerContributor>?> GetContributers()
     {
         try
         {
@@ -124,7 +124,7 @@ public static class GitHub
 
             var githubData = await github.Repository.GetAllContributors("Founntain", "osuplayer");
 
-            var result = new List<OsuPlayerContributer>();
+            var result = new List<OsuPlayerContributor>();
 
             foreach (var user in githubData)
             {
@@ -145,7 +145,7 @@ public static class GitHub
                     Debug.WriteLine(ex);
                 }
 
-                result.Add(new OsuPlayerContributer(user.Login, image));
+                result.Add(new OsuPlayerContributor(user.Login, image));
             }
 
             return result;

@@ -233,17 +233,17 @@
                             </ItemsRepeater.Layout>
 
                             <ItemsRepeater.ItemTemplate>
-                                <DataTemplate DataType="data:OsuPlayerContributer">
+                                <DataTemplate DataType="data:OsuPlayerContributor">
                                     <StackPanel Orientation="Horizontal" Spacing="5">
                                         <Border CornerRadius="100" Width="50" Height="50" VerticalAlignment="Center"
                                                 BorderBrush="White" BorderThickness="2">
                                             <Border.Background>
-                                                <ImageBrush Source="{Binding avatar}"
+                                                <ImageBrush Source="{Binding Avatar}"
                                                             BitmapInterpolationMode="MediumQuality" />
                                             </Border.Background>
                                         </Border>
 
-                                        <TextBlock Text="{Binding name}" FontSize="20" VerticalAlignment="Center" />
+                                        <TextBlock Text="{Binding Name}" FontSize="20" VerticalAlignment="Center" />
                                     </StackPanel>
                                 </DataTemplate>
                             </ItemsRepeater.ItemTemplate>

@@ -2,4 +2,4 @@
 
 namespace OsuPlayer.Network.Data;
 
-public record OsuPlayerContributer(string name, Bitmap? avatar);
+public record OsuPlayerContributor(string Name, Bitmap? Avatar);

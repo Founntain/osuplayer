@@ -30,21 +30,19 @@ public partial class ApiAsync
     {
         if (string.IsNullOrWhiteSpace(bannerUrl)) return default;
 
-        using (var client = new HttpClient())
+        using var client = new HttpClient();
+        
+        try
         {
-            try
-            {
-                var data = await client.GetByteArrayAsync(bannerUrl);
+            var data = await client.GetByteArrayAsync(bannerUrl);
 
-                await using (var stream = new MemoryStream(data))
-                {
-                    return new Bitmap(stream);
-                }
-            }
-            catch (Exception)
-            {
-                return default;
-            }
+            await using var stream = new MemoryStream(data);
+            
+            return new Bitmap(stream);
+        }
+        catch (Exception)
+        {
+            return default;
         }
     }
 
