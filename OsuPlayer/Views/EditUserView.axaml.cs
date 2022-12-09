@@ -30,7 +30,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
             if (this.GetVisualRoot() is MainWindow mainWindow)
                 _mainWindow = mainWindow;
         });
-        
+
         AvaloniaXamlLoader.Load(this);
     }
 
@@ -176,10 +176,10 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
         if (ViewModel == null)
         {
-            if(!string.IsNullOrWhiteSpace(editUserModel.UserModel.Name))
+            if (!string.IsNullOrWhiteSpace(editUserModel.UserModel.Name))
                 ProfileManager.User = await ApiAsync.GetProfileByNameAsync(editUserModel.UserModel.Name);
 
-            if (changedProfilePicture) 
+            if (changedProfilePicture)
                 await MessageBox.ShowDialogAsync(_mainWindow, $"We couldn't update your profile picture, because you left the edit view to early!{Environment.NewLine}If you want to update your profile picture please wait, until you get the message that it's been done!");
         }
         else
@@ -202,7 +202,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
     private async Task<bool> HandleResponse(UserResponse response)
     {
         if (_mainWindow == default) return default;
-        
+
         switch (response)
         {
             case UserResponse.UserEdited:
@@ -236,7 +236,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
         if (_mainWindow == default || ViewModel?.CurrentUser == default || ViewModel?.CurrentProfilePicture == default) return;
 
         await using var stream = new MemoryStream();
-        
+
         ViewModel.CurrentProfilePicture.Save(stream);
 
         var profilePicture = Convert.ToBase64String(stream.ToArray());

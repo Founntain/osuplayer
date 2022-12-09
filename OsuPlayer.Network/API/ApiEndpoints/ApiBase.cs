@@ -40,7 +40,7 @@ public static partial class ApiAsync
         try
         {
             using var client = new HttpClient();
-            
+
             var data = await client.GetByteArrayAsync(new Uri($"{Url}{controller}/{action}"));
 
             return JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(data));
@@ -70,7 +70,7 @@ public static partial class ApiAsync
         try
         {
             using var client = new HttpClient();
-            
+
             var url = new Uri($"{Url}{controller}/{action}");
 
             var req = new HttpRequestMessage(HttpMethod.Post, url);
@@ -104,7 +104,7 @@ public static partial class ApiAsync
         try
         {
             using var client = new HttpClient();
-            
+
             var data = await client.GetByteArrayAsync(new Uri($"{Url}{controller}/{action}?{parameters}"));
 
             return JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(data));
@@ -134,7 +134,7 @@ public static partial class ApiAsync
         try
         {
             using var client = new HttpClient();
-            
+
             var url = new Uri($"{Url}{controller}/{action}?{parameters}");
 
             var req = new HttpRequestMessage(HttpMethod.Post, url);

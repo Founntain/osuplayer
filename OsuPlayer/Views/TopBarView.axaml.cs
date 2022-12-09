@@ -30,7 +30,7 @@ internal partial class TopBarView : ReactiveControl<TopBarViewModel>
     private void Navigation_Clicked(object? sender, RoutedEventArgs e)
     {
         if (_mainWindow?.ViewModel == default) return;
-        
+
         switch ((sender as Control)?.Name)
         {
             case "SymmetricalNavigation":
@@ -60,7 +60,7 @@ internal partial class TopBarView : ReactiveControl<TopBarViewModel>
     private void TopBarGrid_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
         if (_mainWindow == default) return;
-        
+
         _mainWindow.BeginMoveDrag(e);
         e.Handled = false;
     }

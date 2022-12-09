@@ -17,7 +17,7 @@ public static class GeneralExtensions
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 url = url.Replace("&", "^&");
-                
+
                 Process.Start(new ProcessStartInfo(url)
                 {
                     UseShellExecute = true

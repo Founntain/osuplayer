@@ -41,7 +41,7 @@ public static class PlaylistManager
     public static async Task<IList<Playlist>?> AddPlaylistAsync(Playlist playlist)
     {
         await using var storage = new PlaylistStorage();
-        
+
         await storage.ReadAsync();
 
         if (storage.Container.Playlists?.Any(x => x == playlist) ?? true)
@@ -59,7 +59,7 @@ public static class PlaylistManager
     public static async Task RenamePlaylist(Playlist playlist)
     {
         await using var storage = new PlaylistStorage();
-        
+
         await storage.ReadAsync();
 
         var p = storage.Container.Playlists?.FirstOrDefault(x => x == playlist);
@@ -77,7 +77,7 @@ public static class PlaylistManager
     public static async Task<IList<Playlist>?> DeletePlaylistAsync(Playlist playlist)
     {
         await using var storage = new PlaylistStorage();
-        
+
         await storage.ReadAsync();
 
         var p = storage.Container.Playlists?.First(x => x == playlist);

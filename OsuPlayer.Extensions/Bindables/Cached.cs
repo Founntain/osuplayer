@@ -40,7 +40,7 @@ public class Cached<T>
     public bool Invalidate()
     {
         if (!IsValid) return false;
-        
+
         IsValid = false;
         //FrameStatistics.Increment(StatisticsCounterType.Invalidations);
         return true;

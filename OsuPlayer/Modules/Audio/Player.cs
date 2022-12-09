@@ -69,7 +69,6 @@ public class Player : IPlayer, IImportNotifications
         var runtimePlatform = AvaloniaLocator.Current.GetRequiredService<IRuntimePlatform>();
 
         if (runtimePlatform.GetRuntimeInfo().OperatingSystem == OperatingSystemType.WinNT)
-        {
             try
             {
                 _winMediaControls = new WindowsMediaTransportControls(this);
@@ -78,7 +77,6 @@ public class Player : IPlayer, IImportNotifications
             {
                 _winMediaControls = null;
             }
-        }
 
         _audioEngine.ChannelReachedEnd = () => NextSong(PlayDirection.Forward);
 
@@ -117,7 +115,7 @@ public class Player : IPlayer, IImportNotifications
         RepeatMode.BindValueChanged(d =>
         {
             using var cfg = new Config();
-            
+
             cfg.Container.RepeatMode = d.NewValue;
         }, true);
 
@@ -126,7 +124,7 @@ public class Player : IPlayer, IImportNotifications
         SelectedPlaylist.BindValueChanged(d =>
         {
             using var cfg = new Config();
-            
+
             cfg.Container.SelectedPlaylist = d.NewValue?.Id;
 
             if (d.NewValue == null) return;
@@ -340,7 +338,7 @@ public class Player : IPlayer, IImportNotifications
     private IMapEntryBase GetNextSongToPlay(IList<IMapEntryBase> songSource, int currentIndex, PlayDirection playDirection)
     {
         IMapEntryBase songToPlay;
-        
+
         var offset = (int) playDirection;
 
         if (SongSourceProvider.SongSourceList == null || !SongSourceProvider.SongSourceList.Any())
@@ -388,7 +386,7 @@ public class Player : IPlayer, IImportNotifications
         if (fullMapEntry == default) throw new NullReferenceException();
 
         fullMapEntry.UseUnicode = config.Container.UseSongNameUnicode;
-        
+
         var findBackgroundTask = fullMapEntry.FindBackground();
 
         _currentSongTimer.Stop();

@@ -10,9 +10,8 @@ public class RepeatConverter : IValueConverter
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is not RepeatMode val) return MaterialIconKind.QuestionMark;
-        
+
         if (targetType == typeof(MaterialIconKind))
-        {
             return val switch
             {
                 RepeatMode.NoRepeat => MaterialIconKind.RepeatOff,
@@ -20,7 +19,6 @@ public class RepeatConverter : IValueConverter
                 RepeatMode.SingleSong => MaterialIconKind.RepeatOnce,
                 _ => MaterialIconKind.RepeatOff
             };
-        }
 
         return targetType == typeof(bool) && val == RepeatMode.Playlist;
     }

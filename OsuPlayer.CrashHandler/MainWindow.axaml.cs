@@ -29,7 +29,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
     private async void Window_OnActivated(object? sender, EventArgs e)
     {
         if (ViewModel == default) return;
-        
+
         var files = Directory.GetFiles("logs").Select(x => new FileInfo(x));
 
         var latestLog = files.MaxBy(x => x.CreationTimeUtc);
@@ -46,7 +46,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         if (ViewModel == null) return;
 
         if (Application.Current?.Clipboard == default) return;
-        
+
         await Application.Current.Clipboard.SetTextAsync(ViewModel.CrashLog);
     }
 

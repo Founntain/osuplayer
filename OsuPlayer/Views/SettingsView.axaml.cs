@@ -41,14 +41,14 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
     private void SettingsView_OnInitialized(object? sender, EventArgs e)
     {
         using var config = new Config();
-        
+
         ViewModel!.OsuLocation = config.Read().OsuPath!;
     }
 
     public async void ImportSongsClick(object? sender, RoutedEventArgs routedEventArgs)
     {
         if (_mainWindow == default) return;
-        
+
         var dialog = new OpenFileDialog
         {
             Title = "Select your osu!.db or client.realm file",
@@ -92,7 +92,7 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
         }
 
         var player = ViewModel.Player;
-        
+
         await Task.Run(() => SongImporter.ImportSongsAsync(player.SongSourceProvider, player as IImportNotifications));
         //await Task.Run(ViewModel.Player.ImportSongsAsync);
     }
@@ -100,7 +100,7 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
     public async void ImportCollectionsClick(object? sender, RoutedEventArgs routedEventArgs)
     {
         if (_mainWindow == default) return;
-        
+
         var player = ViewModel.Player;
         var success = await Task.Run(() => CollectionImporter.ImportCollectionsAsync(player.SongSourceProvider));
 
@@ -120,7 +120,7 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
     private void OpenEqClick(object? sender, RoutedEventArgs e)
     {
         if (_mainWindow?.ViewModel == default) return;
-        
+
         _mainWindow.ViewModel.MainView = _mainWindow.ViewModel.EqualizerView;
     }
 

@@ -93,7 +93,7 @@ public class DiscordClient
     {
         var buttons = new List<Button>
         {
-            new ()
+            new()
             {
                 Label = "osu!player GitHub",
                 Url = "https://github.com/osu-player/osuplayer"

@@ -12,20 +12,20 @@ namespace OsuPlayer.Windows;
 
 public class MiniplayerViewModel : BaseWindowViewModel
 {
-    public readonly IPlayer Player;
-    
+    private readonly Bindable<IMapEntry?> _currentSong = new();
+
     private readonly Bindable<bool> _isPlaying = new();
     private readonly Bindable<RepeatMode> _isRepeating = new();
     private readonly Bindable<bool> _isShuffle = new();
     private readonly Bindable<double> _songLength = new();
     private readonly Bindable<double> _songTime = new();
     private readonly Bindable<double> _volume = new();
-    private readonly Bindable<IMapEntry?> _currentSong = new();
+    public readonly IPlayer Player;
+    private Bitmap? _currentSongImage;
+    private string _currentSongLength = "00:00";
+    private string _currentSongTime = "00:00";
 
     private double _playbackSpeed;
-    private string _currentSongTime = "00:00";
-    private string _currentSongLength = "00:00";
-    private Bitmap? _currentSongImage;
 
     public bool IsCurrentSongInPlaylist => _currentSong.Value != null
                                            && Player.SelectedPlaylist.Value != null

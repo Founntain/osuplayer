@@ -25,7 +25,7 @@ public partial class BlacklistEditorView : ReactiveControl<BlacklistEditorViewMo
             if (this.GetVisualRoot() is MainWindow mainWindow)
                 _mainWindow = mainWindow;
         });
-        
+
         AvaloniaXamlLoader.Load(this);
     }
 
@@ -52,7 +52,7 @@ public partial class BlacklistEditorView : ReactiveControl<BlacklistEditorViewMo
 
         await using (var blacklist = new Blacklist())
         {
-            blacklist.Container.Songs = ViewModel.Blacklist?.Songs ?? new();
+            blacklist.Container.Songs = ViewModel.Blacklist?.Songs ?? new HashSet<string>();
             ViewModel.Blacklist = blacklist.Container;
         }
 
@@ -74,7 +74,7 @@ public partial class BlacklistEditorView : ReactiveControl<BlacklistEditorViewMo
 
         await using (var blacklist = new Blacklist())
         {
-            blacklist.Container.Songs = ViewModel.Blacklist?.Songs ?? new();
+            blacklist.Container.Songs = ViewModel.Blacklist?.Songs ?? new HashSet<string>();
             ViewModel.Blacklist = blacklist.Container;
         }
 
@@ -88,7 +88,7 @@ public partial class BlacklistEditorView : ReactiveControl<BlacklistEditorViewMo
         var songs = listBox.SelectedItems.Cast<IMapEntryBase>().ToList();
 
         if (_mainWindow == default || _mainWindow.ViewModel == default) return;
-        
+
         _mainWindow.ViewModel.BlacklistEditorView.SelectedSongListItems = songs;
     }
 
@@ -99,7 +99,7 @@ public partial class BlacklistEditorView : ReactiveControl<BlacklistEditorViewMo
         var songs = listBox.SelectedItems.Cast<IMapEntryBase>().ToList();
 
         if (_mainWindow == default || _mainWindow.ViewModel == default) return;
-        
+
         _mainWindow.ViewModel.BlacklistEditorView.SelectedBlacklistItems = songs;
     }
 }

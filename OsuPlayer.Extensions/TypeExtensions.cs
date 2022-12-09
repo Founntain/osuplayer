@@ -52,7 +52,7 @@ public static class Extensions
 
         var arr = (T[]) Enum.GetValues(src.GetType());
         var j = Array.IndexOf(arr, src) + 1;
-        
+
         return arr.Length == j ? arr[0] : arr[j];
     }
 

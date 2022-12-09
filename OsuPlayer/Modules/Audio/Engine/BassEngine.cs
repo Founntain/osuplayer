@@ -273,11 +273,11 @@ public sealed class BassEngine : IAudioEngine
         _paramEq.AddBand(16000);
 
         using var eqStorage = new EqStorage();
-        
+
         eqStorage.Container.LastUsedEqId ??= eqStorage.Container.EqPresets?.First().Id;
 
         EqGains.Set(eqStorage.Container.EqPresets?.FirstOrDefault(x => x.Id == eqStorage.Container.LastUsedEqId)?.Gain);
-        
+
         SetAllEq();
     }
 

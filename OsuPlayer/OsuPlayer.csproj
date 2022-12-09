@@ -117,7 +117,7 @@
             <DependentUpon>StatisticsView.axaml</DependentUpon>
         </Compile>
         <Compile Update="Views\SymmetricalViewModel.cs">
-          <DependentUpon>SymmetricalView.axaml</DependentUpon>
+            <DependentUpon>SymmetricalView.axaml</DependentUpon>
         </Compile>
     </ItemGroup>
     <ItemGroup>

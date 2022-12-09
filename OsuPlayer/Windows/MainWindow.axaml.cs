@@ -75,7 +75,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         base.OnClosing(e);
 
         if (ViewModel == default) return;
-        
+
         using var config = new Config();
 
         config.Container.Volume = ViewModel.Player.Volume.Value;
@@ -95,13 +95,13 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         if (Debugger.IsAttached) return;
 
         if (ViewModel == default) return;
-        
+
         await using var config = new Config();
 
         var result = await GitHub.CheckForUpdates(config.Container.ReleaseChannel);
 
         if (!result.IsNewVersionAvailable) return;
-        
+
         ViewModel.UpdateView.Update = result;
         ViewModel.MainView = ViewModel.UpdateView;
     }
@@ -109,7 +109,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
     private void MainSplitView_OnPaneClosed(object? sender, EventArgs e)
     {
         if (ViewModel == default) return;
-        
+
         ViewModel.IsPaneOpen = false;
     }
 

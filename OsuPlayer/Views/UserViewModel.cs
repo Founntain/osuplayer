@@ -22,18 +22,18 @@ namespace OsuPlayer.Views;
 public class UserViewModel : BaseViewModel
 {
     public readonly IPlayer Player;
-    private User? _selectedUser;
+    private ObservableCollection<IControl>? _badges;
+    private CancellationTokenSource? _bannerCancellationTokenSource;
     private Bitmap? _currentProfileBanner;
     private Bitmap? _currentProfilePicture;
-    private List<ObservableValue>? _xpGainedGraphValues;
+    private CancellationTokenSource? _profilePictureCancellationTokenSource;
+    private User? _selectedUser;
     private List<ObservableValue>? _songsPlayedGraphValues;
     private CancellationTokenSource? _topSongsCancellationTokenSource;
-    private CancellationTokenSource? _bannerCancellationTokenSource;
-    private CancellationTokenSource? _profilePictureCancellationTokenSource;
-    private ObservableCollection<User>? _users;
-    private ObservableCollection<IControl>? _badges;
     private ObservableCollection<BeatmapUserValidityModel>? _topSongsOfCurrentUser;
-    
+    private ObservableCollection<User>? _users;
+    private List<ObservableValue>? _xpGainedGraphValues;
+
     public ObservableCollection<ISeries>? Series { get; set; }
 
     public Axis[] YAxes { get; set; } =
@@ -57,7 +57,7 @@ public class UserViewModel : BaseViewModel
 
     public List<ObservableValue> XpGainedGraphValues
     {
-        get => _xpGainedGraphValues ?? new();
+        get => _xpGainedGraphValues ?? new List<ObservableValue>();
         private set
         {
             if (Series != default)
@@ -73,7 +73,7 @@ public class UserViewModel : BaseViewModel
 
     public List<ObservableValue> SongsPlayedGraphValues
     {
-        get => _songsPlayedGraphValues ?? new();
+        get => _songsPlayedGraphValues ?? new List<ObservableValue>();
         private set
         {
             if (Series != default)
@@ -95,7 +95,7 @@ public class UserViewModel : BaseViewModel
 
     public ObservableCollection<IControl> Badges
     {
-        get => _badges ?? new();
+        get => _badges ?? new ObservableCollection<IControl>();
         set => this.RaiseAndSetIfChanged(ref _badges, value);
     }
 
@@ -113,7 +113,7 @@ public class UserViewModel : BaseViewModel
 
     public ObservableCollection<User> Users
     {
-        get => _users ?? new();
+        get => _users ?? new ObservableCollection<User>();
         set => this.RaiseAndSetIfChanged(ref _users, value);
     }
 
@@ -288,7 +288,7 @@ public class UserViewModel : BaseViewModel
             }
 
             await using var stream = new MemoryStream(Convert.FromBase64String(profilePicture));
-            
+
             try
             {
                 var bitmap = new Bitmap(stream);

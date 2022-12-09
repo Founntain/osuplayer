@@ -28,7 +28,7 @@ public partial class PlaylistEditorView : ReactiveControl<PlaylistEditorViewMode
             if (this.GetVisualRoot() is MainWindow mainWindow)
                 _mainWindow = mainWindow;
         });
-        
+
         AvaloniaXamlLoader.Load(this);
     }
 
@@ -85,7 +85,7 @@ public partial class PlaylistEditorView : ReactiveControl<PlaylistEditorViewMode
     private void SongList_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (_mainWindow?.ViewModel == default) return;
-        
+
         if (sender is not ListBox listBox) return;
 
         var songs = listBox.SelectedItems.Cast<IMapEntryBase>().ToList();
@@ -96,7 +96,7 @@ public partial class PlaylistEditorView : ReactiveControl<PlaylistEditorViewMode
     private void Playlist_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (_mainWindow?.ViewModel == default) return;
-        
+
         if (sender is not ListBox listBox) return;
 
         var songs = listBox.SelectedItems.Cast<IMapEntryBase>().ToList();
@@ -155,7 +155,7 @@ public partial class PlaylistEditorView : ReactiveControl<PlaylistEditorViewMode
     private async void ConfirmDeletePlaylist_OnClick(object? sender, RoutedEventArgs e)
     {
         if (_mainWindow == default) return;
-        
+
         if (ViewModel.CurrentSelectedPlaylist == null) return;
 
         if (ViewModel.CurrentSelectedPlaylist.Name == "Favorites")

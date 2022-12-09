@@ -26,7 +26,7 @@ public partial class EqualizerView : ReactiveControl<EqualizerViewModel>
             if (this.GetVisualRoot() is MainWindow mainWindow)
                 _mainWindow = mainWindow;
         });
-        
+
         AvaloniaXamlLoader.Load(this);
     }
 
@@ -52,7 +52,7 @@ public partial class EqualizerView : ReactiveControl<EqualizerViewModel>
         };
 
         using var eqStorage = new EqStorage();
-        
+
         if (eqStorage.Container.EqPresets == default) return;
 
         if (eqStorage.Container.EqPresets.Any(x => x.Name == eqPreset.Name)) return;
@@ -70,7 +70,7 @@ public partial class EqualizerView : ReactiveControl<EqualizerViewModel>
     private async void DeleteEqPreset_OnClick(object? sender, RoutedEventArgs e)
     {
         if (_mainWindow == default) return;
-        
+
         if (ViewModel.SelectedPreset?.Name is "Flat (Default)" or "Custom")
         {
             await MessageBox.ShowDialogAsync(_mainWindow, "No you can't delete the default and custom preset! Sorry :(");
@@ -125,7 +125,7 @@ public partial class EqualizerView : ReactiveControl<EqualizerViewModel>
     private async void RenameEqPreset_OnClick(object? sender, RoutedEventArgs e)
     {
         if (_mainWindow == default) return;
-        
+
         if (ViewModel.SelectedPreset?.Name is "Flat (Default)" or "Custom")
         {
             await MessageBox.ShowDialogAsync(_mainWindow, "No you can't rename the default and custom preset! Sorry :(");

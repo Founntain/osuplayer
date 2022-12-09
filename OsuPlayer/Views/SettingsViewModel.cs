@@ -19,26 +19,26 @@ namespace OsuPlayer.Views;
 
 public class SettingsViewModel : BaseViewModel
 {
-    public readonly IPlayer Player;
     private readonly Bindable<bool> _blacklistSkip = new();
     private readonly Bindable<bool> _playlistEnableOnPlay = new();
     private readonly Bindable<SortingMode> _sortingMode = new();
+    public readonly IPlayer Player;
+    private List<OsuPlayerContributor>? _contributors;
     private string _osuLocation = string.Empty;
     private string _patchnotes = string.Empty;
-    private string? _selectedFont;
-    private string _settingsSearchQ = string.Empty;
     private KnownColors _selectedAccentColor;
     private KnownColors _selectedBackgroundColor;
+    private string? _selectedFont;
     private FontWeights _selectedFontWeight;
     private ReleaseChannels _selectedReleaseChannel;
+    private IShuffleImpl? _selectedShuffleAlgorithm;
     private StartupSong _selectedStartupSong;
     private WindowTransparencyLevel _selectedTransparencyLevel;
-    private List<OsuPlayerContributor>? _contributors;
-    private IShuffleImpl? _selectedShuffleAlgorithm;
+    private string _settingsSearchQ = string.Empty;
     private IShuffleServiceProvider? _shuffleServiceProvider;
+    private bool _useDiscordRpc;
 
     public MainWindow? MainWindow;
-    private bool _useDiscordRpc;
 
     public List<OsuPlayerContributor>? Contributors
     {
@@ -266,11 +266,11 @@ public class SettingsViewModel : BaseViewModel
             var searchQs = value.Split(' ');
 
             if (SettingsCategories == default) return;
-            
+
             foreach (var category in SettingsCategories)
             {
                 if (category is not Grid settingsCat) continue;
-                
+
                 var settingsPanel =
                     settingsCat.Children.FirstOrDefault(x => x.Name?.Contains(category.Name) ?? false);
 
@@ -290,7 +290,7 @@ public class SettingsViewModel : BaseViewModel
                 }
 
                 var foundAnySettings = false;
-                    
+
                 foreach (var setting in settings)
                 {
                     setting.IsVisible = searchQs.All(x =>
@@ -325,7 +325,7 @@ public class SettingsViewModel : BaseViewModel
         _selectedFont = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
         _selectedShuffleAlgorithm = ShuffleAlgorithms?.FirstOrDefault(x => x == _shuffleServiceProvider?.ShuffleImpl);
         _useDiscordRpc = config.Container.UseDiscordRpc;
-        
+
         if (sortProvider != null)
         {
             _sortingMode.BindTo(sortProvider.SortingModeBindable);

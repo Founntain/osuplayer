@@ -37,7 +37,7 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
         var mapCount = ReadInt32();
 
         minBeatMaps.Capacity = mapCount;
-        
+
         int? prevId = null;
 
         for (var i = 1; i < mapCount; i++)
@@ -48,7 +48,7 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
             if (prevId != null)
             {
                 var length = CalculateMapLength(out var newSetId, out _);
-                
+
                 if (prevId == newSetId)
                 {
                     prevId = newSetId;
@@ -57,9 +57,9 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
 
                 BaseStream.Seek(-length, SeekOrigin.Current);
             }
-            
+
             ReadFromStream(out var minBeatMap);
-            
+
             prevId = minBeatMap.BeatmapSetId;
             minBeatMaps.Add(minBeatMap);
         }
@@ -172,9 +172,9 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
 
         BaseStream.Seek(17 * timingCnt, SeekOrigin.Current);
         BaseStream.Seek(4, SeekOrigin.Current);
-        
+
         var beatmapSetId = ReadInt32();
-        
+
         BaseStream.Seek(15, SeekOrigin.Current);
 
         ReadString(true); //SongSource
@@ -219,9 +219,9 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
         ReadString(true);
         ReadString(true);
         ReadString(true);
-        
+
         hash = ReadString();
-        
+
         ReadString(true);
         BaseStream.Seek(15, SeekOrigin.Current);
         BaseStream.Seek(OsuDbVersion >= 20140609 ? 16 : 4, SeekOrigin.Current);
@@ -237,25 +237,25 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
 
         BaseStream.Seek(12, SeekOrigin.Current);
         var timingCnt = ReadInt32();
-        
+
         BaseStream.Seek(timingCnt * 17, SeekOrigin.Current);
         BaseStream.Seek(4, SeekOrigin.Current);
-        
+
         setId = ReadInt32();
-        
+
         BaseStream.Seek(15, SeekOrigin.Current);
-        
+
         ReadString(true);
         ReadString(true);
-        
+
         BaseStream.Seek(2, SeekOrigin.Current);
-        
+
         ReadString(true);
-        
+
         BaseStream.Seek(10, SeekOrigin.Current);
-        
+
         ReadString(true);
-        
+
         BaseStream.Seek(OsuDbVersion < 20140609 ? 20 : 18, SeekOrigin.Current);
 
         return BaseStream.Position - initOffset;

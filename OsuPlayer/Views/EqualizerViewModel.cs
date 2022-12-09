@@ -126,7 +126,7 @@ public class EqualizerViewModel : BaseViewModel
             EqPresets.Insert(0, EqPreset.Flat);
 
             using var eqPresets = new EqStorage();
-            
+
             eqPresets.Container.EqPresets = EqPresets;
         }
 

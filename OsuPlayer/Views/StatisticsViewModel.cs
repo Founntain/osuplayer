@@ -11,16 +11,16 @@ public class StatisticsViewModel : BaseViewModel
     private int _beatmapsTracked;
     private uint _communityLevel;
     private float _mbUsed;
-    private TimeSpan _playerAgeTime;
     private string _playerAge = string.Empty;
+    private TimeSpan _playerAgeTime;
     private ulong _songsPlayed;
+
+    private Timer? _timer;
     private uint _translators;
 
     private uint _users;
     private ulong _xpEarned;
     private ulong _xpLeft;
-
-    private Timer? _timer;
 
     public uint Users
     {

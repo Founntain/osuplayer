@@ -116,9 +116,9 @@ public class Bindable<T> : IBindable<T>, IBindable
     public void BindValueChanged(Action<ValueChangedEvent<T>> onChange, bool ignoreSource = false, bool runOnceImmediately = false)
     {
         ValueChanged += onChange;
-        
+
         _ignoreSource = ignoreSource;
-        
+
         if (runOnceImmediately)
             onChange(new ValueChangedEvent<T>(Value, Value));
     }
@@ -146,7 +146,7 @@ public class Bindable<T> : IBindable<T>, IBindable
     internal void SetValue(T previous, T value, bool bypassChecks = false, Bindable<T>? source = null)
     {
         _value = value;
-        
+
         TriggerValueChanged(previous, source ?? this, true, bypassChecks);
     }
 
@@ -163,14 +163,12 @@ public class Bindable<T> : IBindable<T>, IBindable
         var beforePropagation = _value;
 
         if (propagateToBindings && Bindings != null)
-        {
             foreach (var binding in Bindings)
             {
                 if (binding == source) continue;
 
                 binding.SetValue(previousValue, _value, bypassChecks, this);
             }
-        }
 
         if (EqualityComparer<T>.Default.Equals(beforePropagation, _value) && (source != this || bypassChecks))
             ValueChanged?.Invoke(new ValueChangedEvent<T>(previousValue, _value));
@@ -224,7 +222,7 @@ public class Bindable<T> : IBindable<T>, IBindable
     /// <inheritdoc cref="IBindable.CreateInstance" />
     protected virtual Bindable<T> CreateInstance()
     {
-        return new();
+        return new Bindable<T>();
     }
 
     /// <inheritdoc cref="IBindable{T}.GetBoundCopy" />

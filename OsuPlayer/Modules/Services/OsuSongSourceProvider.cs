@@ -41,10 +41,8 @@ public class OsuSongSourceProvider : ISongSourceProvider
         invalidHashes = new List<string>();
 
         for (var i = 0; i < maps.Length; i++)
-        {
             if (maps[i] == null)
                 invalidHashes.Add(hashes.ElementAt(i));
-        }
 
         return maps.Where(map => map != null).ToList();
     }

@@ -25,10 +25,10 @@ public static class PasswordManager
             errorMessages.Add("At least one uppercase and one lowercase character");
 
         if (errorMessages.Count <= 0) return true;
-        
+
         var s = "Your password needs to meet the following requirements:\n";
 
-        foreach (var errorMessage in errorMessages) 
+        foreach (var errorMessage in errorMessages)
             s += errorMessage + "\n";
 
         // OsuPlayerMessageBox.Show(s, "Fix password errors");
@@ -56,10 +56,10 @@ public static class PasswordManager
             errorMessages.Add("At least one uppercase and one lowercase character");
 
         if (errorMessages.Count <= 0) return (true, null);
-        
+
         var s = "Your password needs to meet the following requirements:\n";
 
-        foreach (var errorMessage in errorMessages) 
+        foreach (var errorMessage in errorMessages)
             s += errorMessage + "\n";
 
         // OsuPlayerMessageBox.Show(s, "Fix password errors");

@@ -16,7 +16,7 @@ public partial class SearchView : ReactiveControl<SearchViewModel>
     private void InitializeComponent()
     {
         this.WhenActivated(_ => { });
-        
+
         AvaloniaXamlLoader.Load(this);
     }
 
@@ -24,14 +24,14 @@ public partial class SearchView : ReactiveControl<SearchViewModel>
     {
         var list = sender as ListBox;
         var song = list!.SelectedItem as IMapEntryBase;
-        
+
         await ViewModel.Player.TryPlaySongAsync(song);
     }
 
     private void AddToBlacklist_OnClick(object? sender, RoutedEventArgs e)
     {
         using var blacklist = new Blacklist();
-        
+
         blacklist.Container.Songs.Add(ViewModel.SelectedSong?.Hash);
     }
 }

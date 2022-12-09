@@ -73,7 +73,7 @@ public abstract class Storable<T> : IDisposable, IAsyncDisposable where T : ISto
         {
             var rawJson = JObject.Parse(data);
             rawJson.Remove(e.Path ?? string.Empty);
-            
+
             return _storableContainer = JsonConvert.DeserializeObject<T>(rawJson.ToString(), SerializerSettings)!;
         }
     }
@@ -121,7 +121,6 @@ public abstract class Storable<T> : IDisposable, IAsyncDisposable where T : ISto
     private void TrySave(T container)
     {
         for (var i = 0; i < 3; i++)
-        {
             try
             {
                 File.WriteAllText(Path!, JsonConvert.SerializeObject(container, SerializerSettings));
@@ -132,7 +131,6 @@ public abstract class Storable<T> : IDisposable, IAsyncDisposable where T : ISto
                 Console.WriteLine(e);
                 Thread.Sleep(50);
             }
-        }
     }
 
     /// <summary>
@@ -153,7 +151,6 @@ public abstract class Storable<T> : IDisposable, IAsyncDisposable where T : ISto
     private async Task TrySaveAsync(T container)
     {
         for (var i = 0; i < 3; i++)
-        {
             try
             {
                 await File.WriteAllTextAsync(Path!, JsonConvert.SerializeObject(container, SerializerSettings));
@@ -163,6 +160,5 @@ public abstract class Storable<T> : IDisposable, IAsyncDisposable where T : ISto
                 Console.WriteLine(e);
                 Thread.Sleep(50);
             }
-        }
     }
 }

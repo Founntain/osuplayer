@@ -19,7 +19,7 @@ internal class RealmMapEntry : RealmMapEntryBase, IMapEntry
     {
         if (UseUnicode)
             return string.IsNullOrEmpty(ArtistUnicode) ? Artist : ArtistUnicode;
-        
+
         return Artist;
     }
 
@@ -27,7 +27,7 @@ internal class RealmMapEntry : RealmMapEntryBase, IMapEntry
     {
         if (UseUnicode)
             return string.IsNullOrEmpty(TitleUnicode) ? Artist : TitleUnicode;
-        
+
         return Title;
     }
 

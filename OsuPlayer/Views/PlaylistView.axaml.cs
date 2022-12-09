@@ -40,7 +40,7 @@ public partial class PlaylistView : ReactiveControl<PlaylistViewModel>
     private void OpenBlacklistEditor_OnClick(object? sender, RoutedEventArgs e)
     {
         if (_mainWindow.ViewModel == default) return;
-        
+
         _mainWindow.ViewModel.MainView = _mainWindow.ViewModel.BlacklistEditorView;
     }
 

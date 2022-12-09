@@ -107,14 +107,12 @@ public class BindableArray<T> : IBindableArray<T>, IBindable
         }
 
         if (_bindings != default)
-        {
             foreach (var binding in _bindings)
             {
                 if (binding == source) continue;
-                
+
                 binding.Set(val, this);
             }
-        }
 
         if (source != this)
             NotifyCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
@@ -125,7 +123,7 @@ public class BindableArray<T> : IBindableArray<T>, IBindable
         if (value is double dVal)
         {
             var round = Math.Round(dVal, _precision);
-            
+
             if (round is T val)
                 return val;
         }
@@ -133,7 +131,7 @@ public class BindableArray<T> : IBindableArray<T>, IBindable
         if (value is decimal decVal)
         {
             var round = Math.Round(decVal, _precision);
-            
+
             if (round is T val)
                 return val;
         }
@@ -150,14 +148,12 @@ public class BindableArray<T> : IBindableArray<T>, IBindable
         Array[index] = rValue;
 
         if (_bindings != default)
-        {
             foreach (var binding in _bindings)
             {
                 if (binding == source) continue;
-                
+
                 binding.SetValue(index, value, this, dontTrigger);
             }
-        }
 
         if (!dontTrigger)
             NotifyCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, rValue, last, index));
@@ -183,10 +179,10 @@ public class BindableArray<T> : IBindableArray<T>, IBindable
     {
         if (other == null)
             throw new ArgumentNullException(nameof(other));
-        
+
         if (_bindings?.Contains(WeakReference) == true)
             throw new ArgumentException("An already bound collection can not be bound again.");
-        
+
         if (other == this)
             throw new ArgumentException("A collection can not be bound to itself");
 
