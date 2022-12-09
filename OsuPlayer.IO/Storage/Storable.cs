@@ -73,6 +73,7 @@ public abstract class Storable<T> : IDisposable, IAsyncDisposable where T : ISto
         {
             var rawJson = JObject.Parse(data);
             rawJson.Remove(e.Path ?? string.Empty);
+            
             return _storableContainer = JsonConvert.DeserializeObject<T>(rawJson.ToString(), SerializerSettings)!;
         }
     }
@@ -80,7 +81,7 @@ public abstract class Storable<T> : IDisposable, IAsyncDisposable where T : ISto
     /// <summary>
     /// Reads the corresponding file as set in the <see cref="Path" /> from the disk asynchronously
     /// </summary>
-    /// <returns>the read <see cref="StorableContainer" /> instance</returns>
+    /// <returns>the read <see cref="IStorableContainer" /> instance</returns>
     public virtual async Task<T> ReadAsync()
     {
         if (!File.Exists(Path) || _storableContainer != null)
@@ -105,7 +106,7 @@ public abstract class Storable<T> : IDisposable, IAsyncDisposable where T : ISto
     /// <summary>
     /// Saves the file to the disk
     /// </summary>
-    /// <param name="container">the <see cref="StorableContainer" /> to be saved</param>
+    /// <param name="container">the <see cref="IStorableContainer" /> to be saved</param>
     /// <remarks>Also happens on dispose of the <see cref="Storable{T}" /> instance</remarks>
     public virtual void Save(T container)
     {
@@ -137,7 +138,7 @@ public abstract class Storable<T> : IDisposable, IAsyncDisposable where T : ISto
     /// <summary>
     /// Saves the file to the disk asynchronously
     /// </summary>
-    /// <param name="container">the <see cref="StorableContainer" /> to be saved</param>
+    /// <param name="container">the <see cref="IStorableContainer" /> to be saved</param>
     /// <remarks>Also happens on dispose of the <see cref="Storable{T}" /> instance</remarks>
     public virtual async Task SaveAsync(T container)
     {

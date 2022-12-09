@@ -5,7 +5,7 @@ namespace OsuPlayer.IO.DbReader;
 /// </summary>
 public class Collection
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
     public List<string> BeatmapHashes { get; private set; } = new();
 
     public Collection()

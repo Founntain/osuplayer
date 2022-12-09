@@ -100,9 +100,7 @@ public class RealmMapEntryBase : IMapEntryBase
 
     public IDatabaseReader? GetReader()
     {
-        if (OsuPath == null) return null;
-
-        return new RealmReader(OsuPath);
+        return OsuPath != null ? new RealmReader(OsuPath) : null;
     }
 
     public bool Equals(IMapEntryBase? other)

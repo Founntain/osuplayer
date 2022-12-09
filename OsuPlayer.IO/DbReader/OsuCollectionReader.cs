@@ -33,6 +33,7 @@ public class OsuCollectionReader : BinaryReader
 
         await file.FlushAsync();
         reader.Dispose();
+        
         return collections;
     }
 
