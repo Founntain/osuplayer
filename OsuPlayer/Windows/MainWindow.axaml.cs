@@ -74,6 +74,8 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
     {
         base.OnClosing(e);
 
+        if (ViewModel == default) return;
+        
         using var config = new Config();
 
         config.Container.Volume = ViewModel.Player.Volume.Value;
@@ -92,19 +94,22 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
         if (Debugger.IsAttached) return;
 
+        if (ViewModel == default) return;
+        
         await using var config = new Config();
 
         var result = await GitHub.CheckForUpdates(config.Container.ReleaseChannel);
 
-        if (result.IsNewVersionAvailable)
-        {
-            ViewModel.UpdateView.Update = result;
-            ViewModel!.MainView = ViewModel.UpdateView;
-        }
+        if (!result.IsNewVersionAvailable) return;
+        
+        ViewModel.UpdateView.Update = result;
+        ViewModel.MainView = ViewModel.UpdateView;
     }
 
     private void MainSplitView_OnPaneClosed(object? sender, EventArgs e)
     {
+        if (ViewModel == default) return;
+        
         ViewModel.IsPaneOpen = false;
     }
 
@@ -120,7 +125,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         await loginWindow.ShowDialog(this);
 
         // We only want to update the user panel, when the home view is already open, to refresh the panel.
-        if (ViewModel.MainView.GetType() != typeof(HomeViewModel)) return;
+        if (ViewModel?.MainView.GetType() != typeof(HomeViewModel)) return;
 
         ViewModel.HomeView.RaisePropertyChanged(nameof(ViewModel.HomeView.IsUserLoggedIn));
         ViewModel.HomeView.RaisePropertyChanged(nameof(ViewModel.HomeView.IsUserNotLoggedIn));

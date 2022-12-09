@@ -12,29 +12,28 @@ namespace OsuPlayer.Windows;
 
 public class MiniplayerViewModel : BaseWindowViewModel
 {
+    public readonly IPlayer Player;
+    
     private readonly Bindable<bool> _isPlaying = new();
     private readonly Bindable<RepeatMode> _isRepeating = new();
     private readonly Bindable<bool> _isShuffle = new();
     private readonly Bindable<double> _songLength = new();
     private readonly Bindable<double> _songTime = new();
     private readonly Bindable<double> _volume = new();
-    public readonly Bindable<IMapEntry?> CurrentSong = new();
-
-    public readonly IPlayer Player;
-    private Bitmap? _currentSongImage;
-    private string _currentSongLength = "00:00";
-
-    private string _currentSongTime = "00:00";
+    private readonly Bindable<IMapEntry?> _currentSong = new();
 
     private double _playbackSpeed;
+    private string _currentSongTime = "00:00";
+    private string _currentSongLength = "00:00";
+    private Bitmap? _currentSongImage;
 
-    public bool IsCurrentSongInPlaylist => CurrentSong.Value != null
+    public bool IsCurrentSongInPlaylist => _currentSong.Value != null
                                            && Player.SelectedPlaylist.Value != null
-                                           && Player.SelectedPlaylist.Value.Songs.Contains(CurrentSong.Value.Hash);
+                                           && Player.SelectedPlaylist.Value.Songs.Contains(_currentSong.Value.Hash);
 
     public bool IsAPlaylistSelected => Player.SelectedPlaylist.Value != default;
 
-    public bool IsCurrentSongOnBlacklist => new Blacklist().Contains(CurrentSong.Value);
+    public bool IsCurrentSongOnBlacklist => new Blacklist().Contains(_currentSong.Value);
 
     public double Volume
     {
@@ -100,7 +99,7 @@ public class MiniplayerViewModel : BaseWindowViewModel
 
     public bool IsPlaying => _isPlaying.Value;
 
-    public string TitleText => CurrentSong.Value?.Title ?? "No song is playing";
+    public string TitleText => _currentSong.Value?.Title ?? "No song is playing";
 
     public RepeatMode IsRepeating
     {
@@ -112,7 +111,7 @@ public class MiniplayerViewModel : BaseWindowViewModel
         }
     }
 
-    public string ArtistText => CurrentSong.Value?.Artist ?? "please select from song list";
+    public string ArtistText => _currentSong.Value?.Artist ?? "please select from song list";
 
     public string SongText => $"{ArtistText} - {TitleText}";
 
@@ -140,8 +139,8 @@ public class MiniplayerViewModel : BaseWindowViewModel
         _songLength.BindTo(bassEngine.ChannelLength);
         _songLength.BindValueChanged(_ => this.RaisePropertyChanged(nameof(SongLength)));
 
-        CurrentSong.BindTo(Player.CurrentSong);
-        CurrentSong.BindValueChanged(_ =>
+        _currentSong.BindTo(Player.CurrentSong);
+        _currentSong.BindValueChanged(_ =>
         {
             this.RaisePropertyChanged(nameof(TitleText));
             this.RaisePropertyChanged(nameof(ArtistText));

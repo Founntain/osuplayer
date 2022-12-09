@@ -5,8 +5,8 @@ namespace OsuPlayer.Windows;
 
 public class LoginWindowViewModel : BaseWindowViewModel
 {
-    private string _password;
-    private string _username;
+    private string _password = string.Empty;
+    private string _username = string.Empty;
 
     public string Username
     {

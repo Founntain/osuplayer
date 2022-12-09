@@ -14,7 +14,7 @@ namespace OsuPlayer.Windows;
 
 public partial class Miniplayer : ReactiveWindow<MiniplayerViewModel>
 {
-    private readonly MainWindow _mainWindow;
+    private readonly MainWindow? _mainWindow;
 
     public Miniplayer()
     {
@@ -56,6 +56,8 @@ public partial class Miniplayer : ReactiveWindow<MiniplayerViewModel>
 
     private void SongControl(object? sender, RoutedEventArgs e)
     {
+        if (ViewModel == default) return;
+        
         switch ((sender as Control)?.Name)
         {
             case "Repeat":
@@ -78,6 +80,8 @@ public partial class Miniplayer : ReactiveWindow<MiniplayerViewModel>
 
     private void RepeatContextMenu_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
+        if (ViewModel == default) return;
+        
         ViewModel.Player.SelectedPlaylist.Value = (Playlist) (sender as ContextMenu)?.SelectedItem;
     }
 
@@ -89,6 +93,8 @@ public partial class Miniplayer : ReactiveWindow<MiniplayerViewModel>
 
     private void Volume_OnClick(object? sender, RoutedEventArgs e)
     {
+        if(ViewModel == default) return;
+
         ViewModel.Player.ToggleMute();
     }
 
@@ -99,6 +105,8 @@ public partial class Miniplayer : ReactiveWindow<MiniplayerViewModel>
 
     private void Miniplayer_OnClosed(object? sender, EventArgs e)
     {
+        if (_mainWindow == default) return;
+        
         _mainWindow.Miniplayer = null;
 
         _mainWindow.WindowState = WindowState.Normal;
