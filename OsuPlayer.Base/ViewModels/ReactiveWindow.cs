@@ -13,13 +13,13 @@ public class ReactiveWindow<TViewModel> : Window, IViewFor<TViewModel> where TVi
     public static readonly StyledProperty<TViewModel> ViewModelProperty = AvaloniaProperty
         .Register<ReactiveWindow<TViewModel>, TViewModel>(nameof(ViewModel));
 
-    object IViewFor.ViewModel
+    object? IViewFor.ViewModel
     {
         get => ViewModel;
         set => ViewModel = (TViewModel) value;
     }
 
-    public TViewModel ViewModel
+    public TViewModel? ViewModel
     {
         get => GetValue(ViewModelProperty);
         set => SetValue(ViewModelProperty, value);

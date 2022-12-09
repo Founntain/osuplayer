@@ -7,9 +7,7 @@ public class UsernameConverter : IValueConverter
 {
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        var x = string.IsNullOrWhiteSpace(value?.ToString()) ? "Not logged in" : value;
-
-        return x;
+        return string.IsNullOrWhiteSpace(value?.ToString()) ? "Not logged in" : value;;
     }
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

@@ -26,10 +26,7 @@ public static class Extensions
 
     public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T>? source)
     {
-        if (source == default)
-            return new ObservableCollection<T>();
-
-        return new ObservableCollection<T>(source);
+        return source == default ? new ObservableCollection<T>() : new ObservableCollection<T>(source);
     }
 
     public static SourceList<T> ToSourceList<T>(this IEnumerable<T>? source)
@@ -46,11 +43,7 @@ public static class Extensions
 
     public static bool IsDigitsOnly(this string str)
     {
-        foreach (var c in str)
-            if (c < '0' || c > '9')
-                return false;
-
-        return true;
+        return str.All(c => c >= '0' && c <= '9');
     }
 
     public static T Next<T>(this T src) where T : struct
@@ -59,6 +52,7 @@ public static class Extensions
 
         var arr = (T[]) Enum.GetValues(src.GetType());
         var j = Array.IndexOf(arr, src) + 1;
+        
         return arr.Length == j ? arr[0] : arr[j];
     }
 
@@ -76,9 +70,7 @@ public static class Extensions
     {
         var version = assembly?.GetName().Version;
 
-        if (version == null) return string.Empty;
-
-        return $"{version.Major}.{version.Minor}.{version.Build}";
+        return version == null ? string.Empty : $"{version.Major}.{version.Minor}.{version.Build}";
     }
 
     public static T GetRequiredService<T>(this IReadonlyDependencyResolver resolver)

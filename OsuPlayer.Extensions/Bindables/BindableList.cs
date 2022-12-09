@@ -73,6 +73,7 @@ public sealed class BindableList<T> : IBindableList<T>, IBindable, IParseable, I
 
                 Clear();
                 AddRange(newItems);
+                
                 break;
 
             default:
@@ -118,11 +119,16 @@ public sealed class BindableList<T> : IBindableList<T>, IBindable, IParseable, I
         _collection[index] = item;
 
         if (_bindings != null)
+        {
+            // prevent re-adding the item back to the callee.
+            // That would result in a <see cref="StackOverflowException"/>.
             foreach (var b in _bindings)
-                // prevent re-adding the item back to the callee.
-                // That would result in a <see cref="StackOverflowException"/>.
-                if (b != caller)
-                    b.SetIndex(index, item, this);
+            {
+                if (b == caller) continue;
+                
+                b.SetIndex(index, item, this);
+            }
+        }
 
         NotifyCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, item, lastItem, index));
     }
@@ -144,11 +150,16 @@ public sealed class BindableList<T> : IBindableList<T>, IBindable, IParseable, I
         _collection.Add(item);
 
         if (_bindings != null)
+        {
+            // prevent re-adding the item back to the callee.
+            // That would result in a <see cref="StackOverflowException"/>.
             foreach (var b in _bindings)
-                // prevent re-adding the item back to the callee.
-                // That would result in a <see cref="StackOverflowException"/>.
-                if (b != caller)
-                    b.Add(item, this);
+            {
+                if (b == caller) continue;
+                
+                b.Add(item, this);
+            }
+        }
 
         NotifyCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, _collection.Count - 1));
     }
@@ -181,11 +192,16 @@ public sealed class BindableList<T> : IBindableList<T>, IBindable, IParseable, I
         _collection.Insert(index, item);
 
         if (_bindings != null)
+        { 
+            // prevent re-adding the item back to the callee.
+            // That would result in a <see cref="StackOverflowException"/>.
             foreach (var b in _bindings)
-                // prevent re-adding the item back to the callee.
-                // That would result in a <see cref="StackOverflowException"/>.
-                if (b != caller)
-                    b.Insert(index, item, this);
+            {
+                if (b == caller) continue;
+                
+                b.Insert(index, item, this);
+            }
+        }
 
         NotifyCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, index));
     }
@@ -258,11 +274,16 @@ public sealed class BindableList<T> : IBindableList<T>, IBindable, IParseable, I
         _collection.RemoveAt(index);
 
         if (_bindings != null)
+        {
+            // prevent re-removing from the callee.
+            // That would result in a <see cref="StackOverflowException"/>.
             foreach (var b in _bindings)
-                // prevent re-removing from the callee.
-                // That would result in a <see cref="StackOverflowException"/>.
-                if (b != caller)
-                    b.Remove(listItem, this);
+            {
+                if (b == caller) continue;
+                
+                b.Remove(listItem, this);
+            }
+        }
 
         NotifyCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, listItem, index));
 
@@ -291,11 +312,16 @@ public sealed class BindableList<T> : IBindableList<T>, IBindable, IParseable, I
             return;
 
         if (_bindings != null)
+        {
+            // Prevent re-adding the item back to the callee.
+            // That would result in a <see cref="StackOverflowException"/>.
             foreach (var b in _bindings)
-                // Prevent re-adding the item back to the callee.
-                // That would result in a <see cref="StackOverflowException"/>.
-                if (b != caller)
-                    b.RemoveRange(index, count, this);
+            {
+                if (b == caller) continue;
+                
+                b.RemoveRange(index, count, this);
+            }
+        }
 
         NotifyCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removedItems, index));
     }
@@ -319,11 +345,16 @@ public sealed class BindableList<T> : IBindableList<T>, IBindable, IParseable, I
         _collection.RemoveAt(index);
 
         if (_bindings != null)
+        {
+            // prevent re-adding the item back to the callee.
+            // That would result in a <see cref="StackOverflowException"/>.
             foreach (var b in _bindings)
-                // prevent re-adding the item back to the callee.
-                // That would result in a <see cref="StackOverflowException"/>.
-                if (b != caller)
-                    b.RemoveAt(index, this);
+            {
+                if (b == caller) continue;
+                
+                b.RemoveAt(index, this);
+            }
+        }
 
         NotifyCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item, index));
     }
@@ -349,11 +380,16 @@ public sealed class BindableList<T> : IBindableList<T>, IBindable, IParseable, I
         _collection.RemoveAll(match);
 
         if (_bindings != null)
+        {
+            // prevent re-adding the item back to the callee.
+            // That would result in a <see cref="StackOverflowException"/>.
             foreach (var b in _bindings)
-                // prevent re-adding the item back to the callee.
-                // That would result in a <see cref="StackOverflowException"/>.
-                if (b != caller)
-                    b.RemoveAll(match, this);
+            {
+                if (b == caller) continue;
+                
+                b.RemoveAll(match, this);
+            }
+        }
 
         NotifyCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removed));
 
@@ -455,6 +491,7 @@ public sealed class BindableList<T> : IBindableList<T>, IBindable, IParseable, I
     public void BindDisabledChanged(Action<bool> onChange, bool runOnceImmediately = false)
     {
         DisabledChanged += onChange;
+        
         if (runOnceImmediately)
             onChange(Disabled);
     }
@@ -465,8 +502,10 @@ public sealed class BindableList<T> : IBindableList<T>, IBindable, IParseable, I
         var beforePropagation = _disabled;
 
         if (propagateToBindings && _bindings != null)
+        {
             foreach (var b in _bindings)
                 b.Disabled = _disabled;
+        }
 
         if (beforePropagation == _disabled)
             DisabledChanged?.Invoke(_disabled);
@@ -499,7 +538,7 @@ public sealed class BindableList<T> : IBindableList<T>, IBindable, IParseable, I
 
     public void UnbindFrom(IUnbindable them)
     {
-        if (!(them is BindableList<T> tThem))
+        if (them is not BindableList<T> tThem)
             throw new InvalidCastException($"Can't unbind a bindable of type {them.GetType()} from a bindable of type {GetType()}.");
 
         RemoveWeakReference(tThem.WeakReference);
@@ -527,11 +566,16 @@ public sealed class BindableList<T> : IBindableList<T>, IBindable, IParseable, I
         _collection.AddRange(items.Cast<T>());
 
         if (_bindings != null)
+        {
+            // prevent re-adding the item back to the callee.
+            // That would result in a <see cref="StackOverflowException"/>.
             foreach (var b in _bindings)
-                // prevent re-adding the item back to the callee.
-                // That would result in a <see cref="StackOverflowException"/>.
-                if (b != caller)
-                    b.AddRange(items, this);
+            {
+                if (b == caller) continue;
+                
+                b.AddRange(items, this);
+            }
+        }
 
         NotifyCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, items, _collection.Count - items.Count));
     }
@@ -556,11 +600,16 @@ public sealed class BindableList<T> : IBindableList<T>, IBindable, IParseable, I
         _collection.Insert(newIndex, item);
 
         if (_bindings != null)
+        {
+            // prevent re-adding the item back to the callee.
+            // That would result in a <see cref="StackOverflowException"/>.
             foreach (var b in _bindings)
-                // prevent re-adding the item back to the callee.
-                // That would result in a <see cref="StackOverflowException"/>.
-                if (b != caller)
-                    b.Move(oldIndex, newIndex, this);
+            {
+                if (b == caller) continue;
+                
+                b.Move(oldIndex, newIndex, this);
+            }
+        }
 
         NotifyCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move, item, newIndex, oldIndex));
     }
@@ -598,8 +647,10 @@ public sealed class BindableList<T> : IBindableList<T>, IBindable, IParseable, I
     {
         if (them == null)
             throw new ArgumentNullException(nameof(them));
+        
         if (_bindings?.Contains(WeakReference) == true)
             throw new ArgumentException("An already bound collection can not be bound again.");
+        
         if (them == this)
             throw new ArgumentException("A collection can not be bound to itself");
 
@@ -624,6 +675,7 @@ public sealed class BindableList<T> : IBindableList<T>, IBindable, IParseable, I
     public void BindCollectionChanged(NotifyCollectionChangedEventHandler onChange, bool runOnceImmediately = false)
     {
         CollectionChanged += onChange;
+        
         if (runOnceImmediately)
             onChange(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, _collection));
     }

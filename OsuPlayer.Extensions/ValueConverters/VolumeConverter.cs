@@ -8,18 +8,15 @@ public class VolumeConverter : IValueConverter
 {
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is double val)
-        {
-            if (val == 0)
-                return MaterialIconKind.VolumeMute;
-            if (val < 33)
-                return MaterialIconKind.VolumeLow;
-            if (val < 66)
-                return MaterialIconKind.VolumeMedium;
-            return MaterialIconKind.VolumeHigh;
-        }
+        if (value is not double val) return MaterialIconKind.QuestionMark;
 
-        return MaterialIconKind.QuestionMark;
+        return val switch
+        {
+            0 => MaterialIconKind.VolumeMute,
+            < 33 => MaterialIconKind.VolumeLow,
+            < 66 => MaterialIconKind.VolumeMedium,
+            _ => MaterialIconKind.VolumeHigh
+        };
     }
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

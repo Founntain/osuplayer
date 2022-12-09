@@ -1,4 +1,4 @@
-﻿namespace OsuPlayer.Extensions;
+﻿namespace OsuPlayer.Extensions.Exceptions;
 
 public class NullOrEmptyException : Exception
 {
