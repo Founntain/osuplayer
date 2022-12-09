@@ -1,4 +1,8 @@
-﻿using OsuPlayer.Extensions.Lists;
+﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
+// See the LICENCE file in the repository root for full licence text.
+// THIS CODE WAS REFACTORED, TO RESOLVE ISSUES WITH PROJECT WARNINGS!
+
+using OsuPlayer.Extensions.Lists;
 
 namespace OsuPlayer.Extensions.Bindables;
 

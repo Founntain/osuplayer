@@ -1,4 +1,8 @@
-﻿using System.Collections.Specialized;
+﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
+// See the LICENCE file in the repository root for full licence text.
+// THIS CODE WAS REFACTORED, TO RESOLVE ISSUES WITH PROJECT WARNINGS!
+
+using System.Collections.Specialized;
 using OsuPlayer.Extensions.Lists;
 
 namespace OsuPlayer.Extensions.Bindables;
