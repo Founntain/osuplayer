@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://7.founntain.dev/IY26BPcE.png" />
+    <img src="https://user-images.githubusercontent.com/28785685/208073123-a308effa-033e-4f4f-94d4-3407e8d52165.png"/>
 </P>
 
 # osu!player
