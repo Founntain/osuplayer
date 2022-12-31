@@ -77,6 +77,16 @@ public partial class NorthFox : AbstractApiBase
         return await GetById<UserModel>("User", uniqueId);
     }
 
+    public async Task<UserModel?> GetUserFromLoginToken()
+    {
+        return await GetRequestAsync<UserModel>("User", "GetUserFromLoginToekn");
+    }
+
+    public async Task<List<UserActivityModel>?> GetActivityOfUser(Guid uniqueId)
+    {
+        return await GetRequestWithParameterAsync<List<UserActivityModel>>("User", "getUserActivityOfUser", $"uniqueId={uniqueId}");
+    }
+    
     #endregion
 
     #region POST Requests
@@ -113,7 +123,7 @@ public partial class NorthFox : AbstractApiBase
         }
     }
     
-    public async Task<UserModel?> EditUser(UserModel editData)
+    public async Task<UserModel?> EditUser(EditUserModel editData)
     {
         return await PostRequestAsync<UserModel>("User", "edit", editData);
     }
@@ -133,6 +143,11 @@ public partial class NorthFox : AbstractApiBase
     public async Task<UserModel?> UpdateXp(UpdateXpModel updateXpModel)
     {
         return await PostRequestAsync<UserModel>("User", "updateXp", updateXpModel);
+    }
+
+    public async Task<bool> SaveProfilePicture(byte[] data)
+    {
+        return await PostRequestAsync<bool>("User", "saveProfilePicture", data);
     }
     
     #endregion

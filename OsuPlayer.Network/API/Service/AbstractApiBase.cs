@@ -89,7 +89,7 @@ public abstract class AbstractApiBase
             var url = new Uri($"{Url}{controller}/{action}");
             
             var req = new HttpRequestMessage(HttpMethod.Get, url);
-            req.Headers.Add("session-token", "UserAuthToken");
+            req.Headers.Add("session-token", UserAuthToken);
             
             CancelCancellationToken();
             
@@ -129,7 +129,7 @@ public abstract class AbstractApiBase
             var url = new Uri($"{Url}{controller}/{action}?{parameters}");
             
             var req = new HttpRequestMessage(HttpMethod.Get, url);
-            req.Headers.Add("session-token", "UserAuthToken");
+            req.Headers.Add("session-token", UserAuthToken);
             
             CancelCancellationToken();
             
@@ -174,7 +174,7 @@ public abstract class AbstractApiBase
             var url = new Uri($"{Url}{controller}/{action}");
 
             var req = new HttpRequestMessage(HttpMethod.Post, url);
-            req.Headers.Add("session-token", "UserAuthToken");
+            req.Headers.Add("session-token", UserAuthToken);
             req.Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
 
             CancelCancellationToken();
@@ -217,7 +217,7 @@ public abstract class AbstractApiBase
             var url = new Uri($"{Url}{controller}/{action}?{parameters}");
 
             var req = new HttpRequestMessage(HttpMethod.Post, url);
-            req.Headers.Add("session-token", "UserAuthToken");
+            req.Headers.Add("session-token", UserAuthToken);
 
             CancelCancellationToken();
 
@@ -262,7 +262,7 @@ public abstract class AbstractApiBase
             var url = new Uri($"{Url}{controller}/{action}");
 
             var req = new HttpRequestMessage(HttpMethod.Delete, url);
-            req.Headers.Add("session-token", "UserAuthToken");
+            req.Headers.Add("session-token", UserAuthToken);
             req.Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
 
             CancelCancellationToken();
