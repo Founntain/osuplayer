@@ -3,6 +3,7 @@ using System.Reactive.Disposables;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
@@ -52,7 +53,7 @@ public class SettingsViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _patchnotes, value);
     }
 
-    public User? CurrentUser => ProfileManager.User;
+    public UserModel? CurrentUser => ProfileManager.User;
 
     public string OsuLocation
     {

@@ -2,10 +2,15 @@
 using System.Reactive.Disposables;
 using System.Threading;
 using Avalonia.Media.Imaging;
+using OsuPlayer.Api.Data.API.EntityModels;
+using OsuPlayer.Api.Data.API.RequestModels.Statistics;
 using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Data.API.Models.Beatmap;
 using OsuPlayer.Extensions;
+using OsuPlayer.Network.API.Service.Endpoints;
 using ReactiveUI;
+using Splat;
+using BeatmapModel = OsuPlayer.Data.API.Models.Beatmap.BeatmapModel;
 
 namespace OsuPlayer.Views;
 
@@ -16,7 +21,7 @@ public class EditUserViewModel : BaseViewModel
     private Bitmap? _currentProfileBanner;
     private Bitmap? _currentProfilePicture;
 
-    private User? _currentUser;
+    private UserModel? _currentUser;
     private bool _isDeleteProfilePopupOpen;
     private bool _isNewBannerSelected;
     private bool _isNewProfilePictureSelected;
@@ -24,7 +29,7 @@ public class EditUserViewModel : BaseViewModel
     private string _password = string.Empty;
     private CancellationTokenSource? _profilePictureCancellationTokenSource;
     private CancellationTokenSource? _topSongsCancellationTokenSource;
-    private ObservableCollection<BeatmapUserValidityModel>? _topSongsOfCurrentUser;
+    private ObservableCollection<UserStatsModel>? _topSongsOfCurrentUser;
 
     public string ConfirmDeletionPassword
     {
@@ -56,7 +61,7 @@ public class EditUserViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _isNewProfilePictureSelected, value);
     }
 
-    public ObservableCollection<BeatmapUserValidityModel>? TopSongsOfCurrentUser
+    public ObservableCollection<UserStatsModel>? TopSongsOfCurrentUser
     {
         get => _topSongsOfCurrentUser;
         set => this.RaiseAndSetIfChanged(ref _topSongsOfCurrentUser, value);
@@ -74,13 +79,13 @@ public class EditUserViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _currentProfileBanner, value);
     }
 
-    public string CurrentProfileBannerUrl
+    public string? CurrentProfileBannerUrl
     {
-        get => _currentUser?.CustomWebBackground ?? string.Empty;
-        set => _currentUser!.CustomWebBackground = value;
+        get => _currentUser?.CustomBannerUrl;
+        set => _currentUser!.CustomBannerUrl = value;
     }
 
-    public User? CurrentUser
+    public UserModel? CurrentUser
     {
         get => _currentUser;
         set
@@ -128,7 +133,7 @@ public class EditUserViewModel : BaseViewModel
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            var songs = await ApiAsync.GetBeatmapsPlayedByUser(CurrentUser.Name);
+            var songs = await Locator.Current.GetService<NorthFox>().GetBeatmapsPlayedByUser(CurrentUser.UniqueId);
 
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
@@ -160,7 +165,7 @@ public class EditUserViewModel : BaseViewModel
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            var profilePicture = await ApiAsync.GetProfilePictureAsync(CurrentUser.Name);
+            var profilePicture = await Locator.Current.GetService<NorthFox>().GetProfilePictureAsync(CurrentUser.Name);
 
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
@@ -213,7 +218,7 @@ public class EditUserViewModel : BaseViewModel
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            var banner = await ApiAsync.GetProfileBannerAsync(CurrentUser.CustomWebBackground);
+            var banner = await Locator.Current.GetService<NorthFox>().GetProfileBannerAsync(CurrentUser.CustomBannerUrl);
 
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
@@ -225,7 +230,7 @@ public class EditUserViewModel : BaseViewModel
             }
 
             CurrentProfileBanner = banner;
-            CurrentProfileBannerUrl = CurrentUser.CustomWebBackground;
+            CurrentProfileBannerUrl = CurrentUser.CustomBannerUrl;
             this.RaisePropertyChanged(nameof(CurrentProfileBannerUrl));
         }
         catch (OperationCanceledException)

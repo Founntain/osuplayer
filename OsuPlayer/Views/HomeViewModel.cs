@@ -9,6 +9,7 @@ using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
+using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
@@ -16,8 +17,10 @@ using OsuPlayer.IO.Importer;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Modules.Services;
+using OsuPlayer.Network.API.Service.Endpoints;
 using ReactiveUI;
 using SkiaSharp;
+using Splat;
 
 namespace OsuPlayer.Views;
 
@@ -52,12 +55,12 @@ public class HomeViewModel : BaseViewModel
         }
     };
 
-    public bool IsUserNotLoggedIn => CurrentUser == default || CurrentUser?.Id == Guid.Empty;
-    public bool IsUserLoggedIn => CurrentUser != default && CurrentUser?.Id != Guid.Empty;
+    public bool IsUserNotLoggedIn => CurrentUser == default || CurrentUser?.UniqueId == Guid.Empty;
+    public bool IsUserLoggedIn => CurrentUser != default && CurrentUser?.UniqueId != Guid.Empty;
 
     public bool SongsLoading => new Config().Container.OsuPath != null && _songsLoading.Value;
 
-    public User? CurrentUser => ProfileManager.User;
+    public UserModel? CurrentUser => ProfileManager.User;
 
     public Bitmap? ProfilePicture
     {
@@ -153,7 +156,7 @@ public class HomeViewModel : BaseViewModel
     {
         if (CurrentUser == default || string.IsNullOrWhiteSpace(CurrentUser.Name)) return default;
 
-        var profilePicture = await ApiAsync.GetProfilePictureAsync(CurrentUser.Name);
+        var profilePicture = await Locator.Current.GetService<NorthFox>().GetProfilePictureAsync(CurrentUser.Name);
 
         if (profilePicture == default) return default;
 

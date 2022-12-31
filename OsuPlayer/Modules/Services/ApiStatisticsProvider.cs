@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Avalonia.Threading;
 using LiveChartsCore.Defaults;
 using OsuPlayer.Data.API.Enums;
+using OsuPlayer.Network.API.Service.Endpoints;
+using Splat;
 
 namespace OsuPlayer.Modules.Services;
 
@@ -13,7 +15,7 @@ public class ApiStatisticsProvider : IStatisticsProvider
 
     public async Task UpdateOnlineStatus(UserOnlineStatusType statusType, string? song = null, string? checksum = null)
     {
-        await ApiAsync.SetUserOnlineStatus(statusType, song, checksum);
+        await Locator.Current.GetService<NorthFox>().SetUserOnlineStatus(statusType, song, checksum);
     }
 
     public async Task UpdateXp(string hash, double timeListened, double songLength)

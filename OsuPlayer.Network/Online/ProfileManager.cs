@@ -1,15 +1,15 @@
-﻿using OsuPlayer.Network.API.ApiEndpoints;
+﻿using OsuPlayer.Api.Data.API.EntityModels;
+using OsuPlayer.Network.API.Service.Endpoints;
+using Splat;
 
 namespace OsuPlayer.Network.Online;
 
-public static class ProfileManager
+public class ProfileManager
 {
-    public static User? User = User ?? new User();
+    public static UserModel? User = User ?? new ();
 
-    public static async Task<User?> LoadProfile(string username, string password)
+    public static async Task Login(string username, string password)
     {
-        User = await ApiAsync.LoadUserWithCredentialsAsync(username, password);
-
-        return User;
+        User = await Locator.Current.GetService<NorthFox>().LoginAndSaveAuthToken(username, password);
     }
 }

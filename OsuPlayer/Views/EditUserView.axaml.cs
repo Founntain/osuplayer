@@ -5,12 +5,13 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using Avalonia.ReactiveUI;
 using Avalonia.VisualTree;
-using OsuPlayer.Data.API.Enums;
-using OsuPlayer.Data.API.Models.User;
+using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Extensions;
+using OsuPlayer.Network.API.Service.Endpoints;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
 using ReactiveUI;
+using Splat;
 
 namespace OsuPlayer.Views;
 
@@ -133,7 +134,10 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
     {
         if (_mainWindow == default || ViewModel?.CurrentUser == default || string.IsNullOrWhiteSpace(ViewModel?.CurrentUser.Name)) return;
 
-        var tempUser = await ApiAsync.GetProfileByNameAsync(ViewModel.CurrentUser.Name);
+        var api = Locator.Current.GetService<NorthFox>();
+        
+        var tempUser = await api.GetUserFromLoginToken();
+        
         var changedProfilePicture = ViewModel.IsNewProfilePictureSelected;
 
         if (tempUser == default)
@@ -152,7 +156,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
             return;
         }
 
-        if (ViewModel.CurrentUser.OsuProfile.Length > 0 && !ViewModel.CurrentUser.OsuProfile.IsDigitsOnly())
+        if (ViewModel.CurrentUser.OsuProfile?.Length > 0 && ViewModel.CurrentUser.OsuProfile.IsDigitsOnly())
         {
             await MessageBox.ShowDialogAsync(_mainWindow,
                 "Your osu!profile ID should only contain numbers");
@@ -169,15 +173,15 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
                 : ViewModel.NewPassword
         };
 
-        var response = await ApiAsync.ApiRequestAsync<UserResponse>("users", "editUser", editUserModel);
+        var response = await api.EditUser(editUserModel);
 
-        if (!await HandleResponse(response))
+        if (response == default)
             return;
 
         if (ViewModel == null)
         {
             if (!string.IsNullOrWhiteSpace(editUserModel.UserModel.Name))
-                ProfileManager.User = await ApiAsync.GetProfileByNameAsync(editUserModel.UserModel.Name);
+                ProfileManager.User = await api.GetUserFromLoginToken();
 
             if (changedProfilePicture)
                 await MessageBox.ShowDialogAsync(_mainWindow, $"We couldn't update your profile picture, because you left the edit view to early!{Environment.NewLine}If you want to update your profile picture please wait, until you get the message that it's been done!");
@@ -194,60 +198,19 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
         }
     }
 
-    /// <summary>
-    /// This handles the <see cref="UserResponse" /> got from editing the user.
-    /// </summary>
-    /// <param name="response">the response to handle</param>
-    /// <returns>true if the response is a successful one, false otherwise</returns>
-    private async Task<bool> HandleResponse(UserResponse response)
-    {
-        if (_mainWindow == default) return default;
-
-        switch (response)
-        {
-            case UserResponse.UserEdited:
-                await MessageBox.ShowDialogAsync(_mainWindow, "Profile edited successfully!");
-                return true;
-            case UserResponse.UserEditedAndPasswordChanged:
-                await MessageBox.ShowDialogAsync(_mainWindow,
-                    "Profile edited successfully and password changed.");
-                return true;
-            case UserResponse.UserEditedAndPasswordNotChanged:
-                await MessageBox.ShowDialogAsync(_mainWindow,
-                    "Profile edited successfully. However your password couldn't be changed!");
-                return true;
-            case UserResponse.UserAlreadyExists:
-                await MessageBox.ShowDialogAsync(_mainWindow,
-                    "Profile not updated because the user already exists. Did you try changing your name?");
-                return false;
-            case UserResponse.PasswordIncorrect:
-                await MessageBox.ShowDialogAsync(_mainWindow,
-                    "The password you entered is not correct, therefore your profile was not updated!");
-                return false;
-            default:
-                await MessageBox.ShowDialogAsync(_mainWindow,
-                    string.Format($"We had trouble updating your profile error message:\n\n{response:G}"));
-                return false;
-        }
-    }
-
     private async Task UpdateProfilePicture()
     {
         if (_mainWindow == default || ViewModel?.CurrentUser == default || ViewModel?.CurrentProfilePicture == default) return;
 
+        var api = Locator.Current.GetService<NorthFox>();
+        
         await using var stream = new MemoryStream();
 
         ViewModel.CurrentProfilePicture.Save(stream);
 
-        var profilePicture = Convert.ToBase64String(stream.ToArray());
+        var response = await api.SaveProfilePicture(stream.ToArray());
 
-        var response = await ApiAsync.ApiRequestAsync<UserResponse>("users", "saveProfilePicture", new
-        {
-            ViewModel.CurrentUser.Name,
-            Picture = profilePicture
-        });
-
-        if (response == UserResponse.CantSaveProfilePicture)
+        if (!response)
         {
             await MessageBox.ShowDialogAsync(_mainWindow, "Profile picture could not be saved!");
 
@@ -281,7 +244,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
     {
         if (ViewModel?.CurrentUser == default) return;
 
-        var banner = await ApiAsync.GetProfileBannerAsync(ViewModel.CurrentUser.CustomWebBackground);
+        var banner = await Locator.Current.GetService<NorthFox>().GetProfileBannerAsync(ViewModel.CurrentUser.CustomBannerUrl);
 
         if (banner == default) return;
 
@@ -292,18 +255,20 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
     {
         if (ViewModel?.CurrentUser == default || string.IsNullOrWhiteSpace(ViewModel.CurrentUser.Name)) return;
 
-        var user = await ApiAsync.GetProfileByNameAsync(ViewModel.CurrentUser.Name);
+        var api = Locator.Current.GetService<NorthFox>();
+        
+        var user = await api.GetUserFromLoginToken();
 
         if (user == default) return;
 
-        ViewModel.CurrentProfileBannerUrl = user.CustomWebBackground;
+        ViewModel.CurrentProfileBannerUrl = user.CustomBannerUrl;
 
         ViewModel.RaisePropertyChanged(nameof(ViewModel.CurrentProfileBannerUrl));
-        ViewModel.RaisePropertyChanged(nameof(ViewModel.CurrentUser.CustomWebBackground));
+        ViewModel.RaisePropertyChanged(nameof(ViewModel.CurrentUser.CustomBannerUrl));
 
         if (ViewModel?.CurrentUser == default) return;
 
-        var banner = await ApiAsync.GetProfileBannerAsync(ViewModel.CurrentUser.CustomWebBackground);
+        var banner = await api.GetProfileBannerAsync(ViewModel.CurrentUser.CustomBannerUrl);
 
         if (banner == default)
         {
@@ -317,7 +282,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
     private async void ConfirmDeleteProfile_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (_mainWindow.ViewModel == default || ProfileManager.User == default || ViewModel == default) return;
+        if (_mainWindow?.ViewModel == default || ProfileManager.User == default || ViewModel == default) return;
 
         if (string.IsNullOrWhiteSpace(ViewModel.ConfirmDeletionPassword))
         {
@@ -326,22 +291,11 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
             return;
         }
 
-        var response = await ApiAsync.ApiRequestAsync<UserResponse>("users", "deleteUser", new
+        var response = await Locator.Current.GetService<NorthFox>().DeleteUser();
+
+        if (!response)
         {
-            Id = ProfileManager.User.Id.ToString(),
-            Password = ViewModel.ConfirmDeletionPassword
-        });
-
-        if (response != UserResponse.UserDeleted)
-        {
-            if (response == UserResponse.PasswordIncorrect)
-            {
-                MessageBox.Show("Profile could not be deleted, because you entered the wrong password!");
-
-                return;
-            }
-
-            MessageBox.Show("Profile could not be deleted, due to an server error!");
+            MessageBox.Show("You are not authorized to delete this profile or an error occured!");
 
             return;
         }

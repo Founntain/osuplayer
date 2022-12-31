@@ -9,13 +9,17 @@ using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using Material.Icons;
 using Material.Icons.Avalonia;
+using OsuPlayer.Api.Data.API.EntityModels;
+using OsuPlayer.Api.Data.API.RequestModels.Statistics;
 using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Data.API.Enums;
 using OsuPlayer.Data.API.Models.Beatmap;
 using OsuPlayer.Extensions;
 using OsuPlayer.Modules.Audio.Interfaces;
+using OsuPlayer.Network.API.Service.Endpoints;
 using ReactiveUI;
 using SkiaSharp;
+using Splat;
 
 namespace OsuPlayer.Views;
 
@@ -27,11 +31,11 @@ public class UserViewModel : BaseViewModel
     private Bitmap? _currentProfileBanner;
     private Bitmap? _currentProfilePicture;
     private CancellationTokenSource? _profilePictureCancellationTokenSource;
-    private User? _selectedUser;
+    private UserModel? _selectedUser;
     private List<ObservableValue>? _songsPlayedGraphValues;
     private CancellationTokenSource? _topSongsCancellationTokenSource;
-    private ObservableCollection<BeatmapUserValidityModel>? _topSongsOfCurrentUser;
-    private ObservableCollection<User>? _users;
+    private ObservableCollection<UserStatsModel>? _topSongsOfCurrentUser;
+    private ObservableCollection<UserModel>? _users;
     private List<ObservableValue>? _xpGainedGraphValues;
 
     public ObservableCollection<ISeries>? Series { get; set; }
@@ -87,7 +91,7 @@ public class UserViewModel : BaseViewModel
         }
     }
 
-    public ObservableCollection<BeatmapUserValidityModel>? TopSongsOfCurrentUser
+    public ObservableCollection<UserStatsModel>? TopSongsOfCurrentUser
     {
         get => _topSongsOfCurrentUser;
         set => this.RaiseAndSetIfChanged(ref _topSongsOfCurrentUser, value);
@@ -111,13 +115,13 @@ public class UserViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _currentProfilePicture, value);
     }
 
-    public ObservableCollection<User> Users
+    public ObservableCollection<UserModel> Users
     {
-        get => _users ?? new ObservableCollection<User>();
+        get => _users ?? new ObservableCollection<UserModel>();
         set => this.RaiseAndSetIfChanged(ref _users, value);
     }
 
-    public User? SelectedUser
+    public UserModel? SelectedUser
     {
         get => _selectedUser;
         set
@@ -150,7 +154,7 @@ public class UserViewModel : BaseViewModel
     {
         Disposable.Create(() => { }).DisposeWith(disposables);
 
-        Users = (await ApiAsync.GetRequestAsync<List<User>>("users", "getUsersWithData")).ToObservableCollection();
+        Users = (await Locator.Current.GetService<NorthFox>().GetAllUsers())?.ToObservableCollection() ?? new ();
 
         Series = new ObservableCollection<ISeries>
         {
@@ -244,7 +248,7 @@ public class UserViewModel : BaseViewModel
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            var songs = await ApiAsync.GetBeatmapsPlayedByUser(SelectedUser.Name);
+            var songs = await Locator.Current.GetService<NorthFox>().GetBeatmapsPlayedByUser(SelectedUser.UniqueId);
 
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
@@ -276,7 +280,7 @@ public class UserViewModel : BaseViewModel
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            var profilePicture = await ApiAsync.GetProfilePictureAsync(SelectedUser.Name);
+            var profilePicture = await Locator.Current.GetService<NorthFox>().GetProfilePictureAsync(SelectedUser.Name);
 
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
@@ -328,7 +332,7 @@ public class UserViewModel : BaseViewModel
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            var banner = await ApiAsync.GetProfileBannerAsync(SelectedUser.CustomWebBackground);
+            var banner = await Locator.Current.GetService<NorthFox>().GetProfileBannerAsync(SelectedUser.CustomBannerUrl);
 
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
@@ -353,7 +357,7 @@ public class UserViewModel : BaseViewModel
     {
         if (SelectedUser == default || string.IsNullOrWhiteSpace(SelectedUser.Name)) return;
 
-        var data = await ApiAsync.GetActivityOfUser(SelectedUser.Name);
+        var data = await Locator.Current.GetService<NorthFox>().GetActivityOfUser(SelectedUser.UniqueId);
 
         if (data == default) return;
 
@@ -365,10 +369,10 @@ public class UserViewModel : BaseViewModel
         foreach (var item in data)
             try
             {
-                XAxes.First().Labels?.Add(item.Item1);
+                XAxes.First().Labels?.Add(item.Date.ToString("MMMM yyyy"));
 
-                songsPlayedValues.Add(new ObservableValue(item.Item2));
-                xpGainedValues.Add(new ObservableValue(item.Item3));
+                songsPlayedValues.Add(new ObservableValue(item.SongsPlayed));
+                xpGainedValues.Add(new ObservableValue(item.XpGained));
             }
             catch (Exception e)
             {

@@ -1,4 +1,4 @@
-﻿namespace OsuPlayer.Data.API.Models.User;
+﻿using OsuPlayer.Api.Data.API.EntityModels;
 
 public sealed class EditUserModel
 {

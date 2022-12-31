@@ -5,8 +5,10 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
+using OsuPlayer.Network.API.Service.Endpoints;
 using OsuPlayer.UI_Extensions;
 using ReactiveUI;
+using Splat;
 
 namespace OsuPlayer.Windows;
 
@@ -55,7 +57,7 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
     {
         if (ViewModel == default) return;
 
-        var user = await ApiAsync.LoadUserWithCredentialsAsync(ViewModel.Username, ViewModel.Password);
+        var user = await Locator.Current.GetService<NorthFox>().LoginAndSaveAuthToken(ViewModel.Username, ViewModel.Password);
 
         if (user == default)
         {
