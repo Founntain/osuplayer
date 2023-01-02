@@ -2,7 +2,7 @@
 
 public sealed class EditUserModel
 {
-    public Api.Data.API.EntityModels.UserModel UserModel { get; set; }
+    public UserModel UserModel { get; set; }
     public string Password { get; set; }
     public string? NewPassword { get; set; }
 }
