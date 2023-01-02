@@ -60,7 +60,7 @@ public class HomeViewModel : BaseViewModel
 
     public bool SongsLoading => new Config().Container.OsuPath != null && _songsLoading.Value;
 
-    public UserModel? CurrentUser => ProfileManager.User;
+    public User? CurrentUser => ProfileManager.User;
 
     public Bitmap? ProfilePicture
     {
@@ -154,13 +154,14 @@ public class HomeViewModel : BaseViewModel
 
     internal async Task<Bitmap?> LoadProfilePicture()
     {
-        if (CurrentUser == default || string.IsNullOrWhiteSpace(CurrentUser.Name)) return default;
+        if (CurrentUser == default || CurrentUser.UniqueId == Guid.Empty) return default;
 
-        var profilePicture = await Locator.Current.GetService<NorthFox>().GetProfilePictureAsync(CurrentUser.Name);
+        var profilePicture = await Locator.Current.GetService<NorthFox>().GetProfilePictureAsync(CurrentUser.UniqueId);
 
-        if (profilePicture == default) return default;
+        if (profilePicture == default || profilePicture.Length == 0) 
+            return default;
 
-        await using var stream = new MemoryStream(Convert.FromBase64String(profilePicture));
+        await using var stream = new MemoryStream(profilePicture);
         return await Task.Run(() => new Bitmap(stream));
     }
 }

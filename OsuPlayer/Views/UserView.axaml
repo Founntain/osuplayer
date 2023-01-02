@@ -4,9 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:online="clr-namespace:OsuPlayer.Network.Online;assembly=OsuPlayer.Network"
              xmlns:views="clr-namespace:OsuPlayer.Views"
-             xmlns:beatmap="clr-namespace:OsuPlayer.Data.API.Models.Beatmap;assembly=OsuPlayer.Data"
              xmlns:valueConverters="clr-namespace:OsuPlayer.Extensions.ValueConverters;assembly=OsuPlayer.Extensions"
              xmlns:avalonia="clr-namespace:LiveChartsCore.SkiaSharpView.Avalonia;assembly=LiveChartsCore.SkiaSharpView.Avalonia"
+             xmlns:statistics="clr-namespace:OsuPlayer.Api.Data.API.RequestModels.Statistics;assembly=OsuPlayer.Api.Data"
+             xmlns:avalonia1="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:entityModels="clr-namespace:OsuPlayer.Api.Data.API.EntityModels;assembly=OsuPlayer.Api.Data"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.UserView"
              FontWeight="{DynamicResource DefaultFontWeight}">
@@ -101,7 +103,16 @@
                             </StackPanel>
 
                             <ScrollViewer Name="BadgeViewer" Grid.Row="2" Margin="10 0">
-                                <ContentPresenter Name="BadgeItems" />
+                                <ItemsRepeater Name="BadgeItems" Items="{Binding SelectedUser.Badges}" VerticalAlignment="Top" HorizontalAlignment="Left">
+                                    <ItemsRepeater.Layout>
+                                        <StackLayout Orientation="Horizontal" Spacing="0"></StackLayout>
+                                    </ItemsRepeater.Layout>
+                                    <ItemsRepeater.ItemTemplate>
+                                        <DataTemplate DataType="entityModels:BadgeModel">
+                                            <avalonia1:MaterialIcon Kind="{Binding Icon}" Width="32" Height="32" ToolTip.Tip="{Binding Description}"/>
+                                        </DataTemplate>
+                                    </ItemsRepeater.ItemTemplate>
+                                </ItemsRepeater>
                             </ScrollViewer>
                         </Grid>
 
@@ -136,13 +147,13 @@
                                 <TextBlock Text="{Binding SelectedUser.LevelString}" FontSize="24"
                                            HorizontalAlignment="Center" VerticalAlignment="Center" />
                             </Border>
-                            <ListBox Grid.Row="1" Background="Transparent" Items="{Binding TopSongsOfCurrentUser}"
+                            <ListBox Grid.Row="1" Background="Transparent" Items="{Binding TopSongsOfCurrentUser.Items}"
                                      DoubleTapped="UserTopSongsList_OnDoubleTapped">
                                 <ListBox.ItemTemplate>
-                                    <DataTemplate DataType="beatmap:BeatmapUserValidityModel">
+                                    <DataTemplate DataType="statistics:BeatmapTimesPlayedModel">
                                         <StackPanel>
                                             <TextBlock Text="{Binding GetTitle}" />
-                                            <TextBlock Text="{Binding GetTimesplayed}" FontSize="12"
+                                            <TextBlock Text="{Binding GetTimesPlayed}" FontSize="12"
                                                        FontWeight="{DynamicResource SmallerFontWeight}" />
                                         </StackPanel>
                                     </DataTemplate>

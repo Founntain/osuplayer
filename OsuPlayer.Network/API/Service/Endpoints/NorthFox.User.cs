@@ -15,12 +15,11 @@ public partial class NorthFox : AbstractApiBase
     /// <summary>
     /// Get the profile picture of a specific user
     /// </summary>
-    /// <param name="username">The username of the user</param>
+    /// <param name="uniqueId">The ID of the user</param>
     /// <returns>The profile picture as Base64 string</returns>
-    public async Task<string?> GetProfilePictureAsync(string username)
+    public async Task<byte[]?> GetProfilePictureAsync(Guid uniqueId)
     {
-        if (string.IsNullOrWhiteSpace(username)) return default;
-
+        if (uniqueId == Guid.Empty) return default;
         
         // We have to use an own implementation, than the base methods. Reason is that this action doesn't return an Api Response!
         if (Constants.OfflineMode)
@@ -30,9 +29,9 @@ public partial class NorthFox : AbstractApiBase
         {
             using var client = new HttpClient();
 
-            var data = await client.GetByteArrayAsync(new Uri($"{Url}users/getProfilePictureByName?name={username}"));
+            var data = await client.GetByteArrayAsync(new Uri($"{Url}User/getProfilePicture?id={uniqueId}"));
 
-            return JsonConvert.DeserializeObject<string>(Encoding.UTF8.GetString(data));
+            return data;
         }
         catch (Exception ex)
         {
@@ -61,7 +60,7 @@ public partial class NorthFox : AbstractApiBase
 
             return new Bitmap(stream);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
             return default;
         }
@@ -79,7 +78,7 @@ public partial class NorthFox : AbstractApiBase
 
     public async Task<UserModel?> GetUserFromLoginToken()
     {
-        return await GetRequestAsync<UserModel>("User", "GetUserFromLoginToekn");
+        return await GetRequestAsync<UserModel>("User", "getUserFromLoginToken");
     }
 
     public async Task<List<UserActivityModel>?> GetActivityOfUser(Guid uniqueId)
@@ -90,6 +89,11 @@ public partial class NorthFox : AbstractApiBase
     #endregion
 
     #region POST Requests
+
+    public async Task<UserModel?> Register(AddUserModel data)
+    {
+        return await PostRequestAsync<UserModel>("User", "register", data);
+    }
 
     public async Task<UserTokenResponse?> Login(string username, string password)
     {
@@ -123,6 +127,39 @@ public partial class NorthFox : AbstractApiBase
         }
     }
     
+    public async Task<UserTokenResponse?> Login(string token)
+    {
+        if (Constants.OfflineMode)
+            return default;
+        
+        try
+        {
+            using var client = new HttpClient();
+
+            var url = new Uri($"{Url}User/loginWithToken");
+
+            var req = new HttpRequestMessage(HttpMethod.Post, url);
+            
+            req.Headers.Add("session-token", token);
+
+            CancelCancellationToken();
+            
+            var result = await client.SendAsync(req, CancellationTokenSource.Token);
+
+            var response = JsonConvert.DeserializeObject<ApiResponse<UserTokenResponse>>(await result.Content.ReadAsStringAsync());
+            
+            return response.Errors?.Any() == true 
+                ? default 
+                : response.Value;
+        }
+        catch (Exception ex)
+        {
+            ParseWebException(ex);
+
+            return default;
+        }
+    }
+    
     public async Task<UserModel?> EditUser(EditUserModel editData)
     {
         return await PostRequestAsync<UserModel>("User", "edit", editData);
@@ -133,11 +170,9 @@ public partial class NorthFox : AbstractApiBase
         return await PostRequestAsync<bool>("User", "changePassword", newPassword);
     }
 
-    public async Task<UserModel?> UpdateSongsPlayed(string username, int amount, int beatmapSetId = -1)
+    public async Task<UserModel?> UpdateSongsPlayed(int amount, int beatmapSetId = -1)
     {
-        if (string.IsNullOrWhiteSpace(username)) return default;
-
-        return await PostRequestWithParametersAsync<UserModel>("User", "updateSongsPlayed", $"username={username}&amount={amount}&beatmapSetId={beatmapSetId}");
+        return await PostRequestWithParametersAsync<UserModel>("User", "updateSongsPlayed", $"&amount={amount}&beatmapSetId={beatmapSetId}");
     }
 
     public async Task<UserModel?> UpdateXp(UpdateXpModel updateXpModel)
@@ -148,6 +183,11 @@ public partial class NorthFox : AbstractApiBase
     public async Task<bool> SaveProfilePicture(byte[] data)
     {
         return await PostRequestAsync<bool>("User", "saveProfilePicture", data);
+    }
+
+    public async Task<bool> SetOnlineStatus(UserOnlineStatusModel data)
+    {
+        return await PostRequestAsync<bool>("User", "setOnlineStatus", data);
     }
     
     #endregion

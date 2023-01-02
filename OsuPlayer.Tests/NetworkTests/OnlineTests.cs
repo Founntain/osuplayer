@@ -1,6 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
-using OsuPlayer.Data.API.Enums;
+using OsuPlayer.Api.Data.API.Enums;
 using OsuPlayer.Network.Online;
 
 namespace OsuPlayer.Tests;
@@ -12,7 +12,7 @@ public class OnlineTests
     {
         var user = new User
         {
-            Id = Guid.Empty,
+            UniqueId = Guid.Empty,
             Description = default,
             Level = default,
             Name = default,
@@ -25,12 +25,10 @@ public class OnlineTests
             JoinDate = default,
             LastSeen = default,
             OsuProfile = default,
-            ProfilePicture = default,
             SongsPlayed = default,
             TotalXp = default,
-            VersionDate = default,
             CustomRoleColor = default,
-            CustomWebBackground = default,
+            CustomBannerUrl = default,
             HasXpLock = default
         };
 
@@ -92,21 +90,5 @@ public class OnlineTests
         Assert.IsNotEmpty(news.Title);
         Assert.Greater(news.CreationTime, DateTime.MinValue);
         Assert.IsNotEmpty(news.CreationTimeString);
-    }
-
-    [Test]
-    public void OnlineStatusModel()
-    {
-        var model = new OnlineUserStatusModelExtended();
-
-        Assert.IsNotEmpty(model.Status);
-
-        model.StatusType = UserOnlineStatusType.Listening;
-
-        Assert.IsNotEmpty(model.Status);
-
-        model.StatusType = UserOnlineStatusType.InParty;
-
-        Assert.IsNotEmpty(model.Status);
     }
 }

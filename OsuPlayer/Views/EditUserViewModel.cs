@@ -29,7 +29,7 @@ public class EditUserViewModel : BaseViewModel
     private string _password = string.Empty;
     private CancellationTokenSource? _profilePictureCancellationTokenSource;
     private CancellationTokenSource? _topSongsCancellationTokenSource;
-    private ObservableCollection<UserStatsModel>? _topSongsOfCurrentUser;
+    private ObservableCollection<BeatmapTimesPlayedModel>? _topSongsOfCurrentUser;
 
     public string ConfirmDeletionPassword
     {
@@ -61,7 +61,7 @@ public class EditUserViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _isNewProfilePictureSelected, value);
     }
 
-    public ObservableCollection<UserStatsModel>? TopSongsOfCurrentUser
+    public ObservableCollection<BeatmapTimesPlayedModel>? TopSongsOfCurrentUser
     {
         get => _topSongsOfCurrentUser;
         set => this.RaiseAndSetIfChanged(ref _topSongsOfCurrentUser, value);
@@ -92,7 +92,7 @@ public class EditUserViewModel : BaseViewModel
         {
             this.RaiseAndSetIfChanged(ref _currentUser, value);
 
-            LoadTopSongs();
+            // LoadTopSongs();
             LoadProfilePicture();
             LoadProfileBanner();
         }
@@ -133,12 +133,12 @@ public class EditUserViewModel : BaseViewModel
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            var songs = await Locator.Current.GetService<NorthFox>().GetBeatmapsPlayedByUser(CurrentUser.UniqueId);
+            var stats = await Locator.Current.GetService<NorthFox>().GetBeatmapsPlayedByUser(CurrentUser.UniqueId);
 
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            TopSongsOfCurrentUser = songs.ToObservableCollection();
+            TopSongsOfCurrentUser = stats.Beatmaps.ToObservableCollection();
         }
         catch (OperationCanceledException)
         {
@@ -165,18 +165,18 @@ public class EditUserViewModel : BaseViewModel
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            var profilePicture = await Locator.Current.GetService<NorthFox>().GetProfilePictureAsync(CurrentUser.Name);
+            var profilePicture = await Locator.Current.GetService<NorthFox>().GetProfilePictureAsync(CurrentUser.UniqueId);
 
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            if (string.IsNullOrWhiteSpace(profilePicture))
+            if (profilePicture == default || profilePicture?.Length == 0)
             {
                 CurrentProfilePicture = default;
                 return;
             }
 
-            await using (var stream = new MemoryStream(Convert.FromBase64String(profilePicture)))
+            await using (var stream = new MemoryStream(profilePicture))
             {
                 try
                 {

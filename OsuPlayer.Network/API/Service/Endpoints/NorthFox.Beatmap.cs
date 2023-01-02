@@ -18,9 +18,9 @@ public partial class NorthFox
         return await GetById<BeatmapModel>("Beatmap", uniqueId);
     }
 
-    public async Task<List<UserStatsModel>> GetBeatmapsPlayedByUser(Guid uniqueId, int amount = 0)
+    public async Task<UserStatsModel?> GetBeatmapsPlayedByUser(Guid uniqueId, int amount = 0)
     {
-        return await GetRequestWithParameterAsync<List<UserStatsModel>>("Beatmap", "beatmapsPlayedByUser", $"id={uniqueId}&amount={amount}");
+        return await GetRequestWithParameterAsync<UserStatsModel>("Beatmap", "beatmapsPlayedByUser", $"id={uniqueId}&amount={amount}");
     }
 
     #endregion

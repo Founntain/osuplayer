@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Threading.Tasks;
 using LiveChartsCore.Defaults;
-using OsuPlayer.Data.API.Enums;
+using OsuPlayer.Api.Data.API.Enums;
 
 namespace OsuPlayer.Modules.Services;
 
@@ -25,9 +25,9 @@ public interface IStatisticsProvider
     /// </summary>
     /// <param name="hash">The md5 hash of the song which gave the xp</param>
     /// <param name="timeListened">Time listened in milliseconds</param>
-    /// <param name="songLength">The total song length in seconds</param>
+    /// <param name="channelLength">The total song length in seconds</param>
     /// <returns></returns>
-    public Task UpdateXp(string hash, double timeListened, double songLength);
+    public Task UpdateXp(string hash, double timeListened, double channelLength);
 
     /// <summary>
     /// Updates the amount of times the user has played a song.

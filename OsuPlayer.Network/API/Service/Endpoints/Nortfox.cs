@@ -20,4 +20,15 @@ public partial class NorthFox
 
         return response?.User;
     }
+    
+    public async Task<UserModel?> LoginWithTokenAndSaveNewToken(string token)
+    {
+        var response = await Login(token);
+
+        UserAuthToken = response?.Token;
+        
+        await File.WriteAllBytesAsync("session.op", Encoding.UTF8.GetBytes(UserAuthToken ?? string.Empty));
+
+        return response?.User;
+    }
 }

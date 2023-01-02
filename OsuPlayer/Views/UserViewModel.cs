@@ -10,10 +10,9 @@ using LiveChartsCore.SkiaSharpView.Painting;
 using Material.Icons;
 using Material.Icons.Avalonia;
 using OsuPlayer.Api.Data.API.EntityModels;
+using OsuPlayer.Api.Data.API.Enums;
 using OsuPlayer.Api.Data.API.RequestModels.Statistics;
 using OsuPlayer.Base.ViewModels;
-using OsuPlayer.Data.API.Enums;
-using OsuPlayer.Data.API.Models.Beatmap;
 using OsuPlayer.Extensions;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Network.API.Service.Endpoints;
@@ -31,11 +30,11 @@ public class UserViewModel : BaseViewModel
     private Bitmap? _currentProfileBanner;
     private Bitmap? _currentProfilePicture;
     private CancellationTokenSource? _profilePictureCancellationTokenSource;
-    private UserModel? _selectedUser;
+    private User? _selectedUser;
     private List<ObservableValue>? _songsPlayedGraphValues;
     private CancellationTokenSource? _topSongsCancellationTokenSource;
-    private ObservableCollection<UserStatsModel>? _topSongsOfCurrentUser;
-    private ObservableCollection<UserModel>? _users;
+    private ObservableCollection<BeatmapTimesPlayedModel>? _topSongsOfCurrentUser;
+    private ObservableCollection<User>? _users;
     private List<ObservableValue>? _xpGainedGraphValues;
 
     public ObservableCollection<ISeries>? Series { get; set; }
@@ -91,7 +90,7 @@ public class UserViewModel : BaseViewModel
         }
     }
 
-    public ObservableCollection<UserStatsModel>? TopSongsOfCurrentUser
+    public ObservableCollection<BeatmapTimesPlayedModel>? TopSongsOfCurrentUser
     {
         get => _topSongsOfCurrentUser;
         set => this.RaiseAndSetIfChanged(ref _topSongsOfCurrentUser, value);
@@ -115,13 +114,13 @@ public class UserViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _currentProfilePicture, value);
     }
 
-    public ObservableCollection<UserModel> Users
+    public ObservableCollection<User> Users
     {
-        get => _users ?? new ObservableCollection<UserModel>();
+        get => _users ?? new ObservableCollection<User>();
         set => this.RaiseAndSetIfChanged(ref _users, value);
     }
 
-    public UserModel? SelectedUser
+    public User? SelectedUser
     {
         get => _selectedUser;
         set
@@ -135,7 +134,7 @@ public class UserViewModel : BaseViewModel
             ReloadStats();
         }
     }
-
+    
     public UserViewModel(IPlayer player)
     {
         Player = player;
@@ -154,7 +153,9 @@ public class UserViewModel : BaseViewModel
     {
         Disposable.Create(() => { }).DisposeWith(disposables);
 
-        Users = (await Locator.Current.GetService<NorthFox>().GetAllUsers())?.ToObservableCollection() ?? new ();
+        Users = (await Locator.Current.GetService<NorthFox>().GetAllUsers())
+            ?.Select(x => new User(x))
+            .ToObservableCollection() ?? new ();
 
         Series = new ObservableCollection<ISeries>
         {
@@ -248,12 +249,12 @@ public class UserViewModel : BaseViewModel
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            var songs = await Locator.Current.GetService<NorthFox>().GetBeatmapsPlayedByUser(SelectedUser.UniqueId);
+            var stats = await Locator.Current.GetService<NorthFox>().GetBeatmapsPlayedByUser(SelectedUser.UniqueId);
 
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            TopSongsOfCurrentUser = songs.ToObservableCollection();
+            TopSongsOfCurrentUser = stats?.Beatmaps?.ToObservableCollection();
         }
         catch (OperationCanceledException)
         {
@@ -264,7 +265,7 @@ public class UserViewModel : BaseViewModel
 
     private async void LoadProfilePicture()
     {
-        if (SelectedUser == default || string.IsNullOrWhiteSpace(SelectedUser.Name))
+        if (SelectedUser == default || SelectedUser.UniqueId == Guid.Empty)
         {
             CurrentProfilePicture = default;
             return;
@@ -280,18 +281,18 @@ public class UserViewModel : BaseViewModel
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            var profilePicture = await Locator.Current.GetService<NorthFox>().GetProfilePictureAsync(SelectedUser.Name);
+            var profilePicture = await Locator.Current.GetService<NorthFox>().GetProfilePictureAsync(SelectedUser.UniqueId);
 
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            if (string.IsNullOrWhiteSpace(profilePicture))
+            if (profilePicture == default || profilePicture.Length == 0)
             {
                 CurrentProfilePicture = default;
                 return;
             }
 
-            await using var stream = new MemoryStream(Convert.FromBase64String(profilePicture));
+            await using var stream = new MemoryStream(profilePicture);
 
             try
             {
@@ -355,7 +356,7 @@ public class UserViewModel : BaseViewModel
 
     private async void LoadStats()
     {
-        if (SelectedUser == default || string.IsNullOrWhiteSpace(SelectedUser.Name)) return;
+        if (SelectedUser == default || SelectedUser.UniqueId == Guid.Empty) return;
 
         var data = await Locator.Current.GetService<NorthFox>().GetActivityOfUser(SelectedUser.UniqueId);
 
@@ -388,43 +389,25 @@ public class UserViewModel : BaseViewModel
 
     public IEnumerable<IControl> LoadBadges(User? currentUser)
     {
+        return new List<IControl>();
+        
         if (currentUser == default) return default!;
 
         var badges = new List<MaterialIcon>();
 
         var size = 32;
 
-        if (currentUser.Role == UserRole.Developer)
-            badges.Add(new MaterialIcon
+        foreach (var badge in currentUser.Badges)
+        {
+            var materialIcon = new MaterialIcon
             {
-                Kind = MaterialIconKind.Xml,
+                Kind = (MaterialIconKind) badge.Icon,
                 Height = size,
-                Width = size
-            });
+                Width = size,
+            };
 
-        if (currentUser.IsDonator)
-            badges.Add(new MaterialIcon
-            {
-                Kind = MaterialIconKind.Heart,
-                Height = size,
-                Width = size
-            });
-
-        if (currentUser.Role == UserRole.Tester)
-            badges.Add(new MaterialIcon
-            {
-                Kind = MaterialIconKind.TestTube,
-                Height = size,
-                Width = size
-            });
-
-        if (currentUser.JoinDate < new DateTime(2019, 1, 1))
-            badges.Add(new MaterialIcon
-            {
-                Kind = MaterialIconKind.Creation,
-                Height = size,
-                Width = size
-            });
+            badges.Add(materialIcon);
+        }
 
         return badges;
     }

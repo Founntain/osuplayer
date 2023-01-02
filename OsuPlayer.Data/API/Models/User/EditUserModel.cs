@@ -1,8 +1,8 @@
-﻿using OsuPlayer.Api.Data.API.EntityModels;
+﻿namespace OsuPlayer.Data.API.Models.User;
 
 public sealed class EditUserModel
 {
-    public UserModel UserModel { get; set; }
+    public Api.Data.API.EntityModels.UserModel UserModel { get; set; }
     public string Password { get; set; }
     public string? NewPassword { get; set; }
 }

@@ -5,6 +5,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
+using OsuPlayer.Extensions;
 using OsuPlayer.Network.API.Service.Endpoints;
 using OsuPlayer.UI_Extensions;
 using ReactiveUI;
@@ -77,7 +78,7 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
             return;
         }
 
-        ProfileManager.User = user;
+        ProfileManager.User = user.ConvertObject<User>();
 
         Close();
     }

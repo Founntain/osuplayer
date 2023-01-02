@@ -6,6 +6,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.ReactiveUI;
 using Avalonia.VisualTree;
 using OsuPlayer.Api.Data.API.EntityModels;
+using OsuPlayer.Api.Data.API.RequestModels.User;
 using OsuPlayer.Extensions;
 using OsuPlayer.Network.API.Service.Endpoints;
 using OsuPlayer.UI_Extensions;
@@ -166,8 +167,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
         var editUserModel = new EditUserModel
         {
-            UserModel = ViewModel.CurrentUser,
-            Password = ViewModel.Password,
+            User = ViewModel.CurrentUser,
             NewPassword = string.IsNullOrWhiteSpace(ViewModel.NewPassword)
                 ? null
                 : ViewModel.NewPassword
@@ -180,8 +180,8 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
         if (ViewModel == null)
         {
-            if (!string.IsNullOrWhiteSpace(editUserModel.UserModel.Name))
-                ProfileManager.User = await api.GetUserFromLoginToken();
+            if (!string.IsNullOrWhiteSpace(editUserModel.User.Name))
+                ProfileManager.User = (await api.GetUserFromLoginToken())?.ConvertObject<User>();
 
             if (changedProfilePicture)
                 await MessageBox.ShowDialogAsync(_mainWindow, $"We couldn't update your profile picture, because you left the edit view to early!{Environment.NewLine}If you want to update your profile picture please wait, until you get the message that it's been done!");
@@ -191,7 +191,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
             ViewModel.NewPassword = string.Empty;
             ViewModel.Password = string.Empty;
 
-            ProfileManager.User = ViewModel.CurrentUser;
+            ProfileManager.User = ViewModel.CurrentUser.ConvertObject<User>();
 
             if (changedProfilePicture)
                 await UpdateProfilePicture();
@@ -308,5 +308,10 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
         ViewModel.IsDeleteProfilePopupOpen = false;
 
         _mainWindow.ViewModel!.MainView = _mainWindow.ViewModel.HomeView;
+    }
+
+    private void GetDonatorPerksBtn_Click(object? sender, RoutedEventArgs e)
+    {
+        GeneralExtensions.OpenUrl("https://github.com/Founntain/osuplayer/wiki/Support-osu!player");
     }
 }
