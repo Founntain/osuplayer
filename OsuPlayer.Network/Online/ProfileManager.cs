@@ -1,5 +1,4 @@
-﻿using OsuPlayer.Extensions;
-using OsuPlayer.Network.API.Service.Endpoints;
+﻿using OsuPlayer.Network.API.Service.Endpoints;
 using Splat;
 
 namespace OsuPlayer.Network.Online;

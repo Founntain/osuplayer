@@ -2,7 +2,6 @@
 using Avalonia.Media;
 using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.Enums;
-using OsuPlayer.Extensions;
 
 namespace OsuPlayer.Network.Online;
 
@@ -92,7 +91,7 @@ public sealed class User : UserModel
 
     public override int GetHashCode()
     {
-        return Name.GetHashCode();
+        return UniqueId.GetHashCode();
     }
 
     public override bool Equals(object? obj)
@@ -116,16 +115,12 @@ public sealed class User : UserModel
     {
         switch (Role)
         {
+            case UserRole.Staff:
+                return UserColors.Staff;
             case UserRole.Developer:
                 return UserColors.Developer;
             case UserRole.Tester:
                 return UserColors.Tester;
-            case UserRole.Translator:
-                return UserColors.Translator;
-            case UserRole.Admin:
-                return UserColors.Admin;
-            case UserRole.Staff:
-                return UserColors.Staff;
             case UserRole.Donator:
                 return UserColors.Donator;
             default:
@@ -139,14 +134,10 @@ public sealed class User : UserModel
         {
             case UserRole.Developer:
                 return "Developer";
-            case UserRole.Admin:
-                return "Admin";
             case UserRole.Staff:
                 return "Staff";
             case UserRole.Tester:
                 return "Tester";
-            case UserRole.Translator:
-                return "Translator";
             case UserRole.Donator:
                 return "Donator";
             default:

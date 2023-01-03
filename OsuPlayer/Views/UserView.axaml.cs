@@ -1,13 +1,7 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Controls.Presenters;
+﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Layout;
-using Avalonia.LogicalTree;
 using Avalonia.Markup.Xaml;
-using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.RequestModels.Statistics;
-using OsuPlayer.Data.API.Models.Beatmap;
 using OsuPlayer.Extensions;
 
 namespace OsuPlayer.Views;

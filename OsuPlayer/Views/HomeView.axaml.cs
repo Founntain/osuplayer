@@ -2,13 +2,10 @@
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
-using OsuPlayer.Extensions;
 using OsuPlayer.IO.Storage.Blacklist;
-using OsuPlayer.Network.API.Service;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
 using ReactiveUI;
-using Splat;
 
 namespace OsuPlayer.Views;
 

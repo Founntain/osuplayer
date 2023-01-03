@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using OsuPlayer.Api.Data.API.EntityModels;
-using OsuPlayer.Network.Online;
 
 namespace OsuPlayer.Network.API.Service.Endpoints;
 
@@ -16,7 +15,7 @@ public partial class NorthFox
 
         UserAuthToken = response?.Token;
         
-        await File.WriteAllBytesAsync("session.op", Encoding.UTF8.GetBytes(UserAuthToken ?? string.Empty));
+        await File.WriteAllBytesAsync("data/session.op", Encoding.UTF8.GetBytes(UserAuthToken ?? string.Empty));
 
         return response?.User;
     }
@@ -27,7 +26,7 @@ public partial class NorthFox
 
         UserAuthToken = response?.Token;
         
-        await File.WriteAllBytesAsync("session.op", Encoding.UTF8.GetBytes(UserAuthToken ?? string.Empty));
+        await File.WriteAllBytesAsync("data/session.op", Encoding.UTF8.GetBytes(UserAuthToken ?? string.Empty));
 
         return response?.User;
     }

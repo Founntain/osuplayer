@@ -1,5 +1,4 @@
-﻿using System.Text;
-using Avalonia.Media.Imaging;
+﻿using Avalonia.Media.Imaging;
 using Newtonsoft.Json;
 using OsuPlayer.Api.Data.API;
 using OsuPlayer.Api.Data.API.EntityModels;
@@ -17,11 +16,12 @@ public partial class NorthFox : AbstractApiBase
     /// </summary>
     /// <param name="uniqueId">The ID of the user</param>
     /// <returns>The profile picture as Base64 string</returns>
-    public async Task<byte[]?> GetProfilePictureAsync(Guid uniqueId)
+    public async Task<Bitmap?> GetProfilePictureAsync(Guid uniqueId)
     {
-        if (uniqueId == Guid.Empty) return default;
+        if (uniqueId == Guid.Empty) 
+            return default;
         
-        // We have to use an own implementation, than the base methods. Reason is that this action doesn't return an Api Response!
+        // We have to use an own implementation, than the base methods. Reason is that this action doesn't return an ApiResponse<T>
         if (Constants.OfflineMode)
             return default;
 
@@ -29,9 +29,9 @@ public partial class NorthFox : AbstractApiBase
         {
             using var client = new HttpClient();
 
-            var data = await client.GetByteArrayAsync(new Uri($"{Url}User/getProfilePicture?id={uniqueId}"));
+            var data = await client.GetAsync(new Uri($"{Url}User/getProfilePicture?id={uniqueId}"));
 
-            return data;
+            return new Bitmap(await data.Content.ReadAsStreamAsync());
         }
         catch (Exception ex)
         {
@@ -48,17 +48,16 @@ public partial class NorthFox : AbstractApiBase
     /// <returns>The banner as an <see cref="Bitmap" /></returns>
     public async Task<Bitmap?> GetProfileBannerAsync(string? bannerUrl = null)
     {
-        if (string.IsNullOrWhiteSpace(bannerUrl)) return default;
+        if (string.IsNullOrWhiteSpace(bannerUrl))
+            return default;
 
         using var client = new HttpClient();
 
         try
         {
-            var data = await client.GetByteArrayAsync(bannerUrl);
+            var data = await client.GetAsync(bannerUrl);
 
-            await using var stream = new MemoryStream(data);
-
-            return new Bitmap(stream);
+            return new Bitmap(await data.Content.ReadAsStreamAsync());
         }
         catch (Exception ex)
         {
@@ -83,7 +82,7 @@ public partial class NorthFox : AbstractApiBase
 
     public async Task<List<UserActivityModel>?> GetActivityOfUser(Guid uniqueId)
     {
-        return await GetRequestWithParameterAsync<List<UserActivityModel>>("User", "getUserActivityOfUser", $"uniqueId={uniqueId}");
+        return await GetRequestWithParameterAsync<List<UserActivityModel>>("User", "getActivityOfUser", $"uniqueId={uniqueId}");
     }
     
     #endregion

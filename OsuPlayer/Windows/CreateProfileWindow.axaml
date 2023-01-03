@@ -8,7 +8,7 @@
         Title="create new profile"
 
         FontWeight="{DynamicResource DefaultFontWeight}"
-        FontFamily="{DynamicResource Montserrat}"
+        FontFamily="Montserrat"
         FontSize="16"
 
         WindowStartupLocation="CenterScreen"
@@ -42,15 +42,15 @@
         <StackPanel Grid.Row="1" HorizontalAlignment="Stretch" Margin="10">
             <StackPanel>
                 <TextBlock Text="Username" />
-                <TextBox Text="{Binding Username}" />
+                <TextBox Text="{Binding Username}" FontWeight="{DynamicResource DefaultFontWeight}" />
             </StackPanel>
 
             <StackPanel Margin="0 10">
                 <TextBlock Text="Password" />
-                <TextBox Text="{Binding Password}" PasswordChar="•" />
+                <TextBox Text="{Binding Password}" FontWeight="{DynamicResource DefaultFontWeight}" PasswordChar="•" />
             </StackPanel>
 
-            <TextBlock Text="you can choose a description, profile picture and other stuff after creating your profile"
+            <TextBlock Text="you can choose a description, profile picture and other stuff after creating your profile" FontWeight="{DynamicResource SmallerFontWeight}"
                        Margin="0 5" TextWrapping="Wrap" />
 
             <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Margin="0 10">

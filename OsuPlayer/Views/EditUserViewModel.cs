@@ -5,12 +5,10 @@ using Avalonia.Media.Imaging;
 using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.RequestModels.Statistics;
 using OsuPlayer.Base.ViewModels;
-using OsuPlayer.Data.API.Models.Beatmap;
 using OsuPlayer.Extensions;
 using OsuPlayer.Network.API.Service.Endpoints;
 using ReactiveUI;
 using Splat;
-using BeatmapModel = OsuPlayer.Data.API.Models.Beatmap.BeatmapModel;
 
 namespace OsuPlayer.Views;
 
@@ -166,32 +164,11 @@ public class EditUserViewModel : BaseViewModel
                 cancellationToken.ThrowIfCancellationRequested();
 
             var profilePicture = await Locator.Current.GetService<NorthFox>().GetProfilePictureAsync(CurrentUser.UniqueId);
-
+            
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            if (profilePicture == default || profilePicture?.Length == 0)
-            {
-                CurrentProfilePicture = default;
-                return;
-            }
-
-            await using (var stream = new MemoryStream(profilePicture))
-            {
-                try
-                {
-                    var bitmap = new Bitmap(stream);
-
-                    CurrentProfilePicture = bitmap;
-
-                    Debug.WriteLine(bitmap.ToString());
-                }
-                catch (Exception)
-                {
-                    CurrentProfilePicture = default;
-                    Debug.WriteLine("Could not convert ProfilePicture MemoryStream to Bitmap");
-                }
-            }
+            CurrentProfilePicture = profilePicture;
         }
         catch (OperationCanceledException)
         {

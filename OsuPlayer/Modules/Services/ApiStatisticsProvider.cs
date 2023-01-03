@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Threading.Tasks;
 using Avalonia.Threading;
-using DynamicData.Cache.Internal;
 using LiveChartsCore.Defaults;
 using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.Enums;

@@ -9,7 +9,6 @@ using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
-using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
@@ -156,12 +155,6 @@ public class HomeViewModel : BaseViewModel
     {
         if (CurrentUser == default || CurrentUser.UniqueId == Guid.Empty) return default;
 
-        var profilePicture = await Locator.Current.GetService<NorthFox>().GetProfilePictureAsync(CurrentUser.UniqueId);
-
-        if (profilePicture == default || profilePicture.Length == 0) 
-            return default;
-
-        await using var stream = new MemoryStream(profilePicture);
-        return await Task.Run(() => new Bitmap(stream));
+        return await Locator.Current.GetService<NorthFox>().GetProfilePictureAsync(CurrentUser.UniqueId);
     }
 }

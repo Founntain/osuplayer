@@ -2,7 +2,6 @@
 using System.Net.Http.Headers;
 using System.Text;
 using Newtonsoft.Json;
-using Octokit;
 using OsuPlayer.Api.Data.API;
 using OsuPlayer.Network.Online;
 

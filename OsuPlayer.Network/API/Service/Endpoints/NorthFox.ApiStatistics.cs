@@ -1,5 +1,4 @@
-﻿using OsuPlayer.Api.Data.API.EntityModels;
-using OsuPlayer.Api.Data.API.Models;
+﻿using OsuPlayer.Api.Data.API.Models;
 
 namespace OsuPlayer.Network.API.Service.Endpoints;
 

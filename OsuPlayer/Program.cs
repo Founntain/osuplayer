@@ -7,7 +7,6 @@ using OsuPlayer.IO.Importer;
 using OsuPlayer.Modules.Audio.Engine;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Modules.Services;
-using OsuPlayer.Network.API.Service;
 using OsuPlayer.Network.API.Service.Endpoints;
 using OsuPlayer.Windows;
 using Splat;

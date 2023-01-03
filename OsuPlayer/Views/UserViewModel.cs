@@ -9,8 +9,6 @@ using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using Material.Icons;
 using Material.Icons.Avalonia;
-using OsuPlayer.Api.Data.API.EntityModels;
-using OsuPlayer.Api.Data.API.Enums;
 using OsuPlayer.Api.Data.API.RequestModels.Statistics;
 using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Extensions;
@@ -286,27 +284,7 @@ public class UserViewModel : BaseViewModel
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            if (profilePicture == default || profilePicture.Length == 0)
-            {
-                CurrentProfilePicture = default;
-                return;
-            }
-
-            await using var stream = new MemoryStream(profilePicture);
-
-            try
-            {
-                var bitmap = new Bitmap(stream);
-
-                CurrentProfilePicture = bitmap;
-
-                Debug.WriteLine(bitmap.ToString());
-            }
-            catch (Exception)
-            {
-                CurrentProfilePicture = default;
-                Debug.WriteLine("Could not convert ProfilePicture MemoryStream to Bitmap");
-            }
+            CurrentProfilePicture = profilePicture;
         }
         catch (OperationCanceledException)
         {

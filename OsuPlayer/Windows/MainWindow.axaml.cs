@@ -115,9 +115,12 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
     private async void Window_OnOpened(object? sender, EventArgs e)
     {
-        var sessionToken = await File.ReadAllTextAsync("session.op");
+        if (!File.Exists("data/session.op"))
+            return;
+        
+        var sessionToken = await File.ReadAllTextAsync("data/session.op");
 
-        await ProfileManager.Login(sessionToken);
+        await ProfileManager.Login(sessionToken); 
 
         // We only want to update the user panel, when the home view is already open, to refresh the panel.
         if (ViewModel?.MainView?.GetType() != typeof(HomeViewModel)) return;

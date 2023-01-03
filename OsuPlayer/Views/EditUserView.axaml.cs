@@ -5,7 +5,6 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using Avalonia.ReactiveUI;
 using Avalonia.VisualTree;
-using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.RequestModels.User;
 using OsuPlayer.Extensions;
 using OsuPlayer.Network.API.Service.Endpoints;

@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
 using Avalonia.ReactiveUI;
 using OsuPlayer.Extensions;
 using OsuPlayer.Network.API.Service.Endpoints;
@@ -18,6 +19,10 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
     public LoginWindow()
     {
         Init();
+        
+        using var config = new Config();
+        
+        FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
     }
 
     public LoginWindow(string username)

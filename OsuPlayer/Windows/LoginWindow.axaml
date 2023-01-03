@@ -5,7 +5,7 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="OsuPlayer.Windows.LoginWindow"
         Title="login to osu!player community"
-        FontFamily="{DynamicResource Montserrat}"
+        FontFamily="Montserrat"
         FontSize="16"
         FontWeight="{DynamicResource DefaultFontWeight}"
 
@@ -31,10 +31,10 @@
         </Panel>
         <TextBlock Text="login to osu!player" Margin="10" FontSize="18" FontWeight="SemiBold" />
 
-        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="10" Spacing="10">
-            <TextBox Text="{Binding Username}" Watermark="username..." FontWeight="SemiBold"
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="10 0 10 10" Spacing="10">
+            <TextBox Text="{Binding Username}" Watermark="username..." FontWeight="{DynamicResource DefaultFontWeight}"
                      HorizontalAlignment="Stretch" AttachedToVisualTree="Visual_OnAttachedToVisualTree" />
-            <TextBox Text="{Binding Password}" Watermark="password..." FontWeight="SemiBold" PasswordChar="•"
+            <TextBox Text="{Binding Password}" Watermark="password..." FontWeight="{DynamicResource DefaultFontWeight}" PasswordChar="•"
                      HorizontalAlignment="Stretch" x:Name="PasswordBox" KeyUp="InputElement_OnKeyUp" />
         </StackPanel>
 

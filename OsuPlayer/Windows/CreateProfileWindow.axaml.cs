@@ -1,5 +1,6 @@
 ﻿using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
 using Avalonia.ReactiveUI;
 using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.RequestModels.User;
@@ -19,6 +20,8 @@ public partial class CreateProfileWindow : ReactiveWindow<CreateProfileWindowVie
 
         using var config = new Config();
         TransparencyLevelHint = config.Read().TransparencyLevelHint;
+        
+        FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
     }
 
     private void InitializeComponent()
