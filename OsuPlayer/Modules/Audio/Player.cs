@@ -349,9 +349,17 @@ public class Player : IPlayer, IImportNotifications
 
         currentIndex = songSource.IndexOf(SongSourceProvider.SongSourceList[currentIndex]);
 
+        if (currentIndex < 0)
+        {
+            RepeatMode.Value = Data.OsuPlayer.Enums.RepeatMode.NoRepeat;
+            
+            return SongSourceProvider.SongSourceList?[0]!;
+        }
+        
         if (IsShuffle.Value && _shuffleProvider?.ShuffleImpl != null)
         {
             _shuffleProvider.ShuffleImpl.Init(songSource.Count);
+            
             songToPlay = songSource[_shuffleProvider.ShuffleImpl.DoShuffle(currentIndex, (ShuffleDirection) playDirection)];
         }
         else

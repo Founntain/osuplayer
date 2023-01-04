@@ -99,7 +99,7 @@ public class PlaylistViewModel : BaseViewModel
             this.RaisePropertyChanged(nameof(Playlists));
 
             if (SelectedPlaylist == null)
-                SelectedPlaylist = Playlists.First(x => x.Id == selection!.Id);
+                SelectedPlaylist = Playlists.FirstOrDefault(x => x.Id == selection!.Id);
         };
 
         Activator = new ViewModelActivator();
