@@ -33,15 +33,15 @@ public abstract class AbstractApiBase
     /// <summary>
     /// Cancels the current CancellationToken (if one exists) and creates a new one!
     /// </summary>
-    protected void CancelCancellationToken()
-    {
-        // TODO: Currently does nothing, because it breaks the functionality a bit. 
-        // TODO: This needs to be re-thinked a bit!
-        return;
-        
-        CancellationTokenSource.Cancel();
-        CancellationTokenSource = new ();
-    }
+    // protected void CancelCancellationToken()
+    // {
+    //     // TODO: Currently does nothing, because it breaks the functionality a bit. 
+    //     // TODO: This needs to be re-thinked a bit!
+    //     return;
+    //     
+    //     CancellationTokenSource.Cancel();
+    //     CancellationTokenSource = new ();
+    // }
 
     protected AuthenticationHeaderValue GetAuthorizationHeader(string username, string password)
     {
@@ -98,7 +98,7 @@ public abstract class AbstractApiBase
             req.Headers.Add("username", ProfileManager.User?.Name);
             req.Headers.Add("session-token", UserAuthToken);
             
-            CancelCancellationToken();
+            // CancelCancellationToken();
             
             var result = await client.SendAsync(req, CancellationTokenSource.Token);
 
@@ -140,7 +140,7 @@ public abstract class AbstractApiBase
             req.Headers.Add("username", ProfileManager.User?.Name);
             req.Headers.Add("session-token", UserAuthToken);
             
-            CancelCancellationToken();
+            // CancelCancellationToken();
             
             var result = await client.SendAsync(req, CancellationTokenSource.Token);
 
@@ -189,7 +189,7 @@ public abstract class AbstractApiBase
 
             req.Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
 
-            CancelCancellationToken();
+            // CancelCancellationToken();
             
             var result = await client.SendAsync(req, CancellationTokenSource.Token);
 
@@ -232,7 +232,7 @@ public abstract class AbstractApiBase
             req.Headers.Add("username", ProfileManager.User?.Name);
             req.Headers.Add("session-token", UserAuthToken);
 
-            CancelCancellationToken();
+            // CancelCancellationToken();
 
             var result = await client.SendAsync(req, CancellationTokenSource.Token);
 
@@ -281,7 +281,7 @@ public abstract class AbstractApiBase
             
             req.Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
 
-            CancelCancellationToken();
+            // CancelCancellationToken();
             
             var result = await client.SendAsync(req, CancellationTokenSource.Token);
 
