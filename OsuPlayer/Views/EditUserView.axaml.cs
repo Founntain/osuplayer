@@ -5,6 +5,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using Avalonia.ReactiveUI;
 using Avalonia.VisualTree;
+using Material.Icons;
 using OsuPlayer.Api.Data.API.RequestModels.User;
 using OsuPlayer.Extensions;
 using OsuPlayer.Network.API.Service.Endpoints;
@@ -156,7 +157,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
             return;
         }
 
-        if (ViewModel.CurrentUser.OsuProfile?.Length > 0 && ViewModel.CurrentUser.OsuProfile.IsDigitsOnly())
+        if (ViewModel.CurrentUser.OsuProfile?.Length > 0 && !ViewModel.CurrentUser.OsuProfile.IsDigitsOnly())
         {
             await MessageBox.ShowDialogAsync(_mainWindow,
                 "Your osu!profile ID should only contain numbers");
