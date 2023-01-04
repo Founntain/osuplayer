@@ -108,7 +108,7 @@ public partial class NorthFox : AbstractApiBase
             var req = new HttpRequestMessage(HttpMethod.Post, url);
             req.Headers.Authorization = GetAuthorizationHeader(username, password);
 
-            CancelCancellationToken();
+            // CancelCancellationToken();
             
             var result = await client.SendAsync(req, CancellationTokenSource.Token);
 
@@ -141,7 +141,7 @@ public partial class NorthFox : AbstractApiBase
             
             req.Headers.Add("session-token", token);
 
-            CancelCancellationToken();
+            // CancelCancellationToken();
             
             var result = await client.SendAsync(req, CancellationTokenSource.Token);
 
