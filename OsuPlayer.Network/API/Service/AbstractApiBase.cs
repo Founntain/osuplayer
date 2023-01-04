@@ -10,8 +10,9 @@ namespace OsuPlayer.Network.API.Service;
 public abstract class AbstractApiBase
 {
     protected string Url => Constants.Localhost
-        ? "https://sandbox.founntain.dev/"
-        : "https://osuplayer.founntain.dev/api/";
+        ? "http://localhost:7096/"
+        : "https://sandbox.founntain.dev/";
+        // : "https://osuplayer.founntain.dev/api/";
     
     protected static CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
     
