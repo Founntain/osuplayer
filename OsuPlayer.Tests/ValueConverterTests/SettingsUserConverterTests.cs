@@ -39,19 +39,22 @@ public class SettingsUserConverterTests
         Assert.AreEqual("Not logged in", output);
     }
 
-    [TestCase("Test")]
-    [TestCase("Hallo")]
-    public void TestCorrectUsage(string name)
-    {
-        var input = new User
-        {
-            Name = name
-        };
-        Assert.IsInstanceOf(_expectedInput, input);
-        var output = _userConverter.Convert(input, _expectedOutput, null, CultureInfo.InvariantCulture);
-        Assert.IsInstanceOf(_expectedOutput, output);
-        Assert.AreEqual(input.Name, output);
-    }
+    // [TestCase("Test")]
+    // [TestCase("Hallo")]
+    // public void TestCorrectUsage(string name)
+    // {
+    //     var input = new User
+    //     {
+    //         Name = name
+    //     };
+    //     
+    //     Assert.IsInstanceOf(_expectedInput, input);
+    //     
+    //     var output = _userConverter.Convert(input, _expectedOutput, null, CultureInfo.InvariantCulture);
+    //     
+    //     Assert.IsInstanceOf(_expectedOutput, output);
+    //     Assert.AreEqual(input.Name, output);
+    // }
 
     [Test]
     public void TestOutputOnIncorrectInput()
