@@ -20,8 +20,4 @@
         </Reference>
     </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\..\OsuPlayer.Api.Data\OsuPlayer.Api.Data\OsuPlayer.Api.Data.csproj" />
-    </ItemGroup>
-
 </Project>
