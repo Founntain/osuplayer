@@ -205,7 +205,6 @@ public abstract class AbstractApiBase
             return default;
         }
     }
-
     
     /// <summary>
     /// Creates a POST request to the osu!player API returning T.
@@ -300,5 +299,4 @@ public abstract class AbstractApiBase
     }
 
     #endregion
-
 }
