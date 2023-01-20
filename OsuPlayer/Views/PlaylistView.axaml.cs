@@ -8,6 +8,7 @@ using Material.Icons.Avalonia;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.IO.Storage.Playlists;
+using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
 using ReactiveUI;
 
@@ -60,6 +61,13 @@ public partial class PlaylistView : ReactiveControl<PlaylistViewModel>
     private void PlayPlaylist_OnClick(object? sender, RoutedEventArgs e)
     {
         if (sender is not Control {DataContext: Playlist playlist}) return;
+
+        if (!playlist.Songs.Any())
+        {
+            MessageBox.Show("This playlist is empty!");
+
+            return;
+        }
 
         ViewModel.Player.RepeatMode.Value = RepeatMode.Playlist;
         ViewModel.Player.SelectedPlaylist.Value = playlist;

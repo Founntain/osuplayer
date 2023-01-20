@@ -139,7 +139,7 @@ public class PlaylistViewModel : BaseViewModel
 
     private void RefreshAllIcons()
     {
-        if (_materialIcons.Count != Playlists?.Count) return;
+        if (_materialIcons.Count != Playlists?.Count || Player.RepeatMode.Value != RepeatMode.Playlist) return;
 
         for (var i = 0; i < _materialIcons.Count; i++) _materialIcons[i].IsVisible = Player.SelectedPlaylist.Value?.Id == Playlists?[i].Id;
     }
