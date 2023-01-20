@@ -125,6 +125,10 @@
                     </Border>
                     <StackPanel Grid.Row="1" Spacing="5" Margin="10" VerticalAlignment="Stretch"
                                 HorizontalAlignment="Stretch">
+                        <TextBlock Text="Username" />
+                        <TextBox Watermark="enter new username..." Text="{Binding NewUsername}"
+                                 FontWeight="SemiBold" HorizontalAlignment="Stretch"
+                                 HorizontalContentAlignment="Center" />
                         <TextBlock Text="osu!profile ID (NOT URL)" />
                         <TextBox Watermark="osu!profile ID" Text="{Binding CurrentUser.OsuProfile}"
                                  FontWeight="SemiBold" HorizontalAlignment="Stretch"

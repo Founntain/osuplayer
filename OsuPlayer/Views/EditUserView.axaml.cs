@@ -168,6 +168,9 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
         var editUserModel = new EditUserModel
         {
             User = ViewModel.CurrentUser,
+            NewUsername = string.IsNullOrWhiteSpace(ViewModel.NewUsername)
+                ? null
+                : ViewModel.NewUsername,
             NewPassword = string.IsNullOrWhiteSpace(ViewModel.NewPassword)
                 ? null
                 : ViewModel.NewPassword
@@ -192,6 +195,17 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
             ViewModel.Password = string.Empty;
 
             ProfileManager.User = ViewModel.CurrentUser.ConvertObject<User>();
+
+            var successMessage = "Profile updated successfully!";
+            
+            if (response.Name == ViewModel.NewUsername && tempUser.Name != response.Name)
+            {
+                successMessage = "Profile and username updated successfully. Restart your client to see you new username!";
+            }
+            
+            ViewModel.NewUsername = string.Empty;
+
+            await MessageBox.ShowDialogAsync(_mainWindow, successMessage);
 
             if (changedProfilePicture)
                 await UpdateProfilePicture();

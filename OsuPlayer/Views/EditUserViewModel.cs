@@ -24,6 +24,7 @@ public class EditUserViewModel : BaseViewModel
     private bool _isNewBannerSelected;
     private bool _isNewProfilePictureSelected;
     private string _newPassword = string.Empty;
+    private string _newUsername = ProfileManager.User?.Name ?? string.Empty;
     private string _password = string.Empty;
     private CancellationTokenSource? _profilePictureCancellationTokenSource;
     private CancellationTokenSource? _topSongsCancellationTokenSource;
@@ -100,6 +101,12 @@ public class EditUserViewModel : BaseViewModel
     {
         get => _newPassword;
         set => this.RaiseAndSetIfChanged(ref _newPassword, value);
+    }
+
+    public string NewUsername
+    {
+        get => _newUsername;
+        set => this.RaiseAndSetIfChanged(ref _newUsername, value);
     }
 
     public EditUserViewModel()
