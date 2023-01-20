@@ -42,7 +42,7 @@ Your profile picture will also be deleted when you delete your profile.
 Don't post anything NSFW, hate-/harmful in your description or somewhere else in the client. This also includes your profile picture. *(sorry about that, but no anime tiddies as profile picture)*  
 
 If you create a profile and don't reach level 2 in 24 hours **we have the right to delete your profile**.  
-Please only create an account if you intend to use the player and its user feature as intended.  
+Please only create an account if you intend to use the player and its user feature as intended. If you entered a wrong name. Fear not, you are able to change your name in the settings. If this is not possible for some reason, please hit us up to get this resolved. Don't create a new profile because of that.  
 You don't need a profile if you do not want to use the user features, such as collecting XP and statistics!  
 If your profile was deleted, you will still be able to create a new profile if you believe you will use it as intended.  
 
