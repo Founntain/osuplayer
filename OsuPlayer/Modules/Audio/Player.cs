@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Platform;
-using OsuPlayer.Data.API.Enums;
+using OsuPlayer.Api.Data.API.Enums;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
@@ -349,9 +349,17 @@ public class Player : IPlayer, IImportNotifications
 
         currentIndex = songSource.IndexOf(SongSourceProvider.SongSourceList[currentIndex]);
 
+        if (!songSource.Any())
+        {
+            RepeatMode.Value = Data.OsuPlayer.Enums.RepeatMode.NoRepeat;
+
+            return SongSourceProvider.SongSourceList[0];
+        }
+
         if (IsShuffle.Value && _shuffleProvider?.ShuffleImpl != null)
         {
             _shuffleProvider.ShuffleImpl.Init(songSource.Count);
+
             songToPlay = songSource[_shuffleProvider.ShuffleImpl.DoShuffle(currentIndex, (ShuffleDirection) playDirection)];
         }
         else

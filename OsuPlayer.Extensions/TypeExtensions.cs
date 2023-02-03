@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Reflection;
 using DynamicData;
+using Newtonsoft.Json;
 using Splat;
 
 namespace OsuPlayer.Extensions;
@@ -81,5 +82,10 @@ public static class Extensions
             throw new InvalidOperationException($"Service of type {typeof(T)} could not be found");
 
         return service;
+    }
+
+    public static T ConvertObject<T>(this object obj)
+    {
+        return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(obj));
     }
 }

@@ -43,6 +43,7 @@
         <PackageReference Include="Markdown.Avalonia" Version="0.10.12" />
         <PackageReference Include="Material.Icons.Avalonia" Version="1.1.10" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+        <PackageReference Include="OsuPlayer.Api.Data" Version="1.0.1" />
         <PackageReference Include="XamlNameReferenceGenerator" Version="1.4.2" />
     </ItemGroup>
     <ItemGroup>

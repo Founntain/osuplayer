@@ -125,6 +125,10 @@
                     </Border>
                     <StackPanel Grid.Row="1" Spacing="5" Margin="10" VerticalAlignment="Stretch"
                                 HorizontalAlignment="Stretch">
+                        <TextBlock Text="Username" />
+                        <TextBox Watermark="enter new username..." Text="{Binding NewUsername}"
+                                 FontWeight="SemiBold" HorizontalAlignment="Stretch"
+                                 HorizontalContentAlignment="Center" />
                         <TextBlock Text="osu!profile ID (NOT URL)" />
                         <TextBox Watermark="osu!profile ID" Text="{Binding CurrentUser.OsuProfile}"
                                  FontWeight="SemiBold" HorizontalAlignment="Stretch"
@@ -188,7 +192,7 @@
                                 Background="#7F000000" BorderBrush="{DynamicResource SystemAccentColor}"
                                 CornerRadius="5" BorderThickness="0">
                             <Grid ColumnDefinitions="*, Auto, Auto">
-                                <TextBox Grid.Column="0" Watermark="enter password to save"
+                                <TextBox Grid.Column="0" Watermark="enter banner url"
                                          VerticalContentAlignment="Center" HorizontalAlignment="Stretch"
                                          TextAlignment="Center"
                                          BorderThickness="0"
@@ -221,6 +225,7 @@
                     </StackPanel>
 
                     <Button Grid.Row="2" Content="get donator perks ❤️" Margin="5"
+                            Click="GetDonatorPerksBtn_Click"
                             VerticalAlignment="Bottom" HorizontalAlignment="Stretch"
                             HorizontalContentAlignment="Center"
                             IsVisible="{Binding !CurrentUser.IsDonator}" />

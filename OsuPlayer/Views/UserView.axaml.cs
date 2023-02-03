@@ -1,9 +1,7 @@
 ﻿using Avalonia.Controls;
-using Avalonia.Controls.Presenters;
 using Avalonia.Interactivity;
-using Avalonia.Layout;
 using Avalonia.Markup.Xaml;
-using OsuPlayer.Data.API.Models.Beatmap;
+using OsuPlayer.Api.Data.API.RequestModels.Statistics;
 using OsuPlayer.Extensions;
 
 namespace OsuPlayer.Views;
@@ -22,25 +20,29 @@ public partial class UserView : ReactiveControl<UserViewModel>
 
     private void UserList_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        var viewer = this.FindControl<ContentPresenter>("BadgeItems");
+        // var viewer = this.FindControl<ContentPresenter>("BadgeItems");
         var list = (ListBox) sender;
 
         if (list?.SelectedItem == default) return;
 
-        var items = ViewModel!.LoadBadges((User) list.SelectedItem);
+        var user = list?.SelectedItem.ConvertObject<User>();
+        
+        // var items = ViewModel!.LoadBadges(user);
 
-        viewer.Content = new ItemsRepeater
-        {
-            Items = items,
-            HorizontalAlignment = HorizontalAlignment.Center,
-            VerticalAlignment = VerticalAlignment.Top,
-            Layout = new WrapLayout
-            {
-                Orientation = Orientation.Horizontal
-            }
-        };
-
-        viewer.UpdateChild();
+        // viewer.Content = new ItemsRepeater
+        // {
+        //     Items = items,
+        //     HorizontalAlignment = HorizontalAlignment.Center,
+        //     VerticalAlignment = VerticalAlignment.Top,
+        //     Layout = new WrapLayout
+        //     {
+        //         Orientation = Orientation.Horizontal
+        //     }
+        // };
+        //
+        // viewer.Margin = new Thickness(0, 0, 0, 5);
+        //
+        // viewer.UpdateChild();
     }
 
     private async void UserTopSongsList_OnDoubleTapped(object? sender, RoutedEventArgs e)
@@ -49,7 +51,7 @@ public partial class UserView : ReactiveControl<UserViewModel>
 
         if (listBox == default) return;
 
-        var beatmapModel = (BeatmapUserValidityModel) listBox.SelectedItem;
+        var beatmapModel = (BeatmapTimesPlayedModel) listBox.SelectedItem;
 
         if (beatmapModel == default || ViewModel.Player.SongSourceProvider.SongSourceList == default) return;
 

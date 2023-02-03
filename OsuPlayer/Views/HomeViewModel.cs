@@ -16,8 +16,10 @@ using OsuPlayer.IO.Importer;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Modules.Services;
+using OsuPlayer.Network.API.Service.Endpoints;
 using ReactiveUI;
 using SkiaSharp;
+using Splat;
 
 namespace OsuPlayer.Views;
 
@@ -52,8 +54,8 @@ public class HomeViewModel : BaseViewModel
         }
     };
 
-    public bool IsUserNotLoggedIn => CurrentUser == default || CurrentUser?.Id == Guid.Empty;
-    public bool IsUserLoggedIn => CurrentUser != default && CurrentUser?.Id != Guid.Empty;
+    public bool IsUserNotLoggedIn => CurrentUser == default || CurrentUser?.UniqueId == Guid.Empty;
+    public bool IsUserLoggedIn => CurrentUser != default && CurrentUser?.UniqueId != Guid.Empty;
 
     public bool SongsLoading => new Config().Container.OsuPath != null && _songsLoading.Value;
 
@@ -151,13 +153,8 @@ public class HomeViewModel : BaseViewModel
 
     internal async Task<Bitmap?> LoadProfilePicture()
     {
-        if (CurrentUser == default || string.IsNullOrWhiteSpace(CurrentUser.Name)) return default;
+        if (CurrentUser == default || CurrentUser.UniqueId == Guid.Empty) return default;
 
-        var profilePicture = await ApiAsync.GetProfilePictureAsync(CurrentUser.Name);
-
-        if (profilePicture == default) return default;
-
-        await using var stream = new MemoryStream(Convert.FromBase64String(profilePicture));
-        return await Task.Run(() => new Bitmap(stream));
+        return await Locator.Current.GetService<NorthFox>().GetProfilePictureAsync(CurrentUser.UniqueId);
     }
 }

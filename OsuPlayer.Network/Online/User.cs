@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using Avalonia.Media;
-using OsuPlayer.Data.API.Enums;
-using OsuPlayer.Data.API.Models.User;
+using OsuPlayer.Api.Data.API.EntityModels;
+using OsuPlayer.Api.Data.API.Enums;
 
 namespace OsuPlayer.Network.Online;
 
@@ -10,18 +10,42 @@ namespace OsuPlayer.Network.Online;
 /// </summary>
 public sealed class User : UserModel
 {
-    public string SongsPlayedString => Id == Guid.Empty ? string.Empty : $"{SongsPlayed.ToString("##,###", CultureInfo.InvariantCulture)} songs played";
+    public string SongsPlayedString
+    {
+        get
+        {
+            if (UniqueId == Guid.Empty) return string.Empty;
+                
+            return SongsPlayed == default ? "0 songs played" : $"{SongsPlayed.ToString("##,###", CultureInfo.InvariantCulture)} songs played";
+        }
+    }
 
-    public string LevelAndTotalXpString =>
-        Id == Guid.Empty ? string.Empty : $"Level {Level.ToString("##,###", CultureInfo.InvariantCulture)} | Total XP: {TotalXp.ToString("##,###", CultureInfo.InvariantCulture)}";
+    public string LevelAndTotalXpString
+    {
+        get
+        {
+            if (UniqueId == Guid.Empty) return string.Empty;
 
-    public string LevelProgressString =>
-        Id == Guid.Empty ? string.Empty : $"{Xp.ToString("##,###", CultureInfo.InvariantCulture)} XP / {GetXpNeededForNextLevel().ToString("##,###", CultureInfo.InvariantCulture)} XP";
+            return TotalXp == default ? "Level 1 | Total XP: 0" : $"Level {Level.ToString("##,###", CultureInfo.InvariantCulture)} | Total XP: {TotalXp.ToString("##,###", CultureInfo.InvariantCulture)}";
+        }
+    }
+
+    public string LevelProgressString
+    {
+        get
+        {
+            if (UniqueId == Guid.Empty) return string.Empty;
+            
+            return Xp == default 
+                ? $"0 XP / {GetXpNeededForNextLevel().ToString("##,###", CultureInfo.InvariantCulture)} XP" 
+                : $"{Xp.ToString("##,###", CultureInfo.InvariantCulture)} XP / {GetXpNeededForNextLevel().ToString("##,###", CultureInfo.InvariantCulture)} XP";
+        }
+    }
 
     public Brush RoleColor => GetRoleColorBrush();
     public string RoleString => GetRoleString();
 
-    public string DescriptionTitleString => $"{Name}'s Description";
+    public string DescriptionTitleString => string.IsNullOrWhiteSpace(Description) ? $"{Name} has no description" : $"{Name}'s Description";
     public string LevelString => $"Level {Level}";
     public string JoinDateString => $"joined {JoinDate.ToString("D", new CultureInfo("en-us"))}";
 
@@ -30,7 +54,34 @@ public sealed class User : UserModel
 
     public User()
     {
-        Role = UserRole.Unknown;
+        Role = UserRole.User;
+    }
+
+    public User(UserModel userModel)
+    {
+        UniqueId = userModel.UniqueId;
+        Name = userModel.Name;
+        Description = userModel.Description;
+        Role = userModel.Role;
+        JoinDate = userModel.JoinDate;
+        LastActivity = userModel.LastActivity;
+        LastSeen = userModel.LastSeen;
+        Level = userModel.Level;
+        Xp = userModel.Xp;
+        TotalXp = userModel.TotalXp;
+        HasXpLock = userModel.HasXpLock;
+        SongsPlayed = userModel.SongsPlayed;
+        OsuProfile = userModel.OsuProfile;
+
+        IsDonator = userModel.IsDonator;
+        AmountDonated = userModel.AmountDonated;
+        CustomRolename = userModel.CustomRolename;
+        CustomRoleColor = userModel.CustomRoleColor;
+        CustomBannerUrl = userModel.CustomBannerUrl;
+
+        Version = userModel.Version;
+
+        Badges = userModel.Badges;
     }
 
     public override string? ToString()
@@ -40,7 +91,7 @@ public sealed class User : UserModel
 
     public override int GetHashCode()
     {
-        return Name.GetHashCode();
+        return UniqueId.GetHashCode();
     }
 
     public override bool Equals(object? obj)
@@ -64,14 +115,12 @@ public sealed class User : UserModel
     {
         switch (Role)
         {
+            case UserRole.Staff:
+                return UserColors.Staff;
             case UserRole.Developer:
                 return UserColors.Developer;
             case UserRole.Tester:
                 return UserColors.Tester;
-            case UserRole.Translator:
-                return UserColors.Translator;
-            case UserRole.LegacyUser:
-                return UserColors.LegacyUser;
             case UserRole.Donator:
                 return UserColors.Donator;
             default:
@@ -85,10 +134,10 @@ public sealed class User : UserModel
         {
             case UserRole.Developer:
                 return "Developer";
+            case UserRole.Staff:
+                return "Staff";
             case UserRole.Tester:
                 return "Tester";
-            case UserRole.Translator:
-                return "Translator";
             case UserRole.Donator:
                 return "Donator";
             default:

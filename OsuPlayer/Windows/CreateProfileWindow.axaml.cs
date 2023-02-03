@@ -1,10 +1,14 @@
 ﻿using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
 using Avalonia.ReactiveUI;
-using OsuPlayer.Data.API.Models.User;
+using OsuPlayer.Api.Data.API.EntityModels;
+using OsuPlayer.Api.Data.API.RequestModels.User;
 using OsuPlayer.Extensions;
+using OsuPlayer.Network.API.Service.Endpoints;
 using OsuPlayer.Network.Security;
 using OsuPlayer.UI_Extensions;
+using Splat;
 
 namespace OsuPlayer.Windows;
 
@@ -16,6 +20,8 @@ public partial class CreateProfileWindow : ReactiveWindow<CreateProfileWindowVie
 
         using var config = new Config();
         TransparencyLevelHint = config.Read().TransparencyLevelHint;
+        
+        FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
     }
 
     private void InitializeComponent()
@@ -43,34 +49,26 @@ public partial class CreateProfileWindow : ReactiveWindow<CreateProfileWindowVie
             return;
         }
 
-        var response = await ApiAsync.ApiRequestAsync<string>("users", "createUser", new CreateUserModel
+        var response = await Locator.Current.GetService<NorthFox>().Register(new AddUserModel
         {
-            UserModel = new UserModel
-            {
-                Name = ViewModel.Username
-            },
+            Username = ViewModel.Username,
             Password = ViewModel.Password
         });
 
-        switch (response)
+        if (response == default)
         {
-            case "User already exists":
-                MessageBox.Show("User already exists, please try another username!");
-                return;
-            case "Profile creation failed":
-                MessageBox.Show("Profile couldn't be created!");
-
-                return;
+            await MessageBox.ShowDialogAsync(this, "Can't create a profile. Possible reasons could be: The username is already taken or an server error happend. Please try again later or another username!");
+            return;
         }
 
-        if (!string.IsNullOrWhiteSpace(response))
+        if (response.GetType() == typeof(UserModel))
         {
             await MessageBox.ShowDialogAsync(this, "Profile created successfully. You can now log in!");
             Close();
             return;
         }
 
-        MessageBox.Show("And error occured on the server side, or the API is not reachable! Please try again later");
+        MessageBox.Show("An error occured on the server side, or the API is not reachable! Please try again later");
     }
 
     private void OpenTosBtn_OnClick(object? sender, RoutedEventArgs e)

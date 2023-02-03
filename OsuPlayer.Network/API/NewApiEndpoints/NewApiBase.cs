@@ -1,18 +1,18 @@
 ﻿using System.Net;
 using System.Text;
 using Newtonsoft.Json;
+using OsuPlayer.Api.Data.API;
 
-namespace OsuPlayer.Network.API.ApiEndpoints;
+namespace OsuPlayer.Network.API.NewApiEndpoints;
 
-/// <summary>
-/// Static class to make HTTP Requests to the osu!player api asynchronously
-/// </summary>
-public static partial class ApiAsync
+public static partial class NewApiBase
 {
-    public static string Url => Constants.Localhost
+    private static string Url => Constants.Localhost
         ? "http://localhost:5000/api/"
         : "https://osuplayer.founntain.dev/api/";
 
+    private static CancellationTokenSource? _cancellationTokenSource;
+    
     private static void ParseWebException(Exception ex)
     {
         if (ex.GetType() != typeof(WebException)) return;
@@ -25,8 +25,14 @@ public static partial class ApiAsync
         Constants.OfflineMode = true;
     }
 
+    private static void CancelCancellationToken()
+    {
+        _cancellationTokenSource?.Cancel();
+        _cancellationTokenSource = new ();
+    }
+    
     /// <summary>
-    /// Creates a GET request to the osu!player API return T.
+    /// Creates a GET request to the osu!player API returning T.
     /// </summary>
     /// <param name="controller">The controller to call</param>
     /// <param name="action">The route of the controller</param>
@@ -41,9 +47,15 @@ public static partial class ApiAsync
         {
             using var client = new HttpClient();
 
-            var data = await client.GetByteArrayAsync(new Uri($"{Url}{controller}/{action}"));
+            CancelCancellationToken();
+            
+            var data = await client.GetByteArrayAsync(new Uri($"{Url}{controller}/{action}"), _cancellationTokenSource.Token);
 
-            return JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(data));
+            var response =  JsonConvert.DeserializeObject<ApiResponse<T>>(Encoding.UTF8.GetString(data));
+
+            return response.Errors?.Any() == true 
+                ? default 
+                : response.Value;
         }
         catch (Exception ex)
         {
@@ -52,7 +64,7 @@ public static partial class ApiAsync
             return default;
         }
     }
-
+    
     /// <summary>
     /// Creates a POST request to the osu!player API returning T.
     /// </summary>
@@ -66,7 +78,7 @@ public static partial class ApiAsync
     {
         if (Constants.OfflineMode)
             return default;
-
+        
         try
         {
             using var client = new HttpClient();
@@ -76,9 +88,15 @@ public static partial class ApiAsync
             var req = new HttpRequestMessage(HttpMethod.Post, url);
             req.Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
 
-            var result = await client.SendAsync(req);
+            CancelCancellationToken();
+            
+            var result = await client.SendAsync(req, _cancellationTokenSource.Token);
 
-            return JsonConvert.DeserializeObject<T>(await result.Content.ReadAsStringAsync());
+            var response =  JsonConvert.DeserializeObject<ApiResponse<T>>(await result.Content.ReadAsStringAsync());
+            
+            return response.Errors?.Any() == true 
+                ? default 
+                : response.Value;
         }
         catch (Exception ex)
         {
@@ -105,9 +123,15 @@ public static partial class ApiAsync
         {
             using var client = new HttpClient();
 
-            var data = await client.GetByteArrayAsync(new Uri($"{Url}{controller}/{action}?{parameters}"));
+            CancelCancellationToken();
+            
+            var data = await client.GetByteArrayAsync(new Uri($"{Url}{controller}/{action}?{parameters}"), _cancellationTokenSource.Token);
 
-            return JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(data));
+            var response = JsonConvert.DeserializeObject<ApiResponse<T>>(Encoding.UTF8.GetString(data));
+            
+            return response.Errors?.Any() == true 
+                ? default 
+                : response.Value;
         }
         catch (Exception ex)
         {
@@ -139,9 +163,15 @@ public static partial class ApiAsync
 
             var req = new HttpRequestMessage(HttpMethod.Post, url);
 
-            var result = await client.SendAsync(req);
+            CancelCancellationToken();
 
-            return JsonConvert.DeserializeObject<T>(await result.Content.ReadAsStringAsync());
+            var result = await client.SendAsync(req, _cancellationTokenSource.Token);
+
+            var response = JsonConvert.DeserializeObject<ApiResponse<T>>(await result.Content.ReadAsStringAsync());
+            
+            return response.Errors?.Any() == true 
+                ? default 
+                : response.Value;
         }
         catch (Exception ex)
         {

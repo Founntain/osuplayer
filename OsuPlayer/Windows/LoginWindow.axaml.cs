@@ -4,9 +4,13 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
 using Avalonia.ReactiveUI;
+using OsuPlayer.Extensions;
+using OsuPlayer.Network.API.Service.Endpoints;
 using OsuPlayer.UI_Extensions;
 using ReactiveUI;
+using Splat;
 
 namespace OsuPlayer.Windows;
 
@@ -15,6 +19,10 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
     public LoginWindow()
     {
         Init();
+        
+        using var config = new Config();
+        
+        FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
     }
 
     public LoginWindow(string username)
@@ -55,7 +63,7 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
     {
         if (ViewModel == default) return;
 
-        var user = await ApiAsync.LoadUserWithCredentialsAsync(ViewModel.Username, ViewModel.Password);
+        var user = await Locator.Current.GetService<NorthFox>().LoginAndSaveAuthToken(ViewModel.Username, ViewModel.Password);
 
         if (user == default)
         {
@@ -75,7 +83,7 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
             return;
         }
 
-        ProfileManager.User = user;
+        ProfileManager.User = user.ConvertObject<User>();
 
         Close();
     }

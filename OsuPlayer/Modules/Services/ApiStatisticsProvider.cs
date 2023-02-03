@@ -2,7 +2,12 @@
 using System.Threading.Tasks;
 using Avalonia.Threading;
 using LiveChartsCore.Defaults;
-using OsuPlayer.Data.API.Enums;
+using OsuPlayer.Api.Data.API.EntityModels;
+using OsuPlayer.Api.Data.API.Enums;
+using OsuPlayer.Api.Data.API.RequestModels.User;
+using OsuPlayer.Extensions;
+using OsuPlayer.Network.API.Service.Endpoints;
+using Splat;
 
 namespace OsuPlayer.Modules.Services;
 
@@ -13,10 +18,18 @@ public class ApiStatisticsProvider : IStatisticsProvider
 
     public async Task UpdateOnlineStatus(UserOnlineStatusType statusType, string? song = null, string? checksum = null)
     {
-        await ApiAsync.SetUserOnlineStatus(statusType, song, checksum);
+        if (ProfileManager.User == default || ProfileManager.User.UniqueId == Guid.Empty) 
+            return;
+        
+        await Locator.Current.GetService<NorthFox>().SetOnlineStatus(new UserOnlineStatusModel
+        {
+            StatusType = statusType,
+            Song = song,
+            SongChecksum = checksum,
+        });
     }
 
-    public async Task UpdateXp(string hash, double timeListened, double songLength)
+    public async Task UpdateXp(string hash, double timeListened, double channelLength)
     {
         if (ProfileManager.User == default) return;
 
@@ -24,14 +37,16 @@ public class ApiStatisticsProvider : IStatisticsProvider
 
         var time = timeListened / 1000;
 
-        var response = await ApiAsync.UpdateXpFromCurrentUserAsync(
-            hash,
-            time,
-            songLength);
+        var response = await Locator.Current.GetService<NorthFox>().UpdateXp( new UpdateXpModel
+        {
+            SongChecksum = hash,
+            ChannelLength = channelLength,
+            ElapsedMilliseconds = time
+        });
 
         if (response == default) return;
 
-        ProfileManager.User = response;
+        ProfileManager.User = response.ConvertObject<User>();
 
         var xpEarned = response.TotalXp - currentTotalXp;
 
@@ -44,11 +59,11 @@ public class ApiStatisticsProvider : IStatisticsProvider
     {
         if (ProfileManager.User == default) return;
 
-        var response = await ApiAsync.UpdateSongsPlayedForCurrentUserAsync(1, beatmapSetId);
+        var response = await Locator.Current.GetService<NorthFox>().UpdateSongsPlayed(1, beatmapSetId);
 
         if (response == default) return;
 
-        ProfileManager.User = response;
+        ProfileManager.User = response.ConvertObject<User>();
 
         await Dispatcher.UIThread.InvokeAsync(() => UserDataChanged?.Invoke(this, new PropertyChangedEventArgs("SongsPlayed")));
     }

@@ -9,13 +9,14 @@ using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using Material.Icons;
 using Material.Icons.Avalonia;
+using OsuPlayer.Api.Data.API.RequestModels.Statistics;
 using OsuPlayer.Base.ViewModels;
-using OsuPlayer.Data.API.Enums;
-using OsuPlayer.Data.API.Models.Beatmap;
 using OsuPlayer.Extensions;
 using OsuPlayer.Modules.Audio.Interfaces;
+using OsuPlayer.Network.API.Service.Endpoints;
 using ReactiveUI;
 using SkiaSharp;
+using Splat;
 
 namespace OsuPlayer.Views;
 
@@ -30,7 +31,7 @@ public class UserViewModel : BaseViewModel
     private User? _selectedUser;
     private List<ObservableValue>? _songsPlayedGraphValues;
     private CancellationTokenSource? _topSongsCancellationTokenSource;
-    private ObservableCollection<BeatmapUserValidityModel>? _topSongsOfCurrentUser;
+    private ObservableCollection<BeatmapTimesPlayedModel>? _topSongsOfCurrentUser;
     private ObservableCollection<User>? _users;
     private List<ObservableValue>? _xpGainedGraphValues;
 
@@ -87,7 +88,7 @@ public class UserViewModel : BaseViewModel
         }
     }
 
-    public ObservableCollection<BeatmapUserValidityModel>? TopSongsOfCurrentUser
+    public ObservableCollection<BeatmapTimesPlayedModel>? TopSongsOfCurrentUser
     {
         get => _topSongsOfCurrentUser;
         set => this.RaiseAndSetIfChanged(ref _topSongsOfCurrentUser, value);
@@ -131,7 +132,7 @@ public class UserViewModel : BaseViewModel
             ReloadStats();
         }
     }
-
+    
     public UserViewModel(IPlayer player)
     {
         Player = player;
@@ -150,7 +151,9 @@ public class UserViewModel : BaseViewModel
     {
         Disposable.Create(() => { }).DisposeWith(disposables);
 
-        Users = (await ApiAsync.GetRequestAsync<List<User>>("users", "getUsersWithData")).ToObservableCollection();
+        Users = (await Locator.Current.GetService<NorthFox>().GetAllUsers())
+            ?.Select(x => new User(x))
+            .ToObservableCollection() ?? new ();
 
         Series = new ObservableCollection<ISeries>
         {
@@ -244,12 +247,12 @@ public class UserViewModel : BaseViewModel
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            var songs = await ApiAsync.GetBeatmapsPlayedByUser(SelectedUser.Name);
+            var stats = await Locator.Current.GetService<NorthFox>().GetBeatmapsPlayedByUser(SelectedUser.UniqueId);
 
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            TopSongsOfCurrentUser = songs.ToObservableCollection();
+            TopSongsOfCurrentUser = stats?.Beatmaps?.ToObservableCollection();
         }
         catch (OperationCanceledException)
         {
@@ -260,7 +263,7 @@ public class UserViewModel : BaseViewModel
 
     private async void LoadProfilePicture()
     {
-        if (SelectedUser == default || string.IsNullOrWhiteSpace(SelectedUser.Name))
+        if (SelectedUser == default || SelectedUser.UniqueId == Guid.Empty)
         {
             CurrentProfilePicture = default;
             return;
@@ -276,32 +279,12 @@ public class UserViewModel : BaseViewModel
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            var profilePicture = await ApiAsync.GetProfilePictureAsync(SelectedUser.Name);
+            var profilePicture = await Locator.Current.GetService<NorthFox>().GetProfilePictureAsync(SelectedUser.UniqueId);
 
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            if (string.IsNullOrWhiteSpace(profilePicture))
-            {
-                CurrentProfilePicture = default;
-                return;
-            }
-
-            await using var stream = new MemoryStream(Convert.FromBase64String(profilePicture));
-
-            try
-            {
-                var bitmap = new Bitmap(stream);
-
-                CurrentProfilePicture = bitmap;
-
-                Debug.WriteLine(bitmap.ToString());
-            }
-            catch (Exception)
-            {
-                CurrentProfilePicture = default;
-                Debug.WriteLine("Could not convert ProfilePicture MemoryStream to Bitmap");
-            }
+            CurrentProfilePicture = profilePicture;
         }
         catch (OperationCanceledException)
         {
@@ -328,7 +311,7 @@ public class UserViewModel : BaseViewModel
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            var banner = await ApiAsync.GetProfileBannerAsync(SelectedUser.CustomWebBackground);
+            var banner = await Locator.Current.GetService<NorthFox>().GetProfileBannerAsync(SelectedUser.CustomBannerUrl);
 
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
@@ -351,9 +334,9 @@ public class UserViewModel : BaseViewModel
 
     private async void LoadStats()
     {
-        if (SelectedUser == default || string.IsNullOrWhiteSpace(SelectedUser.Name)) return;
+        if (SelectedUser == default || SelectedUser.UniqueId == Guid.Empty) return;
 
-        var data = await ApiAsync.GetActivityOfUser(SelectedUser.Name);
+        var data = await Locator.Current.GetService<NorthFox>().GetActivityOfUser(SelectedUser.UniqueId);
 
         if (data == default) return;
 
@@ -365,10 +348,10 @@ public class UserViewModel : BaseViewModel
         foreach (var item in data)
             try
             {
-                XAxes.First().Labels?.Add(item.Item1);
+                XAxes.First().Labels?.Add(item.Date.ToString("MMMM yyyy"));
 
-                songsPlayedValues.Add(new ObservableValue(item.Item2));
-                xpGainedValues.Add(new ObservableValue(item.Item3));
+                songsPlayedValues.Add(new ObservableValue(item.SongsPlayed));
+                xpGainedValues.Add(new ObservableValue(item.XpGained));
             }
             catch (Exception e)
             {
@@ -384,43 +367,25 @@ public class UserViewModel : BaseViewModel
 
     public IEnumerable<IControl> LoadBadges(User? currentUser)
     {
+        return new List<IControl>();
+        
         if (currentUser == default) return default!;
 
         var badges = new List<MaterialIcon>();
 
         var size = 32;
 
-        if (currentUser.Role == UserRole.Developer)
-            badges.Add(new MaterialIcon
+        foreach (var badge in currentUser.Badges)
+        {
+            var materialIcon = new MaterialIcon
             {
-                Kind = MaterialIconKind.Xml,
+                Kind = (MaterialIconKind) badge.Icon,
                 Height = size,
-                Width = size
-            });
+                Width = size,
+            };
 
-        if (currentUser.IsDonator)
-            badges.Add(new MaterialIcon
-            {
-                Kind = MaterialIconKind.Heart,
-                Height = size,
-                Width = size
-            });
-
-        if (currentUser.Role == UserRole.Tester)
-            badges.Add(new MaterialIcon
-            {
-                Kind = MaterialIconKind.TestTube,
-                Height = size,
-                Width = size
-            });
-
-        if (currentUser.JoinDate < new DateTime(2019, 1, 1))
-            badges.Add(new MaterialIcon
-            {
-                Kind = MaterialIconKind.Creation,
-                Height = size,
-                Width = size
-            });
+            badges.Add(materialIcon);
+        }
 
         return badges;
     }

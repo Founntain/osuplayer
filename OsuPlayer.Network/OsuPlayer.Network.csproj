@@ -12,6 +12,7 @@
         <PackageReference Include="DiscordRichPresence" Version="1.1.1.14" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
         <PackageReference Include="Octokit" Version="4.0.1" />
+        <PackageReference Include="OsuPlayer.Api.Data" Version="1.0.1" />
     </ItemGroup>
 
     <ItemGroup>

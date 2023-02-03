@@ -2,33 +2,36 @@ using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using System.Timers;
 using OsuPlayer.Base.ViewModels;
+using OsuPlayer.Network.API.Service.Endpoints;
 using ReactiveUI;
+using Splat;
 
 namespace OsuPlayer.Views;
 
 public class StatisticsViewModel : BaseViewModel
 {
-    private int _beatmapsTracked;
-    private uint _communityLevel;
     private float _mbUsed;
-    private string _playerAge = string.Empty;
-    private TimeSpan _playerAgeTime;
-    private ulong _songsPlayed;
-
+    
     private Timer? _timer;
-    private uint _translators;
+    private TimeSpan _playerAgeTime;
+    
+    private string _playerAge = string.Empty;
 
-    private uint _users;
-    private ulong _xpEarned;
+    private ulong _users;
     private ulong _xpLeft;
+    private ulong _xpEarned;
+    private ulong _songsPlayed;
+    private ulong _translators;
+    private ulong _communityLevel;
+    private ulong _beatmapsTracked;
 
-    public uint Users
+    public ulong Users
     {
         get => _users;
         set => this.RaiseAndSetIfChanged(ref _users, value);
     }
 
-    public uint Translators
+    public ulong Translators
     {
         get => _translators;
         set => this.RaiseAndSetIfChanged(ref _translators, value);
@@ -46,7 +49,7 @@ public class StatisticsViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _xpEarned, value);
     }
 
-    public uint CommunityLevel
+    public ulong CommunityLevel
     {
         get => _communityLevel;
         set => this.RaiseAndSetIfChanged(ref _communityLevel, value);
@@ -58,7 +61,7 @@ public class StatisticsViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _xpLeft, value);
     }
 
-    public int BeatmapsTracked
+    public ulong BeatmapsTracked
     {
         get => _beatmapsTracked;
         set => this.RaiseAndSetIfChanged(ref _beatmapsTracked, value);
@@ -119,23 +122,23 @@ public class StatisticsViewModel : BaseViewModel
 
     private async Task UpdateApiStatistics()
     {
-        var statistics = await ApiAsync.GetApiStatistics();
+        var statistics = await Locator.Current.GetService<NorthFox>().GetApiStatistics();
 
-        Users = statistics.TotalUserCount;
-        Translators = statistics.TranslatorCount;
+        Users = statistics.TotalUsers;
+        Translators = statistics.TotalTranslators;
         SongsPlayed = statistics.TotalSongsPlayed;
-        XpEarned = statistics.CommunityTotalXp;
+        XpEarned = statistics.TotalCommunityXp;
         CommunityLevel = statistics.CommunityLevel;
         XpLeft = statistics.CommunityXpLeft;
     }
 
     private async Task UpdateStorageAmount()
     {
-        MbUsed = await ApiAsync.GetStorageAmount();
+        MbUsed = (float) await Locator.Current.GetService<NorthFox>().GetStorageAmount();
     }
 
     private async Task UpdateBeatmapCount()
     {
-        BeatmapsTracked = await ApiAsync.GetBeatmapsCount();
+        BeatmapsTracked = (await Locator.Current.GetService<NorthFox>().GetApiStatistics()).TotalBeatmaps;
     }
 }
