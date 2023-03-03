@@ -214,6 +214,7 @@ public class SettingsViewModel : BaseViewModel
         set
         {
             this.RaiseAndSetIfChanged(ref _selectedShuffleAlgorithm, value);
+            this.RaisePropertyChanged(nameof(SelectedShuffleAlgorithmInfoText));
 
             _shuffleServiceProvider?.SetShuffleImpl(value);
         }
