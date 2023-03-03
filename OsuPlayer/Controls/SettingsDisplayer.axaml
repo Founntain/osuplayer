@@ -1,0 +1,25 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="OsuPlayer.Controls.SettingsDisplayer"
+             >
+    <UserControl.Template>
+        <ControlTemplate>
+            <Border Background="{DynamicResource AcrylicBaseColor}" CornerRadius="{TemplateBinding CornerBehaviour}" Padding="20">
+                <Grid ColumnDefinitions="Auto, *, Auto">
+                    <avalonia:MaterialIcon Kind="{TemplateBinding Icon}" Height="32" Width="32" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10 0 0 0">
+                        <TextBlock Text="{TemplateBinding Title}" FontSize="20" FontWeight="{DynamicResource BiggerFontWeight}"/>
+                        <TextBlock Text="{TemplateBinding Description}" FontSize="14" FontWeight="{DynamicResource SmallerFontWeight}" />
+                    </StackPanel>
+                    
+                    <ContentControl Grid.Column="2" Content="{TemplateBinding InteractionControl}" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                </Grid>
+            </Border>
+        </ControlTemplate>
+    </UserControl.Template>
+</UserControl>
