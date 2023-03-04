@@ -12,7 +12,7 @@
                 <Grid ColumnDefinitions="Auto, *">
                     <avalonia:MaterialIcon Kind="{TemplateBinding Icon}" Height="32" Width="32" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                 
-                    <TextBlock Grid.Column="1" Text="{TemplateBinding Title}" FontSize="32" FontWeight="{DynamicResource BiggerFontWeight}" TextDecorations="Underline" Margin="10 0 0 0"/>
+                    <TextBlock Grid.Column="1" Text="{TemplateBinding Title}" FontSize="32" FontWeight="{DynamicResource BiggerFontWeight}" Margin="10 0 0 0"/>
                 </Grid>
             </Border>
         </ControlTemplate>
