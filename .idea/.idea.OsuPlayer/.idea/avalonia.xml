@@ -6,6 +6,9 @@
         <entry key="OsuPlayer.CrashHandler/App.axaml" value="OsuPlayer.CrashHandler/OsuPlayer.CrashHandler.csproj" />
         <entry key="OsuPlayer.CrashHandler/MainWindow.axaml" value="OsuPlayer.CrashHandler/OsuPlayer.CrashHandler.csproj" />
         <entry key="OsuPlayer/App.axaml" value="OsuPlayer/OsuPlayer.csproj" />
+        <entry key="OsuPlayer/Controls/OsuPlayerComboBox.axaml" value="OsuPlayer/OsuPlayer.csproj" />
+        <entry key="OsuPlayer/Controls/SettingsDisplayer.axaml" value="OsuPlayer/OsuPlayer.csproj" />
+        <entry key="OsuPlayer/Controls/SettingsTitleDisplayer.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/Styles/Accents/AccentColors.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/Styles/Accents/Base.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/Styles/Accents/BaseDark.axaml" value="OsuPlayer/OsuPlayer.csproj" />

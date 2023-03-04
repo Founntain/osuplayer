@@ -120,6 +120,10 @@
         <Compile Update="Views\SymmetricalViewModel.cs">
             <DependentUpon>SymmetricalView.axaml</DependentUpon>
         </Compile>
+        <Compile Update="Controls\SettingsTitleDisplayer.axaml.cs">
+          <DependentUpon>SettingsTitleDisplayer.axaml</DependentUpon>
+          <SubType>Code</SubType>
+        </Compile>
     </ItemGroup>
     <ItemGroup>
         <UpToDateCheckInput Remove="Resources\profiles\cesan.jpg" />

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
@@ -165,6 +166,14 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
             return;
         }
 
+        if (!string.IsNullOrWhiteSpace(ViewModel.NewUsername) && !Regex.IsMatch(ViewModel.NewUsername, "^[a-zA-Z0-9]*$"))
+        {
+            await MessageBox.ShowDialogAsync(_mainWindow,
+                "Your newly entered username can only contain Letters and Numbers!");
+
+            return;
+        }
+        
         var editUserModel = new EditUserModel
         {
             User = ViewModel.CurrentUser,

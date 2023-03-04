@@ -1,0 +1,32 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="OsuPlayer.Controls.SettingsTitleDisplayer">
+    <UserControl.Template>
+        <ControlTemplate>
+            <Border Background="{DynamicResource AcrylicBaseColor}" Padding="20">
+                <Grid ColumnDefinitions="Auto, *">
+                    <avalonia:MaterialIcon Kind="{TemplateBinding Icon}" Height="32" Width="32" Grid.Column="0"
+                                           VerticalAlignment="Center" HorizontalAlignment="Left" />
+
+                    <TextBlock Grid.Column="1" Text="{TemplateBinding Title}" FontSize="32"
+                               FontWeight="{DynamicResource BiggerFontWeight}" Margin="10 0 0 0" />
+                </Grid>
+            </Border>
+        </ControlTemplate>
+    </UserControl.Template>
+    <UserControl.Styles>
+        <Style Selector=":first-child > Border">
+            <Setter Property="CornerRadius" Value="15 15 0 0" />
+        </Style>
+        <Style Selector=":last-child > Border">
+            <Setter Property="CornerRadius" Value="0 0 15 15" />
+        </Style>
+        <Style Selector=":only-child > Border">
+            <Setter Property="CornerRadius" Value="15" />
+        </Style>
+    </UserControl.Styles>
+</UserControl>
