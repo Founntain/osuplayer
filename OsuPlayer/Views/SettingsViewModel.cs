@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Base.ViewModels;
+using OsuPlayer.Controls.Interfaces;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Modules.Audio.Interfaces;
@@ -286,7 +287,16 @@ public class SettingsViewModel : BaseViewModel
                 if (categoryFound)
                 {
                     category.IsVisible = true;
-                    foreach (var setting in settings) setting.IsVisible = true;
+                    foreach (var setting in settings)
+                    {
+                        setting.IsVisible = true;
+                    }
+                    
+                    foreach (var setting in settings)
+                    {
+                        if (setting is ISettingsDisplayer settingsDisplayer)
+                            settingsDisplayer.RefreshCorners();
+                    }
 
                     continue;
                 }
@@ -297,7 +307,14 @@ public class SettingsViewModel : BaseViewModel
                 {
                     setting.IsVisible = searchQs.All(x =>
                         setting.Name?.Contains(x, StringComparison.OrdinalIgnoreCase) ?? false);
+
                     foundAnySettings = foundAnySettings || setting.IsVisible;
+                }
+                
+                foreach (var setting in settings)
+                {
+                    if (setting is ISettingsDisplayer settingsDisplayer)
+                        settingsDisplayer.RefreshCorners();
                 }
 
                 category.IsVisible = foundAnySettings;

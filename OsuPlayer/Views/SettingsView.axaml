@@ -32,156 +32,192 @@
                 <Grid RowDefinitions="Auto" Margin="10" Name="GeneralSettings">
 
                     <StackPanel Spacing="1" Margin="10" Name="GeneralSettingsPanel">
-                        <controls:SettingsTitleDisplayer Title="General Settings" Icon="Cog" CornerBehaviour="15 15 0 0" />
-                        
-                        <controls:SettingsDisplayer Name="ImportOsuSongs" Title="Import osu! songs" Description="Import your osu! songs via osu!.db (stable) or your client.realm (lazer)" Icon="FileImport" >
-                    
+                        <controls:SettingsTitleDisplayer Title="General Settings" Icon="Cog" />
+
+                        <controls:SettingsDisplayer Name="ImportOsuSongs" Title="Import osu! songs"
+                                                    Description="Import your osu! songs via osu!.db (stable) or your client.realm (lazer)"
+                                                    Icon="FileImport">
+
                             <controls:SettingsDisplayer.InteractionControl>
-                                <Button Content="import osu! songs" Click="ImportSongsClick" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                                <Button Content="import osu! songs" Click="ImportSongsClick"
+                                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
                             </controls:SettingsDisplayer.InteractionControl>
-                    
+
                         </controls:SettingsDisplayer>
 
                         <!-- <StackPanel Spacing="5" Name="ImportOsuSongs"> -->
                         <!--     <TextBlock Text="{Binding OsuLocation}" /> -->
                         <!--      -->
                         <!-- </StackPanel> -->
-                        
-                        <controls:SettingsDisplayer Name="ImportCollections" Title="Import osu! collections" Description="Import your osu! collections as playlists" Icon="TableImport">
-                    
+
+                        <controls:SettingsDisplayer Name="ImportCollections" Title="Import osu! collections"
+                                                    Description="Import your osu! collections as playlists"
+                                                    Icon="TableImport">
+
                             <controls:SettingsDisplayer.InteractionControl>
                                 <Button Content="start import" Click="ImportCollectionsClick"
                                         HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
                             </controls:SettingsDisplayer.InteractionControl>
-                    
+
                         </controls:SettingsDisplayer>
-                        
-                        <controls:SettingsDisplayer Name="UpdateChannel" Title="Update Channel" Description="Which update channel to use. This settings requires a restart" Icon="DownloadNetwork">
-                    
+
+                        <controls:SettingsDisplayer Name="UpdateChannel" Title="Update Channel"
+                                                    Description="Which update channel to use. This settings requires a restart"
+                                                    Icon="DownloadNetwork">
+
                             <controls:SettingsDisplayer.InteractionControl>
-                                <ComboBox SelectedItem="{Binding SelectedReleaseChannel}" Items="{Binding ReleaseChannels}"
+                                <ComboBox SelectedItem="{Binding SelectedReleaseChannel}"
+                                          Items="{Binding ReleaseChannels}"
                                           HorizontalAlignment="Stretch" />
                             </controls:SettingsDisplayer.InteractionControl>
-                    
+
                         </controls:SettingsDisplayer>
-                        
-                        <controls:SettingsDisplayer Name="StartupSong" Title="Startup song" Description="Select what song should be played when the application started" Icon="PlayArrow" >
-                    
+
+                        <controls:SettingsDisplayer Name="StartupSong" Title="Startup song"
+                                                    Description="Select what song should be played when the application started"
+                                                    Icon="PlayArrow">
+
                             <controls:SettingsDisplayer.InteractionControl>
                                 <ComboBox SelectedItem="{Binding SelectedStartupSong}" Items="{Binding StartupSongs}"
                                           HorizontalAlignment="Stretch" />
                             </controls:SettingsDisplayer.InteractionControl>
-                    
+
                         </controls:SettingsDisplayer>
-                        
-                        <controls:SettingsDisplayer Name="SongsSortingMode" Title="Song Sorting Mode" Description="Select in which order the songs should be sorted in your song list" Icon="SortVariant" >
-                    
+
+                        <controls:SettingsDisplayer Name="SongsSortingMode" Title="Song Sorting Mode"
+                                                    Description="Select in which order the songs should be sorted in your song list"
+                                                    Icon="SortVariant">
+
                             <controls:SettingsDisplayer.InteractionControl>
                                 <ComboBox SelectedItem="{Binding SelectedSortingMode}" Items="{Binding SortingModes}"
                                           HorizontalAlignment="Stretch" />
                             </controls:SettingsDisplayer.InteractionControl>
-                    
+
                         </controls:SettingsDisplayer>
-                        
-                        <controls:SettingsDisplayer Name="ShuffleAlgorithm" Title="Shuffle Algorithm" Description="{Binding SelectedShuffleAlgorithmInfoText}" Icon="ShuffleVariant" >
-                    
+
+                        <controls:SettingsDisplayer Name="ShuffleAlgorithm" Title="Shuffle Algorithm"
+                                                    Description="{Binding SelectedShuffleAlgorithmInfoText}"
+                                                    Icon="ShuffleVariant">
+
                             <controls:SettingsDisplayer.InteractionControl>
-                                <ComboBox SelectedItem="{Binding SelectedShuffleAlgorithm}" Items="{Binding ShuffleAlgorithms}" HorizontalAlignment="Stretch" />
+                                <ComboBox SelectedItem="{Binding SelectedShuffleAlgorithm}"
+                                          Items="{Binding ShuffleAlgorithms}" HorizontalAlignment="Stretch" />
                             </controls:SettingsDisplayer.InteractionControl>
-                    
+
                         </controls:SettingsDisplayer>
-                        
-                        <controls:SettingsDisplayer Name="BlacklistSkip" Title="Blacklist skipping" Description="Enable if you want that songs that are on your blacklist get automatically skipped" Icon="FilterList" >
-                    
+
+                        <controls:SettingsDisplayer Name="BlacklistSkip" Title="Blacklist skipping"
+                                                    Description="Enable if you want that songs that are on your blacklist get automatically skipped"
+                                                    Icon="FilterList">
+
                             <controls:SettingsDisplayer.InteractionControl>
                                 <ToggleSwitch IsChecked="{Binding BlacklistSkip}" />
                             </controls:SettingsDisplayer.InteractionControl>
-                    
+
                         </controls:SettingsDisplayer>
 
-                        <controls:SettingsDisplayer Name="PlaylistEnableOnPlay" Title="Enable playlist mode on song play" Description="Enable if you want playlist mode to be enabled when you play a song directly from the playlist viewer." Icon="PlaylistPlay" >
-                    
+                        <controls:SettingsDisplayer Name="PlaylistEnableOnPlay"
+                                                    Title="Enable playlist mode on song play"
+                                                    Description="Enable if you want playlist mode to be enabled when you play a song directly from the playlist viewer."
+                                                    Icon="PlaylistPlay">
+
                             <controls:SettingsDisplayer.InteractionControl>
                                 <ToggleSwitch IsChecked="{Binding PlaylistEnableOnPlay}" />
                             </controls:SettingsDisplayer.InteractionControl>
-                    
+
                         </controls:SettingsDisplayer>
-                        
-                        <controls:SettingsDisplayer Name="UseDiscordRpc" Title="Enable Discord Rich Presence" Description="Enable if you want to display your current playing song in your Discord Status" Icon="Share" CornerBehaviour="0 0 15 15" >
-                    
+
+                        <controls:SettingsDisplayer Name="UseDiscordRpc" Title="Enable Discord Rich Presence"
+                                                    Description="Enable if you want to display your current playing song in your Discord Status"
+                                                    Icon="Share">
+
                             <controls:SettingsDisplayer.InteractionControl>
                                 <ToggleSwitch IsChecked="{Binding UseDiscordRpc}" />
                             </controls:SettingsDisplayer.InteractionControl>
-                    
+
                         </controls:SettingsDisplayer>
-                        
+
                     </StackPanel>
                 </Grid>
 
                 <Grid RowDefinitions="Auto" Margin="10" Name="VisualSettings">
 
                     <StackPanel Margin="10" Spacing="1" Name="VisualSettingsPanel">
-                        <controls:SettingsTitleDisplayer Title="Visual Settings" Icon="Shimmer" CornerBehaviour="15 15 0 0" />
+                        <controls:SettingsTitleDisplayer Title="Visual Settings" Icon="Shimmer" />
 
-                        <controls:SettingsDisplayer Name="Font" Title="UI Font" Description="Select the font you want to use as Interface Font. We recommend Montserrat" Icon="FormatFont" >
-                    
+                        <controls:SettingsDisplayer Name="Font" Title="UI Font"
+                                                    Description="Select the font you want to use as Interface Font. We recommend Montserrat"
+                                                    Icon="FormatFont">
+
                             <controls:SettingsDisplayer.InteractionControl>
-                                <AutoCompleteBox SelectedItem="{Binding SelectedFont}" MinimumPrefixLength="0" Items="{Binding Fonts}" HorizontalAlignment="Stretch" />
+                                <AutoCompleteBox SelectedItem="{Binding SelectedFont}" MinimumPrefixLength="0"
+                                                 Items="{Binding Fonts}" HorizontalAlignment="Stretch" />
                             </controls:SettingsDisplayer.InteractionControl>
-                    
+
                         </controls:SettingsDisplayer>
-                        
-                        <controls:SettingsDisplayer Name="FontWeightSelect" Title="UI Font-Weight" Description="Select the font Weight you want to use as Interface Font. We recommend something around SemiBold" Icon="FormatSize" >
-                    
+
+                        <controls:SettingsDisplayer Name="FontWeightSelect" Title="UI Font-Weight"
+                                                    Description="Select the font Weight you want to use as Interface Font. We recommend something around SemiBold"
+                                                    Icon="FormatSize">
+
                             <controls:SettingsDisplayer.InteractionControl>
-                                <ComboBox SelectedItem="{Binding SelectedFontWeight}" Items="{Binding AvailableFontWeights}" HorizontalAlignment="Stretch" />
+                                <ComboBox SelectedItem="{Binding SelectedFontWeight}"
+                                          Items="{Binding AvailableFontWeights}" HorizontalAlignment="Stretch" />
                             </controls:SettingsDisplayer.InteractionControl>
-                    
+
                         </controls:SettingsDisplayer>
-                        
-                        <controls:SettingsDisplayer Name="WindowBlurMethod" Title="Window Blur Method" Description="The Blur Method that should be used for the window background" Icon="Blur" >
-                    
+
+                        <controls:SettingsDisplayer Name="WindowBlurMethod" Title="Window Blur Method"
+                                                    Description="The Blur Method that should be used for the window background"
+                                                    Icon="Blur">
+
                             <controls:SettingsDisplayer.InteractionControl>
-                                <ComboBox SelectedItem="{Binding SelectedTransparencyLevel}" Items="{Binding WindowTransparencyLevels}" HorizontalAlignment="Stretch" />
+                                <ComboBox SelectedItem="{Binding SelectedTransparencyLevel}"
+                                          Items="{Binding WindowTransparencyLevels}" HorizontalAlignment="Stretch" />
                             </controls:SettingsDisplayer.InteractionControl>
-                    
+
                         </controls:SettingsDisplayer>
-                        
-                        <controls:SettingsDisplayer Name="WindowBackgroundColor" Title="Window Background Color" Description="The background color of the window" Icon="PaletteSwatch" >
-                    
+
+                        <controls:SettingsDisplayer Name="WindowBackgroundColor" Title="Window Background Color"
+                                                    Description="The background color of the window"
+                                                    Icon="PaletteSwatch">
+
                             <controls:SettingsDisplayer.InteractionControl>
                                 <AutoCompleteBox SelectedItem="{Binding SelectedBackgroundColor}"
                                                  Watermark="Type to search for color" FilterMode="ContainsOrdinal"
                                                  MinimumPrefixLength="0"
                                                  Items="{Binding KnownColors}" HorizontalAlignment="Stretch" />
                             </controls:SettingsDisplayer.InteractionControl>
-                    
+
                         </controls:SettingsDisplayer>
-                        
-                        <controls:SettingsDisplayer Name="AccentColor" Title="Accent Color" Description="Accent color you want to use" Icon="Palette" CornerBehaviour="0 0 15 15" >
-                    
+
+                        <controls:SettingsDisplayer Name="AccentColor" Title="Accent Color"
+                                                    Description="Accent color you want to use" Icon="Palette">
+
                             <controls:SettingsDisplayer.InteractionControl>
                                 <AutoCompleteBox SelectedItem="{Binding SelectedAccentColor}"
                                                  Watermark="Type to search for color" FilterMode="ContainsOrdinal"
                                                  MinimumPrefixLength="0" Items="{Binding KnownColors}"
                                                  HorizontalAlignment="Stretch" />
                             </controls:SettingsDisplayer.InteractionControl>
-                    
+
                         </controls:SettingsDisplayer>
                     </StackPanel>
                 </Grid>
-                
+
                 <Grid RowDefinitions="Auto" Margin="10" Name="AudioSettings">
 
                     <StackPanel Margin="10" Spacing="1" Name="AudioSettingsPanel">
-                        <controls:SettingsTitleDisplayer Title="Audio Settings" Icon="Speaker" CornerBehaviour="15 15 0 0" />
+                        <controls:SettingsTitleDisplayer Title="Audio Settings" Icon="Speaker" />
 
-                        <controls:SettingsDisplayer Name="EqualizerSettings" Title="Equalizer" Description="Here you can tune your audio frequencies to your liking" Icon="Equalizer" CornerBehaviour="0 0 15 15" >
-                    
+                        <controls:SettingsDisplayer Name="EqualizerSettings" Title="Equalizer"
+                                                    Description="Here you can tune your audio frequencies to your liking">
+
                             <controls:SettingsDisplayer.InteractionControl>
-                                <Button Content="open equalizer" Click="OpenEqClick" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                                <Button Content="open equalizer" Click="OpenEqClick" HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Center" />
                             </controls:SettingsDisplayer.InteractionControl>
-                    
+
                         </controls:SettingsDisplayer>
                     </StackPanel>
                 </Grid>
@@ -189,14 +225,16 @@
                 <Grid RowDefinitions="Auto" Margin="10" Name="UserSettings">
 
                     <StackPanel Margin="10" Spacing="1" Name="UserSettingsPanel">
-                        <controls:SettingsTitleDisplayer Title="User Settings" Icon="ShieldAccount" CornerBehaviour="15 15 0 0" />
+                        <controls:SettingsTitleDisplayer Title="User Settings" Icon="ShieldAccount" />
 
-                        <controls:SettingsDisplayer Name="Login" Title="Log in" Description="{Binding CurrentUser}" Icon="Login" CornerBehaviour="0 0 15 15" >
-                    
+                        <controls:SettingsDisplayer Name="Login" Title="Log in" Description="{Binding CurrentUser}"
+                                                    Icon="Login">
+
                             <controls:SettingsDisplayer.InteractionControl>
-                                <Button Content="log in" Click="LoginClick" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                                <Button Content="log in" Click="LoginClick" HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Center" />
                             </controls:SettingsDisplayer.InteractionControl>
-                    
+
                         </controls:SettingsDisplayer>
                     </StackPanel>
                 </Grid>
@@ -204,8 +242,8 @@
                 <Grid RowDefinitions="Auto" Margin="10" Name="PatchNotesSettings">
 
                     <StackPanel Margin="10" Spacing="1" Name="PatchNotesSettingsPanel">
-                        
-                        <controls:SettingsTitleDisplayer Title="Patch notes" Icon="Notebook" CornerBehaviour="15 15 0 0" />
+
+                        <controls:SettingsTitleDisplayer Title="Patch notes" Icon="Notebook" />
 
                         <Border Background="{DynamicResource AcrylicBaseColor}" CornerRadius="0 0 15 15" Padding="20">
                             <avalonia:MarkdownScrollViewer Markdown="{Binding Patchnotes}">
@@ -228,33 +266,39 @@
                 <Grid RowDefinitions="Auto" Margin="10" Name="HelpAndFeedbackSettings">
 
                     <StackPanel Margin="10" Spacing="1" Name="HelpAndFeedbackSettingsPanel">
-                        <controls:SettingsTitleDisplayer Title="Help and Feedback" Icon="HelpRhombus" CornerBehaviour="15 15 0 0" />
-                        
-                        <controls:SettingsDisplayer Title="Report bug or request feature" Description="Head to our GitHub to report a bugs or reuqest features" Icon="Bug" >
-                    
+                        <controls:SettingsTitleDisplayer Title="Help and Feedback" Icon="HelpRhombus" />
+
+                        <controls:SettingsDisplayer Title="Report bug or request feature"
+                                                    Description="Head to our GitHub to report a bugs or reuqest features"
+                                                    Icon="Bug">
+
                             <controls:SettingsDisplayer.InteractionControl>
                                 <Button Content="report a bug or request a feature" Click="ReportBug_OnClick"
                                         HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
                             </controls:SettingsDisplayer.InteractionControl>
-                    
+
                         </controls:SettingsDisplayer>
-                        
-                        <controls:SettingsDisplayer Title="osu!player Discord Server" Description="Join our Discord server to ask question, dev updates and other stuff" Icon="Bullhorn" >
-                    
+
+                        <controls:SettingsDisplayer Title="osu!player Discord Server"
+                                                    Description="Join our Discord server to ask question, dev updates and other stuff"
+                                                    Icon="Bullhorn">
+
                             <controls:SettingsDisplayer.InteractionControl>
                                 <Button Content="join the discord server" Click="JoinDiscord_OnClick"
                                         HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
                             </controls:SettingsDisplayer.InteractionControl>
-                    
+
                         </controls:SettingsDisplayer>
-                        
-                        <controls:SettingsDisplayer Title="Contact us" Description="Here you can find our contact information if you need to contact us specifically" Icon="Email" CornerBehaviour="0 0 15 15" >
-                    
+
+                        <controls:SettingsDisplayer Title="Contact us"
+                                                    Description="Here you can find our contact information if you need to contact us specifically"
+                                                    Icon="Email">
+
                             <controls:SettingsDisplayer.InteractionControl>
                                 <Button Content="contact us" Click="ContactUs_OnClick" HorizontalAlignment="Stretch"
                                         HorizontalContentAlignment="Center" />
                             </controls:SettingsDisplayer.InteractionControl>
-                    
+
                         </controls:SettingsDisplayer>
                     </StackPanel>
                 </Grid>
@@ -262,8 +306,8 @@
                 <Grid RowDefinitions="Auto" Margin="10" Name="ContributeSettings">
 
                     <StackPanel Margin="10" Spacing="1" Name="ContributePanel">
-                        <controls:SettingsTitleDisplayer Title="Contributers" Icon="AccountStar" CornerBehaviour="15 15 0 0" />
-                        
+                        <controls:SettingsTitleDisplayer Title="Contributers" Icon="AccountStar" />
+
                         <Border Background="{DynamicResource AcrylicBaseColor}" Padding="20">
                             <ItemsRepeater Items="{Binding Contributors}">
                                 <ItemsRepeater.Layout>
@@ -273,7 +317,8 @@
                                 <ItemsRepeater.ItemTemplate>
                                     <DataTemplate DataType="data:OsuPlayerContributor">
                                         <StackPanel Orientation="Horizontal" Spacing="5">
-                                            <Border CornerRadius="100" Width="50" Height="50" VerticalAlignment="Center"
+                                            <Border CornerRadius="100" Width="50" Height="50"
+                                                    VerticalAlignment="Center"
                                                     BorderBrush="White" BorderThickness="2">
                                                 <Border.Background>
                                                     <ImageBrush Source="{Binding Avatar}"
@@ -287,7 +332,7 @@
                                 </ItemsRepeater.ItemTemplate>
                             </ItemsRepeater>
                         </Border>
-                        
+
                         <Border Background="{DynamicResource AcrylicBaseColor}" CornerRadius="0 0 15 15" Padding="20">
                             <TextBlock
                                 Text="Want to help or implement something? Head to our repository for project building info and guidelines. We would be happy to see your Pull-Request!"
