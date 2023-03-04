@@ -6,5 +6,5 @@
 public static class Constants
 {
     public static bool OfflineMode { get; set; }
-    public static bool Localhost { get; set; } = true;
+    public static bool Localhost { get; set; } = false;
 }
