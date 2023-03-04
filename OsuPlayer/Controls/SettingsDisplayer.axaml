@@ -10,10 +10,10 @@
         <ControlTemplate>
             <Border Background="{DynamicResource AcrylicBaseColor}" CornerRadius="{TemplateBinding CornerBehaviour}" Padding="20">
                 <Grid ColumnDefinitions="Auto, *, Auto">
-                    <avalonia:MaterialIcon Kind="{TemplateBinding Icon}" Height="32" Width="32" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                    <avalonia:MaterialIcon Kind="{TemplateBinding Icon}" Height="32" Width="32" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" />
                 
                     <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10 0 0 0">
-                        <TextBlock Text="{TemplateBinding Title}" FontSize="20" FontWeight="{DynamicResource BiggerFontWeight}"/>
+                        <TextBlock Text="{TemplateBinding Title}" FontSize="20" FontWeight="{DynamicResource BiggerFontWeight}" />
                         <TextBlock Text="{TemplateBinding Description}" FontSize="14" FontWeight="{DynamicResource SmallerFontWeight}" />
                     </StackPanel>
                     

@@ -10,7 +10,7 @@ namespace OsuPlayer.Network.API.Service;
 public abstract class AbstractApiBase
 {
     protected string Url => Constants.Localhost
-        ? "http://localhost:7096/"
+        ? "https://localhost:7096/"
         : "https://sandbox.founntain.dev/";
         // : "https://osuplayer.founntain.dev/api/";
     
