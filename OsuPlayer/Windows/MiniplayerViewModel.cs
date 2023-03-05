@@ -171,7 +171,7 @@ public class MiniplayerViewModel : BaseWindowViewModel
             }
 
             CurrentSongImage = null;
-        }, true);
+        }, true, true);
 
         Player.SelectedPlaylist.BindValueChanged(_ =>
         {
