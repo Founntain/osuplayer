@@ -11,8 +11,8 @@ public abstract class AbstractApiBase
 {
     protected string Url => Constants.Localhost
         ? "https://localhost:7096/"
-        : "https://sandbox.founntain.dev/";
-        // : "https://osuplayer.founntain.dev/api/";
+        // : "https://sandbox.founntain.dev/";
+        : "https://osuplayer.founntain.dev/";
     
     protected static CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
     
