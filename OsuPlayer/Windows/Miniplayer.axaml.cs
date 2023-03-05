@@ -4,11 +4,13 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.Extensions;
 using OsuPlayer.Modules.Audio.Interfaces;
+using ReactiveUI;
 
 namespace OsuPlayer.Windows;
 
@@ -34,8 +36,6 @@ public partial class Miniplayer : ReactiveWindow<MiniplayerViewModel>
         _mainWindow = mainWindow;
 
         DataContext = new MiniplayerViewModel(player, engine);
-
-        LoadSettings();
 
 #if DEBUG
         this.AttachDevTools();
