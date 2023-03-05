@@ -4,11 +4,13 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.Extensions;
 using OsuPlayer.Modules.Audio.Interfaces;
+using ReactiveUI;
 
 namespace OsuPlayer.Windows;
 
@@ -27,15 +29,15 @@ public partial class Miniplayer : ReactiveWindow<MiniplayerViewModel>
 #endif
     }
 
-    public Miniplayer(MainWindow mainWindow, IPlayer player, IAudioEngine engine)
+    public Miniplayer(MainWindow mainWindow, IPlayer player, IAudioEngine engine, Bitmap? currentSongBackground)
     {
         InitializeComponent();
 
         _mainWindow = mainWindow;
 
         DataContext = new MiniplayerViewModel(player, engine);
-
-        LoadSettings();
+        
+        LoadBackground(currentSongBackground);
 
 #if DEBUG
         this.AttachDevTools();
@@ -47,6 +49,12 @@ public partial class Miniplayer : ReactiveWindow<MiniplayerViewModel>
         using var config = new Config();
 
         Background = new SolidColorBrush(config.Container.BackgroundColor.ToColor());
+    }
+
+    private void LoadBackground(Bitmap? currentSongBackground)
+    {
+        ViewModel.CurrentSongImage = currentSongBackground;
+        ViewModel.RaisePropertyChanged(nameof(ViewModel.CurrentSongImage));
     }
 
     private void InitializeComponent()

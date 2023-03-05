@@ -155,7 +155,7 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
         if (_mainWindow.Miniplayer != null)
             return;
 
-        _mainWindow.Miniplayer = new Miniplayer(_mainWindow, ViewModel.Player, Locator.Current.GetRequiredService<IAudioEngine>());
+        _mainWindow.Miniplayer = new Miniplayer(_mainWindow, ViewModel.Player, Locator.Current.GetRequiredService<IAudioEngine>(), ViewModel.CurrentSongImage);
 
         _mainWindow.Miniplayer.Show();
 
