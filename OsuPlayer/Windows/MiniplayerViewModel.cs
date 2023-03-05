@@ -12,7 +12,7 @@ namespace OsuPlayer.Windows;
 
 public class MiniplayerViewModel : BaseWindowViewModel
 {
-    private readonly Bindable<IMapEntry?> _currentSong = new();
+    public readonly Bindable<IMapEntry?> CurrentSong = new();
 
     private readonly Bindable<bool> _isPlaying = new();
     private readonly Bindable<RepeatMode> _isRepeating = new();
@@ -27,13 +27,13 @@ public class MiniplayerViewModel : BaseWindowViewModel
 
     private double _playbackSpeed;
 
-    public bool IsCurrentSongInPlaylist => _currentSong.Value != null
+    public bool IsCurrentSongInPlaylist => CurrentSong.Value != null
                                            && Player.SelectedPlaylist.Value != null
-                                           && Player.SelectedPlaylist.Value.Songs.Contains(_currentSong.Value.Hash);
+                                           && Player.SelectedPlaylist.Value.Songs.Contains(CurrentSong.Value.Hash);
 
     public bool IsAPlaylistSelected => Player.SelectedPlaylist.Value != default;
 
-    public bool IsCurrentSongOnBlacklist => new Blacklist().Contains(_currentSong.Value);
+    public bool IsCurrentSongOnBlacklist => new Blacklist().Contains(CurrentSong.Value);
 
     public double Volume
     {
@@ -99,7 +99,7 @@ public class MiniplayerViewModel : BaseWindowViewModel
 
     public bool IsPlaying => _isPlaying.Value;
 
-    public string TitleText => _currentSong.Value?.Title ?? "No song is playing";
+    public string TitleText => CurrentSong.Value?.Title ?? "No song is playing";
 
     public RepeatMode IsRepeating
     {
@@ -111,7 +111,7 @@ public class MiniplayerViewModel : BaseWindowViewModel
         }
     }
 
-    public string ArtistText => _currentSong.Value?.Artist ?? "please select from song list";
+    public string ArtistText => CurrentSong.Value?.Artist ?? "please select from song list";
 
     public string SongText => $"{ArtistText} - {TitleText}";
 
@@ -139,8 +139,8 @@ public class MiniplayerViewModel : BaseWindowViewModel
         _songLength.BindTo(bassEngine.ChannelLength);
         _songLength.BindValueChanged(_ => this.RaisePropertyChanged(nameof(SongLength)));
 
-        _currentSong.BindTo(Player.CurrentSong);
-        _currentSong.BindValueChanged(_ =>
+        CurrentSong.BindTo(Player.CurrentSong);
+        CurrentSong.BindValueChanged(_ =>
         {
             this.RaisePropertyChanged(nameof(TitleText));
             this.RaisePropertyChanged(nameof(ArtistText));
@@ -171,7 +171,7 @@ public class MiniplayerViewModel : BaseWindowViewModel
             }
 
             CurrentSongImage = null;
-        }, true);
+        }, true, true);
 
         Player.SelectedPlaylist.BindValueChanged(_ =>
         {

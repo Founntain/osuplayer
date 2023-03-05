@@ -1,14 +1,19 @@
-﻿using Avalonia;
+﻿using System.ComponentModel;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using OsuPlayer.Base.ViewModels;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.Extensions;
+using OsuPlayer.IO.Storage.Blacklist;
+using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules.Audio.Interfaces;
+using ReactiveUI;
 
 namespace OsuPlayer.Windows;
 
@@ -34,8 +39,6 @@ public partial class Miniplayer : ReactiveWindow<MiniplayerViewModel>
         _mainWindow = mainWindow;
 
         DataContext = new MiniplayerViewModel(player, engine);
-
-        LoadSettings();
 
 #if DEBUG
         this.AttachDevTools();
@@ -110,5 +113,43 @@ public partial class Miniplayer : ReactiveWindow<MiniplayerViewModel>
         _mainWindow.Miniplayer = null;
 
         _mainWindow.WindowState = WindowState.Normal;
+    }
+    
+    private async void Blacklist_OnClick(object? sender, RoutedEventArgs e)
+    {
+        await using (var blacklist = new Blacklist())
+        {
+            await blacklist.ReadAsync();
+
+            var currentHash = ViewModel.CurrentSong.Value?.Hash;
+
+            if (blacklist.Contains(ViewModel.CurrentSong.Value))
+            {
+                blacklist.Container.Songs.Remove(currentHash);
+            }
+            else
+            {
+                blacklist.Container.Songs.Add(currentHash);
+
+                if (ViewModel.Player.BlacklistSkip.Value)
+                    ViewModel.Player.NextSong(PlayDirection.Forward);
+            }
+        }
+
+        ViewModel.Player.TriggerBlacklistChanged(new PropertyChangedEventArgs("Black"));
+        ViewModel.RaisePropertyChanged(nameof(ViewModel.IsCurrentSongOnBlacklist));
+        ViewModel.RaisePropertyChanged(nameof(_mainWindow.ViewModel.PlayerControl.IsCurrentSongOnBlacklist));
+    }
+    
+    private async void Favorite_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (ViewModel.Player.CurrentSong.Value != null)
+        {
+            await PlaylistManager.ToggleSongOfCurrentPlaylist(ViewModel.Player.SelectedPlaylist.Value, ViewModel.Player.CurrentSong.Value);
+            ViewModel.Player.TriggerPlaylistChanged(new PropertyChangedEventArgs("Fav"));
+        }
+
+        ViewModel.RaisePropertyChanged(nameof(ViewModel.IsCurrentSongInPlaylist));
+        ViewModel.RaisePropertyChanged(nameof(_mainWindow.ViewModel.PlayerControl.IsCurrentSongInPlaylist));
     }
 }

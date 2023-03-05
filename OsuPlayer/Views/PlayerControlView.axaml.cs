@@ -75,7 +75,7 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
         _mainWindow.ViewModel!.IsPaneOpen = true;
     }
 
-    private async void Blacklist_OnClick(object? sender, RoutedEventArgs e)
+    internal async void Blacklist_OnClick(object? sender, RoutedEventArgs e)
     {
         await using (var blacklist = new Blacklist())
         {
@@ -100,7 +100,7 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
         ViewModel.RaisePropertyChanged(nameof(ViewModel.IsCurrentSongOnBlacklist));
     }
 
-    private async void Favorite_OnClick(object? sender, RoutedEventArgs e)
+    internal async void Favorite_OnClick(object? sender, RoutedEventArgs e)
     {
         if (ViewModel.Player.CurrentSong.Value != null)
         {

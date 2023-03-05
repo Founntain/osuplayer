@@ -9,7 +9,7 @@
         x:Class="OsuPlayer.Windows.Miniplayer"
         Title="osu!player miniplayer"
 
-        MinWidth="285"
+        MinWidth="375"
         Width="480"
         MaxWidth="500"
         MinHeight="175"
@@ -39,6 +39,8 @@
         <cv:ShuffleConverter x:Key="ShuffleConverter" />
         <cv:RepeatConverter x:Key="RepeatConverter" />
         <cv:VolumeConverter x:Key="VolumeConverter" />
+        <cv:IsCurrentSongInPlaylistConverter x:Key="IsCurrentSongInPlaylistConverter" />
+        <cv:IsCurrentSongOnBlacklistConverter x:Key="IsCurrentSongOnBlacklistConverter" />
     </Window.Resources>
 
     <Design.DataContext>
@@ -99,6 +101,13 @@
                     </Button.Flyout>
                 </Button>
             </Panel>
+            
+            <Button Name="Blacklist" Width="38" Height="38" CornerRadius="50" Click="Blacklist_OnClick"
+                    Background="Transparent">
+                <avalonia:MaterialIcon
+                    Kind="{Binding IsCurrentSongOnBlacklist, Converter={StaticResource IsCurrentSongOnBlacklistConverter}}"
+                    Height="19" Width="19" />
+            </Button>
 
             <Button Name="Repeat" Width="38" Height="38" CornerRadius="50" Click="SongControl"
                     Background="Transparent">
@@ -136,6 +145,15 @@
                     Background="Transparent">
                 <avalonia:MaterialIcon Kind="{Binding IsShuffle, Converter={StaticResource ShuffleConverter}}"
                                        Height="19" Width="19" />
+            </Button>
+            
+            <Button Name="Favorite" Width="38" Height="38" CornerRadius="50"
+                    IsEnabled="{Binding IsAPlaylistSelected}"
+                    Click="Favorite_OnClick"
+                    Background="Transparent">
+                <avalonia:MaterialIcon
+                    Kind="{Binding IsCurrentSongInPlaylist, Converter={StaticResource IsCurrentSongInPlaylistConverter}}"
+                    Height="19" Width="19" />
             </Button>
 
             <Panel HorizontalAlignment="Right">
