@@ -210,8 +210,7 @@
                     <StackPanel Margin="10" Spacing="1" Name="AudioSettingsPanel">
                         <controls:SettingsTitleDisplayer Title="Audio Settings" Icon="Speaker" />
 
-                        <controls:SettingsDisplayer Name="EqualizerSettings" Title="Equalizer"
-                                                    Description="Here you can tune your audio frequencies to your liking">
+                        <controls:SettingsDisplayer Name="EqualizerSettings" Title="Equalizer" Description="Here you can tune your audio frequencies to your liking" Icon="Equalizer">
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <Button Content="open equalizer" Click="OpenEqClick" HorizontalAlignment="Stretch"
