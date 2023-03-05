@@ -29,15 +29,13 @@ public partial class Miniplayer : ReactiveWindow<MiniplayerViewModel>
 #endif
     }
 
-    public Miniplayer(MainWindow mainWindow, IPlayer player, IAudioEngine engine, Bitmap? currentSongBackground)
+    public Miniplayer(MainWindow mainWindow, IPlayer player, IAudioEngine engine)
     {
         InitializeComponent();
 
         _mainWindow = mainWindow;
 
         DataContext = new MiniplayerViewModel(player, engine);
-        
-        LoadBackground(currentSongBackground);
 
 #if DEBUG
         this.AttachDevTools();
@@ -49,12 +47,6 @@ public partial class Miniplayer : ReactiveWindow<MiniplayerViewModel>
         using var config = new Config();
 
         Background = new SolidColorBrush(config.Container.BackgroundColor.ToColor());
-    }
-
-    private void LoadBackground(Bitmap? currentSongBackground)
-    {
-        ViewModel.CurrentSongImage = currentSongBackground;
-        ViewModel.RaisePropertyChanged(nameof(ViewModel.CurrentSongImage));
     }
 
     private void InitializeComponent()
