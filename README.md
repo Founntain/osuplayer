@@ -111,7 +111,7 @@ After a while, Cesan joined me and we started working on it together now and I'm
 ### 🌸 Cesan
 
 <a href="https://github.com/Cesan">
-  <img style="border-radius: 50%;" align="right" width=200 height=200 src="https://osuplayer.founntain.dev/api/users/getProfilePicture?username=Cesan" />
+  <img style="border-radius: 50%;" align="right" width=200 height=200 src="https://osuplayer.founntain.dev/users/getProfilePicture?username=Cesan" />
 </a>
 Hi, I'm Cesan. You can also call me Caro if you want ^^
 
