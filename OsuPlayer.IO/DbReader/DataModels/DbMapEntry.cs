@@ -1,4 +1,6 @@
-﻿namespace OsuPlayer.IO.DbReader.DataModels;
+﻿using System.Diagnostics;
+
+namespace OsuPlayer.IO.DbReader.DataModels;
 
 /// <summary>
 /// a full beatmap entry with optionally used data
@@ -21,7 +23,18 @@ internal class DbMapEntry : DbMapEntryBase, IMapEntry
         if (string.IsNullOrEmpty(FolderPath))
             return null;
 
-        var files = Directory.GetFiles(FolderPath, "*.osu");
+        string[] files;
+        
+        try
+        {
+           files = Directory.GetFiles(FolderPath, "*.osu");
+        }
+        catch(Exception ex)
+        {
+            Debug.WriteLine(ex);
+
+            return null;
+        }
 
         if (files.Length == 0)
             return null;
