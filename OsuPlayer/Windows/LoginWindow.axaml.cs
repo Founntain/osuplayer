@@ -5,8 +5,8 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
-using Avalonia.ReactiveUI;
-using OsuPlayer.Extensions;
+using Nein.Base;
+using Nein.Extensions;
 using OsuPlayer.Network.API.Service.Endpoints;
 using OsuPlayer.UI_Extensions;
 using ReactiveUI;
@@ -83,7 +83,7 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
             return;
         }
 
-        ProfileManager.User = user.ConvertObject<User>();
+        ProfileManager.User = user.ConvertObjectToJson<User>();
 
         Close();
     }

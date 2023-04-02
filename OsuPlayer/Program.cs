@@ -2,6 +2,7 @@
 using Avalonia;
 using Avalonia.Platform;
 using Avalonia.ReactiveUI;
+using Nein.Extensions;
 using OsuPlayer.Extensions;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.Modules.Audio.Engine;

@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using OsuPlayer.Extensions;
+using Nein.Extensions;
 
 namespace OsuPlayer.IO.DbReader.DataModels;
 

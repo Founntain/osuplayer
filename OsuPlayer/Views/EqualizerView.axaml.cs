@@ -2,6 +2,7 @@
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
+using Nein.Base;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.IO.Storage.Equalizer;
 using OsuPlayer.UI_Extensions;

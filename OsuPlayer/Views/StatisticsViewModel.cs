@@ -1,7 +1,7 @@
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using System.Timers;
-using OsuPlayer.Base.ViewModels;
+using Nein.Base;
 using OsuPlayer.Network.API.Service.Endpoints;
 using ReactiveUI;
 using Splat;

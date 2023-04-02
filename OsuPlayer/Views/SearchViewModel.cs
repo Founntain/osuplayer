@@ -3,7 +3,7 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Avalonia.Threading;
 using DynamicData;
-using OsuPlayer.Base.ViewModels;
+using Nein.Base;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.IO.Storage.Playlists;

@@ -1,4 +1,4 @@
-﻿using OsuPlayer.Extensions.Bindables;
+﻿using Nein.Extensions.Bindables;
 
 namespace OsuPlayer.IO.Importer;
 

@@ -2,10 +2,10 @@
 using System.Threading.Tasks;
 using Avalonia.Threading;
 using LiveChartsCore.Defaults;
+using Nein.Extensions;
 using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.Enums;
 using OsuPlayer.Api.Data.API.RequestModels.User;
-using OsuPlayer.Extensions;
 using OsuPlayer.Network.API.Service.Endpoints;
 using Splat;
 
@@ -46,7 +46,7 @@ public class ApiStatisticsProvider : IStatisticsProvider
 
         if (response == default) return;
 
-        ProfileManager.User = response.ConvertObject<User>();
+        ProfileManager.User = response.ConvertObjectToJson<User>();
 
         var xpEarned = response.TotalXp - currentTotalXp;
 
@@ -63,7 +63,7 @@ public class ApiStatisticsProvider : IStatisticsProvider
 
         if (response == default) return;
 
-        ProfileManager.User = response.ConvertObject<User>();
+        ProfileManager.User = response.ConvertObjectToJson<User>();
 
         await Dispatcher.UIThread.InvokeAsync(() => UserDataChanged?.Invoke(this, new PropertyChangedEventArgs("SongsPlayed")));
     }

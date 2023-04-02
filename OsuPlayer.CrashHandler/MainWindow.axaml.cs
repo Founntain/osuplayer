@@ -4,8 +4,8 @@ using System.Linq;
 using Avalonia;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
-using OsuPlayer.Base.ViewModels;
-using OsuPlayer.Extensions;
+using Nein.Base;
+using Nein.Extensions;
 using ReactiveUI;
 
 namespace OsuPlayer.CrashHandler;

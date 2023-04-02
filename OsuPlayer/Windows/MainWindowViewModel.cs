@@ -1,5 +1,5 @@
 using Avalonia.Media;
-using OsuPlayer.Base.ViewModels;
+using Nein.Base;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Modules.Services;
