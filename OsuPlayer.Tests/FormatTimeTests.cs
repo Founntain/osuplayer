@@ -1,6 +1,6 @@
 ﻿using System;
+using Nein.Extensions;
 using NUnit.Framework;
-using OsuPlayer.Extensions;
 
 // ReSharper disable RedundantExplicitParamsArrayCreation
 

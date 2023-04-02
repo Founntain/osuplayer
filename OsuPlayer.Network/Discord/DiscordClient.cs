@@ -3,7 +3,7 @@ using System.Reflection;
 using DiscordRPC;
 using DiscordRPC.Logging;
 using DiscordRPC.Message;
-using OsuPlayer.Extensions;
+using Nein.Extensions;
 using OsuPlayer.Network.Online;
 
 namespace OsuPlayer.Network.Discord;

@@ -2,10 +2,10 @@
 using System.Reactive.Disposables;
 using System.Threading;
 using Avalonia.Media.Imaging;
+using Nein.Base;
+using Nein.Extensions;
 using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.RequestModels.Statistics;
-using OsuPlayer.Base.ViewModels;
-using OsuPlayer.Extensions;
 using OsuPlayer.Network.API.Service.Endpoints;
 using ReactiveUI;
 using Splat;

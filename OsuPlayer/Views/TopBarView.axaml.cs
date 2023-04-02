@@ -3,6 +3,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
+using Nein.Base;
 using OsuPlayer.Windows;
 using ReactiveUI;
 

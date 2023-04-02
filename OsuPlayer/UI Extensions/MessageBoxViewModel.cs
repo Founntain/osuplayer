@@ -1,5 +1,5 @@
 ﻿using Avalonia.Controls;
-using OsuPlayer.Base.ViewModels;
+using Nein.Base;
 using ReactiveUI;
 
 namespace OsuPlayer.UI_Extensions;

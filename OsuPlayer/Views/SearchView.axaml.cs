@@ -1,6 +1,7 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Nein.Base;
 using OsuPlayer.IO.Storage.Blacklist;
 using ReactiveUI;
 

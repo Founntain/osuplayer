@@ -1,8 +1,9 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Nein.Base;
+using Nein.Extensions;
 using OsuPlayer.Api.Data.API.RequestModels.Statistics;
-using OsuPlayer.Extensions;
 
 namespace OsuPlayer.Views;
 
@@ -25,7 +26,7 @@ public partial class UserView : ReactiveControl<UserViewModel>
 
         if (list?.SelectedItem == default) return;
 
-        var user = list?.SelectedItem.ConvertObject<User>();
+        var user = list?.SelectedItem.ConvertObjectToJson<User>();
         
         // var items = ViewModel!.LoadBadges(user);
 

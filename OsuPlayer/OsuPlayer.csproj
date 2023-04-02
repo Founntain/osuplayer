@@ -35,6 +35,7 @@
         <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.19" />
         <PackageReference Include="Avalonia.Skia" Version="0.10.19" />
         <PackageReference Include="DynamicData" Version="7.13.1" />
+        <PackageReference Include="Founntain.Nein" Version="2023.402.1" />
         <PackageReference Include="Founntain.OsuPlayer.NativeLibs" Version="1.0.4" />
         <PackageReference Include="LiveChartsCore.SkiaSharpView.Avalonia" Version="2.0.0-beta.101" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
@@ -51,7 +52,6 @@
         <AvaloniaResource Include="Resources\**" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\OsuPlayer.Base\OsuPlayer.Base.csproj" />
         <ProjectReference Include="..\OsuPlayer.CrashHandler\OsuPlayer.CrashHandler.csproj" />
         <ProjectReference Include="..\OsuPlayer.Data\OsuPlayer.Data.csproj" />
         <ProjectReference Include="..\OsuPlayer.Extensions\OsuPlayer.Extensions.csproj" />
@@ -120,9 +120,8 @@
         <Compile Update="Views\SymmetricalViewModel.cs">
             <DependentUpon>SymmetricalView.axaml</DependentUpon>
         </Compile>
-        <Compile Update="Controls\SettingsTitleDisplayer.axaml.cs">
-          <DependentUpon>SettingsTitleDisplayer.axaml</DependentUpon>
-          <SubType>Code</SubType>
+        <Compile Update="Windows\CreateProfileWindowViewModel.cs">
+          <DependentUpon>CreateProfileWindow.axaml</DependentUpon>
         </Compile>
     </ItemGroup>
     <ItemGroup>

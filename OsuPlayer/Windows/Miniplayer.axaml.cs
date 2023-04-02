@@ -5,11 +5,10 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
-using Avalonia.Media.Imaging;
-using OsuPlayer.Base.ViewModels;
+using Nein.Base;
+using Nein.Extensions;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
-using OsuPlayer.Extensions;
 using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules.Audio.Interfaces;
@@ -114,7 +113,7 @@ public partial class Miniplayer : ReactiveWindow<MiniplayerViewModel>
 
         _mainWindow.WindowState = WindowState.Normal;
     }
-    
+
     private async void Blacklist_OnClick(object? sender, RoutedEventArgs e)
     {
         await using (var blacklist = new Blacklist())
@@ -138,9 +137,9 @@ public partial class Miniplayer : ReactiveWindow<MiniplayerViewModel>
 
         ViewModel.Player.TriggerBlacklistChanged(new PropertyChangedEventArgs("Black"));
         ViewModel.RaisePropertyChanged(nameof(ViewModel.IsCurrentSongOnBlacklist));
-        ViewModel.RaisePropertyChanged(nameof(_mainWindow.ViewModel.PlayerControl.IsCurrentSongOnBlacklist));
+        //ViewModel.RaisePropertyChanged(nameof(_mainWindow.ViewModel.PlayerControl.IsCurrentSongOnBlacklist));
     }
-    
+
     private async void Favorite_OnClick(object? sender, RoutedEventArgs e)
     {
         if (ViewModel.Player.CurrentSong.Value != null)
@@ -150,6 +149,6 @@ public partial class Miniplayer : ReactiveWindow<MiniplayerViewModel>
         }
 
         ViewModel.RaisePropertyChanged(nameof(ViewModel.IsCurrentSongInPlaylist));
-        ViewModel.RaisePropertyChanged(nameof(_mainWindow.ViewModel.PlayerControl.IsCurrentSongInPlaylist));
+        //ViewModel.RaisePropertyChanged(nameof(_mainWindow.ViewModel.PlayerControl.IsCurrentSongInPlaylist));
     }
 }

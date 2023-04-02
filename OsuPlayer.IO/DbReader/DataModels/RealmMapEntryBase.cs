@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using OsuPlayer.Extensions;
+using Nein.Extensions;
 using OsuPlayer.IO.Storage.LazerModels.Beatmaps;
 using OsuPlayer.IO.Storage.LazerModels.Files;
 using Realms;

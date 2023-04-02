@@ -1,6 +1,6 @@
 ﻿using System.Collections.Specialized;
 using System.Reactive.Disposables;
-using OsuPlayer.Base.ViewModels;
+using Nein.Base;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.IO.Storage.Equalizer;
 using OsuPlayer.Modules.Audio.Interfaces;

@@ -6,9 +6,8 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using Avalonia.ReactiveUI;
 using Avalonia.VisualTree;
-using Material.Icons;
+using Nein.Extensions;
 using OsuPlayer.Api.Data.API.RequestModels.User;
-using OsuPlayer.Extensions;
 using OsuPlayer.Network.API.Service.Endpoints;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
@@ -193,7 +192,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
         if (ViewModel == null)
         {
             if (!string.IsNullOrWhiteSpace(editUserModel.User.Name))
-                ProfileManager.User = (await api.GetUserFromLoginToken())?.ConvertObject<User>();
+                ProfileManager.User = (await api.GetUserFromLoginToken())?.ConvertObjectToJson<User>();
 
             if (changedProfilePicture)
                 await MessageBox.ShowDialogAsync(_mainWindow, $"We couldn't update your profile picture, because you left the edit view to early!{Environment.NewLine}If you want to update your profile picture please wait, until you get the message that it's been done!");
@@ -203,7 +202,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
             ViewModel.NewPassword = string.Empty;
             ViewModel.Password = string.Empty;
 
-            ProfileManager.User = ViewModel.CurrentUser.ConvertObject<User>();
+            ProfileManager.User = ViewModel.CurrentUser.ConvertObjectToJson<User>();
 
             var successMessage = "Profile updated successfully!";
             

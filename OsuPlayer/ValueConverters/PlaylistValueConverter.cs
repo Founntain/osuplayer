@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using Avalonia.Data.Converters;
-using OsuPlayer.Extensions;
+using Nein.Extensions;
 using OsuPlayer.IO.Importer;
 using Splat;
 
