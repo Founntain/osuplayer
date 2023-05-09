@@ -14,5 +14,8 @@ public interface IHasEffects
     /// <param name="speed">The speed to set</param>
     public void SetPlaybackSpeed(double speed);
 
+    /// <summary>
+    /// Triggers a Method change. Usually this should only be called when toggling pitch or other FX settings
+    /// </summary>
     public void UpdatePlaybackMethod();
 }
