@@ -80,12 +80,19 @@ public class WindowsMediaTransportControls
         metadata.MusicProperties.Title = fullMapEntry.Title;
         metadata.MusicProperties.Artist = fullMapEntry.Artist;
 
-        if (!string.IsNullOrEmpty(_player.CurrentSongImage.Value) && File.Exists(_player.CurrentSongImage.Value))
+        try
         {
-            var x = await StorageFile.GetFileFromPathAsync(_player.CurrentSongImage.Value ?? "");
-            metadata.Thumbnail = RandomAccessStreamReference.CreateFromFile(x);
+            if (!string.IsNullOrEmpty(_player.CurrentSongImage.Value) && File.Exists(_player.CurrentSongImage.Value))
+            {
+                var x = await StorageFile.GetFileFromPathAsync(_player.CurrentSongImage.Value ?? "");
+                metadata.Thumbnail = RandomAccessStreamReference.CreateFromFile(x);
+            }
+            else
+            {
+                metadata.Thumbnail = null;
+            }
         }
-        else
+        catch (Exception)
         {
             metadata.Thumbnail = null;
         }
