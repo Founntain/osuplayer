@@ -7,9 +7,11 @@ using Nein.Base;
 using Nein.Controls;
 using Nein.Extensions;
 using OsuPlayer.IO.Importer;
+using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
 using ReactiveUI;
+using Splat;
 
 namespace OsuPlayer.Views;
 
@@ -138,5 +140,14 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
     private void ContactUs_OnClick(object? sender, RoutedEventArgs e)
     {
         GeneralExtensions.OpenUrl("https://github.com/osu-player/osuplayer#contact");
+    }
+
+    private void OnUsePitch_Click(object? sender, RoutedEventArgs e)
+    {
+        var value = (sender as ToggleSwitch)?.IsChecked;
+
+        var engine = Locator.Current.GetRequiredService<IAudioEngine>();
+        
+        engine.UpdatePlaybackMethod();
     }
 }

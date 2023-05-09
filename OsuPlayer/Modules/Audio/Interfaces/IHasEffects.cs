@@ -13,4 +13,6 @@ public interface IHasEffects
     /// </summary>
     /// <param name="speed">The speed to set</param>
     public void SetPlaybackSpeed(double speed);
+
+    public void UpdatePlaybackMethod();
 }

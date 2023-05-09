@@ -119,10 +119,48 @@ public sealed class BassEngine : IAudioEngine
 
     public void SetPlaybackSpeed(double speed)
     {
-        Bass.ChannelSetAttribute(_fxStream, ChannelAttribute.TempoFrequency,
-            _sampleFrequency * (1 + speed));
+        using var config = new Config();
+
+        if (config.Container.UsePitch)
+        {
+            Bass.ChannelSetAttribute(_fxStream, ChannelAttribute.Tempo,
+                0);
+            
+            Bass.ChannelSetAttribute(_fxStream, ChannelAttribute.TempoFrequency,
+                _sampleFrequency * (1 + speed));
+        }
+        else
+        {
+            Bass.ChannelSetAttribute(_fxStream, ChannelAttribute.TempoFrequency,
+                _sampleFrequency * (1 + 0));
+            
+            Bass.ChannelSetAttribute(_fxStream, ChannelAttribute.Tempo,
+                speed * 100);
+        }
 
         _playbackSpeed = speed;
+    }
+
+    public void UpdatePlaybackMethod()
+    {
+        using var config = new Config();
+
+        if (config.Container.UsePitch)
+        {
+            Bass.ChannelSetAttribute(_fxStream, ChannelAttribute.Tempo,
+                0);
+            
+            Bass.ChannelSetAttribute(_fxStream, ChannelAttribute.TempoFrequency,
+                _sampleFrequency * (1 + _playbackSpeed));
+        }
+        else
+        {
+            Bass.ChannelSetAttribute(_fxStream, ChannelAttribute.TempoFrequency,
+                _sampleFrequency * (1 + 0));
+            
+            Bass.ChannelSetAttribute(_fxStream, ChannelAttribute.Tempo,
+                _playbackSpeed * 100);
+        }
     }
 
     public bool OpenFile(string path)

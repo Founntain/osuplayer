@@ -39,8 +39,21 @@ public class SettingsViewModel : BaseViewModel
     private string _settingsSearchQ = string.Empty;
     private IShuffleServiceProvider? _shuffleServiceProvider;
     private bool _useDiscordRpc;
+    private bool _usePitch;
 
     public MainWindow? MainWindow;
+
+    public bool UsePitch
+    {
+        get => _usePitch;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _usePitch, value);
+            
+            using var config = new Config();
+            config.Container.UsePitch = value;
+        }
+    }
 
     public List<OsuPlayerContributor>? Contributors
     {
@@ -287,16 +300,11 @@ public class SettingsViewModel : BaseViewModel
                 if (categoryFound)
                 {
                     category.IsVisible = true;
+                    foreach (var setting in settings) setting.IsVisible = true;
+
                     foreach (var setting in settings)
-                    {
-                        setting.IsVisible = true;
-                    }
-                    
-                    foreach (var setting in settings)
-                    {
                         if (setting is ISettingsDisplayer settingsDisplayer)
                             settingsDisplayer.RefreshCorners();
-                    }
 
                     continue;
                 }
@@ -310,12 +318,10 @@ public class SettingsViewModel : BaseViewModel
 
                     foundAnySettings = foundAnySettings || setting.IsVisible;
                 }
-                
+
                 foreach (var setting in settings)
-                {
                     if (setting is ISettingsDisplayer settingsDisplayer)
                         settingsDisplayer.RefreshCorners();
-                }
 
                 category.IsVisible = foundAnySettings;
             }
@@ -324,7 +330,7 @@ public class SettingsViewModel : BaseViewModel
         }
     }
 
-    public Avalonia.Controls.Controls? SettingsCategories { get; set; }
+    public Controls? SettingsCategories { get; set; }
 
     public ObservableCollection<AudioDevice>? OutputDeviceComboboxItems { get; set; }
 
@@ -344,6 +350,7 @@ public class SettingsViewModel : BaseViewModel
         _selectedFont = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
         _selectedShuffleAlgorithm = ShuffleAlgorithms?.FirstOrDefault(x => x == _shuffleServiceProvider?.ShuffleImpl);
         _useDiscordRpc = config.Container.UseDiscordRpc;
+        _usePitch = config.Container.UsePitch;
 
         if (sortProvider != null)
         {
