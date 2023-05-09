@@ -13,6 +13,7 @@ using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules.Audio.Interfaces;
 using ReactiveUI;
+using Splat;
 
 namespace OsuPlayer.Windows;
 
@@ -31,11 +32,11 @@ public partial class Miniplayer : ReactiveWindow<MiniplayerViewModel>
 #endif
     }
 
-    public Miniplayer(MainWindow mainWindow, IPlayer player, IAudioEngine engine)
+    public Miniplayer(IPlayer player, IAudioEngine engine)
     {
         InitializeComponent();
 
-        _mainWindow = mainWindow;
+        _mainWindow = Locator.GetLocator().GetRequiredService<MainWindow>();
 
         DataContext = new MiniplayerViewModel(player, engine);
 

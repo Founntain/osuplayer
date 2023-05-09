@@ -35,6 +35,7 @@
         <entry key="OsuPlayer/Views/UpdateView.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/Views/UserView.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/Windows/CreateProfileWindow.axaml" value="OsuPlayer/OsuPlayer.csproj" />
+        <entry key="OsuPlayer/Windows/FullscreenWindow.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/Windows/LoginWindow.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/Windows/MainWindow.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/Windows/Miniplayer.axaml" value="OsuPlayer/OsuPlayer.csproj" />
