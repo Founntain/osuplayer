@@ -218,6 +218,14 @@
                             </controls:SettingsDisplayer.InteractionControl>
 
                         </controls:SettingsDisplayer>
+                        
+                        <controls:SettingsDisplayer Name="PitchSettings" Title="Enable Pitch Change" Description="If turned on changing the playback speed will change the pitch. (Like Nightcore / Daycore). If turned of it just speeds it up." Icon="Waveform">
+
+                            <controls:SettingsDisplayer.InteractionControl>
+                                <ToggleSwitch IsChecked="{Binding UsePitch}" Click="OnUsePitch_Click" />
+                            </controls:SettingsDisplayer.InteractionControl>
+
+                        </controls:SettingsDisplayer>
                     </StackPanel>
                 </Grid>
 

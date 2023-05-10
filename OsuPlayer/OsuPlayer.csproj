@@ -121,7 +121,7 @@
             <DependentUpon>SymmetricalView.axaml</DependentUpon>
         </Compile>
         <Compile Update="Windows\CreateProfileWindowViewModel.cs">
-          <DependentUpon>CreateProfileWindow.axaml</DependentUpon>
+            <DependentUpon>CreateProfileWindow.axaml</DependentUpon>
         </Compile>
     </ItemGroup>
 </Project>
