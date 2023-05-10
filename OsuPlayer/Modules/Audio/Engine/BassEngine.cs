@@ -123,6 +123,7 @@ public sealed class BassEngine : IAudioEngine
 
         if (config.Container.UsePitch)
         {
+            // Reseting Tempo effect, if we don't do that the effects would overlap result in even more speedup
             Bass.ChannelSetAttribute(_fxStream, ChannelAttribute.Tempo,
                 0);
             
@@ -131,6 +132,7 @@ public sealed class BassEngine : IAudioEngine
         }
         else
         {
+            // Reseting TempoFrequency effect, if we don't do that the effects would overlap result in even more speedup
             Bass.ChannelSetAttribute(_fxStream, ChannelAttribute.TempoFrequency,
                 _sampleFrequency * (1 + 0));
             
