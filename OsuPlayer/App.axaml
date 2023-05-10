@@ -29,9 +29,6 @@
             <SolidColorBrush x:Key="ButtonBackground" Color="#4C000000" />
 
             <Color x:Key="AppBackgroundColor">Black</Color>
-
-            <FontFamily x:Key="Montserrat">/Resources/Fonts/#Montserrat</FontFamily>
-            <FontFamily x:Key="MuseoModerno">/Resources/Fonts/#MuseoModerno</FontFamily>
         </ResourceDictionary>
     </Application.Resources>
 
