@@ -119,50 +119,14 @@ public sealed class BassEngine : IAudioEngine
 
     public void SetPlaybackSpeed(double speed)
     {
-        using var config = new Config();
-
-        if (config.Container.UsePitch)
-        {
-            // Reseting Tempo effect, if we don't do that the effects would overlap result in even more speedup
-            Bass.ChannelSetAttribute(_fxStream, ChannelAttribute.Tempo,
-                0);
-            
-            Bass.ChannelSetAttribute(_fxStream, ChannelAttribute.TempoFrequency,
-                _sampleFrequency * (1 + speed));
-        }
-        else
-        {
-            // Reseting TempoFrequency effect, if we don't do that the effects would overlap result in even more speedup
-            Bass.ChannelSetAttribute(_fxStream, ChannelAttribute.TempoFrequency,
-                _sampleFrequency * (1 + 0));
-            
-            Bass.ChannelSetAttribute(_fxStream, ChannelAttribute.Tempo,
-                speed * 100);
-        }
+        SetPlaybackSpeedOptions(speed);
 
         _playbackSpeed = speed;
     }
 
     public void UpdatePlaybackMethod()
     {
-        using var config = new Config();
-
-        if (config.Container.UsePitch)
-        {
-            Bass.ChannelSetAttribute(_fxStream, ChannelAttribute.Tempo,
-                0);
-            
-            Bass.ChannelSetAttribute(_fxStream, ChannelAttribute.TempoFrequency,
-                _sampleFrequency * (1 + _playbackSpeed));
-        }
-        else
-        {
-            Bass.ChannelSetAttribute(_fxStream, ChannelAttribute.TempoFrequency,
-                _sampleFrequency * (1 + 0));
-            
-            Bass.ChannelSetAttribute(_fxStream, ChannelAttribute.Tempo,
-                _playbackSpeed * 100);
-        }
+        SetPlaybackSpeedOptions(_playbackSpeed);
     }
 
     public bool OpenFile(string path)
@@ -231,6 +195,30 @@ public sealed class BassEngine : IAudioEngine
         config.Container.SelectedAudioDevice = index;
 
         Console.WriteLine($"SET: {index} | {result} | {Bass.LastError}");
+    }
+
+    private void SetPlaybackSpeedOptions(double speed)
+    {
+        using var config = new Config();
+
+        if (config.Container.UsePitch)
+        {
+            // Resetting Tempo effect, else speed overlaps
+            Bass.ChannelSetAttribute(_fxStream, ChannelAttribute.Tempo,
+                0);
+            
+            Bass.ChannelSetAttribute(_fxStream, ChannelAttribute.TempoFrequency,
+                _sampleFrequency * (1 + speed));
+        }
+        else
+        {
+            // Resetting TempoFrequency effect, else speed overlaps
+            Bass.ChannelSetAttribute(_fxStream, ChannelAttribute.TempoFrequency,
+                _sampleFrequency * (1 + 0));
+            
+            Bass.ChannelSetAttribute(_fxStream, ChannelAttribute.Tempo,
+                speed * 100);
+        }
     }
 
     private void InitAudioDevices()
