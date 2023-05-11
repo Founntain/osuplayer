@@ -50,7 +50,7 @@ public class SettingsViewModel : BaseViewModel
         set
         {
             this.RaiseAndSetIfChanged(ref _usePitch, value);
-            
+
             using var config = new Config();
             config.Container.UsePitch = value;
         }
