@@ -18,9 +18,9 @@ public partial class CreateProfileWindow : ReactiveWindow<CreateProfileWindowVie
     {
         InitializeComponent();
 
-        using var config = new Config();
-        TransparencyLevelHint = config.Read().TransparencyLevelHint;
-        
+        var config = new Config();
+
+        TransparencyLevelHint = config.Container.TransparencyLevelHint;
         FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
     }
 
@@ -57,7 +57,8 @@ public partial class CreateProfileWindow : ReactiveWindow<CreateProfileWindowVie
 
         if (response == default)
         {
-            await MessageBox.ShowDialogAsync(this, "Can't create a profile. Possible reasons could be: The username is already taken or an server error happend. Please try again later or another username!");
+            await MessageBox.ShowDialogAsync(this,
+                "Can't create a profile. Possible reasons could be: The username is already taken or an server error happend. Please try again later or another username!");
             return;
         }
 

@@ -53,6 +53,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         Application.Current!.Resources["BiggerFontWeight"] = config.Container.GetBiggerFont().ToFontWeight();
 
         FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
+        config.Container.Font ??= FontFamily.Name;
 
 #if DEBUG
         this.AttachDevTools();

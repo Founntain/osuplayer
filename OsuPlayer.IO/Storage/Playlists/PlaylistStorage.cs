@@ -8,10 +8,19 @@ namespace OsuPlayer.IO.Storage.Playlists;
 /// </summary>
 public class PlaylistStorage : Storable<PlaylistContainer>
 {
+    private static PlaylistContainer? _playlistContainer;
+
     protected override JsonSerializerSettings SerializerSettings { get; } = new()
     {
         Formatting = Formatting.None
     };
 
     public override string Path => System.IO.Path.Combine("data", "playlists.json");
+
+    public PlaylistStorage()
+    {
+        _playlistContainer ??= Read();
+        
+        Container = _playlistContainer;
+    }
 }
