@@ -8,7 +8,7 @@ public class ConfigContainer : IStorableContainer
     public string? OsuPath { get; set; }
     public double Volume { get; set; }
     public bool UseSongNameUnicode { get; set; } = false;
-    public int SelectedAudioDevice { get; set; }
+    public string? SelectedAudioDeviceDriver { get; set; }
     public bool IsEqEnabled { get; set; }
     public WindowTransparencyLevel TransparencyLevelHint { get; set; } = WindowTransparencyLevel.AcrylicBlur;
     public StartupSong StartupSong { get; set; } = StartupSong.FirstSong;

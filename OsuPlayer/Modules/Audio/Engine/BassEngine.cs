@@ -170,10 +170,10 @@ public sealed class BassEngine : IAudioEngine
     /// <remarks>If the index is -1 sets the output device to the default device set in the os.</remarks>
     /// </summary>
     /// <param name="audioDevice"></param>
-    public void SetDevice(AudioDevice audioDevice)
+    public void SetDevice(AudioDevice? audioDevice)
     {
         var audioDevices = GetAudioDevices().ToList();
-        var index = audioDevices.IndexOf(audioDevices.FirstOrDefault(x => x.Driver == audioDevice.Driver));
+        var index = audioDevice == null ? -1 : audioDevices.IndexOf(audioDevices.FirstOrDefault(x => x.Driver == audioDevice.Driver));
 
         if (index == -1)
             for (var i = 0; i < audioDevices.Count; i++)
@@ -186,13 +186,13 @@ public sealed class BassEngine : IAudioEngine
                 break;
             }
 
-        Bass.CurrentDevice = index + 1;
-        Bass.ChannelSetDevice(_fxStream, index + 1);
+        Bass.CurrentDevice = index;
+        Bass.ChannelSetDevice(_fxStream, index);
 
         var result = Bass.LastError == Errors.OK;
 
         using var config = new Config();
-        config.Container.SelectedAudioDevice = index;
+        config.Container.SelectedAudioDeviceDriver = audioDevices[index].Driver;
 
         Console.WriteLine($"SET: {index} | {result} | {Bass.LastError}");
     }
@@ -227,7 +227,7 @@ public sealed class BassEngine : IAudioEngine
 
         var counter = 1;
 
-        foreach (var deviceInfo in GetAudioDevices())
+        foreach (var deviceInfo in GetAudioDevices().Skip(1))
         {
             var success = Bass.Init(counter);
 
@@ -258,7 +258,7 @@ public sealed class BassEngine : IAudioEngine
         InitEq();
 
         var config = new Config();
-        SetDevice(AvailableAudioDevices[config.Container.SelectedAudioDevice]);
+        SetDevice(AvailableAudioDevices.FirstOrDefault(x => x.Driver == config.Container.SelectedAudioDeviceDriver));
 
         // Set the stream to call Stop() when it ends.
         var syncHandle = Bass.ChannelSetSync(_fxStream,
@@ -329,8 +329,6 @@ public sealed class BassEngine : IAudioEngine
 
         for (var i = 0; i < Bass.DeviceCount; i++)
             list.Add(Bass.GetDeviceInfo(i));
-
-        list.RemoveAt(0);
 
         return list;
     }
