@@ -253,8 +253,7 @@ public sealed class BassEngine : IAudioEngine
 
         //SetEqBands();
 
-        var speed = _sampleFrequency * (1 + _playbackSpeed);
-        Bass.ChannelSetAttribute(_fxStream, ChannelAttribute.TempoFrequency, speed);
+        SetPlaybackSpeedOptions(_playbackSpeed);
 
         InitEq();
 
