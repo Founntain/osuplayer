@@ -37,7 +37,7 @@ public class SettingsViewModel : BaseViewModel
     private IShuffleImpl? _selectedShuffleAlgorithm;
     private StartupSong _selectedStartupSong;
     private WindowTransparencyLevel _selectedTransparencyLevel;
-    private AudioDevice _selectedAudioDevice;
+    private AudioDevice? _selectedAudioDevice;
     private string _settingsSearchQ = string.Empty;
     private IShuffleServiceProvider? _shuffleServiceProvider;
     private bool _useDiscordRpc;
@@ -242,13 +242,13 @@ public class SettingsViewModel : BaseViewModel
 
     public AudioDevice SelectedAudioDevice
     {
-        get => _selectedAudioDevice;
+        get => _selectedAudioDevice ?? AvailableAudioDevices[0];
         set
         {
             this.RaiseAndSetIfChanged(ref _selectedAudioDevice, value);
 
             using var config = new Config();
-            config.Container.SelectedAudioDevice = AvailableAudioDevices.IndexOf(value);
+            config.Container.SelectedAudioDeviceDriver = value.Driver;
             
             Player.SetDevice(value);
         }
@@ -367,7 +367,7 @@ public class SettingsViewModel : BaseViewModel
         _selectedFontWeight = config.Container.DefaultFontWeight;
         _selectedFont = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
         _selectedShuffleAlgorithm = ShuffleAlgorithms?.FirstOrDefault(x => x == _shuffleServiceProvider?.ShuffleImpl);
-        _selectedAudioDevice = AvailableAudioDevices[config.Container.SelectedAudioDevice];
+        _selectedAudioDevice = AvailableAudioDevices.FirstOrDefault(x => x.Driver == config.Container.SelectedAudioDeviceDriver);
         _useDiscordRpc = config.Container.UseDiscordRpc;
         _usePitch = config.Container.UsePitch;
 
