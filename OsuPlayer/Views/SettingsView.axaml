@@ -218,7 +218,7 @@
                         <controls:SettingsTitleDisplayer Title="Audio Settings" Icon="Speaker" />
 
                         <controls:SettingsDisplayer Name="AudioDeviceSettings" Title="Audio Device"
-                                                    Description="Seletc the audio device that you want to use for playback"
+                                                    Description="Select the audio device that you want to use for playback"
                                                     Icon="SpeakerMultiple">
 
                             <controls:SettingsDisplayer.InteractionControl>
