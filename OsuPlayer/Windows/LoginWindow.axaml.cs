@@ -19,9 +19,9 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
     public LoginWindow()
     {
         Init();
-        
+
         using var config = new Config();
-        
+
         FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
     }
 

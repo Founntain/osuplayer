@@ -8,6 +8,7 @@ using Nein.Controls.Interfaces;
 using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
+using OsuPlayer.Extensions;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Modules.Services;
 using OsuPlayer.Modules.ShuffleImpl;
@@ -49,7 +50,7 @@ public class SettingsViewModel : BaseViewModel
         set
         {
             this.RaiseAndSetIfChanged(ref _usePitch, value);
-            
+
             using var config = new Config();
             config.Container.UsePitch = value;
         }
@@ -105,13 +106,13 @@ public class SettingsViewModel : BaseViewModel
             using var config = new Config();
             config.Container.DefaultFontWeight = value;
 
-            Application.Current!.Resources["SmallerFontWeight"] = config.Container.GetSmallerFont().ToFontWeight();
+            Application.Current!.Resources["SmallerFontWeight"] = config.Container.GetNextSmallerFont().ToFontWeight();
             Application.Current!.Resources["DefaultFontWeight"] = value.ToFontWeight();
-            Application.Current!.Resources["BiggerFontWeight"] = config.Container.GetBiggerFont().ToFontWeight();
+            Application.Current!.Resources["BiggerFontWeight"] = config.Container.GetNextBiggerFont().ToFontWeight();
 
-            Debug.WriteLine("SMALLER FONT: " + config.Container.GetSmallerFont().ToFontWeight().ToString());
-            Debug.WriteLine("NORMAL FONT: " + value.ToFontWeight().ToString());
-            Debug.WriteLine("BIGGER FONT: " + config.Container.GetBiggerFont().ToFontWeight().ToString());
+            Debug.WriteLine("SMALLER FONT: " + config.Container.GetNextSmallerFont().ToFontWeight());
+            Debug.WriteLine("NORMAL FONT: " + value.ToFontWeight());
+            Debug.WriteLine("BIGGER FONT: " + config.Container.GetNextBiggerFont().ToFontWeight());
         }
     }
 

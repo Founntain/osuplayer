@@ -34,14 +34,4 @@ public class ConfigContainer : IStorableContainer
     {
         return this;
     }
-
-    public FontWeights GetSmallerFont()
-    {
-        return DefaultFontWeight.GetNextSmallerFont();
-    }
-
-    public FontWeights GetBiggerFont()
-    {
-        return DefaultFontWeight.GetNextBiggerFont();
-    }
 }

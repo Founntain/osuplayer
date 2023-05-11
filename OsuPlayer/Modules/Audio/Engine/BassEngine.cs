@@ -206,7 +206,7 @@ public sealed class BassEngine : IAudioEngine
             // Resetting Tempo effect, else speed overlaps
             Bass.ChannelSetAttribute(_fxStream, ChannelAttribute.Tempo,
                 0);
-            
+
             Bass.ChannelSetAttribute(_fxStream, ChannelAttribute.TempoFrequency,
                 _sampleFrequency * (1 + speed));
         }
@@ -215,7 +215,7 @@ public sealed class BassEngine : IAudioEngine
             // Resetting TempoFrequency effect, else speed overlaps
             Bass.ChannelSetAttribute(_fxStream, ChannelAttribute.TempoFrequency,
                 _sampleFrequency * (1 + 0));
-            
+
             Bass.ChannelSetAttribute(_fxStream, ChannelAttribute.Tempo,
                 speed * 100);
         }

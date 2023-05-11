@@ -13,8 +13,8 @@ public partial class MessageBoxWindow : ReactiveWindow<MessageBoxViewModel>
 
         ViewModel = new MessageBoxViewModel();
 
-        using var config = new Config();
-        TransparencyLevelHint = config.Read().TransparencyLevelHint;
+        var config = new Config();
+        TransparencyLevelHint = config.Container.TransparencyLevelHint;
 
 #if DEBUG
         this.AttachDevTools();
@@ -27,8 +27,8 @@ public partial class MessageBoxWindow : ReactiveWindow<MessageBoxViewModel>
 
         ViewModel = new MessageBoxViewModel(this, text, title);
 
-        using var config = new Config();
-        TransparencyLevelHint = config.Read().TransparencyLevelHint;
+        var config = new Config();
+        TransparencyLevelHint = config.Container.TransparencyLevelHint;
 #if DEBUG
         this.AttachDevTools();
 #endif

@@ -132,7 +132,7 @@ public class UserViewModel : BaseViewModel
             ReloadStats();
         }
     }
-    
+
     public UserViewModel(IPlayer player)
     {
         Player = player;
@@ -153,7 +153,7 @@ public class UserViewModel : BaseViewModel
 
         Users = (await Locator.Current.GetService<NorthFox>().GetAllUsers())
             ?.Select(x => new User(x))
-            .ToObservableCollection() ?? new ();
+            .ToObservableCollection() ?? new ObservableCollection<User>();
 
         Series = new ObservableCollection<ISeries>
         {
@@ -368,7 +368,7 @@ public class UserViewModel : BaseViewModel
     public IEnumerable<IControl> LoadBadges(User? currentUser)
     {
         return new List<IControl>();
-        
+
         if (currentUser == default) return default!;
 
         var badges = new List<MaterialIcon>();
@@ -381,7 +381,7 @@ public class UserViewModel : BaseViewModel
             {
                 Kind = (MaterialIconKind) badge.Icon,
                 Height = size,
-                Width = size,
+                Width = size
             };
 
             badges.Add(materialIcon);

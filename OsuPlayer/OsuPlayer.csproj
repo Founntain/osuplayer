@@ -125,6 +125,6 @@
         </Compile>
     </ItemGroup>
     <ItemGroup>
-      <UpToDateCheckInput Remove="Resources\Fonts\Montserrat-VariableFont_wght.ttf" />
+        <UpToDateCheckInput Remove="Resources\Fonts\Montserrat-VariableFont_wght.ttf" />
     </ItemGroup>
 </Project>

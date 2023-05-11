@@ -1,6 +1,6 @@
 using Avalonia.Media;
 using Nein.Base;
-using OsuPlayer.Data.OsuPlayer.Enums;
+using OsuPlayer.Extensions;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Modules.Services;
 using OsuPlayer.Views;
@@ -50,7 +50,8 @@ public class MainWindowViewModel : BaseWindowViewModel
         set => _panelMaterial = value;
     }
 
-    public MainWindowViewModel(IAudioEngine engine, IPlayer player, IShuffleServiceProvider? shuffleServiceProvider = null, IStatisticsProvider? statisticsProvider = null, ISortProvider? sortProvider = null)
+    public MainWindowViewModel(IAudioEngine engine, IPlayer player, IShuffleServiceProvider? shuffleServiceProvider = null,
+        IStatisticsProvider? statisticsProvider = null, ISortProvider? sortProvider = null)
     {
         Player = player;
 

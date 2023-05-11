@@ -171,7 +171,7 @@ public class EditUserViewModel : BaseViewModel
                 cancellationToken.ThrowIfCancellationRequested();
 
             var profilePicture = await Locator.Current.GetService<NorthFox>().GetProfilePictureAsync(CurrentUser.UniqueId);
-            
+
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 

@@ -5,7 +5,7 @@ namespace OsuPlayer.Network.Online;
 
 public class ProfileManager
 {
-    public static User? User = User ?? new ();
+    public static User? User = User ?? new User();
 
     public static async Task Login(string username, string password)
     {
@@ -15,7 +15,7 @@ public class ProfileManager
         if (result == default)
         {
             User = default;
-            
+
             return;
         }
 
@@ -25,14 +25,14 @@ public class ProfileManager
     public static async Task Login(string token)
     {
         if (string.IsNullOrWhiteSpace(token)) return;
-        
+
         var result = await Locator.Current.GetService<NorthFox>().LoginWithTokenAndSaveNewToken(token);
 
         // If login via token failed, we set the User to its default value
         if (result == default)
         {
             User = default;
-            
+
             return;
         }
 
