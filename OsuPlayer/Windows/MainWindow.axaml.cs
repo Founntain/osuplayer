@@ -6,6 +6,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Nein.Base;
 using OsuPlayer.Data.OsuPlayer.Enums;
+using OsuPlayer.Extensions;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.Network;
 using OsuPlayer.Styles;
@@ -45,12 +46,9 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
         ColorSetter.SetColor(accentColor.ToColor());
 
-        config.Container.BackgroundColor = backgroundColor;
-        config.Container.AccentColor = accentColor;
-
-        Application.Current!.Resources["SmallerFontWeight"] = config.Container.GetSmallerFont().ToFontWeight();
+        Application.Current!.Resources["SmallerFontWeight"] = config.Container.GetNextSmallerFont().ToFontWeight();
         Application.Current!.Resources["DefaultFontWeight"] = config.Container.DefaultFontWeight.ToFontWeight();
-        Application.Current!.Resources["BiggerFontWeight"] = config.Container.GetBiggerFont().ToFontWeight();
+        Application.Current!.Resources["BiggerFontWeight"] = config.Container.GetNextBiggerFont().ToFontWeight();
 
         FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
         config.Container.Font ??= FontFamily.Name;
