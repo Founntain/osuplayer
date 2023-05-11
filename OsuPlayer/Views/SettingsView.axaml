@@ -218,8 +218,8 @@
                         <controls:SettingsTitleDisplayer Title="Audio Settings" Icon="Speaker" />
 
                         <controls:SettingsDisplayer Name="AudioDeviceSettings" Title="Audio Device"
-                                                    Description="Here you can change the audio device that is used for playback"
-                                                    Icon="Equalizer">
+                                                    Description="Seletc the audio device that you want to use for playback"
+                                                    Icon="SpeakerMultiple">
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <ComboBox Items="{Binding AvailableAudioDevices}"
