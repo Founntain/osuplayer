@@ -27,6 +27,9 @@
                 ItemWidth="{Binding RelativeSource={RelativeSource Self}, Path=Bounds.Width, Converter={StaticResource GridFormatter}, ConverterParameter=2000}"
                 Name="SettingsGrid">
 
+                <!-- ———————————————— -->
+                <!-- General Settings -->
+                <!-- ———————————————— -->
                 <Grid RowDefinitions="Auto" Margin="10" Name="GeneralSettings">
 
                     <StackPanel Spacing="1" Margin="10" Name="GeneralSettingsPanel">
@@ -138,6 +141,9 @@
                     </StackPanel>
                 </Grid>
 
+                <!-- ——————————————— -->
+                <!-- Visual Settings -->
+                <!-- ——————————————— -->
                 <Grid RowDefinitions="Auto" Margin="10" Name="VisualSettings">
 
                     <StackPanel Margin="10" Spacing="1" Name="VisualSettingsPanel">
@@ -203,10 +209,24 @@
                     </StackPanel>
                 </Grid>
 
+                <!-- —————————————— -->
+                <!-- Audio Settings -->
+                <!-- —————————————— -->
                 <Grid RowDefinitions="Auto" Margin="10" Name="AudioSettings">
 
                     <StackPanel Margin="10" Spacing="1" Name="AudioSettingsPanel">
                         <controls:SettingsTitleDisplayer Title="Audio Settings" Icon="Speaker" />
+
+                        <controls:SettingsDisplayer Name="AudioDeviceSettings" Title="Audio Device"
+                                                    Description="Here you can change the audio device that is used for playback"
+                                                    Icon="Equalizer">
+
+                            <controls:SettingsDisplayer.InteractionControl>
+                                <ComboBox Items="{Binding AvailableAudioDevices}"
+                                          SelectedItem="{Binding SelectedAudioDevice}" HorizontalAlignment="Stretch" />
+                            </controls:SettingsDisplayer.InteractionControl>
+
+                        </controls:SettingsDisplayer>
 
                         <controls:SettingsDisplayer Name="EqualizerSettings" Title="Equalizer"
                                                     Description="Here you can tune your audio frequencies to your liking"
@@ -231,6 +251,9 @@
                     </StackPanel>
                 </Grid>
 
+                <!-- ————————————— -->
+                <!-- User Settings -->
+                <!-- ————————————— -->
                 <Grid RowDefinitions="Auto" Margin="10" Name="UserSettings">
 
                     <StackPanel Margin="10" Spacing="1" Name="UserSettingsPanel">
@@ -248,6 +271,9 @@
                     </StackPanel>
                 </Grid>
 
+                <!-- ——————————————————— -->
+                <!-- Patchnotes Settings -->
+                <!-- ——————————————————— -->
                 <Grid RowDefinitions="Auto" Margin="10" Name="PatchNotesSettings">
 
                     <StackPanel Margin="10" Spacing="1" Name="PatchNotesSettingsPanel">
@@ -272,6 +298,9 @@
                     </StackPanel>
                 </Grid>
 
+                <!-- ———————————————————————— -->
+                <!-- HelpAndFeedback Settings -->
+                <!-- ———————————————————————— -->
                 <Grid RowDefinitions="Auto" Margin="10" Name="HelpAndFeedbackSettings">
 
                     <StackPanel Margin="10" Spacing="1" Name="HelpAndFeedbackSettingsPanel">
@@ -312,6 +341,9 @@
                     </StackPanel>
                 </Grid>
 
+                <!-- ——————————————————— -->
+                <!-- Contribute Settings -->
+                <!-- ——————————————————— -->
                 <Grid RowDefinitions="Auto" Margin="10" Name="ContributeSettings">
 
                     <StackPanel Margin="10" Spacing="1" Name="ContributePanel">

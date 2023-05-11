@@ -37,6 +37,7 @@ public class SettingsViewModel : BaseViewModel
     private IShuffleImpl? _selectedShuffleAlgorithm;
     private StartupSong _selectedStartupSong;
     private WindowTransparencyLevel _selectedTransparencyLevel;
+    private AudioDevice _selectedAudioDevice;
     private string _settingsSearchQ = string.Empty;
     private IShuffleServiceProvider? _shuffleServiceProvider;
     private bool _useDiscordRpc;
@@ -237,6 +238,22 @@ public class SettingsViewModel : BaseViewModel
 
     public string SelectedShuffleAlgorithmInfoText => $"{SelectedShuffleAlgorithm?.Name} - {SelectedShuffleAlgorithm?.Description}";
 
+    public List<AudioDevice> AvailableAudioDevices { get; }
+
+    public AudioDevice SelectedAudioDevice
+    {
+        get => _selectedAudioDevice;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _selectedAudioDevice, value);
+
+            using var config = new Config();
+            config.Container.SelectedAudioDevice = AvailableAudioDevices.IndexOf(value);
+            
+            Player.SetDevice(value);
+        }
+    }
+
     public bool BlacklistSkip
     {
         get => _blacklistSkip.Value;
@@ -333,12 +350,12 @@ public class SettingsViewModel : BaseViewModel
 
     public Controls? SettingsCategories { get; set; }
 
-    public ObservableCollection<AudioDevice>? OutputDeviceComboboxItems { get; set; }
-
     public SettingsViewModel(IPlayer player, ISortProvider? sortProvider, IShuffleServiceProvider? shuffleServiceProvider)
     {
         Player = player;
         _shuffleServiceProvider = shuffleServiceProvider;
+
+        AvailableAudioDevices = Player.AvailableAudioDevices;
 
         var config = new Config();
 
@@ -350,6 +367,7 @@ public class SettingsViewModel : BaseViewModel
         _selectedFontWeight = config.Container.DefaultFontWeight;
         _selectedFont = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
         _selectedShuffleAlgorithm = ShuffleAlgorithms?.FirstOrDefault(x => x == _shuffleServiceProvider?.ShuffleImpl);
+        _selectedAudioDevice = AvailableAudioDevices[config.Container.SelectedAudioDevice];
         _useDiscordRpc = config.Container.UseDiscordRpc;
         _usePitch = config.Container.UsePitch;
 
