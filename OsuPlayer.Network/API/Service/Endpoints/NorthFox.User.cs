@@ -9,6 +9,15 @@ namespace OsuPlayer.Network.API.Service.Endpoints;
 
 public partial class NorthFox : AbstractApiBase
 {
+    #region DELETE Requests
+
+    public async Task<bool> DeleteUser()
+    {
+        return await DeleteRequestAsync<bool>("User", "delete");
+    }
+
+    #endregion
+
     #region GET Requests
 
     /// <summary>
@@ -18,9 +27,9 @@ public partial class NorthFox : AbstractApiBase
     /// <returns>The profile picture as Base64 string</returns>
     public async Task<Bitmap?> GetProfilePictureAsync(Guid uniqueId)
     {
-        if (uniqueId == Guid.Empty) 
+        if (uniqueId == Guid.Empty)
             return default;
-        
+
         // We have to use an own implementation, than the base methods. Reason is that this action doesn't return an ApiResponse<T>
         if (Constants.OfflineMode)
             return default;
@@ -40,7 +49,7 @@ public partial class NorthFox : AbstractApiBase
             return default;
         }
     }
-    
+
     /// <summary>
     /// Gets the banner of a specific user
     /// </summary>
@@ -64,7 +73,7 @@ public partial class NorthFox : AbstractApiBase
             return default;
         }
     }
-    
+
     public async Task<List<UserModel>?> GetAllUsers()
     {
         return await Get<UserModel>("User");
@@ -84,7 +93,7 @@ public partial class NorthFox : AbstractApiBase
     {
         return await GetRequestWithParameterAsync<List<UserActivityModel>>("User", "getActivityOfUser", $"uniqueId={uniqueId}");
     }
-    
+
     #endregion
 
     #region POST Requests
@@ -98,7 +107,7 @@ public partial class NorthFox : AbstractApiBase
     {
         if (Constants.OfflineMode)
             return default;
-        
+
         try
         {
             using var client = new HttpClient();
@@ -109,13 +118,13 @@ public partial class NorthFox : AbstractApiBase
             req.Headers.Authorization = GetAuthorizationHeader(username, password);
 
             // CancelCancellationToken();
-            
+
             var result = await client.SendAsync(req, CancellationTokenSource.Token);
 
             var response = JsonConvert.DeserializeObject<ApiResponse<UserTokenResponse>>(await result.Content.ReadAsStringAsync());
-            
-            return response.Errors?.Any() == true 
-                ? default 
+
+            return response.Errors?.Any() == true
+                ? default
                 : response.Value;
         }
         catch (Exception ex)
@@ -125,12 +134,12 @@ public partial class NorthFox : AbstractApiBase
             return default;
         }
     }
-    
+
     public async Task<UserTokenResponse?> Login(string token)
     {
         if (Constants.OfflineMode)
             return default;
-        
+
         try
         {
             using var client = new HttpClient();
@@ -138,17 +147,17 @@ public partial class NorthFox : AbstractApiBase
             var url = new Uri($"{Url}User/loginWithToken");
 
             var req = new HttpRequestMessage(HttpMethod.Post, url);
-            
+
             req.Headers.Add("session-token", token);
 
             // CancelCancellationToken();
-            
+
             var result = await client.SendAsync(req, CancellationTokenSource.Token);
 
             var response = JsonConvert.DeserializeObject<ApiResponse<UserTokenResponse>>(await result.Content.ReadAsStringAsync());
-            
-            return response.Errors?.Any() == true 
-                ? default 
+
+            return response.Errors?.Any() == true
+                ? default
                 : response.Value;
         }
         catch (Exception ex)
@@ -158,7 +167,7 @@ public partial class NorthFox : AbstractApiBase
             return default;
         }
     }
-    
+
     public async Task<UserModel?> EditUser(EditUserModel editData)
     {
         return await PostRequestAsync<UserModel>("User", "edit", editData);
@@ -187,15 +196,6 @@ public partial class NorthFox : AbstractApiBase
     public async Task<bool> SetOnlineStatus(UserOnlineStatusModel data)
     {
         return await PostRequestAsync<bool>("User", "setOnlineStatus", data);
-    }
-    
-    #endregion
-
-    #region DELETE Requests
-
-    public async Task<bool> DeleteUser()
-    {
-        return await DeleteRequestAsync<bool>("User", "delete");
     }
 
     #endregion

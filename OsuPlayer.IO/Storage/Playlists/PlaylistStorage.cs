@@ -20,7 +20,7 @@ public class PlaylistStorage : Storable<PlaylistContainer>
     public PlaylistStorage()
     {
         _playlistContainer ??= Read();
-        
+
         Container = _playlistContainer;
     }
 }

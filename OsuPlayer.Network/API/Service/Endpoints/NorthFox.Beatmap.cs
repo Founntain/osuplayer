@@ -6,8 +6,17 @@ namespace OsuPlayer.Network.API.Service.Endpoints;
 
 public partial class NorthFox
 {
+    #region POST Requests
+
+    public async Task<List<AddBeatmapModel>> AddBeatmap(List<AddBeatmapModel> beatmapsToAdd)
+    {
+        return await PostRequestAsync<List<AddBeatmapModel>>("Beatmap", "add", beatmapsToAdd);
+    }
+
+    #endregion
+
     #region GET Requests
-    
+
     public async Task<List<BeatmapModel>?> GetAllBeatmaps()
     {
         return await Get<BeatmapModel>("Beatmap");
@@ -21,15 +30,6 @@ public partial class NorthFox
     public async Task<UserStatsModel?> GetBeatmapsPlayedByUser(Guid uniqueId, int amount = 0)
     {
         return await GetRequestWithParameterAsync<UserStatsModel>("Beatmap", "beatmapsPlayedByUser", $"id={uniqueId}&amount={amount}");
-    }
-
-    #endregion
-
-    #region POST Requests
-
-    public async Task<List<AddBeatmapModel>> AddBeatmap(List<AddBeatmapModel> beatmapsToAdd)
-    {
-        return await PostRequestAsync<List<AddBeatmapModel>>("Beatmap", "add", beatmapsToAdd);
     }
 
     #endregion

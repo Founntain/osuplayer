@@ -6,14 +6,12 @@
              xmlns:valueConverters="clr-namespace:OsuPlayer.Extensions.ValueConverters;assembly=OsuPlayer.Extensions"
              xmlns:controls="clr-namespace:Nein.Controls;assembly=Nein"
              xmlns:avalonia="clr-namespace:Markdown.Avalonia;assembly=Markdown.Avalonia"
-             xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:ctxt="clr-namespace:ColorTextBlock.Avalonia;assembly=ColorTextBlock.Avalonia"
              xmlns:data="clr-namespace:OsuPlayer.Network.Data;assembly=OsuPlayer.Network"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.SettingsView"
              Initialized="SettingsView_OnInitialized">
     <UserControl.Resources>
-        <valueConverters:SettingsUserConverter x:Key="SettingsUserConverter" />
         <valueConverters:GridFormatter x:Key="GridFormatter" />
     </UserControl.Resources>
     <Design.DataContext>
@@ -210,7 +208,9 @@
                     <StackPanel Margin="10" Spacing="1" Name="AudioSettingsPanel">
                         <controls:SettingsTitleDisplayer Title="Audio Settings" Icon="Speaker" />
 
-                        <controls:SettingsDisplayer Name="EqualizerSettings" Title="Equalizer" Description="Here you can tune your audio frequencies to your liking" Icon="Equalizer">
+                        <controls:SettingsDisplayer Name="EqualizerSettings" Title="Equalizer"
+                                                    Description="Here you can tune your audio frequencies to your liking"
+                                                    Icon="Equalizer">
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <Button Content="open equalizer" Click="OpenEqClick" HorizontalAlignment="Stretch"
@@ -218,8 +218,10 @@
                             </controls:SettingsDisplayer.InteractionControl>
 
                         </controls:SettingsDisplayer>
-                        
-                        <controls:SettingsDisplayer Name="PitchSettings" Title="Enable Pitch Change" Description="If turned on changing the playback speed will change the pitch. (Like Nightcore / Daycore). If turned of it just speeds it up." Icon="Waveform">
+
+                        <controls:SettingsDisplayer Name="PitchSettings" Title="Enable Pitch Change"
+                                                    Description="If turned on changing the playback speed will change the pitch. (Like Nightcore / Daycore). If turned of it just speeds it up."
+                                                    Icon="Waveform">
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <ToggleSwitch IsChecked="{Binding UsePitch}" Click="OnUsePitch_Click" />

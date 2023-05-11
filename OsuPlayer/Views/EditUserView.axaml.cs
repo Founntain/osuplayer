@@ -136,9 +136,9 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
         if (_mainWindow == default || ViewModel?.CurrentUser == default || string.IsNullOrWhiteSpace(ViewModel?.CurrentUser.Name)) return;
 
         var api = Locator.Current.GetService<NorthFox>();
-        
+
         var tempUser = await api.GetUserFromLoginToken();
-        
+
         var changedProfilePicture = ViewModel.IsNewProfilePictureSelected;
 
         if (tempUser == default)
@@ -172,7 +172,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
             return;
         }
-        
+
         var editUserModel = new EditUserModel
         {
             User = ViewModel.CurrentUser,
@@ -195,7 +195,8 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
                 ProfileManager.User = (await api.GetUserFromLoginToken())?.ConvertObjectToJson<User>();
 
             if (changedProfilePicture)
-                await MessageBox.ShowDialogAsync(_mainWindow, $"We couldn't update your profile picture, because you left the edit view to early!{Environment.NewLine}If you want to update your profile picture please wait, until you get the message that it's been done!");
+                await MessageBox.ShowDialogAsync(_mainWindow,
+                    $"We couldn't update your profile picture, because you left the edit view to early!{Environment.NewLine}If you want to update your profile picture please wait, until you get the message that it's been done!");
         }
         else
         {
@@ -205,12 +206,10 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
             ProfileManager.User = ViewModel.CurrentUser.ConvertObjectToJson<User>();
 
             var successMessage = "Profile updated successfully!";
-            
+
             if (response.Name == ViewModel.NewUsername && tempUser.Name != response.Name)
-            {
                 successMessage = "Profile and username updated successfully. Restart your client to see you new username!";
-            }
-            
+
             ViewModel.NewUsername = string.Empty;
 
             await MessageBox.ShowDialogAsync(_mainWindow, successMessage);
@@ -225,7 +224,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
         if (_mainWindow == default || ViewModel?.CurrentUser == default || ViewModel?.CurrentProfilePicture == default) return;
 
         var api = Locator.Current.GetService<NorthFox>();
-        
+
         await using var stream = new MemoryStream();
 
         ViewModel.CurrentProfilePicture.Save(stream);
@@ -278,7 +277,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
         if (ViewModel?.CurrentUser == default || string.IsNullOrWhiteSpace(ViewModel.CurrentUser.Name)) return;
 
         var api = Locator.Current.GetService<NorthFox>();
-        
+
         var user = await api.GetUserFromLoginToken();
 
         if (user == default) return;

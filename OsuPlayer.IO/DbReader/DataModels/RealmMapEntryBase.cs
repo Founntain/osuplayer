@@ -65,8 +65,10 @@ public class RealmMapEntryBase : IMapEntryBase
         var audioFileName = metadata.Get<string>(nameof(BeatmapMetadata.AudioFile));
         var backgroundFileName = metadata.Get<string>(nameof(BeatmapMetadata.BackgroundFile));
 
-        var audioFile = (RealmObjectBase) files.FirstOrDefault(x => string.Equals(x.DynamicApi.Get<string>(nameof(RealmNamedFileUsage.Filename)), audioFileName, StringComparison.CurrentCultureIgnoreCase));
-        var backgroundFile = (RealmObjectBase) files.FirstOrDefault(x => string.Equals(x.DynamicApi.Get<string>(nameof(RealmNamedFileUsage.Filename)), backgroundFileName, StringComparison.CurrentCultureIgnoreCase));
+        var audioFile = (RealmObjectBase) files.FirstOrDefault(x =>
+            string.Equals(x.DynamicApi.Get<string>(nameof(RealmNamedFileUsage.Filename)), audioFileName, StringComparison.CurrentCultureIgnoreCase));
+        var backgroundFile = (RealmObjectBase) files.FirstOrDefault(x =>
+            string.Equals(x.DynamicApi.Get<string>(nameof(RealmNamedFileUsage.Filename)), backgroundFileName, StringComparison.CurrentCultureIgnoreCase));
 
         if (audioFile == null) return null;
 
@@ -85,7 +87,9 @@ public class RealmMapEntryBase : IMapEntryBase
             Title = Title,
             TitleUnicode = metadata.Get<string>(nameof(BeatmapMetadata.TitleUnicode)),
             AudioFileName = audioFileName,
-            BackgroundFileLocation = string.IsNullOrEmpty(backgroundFolderName) ? string.Empty : Path.Combine(OsuPath, "files", backgroundFolderName, backgroundHash!),
+            BackgroundFileLocation = string.IsNullOrEmpty(backgroundFolderName)
+                ? string.Empty
+                : Path.Combine(OsuPath, "files", backgroundFolderName, backgroundHash!),
             Hash = Hash,
             BeatmapSetId = BeatmapSetId,
             FolderName = audioFolderName,

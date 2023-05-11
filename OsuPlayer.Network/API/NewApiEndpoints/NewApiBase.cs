@@ -7,12 +7,12 @@ namespace OsuPlayer.Network.API.NewApiEndpoints;
 
 public static partial class NewApiBase
 {
+    private static CancellationTokenSource? _cancellationTokenSource;
+
     private static string Url => Constants.Localhost
         ? "http://localhost:5000/api/"
         : "https://osuplayer.founntain.dev/api/";
 
-    private static CancellationTokenSource? _cancellationTokenSource;
-    
     private static void ParseWebException(Exception ex)
     {
         if (ex.GetType() != typeof(WebException)) return;
@@ -28,9 +28,9 @@ public static partial class NewApiBase
     private static void CancelCancellationToken()
     {
         _cancellationTokenSource?.Cancel();
-        _cancellationTokenSource = new ();
+        _cancellationTokenSource = new CancellationTokenSource();
     }
-    
+
     /// <summary>
     /// Creates a GET request to the osu!player API returning T.
     /// </summary>
@@ -48,13 +48,13 @@ public static partial class NewApiBase
             using var client = new HttpClient();
 
             CancelCancellationToken();
-            
+
             var data = await client.GetByteArrayAsync(new Uri($"{Url}{controller}/{action}"), _cancellationTokenSource.Token);
 
-            var response =  JsonConvert.DeserializeObject<ApiResponse<T>>(Encoding.UTF8.GetString(data));
+            var response = JsonConvert.DeserializeObject<ApiResponse<T>>(Encoding.UTF8.GetString(data));
 
-            return response.Errors?.Any() == true 
-                ? default 
+            return response.Errors?.Any() == true
+                ? default
                 : response.Value;
         }
         catch (Exception ex)
@@ -64,7 +64,7 @@ public static partial class NewApiBase
             return default;
         }
     }
-    
+
     /// <summary>
     /// Creates a POST request to the osu!player API returning T.
     /// </summary>
@@ -78,7 +78,7 @@ public static partial class NewApiBase
     {
         if (Constants.OfflineMode)
             return default;
-        
+
         try
         {
             using var client = new HttpClient();
@@ -89,13 +89,13 @@ public static partial class NewApiBase
             req.Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
 
             CancelCancellationToken();
-            
+
             var result = await client.SendAsync(req, _cancellationTokenSource.Token);
 
-            var response =  JsonConvert.DeserializeObject<ApiResponse<T>>(await result.Content.ReadAsStringAsync());
-            
-            return response.Errors?.Any() == true 
-                ? default 
+            var response = JsonConvert.DeserializeObject<ApiResponse<T>>(await result.Content.ReadAsStringAsync());
+
+            return response.Errors?.Any() == true
+                ? default
                 : response.Value;
         }
         catch (Exception ex)
@@ -124,13 +124,13 @@ public static partial class NewApiBase
             using var client = new HttpClient();
 
             CancelCancellationToken();
-            
+
             var data = await client.GetByteArrayAsync(new Uri($"{Url}{controller}/{action}?{parameters}"), _cancellationTokenSource.Token);
 
             var response = JsonConvert.DeserializeObject<ApiResponse<T>>(Encoding.UTF8.GetString(data));
-            
-            return response.Errors?.Any() == true 
-                ? default 
+
+            return response.Errors?.Any() == true
+                ? default
                 : response.Value;
         }
         catch (Exception ex)
@@ -168,9 +168,9 @@ public static partial class NewApiBase
             var result = await client.SendAsync(req, _cancellationTokenSource.Token);
 
             var response = JsonConvert.DeserializeObject<ApiResponse<T>>(await result.Content.ReadAsStringAsync());
-            
-            return response.Errors?.Any() == true 
-                ? default 
+
+            return response.Errors?.Any() == true
+                ? default
                 : response.Value;
         }
         catch (Exception ex)

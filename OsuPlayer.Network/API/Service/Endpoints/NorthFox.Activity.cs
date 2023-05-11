@@ -5,7 +5,7 @@ namespace OsuPlayer.Network.API.Service.Endpoints;
 public partial class NorthFox
 {
     #region GET Requests
-    
+
     public async Task<List<ActivityModel>?> GetAllActivities()
     {
         return await Get<ActivityModel>("Activity");
@@ -15,6 +15,6 @@ public partial class NorthFox
     {
         return await GetById<ActivityModel>("Activity", uniqueId);
     }
-    
+
     #endregion
 }

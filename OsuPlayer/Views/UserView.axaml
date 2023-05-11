@@ -103,13 +103,15 @@
                             </StackPanel>
 
                             <ScrollViewer Name="BadgeViewer" Grid.Row="2" Margin="10 0">
-                                <ItemsRepeater Name="BadgeItems" Items="{Binding SelectedUser.Badges}" VerticalAlignment="Top" HorizontalAlignment="Left">
+                                <ItemsRepeater Name="BadgeItems" Items="{Binding SelectedUser.Badges}"
+                                               VerticalAlignment="Top" HorizontalAlignment="Left">
                                     <ItemsRepeater.Layout>
-                                        <StackLayout Orientation="Horizontal" Spacing="0"></StackLayout>
+                                        <StackLayout Orientation="Horizontal" Spacing="0" />
                                     </ItemsRepeater.Layout>
                                     <ItemsRepeater.ItemTemplate>
                                         <DataTemplate DataType="entityModels:BadgeModel">
-                                            <avalonia1:MaterialIcon Kind="{Binding Icon}" Width="32" Height="32" ToolTip.Tip="{Binding Description}"/>
+                                            <avalonia1:MaterialIcon Kind="{Binding Icon}" Width="32" Height="32"
+                                                                    ToolTip.Tip="{Binding Description}" />
                                         </DataTemplate>
                                     </ItemsRepeater.ItemTemplate>
                                 </ItemsRepeater>
@@ -147,7 +149,8 @@
                                 <TextBlock Text="{Binding SelectedUser.LevelString}" FontSize="24"
                                            HorizontalAlignment="Center" VerticalAlignment="Center" />
                             </Border>
-                            <ListBox Grid.Row="1" Background="Transparent" Items="{Binding TopSongsOfCurrentUser.Items}"
+                            <ListBox Grid.Row="1" Background="Transparent"
+                                     Items="{Binding TopSongsOfCurrentUser.Items}"
                                      DoubleTapped="UserTopSongsList_OnDoubleTapped">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate DataType="statistics:BeatmapTimesPlayedModel">

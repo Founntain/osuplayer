@@ -147,7 +147,7 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
         var value = (sender as ToggleSwitch)?.IsChecked;
 
         var engine = Locator.Current.GetRequiredService<IAudioEngine>();
-        
+
         engine.UpdatePlaybackMethod();
     }
 }

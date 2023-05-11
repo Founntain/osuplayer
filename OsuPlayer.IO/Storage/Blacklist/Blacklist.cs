@@ -7,7 +7,7 @@ namespace OsuPlayer.IO.Storage.Blacklist;
 public class Blacklist : Storable<BlacklistContainer>
 {
     private static BlacklistContainer? _blacklistContainer;
-    
+
     protected override JsonSerializerSettings SerializerSettings { get; } = new()
     {
         Formatting = Formatting.None
@@ -15,15 +15,15 @@ public class Blacklist : Storable<BlacklistContainer>
 
     public override string? Path => System.IO.Path.Combine("data", "blacklist.json");
 
-    public bool Contains(IMapEntryBase? map)
-    {
-        return Container.Songs.Contains(map?.Hash);
-    }
-
     public Blacklist()
     {
         _blacklistContainer ??= Read();
-        
+
         Container = _blacklistContainer;
+    }
+
+    public bool Contains(IMapEntryBase? map)
+    {
+        return Container.Songs.Contains(map?.Hash);
     }
 }
