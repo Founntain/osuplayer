@@ -25,12 +25,12 @@
     
     <Grid Background="Black" RowDefinitions="75*, 25*">
         <Border Grid.Row="0" Grid.RowSpan="2">
-            <Image Source="{Binding CurrentSongImage}" Stretch="UniformToFill" />
+            <Image Name="BackgroundImage" Source="{Binding CurrentSongImage}" Stretch="UniformToFill"/>
         </Border>
         
-        <StackPanel Grid.Row="1">
-            <TextBlock Text="{Binding ArtistText}" FontSize="24" />
-            <TextBlock Text="{Binding TitleText}"  FontSize="32"/>
+        <StackPanel Grid.Row="1" Spacing="5" Margin="10 0">
+            <TextBlock Text="{Binding TitleText}"  FontSize="48"/>
+            <TextBlock Text="{Binding ArtistText}" FontSize="18" />
         </StackPanel>
         
     </Grid>
