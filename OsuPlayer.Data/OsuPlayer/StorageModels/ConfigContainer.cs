@@ -28,6 +28,7 @@ public class ConfigContainer : IStorableContainer
     public FontWeights DefaultFontWeight { get; set; } = FontWeights.Medium;
     public string? Font { get; set; }
     public bool UseDiscordRpc { get; set; }
+    public bool UsePitch { get; set; } = true;
 
     public IStorableContainer Init()
     {

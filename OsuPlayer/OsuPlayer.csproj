@@ -121,17 +121,10 @@
             <DependentUpon>SymmetricalView.axaml</DependentUpon>
         </Compile>
         <Compile Update="Windows\CreateProfileWindowViewModel.cs">
-          <DependentUpon>CreateProfileWindow.axaml</DependentUpon>
+            <DependentUpon>CreateProfileWindow.axaml</DependentUpon>
         </Compile>
         <Compile Update="Windows\FullscreenWindowViewModel.cs">
           <DependentUpon>FullscreenWindow.axaml</DependentUpon>
         </Compile>
-    </ItemGroup>
-    <ItemGroup>
-        <UpToDateCheckInput Remove="Resources\profiles\cesan.jpg" />
-        <UpToDateCheckInput Remove="Resources\profiles\Founntain.png" />
-        <UpToDateCheckInput Remove="Resources\profiles\login.jpg" />
-        <UpToDateCheckInput Remove="Resources\profiles\rene.png" />
-        <UpToDateCheckInput Remove="Resources\profiles\teddy.png" />
     </ItemGroup>
 </Project>

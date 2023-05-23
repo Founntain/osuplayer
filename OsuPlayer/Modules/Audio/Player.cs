@@ -199,6 +199,11 @@ public class Player : IPlayer, IImportNotifications
     {
         _audioEngine.SetPlaybackSpeed(speed);
     }
+    
+    public void UpdatePlaybackMethod()
+    {
+        _audioEngine.UpdatePlaybackMethod();
+    }
 
     public void DisposeDiscordClient()
     {
