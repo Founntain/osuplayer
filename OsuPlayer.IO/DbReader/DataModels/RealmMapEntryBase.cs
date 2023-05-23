@@ -65,15 +65,15 @@ public class RealmMapEntryBase : IMapEntryBase
         var audioFileName = metadata.Get<string>(nameof(BeatmapMetadata.AudioFile));
         var backgroundFileName = metadata.Get<string>(nameof(BeatmapMetadata.BackgroundFile));
 
-        var audioFile = (RealmObjectBase) files.FirstOrDefault(x =>
+        var audioFile = (IRealmObjectBase) files.FirstOrDefault(x =>
             string.Equals(x.DynamicApi.Get<string>(nameof(RealmNamedFileUsage.Filename)), audioFileName, StringComparison.CurrentCultureIgnoreCase));
-        var backgroundFile = (RealmObjectBase) files.FirstOrDefault(x =>
+        var backgroundFile = (IRealmObjectBase) files.FirstOrDefault(x =>
             string.Equals(x.DynamicApi.Get<string>(nameof(RealmNamedFileUsage.Filename)), backgroundFileName, StringComparison.CurrentCultureIgnoreCase));
 
         if (audioFile == null) return null;
 
-        var audioHash = audioFile.DynamicApi.Get<RealmObjectBase>(nameof(RealmNamedFileUsage.File)).DynamicApi.Get<string>(nameof(RealmFile.Hash));
-        var backgroundHash = backgroundFile?.DynamicApi.Get<RealmObjectBase>(nameof(RealmNamedFileUsage.File)).DynamicApi.Get<string>(nameof(RealmFile.Hash));
+        var audioHash = audioFile.DynamicApi.Get<IRealmObjectBase>(nameof(RealmNamedFileUsage.File)).DynamicApi.Get<string>(nameof(RealmFile.Hash));
+        var backgroundHash = backgroundFile?.DynamicApi.Get<IRealmObjectBase>(nameof(RealmNamedFileUsage.File)).DynamicApi.Get<string>(nameof(RealmFile.Hash));
 
         var audioFolderName = Path.Combine($"{audioHash[0]}", $"{audioHash[0]}{audioHash[1]}");
         var backgroundFolderName = Path.Combine($"{backgroundHash?[0]}", $"{backgroundHash?[0]}{backgroundHash?[1]}");
