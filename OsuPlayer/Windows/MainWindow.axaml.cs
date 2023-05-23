@@ -18,6 +18,8 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 {
     public Miniplayer? Miniplayer;
 
+    public FullscreenWindow? FullscreenWindow;
+
     public MainWindow()
     {
         InitializeComponent();
