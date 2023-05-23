@@ -35,7 +35,7 @@ public class RealmReader : IDatabaseReader
         foreach (var dynamicRealmObject in _realm.DynamicApi.All("Beatmap").ToList().OfType<DynamicRealmObject>().ToList())
         {
             var hash = dynamicRealmObject.DynamicApi.Get<string>(nameof(BeatmapInfo.MD5Hash));
-            var id = dynamicRealmObject.DynamicApi.Get<RealmObjectBase>(nameof(BeatmapInfo.BeatmapSet)).DynamicApi.Get<int>(nameof(BeatmapSetInfo.OnlineID));
+            var id = dynamicRealmObject.DynamicApi.Get<IRealmObjectBase>(nameof(BeatmapInfo.BeatmapSet)).DynamicApi.Get<int>(nameof(BeatmapSetInfo.OnlineID));
 
             hashes.Add(hash, id);
         }

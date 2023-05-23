@@ -8,6 +8,7 @@ using Nein.Controls.Interfaces;
 using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
+using OsuPlayer.Extensions;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Modules.Services;
 using OsuPlayer.Modules.ShuffleImpl;
@@ -36,6 +37,7 @@ public class SettingsViewModel : BaseViewModel
     private IShuffleImpl? _selectedShuffleAlgorithm;
     private StartupSong _selectedStartupSong;
     private WindowTransparencyLevel _selectedTransparencyLevel;
+    private AudioDevice? _selectedAudioDevice;
     private string _settingsSearchQ = string.Empty;
     private IShuffleServiceProvider? _shuffleServiceProvider;
     private bool _useDiscordRpc;
@@ -49,7 +51,7 @@ public class SettingsViewModel : BaseViewModel
         set
         {
             this.RaiseAndSetIfChanged(ref _usePitch, value);
-            
+
             using var config = new Config();
             config.Container.UsePitch = value;
         }
@@ -105,13 +107,13 @@ public class SettingsViewModel : BaseViewModel
             using var config = new Config();
             config.Container.DefaultFontWeight = value;
 
-            Application.Current!.Resources["SmallerFontWeight"] = config.Container.GetSmallerFont().ToFontWeight();
+            Application.Current!.Resources["SmallerFontWeight"] = config.Container.GetNextSmallerFont().ToFontWeight();
             Application.Current!.Resources["DefaultFontWeight"] = value.ToFontWeight();
-            Application.Current!.Resources["BiggerFontWeight"] = config.Container.GetBiggerFont().ToFontWeight();
+            Application.Current!.Resources["BiggerFontWeight"] = config.Container.GetNextBiggerFont().ToFontWeight();
 
-            Debug.WriteLine("SMALLER FONT: " + config.Container.GetSmallerFont().ToFontWeight().ToString());
-            Debug.WriteLine("NORMAL FONT: " + value.ToFontWeight().ToString());
-            Debug.WriteLine("BIGGER FONT: " + config.Container.GetBiggerFont().ToFontWeight().ToString());
+            Debug.WriteLine("SMALLER FONT: " + config.Container.GetNextSmallerFont().ToFontWeight());
+            Debug.WriteLine("NORMAL FONT: " + value.ToFontWeight());
+            Debug.WriteLine("BIGGER FONT: " + config.Container.GetNextBiggerFont().ToFontWeight());
         }
     }
 
@@ -236,6 +238,22 @@ public class SettingsViewModel : BaseViewModel
 
     public string SelectedShuffleAlgorithmInfoText => $"{SelectedShuffleAlgorithm?.Name} - {SelectedShuffleAlgorithm?.Description}";
 
+    public List<AudioDevice> AvailableAudioDevices { get; }
+
+    public AudioDevice SelectedAudioDevice
+    {
+        get => _selectedAudioDevice ?? AvailableAudioDevices[0];
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _selectedAudioDevice, value);
+
+            using var config = new Config();
+            config.Container.SelectedAudioDeviceDriver = value.Driver;
+            
+            Player.SetDevice(value);
+        }
+    }
+
     public bool BlacklistSkip
     {
         get => _blacklistSkip.Value;
@@ -332,12 +350,12 @@ public class SettingsViewModel : BaseViewModel
 
     public Controls? SettingsCategories { get; set; }
 
-    public ObservableCollection<AudioDevice>? OutputDeviceComboboxItems { get; set; }
-
     public SettingsViewModel(IPlayer player, ISortProvider? sortProvider, IShuffleServiceProvider? shuffleServiceProvider)
     {
         Player = player;
         _shuffleServiceProvider = shuffleServiceProvider;
+
+        AvailableAudioDevices = Player.AvailableAudioDevices;
 
         var config = new Config();
 
@@ -349,6 +367,7 @@ public class SettingsViewModel : BaseViewModel
         _selectedFontWeight = config.Container.DefaultFontWeight;
         _selectedFont = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
         _selectedShuffleAlgorithm = ShuffleAlgorithms?.FirstOrDefault(x => x == _shuffleServiceProvider?.ShuffleImpl);
+        _selectedAudioDevice = AvailableAudioDevices.FirstOrDefault(x => x.Driver == config.Container.SelectedAudioDeviceDriver);
         _useDiscordRpc = config.Container.UseDiscordRpc;
         _usePitch = config.Container.UsePitch;
 

@@ -76,7 +76,7 @@ internal static class Program
         services.RegisterLazySingleton<IStatisticsProvider>(() => new ApiStatisticsProvider());
         services.RegisterLazySingleton<ISortProvider>(() => new SortProvider());
         services.RegisterLazySingleton<ISongSourceProvider>(() => new OsuSongSourceProvider(resolver.GetService<ISortProvider>()));
-        
+
         services.RegisterLazySingleton(() => new NorthFox());
 
         services.RegisterLazySingleton<IPlayer>(() => new Player(

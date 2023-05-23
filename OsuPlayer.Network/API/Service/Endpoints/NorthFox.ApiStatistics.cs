@@ -10,11 +10,11 @@ public partial class NorthFox
     {
         return await GetRequestAsync<ApiStatisticsModel>("ApiStatistics", "get");
     }
-    
+
     public async Task<double> GetStorageAmount()
     {
         return await GetRequestAsync<double>("ApiStatistics", "getStorageAmount");
     }
-    
+
     #endregion
 }

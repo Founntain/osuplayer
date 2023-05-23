@@ -101,7 +101,7 @@
                     </Button.Flyout>
                 </Button>
             </Panel>
-            
+
             <Button Name="Blacklist" Width="38" Height="38" CornerRadius="50" Click="Blacklist_OnClick"
                     Background="Transparent">
                 <avalonia:MaterialIcon
@@ -146,7 +146,7 @@
                 <avalonia:MaterialIcon Kind="{Binding IsShuffle, Converter={StaticResource ShuffleConverter}}"
                                        Height="19" Width="19" />
             </Button>
-            
+
             <Button Name="Favorite" Width="38" Height="38" CornerRadius="50"
                     IsEnabled="{Binding IsAPlaylistSelected}"
                     Click="Favorite_OnClick"

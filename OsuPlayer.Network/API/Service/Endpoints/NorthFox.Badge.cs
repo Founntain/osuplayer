@@ -5,7 +5,7 @@ namespace OsuPlayer.Network.API.Service.Endpoints;
 public partial class NorthFox
 {
     #region GET Requests
-    
+
     public async Task<List<BadgeModel>?> GetAllBadges()
     {
         return await Get<BadgeModel>("Badge");
@@ -15,7 +15,7 @@ public partial class NorthFox
     {
         return await GetById<BadgeModel>("Badge", uniqueId);
     }
-    
+
     #endregion
 
     #region POST Requests

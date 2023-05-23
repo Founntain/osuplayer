@@ -50,7 +50,8 @@
                 <TextBox Text="{Binding Password}" FontWeight="{DynamicResource DefaultFontWeight}" PasswordChar="•" />
             </StackPanel>
 
-            <TextBlock Text="you can choose a description, profile picture and other stuff after creating your profile" FontWeight="{DynamicResource SmallerFontWeight}"
+            <TextBlock Text="you can choose a description, profile picture and other stuff after creating your profile"
+                       FontWeight="{DynamicResource SmallerFontWeight}"
                        Margin="0 5" TextWrapping="Wrap" />
 
             <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Margin="0 10">

@@ -18,14 +18,14 @@ public class ApiStatisticsProvider : IStatisticsProvider
 
     public async Task UpdateOnlineStatus(UserOnlineStatusType statusType, string? song = null, string? checksum = null)
     {
-        if (ProfileManager.User == default || ProfileManager.User.UniqueId == Guid.Empty) 
+        if (ProfileManager.User == default || ProfileManager.User.UniqueId == Guid.Empty)
             return;
-        
+
         await Locator.Current.GetService<NorthFox>().SetOnlineStatus(new UserOnlineStatusModel
         {
             StatusType = statusType,
             Song = song,
-            SongChecksum = checksum,
+            SongChecksum = checksum
         });
     }
 
@@ -37,7 +37,7 @@ public class ApiStatisticsProvider : IStatisticsProvider
 
         var time = timeListened / 1000;
 
-        var response = await Locator.Current.GetService<NorthFox>().UpdateXp( new UpdateXpModel
+        var response = await Locator.Current.GetService<NorthFox>().UpdateXp(new UpdateXpModel
         {
             SongChecksum = hash,
             ChannelLength = channelLength,

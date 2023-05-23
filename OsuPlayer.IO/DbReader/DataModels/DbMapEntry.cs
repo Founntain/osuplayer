@@ -24,12 +24,12 @@ internal class DbMapEntry : DbMapEntryBase, IMapEntry
             return null;
 
         string[] files;
-        
+
         try
         {
-           files = Directory.GetFiles(FolderPath, "*.osu");
+            files = Directory.GetFiles(FolderPath, "*.osu");
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Debug.WriteLine(ex);
 

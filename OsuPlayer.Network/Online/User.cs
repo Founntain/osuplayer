@@ -15,7 +15,7 @@ public sealed class User : UserModel
         get
         {
             if (UniqueId == Guid.Empty) return string.Empty;
-                
+
             return SongsPlayed == default ? "0 songs played" : $"{SongsPlayed.ToString("##,###", CultureInfo.InvariantCulture)} songs played";
         }
     }
@@ -26,7 +26,9 @@ public sealed class User : UserModel
         {
             if (UniqueId == Guid.Empty) return string.Empty;
 
-            return TotalXp == default ? "Level 1 | Total XP: 0" : $"Level {Level.ToString("##,###", CultureInfo.InvariantCulture)} | Total XP: {TotalXp.ToString("##,###", CultureInfo.InvariantCulture)}";
+            return TotalXp == default
+                ? "Level 1 | Total XP: 0"
+                : $"Level {Level.ToString("##,###", CultureInfo.InvariantCulture)} | Total XP: {TotalXp.ToString("##,###", CultureInfo.InvariantCulture)}";
         }
     }
 
@@ -35,9 +37,9 @@ public sealed class User : UserModel
         get
         {
             if (UniqueId == Guid.Empty) return string.Empty;
-            
-            return Xp == default 
-                ? $"0 XP / {GetXpNeededForNextLevel().ToString("##,###", CultureInfo.InvariantCulture)} XP" 
+
+            return Xp == default
+                ? $"0 XP / {GetXpNeededForNextLevel().ToString("##,###", CultureInfo.InvariantCulture)} XP"
                 : $"{Xp.ToString("##,###", CultureInfo.InvariantCulture)} XP / {GetXpNeededForNextLevel().ToString("##,###", CultureInfo.InvariantCulture)} XP";
         }
     }

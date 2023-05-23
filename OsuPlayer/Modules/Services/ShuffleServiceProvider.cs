@@ -22,7 +22,8 @@ public class ShuffleServiceProvider : IShuffleServiceProvider
 
         ShuffleAlgorithms.Sort((a, b) => string.Compare(a.Name, b.Name, StringComparison.InvariantCulture));
 
-        var shuffleAlgo = ShuffleAlgorithms.FirstOrDefault(x => string.Equals(x.GetType().Name, config.Container.ShuffleAlgorithm, StringComparison.InvariantCultureIgnoreCase));
+        var shuffleAlgo = ShuffleAlgorithms.FirstOrDefault(x =>
+            string.Equals(x.GetType().Name, config.Container.ShuffleAlgorithm, StringComparison.InvariantCultureIgnoreCase));
 
         ShuffleImpl = shuffleAlgo ?? ShuffleAlgorithms.FirstOrDefault(x => x.GetType().IsDefined(typeof(DefaultImplAttr), false));
     }

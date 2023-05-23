@@ -27,7 +27,7 @@ public partial class UserView : ReactiveControl<UserViewModel>
         if (list?.SelectedItem == default) return;
 
         var user = list?.SelectedItem.ConvertObjectToJson<User>();
-        
+
         // var items = ViewModel!.LoadBadges(user);
 
         // viewer.Content = new ItemsRepeater

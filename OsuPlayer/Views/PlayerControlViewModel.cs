@@ -4,6 +4,7 @@ using Nein.Base;
 using Nein.Extensions;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
+using OsuPlayer.Extensions;
 using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules.Audio.Interfaces;
@@ -35,7 +36,7 @@ public class PlayerControlViewModel : BaseViewModel
         {
             using var config = new Config();
 
-            return config.Container.GetSmallerFont();
+            return config.Container.GetNextSmallerFont();
         }
     }
 

@@ -43,9 +43,9 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
 
     private void SettingsView_OnInitialized(object? sender, EventArgs e)
     {
-        using var config = new Config();
+        var config = new Config();
 
-        ViewModel!.OsuLocation = config.Read().OsuPath!;
+        ViewModel!.OsuLocation = config.Container.OsuPath!;
     }
 
     public async void ImportSongsClick(object? sender, RoutedEventArgs routedEventArgs)
@@ -147,7 +147,7 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
         var value = (sender as ToggleSwitch)?.IsChecked;
 
         var engine = Locator.Current.GetRequiredService<IAudioEngine>();
-        
+
         engine.UpdatePlaybackMethod();
     }
 }

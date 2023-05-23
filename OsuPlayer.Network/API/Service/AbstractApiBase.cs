@@ -9,15 +9,15 @@ namespace OsuPlayer.Network.API.Service;
 
 public abstract class AbstractApiBase
 {
+    protected static CancellationTokenSource CancellationTokenSource = new();
+
     protected string Url => Constants.Localhost
         ? "https://localhost:7096/"
         // : "https://sandbox.founntain.dev/";
         : "https://osuplayer.founntain.dev/";
-    
-    protected static CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
-    
+
     protected string? UserAuthToken { get; set; }
-    
+
     protected void ParseWebException(Exception ex)
     {
         if (ex.GetType() != typeof(WebException)) return;
@@ -42,7 +42,6 @@ public abstract class AbstractApiBase
     //     CancellationTokenSource.Cancel();
     //     CancellationTokenSource = new ();
     // }
-
     protected AuthenticationHeaderValue GetAuthorizationHeader(string username, string password)
     {
         var authenticationString = $"{username}:{password}";
@@ -50,14 +49,63 @@ public abstract class AbstractApiBase
 
         return new AuthenticationHeaderValue("Basic", base64EncodedAuthenticationString);
     }
-    
+
+    #region DELETE Requests
+
+    /// <summary>
+    /// Creates a DELETE request to the osu!player API returning T.
+    /// </summary>
+    /// ///
+    /// <param name="controller">The controller to call</param>
+    /// <param name="action">The route of the controller</param>
+    /// <param name="data">Date to send</param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns>Returns an object of type T</returns>
+    public async Task<T?> DeleteRequestAsync<T>(string controller, string action, object? data = null)
+    {
+        if (Constants.OfflineMode)
+            return default;
+
+        try
+        {
+            using var client = new HttpClient();
+
+            var url = new Uri($"{Url}{controller}/{action}");
+
+            var req = new HttpRequestMessage(HttpMethod.Delete, url);
+
+            req.Headers.Add("username", ProfileManager.User?.Name);
+            req.Headers.Add("session-token", UserAuthToken);
+
+            req.Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+
+            // CancelCancellationToken();
+
+            var result = await client.SendAsync(req, CancellationTokenSource.Token);
+
+            var response = JsonConvert.DeserializeObject<ApiResponse<T>>(await result.Content.ReadAsStringAsync());
+
+            return response.Errors?.Any() == true
+                ? default
+                : response.Value;
+        }
+        catch (Exception ex)
+        {
+            ParseWebException(ex);
+
+            return default;
+        }
+    }
+
+    #endregion
+
     #region GET Requests
 
     /// <summary>
     /// Calls the default Get Method of the controller
     /// </summary>
     /// <typeparam name="T">The Type that is expected to return</typeparam>
-    /// <returns>An <see cref="List{T}"/></returns>
+    /// <returns>An <see cref="List{T}" /></returns>
     public async Task<List<T>?> Get<T>(string controller)
     {
         return await GetRequestAsync<List<T>>(controller, "get");
@@ -69,12 +117,12 @@ public abstract class AbstractApiBase
     /// <param name="controller">The controller to call</param>
     /// <param name="uniqueId">The unique ID of the object</param>
     /// <typeparam name="T">The type that is expected to return</typeparam>
-    /// <returns>an object of type <see cref="T"/></returns>
+    /// <returns>an object of type <see cref="T" /></returns>
     public async Task<T?> GetById<T>(string controller, Guid uniqueId)
     {
         return await GetRequestWithParameterAsync<T>(controller, "getById", $"id={uniqueId}");
     }
-    
+
     /// <summary>
     /// Creates a GET request to the osu!player API returning T.
     /// </summary>
@@ -90,22 +138,22 @@ public abstract class AbstractApiBase
         try
         {
             using var client = new HttpClient();
-            
+
             var url = new Uri($"{Url}{controller}/{action}");
-            
+
             var req = new HttpRequestMessage(HttpMethod.Get, url);
-            
+
             req.Headers.Add("username", ProfileManager.User?.Name);
             req.Headers.Add("session-token", UserAuthToken);
-            
+
             // CancelCancellationToken();
-            
+
             var result = await client.SendAsync(req, CancellationTokenSource.Token);
 
-            var response =  JsonConvert.DeserializeObject<ApiResponse<T>>(await result.Content.ReadAsStringAsync());
-            
-            return response.Errors?.Any() == true 
-                ? default 
+            var response = JsonConvert.DeserializeObject<ApiResponse<T>>(await result.Content.ReadAsStringAsync());
+
+            return response.Errors?.Any() == true
+                ? default
                 : response.Value;
         }
         catch (Exception ex)
@@ -115,7 +163,7 @@ public abstract class AbstractApiBase
             return default;
         }
     }
-    
+
     /// <summary>
     /// Creates a GET request to the osu!player api with parameters returning T.
     /// </summary>
@@ -132,22 +180,22 @@ public abstract class AbstractApiBase
         try
         {
             using var client = new HttpClient();
-            
+
             var url = new Uri($"{Url}{controller}/{action}?{parameters}");
-            
+
             var req = new HttpRequestMessage(HttpMethod.Get, url);
-            
+
             req.Headers.Add("username", ProfileManager.User?.Name);
             req.Headers.Add("session-token", UserAuthToken);
-            
+
             // CancelCancellationToken();
-            
+
             var result = await client.SendAsync(req, CancellationTokenSource.Token);
 
-            var response =  JsonConvert.DeserializeObject<ApiResponse<T>>(await result.Content.ReadAsStringAsync());
-            
-            return response.Errors?.Any() == true 
-                ? default 
+            var response = JsonConvert.DeserializeObject<ApiResponse<T>>(await result.Content.ReadAsStringAsync());
+
+            return response.Errors?.Any() == true
+                ? default
                 : response.Value;
         }
         catch (Exception ex)
@@ -175,7 +223,7 @@ public abstract class AbstractApiBase
     {
         if (Constants.OfflineMode)
             return default;
-        
+
         try
         {
             using var client = new HttpClient();
@@ -183,20 +231,20 @@ public abstract class AbstractApiBase
             var url = new Uri($"{Url}{controller}/{action}");
 
             var req = new HttpRequestMessage(HttpMethod.Post, url);
-            
+
             req.Headers.Add("username", ProfileManager.User?.Name);
             req.Headers.Add("session-token", UserAuthToken);
 
             req.Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
 
             // CancelCancellationToken();
-            
+
             var result = await client.SendAsync(req, CancellationTokenSource.Token);
 
-            var response =  JsonConvert.DeserializeObject<ApiResponse<T>>(await result.Content.ReadAsStringAsync());
-            
-            return response.Errors?.Any() == true 
-                ? default 
+            var response = JsonConvert.DeserializeObject<ApiResponse<T>>(await result.Content.ReadAsStringAsync());
+
+            return response.Errors?.Any() == true
+                ? default
                 : response.Value;
         }
         catch (Exception ex)
@@ -206,7 +254,7 @@ public abstract class AbstractApiBase
             return default;
         }
     }
-    
+
     /// <summary>
     /// Creates a POST request to the osu!player API returning T.
     /// </summary>
@@ -228,7 +276,7 @@ public abstract class AbstractApiBase
             var url = new Uri($"{Url}{controller}/{action}?{parameters}");
 
             var req = new HttpRequestMessage(HttpMethod.Post, url);
-            
+
             req.Headers.Add("username", ProfileManager.User?.Name);
             req.Headers.Add("session-token", UserAuthToken);
 
@@ -237,58 +285,9 @@ public abstract class AbstractApiBase
             var result = await client.SendAsync(req, CancellationTokenSource.Token);
 
             var response = JsonConvert.DeserializeObject<ApiResponse<T>>(await result.Content.ReadAsStringAsync());
-            
-            return response.Errors?.Any() == true 
-                ? default 
-                : response.Value;
-        }
-        catch (Exception ex)
-        {
-            ParseWebException(ex);
 
-            return default;
-        }
-    }
-
-    #endregion
-
-    #region DELETE Requests
-
-    /// <summary>
-    /// Creates a DELETE request to the osu!player API returning T.
-    /// </summary>
-    /// ///
-    /// <param name="controller">The controller to call</param>
-    /// <param name="action">The route of the controller</param>
-    /// <param name="data">Date to send</param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns>Returns an object of type T</returns>
-    public async Task<T?> DeleteRequestAsync<T>(string controller, string action, object? data = null)
-    {
-        if (Constants.OfflineMode)
-            return default;
-        
-        try
-        {
-            using var client = new HttpClient();
-
-            var url = new Uri($"{Url}{controller}/{action}");
-
-            var req = new HttpRequestMessage(HttpMethod.Delete, url);
-            
-            req.Headers.Add("username", ProfileManager.User?.Name);
-            req.Headers.Add("session-token", UserAuthToken);
-            
-            req.Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
-
-            // CancelCancellationToken();
-            
-            var result = await client.SendAsync(req, CancellationTokenSource.Token);
-
-            var response =  JsonConvert.DeserializeObject<ApiResponse<T>>(await result.Content.ReadAsStringAsync());
-            
-            return response.Errors?.Any() == true 
-                ? default 
+            return response.Errors?.Any() == true
+                ? default
                 : response.Value;
         }
         catch (Exception ex)

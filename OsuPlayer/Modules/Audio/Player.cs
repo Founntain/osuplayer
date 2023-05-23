@@ -62,7 +62,8 @@ public class Player : IPlayer, IImportNotifications
     public Bindable<Playlist?> SelectedPlaylist { get; } = new();
     private List<IMapEntryBase> ActivePlaylistSongs { get; set; }
 
-    public Player(IAudioEngine audioEngine, ISongSourceProvider songSourceProvider, IShuffleServiceProvider? shuffleProvider = null, IStatisticsProvider? statisticsProvider = null, ISortProvider? sortProvider = null)
+    public Player(IAudioEngine audioEngine, ISongSourceProvider songSourceProvider, IShuffleServiceProvider? shuffleProvider = null,
+        IStatisticsProvider? statisticsProvider = null, ISortProvider? sortProvider = null)
     {
         _audioEngine = audioEngine;
 
@@ -159,7 +160,8 @@ public class Player : IPlayer, IImportNotifications
         var config = new Config();
         var playlists = new PlaylistStorage();
 
-        SelectedPlaylist.Value = playlists.Container.Playlists?.FirstOrDefault(x => x.Id == config.Container.SelectedPlaylist) ?? playlists.Container.Playlists?.First(y => y.Name == "Favorites");
+        SelectedPlaylist.Value = playlists.Container.Playlists?.FirstOrDefault(x => x.Id == config.Container.SelectedPlaylist) ??
+                                 playlists.Container.Playlists?.First(y => y.Name == "Favorites");
 
         switch (config.Container.StartupSong)
         {
@@ -199,7 +201,7 @@ public class Player : IPlayer, IImportNotifications
     {
         _audioEngine.SetPlaybackSpeed(speed);
     }
-    
+
     public void UpdatePlaybackMethod()
     {
         _audioEngine.UpdatePlaybackMethod();
@@ -300,7 +302,8 @@ public class Player : IPlayer, IImportNotifications
             return;
         }
 
-        if ((await new Config().ReadAsync()).IgnoreSongsWithSameNameCheckBox && string.Equals(CurrentSong.Value?.SongName, song.SongName, StringComparison.OrdinalIgnoreCase))
+        if ((await new Config().ReadAsync()).IgnoreSongsWithSameNameCheckBox &&
+            string.Equals(CurrentSong.Value?.SongName, song.SongName, StringComparison.OrdinalIgnoreCase))
             switch (playDirection)
             {
                 case PlayDirection.Forward:
@@ -375,7 +378,8 @@ public class Player : IPlayer, IImportNotifications
             songToPlay = songSource[currentIndex];
         }
 
-        if (BlacklistSkip.Value && new Blacklist().Container.Songs.Contains(songToPlay.Hash)) songToPlay = GetNextSongToPlay(songSource, currentIndex, playDirection);
+        if (BlacklistSkip.Value && new Blacklist().Container.Songs.Contains(songToPlay.Hash))
+            songToPlay = GetNextSongToPlay(songSource, currentIndex, playDirection);
 
         return songToPlay;
     }

@@ -10,20 +10,20 @@ namespace OsuPlayer.Views;
 
 public class StatisticsViewModel : BaseViewModel
 {
+    private ulong _beatmapsTracked;
+    private ulong _communityLevel;
     private float _mbUsed;
-    
-    private Timer? _timer;
-    private TimeSpan _playerAgeTime;
-    
+
     private string _playerAge = string.Empty;
+    private TimeSpan _playerAgeTime;
+    private ulong _songsPlayed;
+
+    private Timer? _timer;
+    private ulong _translators;
 
     private ulong _users;
-    private ulong _xpLeft;
     private ulong _xpEarned;
-    private ulong _songsPlayed;
-    private ulong _translators;
-    private ulong _communityLevel;
-    private ulong _beatmapsTracked;
+    private ulong _xpLeft;
 
     public ulong Users
     {
