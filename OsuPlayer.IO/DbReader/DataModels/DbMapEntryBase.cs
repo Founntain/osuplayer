@@ -159,8 +159,22 @@ public class DbMapEntryBase : IMapEntryBase
         r.ReadInt32(); //LastEditTime
         r.ReadByte(); //ManiaScrollSpeed
 
-        var fullPath = Path.Combine(OsuPath, "Songs", folderName, audioFileName);
-        var folderPath = Path.Combine(OsuPath, "Songs", folderName);
+        string fullPath;
+        string folderPath;
+
+        var folderInfo = new DirectoryInfo(Path.Combine(OsuPath, "Songs"));
+
+        switch (folderInfo.LinkTarget)
+        {
+            case { } target:
+                fullPath = Path.Combine(target, folderName, audioFileName);
+                folderPath = Path.Combine(target, folderName);
+                break;
+            case null:
+                fullPath = Path.Combine(OsuPath, "Songs", folderName, audioFileName);
+                folderPath = Path.Combine(OsuPath, "Songs", folderName);
+                break;
+        }
 
         return new DbMapEntry
         {

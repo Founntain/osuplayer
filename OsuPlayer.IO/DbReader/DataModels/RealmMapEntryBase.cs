@@ -78,6 +78,23 @@ public class RealmMapEntryBase : IMapEntryBase
         var audioFolderName = Path.Combine($"{audioHash[0]}", $"{audioHash[0]}{audioHash[1]}");
         var backgroundFolderName = Path.Combine($"{backgroundHash?[0]}", $"{backgroundHash?[0]}{backgroundHash?[1]}");
 
+        string fullPath;
+        string folderPath;
+
+        var folderInfo = new DirectoryInfo(Path.Combine(OsuPath, "files"));
+
+        switch (folderInfo.LinkTarget)
+        {
+            case { } target:
+                fullPath = Path.Combine(target, audioFolderName, audioHash);
+                folderPath = Path.Combine(target, audioFolderName);
+                break;
+            case null:
+                fullPath = Path.Combine(OsuPath, "files", audioFolderName, audioHash);
+                folderPath = Path.Combine(OsuPath, "files", audioFolderName);
+                break;
+        }
+
         var newMap = new RealmMapEntry
         {
             Id = Id,
@@ -93,8 +110,8 @@ public class RealmMapEntryBase : IMapEntryBase
             Hash = Hash,
             BeatmapSetId = BeatmapSetId,
             FolderName = audioFolderName,
-            FolderPath = Path.Combine("files", audioFolderName),
-            FullPath = Path.Combine(OsuPath, "files", audioFolderName, audioHash)
+            FullPath = fullPath,
+            FolderPath = folderPath
         };
 
         realm.Dispose();
