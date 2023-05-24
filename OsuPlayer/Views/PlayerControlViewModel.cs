@@ -1,5 +1,6 @@
 using System.Reactive.Disposables;
 using Avalonia.Media.Imaging;
+using Avalonia.Threading;
 using Nein.Base;
 using Nein.Extensions;
 using OsuPlayer.Data.OsuPlayer.Enums;
@@ -176,14 +177,17 @@ public class PlayerControlViewModel : BaseViewModel
 
         Player.CurrentSongImage.BindValueChanged(d =>
         {
-            CurrentSongImage?.Dispose();
-            if (!string.IsNullOrEmpty(d.NewValue) && File.Exists(d.NewValue))
+            Dispatcher.UIThread.Post(() =>
             {
-                CurrentSongImage = new Bitmap(d.NewValue);
-                return;
-            }
+                CurrentSongImage?.Dispose();
+                if (!string.IsNullOrEmpty(d.NewValue) && File.Exists(d.NewValue))
+                {
+                    CurrentSongImage = new Bitmap(d.NewValue);
+                    return;
+                }
 
-            CurrentSongImage = null;
+                CurrentSongImage = null;
+            });
         }, true);
 
         Player.SelectedPlaylist.BindValueChanged(_ =>

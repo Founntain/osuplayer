@@ -1,5 +1,6 @@
 ﻿using System.Collections.Specialized;
 using System.Reactive.Disposables;
+using Avalonia.Threading;
 using Nein.Base;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.IO.Storage.Equalizer;
@@ -106,7 +107,10 @@ public class EqualizerViewModel : BaseViewModel
         _player = player;
 
         Frequencies.BindTo(_player.EqGains);
-        Frequencies.BindCollectionChanged(UpdateEq);
+        Frequencies.BindCollectionChanged((sender, args) =>
+        {
+            Dispatcher.UIThread.Post(() => UpdateEq(sender, args));
+        });
 
         using (var eqStorage = new EqStorage())
         {
@@ -117,7 +121,7 @@ public class EqualizerViewModel : BaseViewModel
         this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
     }
 
-    private void UpdateEq(object sender, NotifyCollectionChangedEventArgs args)
+    private void UpdateEq(object? sender, NotifyCollectionChangedEventArgs args)
     {
         if (EqPresets?.FirstOrDefault(x => x.Name == "Flat (Default)") == default)
         {

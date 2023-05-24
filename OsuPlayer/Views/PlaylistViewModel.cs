@@ -82,7 +82,10 @@ public class PlaylistViewModel : BaseViewModel
             {
                 Dispatcher.UIThread.Post(() =>
                 {
-                    foreach (var x in _materialIcons) x.IsVisible = false;
+                    foreach (var x in _materialIcons)
+                    {
+                        x.IsVisible = false;
+                    }
                 });
                 return;
             }
@@ -97,12 +100,15 @@ public class PlaylistViewModel : BaseViewModel
             if (selection == default)
                 return;
 
-            Playlists = PlaylistManager.GetAllPlaylists()?.OrderBy(x => x.Name).ToObservableCollection() ?? new ObservableCollection<Playlist>();
+            Dispatcher.UIThread.Post(() =>
+            {
+                Playlists = PlaylistManager.GetAllPlaylists()?.OrderBy(x => x.Name).ToObservableCollection() ?? new ObservableCollection<Playlist>();
 
-            this.RaisePropertyChanged(nameof(Playlists));
+                this.RaisePropertyChanged(nameof(Playlists));
 
-            if (SelectedPlaylist == null)
-                SelectedPlaylist = Playlists.FirstOrDefault(x => x.Id == selection!.Id);
+                if (SelectedPlaylist == null)
+                    SelectedPlaylist = Playlists.FirstOrDefault(x => x.Id == selection!.Id);
+            });
         };
 
         Activator = new ViewModelActivator();
@@ -146,7 +152,10 @@ public class PlaylistViewModel : BaseViewModel
 
         Dispatcher.UIThread.Post(() =>
         {
-            for (var i = 0; i < _materialIcons.Count; i++) _materialIcons[i].IsVisible = Player.SelectedPlaylist.Value?.Id == Playlists?[i].Id;
+            for (var i = 0; i < _materialIcons.Count; i++)
+            {
+                _materialIcons[i].IsVisible = Player.SelectedPlaylist.Value?.Id == Playlists?[i].Id;
+            }
         });
     }
 
