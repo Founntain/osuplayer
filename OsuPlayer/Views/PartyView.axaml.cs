@@ -1,11 +1,11 @@
-﻿using Avalonia.Controls;
-using Avalonia.Interactivity;
+﻿using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Nein.Base;
 using Nein.Extensions;
 
 namespace OsuPlayer.Views;
 
-public partial class PartyView : UserControl
+public partial class PartyView : ReactiveControl<PartyViewModel>
 {
     public PartyView()
     {
