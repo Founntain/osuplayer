@@ -80,7 +80,13 @@ public class PlaylistViewModel : BaseViewModel
         {
             if (d.NewValue != RepeatMode.Playlist)
             {
-                _materialIcons.ForEach(x => x.IsVisible = false);
+                Dispatcher.UIThread.Post(() =>
+                {
+                    foreach (var x in _materialIcons)
+                    {
+                        x.IsVisible = false;
+                    }
+                });
                 return;
             }
 
@@ -94,12 +100,15 @@ public class PlaylistViewModel : BaseViewModel
             if (selection == default)
                 return;
 
-            Playlists = PlaylistManager.GetAllPlaylists()?.OrderBy(x => x.Name).ToObservableCollection() ?? new ObservableCollection<Playlist>();
+            Dispatcher.UIThread.Post(() =>
+            {
+                Playlists = PlaylistManager.GetAllPlaylists()?.OrderBy(x => x.Name).ToObservableCollection() ?? new ObservableCollection<Playlist>();
 
-            this.RaisePropertyChanged(nameof(Playlists));
+                this.RaisePropertyChanged(nameof(Playlists));
 
-            if (SelectedPlaylist == null)
-                SelectedPlaylist = Playlists.FirstOrDefault(x => x.Id == selection!.Id);
+                if (SelectedPlaylist == null)
+                    SelectedPlaylist = Playlists.FirstOrDefault(x => x.Id == selection!.Id);
+            });
         };
 
         Activator = new ViewModelActivator();
@@ -141,7 +150,13 @@ public class PlaylistViewModel : BaseViewModel
     {
         if (_materialIcons.Count != Playlists?.Count || Player.RepeatMode.Value != RepeatMode.Playlist) return;
 
-        for (var i = 0; i < _materialIcons.Count; i++) _materialIcons[i].IsVisible = Player.SelectedPlaylist.Value?.Id == Playlists?[i].Id;
+        Dispatcher.UIThread.Post(() =>
+        {
+            for (var i = 0; i < _materialIcons.Count; i++)
+            {
+                _materialIcons[i].IsVisible = Player.SelectedPlaylist.Value?.Id == Playlists?[i].Id;
+            }
+        });
     }
 
     /// <summary>

@@ -2,6 +2,7 @@
 using System.Reactive.Disposables;
 using System.Threading;
 using Avalonia.Media.Imaging;
+using Avalonia.Threading;
 using Nein.Base;
 using Nein.Extensions;
 using OsuPlayer.Api.Data.API.EntityModels;
@@ -143,7 +144,7 @@ public class EditUserViewModel : BaseViewModel
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            TopSongsOfCurrentUser = stats.Beatmaps.ToObservableCollection();
+            Dispatcher.UIThread.Post(() => TopSongsOfCurrentUser = stats?.Beatmaps.ToObservableCollection());
         }
         catch (OperationCanceledException)
         {
@@ -175,7 +176,7 @@ public class EditUserViewModel : BaseViewModel
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            CurrentProfilePicture = profilePicture;
+            Dispatcher.UIThread.Post(() => CurrentProfilePicture = profilePicture);
         }
         catch (OperationCanceledException)
         {
@@ -209,12 +210,15 @@ public class EditUserViewModel : BaseViewModel
 
             if (banner == default)
             {
-                CurrentProfileBanner = default;
+                Dispatcher.UIThread.Post(() => CurrentProfileBanner = default);
                 return;
             }
 
-            CurrentProfileBanner = banner;
-            CurrentProfileBannerUrl = CurrentUser.CustomBannerUrl;
+            Dispatcher.UIThread.Post(() =>
+            {
+                CurrentProfileBanner = banner;
+                CurrentProfileBannerUrl = CurrentUser.CustomBannerUrl;
+            });
             this.RaisePropertyChanged(nameof(CurrentProfileBannerUrl));
         }
         catch (OperationCanceledException)
