@@ -21,4 +21,9 @@ public partial class PartyView : ReactiveControl<PartyViewModel>
     {
         GeneralExtensions.OpenUrl("https://github.com/osu-player/osuplayer/issues/70");
     }
+
+    private void JoinParty_OnClick(object? sender, RoutedEventArgs e)
+    {
+        throw new NotImplementedException();
+    }
 }

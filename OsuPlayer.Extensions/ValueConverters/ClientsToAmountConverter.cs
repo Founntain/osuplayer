@@ -4,14 +4,15 @@ using OsuPlayer.Api.Data.API.EntityModels;
 
 namespace OsuPlayer.Extensions.ValueConverters;
 
-public class SettingsUserConverter : IValueConverter
+public class ClientsToAmountConverter : IValueConverter
 {
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is UserModel user)
-            return user.Name;
+        // Checks if Values[0] is a Guid and assigns it to hostId, same for clients.
+        if (value is not HashSet<UserModel> clients || clients.Count == 0) 
+            return "Unkown host";
 
-        return "Not logged in";
+        return $"{clients.Count} people listening" ?? string.Empty;
     }
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

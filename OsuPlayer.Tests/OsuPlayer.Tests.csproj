@@ -17,11 +17,10 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="OsuPlayer.Api.Data" Version="1.0.1" />
+        <PackageReference Include="OsuPlayer.Api.Data" Version="1.0.2" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\OsuPlayer.Data\OsuPlayer.Data.csproj" />
         <ProjectReference Include="..\OsuPlayer.Extensions\OsuPlayer.Extensions.csproj" />
         <ProjectReference Include="..\OsuPlayer.IO\OsuPlayer.IO.csproj" />
         <ProjectReference Include="..\OsuPlayer.Network\OsuPlayer.Network.csproj" />

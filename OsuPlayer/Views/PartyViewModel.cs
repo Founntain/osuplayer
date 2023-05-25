@@ -37,7 +37,7 @@ public class PartyViewModel : BaseViewModel
 
         AvailableParties = new List<PartyModel>()
         {
-            new PartyModel()
+            new()
             {
                 HostId = testUsers.First().UniqueId,
                 Beatmap = new ()
@@ -48,6 +48,18 @@ public class PartyViewModel : BaseViewModel
                 IsPrivate = false,
                 IsPaused = true,
                 UsersInParty = testUsers.ToHashSet()
+            },
+            new()
+            {
+                HostId = testUsers.Take(5).Last().UniqueId,
+                Beatmap = new ()
+                {
+                    Title = player.CurrentSong.Value.Title,
+                    Artist = player.CurrentSong.Value.Artist,
+                },
+                IsPrivate = false,
+                IsPaused = true,
+                UsersInParty = testUsers.Take(5).ToHashSet()
             }
         }.ToObservableCollection();
     }

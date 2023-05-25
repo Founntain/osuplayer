@@ -44,7 +44,7 @@
         <PackageReference Include="Markdown.Avalonia" Version="0.10.13" />
         <PackageReference Include="Material.Icons.Avalonia" Version="1.1.10" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-        <PackageReference Include="OsuPlayer.Api.Data" Version="1.0.1" />
+        <PackageReference Include="OsuPlayer.Api.Data" Version="1.0.2" />
         <PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1" />
     </ItemGroup>
     <ItemGroup>
@@ -53,7 +53,6 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\OsuPlayer.CrashHandler\OsuPlayer.CrashHandler.csproj" />
-        <ProjectReference Include="..\OsuPlayer.Data\OsuPlayer.Data.csproj" />
         <ProjectReference Include="..\OsuPlayer.Extensions\OsuPlayer.Extensions.csproj" />
         <ProjectReference Include="..\OsuPlayer.IO\OsuPlayer.IO.csproj" />
         <ProjectReference Include="..\OsuPlayer.Network\OsuPlayer.Network.csproj" />

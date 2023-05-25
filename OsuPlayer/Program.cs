@@ -7,6 +7,7 @@ using OsuPlayer.Extensions;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.Modules.Audio.Engine;
 using OsuPlayer.Modules.Audio.Interfaces;
+using OsuPlayer.Modules.Party;
 using OsuPlayer.Modules.Services;
 using OsuPlayer.Network.API.Service.Endpoints;
 using OsuPlayer.Windows;
@@ -76,6 +77,7 @@ internal static class Program
         services.RegisterLazySingleton<IStatisticsProvider>(() => new ApiStatisticsProvider());
         services.RegisterLazySingleton<ISortProvider>(() => new SortProvider());
         services.RegisterLazySingleton<ISongSourceProvider>(() => new OsuSongSourceProvider(resolver.GetService<ISortProvider>()));
+        services.RegisterLazySingleton<PartyManager>(() => new PartyManager());
 
         services.RegisterLazySingleton(() => new NorthFox());
 
