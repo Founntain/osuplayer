@@ -49,6 +49,14 @@ public class PlayerControlViewModel : BaseViewModel
 
     public bool IsCurrentSongOnBlacklist => new Blacklist().Contains(CurrentSong.Value);
 
+    private bool _displayBackgroundImage;
+
+    public bool DisplayBackgroundImage
+    {
+        get => _displayBackgroundImage;
+        set => this.RaiseAndSetIfChanged(ref _displayBackgroundImage, value);
+    }
+    
     public double Volume
     {
         get => _volume.Value;

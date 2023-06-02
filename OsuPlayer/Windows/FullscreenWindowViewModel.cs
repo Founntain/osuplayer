@@ -44,8 +44,6 @@ public class FullscreenWindowViewModel : BaseWindowViewModel
             
             if (!string.IsNullOrEmpty(d.NewValue) && File.Exists(d.NewValue))
             {
-                // CurrentSongImage = new Bitmap(d.NewValue);
-                
                 CurrentSongImage = BitmapExtensions.BlurBitmap(d.NewValue, blurRadius: 25, opacity: 0.75f);
                 
                 return;

@@ -89,9 +89,6 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
     private async void Window_OnInitialized(object? sender, EventArgs e)
     {
-        // var rpc = new DiscordClient();
-        // rpc.Initialize();
-
         if (Debugger.IsAttached) return;
 
         if (ViewModel == default) return;

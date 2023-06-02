@@ -1,6 +1,10 @@
+using System.ComponentModel;
+using ABI.Windows.Devices.Sensors.Custom;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using Nein.Base;
 using OsuPlayer.Extensions;
+using OsuPlayer.Modules;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Modules.Services;
 using OsuPlayer.Views;
@@ -38,16 +42,40 @@ public class MainWindowViewModel : BaseWindowViewModel
     public StatisticsViewModel StatisticsView { get; }
     public SymmetricalViewModel SymmetricalView { get; }
 
+    private Bitmap? _backgroundImage;
+
+    public Bitmap? BackgroundImage
+    {
+        get => _backgroundImage;
+        set => this.RaiseAndSetIfChanged(ref _backgroundImage, value);
+    }
+
     public BaseViewModel? MainView
     {
         get => _mainView;
         set => this.RaiseAndSetIfChanged(ref _mainView, value);
     }
 
+    private float _backgroundBlurRadius;
+
+    public float BackgroundBlurRadius
+    {
+        get => _backgroundBlurRadius;
+        set => this.RaiseAndSetIfChanged(ref _backgroundBlurRadius, value);
+    }
+
     public ExperimentalAcrylicMaterial? PanelMaterial
     {
         get => _panelMaterial;
         set => _panelMaterial = value;
+    }
+
+    private bool _displayBackgroundImage;
+
+    public bool DisplayBackgroundImage
+    {
+        get => _displayBackgroundImage;
+        set => this.RaiseAndSetIfChanged(ref _displayBackgroundImage, value);
     }
 
     public MainWindowViewModel(IAudioEngine engine, IPlayer player, IShuffleServiceProvider? shuffleServiceProvider = null,
@@ -74,7 +102,7 @@ public class MainWindowViewModel : BaseWindowViewModel
         SymmetricalView = new SymmetricalViewModel();
 
         using var config = new Config();
-
+        
         var backgroundColor = config.Container.BackgroundColor.ToColor();
 
         PanelMaterial = new ExperimentalAcrylicMaterial
@@ -84,5 +112,29 @@ public class MainWindowViewModel : BaseWindowViewModel
             TintOpacity = 1,
             MaterialOpacity = 0.25
         };
+
+        DisplayBackgroundImage = config.Container.DisplayBackgroundImage;
+        BackgroundBlurRadius = config.Container.BackgroundBlurRadius;
+        
+        Player.CurrentSongImage.BindValueChanged(d =>
+        {
+            BackgroundImage?.Dispose();
+
+            if (!DisplayBackgroundImage)
+            {
+                BackgroundImage = null;
+                
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(d.NewValue) && File.Exists(d.NewValue))
+            {
+                BackgroundImage = BitmapExtensions.BlurBitmap(d.NewValue, blurRadius: BackgroundBlurRadius, opacity: 0.75f, quality: 25);
+                
+                return;
+            }
+
+            BackgroundImage = null;
+        }, true, true);
     }
 }
