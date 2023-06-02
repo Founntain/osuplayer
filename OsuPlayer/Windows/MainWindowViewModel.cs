@@ -2,6 +2,7 @@ using System.ComponentModel;
 using ABI.Windows.Devices.Sensors.Custom;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
+using Avalonia.Threading;
 using Nein.Base;
 using OsuPlayer.Extensions;
 using OsuPlayer.Modules;
@@ -118,23 +119,26 @@ public class MainWindowViewModel : BaseWindowViewModel
         
         Player.CurrentSongImage.BindValueChanged(d =>
         {
-            BackgroundImage?.Dispose();
-
-            if (!DisplayBackgroundImage)
+            Dispatcher.UIThread.Post(() =>
             {
+                BackgroundImage?.Dispose();
+
+                if (!DisplayBackgroundImage)
+                {
+                    BackgroundImage = null;
+
+                    return;
+                }
+
+                if (!string.IsNullOrEmpty(d.NewValue) && File.Exists(d.NewValue))
+                {
+                    BackgroundImage = BitmapExtensions.BlurBitmap(d.NewValue, blurRadius: BackgroundBlurRadius, opacity: 0.75f, quality: 25);
+
+                    return;
+                }
+
                 BackgroundImage = null;
-                
-                return;
-            }
-
-            if (!string.IsNullOrEmpty(d.NewValue) && File.Exists(d.NewValue))
-            {
-                BackgroundImage = BitmapExtensions.BlurBitmap(d.NewValue, blurRadius: BackgroundBlurRadius, opacity: 0.75f, quality: 25);
-                
-                return;
-            }
-
-            BackgroundImage = null;
+            });
         }, true, true);
     }
 }

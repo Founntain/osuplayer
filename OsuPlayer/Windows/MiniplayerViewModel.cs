@@ -1,4 +1,5 @@
 ﻿using Avalonia.Media.Imaging;
+using Avalonia.Threading;
 using Nein.Base;
 using Nein.Extensions;
 using OsuPlayer.Data.OsuPlayer.Enums;
@@ -163,17 +164,20 @@ public class MiniplayerViewModel : BaseWindowViewModel
 
         Player.CurrentSongImage.BindValueChanged(d =>
         {
-            CurrentSongImage?.Dispose();
-            if (!string.IsNullOrEmpty(d.NewValue) && File.Exists(d.NewValue))
+            Dispatcher.UIThread.Post(() =>
             {
-                // CurrentSongImage = new Bitmap(d.NewValue);
+                CurrentSongImage?.Dispose();
+                if (!string.IsNullOrEmpty(d.NewValue) && File.Exists(d.NewValue))
+                {
+                    // CurrentSongImage = new Bitmap(d.NewValue);
                 
-                CurrentSongImage = BitmapExtensions.BlurBitmap(d.NewValue, blurRadius: 25, opacity: 0.75f);
+                    CurrentSongImage = BitmapExtensions.BlurBitmap(d.NewValue, blurRadius: 25, opacity: 0.75f);
                 
-                return;
-            }
+                    return;
+                }
 
-            CurrentSongImage = null;
+                CurrentSongImage = null;
+            });
         }, true, true);
 
         Player.SelectedPlaylist.BindValueChanged(_ =>
