@@ -26,24 +26,67 @@ public class SettingsViewModel : BaseViewModel
     private readonly Bindable<bool> _playlistEnableOnPlay = new();
     private readonly Bindable<SortingMode> _sortingMode = new();
     public readonly IPlayer Player;
+
+    private float _backgroundBlurRadius;
+
+    private BackgroundMode _backgroundMode;
     private List<OsuPlayerContributor>? _contributors;
     private string _osuLocation = string.Empty;
     private string _patchnotes = string.Empty;
     private KnownColors _selectedAccentColor;
+    private AudioDevice? _selectedAudioDevice;
     private KnownColors _selectedBackgroundColor;
     private string? _selectedFont;
     private FontWeights _selectedFontWeight;
     private ReleaseChannels _selectedReleaseChannel;
     private IShuffleImpl? _selectedShuffleAlgorithm;
     private StartupSong _selectedStartupSong;
-    private WindowTransparencyLevel _selectedTransparencyLevel;
-    private AudioDevice? _selectedAudioDevice;
     private string _settingsSearchQ = string.Empty;
+
+    private bool _displayBackgroundImage;
     private IShuffleServiceProvider? _shuffleServiceProvider;
     private bool _useDiscordRpc;
     private bool _usePitch;
 
     public MainWindow? MainWindow;
+
+    public float BackgroundBlurRadius
+    {
+        get => _backgroundBlurRadius;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _backgroundBlurRadius, value);
+
+            using var config = new Config();
+
+            config.Container.BackgroundBlurRadius = value;
+            
+            if (MainWindow?.ViewModel == null) return;
+
+            MainWindow.ViewModel.BackgroundBlurRadius = value;
+        }
+    }
+
+    public bool DisplayBackgroundImage
+    {
+        get => _displayBackgroundImage;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _displayBackgroundImage, value);
+
+            using var config = new Config();
+
+            config.Container.DisplayBackgroundImage = value;
+            
+            if (MainWindow?.ViewModel == null) return;
+
+            MainWindow.ViewModel.DisplayBackgroundImage = value;
+            
+            if (MainWindow?.ViewModel?.PlayerControl == null) return;
+            
+            MainWindow.ViewModel.PlayerControl.DisplayBackgroundImage = !value;
+        }
+    }
 
     public bool UsePitch
     {
@@ -91,7 +134,7 @@ public class SettingsViewModel : BaseViewModel
         }
     }
 
-    public IEnumerable<WindowTransparencyLevel> WindowTransparencyLevels => Enum.GetValues<WindowTransparencyLevel>();
+    public IEnumerable<BackgroundMode> BackgroundModes => Enum.GetValues<BackgroundMode>();
 
     public IEnumerable<KnownColors> KnownColors => Enum.GetValues<KnownColors>();
 
@@ -139,18 +182,33 @@ public class SettingsViewModel : BaseViewModel
         }
     }
 
-    public WindowTransparencyLevel SelectedTransparencyLevel
+    public BackgroundMode BackgroundMode
     {
-        get => _selectedTransparencyLevel;
+        get => _backgroundMode;
         set
         {
-            this.RaiseAndSetIfChanged(ref _selectedTransparencyLevel, value);
+            this.RaiseAndSetIfChanged(ref _backgroundMode, value);
 
             if (MainWindow == null) return;
 
-            MainWindow.TransparencyLevelHint = value;
             using var config = new Config();
-            config.Container.TransparencyLevelHint = value;
+
+            switch (value)
+            {
+                case BackgroundMode.AcrylicBlur:
+                    MainWindow.TransparencyLevelHint = WindowTransparencyLevel.AcrylicBlur;
+
+                    break;
+                case BackgroundMode.Mica:
+                    MainWindow.TransparencyLevelHint = WindowTransparencyLevel.Mica;
+
+                    break;
+                case BackgroundMode.SolidColor:
+                default:
+                    MainWindow.TransparencyLevelHint = WindowTransparencyLevel.None;
+
+                    break;
+            }
         }
     }
 
@@ -249,7 +307,7 @@ public class SettingsViewModel : BaseViewModel
 
             using var config = new Config();
             config.Container.SelectedAudioDeviceDriver = value.Driver;
-            
+
             Player.SetDevice(value);
         }
     }
@@ -360,7 +418,7 @@ public class SettingsViewModel : BaseViewModel
         var config = new Config();
 
         _selectedStartupSong = config.Container.StartupSong;
-        _selectedTransparencyLevel = config.Container.TransparencyLevelHint;
+        _backgroundMode = config.Container.BackgroundMode;
         _selectedReleaseChannel = config.Container.ReleaseChannel;
         _selectedBackgroundColor = config.Container.BackgroundColor;
         _selectedAccentColor = config.Container.AccentColor;
@@ -370,6 +428,8 @@ public class SettingsViewModel : BaseViewModel
         _selectedAudioDevice = AvailableAudioDevices.FirstOrDefault(x => x.Driver == config.Container.SelectedAudioDeviceDriver);
         _useDiscordRpc = config.Container.UseDiscordRpc;
         _usePitch = config.Container.UsePitch;
+        _displayBackgroundImage = config.Container.DisplayBackgroundImage;
+        _backgroundBlurRadius = config.Container.BackgroundBlurRadius;
 
         if (sortProvider != null)
         {

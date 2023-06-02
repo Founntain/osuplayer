@@ -1,4 +1,5 @@
-﻿using Avalonia.Interactivity;
+﻿using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.ReactiveUI;
@@ -20,7 +21,7 @@ public partial class CreateProfileWindow : ReactiveWindow<CreateProfileWindowVie
 
         var config = new Config();
 
-        TransparencyLevelHint = config.Container.TransparencyLevelHint;
+        TransparencyLevelHint = (WindowTransparencyLevel) config.Container.BackgroundMode;
         FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
     }
 

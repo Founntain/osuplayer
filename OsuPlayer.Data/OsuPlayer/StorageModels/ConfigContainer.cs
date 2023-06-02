@@ -10,7 +10,6 @@ public class ConfigContainer : IStorableContainer
     public bool UseSongNameUnicode { get; set; } = false;
     public string? SelectedAudioDeviceDriver { get; set; }
     public bool IsEqEnabled { get; set; }
-    public WindowTransparencyLevel TransparencyLevelHint { get; set; } = WindowTransparencyLevel.AcrylicBlur;
     public StartupSong StartupSong { get; set; } = StartupSong.FirstSong;
     public SortingMode SortingMode { get; set; } = SortingMode.Title;
     public RepeatMode RepeatMode { get; set; } = RepeatMode.NoRepeat;
@@ -29,6 +28,9 @@ public class ConfigContainer : IStorableContainer
     public string? Font { get; set; }
     public bool UseDiscordRpc { get; set; }
     public bool UsePitch { get; set; } = true;
+    public BackgroundMode BackgroundMode { get; set; } = BackgroundMode.AcrylicBlur;
+    public float BackgroundBlurRadius { get; set; } = 50f;
+    public bool DisplayBackgroundImage { get; set; } = false;
 
     public IStorableContainer Init()
     {

@@ -36,6 +36,9 @@
             <ExperimentalAcrylicBorder IsHitTestVisible="False" Material="{Binding PanelMaterial}" >
             </ExperimentalAcrylicBorder>
         </Panel>
+        
+        <Image Source="{Binding BackgroundImage}" Grid.Row="0" Grid.RowSpan="3" IsVisible="{Binding DisplayBackgroundImage}"
+               VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Stretch="UniformToFill"/>
 
         <ContentControl Name="TopBarPanel" Grid.Row="0" Content="{Binding TopBar}" />
         <TransitioningContentControl Name="MainViewPanel" Grid.Row="1" Content="{Binding MainView}">

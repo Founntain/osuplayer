@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Nein.Base;
@@ -36,7 +37,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         InitializeComponent();
 
         using var config = new Config();
-        TransparencyLevelHint = config.Container.TransparencyLevelHint;
+        TransparencyLevelHint = (WindowTransparencyLevel) config.Container.BackgroundMode;
         FontWeight = (FontWeight) config.Container.DefaultFontWeight;
 
         var backgroundColor = config.Container.BackgroundColor;
@@ -89,9 +90,6 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
     private async void Window_OnInitialized(object? sender, EventArgs e)
     {
-        // var rpc = new DiscordClient();
-        // rpc.Initialize();
-
         if (Debugger.IsAttached) return;
 
         if (ViewModel == default) return;

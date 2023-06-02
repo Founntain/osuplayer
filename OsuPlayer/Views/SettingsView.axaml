@@ -161,7 +161,7 @@
                         </controls:SettingsDisplayer>
 
                         <controls:SettingsDisplayer Name="FontWeightSelect" Title="UI Font-Weight"
-                                                    Description="Select the font Weight you want to use as Interface Font. We recommend something around SemiBold"
+                                                    Description="Select the font Weight you want to use as Interface Font. We recommend something around SemiBold or Medium"
                                                     Icon="FormatSize">
 
                             <controls:SettingsDisplayer.InteractionControl>
@@ -171,13 +171,13 @@
 
                         </controls:SettingsDisplayer>
 
-                        <controls:SettingsDisplayer Name="WindowBlurMethod" Title="Window Blur Method"
-                                                    Description="The Blur Method that should be used for the window background"
+                        <controls:SettingsDisplayer Name="WindowBlurMethod" Title="Window Background Method"
+                                                    Description="The Method that should be used for the window background"
                                                     Icon="Blur">
 
                             <controls:SettingsDisplayer.InteractionControl>
-                                <ComboBox SelectedItem="{Binding SelectedTransparencyLevel}"
-                                          Items="{Binding WindowTransparencyLevels}" HorizontalAlignment="Stretch" />
+                                <ComboBox SelectedItem="{Binding BackgroundMode}"
+                                          Items="{Binding BackgroundModes}" HorizontalAlignment="Stretch" />
                             </controls:SettingsDisplayer.InteractionControl>
 
                         </controls:SettingsDisplayer>
@@ -191,6 +191,24 @@
                                                  Watermark="Type to search for color" FilterMode="ContainsOrdinal"
                                                  MinimumPrefixLength="0"
                                                  Items="{Binding KnownColors}" HorizontalAlignment="Stretch" />
+                            </controls:SettingsDisplayer.InteractionControl>
+
+                        </controls:SettingsDisplayer>
+                        
+                        <controls:SettingsDisplayer Name="DisplayBackgroundImage" Title="Use Song Background Image"
+                                                    Description="Toggle if you want to use the current songs background image as window background." Icon="Image">
+
+                            <controls:SettingsDisplayer.InteractionControl>
+                                <ToggleSwitch IsChecked="{Binding DisplayBackgroundImage}"/>
+                            </controls:SettingsDisplayer.InteractionControl>
+
+                        </controls:SettingsDisplayer>
+                        
+                        <controls:SettingsDisplayer Name="BackgroundImageBlur" Title="Background Blur" IsVisible="{Binding DisplayBackgroundImage}"
+                                                    Description="Amount of blur you want to use for the background image. The change will be visible when a new song is played." Icon="BlurCircular">
+
+                            <controls:SettingsDisplayer.InteractionControl>
+                                <Slider Value="{Binding BackgroundBlurRadius}" Minimum="0" Maximum="100" HorizontalAlignment="Stretch" Width="150" TickFrequency="1"/>
                             </controls:SettingsDisplayer.InteractionControl>
 
                         </controls:SettingsDisplayer>

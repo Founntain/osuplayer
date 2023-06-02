@@ -41,7 +41,7 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
         ViewModel = new LoginWindowViewModel();
 
         var config = new Config();
-        TransparencyLevelHint = config.Container.TransparencyLevelHint;
+        TransparencyLevelHint = (WindowTransparencyLevel) config.Container.BackgroundMode;
 #if DEBUG
         this.AttachDevTools();
 #endif

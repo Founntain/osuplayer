@@ -1,4 +1,5 @@
 ﻿using Avalonia.Media.Imaging;
+using Avalonia.Threading;
 using Nein.Base;
 using OsuPlayer.Modules;
 using OsuPlayer.Modules.Audio.Interfaces;
@@ -40,18 +41,19 @@ public class FullscreenWindowViewModel : BaseWindowViewModel
         
         Player.CurrentSongImage.BindValueChanged(d =>
         {
-            CurrentSongImage?.Dispose();
-            
-            if (!string.IsNullOrEmpty(d.NewValue) && File.Exists(d.NewValue))
+            Dispatcher.UIThread.Post(() =>
             {
-                // CurrentSongImage = new Bitmap(d.NewValue);
+                CurrentSongImage?.Dispose();
+            
+                if (!string.IsNullOrEmpty(d.NewValue) && File.Exists(d.NewValue))
+                {
+                    CurrentSongImage = BitmapExtensions.BlurBitmap(d.NewValue, blurRadius: 25, opacity: 0.75f);
                 
-                CurrentSongImage = BitmapExtensions.BlurBitmap(d.NewValue, blurRadius: 25, opacity: 0.75f);
-                
-                return;
-            }
+                    return;
+                }
 
-            CurrentSongImage = null;
+                CurrentSongImage = null;
+            });
         }, true, true);
     }
 }
