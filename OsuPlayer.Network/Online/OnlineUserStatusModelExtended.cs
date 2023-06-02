@@ -1,5 +1,5 @@
-﻿using OsuPlayer.Data.API.Enums;
-using OsuPlayer.Data.API.Models.User;
+﻿using OsuPlayer.Api.Data.API.EntityModels;
+using OsuPlayer.Api.Data.API.Enums;
 
 namespace OsuPlayer.Network.Online;
 
