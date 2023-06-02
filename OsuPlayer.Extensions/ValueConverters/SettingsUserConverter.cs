@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using Avalonia.Data.Converters;
-using OsuPlayer.Data.API.Models.User;
+using OsuPlayer.Api.Data.API.EntityModels;
 
 namespace OsuPlayer.Extensions.ValueConverters;
 
