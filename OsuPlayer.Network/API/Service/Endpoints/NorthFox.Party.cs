@@ -21,9 +21,9 @@ public partial class NorthFox
 
     #region POST Requests
 
-    public async Task<PartyModel> CreateParty(CreatePartyModel createPartyModel)
+    public async Task<PartyModel?> CreateParty(CreatePartyModel createPartyModel)
     {
-        return await PostRequestAsync<PartyModel>("Party", "add", createPartyModel);
+        return await PostRequestAsync<PartyModel?>("Party", "add", createPartyModel);
     }
 
     #endregion

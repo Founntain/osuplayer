@@ -3,59 +3,63 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:OsuPlayer.Views"
-             xmlns:entityModels="clr-namespace:OsuPlayer.Api.Data.API.EntityModels;assembly=OsuPlayer.Api.Data"
              xmlns:valueConverters="clr-namespace:OsuPlayer.Extensions.ValueConverters;assembly=OsuPlayer.Extensions"
-             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:entityModels="clr-namespace:OsuPlayer.Api.Data.API.EntityModels;assembly=OsuPlayer.Api.Data"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="OsuPlayer.Views.PartyView"
-             FontWeight="{DynamicResource DefaultFontWeight}">
-
+             x:Class="OsuPlayer.Views.PartyView">
+    
     <Design.DataContext>
         <views:PartyViewModel />
     </Design.DataContext>
-
+    
     <UserControl.Resources>
-        <valueConverters:BeatmapToSongnameConverter x:Key="BeatmapToSongnameConverter" />
         <valueConverters:HostIdToHostNameConverter x:Key="HostIdToHostNameConverter" />
-        <valueConverters:ClientsToAmountConverter x:Key="ClientsToAmountConverter" />
     </UserControl.Resources>
-
-    <Grid RowDefinitions="Auto, *">
+    
+    <Grid ColumnDefinitions="50*, 50*" RowDefinitions="Auto, *">
+        <Grid Row="0" Column="0" ColumnSpan="2" Background="{StaticResource AcrylicBaseColor}" VerticalAlignment="Center">
+            <TextBlock Grid.Row="0" Grid.Column="0" FontSize="32" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock.Text>
+                    <MultiBinding Converter="{StaticResource HostIdToHostNameConverter}">
+                        <Binding Path="CurrentParty.Value.HostId" />
+                        <Binding Path="CurrentParty.Value.UsersInParty" />
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+        </Grid>
         
-        <Button VerticalAlignment="Center" HorizontalAlignment="Stretch" 
-                HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
-                Content="create new party"/>
+        <StackPanel Grid.Row="1" Grid.Column="0" Spacing="5" Margin="5">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Party ID: " VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding CurrentParty.Value.UniqueId}" VerticalAlignment="Center"/>
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Is paused: " VerticalAlignment="Center"/>
+                <ToggleSwitch IsChecked="{Binding CurrentParty.Value.IsPaused}" IsEnabled="False" VerticalAlignment="Center"/>
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Is private: " VerticalAlignment="Center"/>
+                <ToggleSwitch IsChecked="{Binding CurrentParty.Value.IsPrivate}" IsEnabled="False" VerticalAlignment="Center"/>
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Playback speed: " VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding CurrentParty.Value.PlaybackSpeed}" VerticalAlignment="Center"/>
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Beatmap hash: " VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding CurrentParty.Value.BeatmapHash}" VerticalAlignment="Center"/>
+            </StackPanel>
+            
+        </StackPanel>
         
-        <ListBox Grid.Row="1" Items="{Binding AvailableParties}" Background="Transparent" SelectedItem="{Binding SelectedParty}" HorizontalAlignment="Stretch">
+        <ListBox Grid.Row="1" Grid.Column="1" Items="{Binding CurrentParty.Value.UsersInParty}" Background="{StaticResource AcrylicBaseColor}">
             <ListBox.DataTemplates>
-                <DataTemplate DataType="entityModels:PartyModel">
-                    <Grid ColumnDefinitions="*, *, 100" RowDefinitions="Auto, Auto, Auto">
-                        <TextBlock Grid.Row="0" Grid.Column="0" FontSize="20">
-                            <TextBlock.Text>
-                                <MultiBinding Converter="{StaticResource HostIdToHostNameConverter}">
-                                    <Binding Path="HostId" />
-                                    <Binding Path="UsersInParty" />
-                                </MultiBinding>
-                            </TextBlock.Text>
-                        </TextBlock>
-                        <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
-                                   Text="{Binding Beatmap, Converter={StaticResource BeatmapToSongnameConverter}}"
-                                   FontSize="14" Foreground="#FFCCCCCC"
-                                   FontWeight="{DynamicResource SmallerFontWeight}" />
-
-                        <TextBlock Grid.Row="2" Grid.Column="0"
-                                   Text="{Binding UsersInParty, Converter={StaticResource ClientsToAmountConverter}}"
-                                   FontSize="14" Foreground="#FFCCCCCC"
-                                   FontWeight="{DynamicResource SmallerFontWeight}" />
-
-                        <Button Grid.Column="2" Grid.Row="0" Grid.RowSpan="3" Name="PlayPause" Width="50" Height="50"
-                                CornerRadius="50"
-                                VerticalAlignment="Center" HorizontalAlignment="Right"
-                                Click="JoinParty_OnClick">
-                            <avalonia:MaterialIcon Kind="ArrowRightBoldOutline"
-                                                   Height="40" Width="40" />
-                        </Button>
-                    </Grid>
+                <DataTemplate DataType="entityModels:UserModel">
+                    <TextBlock Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Left" />
                 </DataTemplate>
             </ListBox.DataTemplates>
         </ListBox>

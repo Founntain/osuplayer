@@ -91,6 +91,7 @@ internal static class Program
         services.Register(() => new MainWindowViewModel(
             resolver.GetRequiredService<IAudioEngine>(),
             resolver.GetRequiredService<IPlayer>(),
+            resolver.GetRequiredService<PartyManager>(),
             resolver.GetService<IShuffleServiceProvider>(),
             resolver.GetService<IStatisticsProvider>(),
             resolver.GetService<ISortProvider>()));

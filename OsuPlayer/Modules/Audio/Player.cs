@@ -197,6 +197,11 @@ public class Player : IPlayer, IImportNotifications
         BlacklistChanged?.Invoke(this, e);
     }
 
+    public double GetPlaybackSpeed()
+    {
+        return _audioEngine.GetPlaybackSpeed();
+    }
+    
     public void SetPlaybackSpeed(double speed)
     {
         _audioEngine.SetPlaybackSpeed(speed);

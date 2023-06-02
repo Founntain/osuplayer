@@ -2,6 +2,7 @@ using Avalonia.Media;
 using Nein.Base;
 using OsuPlayer.Extensions;
 using OsuPlayer.Modules.Audio.Interfaces;
+using OsuPlayer.Modules.Party;
 using OsuPlayer.Modules.Services;
 using OsuPlayer.Views;
 using ReactiveUI;
@@ -24,6 +25,7 @@ public class MainWindowViewModel : BaseWindowViewModel
 
     public EditUserViewModel EditUserView { get; }
     public HomeViewModel HomeView { get; }
+    public PartyListViewModel PartyListView { get; }
     public PartyViewModel PartyView { get; }
     public BlacklistEditorViewModel BlacklistEditorView { get; }
     public PlaylistEditorViewModel PlaylistEditorView { get; }
@@ -50,7 +52,7 @@ public class MainWindowViewModel : BaseWindowViewModel
         set => _panelMaterial = value;
     }
 
-    public MainWindowViewModel(IAudioEngine engine, IPlayer player, IShuffleServiceProvider? shuffleServiceProvider = null,
+    public MainWindowViewModel(IAudioEngine engine, IPlayer player, PartyManager partyManager, IShuffleServiceProvider? shuffleServiceProvider = null,
         IStatisticsProvider? statisticsProvider = null, ISortProvider? sortProvider = null)
     {
         Player = player;
@@ -66,7 +68,8 @@ public class MainWindowViewModel : BaseWindowViewModel
         HomeView = new HomeViewModel(Player, statisticsProvider);
         UserView = new UserViewModel(Player);
         EditUserView = new EditUserViewModel();
-        PartyView = new PartyViewModel();
+        PartyListView = new PartyListViewModel();
+        PartyView = new PartyViewModel(partyManager);
         SettingsView = new SettingsViewModel(Player, sortProvider, shuffleServiceProvider);
         EqualizerView = new EqualizerViewModel(Player);
         UpdateView = new UpdateViewModel();

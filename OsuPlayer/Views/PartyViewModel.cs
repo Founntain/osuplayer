@@ -1,74 +1,38 @@
-using System.Reactive.Disposables;
+﻿using System.Reactive.Disposables;
+using ABI.Windows.Devices.Sensors.Custom;
 using Nein.Base;
-using Nein.Extensions;
 using OsuPlayer.Api.Data.API.EntityModels;
-using OsuPlayer.Modules.Audio.Interfaces;
-using OsuPlayer.Network.API.Service.Endpoints;
+using OsuPlayer.Modules.Party;
 using ReactiveUI;
-using Splat;
 
 namespace OsuPlayer.Views;
 
 public class PartyViewModel : BaseViewModel
 {
-    private ObservableCollection<PartyModel> _availableParties;
+    private PartyManager _partyManager;
+    
+    private Bindable<PartyModel?> _currentParty = new();
 
-    public ObservableCollection<PartyModel> AvailableParties
+    public Bindable<PartyModel?> CurrentParty
     {
-        get => _availableParties;
-        set => this.RaiseAndSetIfChanged(ref _availableParties, value);
+        get => _currentParty;
+        set => this.RaiseAndSetIfChanged(ref _currentParty, value);
     }
-
-    public PartyViewModel()
+    
+    public PartyViewModel(PartyManager partyManager)
     {
+        _partyManager = partyManager;
+        
+        _currentParty.BindTo(_partyManager.CurrentParty);
+        _currentParty.BindValueChanged(_ => this.RaisePropertyChanged(nameof(CurrentParty)));
+        
         Activator = new ViewModelActivator();
         
         this.WhenActivated(Block);
     }
 
-    private async void Block(CompositeDisposable disposables)
+    private void Block(CompositeDisposable disposables)
     {
         Disposable.Create(() => { }).DisposeWith(disposables);
-        
-        var player = Locator.Current.GetService<IPlayer>();
-        var users = await Locator.Current.GetService<NorthFox>().GetAllUsers();
-
-        var testUsers = users!.Take(10).ToArray();
-
-        AvailableParties = new List<PartyModel>()
-        {
-            new()
-            {
-                HostId = testUsers.First().UniqueId,
-                Beatmap = new ()
-                {
-                    Title = player.CurrentSong.Value.Title,
-                    Artist = player.CurrentSong.Value.Artist,
-                },
-                IsPrivate = false,
-                IsPaused = true,
-                UsersInParty = testUsers.ToHashSet()
-            },
-            new()
-            {
-                HostId = testUsers.Take(5).Last().UniqueId,
-                Beatmap = new ()
-                {
-                    Title = player.CurrentSong.Value.Title,
-                    Artist = player.CurrentSong.Value.Artist,
-                },
-                IsPrivate = false,
-                IsPaused = true,
-                UsersInParty = testUsers.Take(5).ToHashSet()
-            }
-        }.ToObservableCollection();
-    }
-
-    private PartyModel _selectedParty;
-
-    public PartyModel SelectedParty
-    {
-        get => _selectedParty;
-        set => this.RaiseAndSetIfChanged(ref _selectedParty, value);
     }
 }

@@ -7,7 +7,12 @@ public interface IHasEffects
 {
     public BindableArray<decimal> EqGains { get; }
     public bool IsEqEnabled { get; set; }
-
+    
+    /// <summary>
+    /// Gets the current playback speed
+    /// </summary>
+    public double GetPlaybackSpeed();
+    
     /// <summary>
     /// Sets the playback speed (including pitch)
     /// </summary>

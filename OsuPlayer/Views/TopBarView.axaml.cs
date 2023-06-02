@@ -4,8 +4,11 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
 using Nein.Base;
+using Nein.Extensions;
+using OsuPlayer.Modules.Party;
 using OsuPlayer.Windows;
 using ReactiveUI;
+using Splat;
 
 namespace OsuPlayer.Views;
 
@@ -50,7 +53,10 @@ internal partial class TopBarView : ReactiveControl<TopBarViewModel>
                 _mainWindow.ViewModel!.MainView = _mainWindow.ViewModel.UserView;
                 break;
             case "PartyNavigation":
-                _mainWindow.ViewModel!.MainView = _mainWindow.ViewModel.PartyView;
+                var partyManager = Locator.Current.GetRequiredService<PartyManager>();
+                
+                _mainWindow.ViewModel!.MainView = partyManager.CurrentParty.Value == default  ? _mainWindow.ViewModel.PartyListView : _mainWindow.ViewModel.PartyView;
+                
                 break;
             case "StatisticsNavigation":
                 _mainWindow.ViewModel!.MainView = _mainWindow.ViewModel.StatisticsView;

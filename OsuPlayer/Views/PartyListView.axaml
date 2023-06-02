@@ -1,0 +1,64 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:OsuPlayer.Views"
+             xmlns:entityModels="clr-namespace:OsuPlayer.Api.Data.API.EntityModels;assembly=OsuPlayer.Api.Data"
+             xmlns:valueConverters="clr-namespace:OsuPlayer.Extensions.ValueConverters;assembly=OsuPlayer.Extensions"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="OsuPlayer.Views.PartyListView"
+             FontWeight="{DynamicResource DefaultFontWeight}">
+
+    <Design.DataContext>
+        <views:PartyListViewModel />
+    </Design.DataContext>
+
+    <UserControl.Resources>
+        <valueConverters:BeatmapToSongnameConverter x:Key="BeatmapToSongnameConverter" />
+        <valueConverters:HostIdToHostNameConverter x:Key="HostIdToHostNameConverter" />
+        <valueConverters:ClientsToAmountConverter x:Key="ClientsToAmountConverter" />
+    </UserControl.Resources>
+
+    <Grid RowDefinitions="Auto, *">
+        
+        <Button VerticalAlignment="Center" HorizontalAlignment="Stretch" 
+                HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
+                Content="create new party"
+                Click="CreateParty_OnClick"/>
+        
+        <ListBox Grid.Row="1" Items="{Binding AvailableParties}" Background="Transparent" SelectedItem="{Binding SelectedParty}" HorizontalAlignment="Stretch">
+            <ListBox.DataTemplates>
+                <DataTemplate DataType="entityModels:PartyModel">
+                    <Grid ColumnDefinitions="*, *, 100" RowDefinitions="Auto, Auto, Auto">
+                        <TextBlock Grid.Row="0" Grid.Column="0" FontSize="20">
+                            <TextBlock.Text>
+                                <MultiBinding Converter="{StaticResource HostIdToHostNameConverter}">
+                                    <Binding Path="HostId" />
+                                    <Binding Path="UsersInParty" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                        <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                   Text="{Binding Beatmap, Converter={StaticResource BeatmapToSongnameConverter}}"
+                                   FontSize="14" Foreground="#FFCCCCCC"
+                                   FontWeight="{DynamicResource SmallerFontWeight}" />
+
+                        <TextBlock Grid.Row="2" Grid.Column="0"
+                                   Text="{Binding UsersInParty, Converter={StaticResource ClientsToAmountConverter}}"
+                                   FontSize="14" Foreground="#FFCCCCCC"
+                                   FontWeight="{DynamicResource SmallerFontWeight}" />
+
+                        <Button Grid.Column="2" Grid.Row="0" Grid.RowSpan="3" Name="PlayPause" Width="50" Height="50"
+                                CornerRadius="50"
+                                VerticalAlignment="Center" HorizontalAlignment="Right"
+                                Click="JoinParty_OnClick">
+                            <avalonia:MaterialIcon Kind="ArrowRightBoldOutline"
+                                                   Height="40" Width="40" />
+                        </Button>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.DataTemplates>
+        </ListBox>
+    </Grid>
+</UserControl>

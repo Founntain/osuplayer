@@ -117,6 +117,11 @@ public sealed class BassEngine : IAudioEngine
         }
     }
 
+    public double GetPlaybackSpeed()
+    {
+        return _playbackSpeed;
+    }
+    
     public void SetPlaybackSpeed(double speed)
     {
         SetPlaybackSpeedOptions(speed);

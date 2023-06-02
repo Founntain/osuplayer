@@ -92,8 +92,8 @@
         <Compile Update="UI Extensions\MessageBoxViewModel.cs">
             <DependentUpon>MessageBoxWindow.axaml</DependentUpon>
         </Compile>
-        <Compile Update="Views\PartyViewModel.cs">
-            <DependentUpon>PartyView.axaml</DependentUpon>
+        <Compile Update="Views\PartyListViewModel.cs">
+            <DependentUpon>PartyListView.axaml</DependentUpon>
         </Compile>
         <Compile Update="Views\UserViewModel.cs">
             <DependentUpon>UserView.axaml</DependentUpon>
@@ -121,6 +121,9 @@
         </Compile>
         <Compile Update="Windows\CreateProfileWindowViewModel.cs">
             <DependentUpon>CreateProfileWindow.axaml</DependentUpon>
+        </Compile>
+        <Compile Update="Views\PartyViewModel.cs">
+          <DependentUpon>PartyView.axaml</DependentUpon>
         </Compile>
     </ItemGroup>
     <ItemGroup>
