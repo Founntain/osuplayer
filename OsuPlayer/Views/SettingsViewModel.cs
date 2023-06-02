@@ -197,18 +197,15 @@ public class SettingsViewModel : BaseViewModel
             {
                 case BackgroundMode.AcrylicBlur:
                     MainWindow.TransparencyLevelHint = WindowTransparencyLevel.AcrylicBlur;
-                    config.Container.TransparencyLevelHint = WindowTransparencyLevel.AcrylicBlur;
 
                     break;
                 case BackgroundMode.Mica:
                     MainWindow.TransparencyLevelHint = WindowTransparencyLevel.Mica;
-                    config.Container.TransparencyLevelHint = WindowTransparencyLevel.Mica;
 
                     break;
                 case BackgroundMode.SolidColor:
                 default:
                     MainWindow.TransparencyLevelHint = WindowTransparencyLevel.None;
-                    config.Container.TransparencyLevelHint = WindowTransparencyLevel.None;
 
                     break;
             }

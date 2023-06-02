@@ -68,7 +68,7 @@ public partial class NorthFox : AbstractApiBase
 
             return new Bitmap(await data.Content.ReadAsStreamAsync());
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return default;
         }

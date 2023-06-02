@@ -1,4 +1,5 @@
 ﻿using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using ReactiveUI;
@@ -14,7 +15,7 @@ public partial class MessageBoxWindow : ReactiveWindow<MessageBoxViewModel>
         ViewModel = new MessageBoxViewModel();
 
         var config = new Config();
-        TransparencyLevelHint = config.Container.TransparencyLevelHint;
+        TransparencyLevelHint = (WindowTransparencyLevel) config.Container.BackgroundMode;
 
 #if DEBUG
         this.AttachDevTools();
@@ -28,7 +29,7 @@ public partial class MessageBoxWindow : ReactiveWindow<MessageBoxViewModel>
         ViewModel = new MessageBoxViewModel(this, text, title);
 
         var config = new Config();
-        TransparencyLevelHint = config.Container.TransparencyLevelHint;
+        TransparencyLevelHint = (WindowTransparencyLevel) config.Container.BackgroundMode;
 #if DEBUG
         this.AttachDevTools();
 #endif
