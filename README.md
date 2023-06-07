@@ -73,11 +73,8 @@ A rule of thumb is: If you want a new feature, discuss it with us and if people 
 - [x] Audio-Equalizer 
 - [x] Miniplayer to save some space  
 - [ ] Localization 
-- [ ] Language Editor 
-- [ ] Language Manager to upload and download translations   
 - [ ] Hotkey support  
-- [ ] Export songs to the directory  
-- [ ] Custom themes 
+- [ ] Export songs to directory  
 - [ ] Synced play via osu!player API  
 
 #### 🎱 Stop asking for it
