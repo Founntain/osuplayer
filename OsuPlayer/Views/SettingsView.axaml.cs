@@ -8,6 +8,7 @@ using Nein.Controls;
 using Nein.Extensions;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.Modules.Audio.Interfaces;
+using OsuPlayer.Network.LastFM;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
 using ReactiveUI;
@@ -149,5 +150,39 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
         var engine = Locator.Current.GetRequiredService<IAudioEngine>();
 
         engine.UpdatePlaybackMethod();
+    }
+
+    private async void LastFmAuth_OnClick(object? sender, RoutedEventArgs e)
+    {
+        var player = Locator.Current.GetRequiredService<IPlayer>() as Player;
+        var window = Locator.Current.GetService<MainWindow>();
+
+        using var config = new Config();
+
+        // We only load the APIKey from the config, as it is the only key that we save
+        // 1. Because we always need the api key for all the request
+        // 2. The secret is only used for the first authentication of the token
+        // 3. After that all subsequent last.fm api calls only need the api key and session key
+        var api = new LastFmApi(config.Container.LastFmApiKey, config.Container.LastFmSecret);
+
+        await api.LoadSessionKey();
+
+        if (!api.IsAuthorized())
+        {
+            await api.GetAuthToken();
+            api.AuthorizeToken();
+
+            await MessageBox.ShowDialogAsync(window, "Close this window, when you are done, authenticating in the browser");
+        
+            await api.GetSessionKey();
+
+            await api.SaveSessionKey();
+        }
+        
+        var currentSong = player?.CurrentSong.Value;
+
+        if (currentSong == default) return;
+
+        await api.UpdateNowPlaying(currentSong.Title, currentSong.Artist, (ulong) TimeSpan.FromMicroseconds(currentSong.TotalTime).TotalSeconds);
     }
 }

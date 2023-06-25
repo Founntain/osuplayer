@@ -50,6 +50,36 @@ public class SettingsViewModel : BaseViewModel
 
     public MainWindow? MainWindow;
 
+    private string _lastFmApiKey;
+
+    public string LastFmApiKey
+    {
+        get => _lastFmApiKey;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _lastFmApiKey, value);
+
+            using var config = new Config();
+
+            config.Container.LastFmApiKey = value;
+        }
+    }
+
+    private string _lastFmApiSecret;
+
+    public string LastFmApiSecret
+    {
+        get => _lastFmApiSecret;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _lastFmApiSecret, value);
+
+            using var config = new Config();
+
+            config.Container.LastFmSecret = value;
+        }
+    }
+
     public float BackgroundBlurRadius
     {
         get => _backgroundBlurRadius;

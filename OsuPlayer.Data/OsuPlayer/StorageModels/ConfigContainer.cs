@@ -31,6 +31,8 @@ public class ConfigContainer : IStorableContainer
     public BackgroundMode BackgroundMode { get; set; } = BackgroundMode.AcrylicBlur;
     public float BackgroundBlurRadius { get; set; } = 50f;
     public bool DisplayBackgroundImage { get; set; } = false;
+    public string LastFmApiKey { get; set; }
+    public string LastFmSecret { get; set; }
 
     public IStorableContainer Init()
     {
