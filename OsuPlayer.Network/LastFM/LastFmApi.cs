@@ -56,6 +56,11 @@ public class LastFmApi : AbstractRequestBase
         _secret = secret;
     }
 
+    /// <summary>
+    /// Sends a track.scrobble request to the last.fm api
+    /// </summary>
+    /// <param name="title">The song title</param>
+    /// <param name="artist">The song artist</param>
     public async Task Scrobble(string title, string artist)
     {
         if (string.IsNullOrWhiteSpace(_sessionKey))
@@ -79,6 +84,9 @@ public class LastFmApi : AbstractRequestBase
         Debug.WriteLine($"SCROBBLING | {JsonConvert.ToString(response)}");
     }
 
+    /// <summary>
+    /// Saves the last.fm Session Key to the users file system asynchronously
+    /// </summary>
     public async Task SaveSessionKeyAsync()
     {
         await File.WriteAllBytesAsync("data/lastfm.session", Encoding.UTF8.GetBytes(_sessionKey ?? string.Empty));
@@ -88,7 +96,9 @@ public class LastFmApi : AbstractRequestBase
         config.Container.LastFmApiKey = _apiKey;
         config.Container.LastFmSecret = _secret;
     }
-
+    /// <summary>
+    /// Loads the last.fm Session Key from the users file system
+    /// </summary>
     public bool LoadSessionKey()
     {
         if (!File.Exists("data/lastfm.session")) return false;
@@ -100,6 +110,9 @@ public class LastFmApi : AbstractRequestBase
         return !string.IsNullOrWhiteSpace(_sessionKey);
     }
     
+    /// <summary>
+    /// Loads the last.fm Session Key from the users file system asynchronously
+    /// </summary>
     public async Task<bool> LoadSessionKeyAsync()
     {
         if (!File.Exists("data/lastfm.session")) return false;
@@ -111,6 +124,9 @@ public class LastFmApi : AbstractRequestBase
         return !string.IsNullOrWhiteSpace(_sessionKey);
     }
 
+    /// <summary>
+    /// Checks if we are already authorized to the last.fm, by having a session key
+    /// </summary>
     public bool IsAuthorized()
     {
         return !string.IsNullOrWhiteSpace(_sessionKey);
@@ -118,6 +134,9 @@ public class LastFmApi : AbstractRequestBase
 
     #region Last.FM Authorization
 
+    /// <summary>
+    /// Gets the Auth Token from last.fm
+    /// </summary>
     public async Task<string> GetAuthToken()
     {
         var response = await GetRequest<TokenResponse, object>("&method=auth.gettoken");
@@ -127,11 +146,17 @@ public class LastFmApi : AbstractRequestBase
         return _authToken;
     }
 
+    /// <summary>
+    /// Open the webbrowser to authorize the token
+    /// </summary>
     public void AuthorizeToken()
     {
         GeneralExtensions.OpenUrl($"http://www.last.fm/api/auth/?api_key={_apiKey}&token={_authToken}");
     }
 
+    /// <summary>
+    /// Gets the session key from the last.fm API, using the authorized token
+    /// </summary>
     public async Task GetSessionKey()
     {
         var parameters = new Dictionary<string, string>();
@@ -147,6 +172,11 @@ public class LastFmApi : AbstractRequestBase
         _sessionKey = response.Key;
     }
 
+    /// <summary>
+    /// Gets the current Session Key from last.fm
+    /// </summary>
+    /// <param name="route">The route to the API</param>
+    /// <returns>a <see cref="SessionRequest"/></returns>
     private async Task<SessionResponse?> SessionRequest(string route)
     {
         try
@@ -197,6 +227,12 @@ public class LastFmApi : AbstractRequestBase
         return dict;
     }
 
+    /// <summary>
+    /// Creates the Api Signature for each request that is required for last.fm
+    /// </summary>
+    /// <param name="method">The method that is being called</param>
+    /// <param name="parameters">All parameters used for the request</param>
+    /// <returns>a MD5 Hash of the signature</returns>
     private string GetApiSignature(string method, Dictionary<string, string>? parameters = null)
     {
         parameters ??= new Dictionary<string, string>();
