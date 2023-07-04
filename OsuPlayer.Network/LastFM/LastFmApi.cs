@@ -7,7 +7,6 @@ using Newtonsoft.Json;
 using OsuPlayer.IO.Storage.Config;
 using OsuPlayer.IO.Storage.LazerModels.Extensions;
 using OsuPlayer.Network.LastFM.Responses;
-using OsuPlayer.Network.LastFM.Responses.Scrobble;
 
 namespace OsuPlayer.Network.LastFM;
 
@@ -79,7 +78,7 @@ public class LastFmApi : AbstractRequestBase
 
         parameters.Add("api_sig", apiSignature);
 
-        var response = await PostRequest<ScrobblesResponse, object>(string.Empty, new FormUrlEncodedContent(parameters));
+        var response = await PostRequest<object, object>(string.Empty, new FormUrlEncodedContent(parameters));
 
         Debug.WriteLine($"SCROBBLING | {JsonConvert.ToString(response)}");
     }
