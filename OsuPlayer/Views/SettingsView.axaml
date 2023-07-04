@@ -269,9 +269,9 @@
                     </StackPanel>
                 </Grid>
 
-                <!-- ————————————— -->
+                <!-- ——————————————— -->
                 <!-- Network Settings -->
-                <!-- ————————————— -->
+                <!-- ——————————————— -->
                 <Grid RowDefinitions="Auto" Margin="10" Name="NetworkSettings">
 
                     <StackPanel Margin="10" Spacing="1" Name="NetworkSettingsPanel">
@@ -306,6 +306,15 @@
                                             HorizontalContentAlignment="Center" />
                                 </StackPanel>
                                 
+                            </controls:SettingsDisplayer.InteractionControl>
+                        </controls:SettingsDisplayer>
+                        
+                        <controls:SettingsDisplayer Name="LastFmScrobblin" Title="Enable Scrobbling" Description="Toggle if you want to send your play activity as scrobbles to Last.FM."
+                                                    Icon="CubeSend">
+
+                            <controls:SettingsDisplayer.InteractionControl>
+                                <ToggleSwitch HorizontalAlignment="Stretch" 
+                                        HorizontalContentAlignment="Center" IsChecked="{Binding EnableScrobbling}"/>
                             </controls:SettingsDisplayer.InteractionControl>
 
                         </controls:SettingsDisplayer>

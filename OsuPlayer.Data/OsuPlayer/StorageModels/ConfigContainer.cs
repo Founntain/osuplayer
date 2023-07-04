@@ -33,6 +33,7 @@ public class ConfigContainer : IStorableContainer
     public bool DisplayBackgroundImage { get; set; } = false;
     public string LastFmApiKey { get; set; }
     public string LastFmSecret { get; set; }
+    public bool EnableScrobbling { get; set; } = false;
 
     public IStorableContainer Init()
     {

@@ -6,8 +6,13 @@ namespace OsuPlayer.Network;
 
 public abstract class AbstractRequestBase : IWebRequest
 {
-    public string BaseUrl;
-    protected CancellationTokenSource _cancellationTokenSource = new();
+    protected string BaseUrl;
+    protected CancellationTokenSource CancellationTokenSource = new();
+
+    protected AbstractRequestBase()
+    {
+        BaseUrl = string.Empty;
+    }
     
     protected void ParseWebException(Exception ex)
     {
@@ -18,7 +23,7 @@ public abstract class AbstractRequestBase : IWebRequest
         if (webEx.Status != WebExceptionStatus.ConnectFailure && webEx.Status != WebExceptionStatus.Timeout) return;
     }
 
-    public async Task<TResponse> GetRequest<TResponse, TRequest>(string route, TRequest? data = default)
+    public virtual async Task<TResponse> GetRequest<TResponse, TRequest>(string route, TRequest? data = default)
     {
         try
         {
@@ -33,7 +38,7 @@ public abstract class AbstractRequestBase : IWebRequest
 
             // CancelCancellationToken();
 
-            var result = await client.SendAsync(req, _cancellationTokenSource.Token);
+            var result = await client.SendAsync(req, CancellationTokenSource.Token);
 
             var respString = await result.Content.ReadAsStringAsync();
             
@@ -49,14 +54,12 @@ public abstract class AbstractRequestBase : IWebRequest
         }
     }
 
-    public async Task<TResponse> PostRequest<TResponse, TRequest>(string route, TRequest? data = default)
+    public virtual async Task<TResponse> PostRequest<TResponse, TRequest>(string route, TRequest? data = default)
     {
         try
         {
             using var client = new HttpClient();
 
-            BaseUrl = $"http://ws.audioscrobbler.com/2.0/";
-            
             var url = new Uri($"{BaseUrl}{route}");
 
             var req = new HttpRequestMessage(HttpMethod.Post, url);
@@ -71,7 +74,7 @@ public abstract class AbstractRequestBase : IWebRequest
 
             // CancelCancellationToken();
 
-            var result = await client.SendAsync(req, _cancellationTokenSource.Token);
+            var result = await client.SendAsync(req, CancellationTokenSource.Token);
 
             var response = JsonConvert.DeserializeObject<TResponse>(await result.Content.ReadAsStringAsync());
 

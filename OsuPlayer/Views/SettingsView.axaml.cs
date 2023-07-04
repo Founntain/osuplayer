@@ -154,35 +154,38 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
 
     private async void LastFmAuth_OnClick(object? sender, RoutedEventArgs e)
     {
-        var player = Locator.Current.GetRequiredService<IPlayer>() as Player;
         var window = Locator.Current.GetService<MainWindow>();
+        var lastFmApi = Locator.Current.GetService<LastFmApi>();
 
         using var config = new Config();
 
+        var apiKey = string.IsNullOrWhiteSpace(ViewModel.LastFmApiKey) ? config.Container.LastFmApiKey : ViewModel.LastFmApiKey;
+        var apiSecret = string.IsNullOrWhiteSpace(ViewModel.LastFmApiKey) ? config.Container.LastFmSecret : ViewModel.LastFmApiSecret;
+
+        if (string.IsNullOrWhiteSpace(apiKey) || string.IsNullOrWhiteSpace(apiSecret))
+        {
+            await MessageBox.ShowDialogAsync(window, "Please enter a API-Key and API-Secret before authorizing");
+            return;
+        }
+        
         // We only load the APIKey from the config, as it is the only key that we save
         // 1. Because we always need the api key for all the request
         // 2. The secret is only used for the first authentication of the token
         // 3. After that all subsequent last.fm api calls only need the api key and session key
-        var api = new LastFmApi(config.Container.LastFmApiKey, config.Container.LastFmSecret);
+        lastFmApi.SetApiKeyAndSecret(apiKey, apiSecret);
 
-        await api.LoadSessionKey();
+        await lastFmApi.LoadSessionKeyAsync();
 
-        if (!api.IsAuthorized())
+        if (!lastFmApi.IsAuthorized())
         {
-            await api.GetAuthToken();
-            api.AuthorizeToken();
+            await lastFmApi.GetAuthToken();
+            lastFmApi.AuthorizeToken();
 
             await MessageBox.ShowDialogAsync(window, "Close this window, when you are done, authenticating in the browser");
         
-            await api.GetSessionKey();
+            await lastFmApi.GetSessionKey();
 
-            await api.SaveSessionKey();
+            await lastFmApi.SaveSessionKeyAsync();
         }
-        
-        var currentSong = player?.CurrentSong.Value;
-
-        if (currentSong == default) return;
-
-        await api.UpdateNowPlaying(currentSong.Title, currentSong.Artist, (ulong) TimeSpan.FromMicroseconds(currentSong.TotalTime).TotalSeconds);
     }
 }

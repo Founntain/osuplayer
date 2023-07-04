@@ -16,6 +16,7 @@ using OsuPlayer.Modules.Audio.Engine;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Modules.Services;
 using OsuPlayer.Network.Discord;
+using OsuPlayer.Network.LastFM;
 
 namespace OsuPlayer.Modules.Audio;
 
@@ -31,6 +32,7 @@ public class Player : IPlayer, IImportNotifications
     private readonly IShuffleServiceProvider? _shuffleProvider;
     private readonly IStatisticsProvider? _statisticsProvider;
     private readonly WindowsMediaTransportControls? _winMediaControls;
+    private readonly LastFmApi? _lastFmApi;
 
     private bool _isMuted;
     private double _oldVolume;
@@ -63,7 +65,7 @@ public class Player : IPlayer, IImportNotifications
     private List<IMapEntryBase> ActivePlaylistSongs { get; set; }
 
     public Player(IAudioEngine audioEngine, ISongSourceProvider songSourceProvider, IShuffleServiceProvider? shuffleProvider = null,
-        IStatisticsProvider? statisticsProvider = null, ISortProvider? sortProvider = null)
+        IStatisticsProvider? statisticsProvider = null, ISortProvider? sortProvider = null, LastFmApi? lastFmApi = null)
     {
         _audioEngine = audioEngine;
 
@@ -88,6 +90,8 @@ public class Player : IPlayer, IImportNotifications
         SongSourceProvider = songSourceProvider;
         _shuffleProvider = shuffleProvider;
         _statisticsProvider = statisticsProvider;
+
+        _lastFmApi = lastFmApi;
 
         IsPlaying.BindTo(_audioEngine.IsPlaying);
 
@@ -394,9 +398,7 @@ public class Player : IPlayer, IImportNotifications
         if (SongSourceProvider.SongSourceList == null || !SongSourceProvider.SongSourceList.Any())
             throw new NullOrEmptyException($"{nameof(SongSourceProvider.SongSourceList)} can't be null or empty");
 
-        var config = new Config();
-
-        await config.ReadAsync();
+        await using var config = new Config();
 
         var fullMapEntry = await song.ReadFullEntry();
 
@@ -450,6 +452,18 @@ public class Player : IPlayer, IImportNotifications
         catch (Exception e)
         {
             Debug.WriteLine($"Could not update Songs Played error => {e}");
+        }
+
+        try
+        {
+            if (!config.Container.EnableScrobbling)
+                return;
+            
+            await _lastFmApi?.Scrobble(CurrentSong.Value.Title, CurrentSong.Value.Artist)!;
+        }
+        catch (Exception e)
+        {
+            Debug.WriteLine($"Could not update last.fm error => {e}");
         }
     }
 }
