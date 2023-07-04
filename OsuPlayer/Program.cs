@@ -79,7 +79,6 @@ internal static class Program
         services.RegisterLazySingleton<ISongSourceProvider>(() => new OsuSongSourceProvider(resolver.GetService<ISortProvider>()));
         services.RegisterLazySingleton<LastFmApi>(() => new LastFmApi());
         
-        
         services.RegisterLazySingleton(() => new NorthFox());
 
         services.RegisterLazySingleton<IPlayer>(() => new Player(

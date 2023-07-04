@@ -99,8 +99,7 @@ public class LastFmApi : AbstractRequestBase
 
         return !string.IsNullOrWhiteSpace(_sessionKey);
     }
-
-
+    
     public async Task<bool> LoadSessionKeyAsync()
     {
         if (!File.Exists("data/lastfm.session")) return false;
