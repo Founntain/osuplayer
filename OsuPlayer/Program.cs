@@ -9,6 +9,7 @@ using OsuPlayer.Modules.Audio.Engine;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Modules.Services;
 using OsuPlayer.Network.API.Service.Endpoints;
+using OsuPlayer.Network.LastFM;
 using OsuPlayer.Windows;
 using Splat;
 
@@ -76,15 +77,18 @@ internal static class Program
         services.RegisterLazySingleton<IStatisticsProvider>(() => new ApiStatisticsProvider());
         services.RegisterLazySingleton<ISortProvider>(() => new SortProvider());
         services.RegisterLazySingleton<ISongSourceProvider>(() => new OsuSongSourceProvider(resolver.GetService<ISortProvider>()));
-
+        services.RegisterLazySingleton<LastFmApi>(() => new LastFmApi());
+        
         services.RegisterLazySingleton(() => new NorthFox());
 
         services.RegisterLazySingleton<IPlayer>(() => new Player(
-            resolver.GetRequiredService<IAudioEngine>(),
-            resolver.GetRequiredService<ISongSourceProvider>(),
-            resolver.GetService<IShuffleServiceProvider>(),
-            resolver.GetService<IStatisticsProvider>(),
-            resolver.GetService<ISortProvider>()));
+                audioEngine: resolver.GetRequiredService<IAudioEngine>(),
+                songSourceProvider: resolver.GetRequiredService<ISongSourceProvider>(),
+                shuffleProvider: resolver.GetRequiredService<IShuffleServiceProvider>(),
+                statisticsProvider: resolver.GetRequiredService<IStatisticsProvider>(),
+                sortProvider: resolver.GetRequiredService<ISortProvider>(),
+                lastFmApi: resolver.GetRequiredService<LastFmApi>()
+        ));
 
         services.Register(() => new MainWindowViewModel(
             resolver.GetRequiredService<IAudioEngine>(),

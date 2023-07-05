@@ -8,6 +8,7 @@ using Nein.Controls;
 using Nein.Extensions;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.Modules.Audio.Interfaces;
+using OsuPlayer.Network.LastFM;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
 using ReactiveUI;
@@ -149,5 +150,42 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
         var engine = Locator.Current.GetRequiredService<IAudioEngine>();
 
         engine.UpdatePlaybackMethod();
+    }
+
+    private async void LastFmAuth_OnClick(object? sender, RoutedEventArgs e)
+    {
+        var window = Locator.Current.GetService<MainWindow>();
+        var lastFmApi = Locator.Current.GetService<LastFmApi>();
+
+        using var config = new Config();
+
+        var apiKey = string.IsNullOrWhiteSpace(ViewModel.LastFmApiKey) ? config.Container.LastFmApiKey : ViewModel.LastFmApiKey;
+        var apiSecret = string.IsNullOrWhiteSpace(ViewModel.LastFmApiKey) ? config.Container.LastFmSecret : ViewModel.LastFmApiSecret;
+
+        if (string.IsNullOrWhiteSpace(apiKey) || string.IsNullOrWhiteSpace(apiSecret))
+        {
+            await MessageBox.ShowDialogAsync(window, "Please enter a API-Key and API-Secret before authorizing");
+            return;
+        }
+        
+        // We only load the APIKey from the config, as it is the only key that we save
+        // 1. Because we always need the api key for all the request
+        // 2. The secret is only used for the first authentication of the token
+        // 3. After that all subsequent last.fm api calls only need the api key and session key
+        lastFmApi.SetApiKeyAndSecret(apiKey, apiSecret);
+
+        await lastFmApi.LoadSessionKeyAsync();
+
+        if (!lastFmApi.IsAuthorized())
+        {
+            await lastFmApi.GetAuthToken();
+            lastFmApi.AuthorizeToken();
+
+            await MessageBox.ShowDialogAsync(window, "Close this window, when you are done, authenticating in the browser");
+        
+            await lastFmApi.GetSessionKey();
+
+            await lastFmApi.SaveSessionKeyAsync();
+        }
     }
 }

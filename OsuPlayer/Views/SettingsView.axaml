@@ -269,13 +269,13 @@
                     </StackPanel>
                 </Grid>
 
-                <!-- ————————————— -->
-                <!-- User Settings -->
-                <!-- ————————————— -->
-                <Grid RowDefinitions="Auto" Margin="10" Name="UserSettings">
+                <!-- ——————————————— -->
+                <!-- Network Settings -->
+                <!-- ——————————————— -->
+                <Grid RowDefinitions="Auto" Margin="10" Name="NetworkSettings">
 
-                    <StackPanel Margin="10" Spacing="1" Name="UserSettingsPanel">
-                        <controls:SettingsTitleDisplayer Title="User Settings" Icon="ShieldAccount" />
+                    <StackPanel Margin="10" Spacing="1" Name="NetworkSettingsPanel">
+                        <controls:SettingsTitleDisplayer Title="Network Settings" Icon="NetworkOutline" />
 
                         <controls:SettingsDisplayer Name="Login" Title="Log in" Description="{Binding CurrentUser}"
                                                     Icon="Login">
@@ -283,6 +283,38 @@
                             <controls:SettingsDisplayer.InteractionControl>
                                 <Button Content="log in" Click="LoginClick" HorizontalAlignment="Stretch"
                                         HorizontalContentAlignment="Center" />
+                            </controls:SettingsDisplayer.InteractionControl>
+
+                        </controls:SettingsDisplayer>
+                        
+                        <controls:SettingsDisplayer Name="LastFmAuth" Title="Last.FM Scrobbler" Description="Enter your API-Key and Secret to use the Last.FM Scrobbler"
+                                                    Icon="Login">
+
+                            <controls:SettingsDisplayer.InteractionControl>
+                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                    <StackPanel Orientation="Vertical" Spacing="2">
+                                        <TextBlock Text="Last.FM API-Key"/>
+                                        <TextBox Watermark="API-Key" PasswordChar="•" Text="{Binding LastFmApiKey}" />
+                                    </StackPanel>
+                                    
+                                    <StackPanel Orientation="Vertical" Spacing="2">
+                                        <TextBlock Text="Secret"/>
+                                        <TextBox Watermark="API-Secret" PasswordChar="•" Text="{Binding LastFmApiSecret}" />
+                                    </StackPanel>
+                                    
+                                    <Button Content="Authorize" Click="LastFmAuth_OnClick" HorizontalAlignment="Stretch"
+                                            HorizontalContentAlignment="Center" />
+                                </StackPanel>
+                                
+                            </controls:SettingsDisplayer.InteractionControl>
+                        </controls:SettingsDisplayer>
+                        
+                        <controls:SettingsDisplayer Name="LastFmScrobblin" Title="Enable Scrobbling" Description="Toggle if you want to send your play activity as scrobbles to Last.FM."
+                                                    Icon="CubeSend">
+
+                            <controls:SettingsDisplayer.InteractionControl>
+                                <ToggleSwitch HorizontalAlignment="Stretch" 
+                                        HorizontalContentAlignment="Center" IsChecked="{Binding EnableScrobbling}"/>
                             </controls:SettingsDisplayer.InteractionControl>
 
                         </controls:SettingsDisplayer>

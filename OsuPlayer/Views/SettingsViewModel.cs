@@ -31,6 +31,14 @@ public class SettingsViewModel : BaseViewModel
 
     private BackgroundMode _backgroundMode;
     private List<OsuPlayerContributor>? _contributors;
+
+    private bool _displayBackgroundImage;
+
+    private bool _enableScrobbling;
+
+    private string _lastFmApiKey;
+
+    private string _lastFmApiSecret;
     private string _osuLocation = string.Empty;
     private string _patchnotes = string.Empty;
     private KnownColors _selectedAccentColor;
@@ -42,13 +50,36 @@ public class SettingsViewModel : BaseViewModel
     private IShuffleImpl? _selectedShuffleAlgorithm;
     private StartupSong _selectedStartupSong;
     private string _settingsSearchQ = string.Empty;
-
-    private bool _displayBackgroundImage;
     private IShuffleServiceProvider? _shuffleServiceProvider;
     private bool _useDiscordRpc;
     private bool _usePitch;
 
     public MainWindow? MainWindow;
+
+    public bool EnableScrobbling
+    {
+        get => _enableScrobbling;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _enableScrobbling, value);
+
+            using var config = new Config();
+
+            config.Container.EnableScrobbling = value;
+        }
+    }
+
+    public string LastFmApiKey
+    {
+        get => _lastFmApiKey;
+        set => this.RaiseAndSetIfChanged(ref _lastFmApiKey, value);
+    }
+
+    public string LastFmApiSecret
+    {
+        get => _lastFmApiSecret;
+        set => this.RaiseAndSetIfChanged(ref _lastFmApiSecret, value);
+    }
 
     public float BackgroundBlurRadius
     {
@@ -60,7 +91,7 @@ public class SettingsViewModel : BaseViewModel
             using var config = new Config();
 
             config.Container.BackgroundBlurRadius = value;
-            
+
             if (MainWindow?.ViewModel == null) return;
 
             MainWindow.ViewModel.BackgroundBlurRadius = value;
@@ -77,13 +108,13 @@ public class SettingsViewModel : BaseViewModel
             using var config = new Config();
 
             config.Container.DisplayBackgroundImage = value;
-            
+
             if (MainWindow?.ViewModel == null) return;
 
             MainWindow.ViewModel.DisplayBackgroundImage = value;
-            
+
             if (MainWindow?.ViewModel?.PlayerControl == null) return;
-            
+
             MainWindow.ViewModel.PlayerControl.DisplayBackgroundImage = !value;
         }
     }
@@ -430,6 +461,7 @@ public class SettingsViewModel : BaseViewModel
         _usePitch = config.Container.UsePitch;
         _displayBackgroundImage = config.Container.DisplayBackgroundImage;
         _backgroundBlurRadius = config.Container.BackgroundBlurRadius;
+        _enableScrobbling = config.Container.EnableScrobbling;
 
         if (sortProvider != null)
         {
