@@ -41,7 +41,7 @@ public class MainWindowViewModel : BaseWindowViewModel
     public PlayerControlViewModel PlayerControl { get; }
     public EqualizerViewModel EqualizerView { get; }
     public StatisticsViewModel StatisticsView { get; }
-    public SymmetricalViewModel SymmetricalView { get; }
+    public BeatmapsViewModel BeatmapView { get; }
 
     private Bitmap? _backgroundImage;
 
@@ -100,7 +100,7 @@ public class MainWindowViewModel : BaseWindowViewModel
         EqualizerView = new EqualizerViewModel(Player);
         UpdateView = new UpdateViewModel();
         StatisticsView = new StatisticsViewModel();
-        SymmetricalView = new SymmetricalViewModel();
+        BeatmapView = new BeatmapsViewModel();
 
         using var config = new Config();
         

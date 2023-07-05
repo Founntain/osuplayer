@@ -1,0 +1,40 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:modelExtensions="clr-namespace:OsuPlayer.Network.API.ModelExtensions;assembly=OsuPlayer.Network"
+             xmlns:views="clr-namespace:OsuPlayer.Views"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="OsuPlayer.Views.BeatmapsView">
+    <Design.DataContext>
+        <views:BeatmapsViewModel />
+    </Design.DataContext>
+    
+    <Grid RowDefinitions="Auto, *">
+        <Grid Grid.Row="0" Background="{DynamicResource AcrylicSecondaryColor}" VerticalAlignment="Center">
+            <TextBlock Text="Beatmaps played by users" Margin="10 5" FontSize="26" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        </Grid>
+        <ListBox Grid.Row="1" Items="{Binding Beatmaps}" 
+                 Background="{DynamicResource AcrylicBaseColor}">
+            <ListBox.Styles>
+                <Style Selector="ListBoxItem">
+                    <Setter Property="Margin" Value="0" />
+                    <Setter Property="Padding" Value="0" />
+                </Style>
+            </ListBox.Styles>
+            <ListBox.ItemTemplate>
+                <DataTemplate DataType="modelExtensions:ApiBeatmapModel">
+                    <Grid ColumnDefinitions="*, Auto" Margin="10 0">
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Stretch" Spacing="2" Margin="10">
+                            <TextBlock Text="{Binding FullSongName}" Margin="0 5" FontSize="20" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding LastPlayedString}" FontStyle="Italic" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                            <TextBlock Text="{Binding MostPlayedString}" FontStyle="Italic" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                        </StackPanel>
+                        
+                        <TextBlock Grid.Column="1" Text="{Binding TimesPlayedString}" Margin="10 5" FontSize="18" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</UserControl>

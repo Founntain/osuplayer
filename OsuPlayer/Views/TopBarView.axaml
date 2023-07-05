@@ -14,10 +14,10 @@
         <Border Background="Transparent" PointerPressed="TopBarGrid_PointerPressed" />
 
         <DockPanel HorizontalAlignment="Center">
-            <!-- The Button to make it look symmetrical -->
-            <Button Name="SymmetricalNavigation" Width="32" Height="32" CornerRadius="50" Click="Navigation_Clicked"
+            <!-- Beatmaps view -->
+            <Button Name="BeatmapsNavigation" Width="32" Height="32" CornerRadius="50" Click="Navigation_Clicked"
                     Background="Transparent">
-                <avalonia:MaterialIcon Kind="MirrorRectangle" Height="24" Width="24" />
+                <avalonia:MaterialIcon Kind="FormatListBulleted" Height="24" Width="24" />
             </Button>
             <!--Search Button-->
             <Button Name="SearchNavigation" Width="32" Height="32" CornerRadius="50" Click="Navigation_Clicked"

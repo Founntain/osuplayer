@@ -1,11 +1,13 @@
-﻿using Avalonia.Controls;
+﻿using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using Nein.Base;
 
 namespace OsuPlayer.Views;
 
-public partial class SymmetricalView : UserControl
+public partial class BeatmapsView : ReactiveControl<BeatmapsViewModel>
 {
-    public SymmetricalView()
+    public BeatmapsView()
     {
         InitializeComponent();
     }
