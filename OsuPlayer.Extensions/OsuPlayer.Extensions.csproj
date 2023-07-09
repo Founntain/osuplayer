@@ -8,11 +8,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="0.10.19" />
-        <PackageReference Include="DynamicData" Version="7.13.1" />
-        <PackageReference Include="Material.Icons.Avalonia" Version="1.1.10" />
-        <PackageReference Include="OsuPlayer.Api.Data" Version="1.0.2" />
-        <PackageReference Include="Splat" Version="14.6.8" />
+        <PackageReference Include="Avalonia" Version="11.0.0" />
+        <PackageReference Include="DynamicData" Version="7.14.2" />
+        <PackageReference Include="Material.Icons.Avalonia" Version="2.0.1" />
+        <PackageReference Include="OsuPlayer.Api.Data" Version="1.0.3" />
+        <PackageReference Include="Splat" Version="14.6.37" />
     </ItemGroup>
 
     <ItemGroup>

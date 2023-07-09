@@ -13,12 +13,12 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="0.10.19" />
-        <PackageReference Include="DynamicData" Version="7.13.1" />
+        <PackageReference Include="Avalonia" Version="11.0.0" />
+        <PackageReference Include="DynamicData" Version="7.14.2" />
         <PackageReference Include="Founntain.Nein" Version="2023.623.0" />
-        <PackageReference Include="MongoDB.Bson" Version="2.19.1" />
+        <PackageReference Include="MongoDB.Bson" Version="2.20.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-        <PackageReference Include="Realm" Version="10.21.0">
+        <PackageReference Include="Realm" Version="11.2.0">
             <IncludeAssets>native</IncludeAssets>
         </PackageReference>
         <!--        <PackageReference Include="Realm.Fody" Version="10.15.1">-->

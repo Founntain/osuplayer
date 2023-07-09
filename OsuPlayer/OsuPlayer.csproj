@@ -29,22 +29,22 @@
         <TrimmableAssembly Include="Avalonia.Themes.Default" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="0.10.19" />
-        <PackageReference Include="Avalonia.Desktop" Version="0.10.19" />
-        <PackageReference Include="Avalonia.Diagnostics" Version="0.10.19" />
-        <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.19" />
-        <PackageReference Include="Avalonia.Skia" Version="0.10.19" />
-        <PackageReference Include="DynamicData" Version="7.13.1" />
+        <PackageReference Include="Avalonia" Version="11.0.0" />
+        <PackageReference Include="Avalonia.Desktop" Version="11.0.0" />
+        <PackageReference Include="Avalonia.Diagnostics" Version="11.0.0" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.0" />
+        <PackageReference Include="Avalonia.Skia" Version="11.0.0" />
+        <PackageReference Include="DynamicData" Version="7.14.2" />
         <PackageReference Include="Founntain.Nein" Version="2023.623.0" />
         <PackageReference Include="Founntain.OsuPlayer.NativeLibs" Version="1.0.4" />
         <PackageReference Include="LiveChartsCore.SkiaSharpView.Avalonia" Version="2.0.0-beta.101" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Include="ManagedBass" Version="3.1.1" />
         <PackageReference Include="ManagedBass.Fx" Version="3.1.1" />
-        <PackageReference Include="Markdown.Avalonia" Version="0.10.13" />
-        <PackageReference Include="Material.Icons.Avalonia" Version="1.1.10" />
+        <PackageReference Include="Markdown.Avalonia" Version="11.0.0" />
+        <PackageReference Include="Material.Icons.Avalonia" Version="2.0.1" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-        <PackageReference Include="OsuPlayer.Api.Data" Version="1.0.2" />
+        <PackageReference Include="OsuPlayer.Api.Data" Version="1.0.3" />
         <PackageReference Include="SkiaSharp" Version="2.88.3" />
         <PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1" />
     </ItemGroup>
