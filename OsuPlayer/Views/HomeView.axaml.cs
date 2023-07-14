@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
@@ -46,7 +47,7 @@ public partial class HomeView : ReactiveControl<HomeViewModel>
         //ViewModel!.Songs = new ObservableCollection<SongEntry>(songs);
     }
 
-    private async void InputElement_OnDoubleTapped(object? sender, RoutedEventArgs e)
+    private async void InputElement_OnDoubleTapped(object? sender, TappedEventArgs e)
     {
         var list = sender as ListBox;
         var song = list!.SelectedItem as IMapEntryBase;

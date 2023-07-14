@@ -7,6 +7,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Nein.Base;
 using Nein.Extensions;
+using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Network.API.Service.Endpoints;
 using OsuPlayer.UI_Extensions;
 using ReactiveUI;
@@ -22,7 +23,7 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
 
         using var config = new Config();
 
-        FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
+        FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamily.Name;
     }
 
     public LoginWindow(string username)
@@ -41,7 +42,7 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
         ViewModel = new LoginWindowViewModel();
 
         var config = new Config();
-        TransparencyLevelHint = (WindowTransparencyLevel) config.Container.BackgroundMode;
+        TransparencyLevelHint = config.Container.BackgroundMode.ToWindowTransparencyLevelList();
 #if DEBUG
         this.AttachDevTools();
 #endif

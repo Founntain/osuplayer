@@ -114,7 +114,7 @@
                     </Popup>
                 </Panel>
 
-                <ComboBox Items="{Binding EqPresets}" SelectedItem="{Binding SelectedPreset}"
+                <ComboBox ItemsSource="{Binding EqPresets}" SelectedItem="{Binding SelectedPreset}"
                           Margin="0 0 10 0" VerticalAlignment="Center" DockPanel.Dock="Right" />
             </DockPanel>
         </Grid>

@@ -1,8 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using Avalonia;
-using Avalonia.Platform;
 using Nein.Extensions;
 using Nein.Extensions.Exceptions;
 using OsuPlayer.Api.Data.API.Enums;
@@ -69,9 +68,7 @@ public class Player : IPlayer, IImportNotifications
     {
         _audioEngine = audioEngine;
 
-        var runtimePlatform = AvaloniaLocator.Current.GetRequiredService<IRuntimePlatform>();
-
-        if (runtimePlatform.GetRuntimeInfo().OperatingSystem == OperatingSystemType.WinNT)
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             try
             {
                 _winMediaControls = new WindowsMediaTransportControls(this);

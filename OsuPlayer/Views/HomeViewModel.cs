@@ -3,11 +3,13 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
-using Avalonia.Threading;
+using Avalonia.ReactiveUI;
 using DynamicData;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using Nein.Base;
 using OsuPlayer.Data.OsuPlayer.Classes;
@@ -72,6 +74,9 @@ public class HomeViewModel : BaseViewModel
         get => _playlistContextMenuEntries;
         set => this.RaiseAndSetIfChanged(ref _playlistContextMenuEntries, value);
     }
+
+    public IPaint<SkiaSharpDrawingContext> TooltipBackgroundPaint { get; } = new SolidColorPaint(new SKColor(0x7F, 0, 0, 1));
+    public IPaint<SkiaSharpDrawingContext> TooltipTextPaint { get; } = new SolidColorPaint(new SKColor(0xff, 0xff, 0xff, 1));
 
     public HomeViewModel(IPlayer player, IStatisticsProvider? statisticsProvider)
     {

@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using Avalonia;
-using Avalonia.Platform;
 using Avalonia.ReactiveUI;
 using Nein.Extensions;
 using OsuPlayer.Extensions;
@@ -27,7 +26,7 @@ internal static class Program
         {
             var builder = BuildAvaloniaApp();
 
-            Register(Locator.CurrentMutable, Locator.Current, builder.RuntimePlatform);
+            Register(Locator.CurrentMutable, Locator.Current);
 
             builder.StartWithClassicDesktopLifetime(args);
         }
@@ -61,15 +60,15 @@ internal static class Program
             .UsePlatformDetect()
             .LogToTrace()
             .UseSkia()
-            .UseReactiveUI()
-            .With(new Win32PlatformOptions
-            {
-                AllowEglInitialization = true,
-                UseWindowsUIComposition = true
-            });
+            .UseReactiveUI();
+            // .With(new Win32PlatformOptions
+            // {
+            //     AllowEglInitialization = true,
+            //     UseWindowsUIComposition = true
+            // });
     }
 
-    private static void Register(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver, IRuntimePlatform platform)
+    private static void Register(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver)
     {
         services.RegisterLazySingleton<IAudioEngine>(() => new BassEngine());
 

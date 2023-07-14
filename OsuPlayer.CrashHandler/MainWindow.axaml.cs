@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using Avalonia;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Nein.Base;
@@ -45,9 +44,11 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
     {
         if (ViewModel == null) return;
 
-        if (Application.Current?.Clipboard == default) return;
+        var topLevel = GetTopLevel(this);
+        
+        if (topLevel?.Clipboard == default) return;
 
-        await Application.Current.Clipboard.SetTextAsync(ViewModel.CrashLog);
+        await topLevel.Clipboard.SetTextAsync(ViewModel.CrashLog);
     }
 
     private void GitHub_OnClick(object? sender, RoutedEventArgs e)

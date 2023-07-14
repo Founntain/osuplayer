@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Nein.Base;
@@ -46,7 +47,7 @@ public partial class UserView : ReactiveControl<UserViewModel>
         // viewer.UpdateChild();
     }
 
-    private async void UserTopSongsList_OnDoubleTapped(object? sender, RoutedEventArgs e)
+    private async void UserTopSongsList_OnDoubleTapped(object? sender, TappedEventArgs e)
     {
         var listBox = (ListBox) sender;
 

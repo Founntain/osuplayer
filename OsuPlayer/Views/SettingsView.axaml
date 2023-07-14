@@ -1,4 +1,4 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
+<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -68,7 +68,7 @@
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <ComboBox SelectedItem="{Binding SelectedReleaseChannel}"
-                                          Items="{Binding ReleaseChannels}"
+                                          ItemsSource="{Binding ReleaseChannels}"
                                           HorizontalAlignment="Stretch" />
                             </controls:SettingsDisplayer.InteractionControl>
 
@@ -79,7 +79,8 @@
                                                     Icon="PlayArrow">
 
                             <controls:SettingsDisplayer.InteractionControl>
-                                <ComboBox SelectedItem="{Binding SelectedStartupSong}" Items="{Binding StartupSongs}"
+                                <ComboBox SelectedItem="{Binding SelectedStartupSong}"
+                                          ItemsSource="{Binding StartupSongs}"
                                           HorizontalAlignment="Stretch" />
                             </controls:SettingsDisplayer.InteractionControl>
 
@@ -90,7 +91,8 @@
                                                     Icon="SortVariant">
 
                             <controls:SettingsDisplayer.InteractionControl>
-                                <ComboBox SelectedItem="{Binding SelectedSortingMode}" Items="{Binding SortingModes}"
+                                <ComboBox SelectedItem="{Binding SelectedSortingMode}"
+                                          ItemsSource="{Binding SortingModes}"
                                           HorizontalAlignment="Stretch" />
                             </controls:SettingsDisplayer.InteractionControl>
 
@@ -102,7 +104,7 @@
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <ComboBox SelectedItem="{Binding SelectedShuffleAlgorithm}"
-                                          Items="{Binding ShuffleAlgorithms}" HorizontalAlignment="Stretch" />
+                                          ItemsSource="{Binding ShuffleAlgorithms}" HorizontalAlignment="Stretch" />
                             </controls:SettingsDisplayer.InteractionControl>
 
                         </controls:SettingsDisplayer>
@@ -155,7 +157,7 @@
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <AutoCompleteBox SelectedItem="{Binding SelectedFont}" MinimumPrefixLength="0"
-                                                 Items="{Binding Fonts}" HorizontalAlignment="Stretch" />
+                                                 ItemsSource="{Binding Fonts}" HorizontalAlignment="Stretch" />
                             </controls:SettingsDisplayer.InteractionControl>
 
                         </controls:SettingsDisplayer>
@@ -166,7 +168,7 @@
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <ComboBox SelectedItem="{Binding SelectedFontWeight}"
-                                          Items="{Binding AvailableFontWeights}" HorizontalAlignment="Stretch" />
+                                          ItemsSource="{Binding AvailableFontWeights}" HorizontalAlignment="Stretch" />
                             </controls:SettingsDisplayer.InteractionControl>
 
                         </controls:SettingsDisplayer>
@@ -177,7 +179,7 @@
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <ComboBox SelectedItem="{Binding BackgroundMode}"
-                                          Items="{Binding BackgroundModes}" HorizontalAlignment="Stretch" />
+                                          ItemsSource="{Binding BackgroundModes}" HorizontalAlignment="Stretch" />
                             </controls:SettingsDisplayer.InteractionControl>
 
                         </controls:SettingsDisplayer>
@@ -190,25 +192,29 @@
                                 <AutoCompleteBox SelectedItem="{Binding SelectedBackgroundColor}"
                                                  Watermark="Type to search for color" FilterMode="ContainsOrdinal"
                                                  MinimumPrefixLength="0"
-                                                 Items="{Binding KnownColors}" HorizontalAlignment="Stretch" />
+                                                 ItemsSource="{Binding KnownColors}" HorizontalAlignment="Stretch" />
                             </controls:SettingsDisplayer.InteractionControl>
 
                         </controls:SettingsDisplayer>
-                        
+
                         <controls:SettingsDisplayer Name="DisplayBackgroundImage" Title="Use Song Background Image"
-                                                    Description="Toggle if you want to use the current songs background image as window background." Icon="Image">
+                                                    Description="Toggle if you want to use the current songs background image as window background."
+                                                    Icon="Image">
 
                             <controls:SettingsDisplayer.InteractionControl>
-                                <ToggleSwitch IsChecked="{Binding DisplayBackgroundImage}"/>
+                                <ToggleSwitch IsChecked="{Binding DisplayBackgroundImage}" />
                             </controls:SettingsDisplayer.InteractionControl>
 
                         </controls:SettingsDisplayer>
-                        
-                        <controls:SettingsDisplayer Name="BackgroundImageBlur" Title="Background Blur" IsVisible="{Binding DisplayBackgroundImage}"
-                                                    Description="Amount of blur you want to use for the background image. The change will be visible when a new song is played." Icon="BlurCircular">
+
+                        <controls:SettingsDisplayer Name="BackgroundImageBlur" Title="Background Blur"
+                                                    IsVisible="{Binding DisplayBackgroundImage}"
+                                                    Description="Amount of blur you want to use for the background image. The change will be visible when a new song is played."
+                                                    Icon="BlurCircular">
 
                             <controls:SettingsDisplayer.InteractionControl>
-                                <Slider Value="{Binding BackgroundBlurRadius}" Minimum="0" Maximum="100" HorizontalAlignment="Stretch" Width="150" TickFrequency="1"/>
+                                <Slider Value="{Binding BackgroundBlurRadius}" Minimum="0" Maximum="100"
+                                        HorizontalAlignment="Stretch" Width="150" TickFrequency="1" />
                             </controls:SettingsDisplayer.InteractionControl>
 
                         </controls:SettingsDisplayer>
@@ -219,7 +225,7 @@
                             <controls:SettingsDisplayer.InteractionControl>
                                 <AutoCompleteBox SelectedItem="{Binding SelectedAccentColor}"
                                                  Watermark="Type to search for color" FilterMode="ContainsOrdinal"
-                                                 MinimumPrefixLength="0" Items="{Binding KnownColors}"
+                                                 MinimumPrefixLength="0" ItemsSource="{Binding KnownColors}"
                                                  HorizontalAlignment="Stretch" />
                             </controls:SettingsDisplayer.InteractionControl>
 
@@ -240,7 +246,7 @@
                                                     Icon="SpeakerMultiple">
 
                             <controls:SettingsDisplayer.InteractionControl>
-                                <ComboBox Items="{Binding AvailableAudioDevices}"
+                                <ComboBox ItemsSource="{Binding AvailableAudioDevices}"
                                           SelectedItem="{Binding SelectedAudioDevice}" HorizontalAlignment="Stretch" />
                             </controls:SettingsDisplayer.InteractionControl>
 
@@ -286,35 +292,40 @@
                             </controls:SettingsDisplayer.InteractionControl>
 
                         </controls:SettingsDisplayer>
-                        
-                        <controls:SettingsDisplayer Name="LastFmAuth" Title="Last.FM Scrobbler" Description="Enter your API-Key and Secret to use the Last.FM Scrobbler"
+
+                        <controls:SettingsDisplayer Name="LastFmAuth" Title="Last.FM Scrobbler"
+                                                    Description="Enter your API-Key and Secret to use the Last.FM Scrobbler"
                                                     Icon="Login">
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <StackPanel Orientation="Horizontal" Spacing="5">
                                     <StackPanel Orientation="Vertical" Spacing="2">
-                                        <TextBlock Text="Last.FM API-Key"/>
+                                        <TextBlock Text="Last.FM API-Key" />
                                         <TextBox Watermark="API-Key" PasswordChar="•" Text="{Binding LastFmApiKey}" />
                                     </StackPanel>
-                                    
+
                                     <StackPanel Orientation="Vertical" Spacing="2">
-                                        <TextBlock Text="Secret"/>
-                                        <TextBox Watermark="API-Secret" PasswordChar="•" Text="{Binding LastFmApiSecret}" />
+                                        <TextBlock Text="Secret" />
+                                        <TextBox Watermark="API-Secret" PasswordChar="•"
+                                                 Text="{Binding LastFmApiSecret}" />
                                     </StackPanel>
-                                    
-                                    <Button Content="Authorize" Click="LastFmAuth_OnClick" HorizontalAlignment="Stretch"
+
+                                    <Button Content="Authorize" Click="LastFmAuth_OnClick"
+                                            HorizontalAlignment="Stretch"
                                             HorizontalContentAlignment="Center" />
                                 </StackPanel>
-                                
+
                             </controls:SettingsDisplayer.InteractionControl>
                         </controls:SettingsDisplayer>
-                        
-                        <controls:SettingsDisplayer Name="LastFmScrobblin" Title="Enable Scrobbling" Description="Toggle if you want to send your play activity as scrobbles to Last.FM."
+
+                        <controls:SettingsDisplayer Name="LastFmScrobblin" Title="Enable Scrobbling"
+                                                    Description="Toggle if you want to send your play activity as scrobbles to Last.FM."
                                                     Icon="CubeSend">
 
                             <controls:SettingsDisplayer.InteractionControl>
-                                <ToggleSwitch HorizontalAlignment="Stretch" 
-                                        HorizontalContentAlignment="Center" IsChecked="{Binding EnableScrobbling}"/>
+                                <ToggleSwitch HorizontalAlignment="Stretch"
+                                              HorizontalContentAlignment="Center"
+                                              IsChecked="{Binding EnableScrobbling}" />
                             </controls:SettingsDisplayer.InteractionControl>
 
                         </controls:SettingsDisplayer>
@@ -400,7 +411,7 @@
                         <controls:SettingsTitleDisplayer Title="Contributers" Icon="AccountStar" />
 
                         <Border Background="{DynamicResource AcrylicBaseColor}" Padding="20">
-                            <ItemsRepeater Items="{Binding Contributors}">
+                            <ItemsRepeater ItemsSource="{Binding Contributors}">
                                 <ItemsRepeater.Layout>
                                     <WrapLayout HorizontalSpacing="5" VerticalSpacing="5" Orientation="Horizontal" />
                                 </ItemsRepeater.Layout>
@@ -412,8 +423,7 @@
                                                     VerticalAlignment="Center"
                                                     BorderBrush="White" BorderThickness="2">
                                                 <Border.Background>
-                                                    <ImageBrush Source="{Binding Avatar}"
-                                                                BitmapInterpolationMode="MediumQuality" />
+                                                    <ImageBrush Source="{Binding Avatar}" />
                                                 </Border.Background>
                                             </Border>
 

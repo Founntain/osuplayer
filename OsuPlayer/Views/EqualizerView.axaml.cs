@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
@@ -31,7 +32,7 @@ public partial class EqualizerView : ReactiveControl<EqualizerViewModel>
         AvaloniaXamlLoader.Load(this);
     }
 
-    private void ResetSlider(object? sender, RoutedEventArgs e)
+    private void ResetSlider(object? sender, TappedEventArgs e)
     {
         if (sender is Slider slider)
             slider.Value = 0;

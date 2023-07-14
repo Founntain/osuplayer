@@ -30,10 +30,9 @@ public partial class BlacklistEditorView : ReactiveControl<BlacklistEditorViewMo
         AvaloniaXamlLoader.Load(this);
     }
 
-    private async void PlaySong(object? sender, RoutedEventArgs e)
+    private async void PlaySong(object? sender, TappedEventArgs e)
     {
-        var tapped = (TappedEventArgs) e;
-        var controlSource = (Control) tapped.Pointer.Captured;
+        var controlSource = (Control) e.Pointer.Captured;
 
         if (controlSource?.DataContext is IMapEntryBase song)
             await ViewModel.Player.TryPlaySongAsync(song);

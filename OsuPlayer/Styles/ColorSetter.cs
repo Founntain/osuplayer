@@ -1,5 +1,6 @@
 ﻿using Avalonia;
-using Avalonia.Markup.Xaml.MarkupExtensions;
+using Avalonia.Controls;
+using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Media;
 using Nein.Extensions;
 
@@ -9,17 +10,17 @@ public class ColorSetter
 {
     public static void SetColor(Color color)
     {
-        var resourceProvider = (ResourceInclude) Application.Current!.Resources.MergedDictionaries.First();
+        var resourceProvider = (IResourceProvider) Application.Current!.Resources.MergedDictionaries.First();
 
         color = Color.FromArgb(255, color.R, color.G, color.B);
 
-        resourceProvider.Loaded["SystemAccentColor"] = color;
-        resourceProvider.Loaded["SystemAccentColorDark1"] = CalculateShade(color, -0.1f);
-        resourceProvider.Loaded["SystemAccentColorDark2"] = CalculateShade(color, -0.2f);
-        resourceProvider.Loaded["SystemAccentColorDark3"] = CalculateShade(color, -0.3f);
-        resourceProvider.Loaded["SystemAccentColorLight1"] = CalculateShade(color, 0.1f);
-        resourceProvider.Loaded["SystemAccentColorLight2"] = CalculateShade(color, 0.2f);
-        resourceProvider.Loaded["SystemAccentColorLight3"] = CalculateShade(color, 0.3f);
+        // resourceProvider.Loaded["SystemAccentColor"] = color;
+        // resourceProvider.Loaded["SystemAccentColorDark1"] = CalculateShade(color, -0.1f);
+        // resourceProvider.Loaded["SystemAccentColorDark2"] = CalculateShade(color, -0.2f);
+        // resourceProvider.Loaded["SystemAccentColorDark3"] = CalculateShade(color, -0.3f);
+        // resourceProvider.Loaded["SystemAccentColorLight1"] = CalculateShade(color, 0.1f);
+        // resourceProvider.Loaded["SystemAccentColorLight2"] = CalculateShade(color, 0.2f);
+        // resourceProvider.Loaded["SystemAccentColorLight3"] = CalculateShade(color, 0.3f);
     }
 
     private static Color CalculateShade(Color baseColor, float offset)

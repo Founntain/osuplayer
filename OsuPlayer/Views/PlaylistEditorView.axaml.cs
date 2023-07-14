@@ -179,7 +179,7 @@ public partial class PlaylistEditorView : ReactiveControl<PlaylistEditorViewMode
         ViewModel.IsDeletePlaylistPopupOpen = false;
     }
 
-    private async void PlaySong(object? sender, RoutedEventArgs e)
+    private async void PlaySong(object? sender, TappedEventArgs e)
     {
         var tapped = (TappedEventArgs) e;
         var controlSource = (Control) tapped.Pointer.Captured;

@@ -191,7 +191,7 @@ public class SettingsViewModel : BaseViewModel
         }
     }
 
-    public IEnumerable<string> Fonts => FontManager.Current.GetInstalledFontFamilyNames();
+    public IEnumerable<string> Fonts => FontManager.Current.SystemFonts.Select(x => x.Name);
 
     public string? SelectedFont
     {
@@ -224,22 +224,10 @@ public class SettingsViewModel : BaseViewModel
 
             using var config = new Config();
 
-            switch (value)
-            {
-                case BackgroundMode.AcrylicBlur:
-                    MainWindow.TransparencyLevelHint = WindowTransparencyLevel.AcrylicBlur;
+            config.Container.BackgroundMode = value;
 
-                    break;
-                case BackgroundMode.Mica:
-                    MainWindow.TransparencyLevelHint = WindowTransparencyLevel.Mica;
-
-                    break;
-                case BackgroundMode.SolidColor:
-                default:
-                    MainWindow.TransparencyLevelHint = WindowTransparencyLevel.None;
-
-                    break;
-            }
+            MainWindow.TransparencyLevelHint = null!;
+            MainWindow.TransparencyLevelHint = value.ToWindowTransparencyLevelList();
         }
     }
 
@@ -454,7 +442,7 @@ public class SettingsViewModel : BaseViewModel
         _selectedBackgroundColor = config.Container.BackgroundColor;
         _selectedAccentColor = config.Container.AccentColor;
         _selectedFontWeight = config.Container.DefaultFontWeight;
-        _selectedFont = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
+        _selectedFont = config.Container.Font ?? FontManager.Current.DefaultFontFamily.Name;
         _selectedShuffleAlgorithm = ShuffleAlgorithms?.FirstOrDefault(x => x == _shuffleServiceProvider?.ShuffleImpl);
         _selectedAudioDevice = AvailableAudioDevices.FirstOrDefault(x => x.Driver == config.Container.SelectedAudioDeviceDriver);
         _useDiscordRpc = config.Container.UseDiscordRpc;

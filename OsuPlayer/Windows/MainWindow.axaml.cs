@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Avalonia;
@@ -6,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Nein.Base;
+using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Extensions;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.Network;
@@ -39,8 +39,15 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
         InitializeComponent();
 
+        this.WhenActivated(_ =>
+        {
+            if (ViewModel != null)
+                ViewModel.MainView = ViewModel.HomeView;
+        });
+
+
         using var config = new Config();
-        TransparencyLevelHint = (WindowTransparencyLevel) config.Container.BackgroundMode;
+        TransparencyLevelHint = config.Container.BackgroundMode.ToWindowTransparencyLevelList();
         FontWeight = (FontWeight) config.Container.DefaultFontWeight;
 
         var backgroundColor = config.Container.BackgroundColor;
@@ -55,7 +62,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         Application.Current!.Resources["DefaultFontWeight"] = config.Container.DefaultFontWeight.ToFontWeight();
         Application.Current!.Resources["BiggerFontWeight"] = config.Container.GetNextBiggerFont().ToFontWeight();
 
-        FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
+        FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamily.Name;
         config.Container.Font ??= FontFamily.Name;
 
         Task.Run(async () =>
@@ -70,13 +77,13 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
                 var apiKey = config.Container.LastFmApiKey;
                 var apiSecret = config.Container.LastFmSecret;
                 var sessionKey = await lastFmApi.LoadSessionKeyAsync();
-    
+
                 if (!string.IsNullOrWhiteSpace(apiKey) || !string.IsNullOrWhiteSpace(apiSecret) || !sessionKey)
                 {
                     Console.WriteLine("Can't connect to last.fm, because no apikey, apisecret or session key fast found");
                     return;
                 }
-            
+
                 // We only load the APIKey from the config, as it is the only key that we save
                 // 1. Because we always need the api key for all the request
                 // 2. The secret is only used for the first authentication of the token
@@ -87,11 +94,11 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
                 {
                     await lastFmApi.GetAuthToken();
                     lastFmApi.AuthorizeToken();
-    
+
                     await MessageBox.ShowDialogAsync(window, "Close this window, when you are done, authenticating in the browser");
-            
+
                     await lastFmApi.GetSessionKey();
-    
+
                     await lastFmApi.SaveSessionKeyAsync();
                 }
             }
@@ -106,18 +113,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 #endif
     }
 
-    private void InitializeComponent()
-    {
-        this.WhenActivated(_ =>
-        {
-            if (ViewModel != null)
-                ViewModel.MainView = ViewModel.HomeView;
-        });
-
-        AvaloniaXamlLoader.Load(this);
-    }
-
-    protected override void OnClosing(CancelEventArgs e)
+    protected override void OnClosing(WindowClosingEventArgs e)
     {
         base.OnClosing(e);
 

@@ -144,7 +144,7 @@
                         Background="Transparent">
                     <Button.ContextMenu>
                         <ContextMenu IsVisible="{Binding IsRepeating, Converter={StaticResource RepeatConverter}}"
-                                     Items="{Binding Playlists}" PointerReleased="RepeatContextMenu_OnPointerReleased" />
+                                     ItemsSource="{Binding Playlists}" PointerReleased="RepeatContextMenu_OnPointerReleased" />
                     </Button.ContextMenu>
                     <Panel>
                         <avalonia:MaterialIcon Kind="{Binding IsRepeating, Converter={StaticResource RepeatConverter}}"

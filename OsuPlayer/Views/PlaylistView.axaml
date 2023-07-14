@@ -22,7 +22,7 @@
                 <TextBlock Text="your playlists" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Center" />
             </Border>
 
-            <ListBox Grid.Row="1" SelectedItem="{Binding SelectedPlaylist}" Items="{Binding Playlists}"
+            <ListBox Grid.Row="1" SelectedItem="{Binding SelectedPlaylist}" ItemsSource="{Binding Playlists}"
                      Background="Transparent">
                 <ListBox.Styles>
                     <Style Selector="ListBoxItem">
@@ -58,7 +58,7 @@
 
         <Grid Column="1" Margin="10" RowDefinitions="Auto, *" Background="{DynamicResource AcrylicBaseColor}">
             <TextBox Grid.Row="0" Margin="10" Text="{Binding FilterText}" Watermark="type to search..." />
-            <ListBox Grid.Row="1" Background="Transparent" Items="{Binding FilteredSongEntries}"
+            <ListBox Grid.Row="1" Background="Transparent" ItemsSource="{Binding FilteredSongEntries}"
                      SelectedItem="{Binding SelectedSong}">
                 <ListBox.ContextMenu>
                     <ContextMenu>

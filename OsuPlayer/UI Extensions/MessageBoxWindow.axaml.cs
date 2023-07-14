@@ -1,7 +1,7 @@
 ﻿using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
+using OsuPlayer.Data.OsuPlayer.Enums;
 using ReactiveUI;
 
 namespace OsuPlayer.UI_Extensions;
@@ -15,7 +15,7 @@ public partial class MessageBoxWindow : ReactiveWindow<MessageBoxViewModel>
         ViewModel = new MessageBoxViewModel();
 
         var config = new Config();
-        TransparencyLevelHint = (WindowTransparencyLevel) config.Container.BackgroundMode;
+        TransparencyLevelHint = config.Container.BackgroundMode.ToWindowTransparencyLevelList();
 
 #if DEBUG
         this.AttachDevTools();
@@ -29,7 +29,7 @@ public partial class MessageBoxWindow : ReactiveWindow<MessageBoxViewModel>
         ViewModel = new MessageBoxViewModel(this, text, title);
 
         var config = new Config();
-        TransparencyLevelHint = (WindowTransparencyLevel) config.Container.BackgroundMode;
+        TransparencyLevelHint = config.Container.BackgroundMode.ToWindowTransparencyLevelList();
 #if DEBUG
         this.AttachDevTools();
 #endif

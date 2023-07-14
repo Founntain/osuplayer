@@ -1,11 +1,11 @@
-﻿using Avalonia.Controls;
-using Avalonia.Interactivity;
+﻿using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.ReactiveUI;
 using Nein.Extensions;
 using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.RequestModels.User;
+using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Network.API.Service.Endpoints;
 using OsuPlayer.Network.Security;
 using OsuPlayer.UI_Extensions;
@@ -21,8 +21,8 @@ public partial class CreateProfileWindow : ReactiveWindow<CreateProfileWindowVie
 
         var config = new Config();
 
-        TransparencyLevelHint = (WindowTransparencyLevel) config.Container.BackgroundMode;
-        FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
+        TransparencyLevelHint = config.Container.BackgroundMode.ToWindowTransparencyLevelList();
+        FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamily.Name;
     }
 
     private void InitializeComponent()

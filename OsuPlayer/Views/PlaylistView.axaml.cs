@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
@@ -46,7 +47,7 @@ public partial class PlaylistView : ReactiveControl<PlaylistViewModel>
         _mainWindow.ViewModel.MainView = _mainWindow.ViewModel.BlacklistEditorView;
     }
 
-    private async void PlaySong(object? sender, RoutedEventArgs e)
+    private async void PlaySong(object? sender, TappedEventArgs e)
     {
         if (sender is not Control {DataContext: IMapEntryBase song}) return;
 

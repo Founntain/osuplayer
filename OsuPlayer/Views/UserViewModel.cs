@@ -5,8 +5,12 @@ using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
+using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.SkiaSharpView.SKCharts;
 using Material.Icons;
 using Material.Icons.Avalonia;
 using Nein.Base;
@@ -23,7 +27,7 @@ namespace OsuPlayer.Views;
 public class UserViewModel : BaseViewModel
 {
     public readonly IPlayer Player;
-    private ObservableCollection<IControl>? _badges;
+    private ObservableCollection<Control>? _badges;
     private CancellationTokenSource? _bannerCancellationTokenSource;
     private Bitmap? _currentProfileBanner;
     private Bitmap? _currentProfilePicture;
@@ -94,9 +98,9 @@ public class UserViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _topSongsOfCurrentUser, value);
     }
 
-    public ObservableCollection<IControl> Badges
+    public ObservableCollection<Control> Badges
     {
-        get => _badges ?? new ObservableCollection<IControl>();
+        get => _badges ?? new ObservableCollection<Control>();
         set => this.RaiseAndSetIfChanged(ref _badges, value);
     }
 
@@ -133,13 +137,22 @@ public class UserViewModel : BaseViewModel
         }
     }
 
+    public IPaint<SkiaSharpDrawingContext> TooltipBackgroundPaint { get; } = new SolidColorPaint(new SKColor(0x1F000000));
+    public IPaint<SkiaSharpDrawingContext> TooltipTextPaint { get; } = new SolidColorPaint(new SKColor(0xFFFFFFFF))
+    {
+        SKTypeface = SKTypeface.FromFamilyName("Montserrat"),
+        IsFill = true,
+        SKFontStyle = SKFontStyle.Bold
+    };
+    //public IChartTooltip<SkiaSharpDrawingContext> Tooltip { get; } = new SKDefaultTooltip();
+
     public UserViewModel(IPlayer player)
     {
         Player = player;
 
         Activator = new ViewModelActivator();
 
-        Badges = new ObservableCollection<IControl>();
+        Badges = new ObservableCollection<Control>();
 
         SongsPlayedGraphValues = new List<ObservableValue>();
         XpGainedGraphValues = new List<ObservableValue>();
@@ -365,9 +378,9 @@ public class UserViewModel : BaseViewModel
         this.RaisePropertyChanged(nameof(XAxes));
     }
 
-    public IEnumerable<IControl> LoadBadges(User? currentUser)
+    public IEnumerable<Control> LoadBadges(User? currentUser)
     {
-        return new List<IControl>();
+        return new List<Control>();
 
         if (currentUser == default) return default!;
 

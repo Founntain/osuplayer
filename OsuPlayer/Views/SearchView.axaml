@@ -13,14 +13,14 @@
 
     <Grid RowDefinitions="Auto, *">
         <TextBox Margin="10" Grid.Row="0" Text="{Binding FilterText}" Watermark="type to search..." />
-        <!-- <AutoCompleteBox Margin="0 2" Grid.Row="0" Text="{Binding FilterText}" Items="{Binding $parent[Window].DataContext.FilteredSongEntries}"/> -->
+        <!-- <AutoCompleteBox Margin="0 2" Grid.Row="0" Text="{Binding FilterText}" ItemsSource="{Binding $parent[Window].DataContext.FilteredSongEntries}"/> -->
 
-        <ListBox Grid.Row="1" Items="{Binding FilteredSongEntries}" Background="{DynamicResource AcrylicBaseColor}"
+        <ListBox Grid.Row="1" ItemsSource="{Binding FilteredSongEntries}" Background="{DynamicResource AcrylicBaseColor}"
                  DoubleTapped="InputElement_OnDoubleTapped" SelectedItem="{Binding SelectedSong}">
             <ListBox.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Add to playlist"
-                              Items="{Binding PlaylistContextMenuEntries}"
+                              ItemsSource="{Binding PlaylistContextMenuEntries}"
                               Classes="SubItems">
                         <MenuItem.Styles>
                             <Style Selector="MenuItem.SubItems MenuItem">

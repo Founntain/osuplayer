@@ -1,6 +1,7 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:views="clr-namespace:Nein.View;assembly=Nein"
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              x:Class="OsuPlayer.App">
     <Application.DataTemplates>
         <views:ViewLocator />
@@ -34,6 +35,6 @@
 
     <Application.Styles>
         <StyleInclude Source="avares://OsuPlayer/Styles/FluentDark.axaml" />
-        <StyleInclude Source="avares://Material.Icons.Avalonia/App.xaml" />
+        <materialIcons:MaterialIconStyles />
     </Application.Styles>
 </Application>

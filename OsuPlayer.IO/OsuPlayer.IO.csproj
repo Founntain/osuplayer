@@ -15,7 +15,7 @@
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="11.0.0" />
         <PackageReference Include="DynamicData" Version="7.14.2" />
-        <PackageReference Include="Founntain.Nein" Version="2023.623.0" />
+        <PackageReference Include="Founntain.Nein" Version="2023.714.0" />
         <PackageReference Include="MongoDB.Bson" Version="2.20.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="Realm" Version="11.2.0">
