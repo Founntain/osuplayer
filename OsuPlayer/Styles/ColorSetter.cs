@@ -14,6 +14,8 @@ public class ColorSetter
 
         color = Color.FromArgb(255, color.R, color.G, color.B);
 
+        //TODO: Check how to set values in the resource provider
+        
         // resourceProvider.Loaded["SystemAccentColor"] = color;
         // resourceProvider.Loaded["SystemAccentColorDark1"] = CalculateShade(color, -0.1f);
         // resourceProvider.Loaded["SystemAccentColorDark2"] = CalculateShade(color, -0.2f);
