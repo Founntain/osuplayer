@@ -45,7 +45,6 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
                 ViewModel.MainView = ViewModel.HomeView;
         });
 
-
         using var config = new Config();
         TransparencyLevelHint = config.Container.BackgroundMode.ToWindowTransparencyLevelList();
         FontWeight = (FontWeight) config.Container.DefaultFontWeight;
