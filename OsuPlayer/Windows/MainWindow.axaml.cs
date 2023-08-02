@@ -12,7 +12,6 @@ using OsuPlayer.Network;
 using OsuPlayer.Network.LastFM;
 using OsuPlayer.Styles;
 using OsuPlayer.UI_Extensions;
-using OsuPlayer.Views;
 using ReactiveUI;
 using Splat;
 
@@ -155,24 +154,5 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         if (ViewModel == default) return;
 
         ViewModel.IsPaneOpen = false;
-    }
-
-    private async void Window_OnOpened(object? sender, EventArgs e)
-    {
-        if (!File.Exists("data/session.op"))
-            return;
-
-        var sessionToken = await File.ReadAllTextAsync("data/session.op");
-
-        await ProfileManager.Login(sessionToken);
-
-        // We only want to update the user panel, when the home view is already open, to refresh the panel.
-        if (ViewModel?.MainView?.GetType() != typeof(HomeViewModel)) return;
-
-        ViewModel.HomeView.RaisePropertyChanged(nameof(ViewModel.HomeView.IsUserLoggedIn));
-        ViewModel.HomeView.RaisePropertyChanged(nameof(ViewModel.HomeView.IsUserNotLoggedIn));
-        ViewModel.HomeView.RaisePropertyChanged(nameof(ViewModel.HomeView.CurrentUser));
-
-        ViewModel.HomeView.ProfilePicture = await ViewModel.HomeView.LoadProfilePicture();
     }
 }

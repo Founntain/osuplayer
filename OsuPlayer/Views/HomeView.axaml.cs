@@ -54,21 +54,6 @@ public partial class HomeView : ReactiveControl<HomeViewModel>
         await ViewModel.Player.TryPlaySongAsync(song);
     }
 
-    private async void LoginBtn_OnClick(object? sender, RoutedEventArgs e)
-    {
-        if (ViewModel == default) return;
-
-        var loginWindow = new LoginWindow();
-
-        await loginWindow.ShowDialog(_mainWindow);
-
-        ViewModel.RaisePropertyChanged(nameof(ViewModel.CurrentUser));
-        ViewModel.RaisePropertyChanged(nameof(ViewModel.IsUserLoggedIn));
-        ViewModel.RaisePropertyChanged(nameof(ViewModel.IsUserNotLoggedIn));
-
-        ViewModel.ProfilePicture = await ViewModel.LoadProfilePicture();
-    }
-
     private void EditBtn_OnClick(object? sender, RoutedEventArgs e)
     {
         if (_mainWindow?.ViewModel == default) return;

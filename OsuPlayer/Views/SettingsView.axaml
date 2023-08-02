@@ -47,11 +47,6 @@
 
                         </controls:SettingsDisplayer>
 
-                        <!-- <StackPanel Spacing="5" Name="ImportOsuSongs"> -->
-                        <!--     <TextBlock Text="{Binding OsuLocation}" /> -->
-                        <!--      -->
-                        <!-- </StackPanel> -->
-
                         <controls:SettingsDisplayer Name="ImportCollections" Title="Import osu! collections"
                                                     Description="Import your osu! collections as playlists"
                                                     Icon="TableImport">
@@ -150,6 +145,14 @@
                     <StackPanel Margin="10" Spacing="1" Name="VisualSettingsPanel">
                         <controls:SettingsTitleDisplayer Title="Visual Settings" Icon="Shimmer" />
 
+                        <controls:SettingsDisplayer Name="DisplayUserStats" Title="Display User Statistics on Home View"
+                                                    Description="Toggle if you want to display your User Stats and session graph on the home view"
+                                                    Icon="User">
+                            <controls:SettingsDisplayer.InteractionControl>
+                                <ToggleSwitch IsChecked="{Binding DisplayUserStats}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                            </controls:SettingsDisplayer.InteractionControl>
+                        </controls:SettingsDisplayer>
+                        
                         <controls:SettingsDisplayer Name="Font" Title="UI Font"
                                                     Description="Select the font you want to use as Interface Font. We recommend Montserrat"
                                                     Icon="FormatFont">

@@ -10,13 +10,13 @@ using ReactiveUI;
 
 namespace OsuPlayer.CrashHandler;
 
-public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
+public partial class CrashHandlerMainWindow : ReactiveWindow<CrashHandlerMainWindowViewModel>
 {
-    public MainWindow()
+    public CrashHandlerMainWindow()
     {
         InitializeComponent();
 
-        ViewModel = new MainWindowViewModel();
+        ViewModel = new CrashHandlerMainWindowViewModel();
     }
 
     private void InitializeComponent()
