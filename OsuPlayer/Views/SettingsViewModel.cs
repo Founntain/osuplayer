@@ -14,9 +14,11 @@ using OsuPlayer.Modules.Services;
 using OsuPlayer.Modules.ShuffleImpl;
 using OsuPlayer.Network;
 using OsuPlayer.Network.Data;
+using OsuPlayer.Network.LastFM;
 using OsuPlayer.Styles;
 using OsuPlayer.Windows;
 using ReactiveUI;
+using Splat;
 
 namespace OsuPlayer.Views;
 
@@ -54,6 +56,14 @@ public class SettingsViewModel : BaseViewModel
     private bool _useDiscordRpc;
     private bool _usePitch;
 
+    private bool _isLastFmAuthorized;
+
+    public bool IsLastFmAuthorized
+    {
+        get => _isLastFmAuthorized;
+        set => this.RaiseAndSetIfChanged(ref _isLastFmAuthorized, value);
+    }
+    
     public MainWindow? MainWindow;
 
     public bool EnableScrobbling
@@ -462,6 +472,10 @@ public class SettingsViewModel : BaseViewModel
         _displayBackgroundImage = config.Container.DisplayBackgroundImage;
         _backgroundBlurRadius = config.Container.BackgroundBlurRadius;
         _enableScrobbling = config.Container.EnableScrobbling;
+
+        var lastFmApi = Locator.Current.GetService<LastFmApi>();
+
+        _isLastFmAuthorized = lastFmApi.LoadSessionKey();
 
         if (sortProvider != null)
         {
