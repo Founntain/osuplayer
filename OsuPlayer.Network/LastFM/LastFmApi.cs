@@ -138,7 +138,7 @@ public class LastFmApi : AbstractRequestBase
     /// </summary>
     public async Task<string> GetAuthToken()
     {
-        var response = await GetRequest<TokenResponse, object>("&method=auth.gettoken");
+        var response = await GetRequest<TokenResponse, object>($"&method=auth.gettoken&api_key={_apiKey}");
 
         _authToken = response.Token;
 
