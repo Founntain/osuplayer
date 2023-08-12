@@ -114,7 +114,7 @@ public class Player : IPlayer, IImportNotifications
 
             if (d.NewValue is null) return;
 
-            _discordClient?.UpdatePresence(d.NewValue.Title, $"by {d.NewValue.Artist}");
+            _discordClient?.UpdatePresence(d.NewValue.Title, $"by {d.NewValue.Artist}", d.NewValue.BeatmapSetId);
         }, true);
 
         RepeatMode.BindValueChanged(d =>

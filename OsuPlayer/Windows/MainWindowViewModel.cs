@@ -1,5 +1,3 @@
-using System.ComponentModel;
-using ABI.Windows.Devices.Sensors.Custom;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;

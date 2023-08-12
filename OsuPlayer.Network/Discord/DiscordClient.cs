@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics;
+using System.Net;
 using System.Reflection;
+using System.Text;
 using DiscordRPC;
 using DiscordRPC.Logging;
 using DiscordRPC.Message;
@@ -12,6 +14,8 @@ public class DiscordClient
 {
     private const string ApplicationId = "506435812397940736";
     private readonly DiscordRpcClient _client;
+    private const string DefaultImageKey = "logo";
+    private readonly string _defaultOsuThumbnailUrl = "https://assets.ppy.sh/beatmaps/{0}/covers/list.jpg";
 
     /// <summary>
     /// Default assets for the RPC including the logo
@@ -51,7 +55,7 @@ public class DiscordClient
             State = "doing nothing...",
             Assets = new Assets
             {
-                LargeImageKey = "logo",
+                LargeImageKey = DefaultImageKey,
                 LargeImageText = "osu!player"
             }
         });
@@ -59,6 +63,11 @@ public class DiscordClient
         _client.Invoke();
 
         return this;
+    }
+
+    ~DiscordClient()
+    {
+        DeInitialize();
     }
 
     /// <summary>
@@ -74,9 +83,15 @@ public class DiscordClient
     /// </summary>
     /// <param name="details">Text of the first line</param>
     /// <param name="state">Text of the second line</param>
-    /// <param name="assets">Assets to use</param>
-    public void UpdatePresence(string details, string state, Assets? assets = null)
+    /// <param name="beatmapSetId">Optional beatmapset ID</param>
+    /// <param name="assets">Optional assets to use</param>
+    public async Task UpdatePresence(string details, string state, int beatmapSetId = 0, Assets? assets = null)
     {
+        if (assets == null && beatmapSetId != 0)
+        {
+            assets = await TryToGetThumbnail(beatmapSetId);
+        }
+        
         _client.SetPresence(new RichPresence
         {
             Details = details,
@@ -87,6 +102,30 @@ public class DiscordClient
         });
 
         _client.Invoke();
+    }
+
+    private async Task<Assets?> TryToGetThumbnail(int beatmapSetId)
+    {
+        var url = string.Format(_defaultOsuThumbnailUrl, beatmapSetId);
+
+        // Discord can't accept URLs bigger than 256 bytes and throws an exception, so we check for that here
+        if (Encoding.UTF8.GetByteCount(url) > 256)
+        {
+            return null;
+        }
+
+        var osuApi = new WebRequestBase(url);
+
+        var thumbnailResponse = await osuApi.GetRequestWithResponseObj<object>(string.Empty);
+
+        if (thumbnailResponse.StatusCode != HttpStatusCode.OK)
+            return null;
+
+        return new()
+            {
+                LargeImageKey = url,
+                LargeImageText = $"osu!player v{Assembly.GetEntryAssembly().ToVersionString()}"
+            };
     }
 
     private Button[]? GetButtons()

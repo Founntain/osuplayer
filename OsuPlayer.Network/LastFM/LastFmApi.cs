@@ -1,16 +1,14 @@
-﻿using System.Diagnostics;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
 using Nein.Extensions;
-using Newtonsoft.Json;
 using OsuPlayer.IO.Storage.Config;
 using OsuPlayer.IO.Storage.LazerModels.Extensions;
 using OsuPlayer.Network.LastFM.Responses;
 
 namespace OsuPlayer.Network.LastFM;
 
-public class LastFmApi : AbstractRequestBase
+public class LastFmApi : WebRequestBase
 {
     /// <summary>
     /// The Last.FM API-Key of the user
@@ -79,8 +77,6 @@ public class LastFmApi : AbstractRequestBase
         parameters.Add("api_sig", apiSignature);
 
         var response = await PostRequest<object, object>(string.Empty, new FormUrlEncodedContent(parameters));
-
-        Debug.WriteLine($"SCROBBLING | {JsonConvert.ToString(response)}");
     }
 
     /// <summary>
