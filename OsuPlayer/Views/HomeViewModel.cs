@@ -155,6 +155,6 @@ public class HomeViewModel : BaseViewModel
     {
         if (CurrentUser == default || CurrentUser.UniqueId == Guid.Empty) return default;
 
-        return await Locator.Current.GetService<NorthFox>().GetProfilePictureAsync(CurrentUser.UniqueId);
+        return await Locator.Current.GetService<NorthFox>().User.GetProfilePictureAsync(CurrentUser.UniqueId);
     }
 }

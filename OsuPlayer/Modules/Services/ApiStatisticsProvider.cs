@@ -21,7 +21,7 @@ public class ApiStatisticsProvider : IStatisticsProvider
         if (ProfileManager.User == default || ProfileManager.User.UniqueId == Guid.Empty)
             return;
 
-        await Locator.Current.GetService<NorthFox>().SetOnlineStatus(new UserOnlineStatusModel
+        await Locator.Current.GetService<NorthFox>().User.SetOnlineStatus(new UserOnlineStatusModel
         {
             StatusType = statusType,
             Song = song,
@@ -37,7 +37,7 @@ public class ApiStatisticsProvider : IStatisticsProvider
 
         var time = timeListened / 1000;
 
-        var response = await Locator.Current.GetService<NorthFox>().UpdateXp(new UpdateXpModel
+        var response = await Locator.Current.GetService<NorthFox>().User.UpdateXp(new UpdateXpModel
         {
             SongChecksum = hash,
             ChannelLength = channelLength,
@@ -59,7 +59,7 @@ public class ApiStatisticsProvider : IStatisticsProvider
     {
         if (ProfileManager.User == default) return;
 
-        var response = await Locator.Current.GetService<NorthFox>().UpdateSongsPlayed(1, beatmapSetId);
+        var response = await Locator.Current.GetService<NorthFox>().User.UpdateSongsPlayed(1, beatmapSetId);
 
         if (response == default) return;
 

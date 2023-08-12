@@ -137,7 +137,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
         var api = Locator.Current.GetService<NorthFox>();
 
-        var tempUser = await api.GetUserFromLoginToken();
+        var tempUser = await api.User.GetUserFromLoginToken();
 
         var changedProfilePicture = ViewModel.IsNewProfilePictureSelected;
 
@@ -184,7 +184,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
                 : ViewModel.NewPassword
         };
 
-        var response = await api.EditUser(editUserModel);
+        var response = await api.User.EditUser(editUserModel);
 
         if (response == default)
             return;
@@ -192,7 +192,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
         if (ViewModel == null)
         {
             if (!string.IsNullOrWhiteSpace(editUserModel.User.Name))
-                ProfileManager.User = (await api.GetUserFromLoginToken())?.ConvertObjectToJson<User>();
+                ProfileManager.User = (await api.User.GetUserFromLoginToken())?.ConvertObjectToJson<User>();
 
             if (changedProfilePicture)
                 await MessageBox.ShowDialogAsync(_mainWindow,
@@ -229,7 +229,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
         ViewModel.CurrentProfilePicture.Save(stream);
 
-        var response = await api.SaveProfilePicture(stream.ToArray());
+        var response = await api.User.SaveProfilePicture(stream.ToArray());
 
         if (!response)
         {
@@ -265,7 +265,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
     {
         if (ViewModel?.CurrentUser == default) return;
 
-        var banner = await Locator.Current.GetService<NorthFox>().GetProfileBannerAsync(ViewModel.CurrentUser.CustomBannerUrl);
+        var banner = await Locator.Current.GetService<NorthFox>().User.GetProfileBannerAsync(ViewModel.CurrentUser.CustomBannerUrl);
 
         if (banner == default) return;
 
@@ -278,7 +278,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
         var api = Locator.Current.GetService<NorthFox>();
 
-        var user = await api.GetUserFromLoginToken();
+        var user = await api.User.GetUserFromLoginToken();
 
         if (user == default) return;
 
@@ -289,7 +289,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
         if (ViewModel?.CurrentUser == default) return;
 
-        var banner = await api.GetProfileBannerAsync(ViewModel.CurrentUser.CustomBannerUrl);
+        var banner = await api.User.GetProfileBannerAsync(ViewModel.CurrentUser.CustomBannerUrl);
 
         if (banner == default)
         {
@@ -312,7 +312,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
             return;
         }
 
-        var response = await Locator.Current.GetService<NorthFox>().DeleteUser();
+        var response = await Locator.Current.GetService<NorthFox>().User.DeleteUser();
 
         if (!response)
         {
