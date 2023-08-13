@@ -1,5 +1,4 @@
 ﻿using Avalonia.Controls;
-using Avalonia.Media;
 
 namespace OsuPlayer.Data.OsuPlayer.Enums;
 

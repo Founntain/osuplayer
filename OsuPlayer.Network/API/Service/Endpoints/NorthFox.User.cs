@@ -7,7 +7,7 @@ using OsuPlayer.Api.Data.API.RequestModels.User.Responses;
 
 namespace OsuPlayer.Network.API.Service.Endpoints;
 
-public partial class NorthFox : AbstractApiBase
+public class NorthFoxUserEndpoint : AbstractApiBase
 {
     #region DELETE Requests
 
@@ -101,71 +101,6 @@ public partial class NorthFox : AbstractApiBase
     public async Task<UserModel?> Register(AddUserModel data)
     {
         return await PostRequestAsync<UserModel>("User", "register", data);
-    }
-
-    public async Task<UserTokenResponse?> Login(string username, string password)
-    {
-        if (Constants.OfflineMode)
-            return default;
-
-        try
-        {
-            using var client = new HttpClient();
-
-            var url = new Uri($"{Url}User/login");
-
-            var req = new HttpRequestMessage(HttpMethod.Post, url);
-            req.Headers.Authorization = GetAuthorizationHeader(username, password);
-
-            // CancelCancellationToken();
-
-            var result = await client.SendAsync(req, CancellationTokenSource.Token);
-
-            var response = JsonConvert.DeserializeObject<ApiResponse<UserTokenResponse>>(await result.Content.ReadAsStringAsync());
-
-            return response.Errors?.Any() == true
-                ? default
-                : response.Value;
-        }
-        catch (Exception ex)
-        {
-            ParseWebException(ex);
-
-            return default;
-        }
-    }
-
-    public async Task<UserTokenResponse?> Login(string token)
-    {
-        if (Constants.OfflineMode)
-            return default;
-
-        try
-        {
-            using var client = new HttpClient();
-
-            var url = new Uri($"{Url}User/loginWithToken");
-
-            var req = new HttpRequestMessage(HttpMethod.Post, url);
-
-            req.Headers.Add("session-token", token);
-
-            // CancelCancellationToken();
-
-            var result = await client.SendAsync(req, CancellationTokenSource.Token);
-
-            var response = JsonConvert.DeserializeObject<ApiResponse<UserTokenResponse>>(await result.Content.ReadAsStringAsync());
-
-            return response.Errors?.Any() == true
-                ? default
-                : response.Value;
-        }
-        catch (Exception ex)
-        {
-            ParseWebException(ex);
-
-            return default;
-        }
     }
 
     public async Task<UserModel?> EditUser(EditUserModel editData)
