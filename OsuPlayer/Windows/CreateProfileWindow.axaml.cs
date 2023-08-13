@@ -50,7 +50,7 @@ public partial class CreateProfileWindow : ReactiveWindow<CreateProfileWindowVie
             return;
         }
 
-        var response = await Locator.Current.GetService<NorthFox>().Register(new AddUserModel
+        var response = await Locator.Current.GetService<NorthFox>().User.Register(new AddUserModel
         {
             Username = ViewModel.Username,
             Password = ViewModel.Password

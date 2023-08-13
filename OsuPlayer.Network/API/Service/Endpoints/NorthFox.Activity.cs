@@ -2,7 +2,7 @@
 
 namespace OsuPlayer.Network.API.Service.Endpoints;
 
-public partial class NorthFox
+public class NorthFoxActivityEndpoint : AbstractApiBase
 {
     #region GET Requests
 

@@ -122,7 +122,7 @@ public class StatisticsViewModel : BaseViewModel
 
     private async Task UpdateApiStatistics()
     {
-        var statistics = await Locator.Current.GetService<NorthFox>().GetApiStatistics();
+        var statistics = await Locator.Current.GetService<NorthFox>().ApiStatistics.GetApiStatistics();
 
         Users = statistics.TotalUsers;
         Translators = statistics.TotalTranslators;
@@ -134,11 +134,11 @@ public class StatisticsViewModel : BaseViewModel
 
     private async Task UpdateStorageAmount()
     {
-        MbUsed = (float) await Locator.Current.GetService<NorthFox>().GetStorageAmount();
+        MbUsed = (float) await Locator.Current.GetService<NorthFox>().ApiStatistics.GetStorageAmount();
     }
 
     private async Task UpdateBeatmapCount()
     {
-        BeatmapsTracked = (await Locator.Current.GetService<NorthFox>().GetApiStatistics()).TotalBeatmaps;
+        BeatmapsTracked = (await Locator.Current.GetService<NorthFox>().ApiStatistics.GetApiStatistics()).TotalBeatmaps;
     }
 }

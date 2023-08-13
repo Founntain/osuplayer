@@ -139,7 +139,7 @@ public class EditUserViewModel : BaseViewModel
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            var stats = await Locator.Current.GetService<NorthFox>().GetBeatmapsPlayedByUser(CurrentUser.UniqueId);
+            var stats = await Locator.Current.GetService<NorthFox>().Beatmap.GetBeatmapsPlayedByUser(CurrentUser.UniqueId);
 
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
@@ -171,7 +171,7 @@ public class EditUserViewModel : BaseViewModel
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            var profilePicture = await Locator.Current.GetService<NorthFox>().GetProfilePictureAsync(CurrentUser.UniqueId);
+            var profilePicture = await Locator.Current.GetService<NorthFox>().User.GetProfilePictureAsync(CurrentUser.UniqueId);
 
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
@@ -203,7 +203,7 @@ public class EditUserViewModel : BaseViewModel
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            var banner = await Locator.Current.GetService<NorthFox>().GetProfileBannerAsync(CurrentUser.CustomBannerUrl);
+            var banner = await Locator.Current.GetService<NorthFox>().User.GetProfileBannerAsync(CurrentUser.CustomBannerUrl);
 
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
