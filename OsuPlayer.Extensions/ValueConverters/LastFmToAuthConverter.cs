@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using System.Reactive.Subjects;
 using Avalonia.Data.Converters;
 using Avalonia.Media;
 
