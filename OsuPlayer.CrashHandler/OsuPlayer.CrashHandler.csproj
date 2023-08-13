@@ -36,8 +36,8 @@
         <PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Update="MainWindowViewModel.cs">
-            <DependentUpon>MainWindow.axaml</DependentUpon>
+        <Compile Update="CrashHandlerMainWindowViewModel.cs">
+            <DependentUpon>CrashHandlerMainWindow.axaml</DependentUpon>
         </Compile>
     </ItemGroup>
     <ItemGroup>
