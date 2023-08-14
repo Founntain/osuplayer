@@ -12,14 +12,14 @@ namespace OsuPlayer.Network.API.Service.Endpoints;
 /// </summary>
 public class NorthFox : AbstractApiBase
 {
-    public NorthFoxActivityEndpoint Activity { get; set; }
-    public NorthFoxApiStatisticsEndpoint ApiStatistics { get; set; }
-    public NorthFoxBadgeEndpoint Badge { get; set; }
-    public NorthFoxBeatmapEndpoint Beatmap { get; set; }
-    public NorthFoxEventEndpoint Event { get; set; }
-    public NorthFoxUserEndpoint User { get; set; }
-    public NorthFoxUserStatisticsEndpoint UserStatistics { get; set; }
-    
+    public NorthFoxActivityEndpoint Activity { get; set; } = new();
+    public NorthFoxApiStatisticsEndpoint ApiStatistics { get; set; } = new();
+    public NorthFoxBadgeEndpoint Badge { get; set; } = new();
+    public NorthFoxBeatmapEndpoint Beatmap { get; set; } = new();
+    public NorthFoxEventEndpoint Event { get; set; } = new();
+    public NorthFoxUserEndpoint User { get; set; } = new();
+    public NorthFoxUserStatisticsEndpoint UserStatistics { get; set; } = new();
+
     public async Task<UserModel?> LoginAndSaveAuthToken(string username, string password)
     {
         var response = await Login(username, password);
