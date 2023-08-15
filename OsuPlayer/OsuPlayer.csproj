@@ -138,6 +138,9 @@
         <Compile Update="Views\HomeView\HomeUserPanelViewModel.cs">
           <DependentUpon>HomeUserPanelView.axaml</DependentUpon>
         </Compile>
+        <Compile Update="Views\HomeSubViews\HomeUserPanelViewModel.cs">
+          <DependentUpon>HomeUserPanelView.axaml</DependentUpon>
+        </Compile>
     </ItemGroup>
     <ItemGroup>
         <UpToDateCheckInput Remove="Resources\Fonts\Montserrat-VariableFont_wght.ttf" />

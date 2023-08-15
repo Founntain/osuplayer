@@ -54,13 +54,6 @@ public partial class HomeView : ReactiveControl<HomeViewModel>
         await ViewModel.Player.TryPlaySongAsync(song);
     }
 
-    private void EditBtn_OnClick(object? sender, RoutedEventArgs e)
-    {
-        if (_mainWindow?.ViewModel == default) return;
-
-        _mainWindow.ViewModel.MainView = _mainWindow.ViewModel.EditUserView;
-    }
-
     private void AddToBlacklist_OnClick(object? sender, RoutedEventArgs e)
     {
         using var blacklist = new Blacklist();

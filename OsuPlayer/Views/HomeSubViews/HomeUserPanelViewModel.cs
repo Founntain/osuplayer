@@ -97,8 +97,8 @@ public class HomeUserPanelViewModel : BaseViewModel
 
         await LoadUserProfileAsync();
     }
-    
-    private async Task LoadUserProfileAsync()
+
+    public async Task LoadUserProfileAsync()
     {
         if (!File.Exists("data/session.op"))
             return;
