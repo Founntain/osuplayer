@@ -104,52 +104,59 @@ public class Player : IPlayer, IImportNotifications
 
         songSourceProvider.Songs?.Subscribe(_ => CurrentIndex = songSourceProvider.SongSourceList?.IndexOf(CurrentSong.Value) ?? -1);
 
-        CurrentSong.BindValueChanged(d =>
-        {
-            using var cfg = new Config();
+        CurrentSong.BindValueChanged(OnCurrentSongChanged, true);
 
-            cfg.Container.LastPlayedSong = d.NewValue?.Hash;
-
-            _statisticsProvider?.UpdateOnlineStatus(UserOnlineStatusType.Listening, d.NewValue?.ToString(), d.NewValue?.Hash);
-
-            if (d.NewValue is null) return;
-
-            _discordClient?.UpdatePresence(d.NewValue.Title, $"by {d.NewValue.Artist}", d.NewValue.BeatmapSetId);
-        }, true);
-
-        RepeatMode.BindValueChanged(d =>
-        {
-            using var cfg = new Config();
-
-            cfg.Container.RepeatMode = d.NewValue;
-        }, true);
+        RepeatMode.BindValueChanged(OnRepeatModeChanged, true);
 
         IsShuffle.BindValueChanged(_ => _shuffleProvider?.ShuffleImpl?.Init(0));
 
-        SelectedPlaylist.BindValueChanged(d =>
+        SelectedPlaylist.BindValueChanged(OnSelectedPlaylistChanged, true);
+    }
+
+    private void OnSelectedPlaylistChanged(ValueChangedEvent<Playlist> selectedPlaylist)
+    {
+        using var cfg = new Config();
+
+        cfg.Container.SelectedPlaylist = selectedPlaylist.NewValue?.Id;
+
+        if (selectedPlaylist.NewValue == null) return;
+
+        ActivePlaylistSongs = SongSourceProvider.GetMapEntriesFromHash(selectedPlaylist.NewValue.Songs, out var invalidHashes);
+
+        if (invalidHashes.Any())
         {
-            using var cfg = new Config();
+            using var playlists = new PlaylistStorage();
 
-            cfg.Container.SelectedPlaylist = d.NewValue?.Id;
+            var playlist = playlists.Container.Playlists?.First(x => x.Id == selectedPlaylist.NewValue.Id);
 
-            if (d.NewValue == null) return;
+            playlist?.Songs.RemoveWhere(song => invalidHashes.Contains(song));
+        }
 
-            ActivePlaylistSongs = SongSourceProvider.GetMapEntriesFromHash(d.NewValue.Songs, out var invalidHashes);
+        if (RepeatMode.Value != Data.OsuPlayer.Enums.RepeatMode.Playlist || CurrentSong.Value == null) return;
 
-            if (invalidHashes.Any())
-            {
-                using var playlists = new PlaylistStorage();
+        if (!ActivePlaylistSongs.Contains(CurrentSong.Value)) NextSong(PlayDirection.Forward);
+    }
 
-                var playlist = playlists.Container.Playlists?.First(x => x.Id == d.NewValue.Id);
+    private void OnRepeatModeChanged(ValueChangedEvent<RepeatMode> repeatMode)
+    {
+        using var cfg = new Config();
 
-                playlist?.Songs.RemoveWhere(song => invalidHashes.Contains(song));
-            }
+        cfg.Container.RepeatMode = repeatMode.NewValue;
+    }
 
-            if (RepeatMode.Value != Data.OsuPlayer.Enums.RepeatMode.Playlist || CurrentSong.Value == null) return;
+    private void OnCurrentSongChanged(ValueChangedEvent<IMapEntry> mapEntry)
+    {
+        using var cfg = new Config();
 
-            if (!ActivePlaylistSongs.Contains(CurrentSong.Value))
-                NextSong(PlayDirection.Forward);
-        }, true);
+        cfg.Container.LastPlayedSong = mapEntry.NewValue?.Hash;
+
+        _statisticsProvider?.UpdateOnlineStatus(UserOnlineStatusType.Listening, mapEntry.NewValue?.ToString(), mapEntry.NewValue?.Hash);
+
+        if (mapEntry.NewValue is null) return;
+
+        var timestamp = TimeSpan.FromSeconds(_audioEngine.ChannelLength.Value * (1 - _audioEngine.PlaybackSpeed.Value));
+        
+        _discordClient?.UpdatePresence(mapEntry.NewValue.Title, $"by {mapEntry.NewValue.Artist}", mapEntry.NewValue.BeatmapSetId, durationLeft: timestamp);
     }
 
     public void OnImportStarted()
@@ -204,6 +211,12 @@ public class Player : IPlayer, IImportNotifications
     public void SetPlaybackSpeed(double speed)
     {
         _audioEngine.SetPlaybackSpeed(speed);
+        
+        if(!_audioEngine.IsPlaying.Value) return;
+        
+        var timestamp = TimeSpan.FromSeconds(_audioEngine.ChannelLength.Value * (1 - _audioEngine.PlaybackSpeed.Value) - _audioEngine.ChannelPosition.Value);
+        
+        _discordClient?.UpdatePresence(CurrentSong.Value.Title, $"by {CurrentSong.Value.Artist}", CurrentSong.Value.BeatmapSetId, durationLeft: timestamp);
     }
 
     public void UpdatePlaybackMethod()
@@ -238,6 +251,10 @@ public class Player : IPlayer, IImportNotifications
         _currentSongTimer.Start();
 
         _winMediaControls?.UpdatePlayingStatus(true);
+        
+        var timestamp = TimeSpan.FromSeconds(_audioEngine.ChannelLength.Value * (1 - _audioEngine.PlaybackSpeed.Value) - _audioEngine.ChannelPosition.Value);
+        
+        _discordClient?.UpdatePresence(CurrentSong.Value.Title, $"by {CurrentSong.Value.Artist}", CurrentSong.Value.BeatmapSetId, durationLeft: timestamp);
     }
 
     public void Pause()
@@ -246,6 +263,8 @@ public class Player : IPlayer, IImportNotifications
         _currentSongTimer.Stop();
 
         _winMediaControls?.UpdatePlayingStatus(false);
+        
+        _discordClient?.UpdatePresence(CurrentSong.Value.Title, $"by {CurrentSong.Value.Artist}", CurrentSong.Value.BeatmapSetId);
     }
 
     public void Stop()

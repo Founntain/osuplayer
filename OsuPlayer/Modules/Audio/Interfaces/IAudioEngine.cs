@@ -9,5 +9,6 @@ public interface IAudioEngine : ICanOpenFiles, ICommonFeatures
 
     public Bindable<double> ChannelLength { get; }
     public Bindable<double> ChannelPosition { get; }
+    public Bindable<double> PlaybackSpeed { get; }
     public ChannelReachedEndHandler ChannelReachedEnd { set; }
 }

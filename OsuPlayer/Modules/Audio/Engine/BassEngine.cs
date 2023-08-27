@@ -35,6 +35,7 @@ public sealed class BassEngine : IAudioEngine
     public Bindable<double> ChannelPosition { get; } = new();
     public Bindable<double> Volume { get; } = new();
     public Bindable<bool> IsPlaying { get; } = new();
+    public Bindable<double> PlaybackSpeed { get; } = new();
 
     public bool IsEqEnabled
     {
@@ -200,6 +201,8 @@ public sealed class BassEngine : IAudioEngine
     private void SetPlaybackSpeedOptions(double speed)
     {
         using var config = new Config();
+
+        PlaybackSpeed.Value = speed;
 
         if (config.Container.UsePitch)
         {

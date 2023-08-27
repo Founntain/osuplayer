@@ -60,8 +60,6 @@ public class DiscordClient
             }
         });
 
-        _client.Invoke();
-
         return this;
     }
 
@@ -85,23 +83,23 @@ public class DiscordClient
     /// <param name="state">Text of the second line</param>
     /// <param name="beatmapSetId">Optional beatmapset ID</param>
     /// <param name="assets">Optional assets to use</param>
-    public async Task UpdatePresence(string details, string state, int beatmapSetId = 0, Assets? assets = null)
+    public async Task UpdatePresence(string details, string state, int beatmapSetId = 0, Assets? assets = null, TimeSpan? durationLeft = null)
     {
         if (assets == null && beatmapSetId != 0)
         {
             assets = await TryToGetThumbnail(beatmapSetId);
         }
+
+        var timestamps = durationLeft == null ? null : Timestamps.FromTimeSpan(durationLeft.Value);
         
         _client.SetPresence(new RichPresence
         {
             Details = details,
             State = state,
             Assets = assets ?? _defaultAssets,
-            Timestamps = Timestamps.Now,
-            Buttons = GetButtons()
+            Buttons = GetButtons(),
+            Timestamps = timestamps
         });
-
-        _client.Invoke();
     }
 
     private async Task<Assets?> TryToGetThumbnail(int beatmapSetId)
