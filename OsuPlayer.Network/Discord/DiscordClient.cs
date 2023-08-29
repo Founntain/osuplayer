@@ -83,6 +83,7 @@ public class DiscordClient
     /// <param name="state">Text of the second line</param>
     /// <param name="beatmapSetId">Optional beatmapset ID</param>
     /// <param name="assets">Optional assets to use</param>
+    /// <param name="durationLeft">Optional duration left that is displayed in the RPC</param>
     public async Task UpdatePresence(string details, string state, int beatmapSetId = 0, Assets? assets = null, TimeSpan? durationLeft = null)
     {
         if (assets == null && beatmapSetId != 0)
