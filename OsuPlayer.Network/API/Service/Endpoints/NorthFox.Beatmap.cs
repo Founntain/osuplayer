@@ -5,7 +5,7 @@ using OsuPlayer.Network.API.ModelExtensions;
 
 namespace OsuPlayer.Network.API.Service.Endpoints;
 
-public partial class NorthFox
+public class NorthFoxBeatmapEndpoint : AbstractApiBase
 {
     #region POST Requests
 

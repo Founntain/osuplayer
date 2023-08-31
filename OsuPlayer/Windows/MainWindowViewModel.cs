@@ -1,5 +1,3 @@
-using System.ComponentModel;
-using ABI.Windows.Devices.Sensors.Custom;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
@@ -17,9 +15,14 @@ public class MainWindowViewModel : BaseWindowViewModel
 {
     public readonly IPlayer Player;
 
+    private float _backgroundBlurRadius;
+
+    private Bitmap? _backgroundImage;
+
+    private bool _displayBackgroundImage;
+
     private bool _isPaneOpen;
     private BaseViewModel? _mainView;
-    private ExperimentalAcrylicMaterial? _panelMaterial;
 
     public bool IsPaneOpen
     {
@@ -43,8 +46,6 @@ public class MainWindowViewModel : BaseWindowViewModel
     public StatisticsViewModel StatisticsView { get; }
     public BeatmapsViewModel BeatmapView { get; }
 
-    private Bitmap? _backgroundImage;
-
     public Bitmap? BackgroundImage
     {
         get => _backgroundImage;
@@ -57,21 +58,13 @@ public class MainWindowViewModel : BaseWindowViewModel
         set => this.RaiseAndSetIfChanged(ref _mainView, value);
     }
 
-    private float _backgroundBlurRadius;
-
     public float BackgroundBlurRadius
     {
         get => _backgroundBlurRadius;
         set => this.RaiseAndSetIfChanged(ref _backgroundBlurRadius, value);
     }
 
-    public ExperimentalAcrylicMaterial? PanelMaterial
-    {
-        get => _panelMaterial;
-        set => _panelMaterial = value;
-    }
-
-    private bool _displayBackgroundImage;
+    public ExperimentalAcrylicMaterial? PanelMaterial { get; set; }
 
     public bool DisplayBackgroundImage
     {
@@ -103,7 +96,7 @@ public class MainWindowViewModel : BaseWindowViewModel
         BeatmapView = new BeatmapsViewModel();
 
         using var config = new Config();
-        
+
         var backgroundColor = config.Container.BackgroundColor.ToColor();
 
         PanelMaterial = new ExperimentalAcrylicMaterial
@@ -116,7 +109,7 @@ public class MainWindowViewModel : BaseWindowViewModel
 
         DisplayBackgroundImage = config.Container.DisplayBackgroundImage;
         BackgroundBlurRadius = config.Container.BackgroundBlurRadius;
-        
+
         Player.CurrentSongImage.BindValueChanged(d =>
         {
             Dispatcher.UIThread.Post(() =>
@@ -132,7 +125,7 @@ public class MainWindowViewModel : BaseWindowViewModel
 
                 if (!string.IsNullOrEmpty(d.NewValue) && File.Exists(d.NewValue))
                 {
-                    BackgroundImage = BitmapExtensions.BlurBitmap(d.NewValue, blurRadius: BackgroundBlurRadius, opacity: 0.75f, quality: 25);
+                    BackgroundImage = BitmapExtensions.BlurBitmap(d.NewValue, BackgroundBlurRadius, 0.75f, 25);
 
                     return;
                 }

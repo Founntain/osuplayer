@@ -151,7 +151,7 @@ public class UserViewModel : BaseViewModel
     {
         Disposable.Create(() => { }).DisposeWith(disposables);
 
-        Users = (await Locator.Current.GetService<NorthFox>().GetAllUsers())
+        Users = (await Locator.Current.GetService<NorthFox>().User.GetAllUsers())
             ?.Select(x => new User(x))
             .ToObservableCollection() ?? new ObservableCollection<User>();
 
@@ -247,7 +247,7 @@ public class UserViewModel : BaseViewModel
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            var stats = await Locator.Current.GetService<NorthFox>().GetBeatmapsPlayedByUser(SelectedUser.UniqueId);
+            var stats = await Locator.Current.GetService<NorthFox>().Beatmap.GetBeatmapsPlayedByUser(SelectedUser.UniqueId);
 
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
@@ -279,7 +279,7 @@ public class UserViewModel : BaseViewModel
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            var profilePicture = await Locator.Current.GetService<NorthFox>().GetProfilePictureAsync(SelectedUser.UniqueId);
+            var profilePicture = await Locator.Current.GetService<NorthFox>().User.GetProfilePictureAsync(SelectedUser.UniqueId);
 
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
@@ -311,7 +311,7 @@ public class UserViewModel : BaseViewModel
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            var banner = await Locator.Current.GetService<NorthFox>().GetProfileBannerAsync(SelectedUser.CustomBannerUrl);
+            var banner = await Locator.Current.GetService<NorthFox>().User.GetProfileBannerAsync(SelectedUser.CustomBannerUrl);
 
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
@@ -336,7 +336,7 @@ public class UserViewModel : BaseViewModel
     {
         if (SelectedUser == default || SelectedUser.UniqueId == Guid.Empty) return;
 
-        var data = await Locator.Current.GetService<NorthFox>().GetActivityOfUser(SelectedUser.UniqueId);
+        var data = await Locator.Current.GetService<NorthFox>().User.GetActivityOfUser(SelectedUser.UniqueId);
 
         if (data == default) return;
 

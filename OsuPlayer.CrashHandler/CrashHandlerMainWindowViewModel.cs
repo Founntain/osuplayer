@@ -3,7 +3,7 @@ using ReactiveUI;
 
 namespace OsuPlayer.CrashHandler;
 
-public class MainWindowViewModel : BaseWindowViewModel
+public class CrashHandlerMainWindowViewModel : BaseWindowViewModel
 {
     private string _crashLog = string.Empty;
 

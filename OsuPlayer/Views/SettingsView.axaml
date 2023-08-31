@@ -13,6 +13,7 @@
              Initialized="SettingsView_OnInitialized">
     <UserControl.Resources>
         <valueConverters:GridFormatter x:Key="GridFormatter" />
+        <valueConverters:LastFmToAuthConverter x:Key="LastFmToAuthConverter" />
     </UserControl.Resources>
     <Design.DataContext>
         <views:SettingsViewModel />
@@ -45,11 +46,6 @@
                             </controls:SettingsDisplayer.InteractionControl>
 
                         </controls:SettingsDisplayer>
-
-                        <!-- <StackPanel Spacing="5" Name="ImportOsuSongs"> -->
-                        <!--     <TextBlock Text="{Binding OsuLocation}" /> -->
-                        <!--      -->
-                        <!-- </StackPanel> -->
 
                         <controls:SettingsDisplayer Name="ImportCollections" Title="Import osu! collections"
                                                     Description="Import your osu! collections as playlists"
@@ -149,6 +145,14 @@
                     <StackPanel Margin="10" Spacing="1" Name="VisualSettingsPanel">
                         <controls:SettingsTitleDisplayer Title="Visual Settings" Icon="Shimmer" />
 
+                        <controls:SettingsDisplayer Name="DisplayUserStats" Title="Display User Statistics on Home View"
+                                                    Description="Toggle if you want to display your User Stats and session graph on the home view"
+                                                    Icon="User">
+                            <controls:SettingsDisplayer.InteractionControl>
+                                <ToggleSwitch IsChecked="{Binding DisplayUserStats}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                            </controls:SettingsDisplayer.InteractionControl>
+                        </controls:SettingsDisplayer>
+                        
                         <controls:SettingsDisplayer Name="Font" Title="UI Font"
                                                     Description="Select the font you want to use as Interface Font. We recommend Montserrat"
                                                     Icon="FormatFont">
@@ -287,23 +291,27 @@
 
                         </controls:SettingsDisplayer>
                         
-                        <controls:SettingsDisplayer Name="LastFmAuth" Title="Last.FM Scrobbler" Description="Enter your API-Key and Secret to use the Last.FM Scrobbler"
+                        <controls:SettingsDisplayer Name="LastFmAuth" Title="Last.FM Scrobbler" Description="Enter your API-Key and Secret to use the Last.FM Scrobbler. When it shows a green border, then the connection is active."
                                                     Icon="Login">
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <StackPanel Orientation="Horizontal" Spacing="5">
                                     <StackPanel Orientation="Vertical" Spacing="2">
                                         <TextBlock Text="Last.FM API-Key"/>
-                                        <TextBox Watermark="API-Key" PasswordChar="•" Text="{Binding LastFmApiKey}" />
+                                        <TextBox Watermark="API-Key" PasswordChar="•" Text="{Binding LastFmApiKey}" BorderBrush="{Binding IsLastFmAuthorized, Converter={StaticResource LastFmToAuthConverter}}" />
                                     </StackPanel>
                                     
                                     <StackPanel Orientation="Vertical" Spacing="2">
                                         <TextBlock Text="Secret"/>
-                                        <TextBox Watermark="API-Secret" PasswordChar="•" Text="{Binding LastFmApiSecret}" />
+                                        <TextBox Watermark="API-Secret" PasswordChar="•" Text="{Binding LastFmApiSecret}" BorderBrush="{Binding IsLastFmAuthorized, Converter={StaticResource LastFmToAuthConverter}}" />
                                     </StackPanel>
                                     
-                                    <Button Content="Authorize" Click="LastFmAuth_OnClick" HorizontalAlignment="Stretch"
-                                            HorizontalContentAlignment="Center" />
+                                    <StackPanel Orientation="Vertical" Spacing="2">
+                                        <TextBlock Text=" " />
+                                        <Button Content="Authorize" Click="LastFmAuth_OnClick" HorizontalAlignment="Stretch"
+                                                HorizontalContentAlignment="Center" />
+                                    </StackPanel>
+                                    
                                 </StackPanel>
                                 
                             </controls:SettingsDisplayer.InteractionControl>

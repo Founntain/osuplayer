@@ -4,14 +4,19 @@ using Newtonsoft.Json;
 
 namespace OsuPlayer.Network;
 
-public abstract class AbstractRequestBase : IWebRequest
+public class WebRequestBase : IWebRequest
 {
     protected string BaseUrl;
     protected CancellationTokenSource CancellationTokenSource = new();
 
-    protected AbstractRequestBase()
+    public WebRequestBase()
     {
         BaseUrl = string.Empty;
+    }
+
+    public WebRequestBase(string baseUrl)
+    {
+        BaseUrl = baseUrl;
     }
     
     protected void ParseWebException(Exception ex)
@@ -45,6 +50,31 @@ public abstract class AbstractRequestBase : IWebRequest
             var response = JsonConvert.DeserializeObject<TResponse>(respString);
 
             return response;
+        }
+        catch (Exception ex)
+        {
+            ParseWebException(ex);
+
+            return default;
+        }
+    }
+    
+    public virtual async Task<HttpResponseMessage> GetRequestWithResponseObj<TRequest>(string route, TRequest? data = default)
+    {
+        try
+        {
+            using var client = new HttpClient();
+
+            var url = new Uri($"{BaseUrl}{route}");
+
+            var req = new HttpRequestMessage(HttpMethod.Get, url);
+
+            if ( data != null )
+                req.Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+
+            // CancelCancellationToken();
+
+            return await client.SendAsync(req, CancellationTokenSource.Token);
         }
         catch (Exception ex)
         {

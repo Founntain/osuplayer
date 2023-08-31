@@ -157,7 +157,7 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
         var window = Locator.Current.GetService<MainWindow>();
         var lastFmApi = Locator.Current.GetService<LastFmApi>();
 
-        using var config = new Config();
+        await using var config = new Config();
 
         var apiKey = string.IsNullOrWhiteSpace(ViewModel.LastFmApiKey) ? config.Container.LastFmApiKey : ViewModel.LastFmApiKey;
         var apiSecret = string.IsNullOrWhiteSpace(ViewModel.LastFmApiKey) ? config.Container.LastFmSecret : ViewModel.LastFmApiSecret;
@@ -176,7 +176,9 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
 
         await lastFmApi.LoadSessionKeyAsync();
 
-        if (!lastFmApi.IsAuthorized())
+        ViewModel.IsLastFmAuthorized = lastFmApi.IsAuthorized();
+
+        if (!ViewModel.IsLastFmAuthorized)
         {
             await lastFmApi.GetAuthToken();
             lastFmApi.AuthorizeToken();
@@ -186,6 +188,8 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
             await lastFmApi.GetSessionKey();
 
             await lastFmApi.SaveSessionKeyAsync();
+
+            ViewModel.IsLastFmAuthorized = lastFmApi.IsAuthorized();
         }
     }
 }

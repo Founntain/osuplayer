@@ -14,45 +14,71 @@ using OsuPlayer.Modules.Services;
 using OsuPlayer.Modules.ShuffleImpl;
 using OsuPlayer.Network;
 using OsuPlayer.Network.Data;
+using OsuPlayer.Network.LastFM;
 using OsuPlayer.Styles;
 using OsuPlayer.Windows;
 using ReactiveUI;
+using Splat;
 
 namespace OsuPlayer.Views;
 
 public class SettingsViewModel : BaseViewModel
 {
+    public readonly IPlayer Player;
+
     private readonly Bindable<bool> _blacklistSkip = new();
     private readonly Bindable<bool> _playlistEnableOnPlay = new();
     private readonly Bindable<SortingMode> _sortingMode = new();
-    public readonly IPlayer Player;
 
-    private float _backgroundBlurRadius;
-
-    private BackgroundMode _backgroundMode;
-    private List<OsuPlayerContributor>? _contributors;
-
-    private bool _displayBackgroundImage;
-
+    private bool _usePitch;
+    private bool _useDiscordRpc;
+    private bool _displayUserStats;
     private bool _enableScrobbling;
-
+    private bool _displayBackgroundImage;
+    private float _backgroundBlurRadius;
     private string _lastFmApiKey;
-
     private string _lastFmApiSecret;
     private string _osuLocation = string.Empty;
     private string _patchnotes = string.Empty;
-    private KnownColors _selectedAccentColor;
-    private AudioDevice? _selectedAudioDevice;
-    private KnownColors _selectedBackgroundColor;
-    private string? _selectedFont;
-    private FontWeights _selectedFontWeight;
-    private ReleaseChannels _selectedReleaseChannel;
-    private IShuffleImpl? _selectedShuffleAlgorithm;
-    private StartupSong _selectedStartupSong;
     private string _settingsSearchQ = string.Empty;
+    private string? _selectedFont;
+    private KnownColors _selectedAccentColor;
+    private KnownColors _selectedBackgroundColor;
+    private FontWeights _selectedFontWeight;
+    private StartupSong _selectedStartupSong;
+    private BackgroundMode _backgroundMode;
+    private ReleaseChannels _selectedReleaseChannel;
+    private AudioDevice? _selectedAudioDevice;
+    private IShuffleImpl? _selectedShuffleAlgorithm;
     private IShuffleServiceProvider? _shuffleServiceProvider;
-    private bool _useDiscordRpc;
-    private bool _usePitch;
+    private List<OsuPlayerContributor>? _contributors;
+
+    public bool DisplayUserStats
+    {
+        get => _displayUserStats;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _displayUserStats, value);
+
+            using var config = new Config();
+
+            config.Container.DisplayerUserStats = value;
+
+            var mainWindowViewModel = Locator.Current.GetService<MainWindowViewModel>();
+
+            mainWindowViewModel.HomeView.DisplayUserStats = value;
+            
+            mainWindowViewModel.HomeView.RaisePropertyChanged(nameof(mainWindowViewModel.HomeView.DisplayUserStats));
+        }
+    }
+
+    private bool _isLastFmAuthorized;
+
+    public bool IsLastFmAuthorized
+    {
+        get => _isLastFmAuthorized;
+        set => this.RaiseAndSetIfChanged(ref _isLastFmAuthorized, value);
+    }
 
     public MainWindow? MainWindow;
 
@@ -462,6 +488,11 @@ public class SettingsViewModel : BaseViewModel
         _displayBackgroundImage = config.Container.DisplayBackgroundImage;
         _backgroundBlurRadius = config.Container.BackgroundBlurRadius;
         _enableScrobbling = config.Container.EnableScrobbling;
+        _displayUserStats = config.Container.DisplayerUserStats;
+
+        var lastFmApi = Locator.Current.GetService<LastFmApi>();
+
+        _isLastFmAuthorized = lastFmApi.LoadSessionKey();
 
         if (sortProvider != null)
         {

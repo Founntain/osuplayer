@@ -1,5 +1,4 @@
-﻿using Avalonia.Controls;
-using OsuPlayer.Data.OsuPlayer.Enums;
+﻿using OsuPlayer.Data.OsuPlayer.Enums;
 
 namespace OsuPlayer.Data.OsuPlayer.StorageModels;
 
@@ -34,6 +33,7 @@ public class ConfigContainer : IStorableContainer
     public string LastFmApiKey { get; set; }
     public string LastFmSecret { get; set; }
     public bool EnableScrobbling { get; set; } = false;
+    public bool DisplayerUserStats { get; set; } = true;
 
     public IStorableContainer Init()
     {

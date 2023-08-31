@@ -25,6 +25,7 @@ internal partial class TopBarView : ReactiveControl<TopBarViewModel>
             if (this.GetVisualRoot() is MainWindow mainWindow)
                 _mainWindow = mainWindow;
         });
+        
         AvaloniaXamlLoader.Load(this);
     }
 

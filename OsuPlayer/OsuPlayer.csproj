@@ -67,9 +67,6 @@
         <Compile Update="Views\PlaylistEditorViewModel.cs">
             <DependentUpon>PlaylistEditorView.axaml</DependentUpon>
         </Compile>
-        <Compile Update="Views\HomeViewModel.cs">
-            <DependentUpon>HomeView.axaml</DependentUpon>
-        </Compile>
         <Compile Update="Views\PlayerControlViewModel.cs">
             <DependentUpon>PlayerControlView.axaml</DependentUpon>
         </Compile>
@@ -123,6 +120,45 @@
         </Compile>
         <Compile Update="Windows\FullscreenWindowViewModel.cs">
           <DependentUpon>FullscreenWindow.axaml</DependentUpon>
+        </Compile>
+<<<<<<< HEAD
+        <Compile Update="Views\BeatmapsViewModel.cs">
+          <DependentUpon>BeatmapsView.axaml</DependentUpon>
+=======
+        <Compile Update="Views\HomeView\HomeUserPanelView.axaml.cs">
+          <DependentUpon>HomeUserPanelView.axaml</DependentUpon>
+          <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\HomeView.axaml.cs">
+          <DependentUpon>HomeView.axaml</DependentUpon>
+          <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\HomeViewModel.cs">
+          <DependentUpon>HomeView.axaml</DependentUpon>
+        </Compile>
+        <Compile Update="Views\HomeView\HomeUserPanelViewModel.cs">
+          <DependentUpon>HomeUserPanelView.axaml</DependentUpon>
+        </Compile>
+        <Compile Update="Views\HomeSubViews\HomeUserPanelViewModel.cs">
+          <DependentUpon>HomeUserPanelView.axaml</DependentUpon>
+        <PackageReference Include="OsuPlayer.Api.Data" Version="1.0.3" />
+        </Compile>
+        <Compile Update="Views\HomeView\HomeUserPanelView.axaml.cs">
+          <DependentUpon>HomeUserPanelView.axaml</DependentUpon>
+          <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\HomeView.axaml.cs">
+          <DependentUpon>HomeView.axaml</DependentUpon>
+          <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\HomeViewModel.cs">
+          <DependentUpon>HomeView.axaml</DependentUpon>
+        </Compile>
+        <Compile Update="Views\HomeView\HomeUserPanelViewModel.cs">
+          <DependentUpon>HomeUserPanelView.axaml</DependentUpon>
+        </Compile>
+        <Compile Update="Views\HomeSubViews\HomeUserPanelViewModel.cs">
+          <DependentUpon>HomeUserPanelView.axaml</DependentUpon>
         </Compile>
         <Compile Update="Views\BeatmapsViewModel.cs">
           <DependentUpon>BeatmapsView.axaml</DependentUpon>
