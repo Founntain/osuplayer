@@ -4,7 +4,7 @@ using OsuPlayer.Api.Data.API;
 using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.RequestModels.User.Responses;
 
-namespace OsuPlayer.Network.API.Service.Endpoints;
+namespace OsuPlayer.Network.API.Service.NorthFox.Endpoints;
 
 /// <summary>
 /// NorthFox is the wrapper for the OsuPlayer.API and provides access to all public available API Endpoints!

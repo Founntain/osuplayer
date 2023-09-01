@@ -1,6 +1,6 @@
 ﻿using OsuPlayer.Api.Data.API.Models;
 
-namespace OsuPlayer.Network.API.Service.Endpoints;
+namespace OsuPlayer.Network.API.Service.NorthFox.Endpoints;
 
 public class NorthFoxApiStatisticsEndpoint : AbstractApiBase
 {

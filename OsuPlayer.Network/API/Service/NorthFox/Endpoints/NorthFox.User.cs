@@ -1,11 +1,8 @@
 ﻿using Avalonia.Media.Imaging;
-using Newtonsoft.Json;
-using OsuPlayer.Api.Data.API;
 using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.RequestModels.User;
-using OsuPlayer.Api.Data.API.RequestModels.User.Responses;
 
-namespace OsuPlayer.Network.API.Service.Endpoints;
+namespace OsuPlayer.Network.API.Service.NorthFox.Endpoints;
 
 public class NorthFoxUserEndpoint : AbstractApiBase
 {

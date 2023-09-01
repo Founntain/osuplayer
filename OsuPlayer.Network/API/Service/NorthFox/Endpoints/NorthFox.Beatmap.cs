@@ -1,9 +1,9 @@
 ﻿using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.RequestModels.Beatmap;
 using OsuPlayer.Api.Data.API.RequestModels.Statistics;
-using OsuPlayer.Network.API.ModelExtensions;
+using OsuPlayer.Api.Data.API.ResponseModels;
 
-namespace OsuPlayer.Network.API.Service.Endpoints;
+namespace OsuPlayer.Network.API.Service.NorthFox.Endpoints;
 
 public class NorthFoxBeatmapEndpoint : AbstractApiBase
 {
@@ -18,9 +18,9 @@ public class NorthFoxBeatmapEndpoint : AbstractApiBase
 
     #region GET Requests
 
-    public async Task<List<ApiBeatmapModel>?> GetAllBeatmaps()
+    public async Task<List<BeatmapModel>?> GetAllBeatmaps()
     {
-        return await Get<ApiBeatmapModel>("Beatmap");
+        return await Get<BeatmapModel>("Beatmap");
     }
 
     public async Task<BeatmapModel> GetBeatmap(Guid uniqueId)
@@ -28,9 +28,9 @@ public class NorthFoxBeatmapEndpoint : AbstractApiBase
         return await GetById<BeatmapModel>("Beatmap", uniqueId);
     }
 
-    public async Task<List<ApiBeatmapModel>> GetBeatmapsPaged(int page = 1, int pageSize = 50)
+    public async Task<BeatmapSearchResponse> GetBeatmapsPaged(SearchBeatmapModel model)
     {
-        return await GetRequestWithParameterAsync<List<ApiBeatmapModel>>("Beatmap", "getPaged", $"page={page}&pageSize={pageSize}");
+        return await PostRequestAsync<BeatmapSearchResponse>("Beatmap", "getBeatmaps", model);
     }
 
     public async Task<UserStatsModel?> GetBeatmapsPlayedByUser(Guid uniqueId, int amount = 0)
