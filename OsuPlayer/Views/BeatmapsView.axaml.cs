@@ -1,17 +1,7 @@
-﻿using System.Threading.Tasks;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Input;
+﻿using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Nein.Base;
-using Nein.Extensions;
-using OsuPlayer.Api.Data.API.RequestModels.Beatmap;
-using OsuPlayer.Api.Data.API.ResponseModels;
-using OsuPlayer.Extensions;
-using OsuPlayer.Network.API.Service.NorthFox;
-using OsuPlayer.Network.API.Service.NorthFox.Endpoints;
-using Splat;
 
 namespace OsuPlayer.Views;
 

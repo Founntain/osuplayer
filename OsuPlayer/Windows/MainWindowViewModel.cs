@@ -2,7 +2,7 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using Nein.Base;
-using OsuPlayer.Extensions;
+using OsuPlayer.Extensions.EnumExtensions;
 using OsuPlayer.Modules;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Modules.Services;
