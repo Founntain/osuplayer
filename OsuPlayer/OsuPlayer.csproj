@@ -44,7 +44,7 @@
         <PackageReference Include="Markdown.Avalonia" Version="0.10.13" />
         <PackageReference Include="Material.Icons.Avalonia" Version="1.1.10" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-        <PackageReference Include="OsuPlayer.Api.Data" Version="1.0.3" />
+        <PackageReference Include="OsuPlayer.Api.Data" Version="1.0.10" />
         <PackageReference Include="SkiaSharp" Version="2.88.3" />
         <PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1" />
     </ItemGroup>
@@ -115,53 +115,34 @@
         <Compile Update="Views\StatisticsViewModel.cs">
             <DependentUpon>StatisticsView.axaml</DependentUpon>
         </Compile>
+        <Compile Update="Views\SymmetricalViewModel.cs">
+            <DependentUpon>SymmetricalView.axaml</DependentUpon>
+        </Compile>
         <Compile Update="Windows\CreateProfileWindowViewModel.cs">
             <DependentUpon>CreateProfileWindow.axaml</DependentUpon>
         </Compile>
         <Compile Update="Windows\FullscreenWindowViewModel.cs">
-          <DependentUpon>FullscreenWindow.axaml</DependentUpon>
-        </Compile>
-<<<<<<< HEAD
-        <Compile Update="Views\BeatmapsViewModel.cs">
-          <DependentUpon>BeatmapsView.axaml</DependentUpon>
-=======
-        <Compile Update="Views\HomeView\HomeUserPanelView.axaml.cs">
-          <DependentUpon>HomeUserPanelView.axaml</DependentUpon>
-          <SubType>Code</SubType>
-        </Compile>
-        <Compile Update="Views\HomeView.axaml.cs">
-          <DependentUpon>HomeView.axaml</DependentUpon>
-          <SubType>Code</SubType>
-        </Compile>
-        <Compile Update="Views\HomeViewModel.cs">
-          <DependentUpon>HomeView.axaml</DependentUpon>
-        </Compile>
-        <Compile Update="Views\HomeView\HomeUserPanelViewModel.cs">
-          <DependentUpon>HomeUserPanelView.axaml</DependentUpon>
-        </Compile>
-        <Compile Update="Views\HomeSubViews\HomeUserPanelViewModel.cs">
-          <DependentUpon>HomeUserPanelView.axaml</DependentUpon>
-        <PackageReference Include="OsuPlayer.Api.Data" Version="1.0.3" />
+            <DependentUpon>FullscreenWindow.axaml</DependentUpon>
         </Compile>
         <Compile Update="Views\HomeView\HomeUserPanelView.axaml.cs">
-          <DependentUpon>HomeUserPanelView.axaml</DependentUpon>
-          <SubType>Code</SubType>
+            <DependentUpon>HomeUserPanelView.axaml</DependentUpon>
+            <SubType>Code</SubType>
         </Compile>
         <Compile Update="Views\HomeView.axaml.cs">
-          <DependentUpon>HomeView.axaml</DependentUpon>
-          <SubType>Code</SubType>
+            <DependentUpon>HomeView.axaml</DependentUpon>
+            <SubType>Code</SubType>
         </Compile>
         <Compile Update="Views\HomeViewModel.cs">
-          <DependentUpon>HomeView.axaml</DependentUpon>
+            <DependentUpon>HomeView.axaml</DependentUpon>
         </Compile>
         <Compile Update="Views\HomeView\HomeUserPanelViewModel.cs">
-          <DependentUpon>HomeUserPanelView.axaml</DependentUpon>
+            <DependentUpon>HomeUserPanelView.axaml</DependentUpon>
         </Compile>
         <Compile Update="Views\HomeSubViews\HomeUserPanelViewModel.cs">
-          <DependentUpon>HomeUserPanelView.axaml</DependentUpon>
+            <DependentUpon>HomeUserPanelView.axaml</DependentUpon>
         </Compile>
         <Compile Update="Views\BeatmapsViewModel.cs">
-          <DependentUpon>BeatmapsView.axaml</DependentUpon>
+            <DependentUpon>BeatmapsView.axaml</DependentUpon>
         </Compile>
     </ItemGroup>
     <ItemGroup>
