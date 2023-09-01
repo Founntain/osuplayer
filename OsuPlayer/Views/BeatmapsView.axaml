@@ -2,39 +2,145 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:modelExtensions="clr-namespace:OsuPlayer.Network.API.ModelExtensions;assembly=OsuPlayer.Network"
              xmlns:views="clr-namespace:OsuPlayer.Views"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:entityModels="clr-namespace:OsuPlayer.Api.Data.API.EntityModels;assembly=OsuPlayer.Api.Data"
+             xmlns:valueConverters="clr-namespace:OsuPlayer.Extensions.ValueConverters;assembly=OsuPlayer.Extensions"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.BeatmapsView">
+    <UserControl.Resources>
+        <valueConverters:BeatmapModelFullSongNameConverter x:Key="FullSongNameConverter" />
+        <valueConverters:BeatmapModelLastPlayedConverter x:Key="LastPlayedConverter" />
+        <valueConverters:BeatmapModelMostPlayedConverter x:Key="MostPlayedConverter" />
+        <valueConverters:BeatmapModelTimesPlayedConverter x:Key="TimesPlayedConverter" />
+    </UserControl.Resources>
     <Design.DataContext>
         <views:BeatmapsViewModel />
     </Design.DataContext>
-    
-    <Grid RowDefinitions="Auto, *">
-        <Grid Grid.Row="0" Background="{DynamicResource AcrylicSecondaryColor}" VerticalAlignment="Center">
-            <TextBlock Text="Beatmaps played by users" Margin="10 5" FontSize="26" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-        </Grid>
-        <ListBox Grid.Row="1" Items="{Binding Beatmaps}" 
-                 Background="{DynamicResource AcrylicBaseColor}">
-            <ListBox.Styles>
-                <Style Selector="ListBoxItem">
-                    <Setter Property="Margin" Value="0" />
-                    <Setter Property="Padding" Value="0" />
-                </Style>
-            </ListBox.Styles>
-            <ListBox.ItemTemplate>
-                <DataTemplate DataType="modelExtensions:ApiBeatmapModel">
-                    <Grid ColumnDefinitions="*, Auto" Margin="10 0">
-                        <StackPanel Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Stretch" Spacing="2" Margin="10">
-                            <TextBlock Text="{Binding FullSongName}" Margin="0 5" FontSize="20" VerticalAlignment="Center"/>
-                            <TextBlock Text="{Binding LastPlayedString}" FontStyle="Italic" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                            <TextBlock Text="{Binding MostPlayedString}" FontStyle="Italic" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+
+    <Grid Margin="0 0 0 1">
+        <SplitView IsPaneOpen="{Binding IsFilterMenuOpen}" PaneBackground="{DynamicResource AcrylicBaseColor}"
+                   OpenPaneLength="400" DisplayMode="CompactInline" CompactPaneLength="45">
+            <SplitView.Pane>
+                <Grid RowDefinitions="*, 50" ColumnDefinitions="45, *" Background="{DynamicResource AcrylicBaseColor}">
+                    <Button Grid.Row="0" Grid.Column="0" Width="45" Height="45" CornerRadius="0" Click="ToggleFilterMenu_OnClick"
+                            VerticalAlignment="Top" HorizontalAlignment="Center">
+                        <avalonia:MaterialIcon Kind="Filter" />
+                    </Button>
+
+                    <StackPanel Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+                        <TextBlock Text="{Binding TotalPages}" />
+                        <Button Width="45" Height="45" CornerRadius="0" Click="PreviousPage_OnClick"
+                                VerticalAlignment="Top" HorizontalAlignment="Center">
+                            <avalonia:MaterialIcon Kind="ChevronLeft" />
+                        </Button>
+                    
+                        <TextBox Text="{Binding CurrentPage}" CornerRadius="0"
+                                 MinWidth="45" MaxWidth="45" Width="45"
+                                 MinHeight="45" MaxHeight="45" Height="45"
+                                 VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                                 VerticalAlignment="Center" HorizontalAlignment="Center" KeyUp="CurrentPage_OnKeyUp"/>
+
+                        <Button Width="45" Height="45" CornerRadius="0"
+                                Click="NextPage_OnClick" VerticalAlignment="Top" HorizontalAlignment="Center">
+                            <avalonia:MaterialIcon Kind="ChevronRight" />
+                        </Button>
+                    </StackPanel>
+                    
+                    <ScrollViewer Grid.Row="0" Grid.Column="1">
+                        <StackPanel Margin="5" Spacing="5">
+                            <StackPanel Spacing="5">
+                                <TextBlock Text="Search Artist" />
+                                <TextBox Text="{Binding SearchArtist}" />
+                                <TextBlock Text="Artist filter condition" />
+                                <ComboBox Items="{Binding StringFilterConditions}"
+                                          SelectedItem="{Binding SearchArtistFilterCondition}"
+                                          HorizontalAlignment="Stretch" />
+                            </StackPanel>
+                            <StackPanel Spacing="2">
+                                <TextBlock Text="Search Title" />
+                                <TextBox Text="{Binding SearchTitle}" />
+                                <TextBlock Text="Title filter condition" />
+                                <ComboBox Items="{Binding StringFilterConditions}"
+                                          SelectedItem="{Binding SearchTitleFilterCondition}"
+                                          HorizontalAlignment="Stretch" />
+                            </StackPanel>
+                            <StackPanel Spacing="2">
+                                <TextBlock Text="Search BeatmapSetID" />
+                                <TextBox Text="{Binding SearchBeatmapSetId}" />
+                                <TextBlock Text="BeatmapSetID filter condition" />
+                                <ComboBox Items="{Binding IntFilterConditions}"
+                                          SelectedItem="{Binding SearchBeatmapSetIdFilterCondition}"
+                                          HorizontalAlignment="Stretch" />
+                            </StackPanel>
+                            <StackPanel Spacing="2">
+                                <TextBlock Text="Search BeatmapID" />
+                                <TextBox Text="{Binding SearchBeatmapId}" />
+                                <TextBlock Text="BeatmapID filter condition" />
+                                <ComboBox Items="{Binding IntFilterConditions}"
+                                          SelectedItem="{Binding SearchBeatmapIdFilterCondition}"
+                                          HorizontalAlignment="Stretch" />
+                            </StackPanel>
                         </StackPanel>
-                        
-                        <TextBlock Grid.Column="1" Text="{Binding TimesPlayedString}" Margin="10 5" FontSize="18" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                    </Grid>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+                    </ScrollViewer>
+
+                    <Button Grid.Row="1" Grid.Column="1" Margin="5,0,5,5" Content="Search" VerticalAlignment="Bottom"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                            Click="SearchBeatmaps_OnClick" />
+                </Grid>
+            </SplitView.Pane>
+            <Grid RowDefinitions="Auto, *">
+                <Grid Grid.Row="0" Grid.Column="0"
+                      Background="{DynamicResource AcrylicSecondaryColor}"
+                      VerticalAlignment="Center">
+                    <TextBlock Text="Beatmaps played by users" Margin="10 5" FontSize="26"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Left" />
+                </Grid>
+
+                <ListBox Grid.Row="1" Items="{Binding Beatmaps}"
+                         Background="{DynamicResource AcrylicBaseColor}" Margin="0 1 0 0">
+                    <ListBox.Styles>
+                        <Style Selector="ListBoxItem">
+                            <Setter Property="Margin" Value="0" />
+                            <Setter Property="Padding" Value="0" />
+                        </Style>
+                    </ListBox.Styles>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="entityModels:BeatmapModel">
+                            <Grid ColumnDefinitions="*, Auto" Margin="10 0">
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center"
+                                            HorizontalAlignment="Stretch"
+                                            Spacing="2" Margin="10">
+                                    <TextBlock Text="{Binding Converter={StaticResource FullSongNameConverter}}" Margin="0 5" FontSize="20"
+                                               VerticalAlignment="Center" />
+                                    <TextBlock Text="{Binding Converter={StaticResource LastPlayedConverter}}" FontStyle="Italic" FontSize="12"
+                                               VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                    <TextBlock Text="{Binding Converter={StaticResource MostPlayedConverter}}" FontStyle="Italic" FontSize="12"
+                                               VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                </StackPanel>
+
+                                <Border Grid.Column="1" Background="{DynamicResource SystemAccentColorDark2}"
+                                        BorderBrush="{DynamicResource AccentColor}" CornerRadius="50"
+                                        VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <TextBlock Text="{Binding Converter={StaticResource TimesPlayedConverter}}" Margin="10 5" FontSize="18"
+                                               FontWeight="Bold"
+                                               VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                </Border>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                
+                <Grid Grid.Row="1" IsVisible="{Binding SearchingBeatmaps}" IsEnabled="{Binding SearchingBeatmaps}" Background="{StaticResource AcrylicBaseColor}"
+                            VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="10">
+                        <TextBlock FontSize="32" FontWeight="{DynamicResource BiggerFontWeight}" Text="🔍 Searching the API... please wait 🔍" />
+                        <ProgressBar IsIndeterminate="True" />
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </SplitView>
     </Grid>
+
 </UserControl>
