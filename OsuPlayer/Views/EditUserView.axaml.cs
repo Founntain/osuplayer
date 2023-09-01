@@ -8,7 +8,7 @@ using Avalonia.ReactiveUI;
 using Avalonia.VisualTree;
 using Nein.Extensions;
 using OsuPlayer.Api.Data.API.RequestModels.User;
-using OsuPlayer.Network.API.Service.Endpoints;
+using OsuPlayer.Network.API.Service.NorthFox.Endpoints;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
 using ReactiveUI;

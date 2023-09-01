@@ -6,7 +6,7 @@ using Avalonia.ReactiveUI;
 using Nein.Extensions;
 using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.RequestModels.User;
-using OsuPlayer.Network.API.Service.Endpoints;
+using OsuPlayer.Network.API.Service.NorthFox.Endpoints;
 using OsuPlayer.Network.Security;
 using OsuPlayer.UI_Extensions;
 using Splat;

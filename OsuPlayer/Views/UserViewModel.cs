@@ -13,7 +13,7 @@ using Nein.Base;
 using Nein.Extensions;
 using OsuPlayer.Api.Data.API.RequestModels.Statistics;
 using OsuPlayer.Modules.Audio.Interfaces;
-using OsuPlayer.Network.API.Service.Endpoints;
+using OsuPlayer.Network.API.Service.NorthFox.Endpoints;
 using ReactiveUI;
 using SkiaSharp;
 using Splat;
