@@ -1,7 +1,7 @@
 ﻿using Avalonia.Media;
 using OsuPlayer.Data.OsuPlayer.Enums;
 
-namespace OsuPlayer.Extensions;
+namespace OsuPlayer.Extensions.EnumExtensions;
 
 public static class KnownColorsExtensions
 {

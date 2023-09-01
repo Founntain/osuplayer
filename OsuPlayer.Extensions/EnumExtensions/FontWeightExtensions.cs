@@ -2,7 +2,7 @@
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
 
-namespace OsuPlayer.Extensions;
+namespace OsuPlayer.Extensions.EnumExtensions;
 
 public static class FontWeightExtensions
 {
