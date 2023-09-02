@@ -6,9 +6,9 @@ public class NorthFoxApiStatisticsEndpoint : AbstractApiBase
 {
     #region GET Requests
 
-    public async Task<ApiStatisticsModel> GetApiStatistics()
+    public async Task<ApiStatisticsModel?> GetApiStatistics()
     {
-        return await GetRequestAsync<ApiStatisticsModel>("ApiStatistics", "get");
+        return await GetRequestAsync<ApiStatisticsModel?>("ApiStatistics", "get");
     }
 
     public async Task<double> GetStorageAmount()
