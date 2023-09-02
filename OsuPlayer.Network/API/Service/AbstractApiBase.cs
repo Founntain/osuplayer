@@ -17,9 +17,22 @@ public abstract class AbstractApiBase
     
     private string GetApiUrl()
     {
+        var url = "https://osuplayer.founntain.dev/";
+        
         bool.TryParse(Environment.GetEnvironmentVariable("USE_LOCAL_API"), out var useLocalApi);
+        bool.TryParse(Environment.GetEnvironmentVariable("USE_SANDBOX_API"), out var useSandboxApi);
 
-        return useLocalApi ? "https://localhost:7096/" : "https://osuplayer.founntain.dev/";
+        if (useLocalApi)
+        {
+            url = "https://localhost:7096/";
+        }
+
+        if (useSandboxApi)
+        {
+            url = "https://sandbox.founntain.dev/";
+        }
+
+        return url;
     }
 
     protected void ParseWebException(Exception ex)
