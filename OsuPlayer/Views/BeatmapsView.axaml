@@ -23,29 +23,31 @@
                    OpenPaneLength="400" DisplayMode="CompactInline" CompactPaneLength="45">
             <SplitView.Pane>
                 <Grid RowDefinitions="*, 50" ColumnDefinitions="45, *" Background="{DynamicResource AcrylicBaseColor}">
-                    <Button Grid.Row="0" Grid.Column="0" Width="45" Height="45" CornerRadius="0" Click="ToggleFilterMenu_OnClick"
+                    <Button Grid.Row="0" Grid.Column="0" Width="45" Height="45" CornerRadius="0"
+                            Click="ToggleFilterMenu_OnClick"
                             VerticalAlignment="Top" HorizontalAlignment="Center">
                         <avalonia:MaterialIcon Kind="Filter" />
                     </Button>
 
-                    <StackPanel Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+                    <StackPanel Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" VerticalAlignment="Bottom"
+                                HorizontalAlignment="Center">
                         <Button Width="45" Height="45" CornerRadius="0" Click="PreviousPage_OnClick"
                                 VerticalAlignment="Top" HorizontalAlignment="Center">
                             <avalonia:MaterialIcon Kind="ChevronLeft" />
                         </Button>
-                    
+
                         <TextBox Text="{Binding CurrentPage}" CornerRadius="0"
                                  MinWidth="45" MaxWidth="45" Width="45"
                                  MinHeight="45" MaxHeight="45" Height="45"
                                  VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
-                                 VerticalAlignment="Center" HorizontalAlignment="Center" KeyUp="CurrentPage_OnKeyUp"/>
+                                 VerticalAlignment="Center" HorizontalAlignment="Center" KeyUp="CurrentPage_OnKeyUp" />
 
                         <Button Width="45" Height="45" CornerRadius="0"
                                 Click="NextPage_OnClick" VerticalAlignment="Top" HorizontalAlignment="Center">
                             <avalonia:MaterialIcon Kind="ChevronRight" />
                         </Button>
                     </StackPanel>
-                    
+
                     <ScrollViewer Grid.Row="0" Grid.Column="1">
                         <StackPanel Margin="5" Spacing="5">
                             <StackPanel Spacing="5">
@@ -97,8 +99,9 @@
                                HorizontalAlignment="Left" />
                 </Grid>
 
-                <ListBox Grid.Row="1" Items="{Binding Beatmaps}"
-                         Background="{DynamicResource AcrylicBaseColor}" Margin="0 1 0 0">
+                <ListBox Name="SongsList" Grid.Row="1" Items="{Binding Beatmaps}"
+                         DoubleTapped="SongsList_OnDoubleTapped" Background="{DynamicResource AcrylicBaseColor}"
+                         Margin="0 1 0 0">
                     <ListBox.Styles>
                         <Style Selector="ListBoxItem">
                             <Setter Property="Margin" Value="0" />
@@ -111,18 +114,22 @@
                                 <StackPanel Grid.Column="0" VerticalAlignment="Center"
                                             HorizontalAlignment="Stretch"
                                             Spacing="2" Margin="10">
-                                    <TextBlock Text="{Binding Converter={StaticResource FullSongNameConverter}}" Margin="0 5" FontSize="20"
+                                    <TextBlock Text="{Binding Converter={StaticResource FullSongNameConverter}}"
+                                               Margin="0 5" FontSize="20"
                                                VerticalAlignment="Center" />
-                                    <TextBlock Text="{Binding Converter={StaticResource LastPlayedConverter}}" FontStyle="Italic" FontSize="12"
+                                    <TextBlock Text="{Binding Converter={StaticResource LastPlayedConverter}}"
+                                               FontStyle="Italic" FontSize="12"
                                                VerticalAlignment="Center" HorizontalAlignment="Left" />
-                                    <TextBlock Text="{Binding Converter={StaticResource MostPlayedConverter}}" FontStyle="Italic" FontSize="12"
+                                    <TextBlock Text="{Binding Converter={StaticResource MostPlayedConverter}}"
+                                               FontStyle="Italic" FontSize="12"
                                                VerticalAlignment="Center" HorizontalAlignment="Left" />
                                 </StackPanel>
 
                                 <Border Grid.Column="1" Background="{DynamicResource SystemAccentColorDark2}"
                                         BorderBrush="{DynamicResource AccentColor}" CornerRadius="50"
                                         VerticalAlignment="Center" HorizontalAlignment="Center">
-                                    <TextBlock Text="{Binding Converter={StaticResource TimesPlayedConverter}}" Margin="10 5" FontSize="18"
+                                    <TextBlock Text="{Binding Converter={StaticResource TimesPlayedConverter}}"
+                                               Margin="10 5" FontSize="18"
                                                FontWeight="Bold"
                                                VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 </Border>
@@ -130,11 +137,13 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-                
-                <Grid Grid.Row="1" IsVisible="{Binding SearchingBeatmaps}" IsEnabled="{Binding SearchingBeatmaps}" Background="{StaticResource AcrylicBaseColor}"
-                            VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+
+                <Grid Grid.Row="1" IsVisible="{Binding SearchingBeatmaps}" IsEnabled="{Binding SearchingBeatmaps}"
+                      Background="{StaticResource AcrylicBaseColor}"
+                      VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="10">
-                        <TextBlock FontSize="32" FontWeight="{DynamicResource BiggerFontWeight}" Text="🔍 Searching the API... please wait 🔍" />
+                        <TextBlock FontSize="32" FontWeight="{DynamicResource BiggerFontWeight}"
+                                   Text="🔍 Searching the API... please wait 🔍" />
                         <ProgressBar IsIndeterminate="True" />
                     </StackPanel>
                 </Grid>

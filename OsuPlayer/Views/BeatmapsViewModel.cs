@@ -6,6 +6,7 @@ using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.Enums;
 using OsuPlayer.Api.Data.API.RequestModels.Beatmap;
 using OsuPlayer.Api.Data.API.ResponseModels;
+using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Network.API.Service.NorthFox.Endpoints;
 using ReactiveUI;
 using Splat;
@@ -101,9 +102,9 @@ public class BeatmapsViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _searchTitleFilterCondition, value);
     }
 
-    public IEnumerable<FilterCondition> StringFilterConditions => Enum.GetValues<FilterCondition>().Where(x => (int)x <= 2);
+    public IEnumerable<FilterCondition> StringFilterConditions => Enum.GetValues<FilterCondition>().Where(x => (int) x <= 2);
 
-    public IEnumerable<FilterCondition> IntFilterConditions => Enum.GetValues<FilterCondition>().Where(x => (int)x > 2);
+    public IEnumerable<FilterCondition> IntFilterConditions => Enum.GetValues<FilterCondition>().Where(x => (int) x > 2);
 
     public ObservableCollection<BeatmapModel> Beatmaps
     {
@@ -111,8 +112,12 @@ public class BeatmapsViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _beatmaps, value);
     }
 
-    public BeatmapsViewModel()
+    public IPlayer Player { get; }
+
+    public BeatmapsViewModel(IPlayer player)
     {
+        Player = player;
+
         Activator = new ViewModelActivator();
 
         this.WhenActivated(Block);
@@ -132,13 +137,13 @@ public class BeatmapsViewModel : BaseViewModel
 
         await SearchBeatmaps();
     }
-    
+
     public async Task<BeatmapSearchResponse> SearchBeatmaps(int newPage = 1, int pageSize = 64)
     {
         var api = Locator.Current.GetService<NorthFox>();
 
         SearchingBeatmaps = true;
-        
+
         var beatmaps = await api.Beatmap.GetBeatmapsPaged(new SearchBeatmapModel
         {
             Page = newPage,
@@ -152,11 +157,11 @@ public class BeatmapsViewModel : BaseViewModel
             BeatmapId = SearchBeatmapId,
             BeatmapIdFilterCondition = SearchBeatmapIdFilterCondition
         });
-        
+
         SearchingBeatmaps = false;
 
         if (beatmaps == null || beatmaps.Beatmaps.Count == 0) return beatmaps;
-        
+
         Beatmaps = beatmaps.Beatmaps.ToObservableCollection();
         CurrentPage = beatmaps.CurrentPage;
         TotalPages = beatmaps.TotalPages;

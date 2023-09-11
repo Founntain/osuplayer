@@ -93,7 +93,7 @@ public class MainWindowViewModel : BaseWindowViewModel
         EqualizerView = new EqualizerViewModel(Player);
         UpdateView = new UpdateViewModel();
         StatisticsView = new StatisticsViewModel();
-        BeatmapView = new BeatmapsViewModel();
+        BeatmapView = new BeatmapsViewModel(Player);
 
         using var config = new Config();
 
