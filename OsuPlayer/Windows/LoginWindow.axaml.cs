@@ -7,7 +7,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Nein.Base;
 using Nein.Extensions;
-using OsuPlayer.Network.API.Service.Endpoints;
+using OsuPlayer.Network.API.Service.NorthFox.Endpoints;
 using OsuPlayer.UI_Extensions;
 using ReactiveUI;
 using Splat;

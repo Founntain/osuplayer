@@ -2,7 +2,7 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using Nein.Base;
-using OsuPlayer.Extensions;
+using OsuPlayer.Extensions.EnumExtensions;
 using OsuPlayer.Modules;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Modules.Services;
@@ -44,7 +44,7 @@ public class MainWindowViewModel : BaseWindowViewModel
     public PlayerControlViewModel PlayerControl { get; }
     public EqualizerViewModel EqualizerView { get; }
     public StatisticsViewModel StatisticsView { get; }
-    public SymmetricalViewModel SymmetricalView { get; }
+    public BeatmapsViewModel BeatmapView { get; }
 
     public Bitmap? BackgroundImage
     {
@@ -93,7 +93,7 @@ public class MainWindowViewModel : BaseWindowViewModel
         EqualizerView = new EqualizerViewModel(Player);
         UpdateView = new UpdateViewModel();
         StatisticsView = new StatisticsViewModel();
-        SymmetricalView = new SymmetricalViewModel();
+        BeatmapView = new BeatmapsViewModel(Player);
 
         using var config = new Config();
 

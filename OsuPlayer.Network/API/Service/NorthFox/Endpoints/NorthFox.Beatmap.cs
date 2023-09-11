@@ -1,8 +1,9 @@
 ﻿using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.RequestModels.Beatmap;
 using OsuPlayer.Api.Data.API.RequestModels.Statistics;
+using OsuPlayer.Api.Data.API.ResponseModels;
 
-namespace OsuPlayer.Network.API.Service.Endpoints;
+namespace OsuPlayer.Network.API.Service.NorthFox.Endpoints;
 
 public class NorthFoxBeatmapEndpoint : AbstractApiBase
 {
@@ -25,6 +26,11 @@ public class NorthFoxBeatmapEndpoint : AbstractApiBase
     public async Task<BeatmapModel> GetBeatmap(Guid uniqueId)
     {
         return await GetById<BeatmapModel>("Beatmap", uniqueId);
+    }
+
+    public async Task<BeatmapSearchResponse> GetBeatmapsPaged(SearchBeatmapModel model)
+    {
+        return await PostRequestAsync<BeatmapSearchResponse>("Beatmap", "getBeatmaps", model);
     }
 
     public async Task<UserStatsModel?> GetBeatmapsPlayedByUser(Guid uniqueId, int amount = 0)

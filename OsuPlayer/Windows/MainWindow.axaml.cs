@@ -6,7 +6,7 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Nein.Base;
-using OsuPlayer.Extensions;
+using OsuPlayer.Extensions.EnumExtensions;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.Network;
 using OsuPlayer.Network.LastFM;

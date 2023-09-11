@@ -10,7 +10,15 @@ namespace OsuPlayer.IO.Importer;
 public interface ISongSourceProvider
 {
     SourceList<IMapEntryBase> SongSource { get; }
+
+    /// <summary>
+    /// An observable which can be used e.g. to put a custom filter on
+    /// </summary>
     public IObservable<IChangeSet<IMapEntryBase>>? Songs { get; }
+
+    /// <summary>
+    /// An read-only observable collection used to find/access songs
+    /// </summary>
     public ReadOnlyObservableCollection<IMapEntryBase>? SongSourceList { get; }
 
     /// <summary>

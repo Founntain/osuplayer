@@ -2,7 +2,7 @@ using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using System.Timers;
 using Nein.Base;
-using OsuPlayer.Network.API.Service.Endpoints;
+using OsuPlayer.Network.API.Service.NorthFox.Endpoints;
 using ReactiveUI;
 using Splat;
 
@@ -124,6 +124,8 @@ public class StatisticsViewModel : BaseViewModel
     {
         var statistics = await Locator.Current.GetService<NorthFox>().ApiStatistics.GetApiStatistics();
 
+        if (statistics == null) return;
+
         Users = statistics.TotalUsers;
         Translators = statistics.TotalTranslators;
         SongsPlayed = statistics.TotalSongsPlayed;
@@ -139,6 +141,10 @@ public class StatisticsViewModel : BaseViewModel
 
     private async Task UpdateBeatmapCount()
     {
-        BeatmapsTracked = (await Locator.Current.GetService<NorthFox>().ApiStatistics.GetApiStatistics()).TotalBeatmaps;
+        var apiStatistics = await Locator.Current.GetService<NorthFox>().ApiStatistics.GetApiStatistics();
+
+        if (apiStatistics == null) return;
+
+        BeatmapsTracked = apiStatistics.TotalBeatmaps;
     }
 }

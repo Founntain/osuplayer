@@ -8,7 +8,7 @@ using Nein.Controls.Interfaces;
 using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
-using OsuPlayer.Extensions;
+using OsuPlayer.Extensions.EnumExtensions;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Modules.Services;
 using OsuPlayer.Modules.ShuffleImpl;

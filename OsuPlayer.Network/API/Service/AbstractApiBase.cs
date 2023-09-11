@@ -11,12 +11,29 @@ public abstract class AbstractApiBase
 {
     protected static CancellationTokenSource CancellationTokenSource = new();
 
-    protected string Url => Constants.Localhost
-        ? "https://localhost:7096/"
-        // : "https://sandbox.founntain.dev/";
-        : "https://osuplayer.founntain.dev/";
+    protected string Url => GetApiUrl();
 
     protected string? UserAuthToken { get; set; }
+    
+    private string GetApiUrl()
+    {
+        var url = "https://osuplayer.founntain.dev/";
+        
+        bool.TryParse(Environment.GetEnvironmentVariable("USE_LOCAL_API"), out var useLocalApi);
+        bool.TryParse(Environment.GetEnvironmentVariable("USE_SANDBOX_API"), out var useSandboxApi);
+
+        if (useLocalApi)
+        {
+            url = "https://localhost:7096/";
+        }
+
+        if (useSandboxApi)
+        {
+            url = "https://sandbox.founntain.dev/";
+        }
+
+        return url;
+    }
 
     protected void ParseWebException(Exception ex)
     {

@@ -1,4 +1,4 @@
-﻿using OsuPlayer.Network.API.Service.Endpoints;
+﻿using OsuPlayer.Network.API.Service.NorthFox.Endpoints;
 using Splat;
 
 namespace OsuPlayer.Network.Online;
