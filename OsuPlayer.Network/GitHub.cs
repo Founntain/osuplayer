@@ -71,22 +71,31 @@ public static class GitHub
     /// <returns>a GitHub release</returns>
     public static async Task<Release?> GetLatestRelease(ReleaseChannels releaseChannel = ReleaseChannels.Stable)
     {
-        var github = new GitHubClient(new ProductHeaderValue("osu!player"));
-
-        var releases = await github.Repository.Release.GetAll("Founntain", "osuplayer");
-
-        var includePreReleases = releaseChannel == ReleaseChannels.PreReleases;
-
-        Release latestRelease = null;
-
-        foreach (var release in releases.OrderBy(x => x.CreatedAt))
+        try
         {
-            if (release.Prerelease && !includePreReleases) continue;
+            var github = new GitHubClient(new ProductHeaderValue("osu!player"));
 
-            latestRelease = release;
+            var releases = await github.Repository.Release.GetAll("Founntain", "osuplayer");
+
+            var includePreReleases = releaseChannel == ReleaseChannels.PreReleases;
+
+            Release latestRelease = null;
+
+            foreach (var release in releases.OrderBy(x => x.CreatedAt))
+            {
+                if (release.Prerelease && !includePreReleases) continue;
+
+                latestRelease = release;
+            }
+
+            return latestRelease;
         }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex);
 
-        return latestRelease;
+            return default;
+        }
     }
 
     public static async Task<string?> GetLatestPatchNotes(ReleaseChannels releaseChannel = ReleaseChannels.Stable)
