@@ -2,18 +2,25 @@
 
 namespace OsuPlayer.Network.API.Service.NorthFox.Endpoints;
 
-public class NorthFoxBadgeEndpoint : AbstractApiBase
+public class NorthFoxBadgeEndpoint
 {
+    private readonly AbstractApiBase _apiBase;
+    
+    public NorthFoxBadgeEndpoint(AbstractApiBase apiBase)
+    {
+        _apiBase = apiBase;
+    }
+    
     #region GET Requests
 
     public async Task<List<BadgeModel>?> GetAllBadges()
     {
-        return await Get<BadgeModel>("Badge");
+        return await _apiBase.Get<BadgeModel>("Badge");
     }
 
     public async Task<BadgeModel> GetBadge(Guid uniqueId)
     {
-        return await GetById<BadgeModel>("Badge", uniqueId);
+        return await _apiBase.GetById<BadgeModel>("Badge", uniqueId);
     }
 
     #endregion
