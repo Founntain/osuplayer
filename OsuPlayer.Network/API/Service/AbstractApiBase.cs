@@ -11,7 +11,7 @@ public abstract class AbstractApiBase
 {
     protected static CancellationTokenSource CancellationTokenSource = new();
 
-    protected string Url => GetApiUrl();
+    protected internal string Url => GetApiUrl();
 
     protected string? UserAuthToken { get; set; }
     
@@ -35,7 +35,7 @@ public abstract class AbstractApiBase
         return url;
     }
 
-    protected void ParseWebException(Exception ex)
+    protected internal void ParseWebException(Exception ex)
     {
         if (ex.GetType() != typeof(WebException)) return;
 

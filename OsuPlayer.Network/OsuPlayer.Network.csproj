@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -21,10 +20,4 @@
         <ProjectReference Include="..\OsuPlayer.Extensions\OsuPlayer.Extensions.csproj" />
         <ProjectReference Include="..\OsuPlayer.IO\OsuPlayer.IO.csproj" />
     </ItemGroup>
-
-
-    <ItemGroup>
-      <Folder Include="API\ModelExtensions\" />
-    </ItemGroup>
-
 </Project>

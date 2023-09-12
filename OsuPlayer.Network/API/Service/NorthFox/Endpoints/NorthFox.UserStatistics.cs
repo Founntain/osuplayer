@@ -3,13 +3,20 @@ using OsuPlayer.Api.Data.API.RequestModels.Statistics;
 
 namespace OsuPlayer.Network.API.Service.NorthFox.Endpoints;
 
-public class NorthFoxUserStatisticsEndpoint : AbstractApiBase
+public class NorthFoxUserStatisticsEndpoint
 {
+    private readonly AbstractApiBase _apiBase;
+    
+    public NorthFoxUserStatisticsEndpoint(AbstractApiBase apiBase)
+    {
+        _apiBase = apiBase;
+    }
+    
     #region POST Requests
 
     public async Task<bool> AddUserStatistic(PostUserStatisticModel data)
     {
-        return await PostRequestAsync<bool>("UserStatistics", "add", data);
+        return await _apiBase.PostRequestAsync<bool>("UserStatistics", "add", data);
     }
 
     #endregion
@@ -18,12 +25,12 @@ public class NorthFoxUserStatisticsEndpoint : AbstractApiBase
 
     public async Task<List<UserStatisticModel>?> GetAllUserStatistics()
     {
-        return await Get<UserStatisticModel>("UserStatistics");
+        return await _apiBase.Get<UserStatisticModel>("UserStatistics");
     }
 
     public async Task<UserStatisticModel> GetAllUserStatistics(Guid uniqueId)
     {
-        return await GetById<UserStatisticModel>("UserStatistics", uniqueId);
+        return await _apiBase.GetById<UserStatisticModel>("UserStatistics", uniqueId);
     }
 
     #endregion

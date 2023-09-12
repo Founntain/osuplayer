@@ -2,18 +2,25 @@
 
 namespace OsuPlayer.Network.API.Service.NorthFox.Endpoints;
 
-public class NorthFoxActivityEndpoint : AbstractApiBase
+public class NorthFoxActivityEndpoint
 {
+    private readonly AbstractApiBase _apiBase;
+    
+    public NorthFoxActivityEndpoint(AbstractApiBase apiBase)
+    {
+        _apiBase = apiBase;
+    }
+    
     #region GET Requests
 
     public async Task<List<ActivityModel>?> GetAllActivities()
     {
-        return await Get<ActivityModel>("Activity");
+        return await _apiBase.Get<ActivityModel>("Activity");
     }
 
     public async Task<ActivityModel> GetActivity(Guid uniqueId)
     {
-        return await GetById<ActivityModel>("Activity", uniqueId);
+        return await _apiBase.GetById<ActivityModel>("Activity", uniqueId);
     }
 
     #endregion

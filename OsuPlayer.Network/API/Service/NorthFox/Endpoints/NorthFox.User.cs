@@ -4,13 +4,20 @@ using OsuPlayer.Api.Data.API.RequestModels.User;
 
 namespace OsuPlayer.Network.API.Service.NorthFox.Endpoints;
 
-public class NorthFoxUserEndpoint : AbstractApiBase
+public class NorthFoxUserEndpoint
 {
+    private readonly AbstractApiBase _apiBase;
+    
+    public NorthFoxUserEndpoint(AbstractApiBase apiBase)
+    {
+        _apiBase = apiBase;
+    }
+    
     #region DELETE Requests
 
     public async Task<bool> DeleteUser()
     {
-        return await DeleteRequestAsync<bool>("User", "delete");
+        return await _apiBase.DeleteRequestAsync<bool>("User", "delete");
     }
 
     #endregion
@@ -35,13 +42,13 @@ public class NorthFoxUserEndpoint : AbstractApiBase
         {
             using var client = new HttpClient();
 
-            var data = await client.GetAsync(new Uri($"{Url}User/getProfilePicture?id={uniqueId}"));
+            var data = await client.GetAsync(new Uri($"{_apiBase.Url}User/getProfilePicture?id={uniqueId}"));
 
             return new Bitmap(await data.Content.ReadAsStreamAsync());
         }
         catch (Exception ex)
         {
-            ParseWebException(ex);
+            _apiBase.ParseWebException(ex);
 
             return default;
         }
@@ -73,22 +80,22 @@ public class NorthFoxUserEndpoint : AbstractApiBase
 
     public async Task<List<UserModel>?> GetAllUsers()
     {
-        return await Get<UserModel>("User");
+        return await _apiBase.Get<UserModel>("User");
     }
 
     public async Task<UserModel> GetUser(Guid uniqueId)
     {
-        return await GetById<UserModel>("User", uniqueId);
+        return await _apiBase.GetById<UserModel>("User", uniqueId);
     }
 
     public async Task<UserModel?> GetUserFromLoginToken()
     {
-        return await GetRequestAsync<UserModel>("User", "getUserFromLoginToken");
+        return await _apiBase.GetRequestAsync<UserModel>("User", "getUserFromLoginToken");
     }
 
     public async Task<List<UserActivityModel>?> GetActivityOfUser(Guid uniqueId)
     {
-        return await GetRequestWithParameterAsync<List<UserActivityModel>>("User", "getActivityOfUser", $"uniqueId={uniqueId}");
+        return await _apiBase.GetRequestWithParameterAsync<List<UserActivityModel>>("User", "getActivityOfUser", $"uniqueId={uniqueId}");
     }
 
     #endregion
@@ -97,37 +104,37 @@ public class NorthFoxUserEndpoint : AbstractApiBase
 
     public async Task<UserModel?> Register(AddUserModel data)
     {
-        return await PostRequestAsync<UserModel>("User", "register", data);
+        return await _apiBase.PostRequestAsync<UserModel>("User", "register", data);
     }
 
     public async Task<UserModel?> EditUser(EditUserModel editData)
     {
-        return await PostRequestAsync<UserModel>("User", "edit", editData);
+        return await _apiBase.PostRequestAsync<UserModel>("User", "edit", editData);
     }
 
     public async Task<bool> ChangePassword(byte[] newPassword)
     {
-        return await PostRequestAsync<bool>("User", "changePassword", newPassword);
+        return await _apiBase.PostRequestAsync<bool>("User", "changePassword", newPassword);
     }
 
     public async Task<UserModel?> UpdateSongsPlayed(int amount, int beatmapSetId = -1)
     {
-        return await PostRequestWithParametersAsync<UserModel>("User", "updateSongsPlayed", $"&amount={amount}&beatmapSetId={beatmapSetId}");
+        return await _apiBase.PostRequestWithParametersAsync<UserModel>("User", "updateSongsPlayed", $"&amount={amount}&beatmapSetId={beatmapSetId}");
     }
 
     public async Task<UserModel?> UpdateXp(UpdateXpModel updateXpModel)
     {
-        return await PostRequestAsync<UserModel>("User", "updateXp", updateXpModel);
+        return await _apiBase.PostRequestAsync<UserModel>("User", "updateXp", updateXpModel);
     }
 
     public async Task<bool> SaveProfilePicture(byte[] data)
     {
-        return await PostRequestAsync<bool>("User", "saveProfilePicture", data);
+        return await _apiBase.PostRequestAsync<bool>("User", "saveProfilePicture", data);
     }
 
     public async Task<bool> SetOnlineStatus(UserOnlineStatusModel data)
     {
-        return await PostRequestAsync<bool>("User", "setOnlineStatus", data);
+        return await _apiBase.PostRequestAsync<bool>("User", "setOnlineStatus", data);
     }
 
     #endregion

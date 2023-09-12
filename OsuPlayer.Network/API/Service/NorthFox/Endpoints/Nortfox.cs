@@ -8,18 +8,35 @@ namespace OsuPlayer.Network.API.Service.NorthFox.Endpoints;
 
 /// <summary>
 /// NorthFox is the wrapper for the OsuPlayer.API and provides access to all public available API Endpoints!
-/// Yes I like foxes :)
+/// Yes I like foxes C:
 /// </summary>
 public class NorthFox : AbstractApiBase
 {
-    public NorthFoxActivityEndpoint Activity { get; set; } = new();
-    public NorthFoxApiStatisticsEndpoint ApiStatistics { get; set; } = new();
-    public NorthFoxBadgeEndpoint Badge { get; set; } = new();
-    public NorthFoxBeatmapEndpoint Beatmap { get; set; } = new();
-    public NorthFoxEventEndpoint Event { get; set; } = new();
-    public NorthFoxUserEndpoint User { get; set; } = new();
-    public NorthFoxUserStatisticsEndpoint UserStatistics { get; set; } = new();
+    #region API Endpoints
 
+    public NorthFoxActivityEndpoint Activity { get; set; }
+    public NorthFoxApiStatisticsEndpoint ApiStatistics { get; set; }
+    public NorthFoxBadgeEndpoint Badge { get; set; }
+    public NorthFoxBeatmapEndpoint Beatmap { get; set; }
+    public NorthFoxEventEndpoint Event { get; set; }
+    public NorthFoxUserEndpoint User { get; set; }
+    public NorthFoxUserStatisticsEndpoint UserStatistics { get; set; }
+
+    #endregion
+
+    public NorthFox()
+    {
+        Activity = new NorthFoxActivityEndpoint(this);
+        ApiStatistics = new NorthFoxApiStatisticsEndpoint(this);
+        Badge = new NorthFoxBadgeEndpoint(this);
+        Beatmap = new NorthFoxBeatmapEndpoint(this);
+        Event = new NorthFoxEventEndpoint(this);
+        User = new NorthFoxUserEndpoint(this);
+        UserStatistics = new NorthFoxUserStatisticsEndpoint(this);
+    }
+    
+    #region Authentication
+    
     public async Task<UserModel?> LoginAndSaveAuthToken(string username, string password)
     {
         var response = await Login(username, password);
@@ -42,9 +59,7 @@ public class NorthFox : AbstractApiBase
         return response?.User;
     }
 
-    #region Authentication
-
-    public async Task<UserTokenResponse?> Login(string username, string password)
+    private async Task<UserTokenResponse?> Login(string username, string password)
     {
         if (Constants.OfflineMode)
             return default;
@@ -76,7 +91,7 @@ public class NorthFox : AbstractApiBase
         }
     }
 
-    public async Task<UserTokenResponse?> Login(string token)
+    private async Task<UserTokenResponse?> Login(string token)
     {
         if (Constants.OfflineMode)
             return default;
