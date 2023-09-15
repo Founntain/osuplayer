@@ -53,7 +53,7 @@ public class ExportSongsViewModel : BaseViewModel
         Activator = new ViewModelActivator();
         
         _songSourceProvider = songSourceProvider;
-
+        _playlists = new();
         _selectedPlaylistSongs = new();
         
         this.WhenActivated(Block);
@@ -62,8 +62,8 @@ public class ExportSongsViewModel : BaseViewModel
     private async void Block(CompositeDisposable disposables)
     {
         Disposable.Create(() => { }).DisposeWith(disposables);
-        
-        using var playlists = new PlaylistStorage();
+
+        await using var playlists = new PlaylistStorage();
 
         Playlists = playlists.Container.Playlists.ToObservableCollection();
     }
