@@ -45,6 +45,7 @@ public class MainWindowViewModel : BaseWindowViewModel
     public EqualizerViewModel EqualizerView { get; }
     public StatisticsViewModel StatisticsView { get; }
     public BeatmapsViewModel BeatmapView { get; }
+    public ExportSongsViewModel ExportSongsView { get; }
 
     public Bitmap? BackgroundImage
     {
@@ -94,6 +95,7 @@ public class MainWindowViewModel : BaseWindowViewModel
         UpdateView = new UpdateViewModel();
         StatisticsView = new StatisticsViewModel();
         BeatmapView = new BeatmapsViewModel(Player);
+        ExportSongsView = new ExportSongsViewModel(Player.SongSourceProvider);
 
         using var config = new Config();
 

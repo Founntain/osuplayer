@@ -57,6 +57,17 @@
                             </controls:SettingsDisplayer.InteractionControl>
 
                         </controls:SettingsDisplayer>
+                        
+                        <controls:SettingsDisplayer Name="ExportSongs" Title="Export songs"
+                                                    Description="Exports your osu! .mp3 files to a given directory. Handy if you want to listen to your songs on the go."
+                                                    Icon="TableExport">
+
+                            <controls:SettingsDisplayer.InteractionControl>
+                                <Button Content="Open Export Configurator" Click="ExportCollectionsClick"
+                                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                            </controls:SettingsDisplayer.InteractionControl>
+
+                        </controls:SettingsDisplayer>
 
                         <controls:SettingsDisplayer Name="UpdateChannel" Title="Update Channel"
                                                     Description="Which update channel to use. This settings requires a restart"
