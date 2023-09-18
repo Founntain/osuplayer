@@ -40,6 +40,38 @@ public class ExportSongsViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _playlists, value);
     }
 
+    private bool _isExportRunning;
+
+    public bool IsExportRunning
+    {
+        get => _isExportRunning;
+        set => this.RaiseAndSetIfChanged(ref _isExportRunning, value);
+    }
+
+    private string _exportString;
+
+    public string ExportString
+    {
+        get => _exportString;
+        set => this.RaiseAndSetIfChanged(ref _exportString, value);
+    }
+
+    private int _exportTotalSongs;
+
+    public int ExportTotalSongs
+    {
+        get => _exportTotalSongs;
+        set => this.RaiseAndSetIfChanged(ref _exportTotalSongs, value);
+    }
+
+    private int _currentExportedSongs;
+
+    public int CurrentExportedSongs
+    {
+        get => _currentExportedSongs;
+        set => this.RaiseAndSetIfChanged(ref _currentExportedSongs, value);
+    }
+    
     private ObservableCollection<IMapEntryBase> _selectedPlaylistSongs;
 
     public ObservableCollection<IMapEntryBase> SelectedPlaylistSongs
@@ -66,5 +98,8 @@ public class ExportSongsViewModel : BaseViewModel
         await using var playlists = new PlaylistStorage();
 
         Playlists = playlists.Container.Playlists.ToObservableCollection();
+        
+        //read an mp3 and set the meta data like title, artist and duration in its meta data and save that file
+        
     }
 }
