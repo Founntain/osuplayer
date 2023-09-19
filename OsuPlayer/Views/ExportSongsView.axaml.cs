@@ -1,20 +1,12 @@
-﻿using System.Net;
-using System.Text;
-using System.Threading;
+﻿using System.Text;
 using System.Threading.Tasks;
-using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using Avalonia.VisualTree;
-using AvaloniaEdit.Utils;
-using OsuPlayer.Data.OsuPlayer.StorageModels;
-using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Network;
 using OsuPlayer.Windows;
 using ReactiveUI;
-using Splat;
 using TagLib;
 using File = System.IO.File;
 
@@ -46,28 +38,55 @@ public partial class ExportSongsView : ReactiveUserControl<ExportSongsViewModel>
         
         var songs = ViewModel.SelectedPlaylistSongs;
 
-        if (songs.Count == 0) return;
+        if (songs.Count > 0) await ExportSongs(songs);
+    }
+    
+    private async void ExportAll_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (_mainWindow?.ViewModel == null) return;
 
+        var songs = _mainWindow.ViewModel.Player.SongSourceProvider.SongSourceList;
+
+        if (songs?.Count > 0) await ExportSongs(songs);
+    }
+
+    private async Task ExportSongs(ICollection<IMapEntryBase> songs)
+    {
+        if (ViewModel == null) return;
+        
         var totalSongCount = songs.Count;
         ViewModel.ExportTotalSongs = totalSongCount;
-        
+
         var progress = new bool?[totalSongCount];
 
-        IEnumerable<Task> tasks;
-
-        tasks = await Task.Run(() =>
+        var tasks = await Task.Run(() =>
         {
             return songs.Select(async (mapEntryBase, index) =>
             {
                 var mapEntry = await mapEntryBase.ReadFullEntry();
 
                 if (mapEntry == null) return;
-                
+
                 try
                 {
-                    Directory.CreateDirectory("export_test");
+                    #region Copy song to export folder asynchroniously
 
-                    File.Copy(mapEntry.FullPath, $"export_test/{mapEntry.Hash}.mp3", true);
+                    Directory.CreateDirectory("export_test");
+                    
+                    const FileOptions fileOptions = FileOptions.Asynchronous | FileOptions.SequentialScan;
+                    const int bufferSize = 81920;
+
+                    await using (var sourceStream = new FileStream(mapEntry.FullPath, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize, fileOptions))
+                    {
+                        await using (var destinationStream = new FileStream($"export_test/{mapEntry.Hash}.mp3", FileMode.Create, FileAccess.Write, FileShare.None, bufferSize, fileOptions))
+                        {
+                            await sourceStream.CopyToAsync(destinationStream, bufferSize);
+                        }
+                    }
+
+                    #endregion
+
+                    #region Tag the song with metadata
 
                     var tFile = TagLib.File.Create($"export_test/{mapEntry.Hash}.mp3");
 
@@ -78,6 +97,8 @@ public partial class ExportSongsView : ReactiveUserControl<ExportSongsViewModel>
                     };
                     tFile.Tag.Album = "osu!player";
                     tFile.Tag.Track = (uint) index + 1;
+
+                    #region Get thumbnail from osu! website
 
                     var url = $"https://assets.ppy.sh/beatmaps/{mapEntry.BeatmapSetId}/covers/list.jpg";
 
@@ -97,16 +118,20 @@ public partial class ExportSongsView : ReactiveUserControl<ExportSongsViewModel>
                         }
                     }
 
+                    #endregion
+
                     tFile.Tag.DateTagged = DateTime.UtcNow;
 
                     tFile.Save();
+
+                    #endregion
 
                     progress[index] = true;
                 }
                 catch (Exception _)
                 {
                     progress[index] = false;
-                    
+
                     File.Delete($"export_test/{mapEntry.Hash}.mp3");
                 }
 
@@ -119,7 +144,7 @@ public partial class ExportSongsView : ReactiveUserControl<ExportSongsViewModel>
                 ViewModel.ExportString = $"Exported {successedSongs} songs out of {totalSongCount} ({failedSongs} failed)";
             });
         });
-        
+
         ViewModel.IsExportRunning = true;
 
         await Task.WhenAll(tasks);

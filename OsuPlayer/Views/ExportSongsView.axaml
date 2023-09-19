@@ -26,7 +26,10 @@
                 <ComboBox Items="{Binding Playlists}" SelectedItem="{Binding SelectedPlaylist}" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
             </StackPanel>
             
-            <Button Content="Export songs" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Bottom" Margin="0 0 0 5" Click="Export_OnClick"/>
+            <StackPanel Margin="0 0 0 5" VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
+                <Button Content="Export ALL imported songs" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="ExportAll_OnClick"/>
+                <Button Content="Export songs" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="Export_OnClick"/>
+            </StackPanel>
         </Grid>
         
         <ListBox Grid.Row="1" Grid.Column="1" Items="{Binding SelectedPlaylistSongs}" Background="{DynamicResource AcrylicBaseColor}" Margin="1 1 0 1">
