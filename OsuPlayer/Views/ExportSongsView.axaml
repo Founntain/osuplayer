@@ -28,7 +28,7 @@
             
             <StackPanel Margin="0 0 0 5" VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
                 <Button Content="Export ALL imported songs" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="ExportAll_OnClick"/>
-                <Button Content="Export songs" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="Export_OnClick"/>
+                <Button Content="Export selected playlist" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="Export_OnClick"/>
             </StackPanel>
         </Grid>
         
@@ -55,7 +55,7 @@
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="10">
                 <TextBlock FontSize="32" FontWeight="{DynamicResource BiggerFontWeight}"
                            Text="{Binding ExportString}" />
-                <ProgressBar Minimum="0" Maximum="{Binding ExportTotalSongs}" Value="{Binding CurrentExportedSongs}" />
+                <ProgressBar Minimum="0" Maximum="{Binding ExportTotalSongs}" Value="{Binding ExportingSongsProgress}" />
             </StackPanel>
         </Grid>
     </Grid>

@@ -64,12 +64,12 @@ public class ExportSongsViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _exportTotalSongs, value);
     }
 
-    private int _currentExportedSongs;
+    private int _exportingSongsProgress;
 
-    public int CurrentExportedSongs
+    public int ExportingSongsProgress
     {
-        get => _currentExportedSongs;
-        set => this.RaiseAndSetIfChanged(ref _currentExportedSongs, value);
+        get => _exportingSongsProgress;
+        set => this.RaiseAndSetIfChanged(ref _exportingSongsProgress, value);
     }
     
     private ObservableCollection<IMapEntryBase> _selectedPlaylistSongs;

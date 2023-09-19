@@ -64,13 +64,19 @@ public partial class ExportSongsView : ReactiveUserControl<ExportSongsViewModel>
 
         Directory.CreateDirectory("export_test");
 
-        var copyTask = Task.Run(async Task () =>
+        var copyTask = Task.Run(async () =>
         {
             for (var index = 0; index < songs.Count; index++)
             {
                 var mapEntry = await songs.ElementAt(index).ReadFullEntry();
 
                 if (mapEntry == null) return;
+                
+                var hashLength = mapEntry.Hash.Length < 8 ? mapEntry.Hash.Length : 8;
+                
+                var fileName = $"{mapEntry.GetArtist()} - {mapEntry.GetTitle()} ({mapEntry.Hash.Substring(0, hashLength)}).mp3";
+                
+                fileName = string.Join("_", fileName.Split(Path.GetInvalidFileNameChars(), StringSplitOptions.RemoveEmptyEntries));
 
                 try
                 {
@@ -81,7 +87,7 @@ public partial class ExportSongsView : ReactiveUserControl<ExportSongsViewModel>
 
                     await using (var sourceStream = new FileStream(mapEntry.FullPath, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize, fileOptions))
                     {
-                        await using (var destinationStream = new FileStream($"export_test/{mapEntry.Hash}.mp3", FileMode.Create, FileAccess.Write,
+                        await using (var destinationStream = new FileStream($"export_test/{fileName}", FileMode.Create, FileAccess.Write,
                                          FileShare.None, bufferSize, fileOptions))
                         {
                             await sourceStream.CopyToAsync(destinationStream, bufferSize);
@@ -92,32 +98,27 @@ public partial class ExportSongsView : ReactiveUserControl<ExportSongsViewModel>
 
                     #region Tag the song with metadata
 
-                    var tFile = TagLib.File.Create($"export_test/{mapEntry.Hash}.mp3");
+                    var tFile = TagLib.File.Create($"export_test/{fileName}");
 
                     tFile.Tag.Title = mapEntry.GetTitle();
+                    tFile.Tag.Album = "osu!player";
+                    tFile.Tag.Track = (uint) index + 1;
                     tFile.Tag.AlbumArtists = new[]
                     {
                         mapEntry.GetArtist()
                     };
-                    tFile.Tag.Album = "osu!player";
-                    tFile.Tag.Track = (uint) index + 1;
 
                     #region Get thumbnail from osu! website
 
-                    var url = $"https://assets.ppy.sh/beatmaps/{mapEntry.BeatmapSetId}/covers/list.jpg";
+                    var findBackground = await mapEntry.FindBackground();
 
-                    // Discord can't accept URLs bigger than 256 bytes and throws an exception, so we check for that here
-                    if (Encoding.UTF8.GetByteCount(url) <= 256)
+                    if (findBackground != null)
                     {
-                        var osuApi = new WebRequestBase(url);
-
-                        var thumbnailResponse = await osuApi.GetRequestWithHttpResponseMessage(string.Empty);
-
-                        if (thumbnailResponse.IsSuccessStatusCode)
+                        await using (var backgroundStream = new FileStream(findBackground, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize, fileOptions))
                         {
                             tFile.Tag.Pictures = new IPicture[]
                             {
-                                new Picture(ByteVector.FromStream(await thumbnailResponse.Content.ReadAsStreamAsync()))
+                                new Picture(ByteVector.FromStream(backgroundStream))
                             };
                         }
                     }
@@ -131,23 +132,25 @@ public partial class ExportSongsView : ReactiveUserControl<ExportSongsViewModel>
                     #endregion
 
                     successfulSongs++;
+                    
+                    Console.WriteLine($"Exported {fileName}");
                 }
                 catch (Exception _)
                 {
                     failedSongs++;
 
-                    File.Delete($"export_test/{mapEntry.Hash}.mp3");
+                    File.Delete($"export_test/{fileName}");
+
+                    Console.WriteLine($"ERROR: failed to export {fileName}");
                 }
 
                 Dispatcher.UIThread.Post(() =>
                 {
-                    ViewModel.CurrentExportedSongs = successfulSongs;
+                    ViewModel.ExportingSongsProgress = successfulSongs + failedSongs;
 
-                    ViewModel.ExportString = $"Exported {successfulSongs} songs out of {totalSongCount} ({failedSongs} failed)";
+                    ViewModel.ExportString = $"💾 Exported {successfulSongs} out of {totalSongCount} songs ({failedSongs} failed) 💾";
                 });
             }
-
-            // songs.Select(async (mapEntryBase, index) => { });
         });
 
         ViewModel.IsExportRunning = true;
