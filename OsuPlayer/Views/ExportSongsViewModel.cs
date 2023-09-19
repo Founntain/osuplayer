@@ -100,6 +100,5 @@ public class ExportSongsViewModel : BaseViewModel
         Playlists = playlists.Container.Playlists.ToObservableCollection();
         
         //read an mp3 and set the meta data like title, artist and duration in its meta data and save that file
-        
     }
 }
