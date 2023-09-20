@@ -1,12 +1,15 @@
 ﻿using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using Nein.Extensions;
 using OsuPlayer.Network;
+using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
 using ReactiveUI;
 using TagLib;
@@ -55,14 +58,27 @@ public partial class ExportSongsView : ReactiveUserControl<ExportSongsViewModel>
     private async Task ExportSongs(ICollection<IMapEntryBase> songs)
     {
         if (ViewModel == null) return;
+        
+        if (_mainWindow == default) return;
+
+        var dialog = new OpenFolderDialog()
+        {
+            Title = "Select your folder to export to",
+        };
+
+        var path = await dialog.ShowAsync(_mainWindow);
+
+        if (path == default || string.IsNullOrWhiteSpace(path))
+        {
+            await MessageBox.ShowDialogAsync(_mainWindow, "Did you even selected a folder?!");
+            return;
+        }
 
         var totalSongCount = songs.Count;
         ViewModel.ExportTotalSongs = totalSongCount;
 
         var successfulSongs = 0;
         var failedSongs = 0;
-
-        Directory.CreateDirectory("export_test");
 
         var copyTask = Task.Run(async () =>
         {
@@ -78,6 +94,8 @@ public partial class ExportSongsView : ReactiveUserControl<ExportSongsViewModel>
                 
                 fileName = string.Join("_", fileName.Split(Path.GetInvalidFileNameChars(), StringSplitOptions.RemoveEmptyEntries));
 
+                var exportPath = Path.Combine(path, fileName);
+
                 try
                 {
                     #region Copy song to export folder asynchroniously
@@ -87,7 +105,7 @@ public partial class ExportSongsView : ReactiveUserControl<ExportSongsViewModel>
 
                     await using (var sourceStream = new FileStream(mapEntry.FullPath, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize, fileOptions))
                     {
-                        await using (var destinationStream = new FileStream($"export_test/{fileName}", FileMode.Create, FileAccess.Write,
+                        await using (var destinationStream = new FileStream(exportPath, FileMode.Create, FileAccess.Write,
                                          FileShare.None, bufferSize, fileOptions))
                         {
                             await sourceStream.CopyToAsync(destinationStream, bufferSize);
@@ -98,7 +116,7 @@ public partial class ExportSongsView : ReactiveUserControl<ExportSongsViewModel>
 
                     #region Tag the song with metadata
 
-                    var tFile = TagLib.File.Create($"export_test/{fileName}");
+                    var tFile = TagLib.File.Create(exportPath);
 
                     tFile.Tag.Title = mapEntry.GetTitle();
                     tFile.Tag.Album = "osu!player";
@@ -139,7 +157,7 @@ public partial class ExportSongsView : ReactiveUserControl<ExportSongsViewModel>
                 {
                     failedSongs++;
 
-                    File.Delete($"export_test/{fileName}");
+                    File.Delete(exportPath);
 
                     Console.WriteLine($"ERROR: failed to export {fileName}");
                 }
@@ -158,5 +176,7 @@ public partial class ExportSongsView : ReactiveUserControl<ExportSongsViewModel>
         await copyTask;
 
         ViewModel.IsExportRunning = false;
+
+        GeneralExtensions.OpenUrl(path);
     }
 }
