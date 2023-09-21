@@ -148,6 +148,9 @@
         <Compile Update="Views\ExportSongsViewModel.cs">
           <DependentUpon>ExportSongsView.axaml</DependentUpon>
         </Compile>
+        <Compile Update="Windows\ExportSongsProcessWindowViewModel.cs">
+          <DependentUpon>ExportSongsProcessWindow.axaml</DependentUpon>
+        </Compile>
     </ItemGroup>
     <ItemGroup>
         <UpToDateCheckInput Remove="Resources\Fonts\Montserrat-VariableFont_wght.ttf" />
