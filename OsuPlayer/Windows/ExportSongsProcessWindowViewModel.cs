@@ -5,6 +5,10 @@ namespace OsuPlayer.Windows;
 
 public class ExportSongsProcessWindowViewModel : BaseWindowViewModel
 {
+    private int _exportingSongsProgress;
+    private int _exportTotalSongs;
+    private string _exportString;
+    private bool _isExportRunning;
     private ICollection<IMapEntryBase> _songs;
 
     public ICollection<IMapEntryBase> Songs
@@ -12,8 +16,6 @@ public class ExportSongsProcessWindowViewModel : BaseWindowViewModel
         get => _songs;
         set => this.RaiseAndSetIfChanged(ref _songs, value);
     }
-    
-    private int _exportTotalSongs;
 
     public int ExportTotalSongs
     {
@@ -21,23 +23,17 @@ public class ExportSongsProcessWindowViewModel : BaseWindowViewModel
         set => this.RaiseAndSetIfChanged(ref _exportTotalSongs, value);
     }
 
-    private int _exportingSongsProgress;
-
     public int ExportingSongsProgress
     {
         get => _exportingSongsProgress;
         set => this.RaiseAndSetIfChanged(ref _exportingSongsProgress, value);
     }
 
-    private string _exportString;
-
     public string ExportString
     {
         get => _exportString;
         set => this.RaiseAndSetIfChanged(ref _exportString, value);
     }
-
-    private bool _isExportRunning;
 
     public bool IsExportRunning
     {
@@ -47,7 +43,6 @@ public class ExportSongsProcessWindowViewModel : BaseWindowViewModel
 
     public ExportSongsProcessWindowViewModel()
     {
-        
     }
 
     public ExportSongsProcessWindowViewModel(ICollection<IMapEntryBase> songs)
