@@ -6,11 +6,11 @@
              xmlns:dataModels="clr-namespace:OsuPlayer.IO.DbReader.DataModels;assembly=OsuPlayer.IO"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.ExportSongsView">
-    
+
     <Design.DataContext>
         <views:ExportSongsViewModel />
     </Design.DataContext>
-    
+
     <Grid RowDefinitions="Auto, *" ColumnDefinitions="25*, 75*">
         <Grid Grid.Row="0" Grid.Column="0" ColumnSpan="2" Margin="0"
               Background="{DynamicResource AcrylicSecondaryColor}"
@@ -19,20 +19,31 @@
                        VerticalAlignment="Center"
                        HorizontalAlignment="Left" />
         </Grid>
-        
-        <Grid Grid.Row="1" Grid.Column="0" Background="{DynamicResource AcrylicSecondaryColor}" Margin="0 1 0 1">
-            <StackPanel Spacing="5" Margin="5">
+
+        <DockPanel Grid.Row="1" Grid.Column="0" Background="{DynamicResource AcrylicSecondaryColor}" Margin="0 1 0 1"
+                   LastChildFill="False">
+            <StackPanel DockPanel.Dock="Top" Spacing="5" Margin="5">
                 <TextBlock Text="Playlist to export" />
-                <ComboBox Items="{Binding Playlists}" SelectedItem="{Binding SelectedPlaylist}" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
+                <ComboBox Items="{Binding Playlists}" SelectedItem="{Binding SelectedPlaylist}"
+                          VerticalAlignment="Center" HorizontalAlignment="Stretch" />
             </StackPanel>
-            
-            <StackPanel Margin="0 0 0 5" VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
-                <Button Content="Export ALL imported songs" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="ExportAll_OnClick"/>
-                <Button Content="Export selected playlist" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="Export_OnClick"/>
+            <StackPanel DockPanel.Dock="Top" Spacing="5" Margin="5">
+                <TextBlock Text="Embed song backgrounds?" />
+                <TextBlock Text="(Higher RAM usage)" FontSize="12" FontWeight="{DynamicResource SmallerFontWeight}" />
+                <ToggleSwitch IsChecked="{Binding EmbedBackground}" />
             </StackPanel>
-        </Grid>
-        
-        <ListBox Grid.Row="1" Grid.Column="1" Items="{Binding SelectedPlaylistSongs}" Background="{DynamicResource AcrylicBaseColor}" Margin="1 1 0 1">
+
+            <StackPanel DockPanel.Dock="Bottom" Margin="0 0 0 5" HorizontalAlignment="Stretch"
+                        VerticalAlignment="Bottom">
+                <Button Content="Export ALL imported songs" HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="ExportAll_OnClick" />
+                <Button Content="Export selected playlist" HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="Export_OnClick" />
+            </StackPanel>
+        </DockPanel>
+
+        <ListBox Grid.Row="1" Grid.Column="1" Items="{Binding SelectedPlaylistSongs}"
+                 Background="{DynamicResource AcrylicBaseColor}" Margin="1 1 0 1">
             <ListBox.DataTemplates>
                 <DataTemplate DataType="dataModels:IMapEntryBase">
                     <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto">
@@ -48,14 +59,18 @@
                 </DataTemplate>
             </ListBox.DataTemplates>
         </ListBox>
-        
-        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" IsVisible="{Binding IsExportRunning}" IsEnabled="{Binding IsExportRunning}"
+
+        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" IsVisible="{Binding IsExportRunning}"
+              IsEnabled="{Binding IsExportRunning}"
               Background="{StaticResource AcrylicBaseColor}"
               VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Stretch" Spacing="10">
-                <TextBlock FontSize="32" FontWeight="{DynamicResource BiggerFontWeight}" HorizontalAlignment="Center" Text="{Binding ExportString}" />
-                <TextBlock Text="if you love your life, don't leave this view, or pc go boom C:" FontSize="16" FontWeight="{DynamicResource BiggerFontWeight}" HorizontalAlignment="Center"/>
-                <ProgressBar Minimum="0" Maximum="{Binding ExportTotalSongs}" Value="{Binding ExportingSongsProgress}" HorizontalAlignment="Stretch" MaxWidth="600" />
+                <TextBlock FontSize="32" FontWeight="{DynamicResource BiggerFontWeight}" HorizontalAlignment="Center"
+                           Text="{Binding ExportString}" />
+                <TextBlock Text="if you love your life, don't leave this view, or pc go boom C:" FontSize="16"
+                           FontWeight="{DynamicResource BiggerFontWeight}" HorizontalAlignment="Center" />
+                <ProgressBar Minimum="0" Maximum="{Binding ExportTotalSongs}" Value="{Binding ExportingSongsProgress}"
+                             HorizontalAlignment="Stretch" MaxWidth="600" />
             </StackPanel>
         </Grid>
     </Grid>

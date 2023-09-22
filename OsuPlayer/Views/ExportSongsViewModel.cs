@@ -27,7 +27,7 @@ public class ExportSongsViewModel : BaseViewModel
 
                 return;
             }
-            
+
             SelectedPlaylistSongs = _songSourceProvider.GetMapEntriesFromHash(value.Songs, out _).ToObservableCollection();
         }
     }
@@ -71,7 +71,7 @@ public class ExportSongsViewModel : BaseViewModel
         get => _exportingSongsProgress;
         set => this.RaiseAndSetIfChanged(ref _exportingSongsProgress, value);
     }
-    
+
     private ObservableCollection<IMapEntryBase> _selectedPlaylistSongs;
 
     public ObservableCollection<IMapEntryBase> SelectedPlaylistSongs
@@ -79,15 +79,23 @@ public class ExportSongsViewModel : BaseViewModel
         get => _selectedPlaylistSongs;
         set => this.RaiseAndSetIfChanged(ref _selectedPlaylistSongs, value);
     }
-    
+
+    private bool _embedBackground;
+
+    public bool EmbedBackground
+    {
+        get => _embedBackground;
+        set => this.RaiseAndSetIfChanged(ref _embedBackground, value);
+    }
+
     public ExportSongsViewModel(ISongSourceProvider songSourceProvider)
     {
         Activator = new ViewModelActivator();
-        
+
         _songSourceProvider = songSourceProvider;
         _playlists = new();
         _selectedPlaylistSongs = new();
-        
+
         this.WhenActivated(Block);
     }
 

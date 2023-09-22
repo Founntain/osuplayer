@@ -6,7 +6,7 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="OsuPlayer.Windows.ExportSongsProcessWindow"
         Title="Exporting songs..."
-        
+
         FontWeight="{DynamicResource DefaultFontWeight}"
         FontFamily="Montserrat"
         FontSize="16"
@@ -19,12 +19,13 @@
         TransparencyLevelHint="Mica"
         ExtendClientAreaToDecorationsHint="True"
         ExtendClientAreaChromeHints="PreferSystemChrome"
-        Activated="Window_OnActivated">
-    
+        Opened="TopLevel_OnOpened"
+        Closing="Window_OnClosing">
+
     <Design.DataContext>
         <windows:ExportSongsProcessWindowViewModel />
     </Design.DataContext>
-    
+
     <Grid>
         <Panel>
             <ExperimentalAcrylicBorder IsHitTestVisible="False">
@@ -37,11 +38,14 @@
                 </ExperimentalAcrylicBorder.Material>
             </ExperimentalAcrylicBorder>
         </Panel>
-        
+
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Stretch" Spacing="10">
-            <TextBlock FontSize="32" FontWeight="{DynamicResource BiggerFontWeight}" HorizontalAlignment="Center" Text="{Binding ExportString}" />
-            <TextBlock Text="close the window to cancel the export" FontSize="16" FontWeight="{DynamicResource BiggerFontWeight}" HorizontalAlignment="Center"/>
-            <ProgressBar Minimum="0" Maximum="{Binding ExportTotalSongs}" Value="{Binding ExportingSongsProgress}" HorizontalAlignment="Stretch" MaxWidth="600" />
+            <TextBlock FontSize="32" FontWeight="{DynamicResource BiggerFontWeight}" HorizontalAlignment="Center"
+                       Text="{Binding ExportString}" />
+            <TextBlock Text="close the window to cancel the export" FontSize="16"
+                       FontWeight="{DynamicResource BiggerFontWeight}" HorizontalAlignment="Center" />
+            <ProgressBar Minimum="0" Maximum="{Binding ExportTotalSongs}" Value="{Binding ExportingSongsProgress}"
+                         HorizontalAlignment="Stretch" MaxWidth="600" />
         </StackPanel>
     </Grid>
 </Window>

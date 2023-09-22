@@ -58,7 +58,7 @@ public partial class ExportSongsView : ReactiveUserControl<ExportSongsViewModel>
     private async Task ExportSongs(ICollection<IMapEntryBase> songs)
     {
         if (_mainWindow == default) return;
-        
+
         var dialog = new OpenFolderDialog()
         {
             Title = "Select your folder to export to",
@@ -69,12 +69,12 @@ public partial class ExportSongsView : ReactiveUserControl<ExportSongsViewModel>
         if (path == default || string.IsNullOrWhiteSpace(path))
         {
             await MessageBox.ShowDialogAsync(_mainWindow, "Did you even selected a folder?!");
-            
+
             return;
         }
-        
-        var exportWindow = new ExportSongsProcessWindow(songs, path);
 
-        await exportWindow.ShowDialog(_mainWindow);
+        var exportWindow = new ExportSongsProcessWindow(songs, path, ViewModel.EmbedBackground);
+
+        exportWindow.Show(_mainWindow);
     }
 }
