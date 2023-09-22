@@ -7,9 +7,9 @@ public class ExportSongsProcessWindowViewModel : BaseWindowViewModel
 {
     private int _exportingSongsProgress;
     private int _exportTotalSongs;
-    private string _exportString;
+    private string _exportString = string.Empty;
     private bool _isExportRunning;
-    private ICollection<IMapEntryBase> _songs;
+    private ICollection<IMapEntryBase> _songs = new List<IMapEntryBase>();
 
     public ICollection<IMapEntryBase> Songs
     {

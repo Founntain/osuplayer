@@ -13,8 +13,7 @@ namespace OsuPlayer.Windows;
 
 public partial class ExportSongsProcessWindow : ReactiveWindow<ExportSongsProcessWindowViewModel>
 {
-    private readonly MainWindow? _mainWindow;
-    private readonly string _path;
+    private readonly string _path = string.Empty;
 
     public ExportSongsProcessWindow()
     {
@@ -27,7 +26,7 @@ public partial class ExportSongsProcessWindow : ReactiveWindow<ExportSongsProces
 
         ViewModel = new ExportSongsProcessWindowViewModel(songs);
 
-        _mainWindow = Locator.Current.GetService<MainWindow>();
+        Locator.Current.GetService<MainWindow>();
         _path = path;
 
         var config = new Config();
