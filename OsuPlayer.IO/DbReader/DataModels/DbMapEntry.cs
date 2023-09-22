@@ -82,7 +82,7 @@ internal class DbMapEntry : DbMapEntryBase, IMapEntry
     public override string GetTitle()
     {
         if (UseUnicode)
-            return string.IsNullOrEmpty(TitleUnicode) ? Artist : TitleUnicode;
+            return string.IsNullOrEmpty(TitleUnicode) ? Title : TitleUnicode;
         return Title;
     }
 }

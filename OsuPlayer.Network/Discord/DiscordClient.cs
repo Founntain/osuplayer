@@ -115,9 +115,9 @@ public class DiscordClient
 
         var osuApi = new WebRequestBase(url);
 
-        var thumbnailResponse = await osuApi.GetRequestWithResponseObj<object>(string.Empty);
+        var thumbnailResponse = await osuApi.GetRequestWithHttpResponseMessage(string.Empty);
 
-        if (thumbnailResponse.StatusCode != HttpStatusCode.OK)
+        if (!thumbnailResponse.IsSuccessStatusCode)
             return null;
 
         return new()

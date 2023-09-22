@@ -45,6 +45,7 @@
         <PackageReference Include="Material.Icons.Avalonia" Version="1.1.10" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="OsuPlayer.Api.Data" Version="1.0.10" />
+        <PackageReference Include="TagLibSharp" Version="2.3.0" />
         <PackageReference Include="SkiaSharp" Version="2.88.6" />
         <PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1" />
     </ItemGroup>
@@ -143,6 +144,12 @@
         </Compile>
         <Compile Update="Views\BeatmapsViewModel.cs">
             <DependentUpon>BeatmapsView.axaml</DependentUpon>
+        </Compile>
+        <Compile Update="Views\ExportSongsViewModel.cs">
+          <DependentUpon>ExportSongsView.axaml</DependentUpon>
+        </Compile>
+        <Compile Update="Windows\ExportSongsProcessWindowViewModel.cs">
+          <DependentUpon>ExportSongsProcessWindow.axaml</DependentUpon>
         </Compile>
     </ItemGroup>
     <ItemGroup>

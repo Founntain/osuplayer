@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
 using Avalonia.ReactiveUI;
 using ReactiveUI;
 
@@ -15,7 +16,9 @@ public partial class MessageBoxWindow : ReactiveWindow<MessageBoxViewModel>
         ViewModel = new MessageBoxViewModel();
 
         var config = new Config();
+        
         TransparencyLevelHint = (WindowTransparencyLevel) config.Container.BackgroundMode;
+        FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
 
 #if DEBUG
         this.AttachDevTools();

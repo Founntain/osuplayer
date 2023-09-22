@@ -58,8 +58,8 @@ public class WebRequestBase : IWebRequest
             return default;
         }
     }
-    
-    public virtual async Task<HttpResponseMessage> GetRequestWithResponseObj<TRequest>(string route, TRequest? data = default)
+
+    public async Task<HttpResponseMessage> GetRequestWithHttpResponseMessage(string route)
     {
         try
         {
@@ -68,19 +68,14 @@ public class WebRequestBase : IWebRequest
             var url = new Uri($"{BaseUrl}{route}");
 
             var req = new HttpRequestMessage(HttpMethod.Get, url);
-
-            if ( data != null )
-                req.Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
-
-            // CancelCancellationToken();
-
+            
             return await client.SendAsync(req, CancellationTokenSource.Token);
         }
         catch (Exception ex)
         {
             ParseWebException(ex);
 
-            return default;
+            return new HttpResponseMessage(HttpStatusCode.BadRequest);
         }
     }
 

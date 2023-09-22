@@ -1,0 +1,51 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:windows="clr-namespace:OsuPlayer.Windows"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="OsuPlayer.Windows.ExportSongsProcessWindow"
+        Title="Exporting songs..."
+
+        FontWeight="{DynamicResource DefaultFontWeight}"
+        FontFamily="Montserrat"
+        FontSize="16"
+
+        WindowStartupLocation="CenterScreen"
+        MaxWidth="800" Width="800"
+        MaxHeight="375"
+
+        Background="Transparent"
+        TransparencyLevelHint="Mica"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="PreferSystemChrome"
+        Opened="TopLevel_OnOpened"
+        Closing="Window_OnClosing">
+
+    <Design.DataContext>
+        <windows:ExportSongsProcessWindowViewModel />
+    </Design.DataContext>
+
+    <Grid>
+        <Panel>
+            <ExperimentalAcrylicBorder IsHitTestVisible="False">
+                <ExperimentalAcrylicBorder.Material>
+                    <ExperimentalAcrylicMaterial
+                        BackgroundSource="Digger"
+                        TintColor="{DynamicResource AppBackgroundColor}"
+                        TintOpacity="0.5"
+                        MaterialOpacity="0.25" />
+                </ExperimentalAcrylicBorder.Material>
+            </ExperimentalAcrylicBorder>
+        </Panel>
+
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Stretch" Spacing="10">
+            <TextBlock FontSize="32" FontWeight="{DynamicResource BiggerFontWeight}" HorizontalAlignment="Center"
+                       Text="{Binding ExportString}" />
+            <TextBlock Text="close the window to cancel the export" FontSize="16"
+                       FontWeight="{DynamicResource BiggerFontWeight}" HorizontalAlignment="Center" />
+            <ProgressBar Minimum="0" Maximum="{Binding ExportTotalSongs}" Value="{Binding ExportingSongsProgress}"
+                         HorizontalAlignment="Stretch" MaxWidth="600" />
+        </StackPanel>
+    </Grid>
+</Window>

@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
+using JetBrains.Annotations;
 using Nein.Base;
 using Nein.Controls;
 using Nein.Extensions;
@@ -191,5 +192,12 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
 
             ViewModel.IsLastFmAuthorized = lastFmApi.IsAuthorized();
         }
+    }
+
+    private void ExportCollectionsClick(object? sender, RoutedEventArgs e)
+    {
+        if (_mainWindow?.ViewModel == null) return;
+        
+        _mainWindow.ViewModel.MainView = _mainWindow.ViewModel.ExportSongsView;
     }
 }
