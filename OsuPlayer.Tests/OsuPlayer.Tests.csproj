@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net7.0-windows10.0.17763.0</TargetFramework>
+        <TargetFramework>net8.0-windows10.0.17763.0</TargetFramework>
         <Nullable>annotations</Nullable>
         <EnableWindowsTargeting>true</EnableWindowsTargeting>
         <IsPackable>false</IsPackable>
@@ -10,10 +10,10 @@
 
     <ItemGroup>
         <PackageReference Include="Founntain.Nein" Version="2023.623.0" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
         <PackageReference Include="NUnit" Version="3.13.3" />
         <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
-        <PackageReference Include="coverlet.collector" Version="3.2.0">
+        <PackageReference Include="coverlet.collector" Version="6.0.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

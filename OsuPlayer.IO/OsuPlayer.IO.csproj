@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>annotations</Nullable>
         <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
@@ -13,8 +13,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="0.10.19" />
-        <PackageReference Include="DynamicData" Version="7.13.1" />
+        <PackageReference Include="Avalonia" Version="0.10.22" />
+        <PackageReference Include="DynamicData" Version="8.0.2" />
         <PackageReference Include="Founntain.Nein" Version="2023.623.0" />
         <PackageReference Include="MongoDB.Bson" Version="2.19.1" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />

@@ -6,7 +6,7 @@
         <!--Avalonia doesen't support TrimMode=link currently,but we are working on that https://github.com/AvaloniaUI/Avalonia/issues/6892 -->
         <TrimMode>copyused</TrimMode>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -26,13 +26,13 @@
         <TrimmableAssembly Include="Avalonia.Themes.Default" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="0.10.19" />
-        <PackageReference Include="Avalonia.Desktop" Version="0.10.19" />
+        <PackageReference Include="Avalonia" Version="0.10.22" />
+        <PackageReference Include="Avalonia.Desktop" Version="0.10.22" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.19" />
-        <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.19" />
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.22" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.22" />
         <PackageReference Include="Founntain.Nein" Version="2023.623.0" />
-        <PackageReference Include="ReactiveUI" Version="18.4.26" />
+        <PackageReference Include="ReactiveUI" Version="19.4.1" />
         <PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1" />
     </ItemGroup>
     <ItemGroup>

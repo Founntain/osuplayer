@@ -1,18 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>annotations</Nullable>
         <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="0.10.19" />
-        <PackageReference Include="DynamicData" Version="7.13.1" />
+        <PackageReference Include="Avalonia" Version="0.10.22" />
+        <PackageReference Include="DynamicData" Version="8.0.2" />
         <PackageReference Include="Material.Icons.Avalonia" Version="1.1.10" />
         <PackageReference Include="OsuPlayer.Api.Data" Version="1.0.10" />
-        <PackageReference Include="Splat" Version="14.6.8" />
+        <PackageReference Include="Splat" Version="14.7.1" />
     </ItemGroup>
 
     <ItemGroup>
