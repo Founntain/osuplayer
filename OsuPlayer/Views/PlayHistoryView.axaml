@@ -11,8 +11,17 @@
     <Design.DataContext>
         <views:PlayHistoryViewModel />
     </Design.DataContext>
-    <Grid>
-        <ListBox Items="{Binding History}" SelectedItem="{Binding SelectedHistoricalMapEntry}" Background="{DynamicResource AcrylicBaseColor}"
+    <Grid RowDefinitions="Auto, *">
+        <Grid Grid.Row="0" Margin="0"
+              Background="{DynamicResource AcrylicSecondaryColor}"
+              VerticalAlignment="Center">
+            <TextBlock Text="Play History" Margin="10 5" FontSize="26"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Left" />
+        </Grid>
+        
+        <ListBox Grid.Row="1" Items="{Binding History}" SelectedItem="{Binding SelectedHistoricalMapEntry}" Background="{DynamicResource AcrylicBaseColor}"
+                 Margin="0 1"
                  DoubleTapped="HistoryListBox_OnDoubleTapped">
             <ListBox.DataTemplates>
                 <DataTemplate DataType="extensions:HistoricalMapEntry">
