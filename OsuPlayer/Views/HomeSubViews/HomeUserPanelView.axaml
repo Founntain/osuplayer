@@ -19,7 +19,7 @@
 
     <Grid ColumnDefinitions="50*, 50*">
         <!-- User Grid -->
-        <Grid Row="0" Column="0" ColumnDefinitions="Auto, *, Auto" Margin="10"
+        <Grid Row="0" Column="0" ColumnDefinitions="Auto, *, Auto" Margin="0 1 1 0"
               Background="{DynamicResource AcrylicBaseColor}">
             <Border Grid.Column="0" Margin="10"
                     CornerRadius="50" Width="100" Height="100" BorderThickness="2" BorderBrush="White"
@@ -58,7 +58,7 @@
         </Grid>
 
         <!--Stats Grid-->
-        <Grid Row="0" Column="1" ColumnDefinitions="50*, 50*" RowDefinitions="Auto, *" Margin="10"
+        <Grid Row="0" Column="1" ColumnDefinitions="50*, 50*" RowDefinitions="Auto, *" Margin="0 1 0 0"
               Background="{DynamicResource AcrylicBaseColor}">
             <TextBlock Grid.Row="0" Margin="10" Text="your session" Grid.Column="0" Grid.ColumnSpan="2" />
 

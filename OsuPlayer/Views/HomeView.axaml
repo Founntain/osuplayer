@@ -23,7 +23,7 @@
         
 
         <!--Songs Grid-->
-        <Grid Row="1" Column="0" ColumnSpan="2" RowDefinitions="40, *" Margin="10"
+        <Grid Row="1" Column="0" ColumnSpan="2" RowDefinitions="40, *" Margin="0 1"
               Background="{DynamicResource AcrylicBaseColor}">
             <Border Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#7F000000">
                 <TextBlock Text="your songs" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Center" />

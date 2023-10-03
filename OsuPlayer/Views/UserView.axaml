@@ -24,7 +24,7 @@
     <!-- Design Base -->
     <!-- https://7.founntain.dev/i6SnB9Ns.png -->
 
-    <Grid ColumnDefinitions="25*, 75*">
+    <Grid ColumnDefinitions="25*, 75*" Margin="0 1">
         <Grid Column="0" Margin="0 0 1 0" RowDefinitions="Auto, *" Background="{DynamicResource AcrylicBaseColor}">
             <AutoCompleteBox Grid.Row="0" Margin="10 5" Items="{Binding Users}" SelectedItem="{Binding SelectedUser}"
                              Watermark="type to search..." />
