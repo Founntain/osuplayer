@@ -9,6 +9,8 @@ using OsuPlayer.Api.Data.API.Enums;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
+using OsuPlayer.IO.DbReader.DataModels.Extensions;
+using OsuPlayer.IO.DbReader.Interfaces;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.IO.Storage.Playlists;
@@ -49,6 +51,8 @@ public class Player : IPlayer, IImportNotifications
     public Bindable<bool> PlaylistEnableOnPlay { get; } = new();
     public Bindable<RepeatMode> RepeatMode { get; } = new();
 
+    public BindableList<HistoricalMapEntry> History { get; } = new();
+    
     public List<AudioDevice> AvailableAudioDevices => _audioEngine.AvailableAudioDevices;
     public BindableArray<decimal> EqGains => _audioEngine.EqGains;
     public Bindable<double> Volume => _audioEngine.Volume;
@@ -146,6 +150,18 @@ public class Player : IPlayer, IImportNotifications
 
     private void OnCurrentSongChanged(ValueChangedEvent<IMapEntry> mapEntry)
     {
+        if(mapEntry.NewValue != default)
+        {
+            var historicalMapEntry = new HistoricalMapEntry(mapEntry.NewValue);
+            
+            var foundEntry = History.FirstOrDefault(entry => new HistoricalMapEntryComparer().Equals(entry, historicalMapEntry));
+
+            if(foundEntry != default)
+                History.Remove(foundEntry);
+            
+            History.Add(historicalMapEntry);
+        }
+        
         using var cfg = new Config();
 
         cfg.Container.LastPlayedSong = mapEntry.NewValue?.Hash;

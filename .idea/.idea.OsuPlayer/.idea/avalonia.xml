@@ -30,6 +30,7 @@
         <entry key="OsuPlayer/Views/HomeView/HomeView.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/Views/MainWindow.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/Views/PartyView.axaml" value="OsuPlayer/OsuPlayer.csproj" />
+        <entry key="OsuPlayer/Views/PlayHistoryView.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/Views/PlayerControlView.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/Views/PlaylistEditorView.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/Views/PlaylistView.axaml" value="OsuPlayer/OsuPlayer.csproj" />
