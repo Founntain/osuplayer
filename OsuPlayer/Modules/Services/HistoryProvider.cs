@@ -23,16 +23,10 @@ public class HistoryProvider : IHistoryProvider
             
         var foundEntry = History.FirstOrDefault(entry => Comparer.Equals(entry, historicalMapEntry));
 
-        if (foundEntry != default)
-        {
-            var index = History.IndexOf(foundEntry);
+        if (foundEntry != default) 
+            History.Remove(foundEntry);
 
-            History[index] = foundEntry;
-        }
-        else
-        {
-            History.Add(historicalMapEntry);
-        }
+        History.Add(historicalMapEntry);
     }
     
     public void ClearHistory()
