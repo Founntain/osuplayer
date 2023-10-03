@@ -77,6 +77,7 @@ internal static class Program
         services.RegisterLazySingleton<IStatisticsProvider>(() => new ApiStatisticsProvider());
         services.RegisterLazySingleton<ISortProvider>(() => new SortProvider());
         services.RegisterLazySingleton<ISongSourceProvider>(() => new OsuSongSourceProvider(resolver.GetService<ISortProvider>()));
+        services.RegisterLazySingleton<IHistoryProvider>(() => new HistoryProvider());
         services.RegisterLazySingleton<LastFmApi>(() => new LastFmApi());
         
         services.RegisterLazySingleton(() => new NorthFox());
@@ -87,6 +88,7 @@ internal static class Program
                 shuffleProvider: resolver.GetRequiredService<IShuffleServiceProvider>(),
                 statisticsProvider: resolver.GetRequiredService<IStatisticsProvider>(),
                 sortProvider: resolver.GetRequiredService<ISortProvider>(),
+                historyProvider: resolver.GetRequiredService<IHistoryProvider>(),
                 lastFmApi: resolver.GetRequiredService<LastFmApi>()
         ));
 

@@ -10,6 +10,7 @@ namespace OsuPlayer.Views;
 public class PlayHistoryViewModel : BaseViewModel
 {
     protected internal IPlayer Player;
+    private readonly IHistoryProvider _historyProvider;
     
     private HistoricalMapEntry _selectedHistoricalMapEntry;
 
@@ -27,18 +28,18 @@ public class PlayHistoryViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _history, value);
     }
 
-    public PlayHistoryViewModel() : this(Locator.Current.GetService<IPlayer>())
+    public PlayHistoryViewModel() : this(Locator.Current.GetService<IHistoryProvider>())
     {
     } 
 
-    public PlayHistoryViewModel(IPlayer player)
+    public PlayHistoryViewModel(IHistoryProvider historyProvider)
     {
-        Player = player;
+        _historyProvider = historyProvider;
         
-        player.History.BindCollectionChanged((_, _) =>
+        historyProvider.History.BindCollectionChanged((_, _) =>
         {
             // We first sort them descending by time played, then by song name alphabetically
-            History = player.History.OrderByDescending(x => x.TimePlayed).ThenBy(x => x.MapEntry.SongName).ToObservableCollection();
+            History = _historyProvider.History.OrderByDescending(x => x.TimePlayed).ThenBy(x => x.MapEntry.SongName).ToObservableCollection();
         });
         
         Activator = new ViewModelActivator();

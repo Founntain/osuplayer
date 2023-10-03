@@ -8,7 +8,7 @@ namespace OsuPlayer.Modules.Audio.Interfaces;
 /// <summary>
 /// This interface represents an audio player which should use the <see cref="IAudioEngine" /> as an underlying base.
 /// </summary>
-public interface IPlayer : ICommonFeatures, IPlayModes, IHasPlaylists, IHasBlacklist, IHasDiscordRpc, IHasHistory
+public interface IPlayer : ICommonFeatures, IPlayModes, IHasPlaylists, IHasBlacklist, IHasDiscordRpc
 {
     public ISongSourceProvider SongSourceProvider { get; }
     public Bindable<IMapEntry?> CurrentSong { get; }

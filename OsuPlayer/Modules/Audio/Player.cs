@@ -33,6 +33,7 @@ public class Player : IPlayer, IImportNotifications
     private readonly DiscordClient? _discordClient;
     private readonly IShuffleServiceProvider? _shuffleProvider;
     private readonly IStatisticsProvider? _statisticsProvider;
+    private readonly IHistoryProvider? _historyProvider;
     private readonly WindowsMediaTransportControls? _winMediaControls;
     private readonly LastFmApi? _lastFmApi;
 
@@ -69,7 +70,7 @@ public class Player : IPlayer, IImportNotifications
     private List<IMapEntryBase> ActivePlaylistSongs { get; set; }
 
     public Player(IAudioEngine audioEngine, ISongSourceProvider songSourceProvider, IShuffleServiceProvider? shuffleProvider = null,
-        IStatisticsProvider? statisticsProvider = null, ISortProvider? sortProvider = null, LastFmApi? lastFmApi = null)
+        IStatisticsProvider? statisticsProvider = null, ISortProvider? sortProvider = null, IHistoryProvider? historyProvider = null, LastFmApi? lastFmApi = null)
     {
         _audioEngine = audioEngine;
 
@@ -94,6 +95,7 @@ public class Player : IPlayer, IImportNotifications
         SongSourceProvider = songSourceProvider;
         _shuffleProvider = shuffleProvider;
         _statisticsProvider = statisticsProvider;
+        _historyProvider = historyProvider;
 
         _lastFmApi = lastFmApi;
 
@@ -150,17 +152,7 @@ public class Player : IPlayer, IImportNotifications
 
     private void OnCurrentSongChanged(ValueChangedEvent<IMapEntry> mapEntry)
     {
-        if(mapEntry.NewValue != default)
-        {
-            var historicalMapEntry = new HistoricalMapEntry(mapEntry.NewValue);
-            
-            var foundEntry = History.FirstOrDefault(entry => new HistoricalMapEntryComparer().Equals(entry, historicalMapEntry));
-
-            if(foundEntry != default)
-                History.Remove(foundEntry);
-            
-            History.Add(historicalMapEntry);
-        }
+        _historyProvider?.AddOrUpdateMapEntry(mapEntry.NewValue);
         
         using var cfg = new Config();
 
