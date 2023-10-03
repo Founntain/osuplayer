@@ -7,6 +7,7 @@ using Avalonia.Media;
 using Avalonia.ReactiveUI;
 using Avalonia.Threading;
 using Nein.Extensions;
+using OsuPlayer.IO.DbReader.Interfaces;
 using Splat;
 using TagLib;
 using File = TagLib.File;

@@ -5,6 +5,7 @@ using DynamicData;
 using Nein.Base;
 using Nein.Extensions;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
+using OsuPlayer.IO.DbReader.Interfaces;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules.Audio.Interfaces;
 using ReactiveUI;

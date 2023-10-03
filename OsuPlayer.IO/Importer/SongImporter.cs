@@ -1,6 +1,7 @@
 ﻿using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.IO.DbReader;
 using OsuPlayer.IO.DbReader.DataModels;
+using OsuPlayer.IO.DbReader.Interfaces;
 using OsuPlayer.IO.Storage.Config;
 
 namespace OsuPlayer.IO.Importer;

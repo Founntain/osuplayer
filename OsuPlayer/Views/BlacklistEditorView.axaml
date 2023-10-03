@@ -6,6 +6,7 @@
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:views="clr-namespace:OsuPlayer.Views"
              xmlns:dataModels="clr-namespace:OsuPlayer.IO.DbReader.DataModels;assembly=OsuPlayer.IO"
+             xmlns:interfaces="clr-namespace:OsuPlayer.IO.DbReader.Interfaces;assembly=OsuPlayer.IO"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.BlacklistEditorView"
              FontWeight="{DynamicResource DefaultFontWeight}">
@@ -44,7 +45,7 @@
                      Items="{Binding FilteredSongEntries}" SelectedItems="{Binding SelectedSongListItems}"
                      SelectionChanged="SongList_OnSelectionChanged" DoubleTapped="PlaySong">
                 <ListBox.ItemTemplate>
-                    <DataTemplate DataType="dataModels:IMapEntryBase">
+                    <DataTemplate DataType="interfaces:IMapEntryBase">
                         <Grid>
                             <TextBlock Text="{Binding SongName}" FontWeight="SemiBold" />
                         </Grid>
@@ -63,7 +64,7 @@
                      Items="{Binding Blacklist.Songs, Converter={StaticResource PlaylistValueConverter}}"
                      SelectionChanged="Blacklist_OnSelectionChanged" DoubleTapped="PlaySong">
                 <ListBox.ItemTemplate>
-                    <DataTemplate DataType="dataModels:IMapEntryBase">
+                    <DataTemplate DataType="interfaces:IMapEntryBase">
                         <Grid>
                             <TextBlock Text="{Binding SongName}" FontWeight="SemiBold" />
                         </Grid>

@@ -68,6 +68,17 @@
                             </controls:SettingsDisplayer.InteractionControl>
 
                         </controls:SettingsDisplayer>
+                        
+                        <controls:SettingsDisplayer Name="PlayHistory" Title="Play history"
+                                                    Description="Display your current sessions play history."
+                                                    Icon="History">
+
+                            <controls:SettingsDisplayer.InteractionControl>
+                                <Button Content="Open Play History" Click="OpenPlayerHistoryClick"
+                                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                            </controls:SettingsDisplayer.InteractionControl>
+
+                        </controls:SettingsDisplayer>
 
                         <controls:SettingsDisplayer Name="UpdateChannel" Title="Update Channel"
                                                     Description="Which update channel to use. This settings requires a restart"

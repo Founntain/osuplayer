@@ -4,6 +4,7 @@ using Avalonia.Threading;
 using DynamicData;
 using Nein.Base;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
+using OsuPlayer.IO.DbReader.Interfaces;
 using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.Modules.Audio.Interfaces;
 using ReactiveUI;

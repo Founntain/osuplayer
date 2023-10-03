@@ -1,6 +1,6 @@
 ﻿using Nein.Extensions;
 
-namespace OsuPlayer.IO.DbReader.DataModels;
+namespace OsuPlayer.IO.DbReader.Interfaces;
 
 public interface IMapEntryBase : IEquatable<IMapEntryBase>, IComparable<IMapEntryBase>
 {

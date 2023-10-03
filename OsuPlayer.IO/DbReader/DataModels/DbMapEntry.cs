@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using OsuPlayer.IO.DbReader.Interfaces;
 
 namespace OsuPlayer.IO.DbReader.DataModels;
 

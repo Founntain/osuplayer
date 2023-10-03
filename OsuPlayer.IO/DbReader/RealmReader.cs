@@ -1,4 +1,5 @@
 ﻿using OsuPlayer.IO.DbReader.DataModels;
+using OsuPlayer.IO.DbReader.Interfaces;
 using OsuPlayer.IO.Storage.LazerModels.Beatmaps;
 using OsuPlayer.IO.Storage.LazerModels.Collections;
 using Realms;

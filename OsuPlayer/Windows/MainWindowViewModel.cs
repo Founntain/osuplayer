@@ -46,6 +46,7 @@ public class MainWindowViewModel : BaseWindowViewModel
     public StatisticsViewModel StatisticsView { get; }
     public BeatmapsViewModel BeatmapView { get; }
     public ExportSongsViewModel ExportSongsView { get; }
+    public PlayHistoryViewModel PlayHistoryView { get; set; }
 
     public Bitmap? BackgroundImage
     {
@@ -73,6 +74,7 @@ public class MainWindowViewModel : BaseWindowViewModel
         set => this.RaiseAndSetIfChanged(ref _displayBackgroundImage, value);
     }
 
+
     public MainWindowViewModel(IAudioEngine engine, IPlayer player, IShuffleServiceProvider? shuffleServiceProvider = null,
         IStatisticsProvider? statisticsProvider = null, ISortProvider? sortProvider = null)
     {
@@ -96,6 +98,7 @@ public class MainWindowViewModel : BaseWindowViewModel
         StatisticsView = new StatisticsViewModel();
         BeatmapView = new BeatmapsViewModel(Player);
         ExportSongsView = new ExportSongsViewModel(Player.SongSourceProvider);
+        PlayHistoryView = new PlayHistoryViewModel();
 
         using var config = new Config();
 

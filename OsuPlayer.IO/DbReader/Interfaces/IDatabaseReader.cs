@@ -1,4 +1,4 @@
-﻿namespace OsuPlayer.IO.DbReader.DataModels;
+﻿namespace OsuPlayer.IO.DbReader.Interfaces;
 
 /// <summary>
 /// Interface used by the database readers used to read the osu databases.
