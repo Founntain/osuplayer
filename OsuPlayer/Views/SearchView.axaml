@@ -12,10 +12,12 @@
     </Design.DataContext>
 
     <Grid RowDefinitions="Auto, *">
-        <TextBox Margin="10" Grid.Row="0" Text="{Binding FilterText}" Watermark="type to search..." />
+        <Grid Row="0" Background="{DynamicResource AcrylicSecondaryColor}" Margin="0">
+            <TextBox Margin="5" Text="{Binding FilterText}" Watermark="type to search..." />
+        </Grid>
         <!-- <AutoCompleteBox Margin="0 2" Grid.Row="0" Text="{Binding FilterText}" Items="{Binding $parent[Window].DataContext.FilteredSongEntries}"/> -->
 
-        <ListBox Grid.Row="1" Items="{Binding FilteredSongEntries}" Background="{DynamicResource AcrylicBaseColor}"
+        <ListBox Margin="0 1" Grid.Row="1" Items="{Binding FilteredSongEntries}" Background="{DynamicResource AcrylicBaseColor}"
                  DoubleTapped="InputElement_OnDoubleTapped" SelectedItem="{Binding SelectedSong}">
             <ListBox.ContextMenu>
                 <ContextMenu>

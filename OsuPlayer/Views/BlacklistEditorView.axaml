@@ -16,7 +16,7 @@
     <UserControl.Resources>
         <valueConverters:PlaylistValueConverter x:Key="PlaylistValueConverter" />
     </UserControl.Resources>
-    <Grid Row="1" ColumnDefinitions="*, 50, *">
+    <Grid Row="1" ColumnDefinitions="*, 50, *" Margin="0 1">
         <Grid Column="1">
             <StackPanel Spacing="10" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <Button Name="AddToBlacklist" Width="38" Height="38" CornerRadius="50" Click="AddToBlacklist_OnClick">
@@ -30,8 +30,7 @@
             </StackPanel>
         </Grid>
 
-        <Grid Column="0" Margin="10" RowDefinitions="50, *" Background="{DynamicResource AcrylicBaseColor}">
-
+        <Grid Column="0" RowDefinitions="50, *" Background="{DynamicResource AcrylicBaseColor}">
             <Border Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#7F000000">
                 <Grid ColumnDefinitions="Auto, *">
                     <TextBlock Grid.Column="0" Text="Your songs" FontSize="22" VerticalAlignment="Center"
@@ -53,7 +52,7 @@
             </ListBox>
         </Grid>
 
-        <Grid Column="2" Margin="10" RowDefinitions="50, *" Background="{DynamicResource AcrylicBaseColor}">
+        <Grid Column="2" RowDefinitions="50, *" Background="{DynamicResource AcrylicBaseColor}">
             <Border Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#7F000000">
                 <TextBlock Text="blacklist songs" FontSize="22" VerticalAlignment="Center"
                            HorizontalAlignment="Center" />
