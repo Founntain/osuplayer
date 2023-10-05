@@ -74,7 +74,6 @@ public class MainWindowViewModel : BaseWindowViewModel
         set => this.RaiseAndSetIfChanged(ref _displayBackgroundImage, value);
     }
 
-
     public MainWindowViewModel(IAudioEngine engine, IPlayer player, IShuffleServiceProvider? shuffleServiceProvider = null,
         IStatisticsProvider? statisticsProvider = null, ISortProvider? sortProvider = null, IHistoryProvider? historyProvider = null)
     {
