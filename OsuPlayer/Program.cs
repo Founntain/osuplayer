@@ -79,17 +79,17 @@ internal static class Program
         services.RegisterLazySingleton<ISongSourceProvider>(() => new OsuSongSourceProvider(resolver.GetService<ISortProvider>()));
         services.RegisterLazySingleton<IHistoryProvider>(() => new HistoryProvider());
         services.RegisterLazySingleton<LastFmApi>(() => new LastFmApi());
-        
+
         services.RegisterLazySingleton(() => new NorthFox());
 
         services.RegisterLazySingleton<IPlayer>(() => new Player(
-                audioEngine: resolver.GetRequiredService<IAudioEngine>(),
-                songSourceProvider: resolver.GetRequiredService<ISongSourceProvider>(),
-                shuffleProvider: resolver.GetRequiredService<IShuffleServiceProvider>(),
-                statisticsProvider: resolver.GetRequiredService<IStatisticsProvider>(),
-                sortProvider: resolver.GetRequiredService<ISortProvider>(),
-                historyProvider: resolver.GetRequiredService<IHistoryProvider>(),
-                lastFmApi: resolver.GetRequiredService<LastFmApi>()
+            audioEngine: resolver.GetRequiredService<IAudioEngine>(),
+            songSourceProvider: resolver.GetRequiredService<ISongSourceProvider>(),
+            shuffleProvider: resolver.GetRequiredService<IShuffleServiceProvider>(),
+            statisticsProvider: resolver.GetRequiredService<IStatisticsProvider>(),
+            sortProvider: resolver.GetRequiredService<ISortProvider>(),
+            historyProvider: resolver.GetRequiredService<IHistoryProvider>(),
+            lastFmApi: resolver.GetRequiredService<LastFmApi>()
         ));
 
         services.Register(() => new MainWindowViewModel(
@@ -97,7 +97,8 @@ internal static class Program
             resolver.GetRequiredService<IPlayer>(),
             resolver.GetService<IShuffleServiceProvider>(),
             resolver.GetService<IStatisticsProvider>(),
-            resolver.GetService<ISortProvider>()));
+            resolver.GetService<ISortProvider>(),
+            resolver.GetService<IHistoryProvider>()));
 
         services.RegisterLazySingleton(() => new MainWindow(
             resolver.GetRequiredService<MainWindowViewModel>()));

@@ -10,7 +10,7 @@ public partial class PlayHistoryView : ReactiveControl<PlayHistoryViewModel>
     {
         InitializeComponent();
     }
-    
+
     private void InitializeComponent()
     {
         AvaloniaXamlLoader.Load(this);
@@ -18,7 +18,7 @@ public partial class PlayHistoryView : ReactiveControl<PlayHistoryViewModel>
 
     private async void HistoryListBox_OnDoubleTapped(object? sender, RoutedEventArgs e)
     {
-        var mapEntryFromHash = ViewModel.SongSourceProvider.GetMapEntryFromHash(ViewModel.SelectedHistoricalMapEntry.MapEntry.Hash);
+        var mapEntryFromHash = ViewModel.SongSourceProvider.GetMapEntryFromHash(ViewModel.SelectedHistoricalMapEntry?.MapEntry.Hash);
 
         await ViewModel.Player.TryPlaySongAsync(mapEntryFromHash);
     }
