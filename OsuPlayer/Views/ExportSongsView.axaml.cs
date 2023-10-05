@@ -8,6 +8,7 @@ using Avalonia.ReactiveUI;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Nein.Extensions;
+using OsuPlayer.IO.DbReader.Interfaces;
 using OsuPlayer.Network;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;

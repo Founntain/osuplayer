@@ -58,6 +58,17 @@
 
                         </controls:SettingsDisplayer>
                         
+                        <controls:SettingsDisplayer Name="PlayHistory" Title="Play history"
+                                                    Description="Display your current sessions play history."
+                                                    Icon="History">
+
+                            <controls:SettingsDisplayer.InteractionControl>
+                                <Button Content="Open Play History" Click="OpenPlayerHistoryClick"
+                                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                            </controls:SettingsDisplayer.InteractionControl>
+
+                        </controls:SettingsDisplayer>
+                        
                         <controls:SettingsDisplayer Name="ExportSongs" Title="Export songs"
                                                     Description="Exports your osu! .mp3 files to a given directory. Handy if you want to listen to your songs on the go."
                                                     Icon="TableExport">

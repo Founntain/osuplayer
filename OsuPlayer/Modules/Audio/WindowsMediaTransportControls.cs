@@ -3,6 +3,7 @@ using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using OsuPlayer.Data.OsuPlayer.Enums;
+using OsuPlayer.IO.DbReader.Interfaces;
 using OsuPlayer.Modules.Audio.Interfaces;
 
 namespace OsuPlayer.Modules.Audio;

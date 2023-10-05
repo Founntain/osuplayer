@@ -1,4 +1,6 @@
-﻿namespace OsuPlayer.Modules.Services;
+﻿using OsuPlayer.IO.DbReader.Interfaces;
+
+namespace OsuPlayer.Modules.Services;
 
 public class ObservableSorter : IObservable<IComparer<IMapEntryBase>>
 {

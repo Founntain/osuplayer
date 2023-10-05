@@ -200,4 +200,11 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
         
         _mainWindow.ViewModel.MainView = _mainWindow.ViewModel.ExportSongsView;
     }
+
+    private void OpenPlayerHistoryClick(object? sender, RoutedEventArgs e)
+    {
+        if (_mainWindow?.ViewModel == null) return;
+
+        _mainWindow.ViewModel.MainView = _mainWindow.ViewModel.PlayHistoryView;
+    }
 }

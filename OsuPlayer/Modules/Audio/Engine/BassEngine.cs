@@ -190,12 +190,10 @@ public sealed class BassEngine : IAudioEngine
         Bass.CurrentDevice = index;
         Bass.ChannelSetDevice(_fxStream, index);
 
-        var result = Bass.LastError == Errors.OK;
-
         using var config = new Config();
         config.Container.SelectedAudioDeviceDriver = audioDevices[index].Driver;
 
-        Console.WriteLine($"SET: {index} | {result} | {Bass.LastError}");
+        Console.WriteLine($"[BASSENGINE] DEVICE {index} | LOADING PLAYBACK {Bass.LastError}");
     }
 
     private void SetPlaybackSpeedOptions(double speed)
@@ -234,7 +232,7 @@ public sealed class BassEngine : IAudioEngine
         {
             var success = Bass.Init(counter);
 
-            Console.WriteLine($"INIT: {deviceInfo} | {success} | {Bass.LastError}");
+            Console.WriteLine($"[BASSENGINE] INIT DEVICE {deviceInfo} | SUCCESSFUL: {success} | CODE: {Bass.LastError}");
 
             if (success) AvailableAudioDevices.Add(deviceInfo);
 

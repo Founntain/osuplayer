@@ -1,5 +1,6 @@
 using System.Text;
 using OsuPlayer.IO.DbReader.DataModels;
+using OsuPlayer.IO.DbReader.Interfaces;
 
 namespace OsuPlayer.IO.DbReader;
 

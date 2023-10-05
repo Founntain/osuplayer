@@ -1,4 +1,6 @@
-﻿namespace OsuPlayer.IO.DbReader.DataModels;
+﻿using OsuPlayer.IO.DbReader.Interfaces;
+
+namespace OsuPlayer.IO.DbReader.DataModels;
 
 /// <summary>
 /// a full beatmap entry with optionally used data

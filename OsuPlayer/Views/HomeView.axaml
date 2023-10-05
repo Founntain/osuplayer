@@ -7,6 +7,7 @@
              xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
              xmlns:dataModels="clr-namespace:OsuPlayer.IO.DbReader.DataModels;assembly=OsuPlayer.IO"
              xmlns:valueConverters="clr-namespace:OsuPlayer.Extensions.ValueConverters;assembly=OsuPlayer.Extensions"
+             xmlns:interfaces="clr-namespace:OsuPlayer.IO.DbReader.Interfaces;assembly=OsuPlayer.IO"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.HomeView"
              FontWeight="{DynamicResource DefaultFontWeight}">
@@ -48,7 +49,7 @@
                     </ContextMenu>
                 </ListBox.ContextMenu>
                 <ListBox.DataTemplates>
-                    <DataTemplate DataType="dataModels:IMapEntryBase">
+                    <DataTemplate DataType="interfaces:IMapEntryBase">
                         <Grid ColumnDefinitions="*, 100" RowDefinitions="Auto, Auto">
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding TitleString}" FontSize="20" />
                             <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding ArtistString}"

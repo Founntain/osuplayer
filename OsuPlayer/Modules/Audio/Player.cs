@@ -9,6 +9,8 @@ using OsuPlayer.Api.Data.API.Enums;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
+using OsuPlayer.IO.DbReader.DataModels.Extensions;
+using OsuPlayer.IO.DbReader.Interfaces;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.IO.Storage.Playlists;
@@ -31,6 +33,7 @@ public class Player : IPlayer, IImportNotifications
     private readonly DiscordClient? _discordClient;
     private readonly IShuffleServiceProvider? _shuffleProvider;
     private readonly IStatisticsProvider? _statisticsProvider;
+    private readonly IHistoryProvider? _historyProvider;
     private readonly WindowsMediaTransportControls? _winMediaControls;
     private readonly LastFmApi? _lastFmApi;
 
@@ -49,6 +52,8 @@ public class Player : IPlayer, IImportNotifications
     public Bindable<bool> PlaylistEnableOnPlay { get; } = new();
     public Bindable<RepeatMode> RepeatMode { get; } = new();
 
+    public BindableList<HistoricalMapEntry> History { get; } = new();
+    
     public List<AudioDevice> AvailableAudioDevices => _audioEngine.AvailableAudioDevices;
     public BindableArray<decimal> EqGains => _audioEngine.EqGains;
     public Bindable<double> Volume => _audioEngine.Volume;
@@ -65,7 +70,7 @@ public class Player : IPlayer, IImportNotifications
     private List<IMapEntryBase> ActivePlaylistSongs { get; set; }
 
     public Player(IAudioEngine audioEngine, ISongSourceProvider songSourceProvider, IShuffleServiceProvider? shuffleProvider = null,
-        IStatisticsProvider? statisticsProvider = null, ISortProvider? sortProvider = null, LastFmApi? lastFmApi = null)
+        IStatisticsProvider? statisticsProvider = null, ISortProvider? sortProvider = null, IHistoryProvider? historyProvider = null, LastFmApi? lastFmApi = null)
     {
         _audioEngine = audioEngine;
 
@@ -90,6 +95,7 @@ public class Player : IPlayer, IImportNotifications
         SongSourceProvider = songSourceProvider;
         _shuffleProvider = shuffleProvider;
         _statisticsProvider = statisticsProvider;
+        _historyProvider = historyProvider;
 
         _lastFmApi = lastFmApi;
 
@@ -146,6 +152,8 @@ public class Player : IPlayer, IImportNotifications
 
     private void OnCurrentSongChanged(ValueChangedEvent<IMapEntry> mapEntry)
     {
+        _historyProvider?.AddOrUpdateMapEntry(mapEntry.NewValue);
+        
         using var cfg = new Config();
 
         cfg.Container.LastPlayedSong = mapEntry.NewValue?.Hash;

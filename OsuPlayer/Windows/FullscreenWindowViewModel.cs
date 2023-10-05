@@ -1,6 +1,7 @@
 ﻿using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using Nein.Base;
+using OsuPlayer.IO.DbReader.Interfaces;
 using OsuPlayer.Modules;
 using OsuPlayer.Modules.Audio.Interfaces;
 using ReactiveUI;

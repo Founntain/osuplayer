@@ -1,0 +1,43 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:OsuPlayer.Views"
+             xmlns:extensions="clr-namespace:OsuPlayer.IO.DbReader.DataModels.Extensions;assembly=OsuPlayer.IO"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="OsuPlayer.Views.PlayHistoryView">
+
+    <Design.DataContext>
+        <views:PlayHistoryViewModel />
+    </Design.DataContext>
+    <Grid RowDefinitions="Auto, *">
+        <Grid Grid.Row="0" Margin="0"
+              Background="{DynamicResource AcrylicSecondaryColor}"
+              VerticalAlignment="Center">
+            <TextBlock Text="Play History" Margin="10 5" FontSize="26"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Left" />
+        </Grid>
+
+        <ListBox Grid.Row="1" Items="{Binding History}" SelectedItem="{Binding SelectedHistoricalMapEntry}"
+                 Background="{DynamicResource AcrylicBaseColor}"
+                 Margin="0 1"
+                 DoubleTapped="HistoryListBox_OnDoubleTapped">
+            <ListBox.DataTemplates>
+                <DataTemplate DataType="extensions:HistoricalMapEntry">
+                    <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto">
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding MapEntry.TitleString}" FontSize="20"
+                                   FontWeight="SemiBold" />
+                        <TextBlock Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Text="{Binding TimePlayedString}"
+                                   FontSize="14" VerticalAlignment="Center" Margin="0 0 15 0"
+                                   FontWeight="{DynamicResource SmallerFontWeight}" />
+                        <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                   Text="{Binding MapEntry.ArtistString}"
+                                   FontSize="14" Foreground="#FFCCCCCC"
+                                   FontWeight="{DynamicResource SmallerFontWeight}" />
+                    </Grid>
+                </DataTemplate>
+            </ListBox.DataTemplates>
+        </ListBox>
+    </Grid>
+</UserControl>

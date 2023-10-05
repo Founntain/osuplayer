@@ -2,6 +2,7 @@
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Nein.Base;
+using OsuPlayer.IO.DbReader.Interfaces;
 using OsuPlayer.IO.Storage.Blacklist;
 using ReactiveUI;
 

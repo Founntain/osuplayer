@@ -8,6 +8,7 @@ using Material.Icons.Avalonia;
 using Nein.Base;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
+using OsuPlayer.IO.DbReader.Interfaces;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
