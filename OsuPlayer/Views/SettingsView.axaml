@@ -20,10 +20,13 @@
     </Design.DataContext>
 
     <Grid RowDefinitions="Auto, *">
-        <TextBox Grid.Row="0" Name="SettingsSearch" Text="{Binding SettingsSearchQ}"
-                 Watermark="type to search for settings" Margin="10 10 10 0" />
+        <Grid Row="0" Background="{DynamicResource AcrylicBaseColor}">
+            <TextBox Name="SettingsSearch" Text="{Binding SettingsSearchQ}"
+                     VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                     Watermark="type to search for settings" Margin="5" />
+        </Grid>
 
-        <ScrollViewer Grid.Row="1">
+        <ScrollViewer Grid.Row="1" Margin="0 0 0 1">
             <controls:CascadingWrapPanel
                 ItemWidth="{Binding RelativeSource={RelativeSource Self}, Path=Bounds.Width, Converter={StaticResource GridFormatter}, ConverterParameter=2000}"
                 Name="SettingsGrid">
@@ -31,10 +34,10 @@
                 <!-- ———————————————— -->
                 <!-- General Settings -->
                 <!-- ———————————————— -->
-                <Grid RowDefinitions="Auto" Margin="10" Name="GeneralSettings">
+                <Grid RowDefinitions="Auto" Margin="0 5 0 0" Name="GeneralSettings">
 
-                    <StackPanel Spacing="1" Margin="10" Name="GeneralSettingsPanel">
-                        <controls:SettingsTitleDisplayer Title="General Settings" Icon="Cog" />
+                    <StackPanel Spacing="1" Margin="1" Name="GeneralSettingsPanel">
+                        <controls:SettingsTitleDisplayer Title="General Settings" Icon="Cog" UseRoundedCorners="False" />
 
                         <controls:SettingsDisplayer Name="ImportOsuSongs" Title="Import osu! songs"
                                                     Description="Import your osu! songs via osu!.db (stable) or your client.realm (lazer)"
@@ -49,7 +52,7 @@
 
                         <controls:SettingsDisplayer Name="ImportCollections" Title="Import osu! collections"
                                                     Description="Import your osu! collections as playlists"
-                                                    Icon="TableImport">
+                                                    Icon="TableImport" UseRoundedCorners="False">
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <Button Content="start import" Click="ImportCollectionsClick"
@@ -60,7 +63,7 @@
 
                         <controls:SettingsDisplayer Name="PlayHistory" Title="Play history"
                                                     Description="Display your current sessions play history."
-                                                    Icon="History">
+                                                    Icon="History" UseRoundedCorners="False">
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <Button Content="Open Play History" Click="OpenPlayerHistoryClick"
@@ -71,7 +74,7 @@
 
                         <controls:SettingsDisplayer Name="ExportSongs" Title="Export songs"
                                                     Description="Exports your osu! .mp3 files to a given directory. Handy if you want to listen to your songs on the go."
-                                                    Icon="TableExport">
+                                                    Icon="TableExport" UseRoundedCorners="False">
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <Button Content="Open Export Configurator" Click="ExportCollectionsClick"
@@ -82,7 +85,7 @@
 
                         <controls:SettingsDisplayer Name="UpdateChannel" Title="Update Channel"
                                                     Description="Which update channel to use. This settings requires a restart"
-                                                    Icon="DownloadNetwork">
+                                                    Icon="DownloadNetwork" UseRoundedCorners="False">
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <ComboBox SelectedItem="{Binding SelectedReleaseChannel}"
@@ -94,7 +97,7 @@
 
                         <controls:SettingsDisplayer Name="StartupSong" Title="Startup song"
                                                     Description="Select what song should be played when the application started"
-                                                    Icon="PlayArrow">
+                                                    Icon="PlayArrow" UseRoundedCorners="False">
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <ComboBox SelectedItem="{Binding SelectedStartupSong}" Items="{Binding StartupSongs}"
@@ -105,7 +108,7 @@
 
                         <controls:SettingsDisplayer Name="SongsSortingMode" Title="Song Sorting Mode"
                                                     Description="Select in which order the songs should be sorted in your song list"
-                                                    Icon="SortVariant">
+                                                    Icon="SortVariant" UseRoundedCorners="False">
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <ComboBox SelectedItem="{Binding SelectedSortingMode}" Items="{Binding SortingModes}"
@@ -116,7 +119,7 @@
 
                         <controls:SettingsDisplayer Name="ShuffleAlgorithm" Title="Shuffle Algorithm"
                                                     Description="{Binding SelectedShuffleAlgorithmInfoText}"
-                                                    Icon="ShuffleVariant">
+                                                    Icon="ShuffleVariant" UseRoundedCorners="False">
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <ComboBox SelectedItem="{Binding SelectedShuffleAlgorithm}"
@@ -127,7 +130,7 @@
 
                         <controls:SettingsDisplayer Name="BlacklistSkip" Title="Blacklist skipping"
                                                     Description="Enable if you want that songs that are on your blacklist get automatically skipped"
-                                                    Icon="FilterList">
+                                                    Icon="FilterList" UseRoundedCorners="False">
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <ToggleSwitch IsChecked="{Binding BlacklistSkip}" />
@@ -138,7 +141,7 @@
                         <controls:SettingsDisplayer Name="PlaylistEnableOnPlay"
                                                     Title="Enable playlist mode on song play"
                                                     Description="Enable if you want playlist mode to be enabled when you play a song directly from the playlist viewer."
-                                                    Icon="PlaylistPlay">
+                                                    Icon="PlaylistPlay" UseRoundedCorners="False">
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <ToggleSwitch IsChecked="{Binding PlaylistEnableOnPlay}" />
@@ -148,7 +151,7 @@
 
                         <controls:SettingsDisplayer Name="UseDiscordRpc" Title="Enable Discord Rich Presence"
                                                     Description="Enable if you want to display your current playing song in your Discord Status"
-                                                    Icon="Share">
+                                                    Icon="Share" UseRoundedCorners="False">
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <ToggleSwitch IsChecked="{Binding UseDiscordRpc}" />
@@ -162,15 +165,15 @@
                 <!-- ——————————————— -->
                 <!-- Visual Settings -->
                 <!-- ——————————————— -->
-                <Grid RowDefinitions="Auto" Margin="10" Name="VisualSettings">
+                <Grid RowDefinitions="Auto" Margin="0 5 0 0" Name="VisualSettings">
 
-                    <StackPanel Margin="10" Spacing="1" Name="VisualSettingsPanel">
-                        <controls:SettingsTitleDisplayer Title="Visual Settings" Icon="Shimmer" />
+                    <StackPanel Margin="1" Spacing="1" Name="VisualSettingsPanel">
+                        <controls:SettingsTitleDisplayer Title="Visual Settings" Icon="Shimmer" UseRoundedCorners="False" />
 
                         <controls:SettingsDisplayer Name="DisplayUserStats"
                                                     Title="Display User Statistics on Home View"
                                                     Description="Toggle if you want to display your User Stats and session graph on the home view"
-                                                    Icon="User">
+                                                    Icon="User" UseRoundedCorners="False">
                             <controls:SettingsDisplayer.InteractionControl>
                                 <ToggleSwitch IsChecked="{Binding DisplayUserStats}" VerticalAlignment="Center"
                                               HorizontalAlignment="Right" />
@@ -179,7 +182,7 @@
 
                         <controls:SettingsDisplayer Name="Font" Title="UI Font"
                                                     Description="Select the font you want to use as Interface Font. We recommend Montserrat"
-                                                    Icon="FormatFont">
+                                                    Icon="FormatFont" UseRoundedCorners="False">
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <AutoCompleteBox SelectedItem="{Binding SelectedFont}" MinimumPrefixLength="0"
@@ -190,7 +193,7 @@
 
                         <controls:SettingsDisplayer Name="FontWeightSelect" Title="UI Font-Weight"
                                                     Description="Select the font Weight you want to use as Interface Font. We recommend something around SemiBold or Medium"
-                                                    Icon="FormatSize">
+                                                    Icon="FormatSize" UseRoundedCorners="False">
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <ComboBox SelectedItem="{Binding SelectedFontWeight}"
@@ -201,7 +204,7 @@
 
                         <controls:SettingsDisplayer Name="WindowBlurMethod" Title="Window Background Method"
                                                     Description="The Method that should be used for the window background"
-                                                    Icon="Blur">
+                                                    Icon="Blur" UseRoundedCorners="False">
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <ComboBox SelectedItem="{Binding BackgroundMode}"
@@ -212,7 +215,7 @@
 
                         <controls:SettingsDisplayer Name="WindowBackgroundColor" Title="Window Background Color"
                                                     Description="The background color of the window"
-                                                    Icon="PaletteSwatch">
+                                                    Icon="PaletteSwatch" UseRoundedCorners="False">
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <AutoCompleteBox SelectedItem="{Binding SelectedBackgroundColor}"
@@ -225,7 +228,7 @@
 
                         <controls:SettingsDisplayer Name="DisplayBackgroundImage" Title="Use Song Background Image"
                                                     Description="Toggle if you want to use the current songs background image as window background."
-                                                    Icon="Image">
+                                                    Icon="Image" UseRoundedCorners="False">
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <ToggleSwitch IsChecked="{Binding DisplayBackgroundImage}" />
@@ -233,10 +236,9 @@
 
                         </controls:SettingsDisplayer>
 
-                        <controls:SettingsDisplayer Name="BackgroundImageBlur" Title="Background Blur"
-                                                    IsVisible="{Binding DisplayBackgroundImage}"
+                        <controls:SettingsDisplayer Name="BackgroundImageBlur" Title="Background Blur" IsVisible="{Binding DisplayBackgroundImage}"
                                                     Description="Amount of blur you want to use for the background image. The change will be visible when a new song is played."
-                                                    Icon="BlurCircular">
+                                                    Icon="BlurCircular" UseRoundedCorners="False">
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <Slider Value="{Binding BackgroundBlurRadius}" Minimum="0" Maximum="100"
@@ -246,7 +248,8 @@
                         </controls:SettingsDisplayer>
 
                         <controls:SettingsDisplayer Name="AccentColor" Title="Accent Color"
-                                                    Description="Accent color you want to use" Icon="Palette">
+                                                    Description="Accent color you want to use"
+                                                    Icon="Palette" UseRoundedCorners="False">
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <AutoCompleteBox SelectedItem="{Binding SelectedAccentColor}"
@@ -262,14 +265,14 @@
                 <!-- —————————————— -->
                 <!-- Audio Settings -->
                 <!-- —————————————— -->
-                <Grid RowDefinitions="Auto" Margin="10" Name="AudioSettings">
+                <Grid RowDefinitions="Auto" Margin="0 5 0 0" Name="AudioSettings">
 
-                    <StackPanel Margin="10" Spacing="1" Name="AudioSettingsPanel">
-                        <controls:SettingsTitleDisplayer Title="Audio Settings" Icon="Speaker" />
+                    <StackPanel Margin="1" Spacing="1" Name="AudioSettingsPanel">
+                        <controls:SettingsTitleDisplayer Title="Audio Settings" Icon="Speaker" UseRoundedCorners="False" />
 
                         <controls:SettingsDisplayer Name="AudioDeviceSettings" Title="Audio Device"
                                                     Description="Select the audio device that you want to use for playback"
-                                                    Icon="SpeakerMultiple">
+                                                    Icon="SpeakerMultiple" UseRoundedCorners="False">
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <ComboBox Items="{Binding AvailableAudioDevices}"
@@ -280,7 +283,7 @@
 
                         <controls:SettingsDisplayer Name="EqualizerSettings" Title="Equalizer"
                                                     Description="Here you can tune your audio frequencies to your liking"
-                                                    Icon="Equalizer">
+                                                    Icon="Equalizer" UseRoundedCorners="False">
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <Button Content="open equalizer" Click="OpenEqClick" HorizontalAlignment="Stretch"
@@ -291,7 +294,7 @@
 
                         <controls:SettingsDisplayer Name="PitchSettings" Title="Enable Pitch Change"
                                                     Description="If turned on changing the playback speed will change the pitch. (Like Nightcore / Daycore). If turned of it just speeds it up."
-                                                    Icon="Waveform">
+                                                    Icon="Waveform" UseRoundedCorners="False">
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <ToggleSwitch IsChecked="{Binding UsePitch}" Click="OnUsePitch_Click" />
@@ -304,13 +307,13 @@
                 <!-- ——————————————— -->
                 <!-- Network Settings -->
                 <!-- ——————————————— -->
-                <Grid RowDefinitions="Auto" Margin="10" Name="NetworkSettings">
+                <Grid RowDefinitions="Auto" Margin="0 5 0 0" Name="NetworkSettings">
 
-                    <StackPanel Margin="10" Spacing="1" Name="NetworkSettingsPanel">
-                        <controls:SettingsTitleDisplayer Title="Network Settings" Icon="NetworkOutline" />
+                    <StackPanel Margin="1" Spacing="1" Name="NetworkSettingsPanel">
+                        <controls:SettingsTitleDisplayer Title="Network Settings" Icon="NetworkOutline" UseRoundedCorners="False" />
 
                         <controls:SettingsDisplayer Name="Login" Title="Log in" Description="{Binding CurrentUser}"
-                                                    Icon="Login">
+                                                    Icon="Login" UseRoundedCorners="False">
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <Button Content="log in" Click="LoginClick" HorizontalAlignment="Stretch"
@@ -318,10 +321,9 @@
                             </controls:SettingsDisplayer.InteractionControl>
 
                         </controls:SettingsDisplayer>
-
-                        <controls:SettingsDisplayer Name="LastFmAuth" Title="Last.FM Scrobbler"
-                                                    Description="Enter your API-Key and Secret to use the Last.FM Scrobbler. When it shows a green border, then the connection is active."
-                                                    Icon="Login">
+                      
+                        <controls:SettingsDisplayer Name="LastFmAuth" Title="Last.FM Scrobbler" Description="Enter your API-Key and Secret to use the Last.FM Scrobbler. When it shows a green border, then the connection is active."
+                                                    Icon="Login" UseRoundedCorners="False">
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <StackPanel Orientation="Horizontal" Spacing="5">
@@ -350,14 +352,13 @@
                             </controls:SettingsDisplayer.InteractionControl>
                         </controls:SettingsDisplayer>
 
-                        <controls:SettingsDisplayer Name="LastFmScrobblin" Title="Enable Scrobbling"
-                                                    Description="Toggle if you want to send your play activity as scrobbles to Last.FM."
-                                                    Icon="CubeSend">
+                        <controls:SettingsDisplayer Name="LastFmScrobblin" Title="Enable Scrobbling" Description="Toggle if you want to send your play activity as scrobbles to Last.FM."
+                                                    Icon="CubeSend" UseRoundedCorners="False">
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <ToggleSwitch HorizontalAlignment="Stretch"
-                                              HorizontalContentAlignment="Center"
-                                              IsChecked="{Binding EnableScrobbling}" />
+                                        HorizontalContentAlignment="Center" IsChecked="{Binding EnableScrobbling}"/>
+
                             </controls:SettingsDisplayer.InteractionControl>
 
                         </controls:SettingsDisplayer>
@@ -367,13 +368,13 @@
                 <!-- ——————————————————— -->
                 <!-- Patchnotes Settings -->
                 <!-- ——————————————————— -->
-                <Grid RowDefinitions="Auto" Margin="10" Name="PatchNotesSettings">
+                <Grid RowDefinitions="Auto" Margin="0 5 0 0" Name="PatchNotesSettings">
 
-                    <StackPanel Margin="10" Spacing="1" Name="PatchNotesSettingsPanel">
+                    <StackPanel Margin="1" Spacing="1" Name="PatchNotesSettingsPanel">
 
-                        <controls:SettingsTitleDisplayer Title="Patch notes" Icon="Notebook" />
+                        <controls:SettingsTitleDisplayer Title="Patch notes" Icon="Notebook" UseRoundedCorners="False" />
 
-                        <Border Background="{DynamicResource AcrylicBaseColor}" CornerRadius="0 0 15 15" Padding="20">
+                        <Border Background="{DynamicResource AcrylicBaseColor}" Padding="20">
                             <avalonia:MarkdownScrollViewer Markdown="{Binding Patchnotes}">
                                 <avalonia:MarkdownScrollViewer.Styles>
                                     <Style Selector="ctxt|CTextBlock.Heading">
@@ -394,14 +395,14 @@
                 <!-- ———————————————————————— -->
                 <!-- HelpAndFeedback Settings -->
                 <!-- ———————————————————————— -->
-                <Grid RowDefinitions="Auto" Margin="10" Name="HelpAndFeedbackSettings">
+                <Grid RowDefinitions="Auto" Margin="0 5 0 0" Name="HelpAndFeedbackSettings">
 
-                    <StackPanel Margin="10" Spacing="1" Name="HelpAndFeedbackSettingsPanel">
-                        <controls:SettingsTitleDisplayer Title="Help and Feedback" Icon="HelpRhombus" />
+                    <StackPanel Margin="1" Spacing="1" Name="HelpAndFeedbackSettingsPanel">
+                        <controls:SettingsTitleDisplayer Title="Help and Feedback" Icon="HelpRhombus" UseRoundedCorners="False" />
 
                         <controls:SettingsDisplayer Title="Report bug or request feature"
                                                     Description="Head to our GitHub to report a bugs or reuqest features"
-                                                    Icon="Bug">
+                                                    Icon="Bug" UseRoundedCorners="False">
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <Button Content="report a bug or request a feature" Click="ReportBug_OnClick"
@@ -412,7 +413,7 @@
 
                         <controls:SettingsDisplayer Title="osu!player Discord Server"
                                                     Description="Join our Discord server to ask question, dev updates and other stuff"
-                                                    Icon="Bullhorn">
+                                                    Icon="Bullhorn" UseRoundedCorners="False">
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <Button Content="join the discord server" Click="JoinDiscord_OnClick"
@@ -423,7 +424,7 @@
 
                         <controls:SettingsDisplayer Title="Contact us"
                                                     Description="Here you can find our contact information if you need to contact us specifically"
-                                                    Icon="Email">
+                                                    Icon="Email" UseRoundedCorners="False">
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <Button Content="contact us" Click="ContactUs_OnClick" HorizontalAlignment="Stretch"
@@ -437,10 +438,10 @@
                 <!-- ——————————————————— -->
                 <!-- Contribute Settings -->
                 <!-- ——————————————————— -->
-                <Grid RowDefinitions="Auto" Margin="10" Name="ContributeSettings">
+                <Grid RowDefinitions="Auto" Margin="0 5 0 0" Name="ContributeSettings">
 
-                    <StackPanel Margin="10" Spacing="1" Name="ContributePanel">
-                        <controls:SettingsTitleDisplayer Title="Contributers" Icon="AccountStar" />
+                    <StackPanel Margin="1" Spacing="1" Name="ContributePanel">
+                        <controls:SettingsTitleDisplayer Title="Contributers" Icon="AccountStar" UseRoundedCorners="False" />
 
                         <Border Background="{DynamicResource AcrylicBaseColor}" Padding="20">
                             <ItemsRepeater Items="{Binding Contributors}">
@@ -467,7 +468,7 @@
                             </ItemsRepeater>
                         </Border>
 
-                        <Border Background="{DynamicResource AcrylicBaseColor}" CornerRadius="0 0 15 15" Padding="20">
+                        <Border Background="{DynamicResource AcrylicBaseColor}" Margin="0 5 0 1" Padding="20">
                             <TextBlock
                                 Text="Want to help or implement something? Head to our repository for project building info and guidelines. We would be happy to see your Pull-Request!"
                                 TextAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center"
