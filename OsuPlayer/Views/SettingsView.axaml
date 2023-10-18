@@ -170,11 +170,13 @@
                     <StackPanel Margin="1" Spacing="1" Name="VisualSettingsPanel">
                         <controls:SettingsTitleDisplayer Title="Visual Settings" Icon="Shimmer" UseRoundedCorners="False" />
 
-                        <controls:SettingsDisplayer Name="DisplayUserStats" Title="Display User Statistics on Home View"
+                        <controls:SettingsDisplayer Name="DisplayUserStats"
+                                                    Title="Display User Statistics on Home View"
                                                     Description="Toggle if you want to display your User Stats and session graph on the home view"
                                                     Icon="User" UseRoundedCorners="False">
                             <controls:SettingsDisplayer.InteractionControl>
-                                <ToggleSwitch IsChecked="{Binding DisplayUserStats}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                <ToggleSwitch IsChecked="{Binding DisplayUserStats}" VerticalAlignment="Center"
+                                              HorizontalAlignment="Right" />
                             </controls:SettingsDisplayer.InteractionControl>
                         </controls:SettingsDisplayer>
 
@@ -229,7 +231,7 @@
                                                     Icon="Image" UseRoundedCorners="False">
 
                             <controls:SettingsDisplayer.InteractionControl>
-                                <ToggleSwitch IsChecked="{Binding DisplayBackgroundImage}"/>
+                                <ToggleSwitch IsChecked="{Binding DisplayBackgroundImage}" />
                             </controls:SettingsDisplayer.InteractionControl>
 
                         </controls:SettingsDisplayer>
@@ -239,7 +241,8 @@
                                                     Icon="BlurCircular" UseRoundedCorners="False">
 
                             <controls:SettingsDisplayer.InteractionControl>
-                                <Slider Value="{Binding BackgroundBlurRadius}" Minimum="0" Maximum="100" HorizontalAlignment="Stretch" Width="150" TickFrequency="1"/>
+                                <Slider Value="{Binding BackgroundBlurRadius}" Minimum="0" Maximum="100"
+                                        HorizontalAlignment="Stretch" Width="150" TickFrequency="1" />
                             </controls:SettingsDisplayer.InteractionControl>
 
                         </controls:SettingsDisplayer>
@@ -318,25 +321,29 @@
                             </controls:SettingsDisplayer.InteractionControl>
 
                         </controls:SettingsDisplayer>
-
+                      
                         <controls:SettingsDisplayer Name="LastFmAuth" Title="Last.FM Scrobbler" Description="Enter your API-Key and Secret to use the Last.FM Scrobbler. When it shows a green border, then the connection is active."
                                                     Icon="Login" UseRoundedCorners="False">
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <StackPanel Orientation="Horizontal" Spacing="5">
                                     <StackPanel Orientation="Vertical" Spacing="2">
-                                        <TextBlock Text="Last.FM API-Key"/>
-                                        <TextBox Watermark="API-Key" PasswordChar="•" Text="{Binding LastFmApiKey}" BorderBrush="{Binding IsLastFmAuthorized, Converter={StaticResource LastFmToAuthConverter}}" />
+                                        <TextBlock Text="Last.FM API-Key" />
+                                        <TextBox Watermark="API-Key" PasswordChar="•" Text="{Binding LastFmApiKey}"
+                                                 BorderBrush="{Binding IsLastFmAuthorized, Converter={StaticResource LastFmToAuthConverter}}" />
                                     </StackPanel>
 
                                     <StackPanel Orientation="Vertical" Spacing="2">
-                                        <TextBlock Text="Secret"/>
-                                        <TextBox Watermark="API-Secret" PasswordChar="•" Text="{Binding LastFmApiSecret}" BorderBrush="{Binding IsLastFmAuthorized, Converter={StaticResource LastFmToAuthConverter}}" />
+                                        <TextBlock Text="Secret" />
+                                        <TextBox Watermark="API-Secret" PasswordChar="•"
+                                                 Text="{Binding LastFmApiSecret}"
+                                                 BorderBrush="{Binding IsLastFmAuthorized, Converter={StaticResource LastFmToAuthConverter}}" />
                                     </StackPanel>
 
                                     <StackPanel Orientation="Vertical" Spacing="2">
                                         <TextBlock Text=" " />
-                                        <Button Content="Authorize" Click="LastFmAuth_OnClick" HorizontalAlignment="Stretch"
+                                        <Button Content="Authorize" Click="LastFmAuth_OnClick"
+                                                HorizontalAlignment="Stretch"
                                                 HorizontalContentAlignment="Center" />
                                     </StackPanel>
 
@@ -351,6 +358,7 @@
                             <controls:SettingsDisplayer.InteractionControl>
                                 <ToggleSwitch HorizontalAlignment="Stretch"
                                         HorizontalContentAlignment="Center" IsChecked="{Binding EnableScrobbling}"/>
+
                             </controls:SettingsDisplayer.InteractionControl>
 
                         </controls:SettingsDisplayer>
