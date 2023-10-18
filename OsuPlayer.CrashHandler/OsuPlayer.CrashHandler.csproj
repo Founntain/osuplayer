@@ -26,13 +26,13 @@
         <TrimmableAssembly Include="Avalonia.Themes.Default" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="0.10.19" />
-        <PackageReference Include="Avalonia.Desktop" Version="0.10.19" />
+        <PackageReference Include="Avalonia" Version="0.10.22" />
+        <PackageReference Include="Avalonia.Desktop" Version="0.10.22" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.19" />
-        <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.19" />
-        <PackageReference Include="Founntain.Nein" Version="2023.623.0" />
-        <PackageReference Include="ReactiveUI" Version="18.4.26" />
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.22" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.22" />
+        <PackageReference Include="Founntain.Nein" Version="2023.1018.2" />
+        <PackageReference Include="ReactiveUI" Version="19.5.1" />
         <PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1" />
     </ItemGroup>
     <ItemGroup>
