@@ -1,17 +1,20 @@
 ﻿using OsuPlayer.Extensions;
-using OsuPlayer.Modules.ShuffleImpl;
+using OsuPlayer.IO.Storage.Config;
+using OsuPlayer.Services.Interfaces;
 
-namespace OsuPlayer.Modules.Services;
+namespace OsuPlayer.Services;
 
 /// <summary>
 /// Provides a service for shuffle implementation registering the services using Splat.
 /// </summary>
-public class ShuffleServiceProvider : IShuffleServiceProvider
+public class ShuffleService : OsuPlayerService, IShuffleServiceProvider
 {
     public List<IShuffleImpl> ShuffleAlgorithms { get; }
     public IShuffleImpl? ShuffleImpl { get; private set; }
 
-    public ShuffleServiceProvider()
+    public override string ServiceName => "SHUFFLE_SERVICE";
+
+    public ShuffleService()
     {
         using var config = new Config();
 

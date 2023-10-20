@@ -1,16 +1,11 @@
 ﻿using OsuPlayer.IO.DbReader.Interfaces;
 
-namespace OsuPlayer.Modules.Services;
+namespace OsuPlayer.Services;
 
 public class ObservableSorter : IObservable<IComparer<IMapEntryBase>>
 {
-    private readonly List<IObserver<IComparer<IMapEntryBase>>> _observers;
+    private readonly List<IObserver<IComparer<IMapEntryBase>>> _observers = new();
     private IComparer<IMapEntryBase>? _lastComparer;
-
-    public ObservableSorter()
-    {
-        _observers = new List<IObserver<IComparer<IMapEntryBase>>>();
-    }
 
     public IDisposable Subscribe(IObserver<IComparer<IMapEntryBase>> observer)
     {

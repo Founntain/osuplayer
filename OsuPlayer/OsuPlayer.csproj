@@ -59,6 +59,7 @@
         <ProjectReference Include="..\OsuPlayer.Extensions\OsuPlayer.Extensions.csproj" />
         <ProjectReference Include="..\OsuPlayer.IO\OsuPlayer.IO.csproj" />
         <ProjectReference Include="..\OsuPlayer.Network\OsuPlayer.Network.csproj" />
+        <ProjectReference Include="..\OsuPlayer.Services\OsuPlayer.Services.csproj" />
     </ItemGroup>
     <ItemGroup>
         <Compile Update="Windows\MainWindow.axaml.cs">

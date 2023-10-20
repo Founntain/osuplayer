@@ -1,6 +1,6 @@
 ﻿using OsuPlayer.Data.OsuPlayer.Enums;
 
-namespace OsuPlayer.Modules.ShuffleImpl;
+namespace OsuPlayer.Services.Interfaces;
 
 /// <summary>
 /// This interface is used as a base for all shuffle algorithm implementations.

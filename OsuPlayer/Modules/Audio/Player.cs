@@ -16,9 +16,9 @@ using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules.Audio.Engine;
 using OsuPlayer.Modules.Audio.Interfaces;
-using OsuPlayer.Modules.Services;
 using OsuPlayer.Network.Discord;
 using OsuPlayer.Network.LastFM;
+using OsuPlayer.Services.Interfaces;
 
 namespace OsuPlayer.Modules.Audio;
 
@@ -53,7 +53,7 @@ public class Player : IPlayer, IImportNotifications
     public Bindable<RepeatMode> RepeatMode { get; } = new();
 
     public BindableList<HistoricalMapEntry> History { get; } = new();
-    
+
     public List<AudioDevice> AvailableAudioDevices => _audioEngine.AvailableAudioDevices;
     public BindableArray<decimal> EqGains => _audioEngine.EqGains;
     public Bindable<double> Volume => _audioEngine.Volume;
@@ -153,7 +153,7 @@ public class Player : IPlayer, IImportNotifications
     private void OnCurrentSongChanged(ValueChangedEvent<IMapEntry> mapEntry)
     {
         _historyProvider?.AddOrUpdateMapEntry(mapEntry.NewValue);
-        
+
         using var cfg = new Config();
 
         cfg.Container.LastPlayedSong = mapEntry.NewValue?.Hash;
@@ -163,7 +163,7 @@ public class Player : IPlayer, IImportNotifications
         if (mapEntry.NewValue is null) return;
 
         var timestamp = TimeSpan.FromSeconds(_audioEngine.ChannelLength.Value * (1 - _audioEngine.PlaybackSpeed.Value));
-        
+
         _discordClient?.UpdatePresence(mapEntry.NewValue.Title, $"by {mapEntry.NewValue.Artist}", mapEntry.NewValue.BeatmapSetId, durationLeft: timestamp);
     }
 
@@ -219,11 +219,11 @@ public class Player : IPlayer, IImportNotifications
     public void SetPlaybackSpeed(double speed)
     {
         _audioEngine.SetPlaybackSpeed(speed);
-        
-        if(!_audioEngine.IsPlaying.Value) return;
-        
+
+        if (!_audioEngine.IsPlaying.Value) return;
+
         var timestamp = TimeSpan.FromSeconds(_audioEngine.ChannelLength.Value * (1 - _audioEngine.PlaybackSpeed.Value) - _audioEngine.ChannelPosition.Value);
-        
+
         _discordClient?.UpdatePresence(CurrentSong.Value.Title, $"by {CurrentSong.Value.Artist}", CurrentSong.Value.BeatmapSetId, durationLeft: timestamp);
     }
 
@@ -259,9 +259,9 @@ public class Player : IPlayer, IImportNotifications
         _currentSongTimer.Start();
 
         _winMediaControls?.UpdatePlayingStatus(true);
-        
+
         var timestamp = TimeSpan.FromSeconds(_audioEngine.ChannelLength.Value * (1 - _audioEngine.PlaybackSpeed.Value) - _audioEngine.ChannelPosition.Value);
-        
+
         _discordClient?.UpdatePresence(CurrentSong.Value.Title, $"by {CurrentSong.Value.Artist}", CurrentSong.Value.BeatmapSetId, durationLeft: timestamp);
     }
 
@@ -271,7 +271,7 @@ public class Player : IPlayer, IImportNotifications
         _currentSongTimer.Stop();
 
         _winMediaControls?.UpdatePlayingStatus(false);
-        
+
         _discordClient?.UpdatePresence(CurrentSong.Value.Title, $"by {CurrentSong.Value.Artist}", CurrentSong.Value.BeatmapSetId);
     }
 
@@ -326,7 +326,6 @@ public class Player : IPlayer, IImportNotifications
     {
         if (SongSourceProvider.SongSourceList == default || !SongSourceProvider.SongSourceList.Any())
             throw new NullOrEmptyException($"{nameof(SongSourceProvider.SongSourceList)} can't be null or empty");
-
         if (song == default)
         {
             await TryStartSongAsync(SongSourceProvider.SongSourceList[0]);
@@ -485,7 +484,7 @@ public class Player : IPlayer, IImportNotifications
         {
             if (!config.Container.EnableScrobbling)
                 return;
-            
+
             await _lastFmApi?.Scrobble(CurrentSong.Value.Title, CurrentSong.Value.Artist)!;
         }
         catch (Exception e)

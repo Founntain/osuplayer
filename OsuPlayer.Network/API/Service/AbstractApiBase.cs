@@ -1,9 +1,11 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
+using Nein.Extensions;
 using Newtonsoft.Json;
 using OsuPlayer.Api.Data.API;
 using OsuPlayer.Network.Online;
+using Splat;
 
 namespace OsuPlayer.Network.API.Service;
 
@@ -14,11 +16,11 @@ public abstract class AbstractApiBase
     protected internal string Url => GetApiUrl();
 
     protected string? UserAuthToken { get; set; }
-    
+
     private string GetApiUrl()
     {
         var url = "https://osuplayer.founntain.dev/";
-        
+
         bool.TryParse(Environment.GetEnvironmentVariable("USE_LOCAL_API"), out var useLocalApi);
         bool.TryParse(Environment.GetEnvironmentVariable("USE_SANDBOX_API"), out var useSandboxApi);
 
@@ -52,10 +54,10 @@ public abstract class AbstractApiBase
     /// </summary>
     // protected void CancelCancellationToken()
     // {
-    //     // TODO: Currently does nothing, because it breaks the functionality a bit. 
+    //     // TODO: Currently does nothing, because it breaks the functionality a bit.
     //     // TODO: This needs to be re-thinked a bit!
     //     return;
-    //     
+    //
     //     CancellationTokenSource.Cancel();
     //     CancellationTokenSource = new ();
     // }

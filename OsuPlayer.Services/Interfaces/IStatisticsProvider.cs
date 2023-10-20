@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel;
-using System.Threading.Tasks;
 using LiveChartsCore.Defaults;
+using Nein.Extensions.Bindables;
 using OsuPlayer.Api.Data.API.Enums;
 
-namespace OsuPlayer.Modules.Services;
+namespace OsuPlayer.Services.Interfaces;
 
 public interface IStatisticsProvider
 {

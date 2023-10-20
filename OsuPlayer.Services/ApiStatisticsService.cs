@@ -1,19 +1,23 @@
 ﻿using System.ComponentModel;
-using System.Threading.Tasks;
 using Avalonia.Threading;
 using LiveChartsCore.Defaults;
 using Nein.Extensions;
+using Nein.Extensions.Bindables;
 using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.Enums;
 using OsuPlayer.Api.Data.API.RequestModels.User;
 using OsuPlayer.Network.API.Service.NorthFox.Endpoints;
+using OsuPlayer.Network.Online;
+using OsuPlayer.Services.Interfaces;
 using Splat;
 
-namespace OsuPlayer.Modules.Services;
+namespace OsuPlayer.Services;
 
-public class ApiStatisticsProvider : IStatisticsProvider
+public class ApiStatisticsService : OsuPlayerService, IStatisticsProvider
 {
     public BindableList<ObservableValue> GraphValues { get; } = new();
+
+    public override string ServiceName => "API_STATISTICS_SERVICE";
     public event PropertyChangedEventHandler? UserDataChanged;
 
     public async Task UpdateOnlineStatus(UserOnlineStatusType statusType, string? song = null, string? checksum = null)
@@ -21,7 +25,7 @@ public class ApiStatisticsProvider : IStatisticsProvider
         if (ProfileManager.User == default || ProfileManager.User.UniqueId == Guid.Empty)
             return;
 
-        await Locator.Current.GetService<NorthFox>().User.SetOnlineStatus(new UserOnlineStatusModel
+        await Locator.Current.GetRequiredService<NorthFox>().User.SetOnlineStatus(new UserOnlineStatusModel
         {
             StatusType = statusType,
             Song = song,
@@ -37,7 +41,7 @@ public class ApiStatisticsProvider : IStatisticsProvider
 
         var time = timeListened / 1000;
 
-        var response = await Locator.Current.GetService<NorthFox>().User.UpdateXp(new UpdateXpModel
+        var response = await Locator.Current.GetRequiredService<NorthFox>().User.UpdateXp(new UpdateXpModel
         {
             SongChecksum = hash,
             ChannelLength = channelLength,
@@ -53,18 +57,22 @@ public class ApiStatisticsProvider : IStatisticsProvider
         GraphValues.Add(new ObservableValue(xpEarned));
 
         await Dispatcher.UIThread.InvokeAsync(() => UserDataChanged?.Invoke(this, new PropertyChangedEventArgs("Xp")));
+
+        LogToConsole($"Successfully updated XP for {ProfileManager.User?.Name ?? string.Empty}. Earned {xpEarned} XP.");
     }
 
     public async Task UpdateSongsPlayed(int beatmapSetId)
     {
         if (ProfileManager.User == default) return;
 
-        var response = await Locator.Current.GetService<NorthFox>().User.UpdateSongsPlayed(1, beatmapSetId);
+        var response = await Locator.Current.GetRequiredService<NorthFox>().User.UpdateSongsPlayed(1, beatmapSetId);
 
         if (response == default) return;
 
         ProfileManager.User = response.ConvertObjectToJson<User>();
 
         await Dispatcher.UIThread.InvokeAsync(() => UserDataChanged?.Invoke(this, new PropertyChangedEventArgs("SongsPlayed")));
+
+        LogToConsole($"Successfully updated songs played for {ProfileManager.User?.Name ?? string.Empty}");
     }
 }

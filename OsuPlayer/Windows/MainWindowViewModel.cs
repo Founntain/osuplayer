@@ -5,7 +5,8 @@ using Nein.Base;
 using OsuPlayer.Extensions.EnumExtensions;
 using OsuPlayer.Modules;
 using OsuPlayer.Modules.Audio.Interfaces;
-using OsuPlayer.Modules.Services;
+using OsuPlayer.Services;
+using OsuPlayer.Services.Interfaces;
 using OsuPlayer.Views;
 using ReactiveUI;
 

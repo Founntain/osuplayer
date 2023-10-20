@@ -1,16 +1,20 @@
 ﻿using DynamicData;
+using Nein.Extensions.Bindables;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.IO.DbReader.Interfaces;
+using OsuPlayer.Services.Interfaces;
 
-namespace OsuPlayer.Modules.Services;
+namespace OsuPlayer.Services;
 
-public class SortProvider : ISortProvider
+public class SortService : OsuPlayerService, ISortProvider
 {
     public IObservable<IChangeSet<IMapEntryBase>>? SortedSongs { get; set; }
     public Bindable<SortingMode> SortingModeBindable { get; } = new();
     public ObservableSorter SortingModeObservable { get; } = new();
 
-    public SortProvider()
+    public override string ServiceName => "SORT_SERVICE";
+
+    public SortService()
     {
         SortingModeBindable.BindValueChanged(d => SortingModeObservable.UpdateComparer(new MapSorter(d.NewValue)), true, true);
     }

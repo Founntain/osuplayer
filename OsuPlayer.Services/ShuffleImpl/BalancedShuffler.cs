@@ -1,11 +1,12 @@
 ﻿using OsuPlayer.Data.OsuPlayer.Enums;
+using OsuPlayer.Services.Interfaces;
 
-namespace OsuPlayer.Modules.ShuffleImpl;
+namespace OsuPlayer.Services.ShuffleImpl;
 
 /// <summary>
 /// This shuffle algorithm performs a full reshuffle of the song list so there aren't any duplicates and biases.
 /// </summary>
-public class BalancedShuffler : IShuffleImpl
+public class BalancedShuffler : OsuPlayerService, IShuffleImpl
 {
     private readonly List<int> _shuffledIndexes = new();
     private int _currentIndex;
@@ -14,6 +15,8 @@ public class BalancedShuffler : IShuffleImpl
 
     public string Name => "Balanced Shuffle";
     public string Description => "Shuffles the entire list of songs so there aren't any duplicates and biases.";
+
+    public override string ServiceName => "BALANCED_SHUFFLE_SERVICE";
 
     public void Init(int maxRange)
     {

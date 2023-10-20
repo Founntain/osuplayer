@@ -1,10 +1,12 @@
-﻿using DynamicData;
+﻿using System.Collections.ObjectModel;
+using DynamicData;
 using OsuPlayer.IO.DbReader.Interfaces;
 using OsuPlayer.IO.Importer;
+using OsuPlayer.Services.Interfaces;
 
-namespace OsuPlayer.Modules.Services;
+namespace OsuPlayer.Services;
 
-public class OsuSongSourceProvider : ISongSourceProvider
+public class OsuSongSourceService : OsuPlayerService, ISongSourceProvider
 {
     private readonly ReadOnlyObservableCollection<IMapEntryBase>? _songSourceList;
 
@@ -12,7 +14,9 @@ public class OsuSongSourceProvider : ISongSourceProvider
     public IObservable<IChangeSet<IMapEntryBase>>? Songs { get; }
     public ReadOnlyObservableCollection<IMapEntryBase>? SongSourceList => _songSourceList;
 
-    public OsuSongSourceProvider(ISortProvider? sortProvider = null)
+    public override string ServiceName => "OSU_SONGSOURCE_SERVICE";
+
+    public OsuSongSourceService(ISortProvider? sortProvider = null)
     {
         if (sortProvider != null)
         {

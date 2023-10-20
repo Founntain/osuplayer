@@ -1,8 +1,9 @@
 ﻿using DynamicData;
+using Nein.Extensions.Bindables;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.IO.DbReader.Interfaces;
 
-namespace OsuPlayer.Modules.Services;
+namespace OsuPlayer.Services.Interfaces;
 
 public interface ISortProvider
 {

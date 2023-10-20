@@ -1,8 +1,8 @@
-﻿using System.Collections;
+﻿using Nein.Extensions.Bindables;
 using OsuPlayer.IO.DbReader.DataModels.Extensions;
 using OsuPlayer.IO.DbReader.Interfaces;
 
-namespace OsuPlayer.Modules.Audio.Interfaces;
+namespace OsuPlayer.Services.Interfaces;
 
 /// <summary>
 /// This interface provides historic capabilities

@@ -1,6 +1,4 @@
-﻿using OsuPlayer.Modules.ShuffleImpl;
-
-namespace OsuPlayer.Modules.Services;
+﻿namespace OsuPlayer.Services.Interfaces;
 
 /// <summary>
 /// This interface provides a service provider for shuffle implementations.

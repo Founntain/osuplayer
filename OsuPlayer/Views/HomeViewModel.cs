@@ -11,7 +11,8 @@ using OsuPlayer.IO.DbReader.Interfaces;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules.Audio.Interfaces;
-using OsuPlayer.Modules.Services;
+using OsuPlayer.Services;
+using OsuPlayer.Services.Interfaces;
 using OsuPlayer.Views.HomeSubViews;
 using ReactiveUI;
 
@@ -31,7 +32,7 @@ public class HomeViewModel : BaseViewModel
     public ReadOnlyObservableCollection<IMapEntryBase>? SortedSongEntries => _sortedSongEntries;
 
     public HomeUserPanelViewModel HomeUserPanelView { get; }
-    
+
     public IMapEntryBase? SelectedSong
     {
         get => _selectedSong;
@@ -58,7 +59,7 @@ public class HomeViewModel : BaseViewModel
         get => _displayUserStats;
         set => this.RaiseAndSetIfChanged(ref _displayUserStats, value);
     }
-    
+
     public List<AddToPlaylistContextMenuEntry>? PlaylistContextMenuEntries
     {
         get => _playlistContextMenuEntries;
@@ -68,12 +69,12 @@ public class HomeViewModel : BaseViewModel
     public HomeViewModel(IPlayer player, IStatisticsProvider? statisticsProvider)
     {
         HomeUserPanelView = new HomeUserPanelViewModel(statisticsProvider);
-        
+
         Player = player;
 
         _songsLoading.BindTo(((IImportNotifications) Player).SongsLoading);
         _songsLoading.BindValueChanged(_ => this.RaisePropertyChanged(nameof(SongsLoading)));
-        
+
         player.SongSourceProvider.Songs?.ObserveOn(AvaloniaScheduler.Instance).Bind(out _sortedSongEntries).Subscribe();
 
         this.RaisePropertyChanged(nameof(SortedSongEntries));

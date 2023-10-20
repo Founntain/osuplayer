@@ -3,7 +3,6 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
-using JetBrains.Annotations;
 using Nein.Base;
 using Nein.Controls;
 using Nein.Extensions;
