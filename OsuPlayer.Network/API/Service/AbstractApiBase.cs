@@ -1,11 +1,9 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
-using Nein.Extensions;
 using Newtonsoft.Json;
 using OsuPlayer.Api.Data.API;
 using OsuPlayer.Network.Online;
-using Splat;
 
 namespace OsuPlayer.Network.API.Service;
 
