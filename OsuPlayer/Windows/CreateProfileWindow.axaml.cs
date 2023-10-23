@@ -6,6 +6,7 @@ using Avalonia.ReactiveUI;
 using Nein.Extensions;
 using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.RequestModels.User;
+using OsuPlayer.Interfaces.Service;
 using OsuPlayer.Network.API.NorthFox;
 using OsuPlayer.Network.Security;
 using OsuPlayer.UI_Extensions;
@@ -50,7 +51,7 @@ public partial class CreateProfileWindow : ReactiveWindow<CreateProfileWindowVie
             return;
         }
 
-        var response = await Locator.Current.GetService<NorthFox>().User.Register(new AddUserModel
+        var response = await Locator.Current.GetService<IOsuPlayerApiService>().User.Register(new AddUserModel
         {
             Username = ViewModel.Username,
             Password = ViewModel.Password

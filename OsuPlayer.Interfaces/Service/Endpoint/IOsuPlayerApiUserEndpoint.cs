@@ -16,7 +16,7 @@ public interface IOsuPlayerApiUserEndpoint
     Task<bool> SaveProfilePicture(byte[] data);
     Task<Bitmap?> GetProfileBannerAsync(string? bannerUrl);
     Task<bool> DeleteUser();
-    Task<List<UserModel>> GetAllUsers();
-    Task<List<UserActivityModel>> GetActivityOfUser(Guid selectedUserUniqueId);
-    Task<UserModel> Register(AddUserModel addUserModel);
+    Task<List<UserModel>?> GetAllUsers();
+    Task<List<UserActivityModel>?> GetActivityOfUser(Guid selectedUserUniqueId);
+    Task<UserModel?> Register(AddUserModel addUserModel);
 }

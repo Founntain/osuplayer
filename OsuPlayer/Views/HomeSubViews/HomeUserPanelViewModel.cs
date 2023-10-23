@@ -124,6 +124,6 @@ public class HomeUserPanelViewModel : BaseViewModel
     {
         if (CurrentUser == default || CurrentUser.UniqueId == Guid.Empty) return default;
 
-        return await Locator.Current.GetService<NorthFox>().User.GetProfilePictureAsync(CurrentUser.UniqueId);
+        return await Locator.Current.GetService<IOsuPlayerApiService>().User.GetProfilePictureAsync(CurrentUser.UniqueId);
     }
 }

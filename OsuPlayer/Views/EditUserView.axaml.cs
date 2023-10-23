@@ -145,7 +145,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
     {
         if (_mainWindow == default || ViewModel?.CurrentUser == default || string.IsNullOrWhiteSpace(ViewModel?.CurrentUser.Name)) return;
 
-        var api = Locator.Current.GetService<NorthFox>();
+        if (Locator.Current.GetService<IOsuPlayerApiService>() is not NorthFox api) return;
 
         var tempUser = await api.User.GetUserFromLoginToken();
 
@@ -233,7 +233,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
     {
         if (_mainWindow == default || ViewModel?.CurrentUser == default || ViewModel?.CurrentProfilePicture == default) return;
 
-        var api = Locator.Current.GetService<NorthFox>();
+        if (Locator.Current.GetService<IOsuPlayerApiService>() is not NorthFox api) return;
 
         await using var stream = new MemoryStream();
 
@@ -275,7 +275,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
     {
         if (ViewModel?.CurrentUser == default) return;
 
-        var banner = await Locator.Current.GetService<NorthFox>().User.GetProfileBannerAsync(ViewModel.CurrentUser.CustomBannerUrl);
+        var banner = await Locator.Current.GetService<IOsuPlayerApiService>().User.GetProfileBannerAsync(ViewModel.CurrentUser.CustomBannerUrl);
 
         if (banner == default) return;
 
@@ -286,7 +286,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
     {
         if (ViewModel?.CurrentUser == default || string.IsNullOrWhiteSpace(ViewModel.CurrentUser.Name)) return;
 
-        var api = Locator.Current.GetService<NorthFox>();
+        var api = Locator.Current.GetService<IOsuPlayerApiService>();
 
         var user = await api.User.GetUserFromLoginToken();
 
@@ -322,7 +322,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
             return;
         }
 
-        var response = await Locator.Current.GetService<NorthFox>().User.DeleteUser();
+        var response = await Locator.Current.GetService<IOsuPlayerApiService>().User.DeleteUser();
 
         if (!response)
         {

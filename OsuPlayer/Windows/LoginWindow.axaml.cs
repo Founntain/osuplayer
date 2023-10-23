@@ -67,7 +67,7 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
     {
         if (ViewModel == default) return;
 
-        var user = await Locator.Current.GetService<NorthFox>().LoginAndSaveAuthToken(ViewModel.Username, ViewModel.Password);
+        var user = await Locator.Current.GetService<IOsuPlayerApiService>().LoginAndSaveAuthToken(ViewModel.Username, ViewModel.Password);
 
         if (user == default)
         {

@@ -13,15 +13,13 @@ public class DbReaderFactory : IDbReaderFactory
         switch (Type)
         {
             case IDbReaderFactory.CreationType.OsuDb:
-            {
                 var dbLoc = Path.Combine(path, "osu!.db");
 
                 if (!File.Exists(dbLoc)) return null;
 
-                using var file = File.OpenRead(dbLoc);
+                var file = File.OpenRead(dbLoc);
 
                 return new OsuDbReader(file, path, this);
-            }
             case IDbReaderFactory.CreationType.Realm:
                 return new RealmReader(path, this);
             default:
