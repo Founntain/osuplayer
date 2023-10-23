@@ -1,16 +1,16 @@
 ﻿using OsuPlayer.Api.Data.API.EntityModels;
 
-namespace OsuPlayer.Network.API.Service.NorthFox.Endpoints;
+namespace OsuPlayer.Network.API.NorthFox;
 
 public class NorthFoxActivityEndpoint
 {
     private readonly AbstractApiBase _apiBase;
-    
+
     public NorthFoxActivityEndpoint(AbstractApiBase apiBase)
     {
         _apiBase = apiBase;
     }
-    
+
     #region GET Requests
 
     public async Task<List<ActivityModel>?> GetAllActivities()

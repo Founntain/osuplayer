@@ -1,7 +1,8 @@
 ﻿using System;
 using NUnit.Framework;
 using OsuPlayer.Api.Data.API.Enums;
-using OsuPlayer.Network.Online;
+using OsuPlayer.Data.DataModels;
+using OsuPlayer.Data.DataModels.Online;
 
 namespace OsuPlayer.Tests.NetworkTests;
 

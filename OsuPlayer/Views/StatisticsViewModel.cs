@@ -2,7 +2,7 @@ using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using System.Timers;
 using Nein.Base;
-using OsuPlayer.Network.API.Service.NorthFox.Endpoints;
+using OsuPlayer.Network.API.NorthFox;
 using ReactiveUI;
 using Splat;
 

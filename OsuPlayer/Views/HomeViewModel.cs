@@ -5,6 +5,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using DynamicData;
 using Nein.Base;
+using OsuPlayer.Data.DataModels;
 using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
@@ -12,6 +13,7 @@ using OsuPlayer.Interfaces.Service;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules.Audio.Interfaces;
+using OsuPlayer.Services;
 using OsuPlayer.Views.HomeSubViews;
 using ReactiveUI;
 
@@ -21,8 +23,10 @@ public class HomeViewModel : BaseViewModel
 {
     private readonly Bindable<bool> _songsLoading = new();
     private readonly ReadOnlyObservableCollection<IMapEntryBase>? _sortedSongEntries;
+    private readonly IProfileManagerService _profileManager;
 
     public readonly IPlayer Player;
+
     private List<AddToPlaylistContextMenuEntry>? _playlistContextMenuEntries;
     private List<Playlist>? _playlists;
     private Bitmap? _profilePicture;
@@ -43,7 +47,7 @@ public class HomeViewModel : BaseViewModel
 
     public bool SongsLoading => new Config().Container.OsuPath != null && _songsLoading.Value;
 
-    public User? CurrentUser => ProfileManager.User;
+    public User? CurrentUser => _profileManager.User;
 
     public Bitmap? ProfilePicture
     {
@@ -65,9 +69,11 @@ public class HomeViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _playlistContextMenuEntries, value);
     }
 
-    public HomeViewModel(IPlayer player, IStatisticsProvider? statisticsProvider)
+    public HomeViewModel(IPlayer player, IStatisticsProvider? statisticsProvider, IProfileManagerService profileManager)
     {
-        HomeUserPanelView = new HomeUserPanelViewModel(statisticsProvider);
+        _profileManager = profileManager;
+
+        HomeUserPanelView = new HomeUserPanelViewModel(statisticsProvider, _profileManager);
 
         Player = player;
 

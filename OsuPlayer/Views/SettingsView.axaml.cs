@@ -6,9 +6,10 @@ using Avalonia.VisualTree;
 using Nein.Base;
 using Nein.Controls;
 using Nein.Extensions;
+using OsuPlayer.Interfaces.Service;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.Modules.Audio.Interfaces;
-using OsuPlayer.Services.LastFM;
+using OsuPlayer.Network.LastFm;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
 using ReactiveUI;
@@ -155,7 +156,7 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
     private async void LastFmAuth_OnClick(object? sender, RoutedEventArgs e)
     {
         var window = Locator.Current.GetService<MainWindow>();
-        var lastFmApi = Locator.Current.GetService<LastFmService>();
+        var lastFmApi = Locator.Current.GetService<ILastFmApiService>();
 
         await using var config = new Config();
 

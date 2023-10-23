@@ -7,7 +7,7 @@ using OsuPlayer.Api.Data.API.Enums;
 using OsuPlayer.Api.Data.API.RequestModels.Beatmap;
 using OsuPlayer.Api.Data.API.ResponseModels;
 using OsuPlayer.Modules.Audio.Interfaces;
-using OsuPlayer.Network.API.Service.NorthFox.Endpoints;
+using OsuPlayer.Network.API.NorthFox;
 using ReactiveUI;
 using Splat;
 

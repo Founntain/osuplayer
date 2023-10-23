@@ -3,14 +3,16 @@ using Newtonsoft.Json;
 using OsuPlayer.Api.Data.API;
 using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.RequestModels.User.Responses;
+using OsuPlayer.Interfaces.Service;
+using OsuPlayer.Interfaces.Service.Endpoint;
 
-namespace OsuPlayer.Network.API.Service.NorthFox.Endpoints;
+namespace OsuPlayer.Network.API.NorthFox;
 
 /// <summary>
 /// NorthFox is the wrapper for the OsuPlayer.API and provides access to all public available API Endpoints!
-/// Yes I like foxes C:
+/// Yes I like foxes 🦊
 /// </summary>
-public class NorthFox : AbstractApiBase
+public class NorthFox : AbstractApiBase, IOsuPlayerApiService
 {
     #region API Endpoints
 
@@ -19,7 +21,7 @@ public class NorthFox : AbstractApiBase
     public NorthFoxBadgeEndpoint Badge { get; set; }
     public NorthFoxBeatmapEndpoint Beatmap { get; set; }
     public NorthFoxEventEndpoint Event { get; set; }
-    public NorthFoxUserEndpoint User { get; set; }
+    public IOsuPlayerApiUserEndpoint User { get; set; }
     public NorthFoxUserStatisticsEndpoint UserStatistics { get; set; }
 
     #endregion
@@ -34,9 +36,9 @@ public class NorthFox : AbstractApiBase
         User = new NorthFoxUserEndpoint(this);
         UserStatistics = new NorthFoxUserStatisticsEndpoint(this);
     }
-    
+
     #region Authentication
-    
+
     public async Task<UserModel?> LoginAndSaveAuthToken(string username, string password)
     {
         var response = await Login(username, password);

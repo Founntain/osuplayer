@@ -2,13 +2,15 @@
 using Avalonia.Media;
 using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.Enums;
+using OsuPlayer.Data.DataModels.Interfaces;
+using OsuPlayer.Data.DataModels.Online;
 
-namespace OsuPlayer.Network.Online;
+namespace OsuPlayer.Data.DataModels;
 
 /// <summary>
 /// Represents a osu!player user
 /// </summary>
-public sealed class User : UserModel
+public sealed class User : UserModel, IUser
 {
     public string SongsPlayedString
     {

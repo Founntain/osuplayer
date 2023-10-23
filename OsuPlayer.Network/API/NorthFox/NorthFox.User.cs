@@ -1,18 +1,19 @@
 ﻿using Avalonia.Media.Imaging;
 using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.RequestModels.User;
+using OsuPlayer.Interfaces.Service.Endpoint;
 
-namespace OsuPlayer.Network.API.Service.NorthFox.Endpoints;
+namespace OsuPlayer.Network.API.NorthFox;
 
-public class NorthFoxUserEndpoint
+public class NorthFoxUserEndpoint : IOsuPlayerApiUserEndpoint
 {
     private readonly AbstractApiBase _apiBase;
-    
+
     public NorthFoxUserEndpoint(AbstractApiBase apiBase)
     {
         _apiBase = apiBase;
     }
-    
+
     #region DELETE Requests
 
     public async Task<bool> DeleteUser()

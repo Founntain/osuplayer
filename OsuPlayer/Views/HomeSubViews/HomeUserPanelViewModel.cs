@@ -6,8 +6,11 @@ using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using Nein.Base;
+using OsuPlayer.Data.DataModels;
+using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.Interfaces.Service;
-using OsuPlayer.Network.API.Service.NorthFox.Endpoints;
+using OsuPlayer.Network.API.NorthFox;
+using OsuPlayer.Services;
 using ReactiveUI;
 using SkiaSharp;
 using Splat;
@@ -16,12 +19,13 @@ namespace OsuPlayer.Views.HomeSubViews;
 
 public class HomeUserPanelViewModel : BaseViewModel
 {
+    private readonly IProfileManagerService _profileManager;
     private readonly BindableList<ObservableValue> _graphValues = new();
 
     public bool IsUserNotLoggedIn => CurrentUser == default || CurrentUser?.UniqueId == Guid.Empty;
     public bool IsUserLoggedIn => CurrentUser != default && CurrentUser?.UniqueId != Guid.Empty;
 
-    public User? CurrentUser => ProfileManager.User;
+    public IUser? CurrentUser => _profileManager.User;
 
     public Axis[] Axes { get; set; } =
     {
@@ -42,8 +46,10 @@ public class HomeUserPanelViewModel : BaseViewModel
 
     public ObservableCollection<ISeries> Series { get; set; }
 
-    public HomeUserPanelViewModel(IStatisticsProvider? statisticsProvider)
+    public HomeUserPanelViewModel(IStatisticsProvider? statisticsProvider, IProfileManagerService profileManager)
     {
+        _profileManager = profileManager;
+
         var statsProvider = statisticsProvider;
 
         if (statsProvider != null)
@@ -105,7 +111,7 @@ public class HomeUserPanelViewModel : BaseViewModel
 
         var sessionToken = await File.ReadAllTextAsync("data/session.op");
 
-        await ProfileManager.Login(sessionToken);
+        await _profileManager.Login(sessionToken);
 
         this.RaisePropertyChanged(nameof(IsUserLoggedIn));
         this.RaisePropertyChanged(nameof(IsUserNotLoggedIn));

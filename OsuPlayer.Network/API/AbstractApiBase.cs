@@ -3,17 +3,25 @@ using System.Net.Http.Headers;
 using System.Text;
 using Newtonsoft.Json;
 using OsuPlayer.Api.Data.API;
-using OsuPlayer.Network.Online;
+using OsuPlayer.Interfaces.Service;
+using Splat;
 
-namespace OsuPlayer.Network.API.Service;
+namespace OsuPlayer.Network.API;
 
 public abstract class AbstractApiBase
 {
+    private readonly IProfileManagerService _profileManager;
+
     protected static CancellationTokenSource CancellationTokenSource = new();
 
     protected internal string Url => GetApiUrl();
 
     protected string? UserAuthToken { get; set; }
+
+    public AbstractApiBase()
+    {
+        _profileManager = Locator.Current.GetService<IProfileManagerService>();
+    }
 
     private string GetApiUrl()
     {
@@ -91,7 +99,7 @@ public abstract class AbstractApiBase
 
             var req = new HttpRequestMessage(HttpMethod.Delete, url);
 
-            req.Headers.Add("username", ProfileManager.User?.Name);
+            req.Headers.Add("username", _profileManager.User.Name);
             req.Headers.Add("session-token", UserAuthToken);
 
             req.Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
@@ -160,7 +168,7 @@ public abstract class AbstractApiBase
 
             var req = new HttpRequestMessage(HttpMethod.Get, url);
 
-            req.Headers.Add("username", ProfileManager.User?.Name);
+            req.Headers.Add("username", _profileManager.User?.Name);
             req.Headers.Add("session-token", UserAuthToken);
 
             // CancelCancellationToken();
@@ -202,7 +210,7 @@ public abstract class AbstractApiBase
 
             var req = new HttpRequestMessage(HttpMethod.Get, url);
 
-            req.Headers.Add("username", ProfileManager.User?.Name);
+            req.Headers.Add("username", _profileManager.User?.Name);
             req.Headers.Add("session-token", UserAuthToken);
 
             // CancelCancellationToken();
@@ -249,7 +257,7 @@ public abstract class AbstractApiBase
 
             var req = new HttpRequestMessage(HttpMethod.Post, url);
 
-            req.Headers.Add("username", ProfileManager.User?.Name);
+            req.Headers.Add("username", _profileManager.User?.Name);
             req.Headers.Add("session-token", UserAuthToken);
 
             req.Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
@@ -294,7 +302,7 @@ public abstract class AbstractApiBase
 
             var req = new HttpRequestMessage(HttpMethod.Post, url);
 
-            req.Headers.Add("username", ProfileManager.User?.Name);
+            req.Headers.Add("username", _profileManager.User?.Name);
             req.Headers.Add("session-token", UserAuthToken);
 
             // CancelCancellationToken();

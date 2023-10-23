@@ -3,7 +3,7 @@ using OsuPlayer.Api.Data.API.RequestModels.Beatmap;
 using OsuPlayer.Api.Data.API.RequestModels.Statistics;
 using OsuPlayer.Api.Data.API.ResponseModels;
 
-namespace OsuPlayer.Network.API.Service.NorthFox.Endpoints;
+namespace OsuPlayer.Network.API.NorthFox;
 
 public class NorthFoxBeatmapEndpoint
 {

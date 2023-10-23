@@ -9,9 +9,9 @@ using OsuPlayer.Interfaces.Service;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.Modules.Audio.Engine;
 using OsuPlayer.Modules.Audio.Interfaces;
-using OsuPlayer.Network.API.Service.NorthFox.Endpoints;
+using OsuPlayer.Network.API.NorthFox;
+using OsuPlayer.Network.LastFm;
 using OsuPlayer.Services;
-using OsuPlayer.Services.LastFM;
 using OsuPlayer.Windows;
 using Splat;
 
@@ -79,14 +79,15 @@ internal static class Program
 
         services.RegisterLazySingleton<IDbReaderFactory>(() => new DbReaderFactory());
 
+        services.RegisterLazySingleton<IProfileManagerService>(() => new ProfileManagerServiceService());
         services.RegisterLazySingleton<IShuffleServiceProvider>(() => new ShuffleService());
-        services.RegisterLazySingleton<IStatisticsProvider>(() => new ApiStatisticsService());
+        services.RegisterLazySingleton<IStatisticsProvider>(() => new ApiStatisticsService(resolver.GetService<IProfileManagerService>()));
         services.RegisterLazySingleton<ISortProvider>(() => new SortService());
         services.RegisterLazySingleton<ISongSourceProvider>(() => new OsuSongSourceService(resolver.GetService<ISortProvider>()));
         services.RegisterLazySingleton<IHistoryProvider>(() => new HistoryService());
-        services.RegisterLazySingleton<LastFmService>(() => new LastFmService());
+        services.RegisterLazySingleton<ILastFmApiService>(() => new LastFmService(new LastFmApi()));
 
-        services.RegisterLazySingleton(() => new NorthFox());
+        services.RegisterLazySingleton<IOsuPlayerApiService>(() => new NorthFox());
 
         services.RegisterLazySingleton<IPlayer>(() => new Player(
             audioEngine: resolver.GetRequiredService<IAudioEngine>(),
@@ -95,12 +96,13 @@ internal static class Program
             statisticsProvider: resolver.GetRequiredService<IStatisticsProvider>(),
             sortProvider: resolver.GetRequiredService<ISortProvider>(),
             historyProvider: resolver.GetRequiredService<IHistoryProvider>(),
-            lastFmApi: resolver.GetRequiredService<LastFmService>()
+            lastFmApi: resolver.GetRequiredService<ILastFmApiService>()
         ));
 
         services.Register(() => new MainWindowViewModel(
             resolver.GetRequiredService<IAudioEngine>(),
             resolver.GetRequiredService<IPlayer>(),
+            resolver.GetRequiredService<IProfileManagerService>(),
             resolver.GetService<IShuffleServiceProvider>(),
             resolver.GetService<IStatisticsProvider>(),
             resolver.GetService<ISortProvider>(),

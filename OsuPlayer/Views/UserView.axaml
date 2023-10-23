@@ -2,13 +2,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:online="clr-namespace:OsuPlayer.Network.Online;assembly=OsuPlayer.Network"
              xmlns:views="clr-namespace:OsuPlayer.Views"
              xmlns:valueConverters="clr-namespace:OsuPlayer.Extensions.ValueConverters;assembly=OsuPlayer.Extensions"
              xmlns:avalonia="clr-namespace:LiveChartsCore.SkiaSharpView.Avalonia;assembly=LiveChartsCore.SkiaSharpView.Avalonia"
              xmlns:statistics="clr-namespace:OsuPlayer.Api.Data.API.RequestModels.Statistics;assembly=OsuPlayer.Api.Data"
              xmlns:avalonia1="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:entityModels="clr-namespace:OsuPlayer.Api.Data.API.EntityModels;assembly=OsuPlayer.Api.Data"
+             xmlns:dataModels="clr-namespace:OsuPlayer.Data.DataModels;assembly=OsuPlayer.Data"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.UserView"
              FontWeight="{DynamicResource DefaultFontWeight}">
@@ -32,7 +32,7 @@
             <ListBox Grid.Row="1" Background="Transparent" Items="{Binding Users}"
                      SelectedItem="{Binding SelectedUser}" SelectionChanged="UserList_OnSelectionChanged">
                 <ListBox.ItemTemplate>
-                    <DataTemplate DataType="online:User">
+                    <DataTemplate DataType="dataModels:User">
                         <TextBlock Text="{Binding Name}" Foreground="{Binding RoleColor}"
                                    FontWeight="{DynamicResource BiggerFontWeight}" />
                     </DataTemplate>

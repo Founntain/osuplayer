@@ -1,8 +1,8 @@
 ﻿using System.Globalization;
 
-namespace OsuPlayer.Network.Online;
+namespace OsuPlayer.Data.DataModels.Online;
 
-public sealed class Article
+public sealed class News
 {
     public DateTime CreationTime { get; set; }
 

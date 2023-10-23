@@ -12,8 +12,11 @@ using Material.Icons.Avalonia;
 using Nein.Base;
 using Nein.Extensions;
 using OsuPlayer.Api.Data.API.RequestModels.Statistics;
+using OsuPlayer.Data.DataModels;
+using OsuPlayer.Interfaces.Service;
 using OsuPlayer.Modules.Audio.Interfaces;
-using OsuPlayer.Network.API.Service.NorthFox.Endpoints;
+using OsuPlayer.Network.API.NorthFox;
+using OsuPlayer.Services;
 using ReactiveUI;
 using SkiaSharp;
 using Splat;
@@ -23,6 +26,9 @@ namespace OsuPlayer.Views;
 public class UserViewModel : BaseViewModel
 {
     public readonly IPlayer Player;
+
+    private readonly IProfileManagerService _profileManager;
+
     private ObservableCollection<IControl>? _badges;
     private CancellationTokenSource? _bannerCancellationTokenSource;
     private Bitmap? _currentProfileBanner;
@@ -133,9 +139,11 @@ public class UserViewModel : BaseViewModel
         }
     }
 
-    public UserViewModel(IPlayer player)
+    public UserViewModel(IPlayer player, IProfileManagerService profileManager)
     {
         Player = player;
+
+        _profileManager = profileManager;
 
         Activator = new ViewModelActivator();
 
@@ -207,7 +215,7 @@ public class UserViewModel : BaseViewModel
 
         if (SelectedUser?.Name != default) return;
 
-        var user = ProfileManager.User;
+        var user = _profileManager.User;
 
         if (user?.Name == null)
         {

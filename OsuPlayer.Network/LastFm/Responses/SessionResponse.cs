@@ -1,3 +1,3 @@
-﻿namespace OsuPlayer.Services.LastFM.Responses;
+﻿namespace OsuPlayer.Network.LastFm.Responses;
 
 public record SessionResponse(string? Name, string Key, int Subscriber);

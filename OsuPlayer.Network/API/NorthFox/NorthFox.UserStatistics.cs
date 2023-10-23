@@ -1,7 +1,7 @@
 ﻿using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.RequestModels.Statistics;
 
-namespace OsuPlayer.Network.API.Service.NorthFox.Endpoints;
+namespace OsuPlayer.Network.API.NorthFox;
 
 public class NorthFoxUserStatisticsEndpoint
 {

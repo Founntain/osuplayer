@@ -18,7 +18,7 @@ using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules.Audio.Engine;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Network.Discord;
-using OsuPlayer.Services.LastFM;
+using OsuPlayer.Network.LastFm;
 
 namespace OsuPlayer.Modules.Audio;
 
@@ -35,7 +35,7 @@ public class Player : IPlayer, IImportNotifications
     private readonly IStatisticsProvider? _statisticsProvider;
     private readonly IHistoryProvider? _historyProvider;
     private readonly WindowsMediaTransportControls? _winMediaControls;
-    private readonly LastFmService? _lastFmApi;
+    private readonly ILastFmApiService? _lastFmApi;
 
     private bool _isMuted;
     private double _oldVolume;
@@ -71,7 +71,7 @@ public class Player : IPlayer, IImportNotifications
 
     public Player(IAudioEngine audioEngine, ISongSourceProvider songSourceProvider, IShuffleServiceProvider? shuffleProvider = null,
         IStatisticsProvider? statisticsProvider = null, ISortProvider? sortProvider = null, IHistoryProvider? historyProvider = null,
-        LastFmService? lastFmApi = null)
+        ILastFmApiService? lastFmApi = null)
     {
         _audioEngine = audioEngine;
 

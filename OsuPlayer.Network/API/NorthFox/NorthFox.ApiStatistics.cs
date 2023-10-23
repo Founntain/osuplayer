@@ -1,16 +1,16 @@
 ﻿using OsuPlayer.Api.Data.API.Models;
 
-namespace OsuPlayer.Network.API.Service.NorthFox.Endpoints;
+namespace OsuPlayer.Network.API.NorthFox;
 
 public class NorthFoxApiStatisticsEndpoint
 {
     private readonly AbstractApiBase _apiBase;
-    
+
     public NorthFoxApiStatisticsEndpoint(AbstractApiBase apiBase)
     {
         _apiBase = apiBase;
     }
-    
+
     #region GET Requests
 
     public async Task<ApiStatisticsModel?> GetApiStatistics()

@@ -13,7 +13,8 @@ using OsuPlayer.Interfaces.Service;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Network;
 using OsuPlayer.Network.Data;
-using OsuPlayer.Services.LastFM;
+using OsuPlayer.Network.LastFm;
+using OsuPlayer.Services;
 using OsuPlayer.Styles;
 using OsuPlayer.Windows;
 using ReactiveUI;
@@ -25,6 +26,8 @@ public class SettingsViewModel : BaseViewModel
 {
     public readonly IPlayer Player;
 
+    private readonly IProfileManagerService _profileManager;
+
     private readonly Bindable<bool> _blacklistSkip = new();
     private readonly Bindable<bool> _playlistEnableOnPlay = new();
     private readonly Bindable<SortingMode> _sortingMode = new();
@@ -35,8 +38,8 @@ public class SettingsViewModel : BaseViewModel
     private bool _enableScrobbling;
     private bool _displayBackgroundImage;
     private float _backgroundBlurRadius;
-    private string _lastFmApiKey;
-    private string _lastFmApiSecret;
+    private string _lastFmApiKey = string.Empty;
+    private string _lastFmApiSecret = string.Empty;
     private string _osuLocation = string.Empty;
     private string _patchnotes = string.Empty;
     private string _settingsSearchQ = string.Empty;
@@ -45,10 +48,10 @@ public class SettingsViewModel : BaseViewModel
     private KnownColors _selectedBackgroundColor;
     private FontWeights _selectedFontWeight;
     private StartupSong _selectedStartupSong;
-    private BackgroundMode _backgroundMode;
-    private ReleaseChannels _selectedReleaseChannel;
     private AudioDevice? _selectedAudioDevice;
     private IShuffleImpl? _selectedShuffleAlgorithm;
+    private BackgroundMode _backgroundMode;
+    private ReleaseChannels _selectedReleaseChannel;
     private IShuffleServiceProvider? _shuffleServiceProvider;
     private List<OsuPlayerContributor>? _contributors;
 
@@ -168,7 +171,7 @@ public class SettingsViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _patchnotes, value);
     }
 
-    public UserModel? CurrentUser => ProfileManager.User;
+    public UserModel? CurrentUser => _profileManager.User;
 
     public string OsuLocation
     {
@@ -464,10 +467,11 @@ public class SettingsViewModel : BaseViewModel
 
     public Controls? SettingsCategories { get; set; }
 
-    public SettingsViewModel(IPlayer player, ISortProvider? sortProvider, IShuffleServiceProvider? shuffleServiceProvider)
+    public SettingsViewModel(IPlayer player, ISortProvider? sortProvider, IShuffleServiceProvider? shuffleServiceProvider, IProfileManagerService profileManager)
     {
         Player = player;
         _shuffleServiceProvider = shuffleServiceProvider;
+        _profileManager = profileManager;
 
         AvailableAudioDevices = Player.AvailableAudioDevices;
 
@@ -489,7 +493,7 @@ public class SettingsViewModel : BaseViewModel
         _enableScrobbling = config.Container.EnableScrobbling;
         _displayUserStats = config.Container.DisplayerUserStats;
 
-        var lastFmApi = Locator.Current.GetService<LastFmService>();
+        var lastFmApi = Locator.Current.GetService<ILastFmApiService>();
 
         _isLastFmAuthorized = lastFmApi.LoadSessionKey();
 

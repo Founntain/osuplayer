@@ -1,6 +1,6 @@
 ﻿using Avalonia.Media;
 
-namespace OsuPlayer.Network.Online;
+namespace OsuPlayer.Data.DataModels.Online;
 
 /// <summary>
 /// A list of all available role colors

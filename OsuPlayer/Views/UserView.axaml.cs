@@ -4,6 +4,7 @@ using Avalonia.Markup.Xaml;
 using Nein.Base;
 using Nein.Extensions;
 using OsuPlayer.Api.Data.API.RequestModels.Statistics;
+using OsuPlayer.Data.DataModels;
 
 namespace OsuPlayer.Views;
 

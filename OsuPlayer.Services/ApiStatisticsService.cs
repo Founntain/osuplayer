@@ -6,6 +6,7 @@ using Nein.Extensions.Bindables;
 using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.Enums;
 using OsuPlayer.Api.Data.API.RequestModels.User;
+using OsuPlayer.Data.DataModels;
 using OsuPlayer.Interfaces.Service;
 using Splat;
 
@@ -18,12 +19,19 @@ public class ApiStatisticsService : OsuPlayerService, IStatisticsProvider
     public override string ServiceName => "API_STATISTICS_SERVICE";
     public event PropertyChangedEventHandler? UserDataChanged;
 
+    private readonly IProfileManagerService _profileManager;
+
+    public ApiStatisticsService(IProfileManagerService profileManager)
+    {
+        _profileManager = profileManager;
+    }
+
     public async Task UpdateOnlineStatus(UserOnlineStatusType statusType, string? song = null, string? checksum = null)
     {
-        if (ProfileManager.User == default || ProfileManager.User.UniqueId == Guid.Empty)
+        if (_profileManager.User == default || _profileManager.User.UniqueId == Guid.Empty)
             return;
 
-        await Locator.Current.GetRequiredService<NorthFox>().User.SetOnlineStatus(new UserOnlineStatusModel
+        await Locator.Current.GetRequiredService<IOsuPlayerApiService>().User.SetOnlineStatus(new UserOnlineStatusModel
         {
             StatusType = statusType,
             Song = song,
@@ -33,13 +41,13 @@ public class ApiStatisticsService : OsuPlayerService, IStatisticsProvider
 
     public async Task UpdateXp(string hash, double timeListened, double channelLength)
     {
-        if (ProfileManager.User == default) return;
+        if (_profileManager.User == default) return;
 
-        var currentTotalXp = ProfileManager.User.TotalXp;
+        var currentTotalXp = _profileManager.User.TotalXp;
 
         var time = timeListened / 1000;
 
-        var response = await Locator.Current.GetRequiredService<NorthFox>().User.UpdateXp(new UpdateXpModel
+        var response = await Locator.Current.GetRequiredService<IOsuPlayerApiService>().User.UpdateXp(new UpdateXpModel
         {
             SongChecksum = hash,
             ChannelLength = channelLength,
@@ -48,7 +56,7 @@ public class ApiStatisticsService : OsuPlayerService, IStatisticsProvider
 
         if (response == default) return;
 
-        ProfileManager.User = response.ConvertObjectToJson<User>();
+        _profileManager.User = response.ConvertObjectToJson<User>();
 
         var xpEarned = response.TotalXp - currentTotalXp;
 
@@ -56,21 +64,21 @@ public class ApiStatisticsService : OsuPlayerService, IStatisticsProvider
 
         await Dispatcher.UIThread.InvokeAsync(() => UserDataChanged?.Invoke(this, new PropertyChangedEventArgs("Xp")));
 
-        LogToConsole($"Successfully updated XP for {ProfileManager.User?.Name ?? string.Empty}. Earned {xpEarned} XP.");
+        LogToConsole($"Successfully updated XP for {_profileManager.User?.Name ?? string.Empty}. Earned {xpEarned} XP.");
     }
 
     public async Task UpdateSongsPlayed(int beatmapSetId)
     {
-        if (ProfileManager.User == default) return;
+        if (_profileManager.User == default) return;
 
-        var response = await Locator.Current.GetRequiredService<NorthFox>().User.UpdateSongsPlayed(1, beatmapSetId);
+        var response = await Locator.Current.GetRequiredService<IOsuPlayerApiService>().User.UpdateSongsPlayed(1, beatmapSetId);
 
         if (response == default) return;
 
-        ProfileManager.User = response.ConvertObjectToJson<User>();
+        _profileManager.User = response.ConvertObjectToJson<User>();
 
         await Dispatcher.UIThread.InvokeAsync(() => UserDataChanged?.Invoke(this, new PropertyChangedEventArgs("SongsPlayed")));
 
-        LogToConsole($"Successfully updated songs played for {ProfileManager.User?.Name ?? string.Empty}");
+        LogToConsole($"Successfully updated songs played for {_profileManager.User?.Name ?? string.Empty}");
     }
 }

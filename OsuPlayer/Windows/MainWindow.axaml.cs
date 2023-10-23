@@ -7,9 +7,11 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Nein.Base;
 using OsuPlayer.Extensions.EnumExtensions;
+using OsuPlayer.Interfaces.Service;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.Network;
-using OsuPlayer.Services.LastFM;
+using OsuPlayer.Network.LastFm;
+using OsuPlayer.Services;
 using OsuPlayer.Styles;
 using OsuPlayer.UI_Extensions;
 using ReactiveUI;
@@ -19,6 +21,8 @@ namespace OsuPlayer.Windows;
 
 public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 {
+    private readonly IProfileManagerService _profileManager;
+
     public Miniplayer? Miniplayer;
 
     public FullscreenWindow? FullscreenWindow;
@@ -31,6 +35,8 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
     public MainWindow(MainWindowViewModel viewModel)
     {
         ViewModel = viewModel;
+
+        _profileManager = ViewModel.ProfileManager;
 
         var player = ViewModel.Player;
 
@@ -62,7 +68,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
             try
             {
                 var window = Locator.Current.GetService<MainWindow>();
-                var lastFmApi = Locator.Current.GetService<LastFmService>();
+                var lastFmApi = Locator.Current.GetService<ILastFmApiService>();
 
                 await using var config = new Config();
 
@@ -125,7 +131,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         using var config = new Config();
 
         config.Container.Volume = ViewModel.Player.Volume.Value;
-        config.Container.Username = ProfileManager.User?.Name;
+        config.Container.Username = _profileManager.User?.Name;
         config.Container.RepeatMode = ViewModel.Player.RepeatMode.Value;
         config.Container.IsShuffle = ViewModel.Player.IsShuffle.Value;
         config.Container.SelectedPlaylist = ViewModel.Player.SelectedPlaylist.Value?.Id;
