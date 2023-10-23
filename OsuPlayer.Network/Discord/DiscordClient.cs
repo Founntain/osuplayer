@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Net;
 using System.Reflection;
 using System.Text;
 using DiscordRPC;
@@ -92,7 +91,7 @@ public class DiscordClient
         }
 
         var timestamps = durationLeft == null ? null : Timestamps.FromTimeSpan(durationLeft.Value);
-        
+
         _client.SetPresence(new RichPresence
         {
             Details = details,
@@ -121,10 +120,10 @@ public class DiscordClient
             return null;
 
         return new()
-            {
-                LargeImageKey = url,
-                LargeImageText = $"osu!player v{Assembly.GetEntryAssembly().ToVersionString()}"
-            };
+        {
+            LargeImageKey = url,
+            LargeImageText = $"osu!player v{Assembly.GetEntryAssembly().ToVersionString()}"
+        };
     }
 
     private Button[]? GetButtons()

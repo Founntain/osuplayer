@@ -1,5 +1,7 @@
 ﻿using Nein.Extensions.Bindables;
-using OsuPlayer.Services.Interfaces;
+using OsuPlayer.Data.DataModels.Extensions;
+using OsuPlayer.Data.DataModels.Interfaces;
+using OsuPlayer.Interfaces.Service;
 
 namespace OsuPlayer.Services;
 

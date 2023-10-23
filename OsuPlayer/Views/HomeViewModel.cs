@@ -5,14 +5,13 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using DynamicData;
 using Nein.Base;
+using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
-using OsuPlayer.IO.DbReader.Interfaces;
+using OsuPlayer.Interfaces.Service;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules.Audio.Interfaces;
-using OsuPlayer.Services;
-using OsuPlayer.Services.Interfaces;
 using OsuPlayer.Views.HomeSubViews;
 using ReactiveUI;
 

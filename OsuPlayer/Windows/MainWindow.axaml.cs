@@ -9,7 +9,6 @@ using Nein.Base;
 using OsuPlayer.Extensions.EnumExtensions;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.Network;
-using OsuPlayer.Network.LastFM;
 using OsuPlayer.Services.LastFM;
 using OsuPlayer.Styles;
 using OsuPlayer.UI_Extensions;
@@ -70,13 +69,13 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
                 var apiKey = config.Container.LastFmApiKey;
                 var apiSecret = config.Container.LastFmSecret;
                 var sessionKey = await lastFmApi.LoadSessionKeyAsync();
-    
+
                 if (!string.IsNullOrWhiteSpace(apiKey) || !string.IsNullOrWhiteSpace(apiSecret) || !sessionKey)
                 {
                     Console.WriteLine("Can't connect to last.fm, because no apikey, apisecret or session key fast found");
                     return;
                 }
-            
+
                 // We only load the APIKey from the config, as it is the only key that we save
                 // 1. Because we always need the api key for all the request
                 // 2. The secret is only used for the first authentication of the token
@@ -87,11 +86,11 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
                 {
                     await lastFmApi.GetAuthToken();
                     lastFmApi.AuthorizeToken();
-    
+
                     await MessageBox.ShowDialogAsync(window, "Close this window, when you are done, authenticating in the browser");
-            
+
                     await lastFmApi.GetSessionKey();
-    
+
                     await lastFmApi.SaveSessionKeyAsync();
                 }
             }

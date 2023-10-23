@@ -1,8 +1,8 @@
 ﻿using System.Reactive.Disposables;
 using Nein.Base;
 using Nein.Extensions;
+using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
-using OsuPlayer.IO.DbReader.Interfaces;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.IO.Storage.Playlists;
 using ReactiveUI;

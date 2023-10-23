@@ -1,18 +1,18 @@
-namespace OsuPlayer.IO.DbReader;
+namespace OsuPlayer.Data.DataModels;
 
 /// <summary>
 /// Represents a collection from osu!
 /// </summary>
-public class Collection
+public class OsuCollection
 {
     public string Name { get; set; } = string.Empty;
     public List<string> BeatmapHashes { get; private set; } = new();
 
-    public Collection()
+    public OsuCollection()
     {
     }
 
-    public Collection(string name, List<string> beatmapHashes)
+    public OsuCollection(string name, List<string> beatmapHashes)
     {
         Name = name;
         BeatmapHashes = beatmapHashes;

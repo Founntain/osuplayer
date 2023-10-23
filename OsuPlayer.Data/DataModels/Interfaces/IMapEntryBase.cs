@@ -1,9 +1,11 @@
 ﻿using Nein.Extensions;
 
-namespace OsuPlayer.IO.DbReader.Interfaces;
+namespace OsuPlayer.Data.DataModels.Interfaces;
 
 public interface IMapEntryBase : IEquatable<IMapEntryBase>, IComparable<IMapEntryBase>
 {
+    public IDbReaderFactory DbReaderFactory { get; init; }
+
     public string Artist { get; }
     public string Title { get; }
     public string Hash { get; }
@@ -34,7 +36,7 @@ public interface IMapEntryBase : IEquatable<IMapEntryBase>, IComparable<IMapEntr
     /// a full <see cref="IMapEntry" /> for extended usage. Returns null if the path doesn't exist or the map was not
     /// found.
     /// </returns>
-    public Task<IMapEntry?> ReadFullEntry();
+    public IMapEntry? ReadFullEntry();
 
     /// <summary>
     /// Gets the corresponding <see cref="IDatabaseReader" /> of the beatmap

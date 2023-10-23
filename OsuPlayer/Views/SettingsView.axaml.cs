@@ -8,7 +8,6 @@ using Nein.Controls;
 using Nein.Extensions;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.Modules.Audio.Interfaces;
-using OsuPlayer.Network.LastFM;
 using OsuPlayer.Services.LastFM;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
@@ -168,7 +167,7 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
             await MessageBox.ShowDialogAsync(window, "Please enter a API-Key and API-Secret before authorizing");
             return;
         }
-        
+
         // We only load the APIKey from the config, as it is the only key that we save
         // 1. Because we always need the api key for all the request
         // 2. The secret is only used for the first authentication of the token
@@ -185,7 +184,7 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
             lastFmApi.AuthorizeToken();
 
             await MessageBox.ShowDialogAsync(window, "Close this window, when you are done, authenticating in the browser");
-        
+
             await lastFmApi.GetSessionKey();
 
             await lastFmApi.SaveSessionKeyAsync();
@@ -197,7 +196,7 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
     private void ExportCollectionsClick(object? sender, RoutedEventArgs e)
     {
         if (_mainWindow?.ViewModel == null) return;
-        
+
         _mainWindow.ViewModel.MainView = _mainWindow.ViewModel.ExportSongsView;
     }
 

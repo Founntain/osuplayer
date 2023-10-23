@@ -3,10 +3,9 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using Nein.Base;
 using OsuPlayer.Extensions.EnumExtensions;
+using OsuPlayer.Interfaces.Service;
 using OsuPlayer.Modules;
 using OsuPlayer.Modules.Audio.Interfaces;
-using OsuPlayer.Services;
-using OsuPlayer.Services.Interfaces;
 using OsuPlayer.Views;
 using ReactiveUI;
 

@@ -1,8 +1,9 @@
-﻿using OsuPlayer.Data.OsuPlayer.Enums;
+﻿using OsuPlayer.Data.DataModels;
+using OsuPlayer.Data.DataModels.Interfaces;
+using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.IO.DbReader;
-using OsuPlayer.IO.DbReader.DataModels;
-using OsuPlayer.IO.DbReader.Interfaces;
 using OsuPlayer.IO.Storage.Config;
+using Splat;
 
 namespace OsuPlayer.IO.Importer;
 
@@ -54,10 +55,16 @@ public static class SongImporter
 
         IEnumerable<IMapEntryBase>? readMaps = null;
 
+        var dbReaderFactory = Locator.Current.GetService<IDbReaderFactory>();
+
         if (File.Exists(Path.Combine(path, "osu!.db")))
-            readMaps = await OsuDbReader.Read(path);
+            dbReaderFactory.Type = IDbReaderFactory.CreationType.OsuDb;
         else if (File.Exists(Path.Combine(path, "client.realm")))
-            readMaps = await RealmReader.Read(path);
+            dbReaderFactory.Type = IDbReaderFactory.CreationType.Realm;
+
+        using var reader = dbReaderFactory.CreateDatabaseReader(path);
+
+        readMaps = await reader.ReadBeatmaps();
 
         if (readMaps == null) return null;
 

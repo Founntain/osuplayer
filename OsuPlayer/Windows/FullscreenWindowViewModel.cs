@@ -1,7 +1,7 @@
 ﻿using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using Nein.Base;
-using OsuPlayer.IO.DbReader.Interfaces;
+using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.Modules;
 using OsuPlayer.Modules.Audio.Interfaces;
 using ReactiveUI;
@@ -26,30 +26,30 @@ public class FullscreenWindowViewModel : BaseWindowViewModel
     }
 
     public string TitleText => CurrentSong.Value?.Title ?? "No song is playing";
-    
+
     public string ArtistText => CurrentSong.Value?.Artist ?? "please select from song list";
-    
+
     public FullscreenWindowViewModel(IPlayer player)
     {
         Player = player;
-        
+
         CurrentSong.BindTo(Player.CurrentSong);
         CurrentSong.BindValueChanged(_ =>
         {
             this.RaisePropertyChanged(nameof(TitleText));
             this.RaisePropertyChanged(nameof(ArtistText));
         });
-        
+
         Player.CurrentSongImage.BindValueChanged(d =>
         {
             Dispatcher.UIThread.Post(() =>
             {
                 CurrentSongImage?.Dispose();
-            
+
                 if (!string.IsNullOrEmpty(d.NewValue) && File.Exists(d.NewValue))
                 {
                     CurrentSongImage = BitmapExtensions.BlurBitmap(d.NewValue, blurRadius: 25, opacity: 0.75f);
-                
+
                     return;
                 }
 

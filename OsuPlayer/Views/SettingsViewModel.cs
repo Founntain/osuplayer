@@ -9,14 +9,11 @@ using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Extensions.EnumExtensions;
+using OsuPlayer.Interfaces.Service;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Network;
 using OsuPlayer.Network.Data;
-using OsuPlayer.Network.LastFM;
-using OsuPlayer.Services;
-using OsuPlayer.Services.Interfaces;
 using OsuPlayer.Services.LastFM;
-using OsuPlayer.Services.ShuffleImpl;
 using OsuPlayer.Styles;
 using OsuPlayer.Windows;
 using ReactiveUI;
@@ -69,7 +66,7 @@ public class SettingsViewModel : BaseViewModel
             var mainWindowViewModel = Locator.Current.GetService<MainWindowViewModel>();
 
             mainWindowViewModel.HomeView.DisplayUserStats = value;
-            
+
             mainWindowViewModel.HomeView.RaisePropertyChanged(nameof(mainWindowViewModel.HomeView.DisplayUserStats));
         }
     }

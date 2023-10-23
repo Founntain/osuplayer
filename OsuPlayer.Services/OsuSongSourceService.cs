@@ -1,6 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using DynamicData;
-using OsuPlayer.Services.Interfaces;
+using OsuPlayer.Data.DataModels.Interfaces;
+using OsuPlayer.Interfaces.Service;
+using OsuPlayer.IO.Importer;
 
 namespace OsuPlayer.Services;
 
@@ -37,7 +39,7 @@ public class OsuSongSourceService : OsuPlayerService, ISongSourceProvider
         return SongSourceList!.FirstOrDefault(x => x.Hash == hash);
     }
 
-    public List<IMapEntryBase> GetMapEntriesFromHash(ICollection<string> hashes, out ICollection<string> invalidHashes)  
+    public List<IMapEntryBase> GetMapEntriesFromHash(ICollection<string> hashes, out ICollection<string> invalidHashes)
     {
         var maps = hashes.Select(x => SongSourceList!.FirstOrDefault(map => map.Hash == x)).ToArray();
 

@@ -1,4 +1,4 @@
-﻿namespace OsuPlayer.IO.Storage.LazerModels.Interfaces;
+﻿namespace OsuPlayer.Data.LazerModels.Interfaces;
 
 public interface IMapperBase
 {

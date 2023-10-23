@@ -1,6 +1,6 @@
-﻿using OsuPlayer.IO.DbReader.Interfaces;
+﻿using OsuPlayer.Data.DataModels.Interfaces;
 
-namespace OsuPlayer.IO.DbReader.DataModels.Extensions;
+namespace OsuPlayer.Data.DataModels.Extensions;
 
 public class HistoricalMapEntry : IComparable<HistoricalMapEntry>
 {
@@ -9,7 +9,7 @@ public class HistoricalMapEntry : IComparable<HistoricalMapEntry>
 
     public string TimePlayedString => $"Last Played: {TimePlayed:G}";
 
-    public HistoricalMapEntry(IMapEntryBase mapEntry) :this(mapEntry, DateTimeOffset.Now)
+    public HistoricalMapEntry(IMapEntryBase mapEntry) : this(mapEntry, DateTimeOffset.Now)
     {
     }
 
@@ -26,7 +26,7 @@ public class HistoricalMapEntry : IComparable<HistoricalMapEntry>
 
     public override bool Equals(object? obj)
     {
-        if(obj is HistoricalMapEntry other)
+        if (obj is HistoricalMapEntry other)
         {
             return MapEntry.Hash == other.MapEntry.Hash;
         }

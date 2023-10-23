@@ -3,7 +3,7 @@ using NUnit.Framework;
 using OsuPlayer.Api.Data.API.Enums;
 using OsuPlayer.Network.Online;
 
-namespace OsuPlayer.Tests;
+namespace OsuPlayer.Tests.NetworkTests;
 
 public class OnlineTests
 {

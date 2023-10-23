@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using OsuPlayer.Network.Security;
 
-namespace OsuPlayer.Tests;
+namespace OsuPlayer.Tests.NetworkTests;
 
 public class PasswordManagerTests
 {

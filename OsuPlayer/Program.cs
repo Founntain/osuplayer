@@ -3,14 +3,14 @@ using Avalonia;
 using Avalonia.Platform;
 using Avalonia.ReactiveUI;
 using Nein.Extensions;
+using OsuPlayer.Data.DataModels;
 using OsuPlayer.Extensions;
+using OsuPlayer.Interfaces.Service;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.Modules.Audio.Engine;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Network.API.Service.NorthFox.Endpoints;
-using OsuPlayer.Network.LastFM;
 using OsuPlayer.Services;
-using OsuPlayer.Services.Interfaces;
 using OsuPlayer.Services.LastFM;
 using OsuPlayer.Windows;
 using Splat;
@@ -76,6 +76,8 @@ internal static class Program
         services.RegisterLazySingleton<LoggingService>(() => new LoggingService());
 
         services.RegisterLazySingleton<IAudioEngine>(() => new BassEngine());
+
+        services.RegisterLazySingleton<IDbReaderFactory>(() => new DbReaderFactory());
 
         services.RegisterLazySingleton<IShuffleServiceProvider>(() => new ShuffleService());
         services.RegisterLazySingleton<IStatisticsProvider>(() => new ApiStatisticsService());

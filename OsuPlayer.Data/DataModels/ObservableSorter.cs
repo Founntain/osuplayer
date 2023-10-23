@@ -1,4 +1,6 @@
-﻿namespace OsuPlayer.Services;
+﻿using OsuPlayer.Data.DataModels.Interfaces;
+
+namespace OsuPlayer.Data.DataModels;
 
 public class ObservableSorter : IObservable<IComparer<IMapEntryBase>>
 {

@@ -1,10 +1,10 @@
 ﻿using JetBrains.Annotations;
 using Newtonsoft.Json;
-using OsuPlayer.IO.Storage.LazerModels.Extensions;
-using OsuPlayer.IO.Storage.LazerModels.Interfaces;
+using OsuPlayer.Data.LazerModels.Extensions;
+using OsuPlayer.Data.LazerModels.Interfaces;
 using Realms;
 
-namespace OsuPlayer.IO.Storage.LazerModels.Beatmaps;
+namespace OsuPlayer.Data.LazerModels.Beatmaps;
 
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
@@ -16,15 +16,18 @@ public class BeatmapMetadata : RealmObject, IBeatmapMetadataInfo
 
     public string Title { get; set; } = string.Empty;
 
-    [JsonProperty("title_unicode")] public string TitleUnicode { get; set; } = string.Empty;
+    [JsonProperty("title_unicode")]
+    public string TitleUnicode { get; set; } = string.Empty;
 
     public string Artist { get; set; } = string.Empty;
 
-    [JsonProperty("artist_unicode")] public string ArtistUnicode { get; set; } = string.Empty;
+    [JsonProperty("artist_unicode")]
+    public string ArtistUnicode { get; set; } = string.Empty;
 
     public string Source { get; set; } = string.Empty;
 
-    [JsonProperty(@"tags")] public string Tags { get; set; } = string.Empty;
+    [JsonProperty(@"tags")]
+    public string Tags { get; set; } = string.Empty;
 
     /// <summary>
     /// The time in milliseconds to begin playing the track for preview purposes.

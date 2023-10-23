@@ -1,4 +1,4 @@
-﻿namespace OsuPlayer.IO.DbReader.Interfaces;
+﻿namespace OsuPlayer.Data.DataModels.Interfaces;
 
 public interface IMapEntry : IMapEntryBase
 {

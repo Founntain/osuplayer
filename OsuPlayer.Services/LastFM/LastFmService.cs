@@ -2,8 +2,10 @@
 using System.Text;
 using System.Xml;
 using Nein.Extensions;
-using OsuPlayer.Network.LastFM.Responses;
-using OsuPlayer.Services.Interfaces;
+using OsuPlayer.Data.LazerModels.Extensions;
+using OsuPlayer.Interfaces.Service;
+using OsuPlayer.IO.Storage.Config;
+using OsuPlayer.Services.LastFM.Responses;
 
 namespace OsuPlayer.Services.LastFM;
 
@@ -94,6 +96,7 @@ public class LastFmService : WebRequestBase, IOsuPlayerService
         config.Container.LastFmApiKey = _apiKey;
         config.Container.LastFmSecret = _secret;
     }
+
     /// <summary>
     /// Loads the last.fm Session Key from the users file system
     /// </summary>

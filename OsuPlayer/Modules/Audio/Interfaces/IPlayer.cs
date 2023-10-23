@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
+using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.Data.OsuPlayer.Enums;
-using OsuPlayer.IO.DbReader.Interfaces;
 using OsuPlayer.IO.Importer;
 
 namespace OsuPlayer.Modules.Audio.Interfaces;
