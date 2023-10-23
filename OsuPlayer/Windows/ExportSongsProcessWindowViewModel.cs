@@ -1,5 +1,5 @@
 ﻿using Nein.Base;
-using OsuPlayer.IO.DbReader.Interfaces;
+using OsuPlayer.Data.DataModels.Interfaces;
 using ReactiveUI;
 
 namespace OsuPlayer.Windows;

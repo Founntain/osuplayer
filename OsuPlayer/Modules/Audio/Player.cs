@@ -6,19 +6,18 @@ using Avalonia.Platform;
 using Nein.Extensions;
 using Nein.Extensions.Exceptions;
 using OsuPlayer.Api.Data.API.Enums;
+using OsuPlayer.Data.DataModels.Extensions;
+using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
-using OsuPlayer.IO.DbReader.DataModels.Extensions;
-using OsuPlayer.IO.DbReader.Interfaces;
+using OsuPlayer.Interfaces.Service;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules.Audio.Engine;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Network.Discord;
-using OsuPlayer.Network.LastFM;
-using OsuPlayer.Services.Interfaces;
 using OsuPlayer.Services.LastFM;
 
 namespace OsuPlayer.Modules.Audio;
@@ -427,7 +426,7 @@ public class Player : IPlayer, IImportNotifications
 
         await using var config = new Config();
 
-        var fullMapEntry = await song.ReadFullEntry();
+        var fullMapEntry = song.ReadFullEntry();
 
         if (fullMapEntry == default) throw new NullReferenceException();
 

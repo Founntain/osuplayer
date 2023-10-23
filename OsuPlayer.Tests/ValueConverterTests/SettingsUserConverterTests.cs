@@ -4,7 +4,7 @@ using NUnit.Framework;
 using OsuPlayer.Extensions.ValueConverters;
 using OsuPlayer.Network.Online;
 
-namespace OsuPlayer.Tests;
+namespace OsuPlayer.Tests.ValueConverterTests;
 
 public class SettingsUserConverterTests
 {

@@ -1,4 +1,4 @@
-﻿namespace OsuPlayer.IO.DbReader.DataModels.Extensions;
+﻿namespace OsuPlayer.Data.DataModels.Extensions;
 
 public class HistoricalMapEntryComparer : IEqualityComparer<HistoricalMapEntry>
 {

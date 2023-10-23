@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using LiveChartsCore.Defaults;
 using Nein.Extensions.Bindables;
 using OsuPlayer.Api.Data.API.Enums;
 

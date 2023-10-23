@@ -13,6 +13,8 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\OsuPlayer.Extensions\OsuPlayer.Extensions.csproj" />
+      <ProjectReference Include="..\OsuPlayer.Interfaces\OsuPlayer.Interfaces.csproj" />
       <ProjectReference Include="..\OsuPlayer.IO\OsuPlayer.IO.csproj" />
     </ItemGroup>
 

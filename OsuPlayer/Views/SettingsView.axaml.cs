@@ -8,7 +8,6 @@ using Nein.Controls;
 using Nein.Extensions;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.Modules.Audio.Interfaces;
-using OsuPlayer.Network.LastFM;
 using OsuPlayer.Services.LastFM;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;

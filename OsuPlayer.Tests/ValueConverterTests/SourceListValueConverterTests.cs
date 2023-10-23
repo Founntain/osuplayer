@@ -6,7 +6,7 @@ using NUnit.Framework;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.Extensions.ValueConverters;
 
-namespace OsuPlayer.Tests;
+namespace OsuPlayer.Tests.ValueConverterTests;
 
 public class SourceListValueConverterTests
 {

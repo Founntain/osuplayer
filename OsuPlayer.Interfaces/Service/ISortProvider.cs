@@ -1,5 +1,7 @@
 ﻿using DynamicData;
 using Nein.Extensions.Bindables;
+using OsuPlayer.Data.DataModels;
+using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.Data.OsuPlayer.Enums;
 
 namespace OsuPlayer.Interfaces.Service;

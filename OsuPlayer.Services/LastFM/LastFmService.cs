@@ -2,8 +2,10 @@
 using System.Text;
 using System.Xml;
 using Nein.Extensions;
-using OsuPlayer.Network.LastFM.Responses;
-using OsuPlayer.Services.Interfaces;
+using OsuPlayer.Data.LazerModels.Extensions;
+using OsuPlayer.Interfaces.Service;
+using OsuPlayer.IO.Storage.Config;
+using OsuPlayer.Services.LastFM.Responses;
 
 namespace OsuPlayer.Services.LastFM;
 

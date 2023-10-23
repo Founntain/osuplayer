@@ -1,12 +1,12 @@
-﻿using OsuPlayer.IO.DbReader.Interfaces;
+﻿using OsuPlayer.Data.DataModels.Interfaces;
 
-namespace OsuPlayer.IO.DbReader.DataModels;
+namespace OsuPlayer.Data.DataModels;
 
 /// <summary>
 /// a full beatmap entry with optionally used data
 /// <remarks>only created on a <see cref="IMapEntryBase.ReadFullEntry" /> call</remarks>
 /// </summary>
-internal class RealmMapEntry : RealmMapEntryBase, IMapEntry
+public class RealmMapEntry : RealmMapEntryBase, IMapEntry
 {
     public string BackgroundFileLocation { get; init; } = string.Empty;
     public string ArtistUnicode { get; init; } = string.Empty;

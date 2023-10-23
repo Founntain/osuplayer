@@ -5,7 +5,7 @@ using NUnit.Framework;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.IO.Storage.Playlists;
 
-namespace OsuPlayer.Tests;
+namespace OsuPlayer.Tests.IOTests;
 
 public class PlaylistTests
 {

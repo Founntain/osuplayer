@@ -1,5 +1,5 @@
 ﻿using System.Text.Json;
-using OsuPlayer.Services.Interfaces;
+using OsuPlayer.Interfaces.Service;
 
 namespace OsuPlayer.Services;
 

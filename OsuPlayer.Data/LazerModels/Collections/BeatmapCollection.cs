@@ -2,11 +2,11 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using JetBrains.Annotations;
-using OsuPlayer.IO.Storage.LazerModels.Beatmaps;
-using OsuPlayer.IO.Storage.LazerModels.Files;
+using OsuPlayer.Data.LazerModels.Beatmaps;
+using OsuPlayer.Data.LazerModels.Files;
 using Realms;
 
-namespace OsuPlayer.IO.Storage.LazerModels.Collections;
+namespace OsuPlayer.Data.LazerModels.Collections;
 
 /// <summary>
 /// A collection of beatmaps grouped by a name.

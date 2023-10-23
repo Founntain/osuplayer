@@ -9,7 +9,6 @@ using Nein.Base;
 using OsuPlayer.Extensions.EnumExtensions;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.Network;
-using OsuPlayer.Network.LastFM;
 using OsuPlayer.Services.LastFM;
 using OsuPlayer.Styles;
 using OsuPlayer.UI_Extensions;

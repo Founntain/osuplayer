@@ -1,9 +1,11 @@
-﻿using OsuPlayer.IO.DbReader.DataModels;
-using OsuPlayer.IO.DbReader.Interfaces;
-using OsuPlayer.IO.Storage.LazerModels.Beatmaps;
-using OsuPlayer.IO.Storage.LazerModels.Collections;
+﻿using OsuPlayer.Data.DataModels;
+using OsuPlayer.Data.DataModels.Interfaces;
+using OsuPlayer.Data.LazerModels.Beatmaps;
+using OsuPlayer.Data.LazerModels.Collections;
+using OsuPlayer.Data.LazerModels.Files;
 using Realms;
 using Realms.Dynamic;
+using Splat;
 
 namespace OsuPlayer.IO.DbReader;
 
@@ -14,12 +16,16 @@ public class RealmReader : IDatabaseReader
 {
     private readonly string _path;
     private readonly Realm _realm;
+    private readonly IDbReaderFactory _readerFactory;
 
-    public RealmReader(string path)
+    public RealmReader(string path, IDbReaderFactory readerFactory)
     {
+        _readerFactory = readerFactory;
+        
         _path = string.Intern(path);
 
         var realmLoc = Path.Combine(_path, "client.realm");
+
         var realmConfig = new RealmConfiguration(realmLoc)
         {
             IsDynamic = true,
@@ -44,25 +50,82 @@ public class RealmReader : IDatabaseReader
         return hashes;
     }
 
-    public Task<List<Collection>> GetCollections(string path)
+    public Task<List<OsuCollection>> GetCollections(string path)
     {
         if (File.Exists(Path.Combine(path, "collection.db"))) return OsuCollectionReader.Read(path);
 
         var dynamicRealmObjects = _realm.DynamicApi.All(nameof(BeatmapCollection)).ToList().OfType<DynamicRealmObject>().ToList();
 
-        var collections = new List<Collection>();
+        var collections = new List<OsuCollection>();
 
         foreach (var realmObject in dynamicRealmObjects)
         {
             var name = realmObject.DynamicApi.Get<string>(nameof(BeatmapCollection.Name));
             var hashes = realmObject.DynamicApi.GetList<string>(nameof(BeatmapCollection.BeatmapMD5Hashes));
 
-            var col = new Collection(name, hashes.ToList());
+            var col = new OsuCollection(name, hashes.ToList());
 
             collections.Add(col);
         }
 
         return Task.FromResult(collections);
+    }
+
+    public IMapEntry? ReadFullEntry(string path, IMapEntryBase mapEntryBase, long? dbOffset = null, Guid? id = null)
+    {
+        if (string.IsNullOrWhiteSpace(path) || id == null)
+            return null;
+
+        var beatmap = (DynamicRealmObject) _realm.DynamicApi.Find("BeatmapSet", id);
+
+        if (beatmap == default)
+            return null;
+
+        var beatmaps = beatmap.DynamicApi.GetList<DynamicRealmObject>(nameof(BeatmapSetInfo.Beatmaps));
+        var metadata = beatmaps.First().DynamicApi.Get<DynamicRealmObject>(nameof(BeatmapInfo.Metadata)).DynamicApi;
+
+        var files = (RealmList<DynamicEmbeddedObject>) beatmap.DynamicApi.GetList<DynamicEmbeddedObject>(nameof(BeatmapSetInfo.Files));
+
+        var audioFileName = metadata.Get<string>(nameof(BeatmapMetadata.AudioFile));
+        var backgroundFileName = metadata.Get<string>(nameof(BeatmapMetadata.BackgroundFile));
+
+        var audioFile = (IRealmObjectBase) files.FirstOrDefault(x =>
+            string.Equals(x.DynamicApi.Get<string>(nameof(RealmNamedFileUsage.Filename)), audioFileName, StringComparison.CurrentCultureIgnoreCase));
+        var backgroundFile = (IRealmObjectBase) files.FirstOrDefault(x =>
+            string.Equals(x.DynamicApi.Get<string>(nameof(RealmNamedFileUsage.Filename)), backgroundFileName, StringComparison.CurrentCultureIgnoreCase));
+
+        if (audioFile == null)
+            return null;
+
+        var audioHash = audioFile.DynamicApi.Get<IRealmObjectBase>(nameof(RealmNamedFileUsage.File)).DynamicApi.Get<string>(nameof(RealmFile.Hash));
+        var backgroundHash = backgroundFile?.DynamicApi.Get<IRealmObjectBase>(nameof(RealmNamedFileUsage.File)).DynamicApi.Get<string>(nameof(RealmFile.Hash));
+
+        var audioFolderName = Path.Combine($"{audioHash[0]}", $"{audioHash[0]}{audioHash[1]}");
+        var backgroundFolderName = Path.Combine($"{backgroundHash?[0]}", $"{backgroundHash?[0]}{backgroundHash?[1]}");
+
+        var newMap = new RealmMapEntry
+        {
+            DbReaderFactory = _readerFactory,
+            Id = id.Value,
+            OsuPath = string.Intern(path),
+            Artist = string.Intern(mapEntryBase.Artist),
+            ArtistUnicode = metadata.Get<string>(nameof(BeatmapMetadata.ArtistUnicode)),
+            Title = mapEntryBase.Title,
+            TitleUnicode = metadata.Get<string>(nameof(BeatmapMetadata.TitleUnicode)),
+            AudioFileName = audioFileName,
+            BackgroundFileLocation = string.IsNullOrEmpty(backgroundFolderName)
+                ? string.Empty
+                : Path.Combine(path, "files", backgroundFolderName, backgroundHash!),
+            Hash = mapEntryBase.Hash,
+            BeatmapSetId = mapEntryBase.BeatmapSetId,
+            FolderName = audioFolderName,
+            FolderPath = Path.Combine("files", audioFolderName),
+            FullPath = Path.Combine(path, "files", audioFolderName, audioHash)
+        };
+
+        _realm.Dispose();
+
+        return newMap;
     }
 
     public Task<List<IMapEntryBase>?> ReadBeatmaps()
@@ -86,6 +149,7 @@ public class RealmReader : IDatabaseReader
 
             minBeatMaps.Add(new RealmMapEntryBase
             {
+                DbReaderFactory = _readerFactory,
                 OsuPath = string.Intern(_path),
                 Artist = string.Intern(artist),
                 Hash = hash,
@@ -116,7 +180,7 @@ public class RealmReader : IDatabaseReader
     /// <returns>an <see cref="IList{T}" /> of <see cref="IMapEntryBase" /> read from the client.realm</returns>
     public static async Task<List<IMapEntryBase>?> Read(string path)
     {
-        using var reader = new RealmReader(path);
+        using var reader = new RealmReader(path, Locator.Current.GetService<IDbReaderFactory>());
 
         return await reader.ReadBeatmaps();
     }

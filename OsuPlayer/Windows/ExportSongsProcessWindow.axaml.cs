@@ -7,7 +7,7 @@ using Avalonia.Media;
 using Avalonia.ReactiveUI;
 using Avalonia.Threading;
 using Nein.Extensions;
-using OsuPlayer.IO.DbReader.Interfaces;
+using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.Services;
 using Splat;
 using TagLib;
@@ -67,7 +67,7 @@ public partial class ExportSongsProcessWindow : ReactiveWindow<ExportSongsProces
                 if (token.IsCancellationRequested)
                     return;
 
-                var mapEntry = await songs.ElementAt(index).ReadFullEntry();
+                var mapEntry = songs.ElementAt(index).ReadFullEntry();
 
                 if (mapEntry == null) return;
 

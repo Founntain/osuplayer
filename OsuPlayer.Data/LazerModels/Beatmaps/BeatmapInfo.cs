@@ -1,10 +1,10 @@
 using JetBrains.Annotations;
 using Newtonsoft.Json;
-using OsuPlayer.IO.Storage.LazerModels.Extensions;
-using OsuPlayer.IO.Storage.LazerModels.Files;
+using OsuPlayer.Data.LazerModels.Extensions;
+using OsuPlayer.Data.LazerModels.Files;
 using Realms;
 
-namespace OsuPlayer.IO.Storage.LazerModels.Beatmaps;
+namespace OsuPlayer.Data.LazerModels.Beatmaps;
 
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.

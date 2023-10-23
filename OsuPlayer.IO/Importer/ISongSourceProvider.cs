@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using DynamicData;
-using OsuPlayer.IO.DbReader.DataModels;
-using OsuPlayer.IO.DbReader.Interfaces;
+using OsuPlayer.Data.DataModels.Interfaces;
 
 namespace OsuPlayer.IO.Importer;
 

@@ -1,6 +1,7 @@
 using System.Text;
-using OsuPlayer.IO.DbReader.DataModels;
-using OsuPlayer.IO.DbReader.Interfaces;
+using OsuPlayer.Data.DataModels;
+using OsuPlayer.Data.DataModels.Interfaces;
+using Splat;
 
 namespace OsuPlayer.IO.DbReader;
 
@@ -10,15 +11,14 @@ namespace OsuPlayer.IO.DbReader;
 public class OsuDbReader : BinaryReader, IDatabaseReader
 {
     private readonly byte[] _buf = new byte[512];
-    private string _path = string.Empty;
-    public static int OsuDbVersion { get; private set; }
+    private readonly string _path;
+    private static int _osuDbVersion;
+    private readonly IDbReaderFactory _readerFactory;
 
-    public OsuDbReader(Stream input) : base(input)
+    public OsuDbReader(Stream input, string path, IDbReaderFactory readerFactory) : base(input)
     {
-    }
-
-    public OsuDbReader(Stream input, string path) : base(input)
-    {
+        _readerFactory = readerFactory;
+        
         _path = string.Intern(path);
     }
 
@@ -27,7 +27,7 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
         var minBeatMaps = new List<IMapEntryBase>();
 
         var ver = ReadInt32();
-        OsuDbVersion = ver;
+        _osuDbVersion = ver;
         var flag = ver is >= 20160408 and < 20191107;
 
         ReadInt32();
@@ -76,7 +76,7 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
         var hashes = new Dictionary<string, int>();
 
         var ver = ReadInt32();
-        OsuDbVersion = ver;
+        _osuDbVersion = ver;
         var flag = ver is >= 20160408 and < 20191107;
 
         ReadInt32();
@@ -104,22 +104,133 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
         return hashes;
     }
 
-    public async Task<List<Collection>?> GetCollections(string path)
+    public async Task<List<OsuCollection>?> GetCollections(string path)
     {
         return await OsuCollectionReader.Read(path);
     }
 
-    public static async Task<List<IMapEntryBase>?> Read(string path)
+    public IMapEntry? ReadFullEntry(string path, IMapEntryBase mapEntryBase, long? dbOffset = null, Guid? id = null)
     {
-        var dbLoc = Path.Combine(path, "osu!.db");
+        if (dbOffset == null)
+            return null;
 
-        if (!File.Exists(dbLoc)) return null;
+        var version = _osuDbVersion;
 
-        var file = File.OpenRead(dbLoc);
+        BaseStream.Seek(dbOffset.Value, SeekOrigin.Begin);
+        
+        ReadString(true); //Artist
 
-        var reader = new OsuDbReader(file, path);
+        var artistUnicode = "Unknown Artist";
+        if (version >= 20121008)
+            artistUnicode = ReadString();
 
-        return await reader.ReadBeatmaps();
+        ReadString(true); //Title
+
+        var titleUnicode = "Unknown Title";
+        if (version >= 20121008)
+            titleUnicode = ReadString();
+
+        ReadString(true); //Creator
+        ReadString(true); //Difficulty
+
+        var audioFileName = ReadString();
+        ReadString(true); //Hash
+
+        ReadString(true); //BeatmapFileName
+        ReadByte(); //RankedStatus
+        ReadUInt16(); //CountHitCircles
+        ReadUInt16(); //CountSliders
+        ReadUInt16(); //CountSpinners
+        ReadDateTime(); //LastModifiedTime
+
+        if (version >= 20140609)
+        {
+            ReadSingle(); //ApproachRate
+            ReadSingle(); //CircleSize
+            ReadSingle(); //HPDrainRate
+            ReadSingle(); //OverallDifficulty
+        }
+        else
+        {
+            //Float
+            ReadByte(); //ApproachRate
+            ReadByte(); //CircleSize
+            ReadByte(); //HPDrainRate
+            ReadByte(); //OverallDifficulty
+        }
+
+        ReadDouble(); //SliderVelocity
+
+        if (version >= 20140609)
+        {
+            ReadStarRating();
+            ReadStarRating();
+            ReadStarRating();
+            ReadStarRating();
+        }
+
+        ReadInt32(); //DrainTimeSeconds
+        ReadInt32(); //TotalTimeSeconds
+
+        ReadInt32(); //AudioPreviewTime
+        var timingCount = ReadInt32();
+
+        BaseStream.Position += 17 * timingCount;
+
+        ReadInt32();
+        ReadInt32(); //beatmapSetId
+
+        ReadInt32(); //ThreadId
+        ReadByte(); //GradeStandard
+        ReadByte(); //GradeTaiko
+        ReadByte(); //GradeCtB
+        ReadByte(); //GradeMania
+        ReadInt16(); //OffsetLocal
+        ReadSingle(); //StackLeniency
+        ReadByte(); //GameMode
+        ReadString(true); //SongSource
+        ReadString(true); //SongTags
+        ReadInt16(); //OffsetOnline
+        ReadString(true); //TitleFont
+        ReadBoolean(); //Unplayed
+        ReadDateTime(); //LastPlayed
+        ReadBoolean(); //IsOsz2
+
+        var folderName = ReadString();
+
+        ReadDateTime(); //LastCheckAgainstOsuRepo
+        ReadBoolean(); //IgnoreBeatmapSounds
+        ReadBoolean(); //IgnoreBeatmapSkin
+        ReadBoolean(); //DisableStoryBoard
+        ReadBoolean(); //DisableVideo
+        ReadBoolean(); //
+
+        if (version < 20140609)
+            ReadInt16(); //OldUnknown1
+
+        ReadInt32(); //LastEditTime
+        ReadByte(); //ManiaScrollSpeed
+
+        var fullPath = Path.Combine(path, "Songs", folderName, audioFileName);
+        var folderPath = Path.Combine(path, "Songs", folderName);
+
+        return new DbMapEntry
+        {
+            DbReaderFactory = _readerFactory,
+            DbOffset = dbOffset.Value,
+            OsuPath = path,
+            Artist = mapEntryBase.Artist,
+            ArtistUnicode = artistUnicode,
+            Title = mapEntryBase.Title,
+            TitleUnicode = titleUnicode,
+            AudioFileName = audioFileName,
+            BeatmapSetId = mapEntryBase.BeatmapSetId,
+            FolderName = folderName,
+            FolderPath = folderPath,
+            FullPath = fullPath,
+            Hash = mapEntryBase.Hash,
+            TotalTime = mapEntryBase.TotalTime
+        };
     }
 
     /// <summary>
@@ -134,7 +245,7 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
         if (artist.Length == 0)
             artist = "Unknown Artist";
 
-        if (OsuDbVersion >= 20121008)
+        if (_osuDbVersion >= 20121008)
             ReadString(true);
 
         var title = string.Intern(ReadString());
@@ -142,7 +253,7 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
         if (title.Length == 0)
             title = "Unknown Title";
 
-        if (OsuDbVersion >= 20121008)
+        if (_osuDbVersion >= 20121008)
             ReadString(true);
 
         ReadString(true);
@@ -153,9 +264,9 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
 
         ReadString(true); //BeatmapFileName
 
-        BaseStream.Seek(OsuDbVersion >= 20140609 ? 39 : 27, SeekOrigin.Current);
+        BaseStream.Seek(_osuDbVersion >= 20140609 ? 39 : 27, SeekOrigin.Current);
 
-        if (OsuDbVersion >= 20140609)
+        if (_osuDbVersion >= 20140609)
         {
             ReadStarRating();
             ReadStarRating();
@@ -187,10 +298,11 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
         ReadBoolean(); //IsOsz2
         ReadString(true);
 
-        BaseStream.Seek(OsuDbVersion < 20140609 ? 20 : 18, SeekOrigin.Current);
+        BaseStream.Seek(_osuDbVersion < 20140609 ? 20 : 18, SeekOrigin.Current);
 
         minBeatmap = new DbMapEntryBase
         {
+            DbReaderFactory = _readerFactory,
             OsuPath = string.Intern(_path),
             Artist = artist,
             Title = title,
@@ -212,10 +324,10 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
         var initOffset = BaseStream.Position;
 
         ReadString(true);
-        if (OsuDbVersion >= 20121008) ReadString(true);
+        if (_osuDbVersion >= 20121008) ReadString(true);
 
         ReadString(true);
-        if (OsuDbVersion >= 20121008) ReadString(true);
+        if (_osuDbVersion >= 20121008) ReadString(true);
 
         ReadString(true);
         ReadString(true);
@@ -225,10 +337,10 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
 
         ReadString(true);
         BaseStream.Seek(15, SeekOrigin.Current);
-        BaseStream.Seek(OsuDbVersion >= 20140609 ? 16 : 4, SeekOrigin.Current);
+        BaseStream.Seek(_osuDbVersion >= 20140609 ? 16 : 4, SeekOrigin.Current);
 
         BaseStream.Seek(8, SeekOrigin.Current);
-        if (OsuDbVersion >= 20140609)
+        if (_osuDbVersion >= 20140609)
         {
             ReadStarRating();
             ReadStarRating();
@@ -257,7 +369,7 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
 
         ReadString(true);
 
-        BaseStream.Seek(OsuDbVersion < 20140609 ? 20 : 18, SeekOrigin.Current);
+        BaseStream.Seek(_osuDbVersion < 20140609 ? 20 : 18, SeekOrigin.Current);
 
         return BaseStream.Position - initOffset;
     }

@@ -1,4 +1,6 @@
-﻿using OsuPlayer.Services.Interfaces;
+﻿using OsuPlayer.Data.OsuPlayer.Enums;
+using OsuPlayer.Extensions;
+using OsuPlayer.Interfaces.Service;
 
 namespace OsuPlayer.Services.ShuffleImpl;
 

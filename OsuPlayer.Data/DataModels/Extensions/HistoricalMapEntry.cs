@@ -1,6 +1,6 @@
-﻿using OsuPlayer.IO.DbReader.Interfaces;
+﻿using OsuPlayer.Data.DataModels.Interfaces;
 
-namespace OsuPlayer.IO.DbReader.DataModels.Extensions;
+namespace OsuPlayer.Data.DataModels.Extensions;
 
 public class HistoricalMapEntry : IComparable<HistoricalMapEntry>
 {
