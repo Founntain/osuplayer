@@ -9,7 +9,7 @@ public class HistoricalMapEntry : IComparable<HistoricalMapEntry>
 
     public string TimePlayedString => $"Last Played: {TimePlayed:G}";
 
-    public HistoricalMapEntry(IMapEntryBase mapEntry) :this(mapEntry, DateTimeOffset.Now)
+    public HistoricalMapEntry(IMapEntryBase mapEntry) : this(mapEntry, DateTimeOffset.Now)
     {
     }
 
@@ -26,7 +26,7 @@ public class HistoricalMapEntry : IComparable<HistoricalMapEntry>
 
     public override bool Equals(object? obj)
     {
-        if(obj is HistoricalMapEntry other)
+        if (obj is HistoricalMapEntry other)
         {
             return MapEntry.Hash == other.MapEntry.Hash;
         }

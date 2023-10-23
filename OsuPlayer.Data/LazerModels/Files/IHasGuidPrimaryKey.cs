@@ -7,5 +7,7 @@ namespace OsuPlayer.Data.LazerModels.Files;
 // See the LICENCE file in the repository root for full licence text.
 public interface IHasGuidPrimaryKey
 {
-    [JsonIgnore] [PrimaryKey] Guid ID { get; }
+    [JsonIgnore]
+    [PrimaryKey]
+    Guid ID { get; }
 }

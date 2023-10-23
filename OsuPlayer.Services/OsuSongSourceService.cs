@@ -39,7 +39,7 @@ public class OsuSongSourceService : OsuPlayerService, ISongSourceProvider
         return SongSourceList!.FirstOrDefault(x => x.Hash == hash);
     }
 
-    public List<IMapEntryBase> GetMapEntriesFromHash(ICollection<string> hashes, out ICollection<string> invalidHashes)  
+    public List<IMapEntryBase> GetMapEntriesFromHash(ICollection<string> hashes, out ICollection<string> invalidHashes)
     {
         var maps = hashes.Select(x => SongSourceList!.FirstOrDefault(map => map.Hash == x)).ToArray();
 

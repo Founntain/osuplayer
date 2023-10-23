@@ -4,9 +4,9 @@ public class HistoricalMapEntryComparer : IEqualityComparer<HistoricalMapEntry>
 {
     public bool Equals(HistoricalMapEntry? x, HistoricalMapEntry? y)
     {
-        if(x == null && y == null) return true;
-        if(x == null || y == null) return false;
-        
+        if (x == null && y == null) return true;
+        if (x == null || y == null) return false;
+
         return x.MapEntry.Hash == y.MapEntry.Hash;
     }
 

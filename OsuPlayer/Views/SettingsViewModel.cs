@@ -66,7 +66,7 @@ public class SettingsViewModel : BaseViewModel
             var mainWindowViewModel = Locator.Current.GetService<MainWindowViewModel>();
 
             mainWindowViewModel.HomeView.DisplayUserStats = value;
-            
+
             mainWindowViewModel.HomeView.RaisePropertyChanged(nameof(mainWindowViewModel.HomeView.DisplayUserStats));
         }
     }

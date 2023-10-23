@@ -21,7 +21,7 @@ public class RealmReader : IDatabaseReader
     public RealmReader(string path, IDbReaderFactory readerFactory)
     {
         _readerFactory = readerFactory;
-        
+
         _path = string.Intern(path);
 
         var realmLoc = Path.Combine(_path, "client.realm");

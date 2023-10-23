@@ -23,7 +23,8 @@ public abstract class OsuPlayerService : IOsuPlayerService
         if (data == null)
             outputMessage = $"{ServiceTag()}{(includeLogTypeTag ? "[" + logType.ToString().ToUpper() + "] " : string.Empty)}{message}";
         else
-            outputMessage = $"{ServiceTag()}{(includeLogTypeTag ? "[" + logType.ToString().ToUpper() + "] " : string.Empty)}{message} - {JsonSerializer.Serialize(data)}";
+            outputMessage =
+                $"{ServiceTag()}{(includeLogTypeTag ? "[" + logType.ToString().ToUpper() + "] " : string.Empty)}{message} - {JsonSerializer.Serialize(data)}";
 
         switch (logType)
         {

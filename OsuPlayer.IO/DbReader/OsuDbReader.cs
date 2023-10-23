@@ -18,7 +18,7 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
     public OsuDbReader(Stream input, string path, IDbReaderFactory readerFactory) : base(input)
     {
         _readerFactory = readerFactory;
-        
+
         _path = string.Intern(path);
     }
 
@@ -117,7 +117,7 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
         var version = _osuDbVersion;
 
         BaseStream.Seek(dbOffset.Value, SeekOrigin.Begin);
-        
+
         ReadString(true); //Artist
 
         var artistUnicode = "Unknown Artist";

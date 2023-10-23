@@ -20,7 +20,8 @@ public class BeatmapInfo : RealmObject, IHasGuidPrimaryKey, IBeatmapInfo, IEquat
 
     public BeatmapSetInfo? BeatmapSet { get; set; }
 
-    [Ignored] public RealmNamedFileUsage? File => BeatmapSet?.Files.FirstOrDefault(f => f.File.Hash == Hash);
+    [Ignored]
+    public RealmNamedFileUsage? File => BeatmapSet?.Files.FirstOrDefault(f => f.File.Hash == Hash);
 
     [Ignored]
     public BeatmapOnlineStatus Status
@@ -29,13 +30,16 @@ public class BeatmapInfo : RealmObject, IHasGuidPrimaryKey, IBeatmapInfo, IEquat
         set => StatusInt = (int) value;
     }
 
-    [MapTo(nameof(Status))] public int StatusInt { get; set; } = (int) BeatmapOnlineStatus.None;
+    [MapTo(nameof(Status))]
+    public int StatusInt { get; set; } = (int) BeatmapOnlineStatus.None;
 
-    [JsonIgnore] public bool Hidden { get; set; }
+    [JsonIgnore]
+    public bool Hidden { get; set; }
 
     public string DifficultyName { get; set; } = string.Empty;
 
-    [Indexed] public int OnlineID { get; set; } = -1;
+    [Indexed]
+    public int OnlineID { get; set; } = -1;
 
     public double Length { get; set; }
 
@@ -52,7 +56,8 @@ public class BeatmapInfo : RealmObject, IHasGuidPrimaryKey, IBeatmapInfo, IEquat
     IRulesetInfo IBeatmapInfo.Ruleset => Ruleset;
     IBeatmapDifficultyInfo IBeatmapInfo.Difficulty => Difficulty;
 
-    [PrimaryKey] public Guid ID { get; set; }
+    [PrimaryKey]
+    public Guid ID { get; set; }
 
     public BeatmapInfo(RulesetInfo? ruleset = null, BeatmapDifficulty? difficulty = null, BeatmapMetadata? metadata = null)
     {

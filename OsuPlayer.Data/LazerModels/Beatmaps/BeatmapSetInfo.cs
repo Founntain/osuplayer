@@ -11,7 +11,8 @@ namespace OsuPlayer.Data.LazerModels.Beatmaps;
 [MapTo("BeatmapSet")]
 public class BeatmapSetInfo : RealmObject, IHasRealmFiles, IEquatable<BeatmapSetInfo>, IBeatmapSetInfo
 {
-    [PrimaryKey] public Guid ID { get; set; }
+    [PrimaryKey]
+    public Guid ID { get; set; }
 
     public IList<BeatmapInfo> Beatmaps { get; } = null!;
 
@@ -22,7 +23,8 @@ public class BeatmapSetInfo : RealmObject, IHasRealmFiles, IEquatable<BeatmapSet
         set => StatusInt = (int) value;
     }
 
-    [MapTo(nameof(Status))] public int StatusInt { get; set; } = (int) BeatmapOnlineStatus.None;
+    [MapTo(nameof(Status))]
+    public int StatusInt { get; set; } = (int) BeatmapOnlineStatus.None;
 
     public bool DeletePending { get; set; }
 
@@ -31,11 +33,13 @@ public class BeatmapSetInfo : RealmObject, IHasRealmFiles, IEquatable<BeatmapSet
     /// </summary>
     public bool Protected { get; set; }
 
-    [Indexed] public int OnlineID { get; set; } = -1;
+    [Indexed]
+    public int OnlineID { get; set; } = -1;
 
     public DateTimeOffset DateAdded { get; set; }
 
-    [JsonIgnore] public IBeatmapMetadataInfo Metadata => Beatmaps.FirstOrDefault()?.Metadata ?? new BeatmapMetadata();
+    [JsonIgnore]
+    public IBeatmapMetadataInfo Metadata => Beatmaps.FirstOrDefault()?.Metadata ?? new BeatmapMetadata();
 
     public double MaxStarDifficulty => Beatmaps.Count == 0 ? 0 : Beatmaps.Max(b => b.StarRating);
 

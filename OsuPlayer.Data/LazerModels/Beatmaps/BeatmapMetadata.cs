@@ -16,15 +16,18 @@ public class BeatmapMetadata : RealmObject, IBeatmapMetadataInfo
 
     public string Title { get; set; } = string.Empty;
 
-    [JsonProperty("title_unicode")] public string TitleUnicode { get; set; } = string.Empty;
+    [JsonProperty("title_unicode")]
+    public string TitleUnicode { get; set; } = string.Empty;
 
     public string Artist { get; set; } = string.Empty;
 
-    [JsonProperty("artist_unicode")] public string ArtistUnicode { get; set; } = string.Empty;
+    [JsonProperty("artist_unicode")]
+    public string ArtistUnicode { get; set; } = string.Empty;
 
     public string Source { get; set; } = string.Empty;
 
-    [JsonProperty(@"tags")] public string Tags { get; set; } = string.Empty;
+    [JsonProperty(@"tags")]
+    public string Tags { get; set; } = string.Empty;
 
     /// <summary>
     /// The time in milliseconds to begin playing the track for preview purposes.

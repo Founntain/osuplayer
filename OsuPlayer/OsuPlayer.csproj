@@ -148,16 +148,16 @@
             <DependentUpon>BeatmapsView.axaml</DependentUpon>
         </Compile>
         <Compile Update="Views\ExportSongsViewModel.cs">
-          <DependentUpon>ExportSongsView.axaml</DependentUpon>
+            <DependentUpon>ExportSongsView.axaml</DependentUpon>
         </Compile>
         <Compile Update="Windows\ExportSongsProcessWindowViewModel.cs">
-          <DependentUpon>ExportSongsProcessWindow.axaml</DependentUpon>
+            <DependentUpon>ExportSongsProcessWindow.axaml</DependentUpon>
         </Compile>
         <Compile Update="Views\PlayHistoryView.axaml.cs">
-          <DependentUpon>PlayHistoryView.axaml</DependentUpon>
+            <DependentUpon>PlayHistoryView.axaml</DependentUpon>
         </Compile>
         <Compile Update="Views\PlayHistoryViewModel.cs">
-          <DependentUpon>PlayHistoryView.axaml</DependentUpon>
+            <DependentUpon>PlayHistoryView.axaml</DependentUpon>
         </Compile>
     </ItemGroup>
     <ItemGroup>

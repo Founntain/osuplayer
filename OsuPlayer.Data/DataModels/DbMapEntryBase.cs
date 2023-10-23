@@ -66,7 +66,7 @@ public class DbMapEntryBase : IMapEntryBase
 
     public IDatabaseReader? GetReader()
     {
-        if (OsuPath == null) 
+        if (OsuPath == null)
             return null;
 
         return DbReaderFactory.CreateDatabaseReader(OsuPath);

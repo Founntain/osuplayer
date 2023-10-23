@@ -7,18 +7,18 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="IO\" />
-      <Folder Include="Network\" />
+        <Folder Include="IO\" />
+        <Folder Include="Network\" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Founntain.Nein" Version="2023.1018.2" />
-      <PackageReference Include="LiveChartsCore" Version="2.0.0-beta.101" />
-      <PackageReference Include="OsuPlayer.Api.Data" Version="1.0.10" />
+        <PackageReference Include="Founntain.Nein" Version="2023.1018.2" />
+        <PackageReference Include="LiveChartsCore" Version="2.0.0-beta.101" />
+        <PackageReference Include="OsuPlayer.Api.Data" Version="1.0.10" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\OsuPlayer.Data\OsuPlayer.Data.csproj" />
+        <ProjectReference Include="..\OsuPlayer.Data\OsuPlayer.Data.csproj" />
     </ItemGroup>
 
 </Project>

@@ -96,6 +96,7 @@ public class LastFmService : WebRequestBase, IOsuPlayerService
         config.Container.LastFmApiKey = _apiKey;
         config.Container.LastFmSecret = _secret;
     }
+
     /// <summary>
     /// Loads the last.fm Session Key from the users file system
     /// </summary>

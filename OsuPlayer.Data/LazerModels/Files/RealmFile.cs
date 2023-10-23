@@ -7,5 +7,6 @@ namespace OsuPlayer.Data.LazerModels.Files;
 [MapTo("File")]
 public class RealmFile : RealmObject, IFileInfo
 {
-    [PrimaryKey] public string Hash { get; set; } = string.Empty;
+    [PrimaryKey]
+    public string Hash { get; set; } = string.Empty;
 }
