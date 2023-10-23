@@ -14,6 +14,8 @@ namespace OsuPlayer.Network.API.NorthFox;
 /// </summary>
 public class NorthFox : AbstractApiBase, IOsuPlayerApiService
 {
+    protected override string ApiName => "NorthFox API 🦊";
+
     #region API Endpoints
 
     public NorthFoxActivityEndpoint Activity { get; set; }
@@ -66,16 +68,16 @@ public class NorthFox : AbstractApiBase, IOsuPlayerApiService
         if (Constants.OfflineMode)
             return default;
 
+        var url = new Uri($"{Url}User/login");
+
+        _loggingService.Log($"Requesting => {ApiName} => {url}");
+
         try
         {
             using var client = new HttpClient();
 
-            var url = new Uri($"{Url}User/login");
-
             var req = new HttpRequestMessage(HttpMethod.Post, url);
             req.Headers.Authorization = GetAuthorizationHeader(username, password);
-
-            // CancelCancellationToken();
 
             var result = await client.SendAsync(req, CancellationTokenSource.Token);
 
@@ -87,7 +89,7 @@ public class NorthFox : AbstractApiBase, IOsuPlayerApiService
         }
         catch (Exception ex)
         {
-            ParseWebException(ex);
+            ParseWebException(ex, url);
 
             return default;
         }
@@ -98,17 +100,17 @@ public class NorthFox : AbstractApiBase, IOsuPlayerApiService
         if (Constants.OfflineMode)
             return default;
 
+        var url = new Uri($"{Url}User/loginWithToken");
+
+        _loggingService.Log($"Requesting => {ApiName} => {url}");
+
         try
         {
             using var client = new HttpClient();
 
-            var url = new Uri($"{Url}User/loginWithToken");
-
             var req = new HttpRequestMessage(HttpMethod.Post, url);
 
             req.Headers.Add("session-token", token);
-
-            // CancelCancellationToken();
 
             var result = await client.SendAsync(req, CancellationTokenSource.Token);
 
@@ -120,7 +122,7 @@ public class NorthFox : AbstractApiBase, IOsuPlayerApiService
         }
         catch (Exception ex)
         {
-            ParseWebException(ex);
+            ParseWebException(ex, url);
 
             return default;
         }

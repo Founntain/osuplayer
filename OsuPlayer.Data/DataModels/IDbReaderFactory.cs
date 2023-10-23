@@ -1,16 +1,11 @@
 ﻿using OsuPlayer.Data.DataModels.Interfaces;
+using OsuPlayer.Data.Enums;
 
 namespace OsuPlayer.Data.DataModels;
 
 public interface IDbReaderFactory
 {
-    public CreationType Type { get; set; }
+    public DbCreationType Type { get; set; }
 
     public IDatabaseReader CreateDatabaseReader(string path);
-
-    public enum CreationType
-    {
-        OsuDb,
-        Realm
-    }
 }

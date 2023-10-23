@@ -21,6 +21,7 @@ namespace OsuPlayer.Windows;
 
 public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 {
+    private readonly ILoggingService _loggingService;
     private readonly IProfileManagerService _profileManager;
 
     public Miniplayer? Miniplayer;
@@ -69,6 +70,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
             {
                 var window = Locator.Current.GetService<MainWindow>();
                 var lastFmApi = Locator.Current.GetService<ILastFmApiService>();
+                var loggingService = Locator.Current.GetService<ILoggingService>();
 
                 await using var config = new Config();
 
@@ -78,7 +80,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
                 if (!string.IsNullOrWhiteSpace(apiKey) || !string.IsNullOrWhiteSpace(apiSecret) || !sessionKey)
                 {
-                    Console.WriteLine("Can't connect to last.fm, because no apikey, apisecret or session key fast found");
+                    loggingService.Log("Can't connect to last.fm, because no apikey, apisecret or session key fast found", LogType.Warning);
                     return;
                 }
 

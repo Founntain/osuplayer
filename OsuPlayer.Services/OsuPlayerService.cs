@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Text;
+using System.Text.Json;
 using OsuPlayer.Interfaces.Service;
 
 namespace OsuPlayer.Services;
@@ -7,8 +8,10 @@ public abstract class OsuPlayerService : IOsuPlayerService
 {
     public abstract string ServiceName { get; }
 
-    private protected OsuPlayerService()
+    protected OsuPlayerService()
     {
+        Console.OutputEncoding = Encoding.UTF8;
+
         LogToConsole("Service initialized.", LogType.Success, includeLogTypeTag: false);
     }
 
@@ -21,10 +24,10 @@ public abstract class OsuPlayerService : IOsuPlayerService
         string outputMessage;
 
         if (data == null)
-            outputMessage = $"{ServiceTag()}{(includeLogTypeTag ? "[" + logType.ToString().ToUpper() + "] " : string.Empty)}{message}";
+            outputMessage = $"{ServiceTag()}{(includeLogTypeTag ? GetLogTypeIcon(logType) + " " : string.Empty)}{message}";
         else
             outputMessage =
-                $"{ServiceTag()}{(includeLogTypeTag ? "[" + logType.ToString().ToUpper() + "] " : string.Empty)}{message} - {JsonSerializer.Serialize(data)}";
+                $"{ServiceTag()}{(includeLogTypeTag ? GetLogTypeIcon(logType) + " " : string.Empty)}{message} - {JsonSerializer.Serialize(data)}";
 
         switch (logType)
         {
@@ -60,5 +63,18 @@ public abstract class OsuPlayerService : IOsuPlayerService
 
         // Resetting the colors, so subsequent logs don't have the same colors.
         Console.ResetColor();
+    }
+
+    private string GetLogTypeIcon(LogType logType)
+    {
+        return logType switch
+        {
+            LogType.Info => "ℹ️",
+            LogType.Success => "✅",
+            LogType.Warning => "⚠️",
+            LogType.Error => "❌",
+            LogType.Debug => "🐛",
+            _ => throw new ArgumentOutOfRangeException(nameof(logType), logType, null)
+        };
     }
 }

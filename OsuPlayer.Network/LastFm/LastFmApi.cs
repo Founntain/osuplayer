@@ -6,11 +6,15 @@ using OsuPlayer.Data.LazerModels.Extensions;
 using OsuPlayer.Interfaces.Service;
 using OsuPlayer.IO.Storage.Config;
 using OsuPlayer.Network.LastFm.Responses;
+using OsuPlayer.Services;
+using Splat;
 
 namespace OsuPlayer.Network.LastFm;
 
 public class LastFmApi : WebRequestBase, ILastFmApiService
 {
+    private readonly ILoggingService _loggingService;
+
     /// <summary>
     /// The Last.FM API-Key of the user
     /// </summary>
@@ -31,6 +35,8 @@ public class LastFmApi : WebRequestBase, ILastFmApiService
 
     public LastFmApi()
     {
+        _loggingService = Locator.Current.GetRequiredService<ILoggingService>();
+
         BaseUrl = "http://ws.audioscrobbler.com/2.0/?format=json";
 
         using var config = new Config();
@@ -55,7 +61,8 @@ public class LastFmApi : WebRequestBase, ILastFmApiService
     {
         if (string.IsNullOrWhiteSpace(_sessionKey))
         {
-            Console.WriteLine("can't scrobble to the last.fm api, because there isn't a valid session key");
+            _loggingService.Log("Can't scrobble to the last.fm api, because there isn't a valid session key", LogType.Warning);
+
             return;
         }
 
@@ -168,20 +175,15 @@ public class LastFmApi : WebRequestBase, ILastFmApiService
     /// <returns>a <see cref="SessionRequest"/></returns>
     private async Task<SessionResponse?> SessionRequest(string route)
     {
+        var baseUrl = $"http://ws.audioscrobbler.com/2.0/?api_key={_apiKey}";
+        var url = new Uri($"{baseUrl}{route}");
+
         try
         {
             using var client = new HttpClient();
 
-            var baseUrl = $"http://ws.audioscrobbler.com/2.0/?api_key={_apiKey}";
-
-            var url = new Uri($"{baseUrl}{route}");
-
             var req = new HttpRequestMessage(HttpMethod.Get, url);
-
-            // CancelCancellationToken();
-
             var result = await client.SendAsync(req, CancellationTokenSource.Token);
-
             var respString = await result.Content.ReadAsStringAsync();
 
             var xmlDoc = new XmlDocument();
@@ -194,7 +196,7 @@ public class LastFmApi : WebRequestBase, ILastFmApiService
         }
         catch (Exception ex)
         {
-            ParseWebException(ex);
+            ParseWebException(ex, url);
 
             return default;
         }

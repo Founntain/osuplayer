@@ -1,8 +1,11 @@
 ﻿using OsuPlayer.Data.DataModels;
 using OsuPlayer.Data.DataModels.Interfaces;
+using OsuPlayer.Data.Enums;
 using OsuPlayer.Data.OsuPlayer.Enums;
+using OsuPlayer.Interfaces.Service;
 using OsuPlayer.IO.DbReader;
 using OsuPlayer.IO.Storage.Config;
+using OsuPlayer.Services;
 using Splat;
 
 namespace OsuPlayer.IO.Importer;
@@ -56,13 +59,16 @@ public static class SongImporter
         IEnumerable<IMapEntryBase>? readMaps = null;
 
         var dbReaderFactory = Locator.Current.GetService<IDbReaderFactory>();
+        var loggingService = Locator.Current.GetService<ILoggingService>();
 
         if (File.Exists(Path.Combine(path, "osu!.db")))
-            dbReaderFactory.Type = IDbReaderFactory.CreationType.OsuDb;
+            dbReaderFactory.Type = DbCreationType.OsuDb;
         else if (File.Exists(Path.Combine(path, "client.realm")))
-            dbReaderFactory.Type = IDbReaderFactory.CreationType.Realm;
+            dbReaderFactory.Type = DbCreationType.Realm;
 
         using var reader = dbReaderFactory.CreateDatabaseReader(path);
+
+        loggingService.Log("Starting beatmap import...");
 
         readMaps = await reader.ReadBeatmaps();
 
@@ -71,6 +77,8 @@ public static class SongImporter
         var maps = readMaps.DistinctBy(x => x.Hash).OrderBy(x => x.BeatmapSetId)
             //.DistinctBy(x => x.Title)
             .Where(x => !string.IsNullOrEmpty(x.Title)).ToArray();
+
+        loggingService.Log($"Successfully imported {maps.Length} beatmaps.", LogType.Success);
 
         return !maps.Any() ? null : maps;
     }

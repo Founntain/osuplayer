@@ -1,6 +1,8 @@
-﻿namespace OsuPlayer.Services;
+﻿using OsuPlayer.Interfaces.Service;
 
-public class LoggingService : OsuPlayerService
+namespace OsuPlayer.Services;
+
+public class LoggingService : OsuPlayerService, ILoggingService
 {
     public override string ServiceName => "LOGGING_SERVICE";
 

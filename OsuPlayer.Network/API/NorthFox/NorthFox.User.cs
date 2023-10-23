@@ -39,17 +39,19 @@ public class NorthFoxUserEndpoint : IOsuPlayerApiUserEndpoint
         if (Constants.OfflineMode)
             return default;
 
+        var url = new Uri($"{_apiBase.Url}User/getProfilePicture?id={uniqueId}");
+
         try
         {
             using var client = new HttpClient();
 
-            var data = await client.GetAsync(new Uri($"{_apiBase.Url}User/getProfilePicture?id={uniqueId}"));
+            var data = await client.GetAsync(url);
 
             return new Bitmap(await data.Content.ReadAsStreamAsync());
         }
         catch (Exception ex)
         {
-            _apiBase.ParseWebException(ex);
+            _apiBase.ParseWebException(ex, url);
 
             return default;
         }

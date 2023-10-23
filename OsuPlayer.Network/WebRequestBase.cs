@@ -1,59 +1,64 @@
 ﻿using System.Net;
 using System.Text;
 using Newtonsoft.Json;
+using OsuPlayer.Interfaces.Service;
+using OsuPlayer.Services;
+using Splat;
 
 namespace OsuPlayer.Network;
 
 public class WebRequestBase : IWebRequest
 {
+    private readonly ILoggingService _loggingService;
     protected string BaseUrl;
-    protected CancellationTokenSource CancellationTokenSource = new();
+    protected readonly CancellationTokenSource CancellationTokenSource = new();
 
-    public WebRequestBase()
+    protected WebRequestBase() :this(string.Empty)
     {
-        BaseUrl = string.Empty;
     }
 
     public WebRequestBase(string baseUrl)
     {
         BaseUrl = baseUrl;
+
+        _loggingService = Locator.Current.GetService<ILoggingService>();
     }
-    
-    protected void ParseWebException(Exception ex)
+
+    protected void ParseWebException(Exception ex, Uri url)
     {
         if (ex.GetType() != typeof(WebException)) return;
 
         var webEx = (WebException) ex;
 
-        if (webEx.Status != WebExceptionStatus.ConnectFailure && webEx.Status != WebExceptionStatus.Timeout) return;
+        _loggingService.Log($"Error while requesting {url}: {webEx.Message}", LogType.Error, webEx);
     }
 
     public virtual async Task<TResponse> GetRequest<TResponse, TRequest>(string route, TRequest? data = default)
     {
+        var url = new Uri($"{BaseUrl}{route}");
+
+        _loggingService.Log($"Request => {url}");
+
         try
         {
             using var client = new HttpClient();
-
-            var url = new Uri($"{BaseUrl}{route}");
 
             var req = new HttpRequestMessage(HttpMethod.Get, url);
 
             if ( data != null )
                 req.Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
 
-            // CancelCancellationToken();
-
             var result = await client.SendAsync(req, CancellationTokenSource.Token);
 
             var respString = await result.Content.ReadAsStringAsync();
-            
+
             var response = JsonConvert.DeserializeObject<TResponse>(respString);
 
             return response;
         }
         catch (Exception ex)
         {
-            ParseWebException(ex);
+            ParseWebException(ex, url);
 
             return default;
         }
@@ -61,19 +66,21 @@ public class WebRequestBase : IWebRequest
 
     public async Task<HttpResponseMessage> GetRequestWithHttpResponseMessage(string route)
     {
+        var url = new Uri($"{BaseUrl}{route}");
+
+        _loggingService.Log($"Request => {url}");
+
         try
         {
             using var client = new HttpClient();
 
-            var url = new Uri($"{BaseUrl}{route}");
-
             var req = new HttpRequestMessage(HttpMethod.Get, url);
-            
+
             return await client.SendAsync(req, CancellationTokenSource.Token);
         }
         catch (Exception ex)
         {
-            ParseWebException(ex);
+            ParseWebException(ex, url);
 
             return new HttpResponseMessage(HttpStatusCode.BadRequest);
         }
@@ -81,11 +88,13 @@ public class WebRequestBase : IWebRequest
 
     public virtual async Task<TResponse> PostRequest<TResponse, TRequest>(string route, TRequest? data = default)
     {
+        var url = new Uri($"{BaseUrl}{route}");
+
+        _loggingService.Log($"Request => {url}");
+
         try
         {
             using var client = new HttpClient();
-
-            var url = new Uri($"{BaseUrl}{route}");
 
             var req = new HttpRequestMessage(HttpMethod.Post, url);
 
@@ -97,8 +106,6 @@ public class WebRequestBase : IWebRequest
                     req.Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
             }
 
-            // CancelCancellationToken();
-
             var result = await client.SendAsync(req, CancellationTokenSource.Token);
 
             var response = JsonConvert.DeserializeObject<TResponse>(await result.Content.ReadAsStringAsync());
@@ -107,7 +114,7 @@ public class WebRequestBase : IWebRequest
         }
         catch (Exception ex)
         {
-            ParseWebException(ex);
+            ParseWebException(ex, url);
 
             return default;
         }

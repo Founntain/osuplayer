@@ -73,7 +73,7 @@ internal static class Program
 
     private static void Register(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver, IRuntimePlatform platform)
     {
-        services.RegisterLazySingleton<LoggingService>(() => new LoggingService());
+        services.RegisterLazySingleton<ILoggingService>(() => new LoggingService());
 
         services.RegisterLazySingleton<IAudioEngine>(() => new BassEngine());
 

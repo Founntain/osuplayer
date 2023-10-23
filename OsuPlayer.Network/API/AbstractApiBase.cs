@@ -4,12 +4,16 @@ using System.Text;
 using Newtonsoft.Json;
 using OsuPlayer.Api.Data.API;
 using OsuPlayer.Interfaces.Service;
+using OsuPlayer.Services;
 using Splat;
 
 namespace OsuPlayer.Network.API;
 
 public abstract class AbstractApiBase
 {
+    protected abstract string ApiName { get; }
+
+    protected readonly ILoggingService _loggingService;
     private readonly IProfileManagerService _profileManager;
 
     protected static CancellationTokenSource CancellationTokenSource = new();
@@ -18,9 +22,12 @@ public abstract class AbstractApiBase
 
     protected string? UserAuthToken { get; set; }
 
-    public AbstractApiBase()
+    protected AbstractApiBase()
     {
+        _loggingService = Locator.Current.GetService<ILoggingService>();
         _profileManager = Locator.Current.GetService<IProfileManagerService>();
+
+        _loggingService.Log($"{ApiName} uses the following base URL: {Url}");
     }
 
     private string GetApiUrl()
@@ -43,11 +50,13 @@ public abstract class AbstractApiBase
         return url;
     }
 
-    protected internal void ParseWebException(Exception ex)
+    protected internal void ParseWebException(Exception ex, Uri url)
     {
         if (ex.GetType() != typeof(WebException)) return;
 
         var webEx = (WebException) ex;
+
+        _loggingService.Log($"Error while requesting {url}: {webEx.Message}", LogType.Error, webEx);
 
         if (webEx.Status != WebExceptionStatus.ConnectFailure && webEx.Status != WebExceptionStatus.Timeout) return;
         if (Constants.OfflineMode) return;
@@ -91,15 +100,17 @@ public abstract class AbstractApiBase
         if (Constants.OfflineMode)
             return default;
 
+        var url = new Uri($"{Url}{controller}/{action}");
+
+        _loggingService.Log($"Requesting => {ApiName} => {url}");
+
         try
         {
             using var client = new HttpClient();
 
-            var url = new Uri($"{Url}{controller}/{action}");
-
             var req = new HttpRequestMessage(HttpMethod.Delete, url);
 
-            req.Headers.Add("username", _profileManager.User.Name);
+            req.Headers.Add("username", _profileManager.User?.Name);
             req.Headers.Add("session-token", UserAuthToken);
 
             req.Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
@@ -116,7 +127,7 @@ public abstract class AbstractApiBase
         }
         catch (Exception ex)
         {
-            ParseWebException(ex);
+            ParseWebException(ex, url);
 
             return default;
         }
@@ -160,18 +171,19 @@ public abstract class AbstractApiBase
         if (Constants.OfflineMode)
             return default;
 
+        var url = new Uri($"{Url}{controller}/{action}");
+
+        _loggingService.Log($"Requesting => {ApiName} => {url}");
+
         try
         {
             using var client = new HttpClient();
-
-            var url = new Uri($"{Url}{controller}/{action}");
 
             var req = new HttpRequestMessage(HttpMethod.Get, url);
 
             req.Headers.Add("username", _profileManager.User?.Name);
             req.Headers.Add("session-token", UserAuthToken);
 
-            // CancelCancellationToken();
 
             var result = await client.SendAsync(req, CancellationTokenSource.Token);
 
@@ -183,7 +195,7 @@ public abstract class AbstractApiBase
         }
         catch (Exception ex)
         {
-            ParseWebException(ex);
+            ParseWebException(ex, url);
 
             return default;
         }
@@ -202,18 +214,19 @@ public abstract class AbstractApiBase
         if (Constants.OfflineMode)
             return default;
 
+        var url = new Uri($"{Url}{controller}/{action}?{parameters}");
+
+        _loggingService.Log($"Requesting => {ApiName} => {url}");
+
         try
         {
             using var client = new HttpClient();
 
-            var url = new Uri($"{Url}{controller}/{action}?{parameters}");
 
             var req = new HttpRequestMessage(HttpMethod.Get, url);
 
             req.Headers.Add("username", _profileManager.User?.Name);
             req.Headers.Add("session-token", UserAuthToken);
-
-            // CancelCancellationToken();
 
             var result = await client.SendAsync(req, CancellationTokenSource.Token);
 
@@ -225,7 +238,7 @@ public abstract class AbstractApiBase
         }
         catch (Exception ex)
         {
-            ParseWebException(ex);
+            ParseWebException(ex, url);
 
             return default;
         }
@@ -249,11 +262,13 @@ public abstract class AbstractApiBase
         if (Constants.OfflineMode)
             return default;
 
+        var url = new Uri($"{Url}{controller}/{action}");
+
+        _loggingService.Log($"Requesting => {ApiName} => {url}");
+
         try
         {
             using var client = new HttpClient();
-
-            var url = new Uri($"{Url}{controller}/{action}");
 
             var req = new HttpRequestMessage(HttpMethod.Post, url);
 
@@ -261,8 +276,6 @@ public abstract class AbstractApiBase
             req.Headers.Add("session-token", UserAuthToken);
 
             req.Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
-
-            // CancelCancellationToken();
 
             var result = await client.SendAsync(req, CancellationTokenSource.Token);
 
@@ -274,7 +287,7 @@ public abstract class AbstractApiBase
         }
         catch (Exception ex)
         {
-            ParseWebException(ex);
+            ParseWebException(ex, url);
 
             return default;
         }
@@ -294,18 +307,18 @@ public abstract class AbstractApiBase
         if (Constants.OfflineMode)
             return default;
 
+        var url = new Uri($"{Url}{controller}/{action}?{parameters}");
+
+        _loggingService.Log($"Requesting => {ApiName} => {url}");
+
         try
         {
             using var client = new HttpClient();
-
-            var url = new Uri($"{Url}{controller}/{action}?{parameters}");
 
             var req = new HttpRequestMessage(HttpMethod.Post, url);
 
             req.Headers.Add("username", _profileManager.User?.Name);
             req.Headers.Add("session-token", UserAuthToken);
-
-            // CancelCancellationToken();
 
             var result = await client.SendAsync(req, CancellationTokenSource.Token);
 
@@ -317,7 +330,7 @@ public abstract class AbstractApiBase
         }
         catch (Exception ex)
         {
-            ParseWebException(ex);
+            ParseWebException(ex, url);
 
             return default;
         }
