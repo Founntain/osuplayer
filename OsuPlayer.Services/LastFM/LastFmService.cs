@@ -2,13 +2,12 @@
 using System.Text;
 using System.Xml;
 using Nein.Extensions;
-using OsuPlayer.IO.Storage.Config;
-using OsuPlayer.IO.Storage.LazerModels.Extensions;
 using OsuPlayer.Network.LastFM.Responses;
+using OsuPlayer.Services.Interfaces;
 
-namespace OsuPlayer.Network.LastFM;
+namespace OsuPlayer.Services.LastFM;
 
-public class LastFmApi : WebRequestBase
+public class LastFmService : WebRequestBase, IOsuPlayerService
 {
     /// <summary>
     /// The Last.FM API-Key of the user
@@ -27,7 +26,9 @@ public class LastFmApi : WebRequestBase
     /// </summary>
     private string? _sessionKey;
 
-    public LastFmApi()
+    public string ServiceName => "LASTFM_SERVICE";
+
+    public LastFmService()
     {
         BaseUrl = "http://ws.audioscrobbler.com/2.0/?format=json";
 
@@ -38,7 +39,7 @@ public class LastFmApi : WebRequestBase
         _authToken = string.Empty;
     }
 
-    public LastFmApi(string apiKey, string secret)
+    public LastFmService(string apiKey, string secret)
     {
         _apiKey = apiKey;
         _secret = secret;
@@ -46,6 +47,8 @@ public class LastFmApi : WebRequestBase
 
         BaseUrl = "http://ws.audioscrobbler.com/2.0/?format=json";
     }
+
+    public string ServiceTag() => $"[{ServiceName}] ";
 
     public void SetApiKeyAndSecret(string apiKey, string secret)
     {
@@ -104,7 +107,7 @@ public class LastFmApi : WebRequestBase
 
         return !string.IsNullOrWhiteSpace(_sessionKey);
     }
-    
+
     /// <summary>
     /// Loads the last.fm Session Key from the users file system asynchronously
     /// </summary>

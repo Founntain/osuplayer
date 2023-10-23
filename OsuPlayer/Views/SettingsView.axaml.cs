@@ -9,6 +9,7 @@ using Nein.Extensions;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Network.LastFM;
+using OsuPlayer.Services.LastFM;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
 using ReactiveUI;
@@ -155,7 +156,7 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
     private async void LastFmAuth_OnClick(object? sender, RoutedEventArgs e)
     {
         var window = Locator.Current.GetService<MainWindow>();
-        var lastFmApi = Locator.Current.GetService<LastFmApi>();
+        var lastFmApi = Locator.Current.GetService<LastFmService>();
 
         await using var config = new Config();
 

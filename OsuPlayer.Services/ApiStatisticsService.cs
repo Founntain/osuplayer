@@ -6,8 +6,6 @@ using Nein.Extensions.Bindables;
 using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.Enums;
 using OsuPlayer.Api.Data.API.RequestModels.User;
-using OsuPlayer.Network.API.Service.NorthFox.Endpoints;
-using OsuPlayer.Network.Online;
 using OsuPlayer.Services.Interfaces;
 using Splat;
 

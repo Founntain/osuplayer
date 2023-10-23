@@ -1,6 +1,4 @@
-﻿using OsuPlayer.Extensions;
-using OsuPlayer.IO.Storage.Config;
-using OsuPlayer.Services.Interfaces;
+﻿using OsuPlayer.Services.Interfaces;
 
 namespace OsuPlayer.Services;
 

@@ -9,7 +9,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\OsuPlayer.Data\OsuPlayer.Data.csproj" />
-        <ProjectReference Include="..\OsuPlayer.Extensions\OsuPlayer.Extensions.csproj" />
     </ItemGroup>
 
     <ItemGroup>

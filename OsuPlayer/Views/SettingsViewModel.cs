@@ -15,6 +15,7 @@ using OsuPlayer.Network.Data;
 using OsuPlayer.Network.LastFM;
 using OsuPlayer.Services;
 using OsuPlayer.Services.Interfaces;
+using OsuPlayer.Services.LastFM;
 using OsuPlayer.Services.ShuffleImpl;
 using OsuPlayer.Styles;
 using OsuPlayer.Windows;
@@ -491,7 +492,7 @@ public class SettingsViewModel : BaseViewModel
         _enableScrobbling = config.Container.EnableScrobbling;
         _displayUserStats = config.Container.DisplayerUserStats;
 
-        var lastFmApi = Locator.Current.GetService<LastFmApi>();
+        var lastFmApi = Locator.Current.GetService<LastFmService>();
 
         _isLastFmAuthorized = lastFmApi.LoadSessionKey();
 

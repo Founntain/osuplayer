@@ -11,6 +11,7 @@ using OsuPlayer.Network.API.Service.NorthFox.Endpoints;
 using OsuPlayer.Network.LastFM;
 using OsuPlayer.Services;
 using OsuPlayer.Services.Interfaces;
+using OsuPlayer.Services.LastFM;
 using OsuPlayer.Windows;
 using Splat;
 
@@ -81,7 +82,7 @@ internal static class Program
         services.RegisterLazySingleton<ISortProvider>(() => new SortService());
         services.RegisterLazySingleton<ISongSourceProvider>(() => new OsuSongSourceService(resolver.GetService<ISortProvider>()));
         services.RegisterLazySingleton<IHistoryProvider>(() => new HistoryService());
-        services.RegisterLazySingleton<LastFmApi>(() => new LastFmApi());
+        services.RegisterLazySingleton<LastFmService>(() => new LastFmService());
 
         services.RegisterLazySingleton(() => new NorthFox());
 
@@ -92,7 +93,7 @@ internal static class Program
             statisticsProvider: resolver.GetRequiredService<IStatisticsProvider>(),
             sortProvider: resolver.GetRequiredService<ISortProvider>(),
             historyProvider: resolver.GetRequiredService<IHistoryProvider>(),
-            lastFmApi: resolver.GetRequiredService<LastFmApi>()
+            lastFmApi: resolver.GetRequiredService<LastFmService>()
         ));
 
         services.Register(() => new MainWindowViewModel(

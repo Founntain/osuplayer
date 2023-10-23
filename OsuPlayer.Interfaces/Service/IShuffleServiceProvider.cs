@@ -1,4 +1,4 @@
-﻿namespace OsuPlayer.Services.Interfaces;
+﻿namespace OsuPlayer.Interfaces.Service;
 
 /// <summary>
 /// This interface provides a service provider for shuffle implementations.

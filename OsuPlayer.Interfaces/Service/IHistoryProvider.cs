@@ -1,8 +1,6 @@
 ﻿using Nein.Extensions.Bindables;
-using OsuPlayer.IO.DbReader.DataModels.Extensions;
-using OsuPlayer.IO.DbReader.Interfaces;
 
-namespace OsuPlayer.Services.Interfaces;
+namespace OsuPlayer.Interfaces.Service;
 
 /// <summary>
 /// This interface provides historic capabilities

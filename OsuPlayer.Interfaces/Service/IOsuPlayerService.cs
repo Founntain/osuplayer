@@ -1,4 +1,4 @@
-﻿namespace OsuPlayer.Services.Interfaces;
+﻿namespace OsuPlayer.Interfaces.Service;
 
 public interface IOsuPlayerService
 {

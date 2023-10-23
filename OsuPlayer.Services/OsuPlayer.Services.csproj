@@ -14,7 +14,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\OsuPlayer.IO\OsuPlayer.IO.csproj" />
-      <ProjectReference Include="..\OsuPlayer.Network\OsuPlayer.Network.csproj" />
     </ItemGroup>
 
 </Project>
