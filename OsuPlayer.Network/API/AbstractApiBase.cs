@@ -184,7 +184,6 @@ public abstract class AbstractApiBase
             req.Headers.Add("username", _profileManager.User?.Name);
             req.Headers.Add("session-token", UserAuthToken);
 
-
             var result = await client.SendAsync(req, CancellationTokenSource.Token);
 
             var response = JsonConvert.DeserializeObject<ApiResponse<T>>(await result.Content.ReadAsStringAsync());
@@ -221,7 +220,6 @@ public abstract class AbstractApiBase
         try
         {
             using var client = new HttpClient();
-
 
             var req = new HttpRequestMessage(HttpMethod.Get, url);
 

@@ -32,7 +32,6 @@ public class LastFmApi : WebRequestBase, ILastFmApiService
     /// </summary>
     private string? _sessionKey;
 
-
     public LastFmApi()
     {
         _loggingService = Locator.Current.GetRequiredService<ILoggingService>();

@@ -29,5 +29,4 @@ public class DbReaderFactory : OsuPlayerService, IDbReaderFactory
                 throw new ArgumentOutOfRangeException();
         }
     }
-
 }
