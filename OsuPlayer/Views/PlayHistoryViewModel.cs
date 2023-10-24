@@ -1,6 +1,7 @@
 ﻿using Nein.Base;
 using Nein.Extensions;
-using OsuPlayer.IO.DbReader.DataModels.Extensions;
+using OsuPlayer.Data.DataModels.Extensions;
+using OsuPlayer.Interfaces.Service;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.Modules.Audio.Interfaces;
 using ReactiveUI;

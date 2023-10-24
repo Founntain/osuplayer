@@ -6,8 +6,11 @@ using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using Nein.Base;
-using OsuPlayer.Modules.Services;
-using OsuPlayer.Network.API.Service.NorthFox.Endpoints;
+using OsuPlayer.Data.DataModels;
+using OsuPlayer.Data.DataModels.Interfaces;
+using OsuPlayer.Interfaces.Service;
+using OsuPlayer.Network.API.NorthFox;
+using OsuPlayer.Services;
 using ReactiveUI;
 using SkiaSharp;
 using Splat;
@@ -16,12 +19,13 @@ namespace OsuPlayer.Views.HomeSubViews;
 
 public class HomeUserPanelViewModel : BaseViewModel
 {
+    private readonly IProfileManagerService _profileManager;
     private readonly BindableList<ObservableValue> _graphValues = new();
-    
+
     public bool IsUserNotLoggedIn => CurrentUser == default || CurrentUser?.UniqueId == Guid.Empty;
     public bool IsUserLoggedIn => CurrentUser != default && CurrentUser?.UniqueId != Guid.Empty;
-    
-    public User? CurrentUser => ProfileManager.User;
+
+    public IUser? CurrentUser => _profileManager.User;
 
     public Axis[] Axes { get; set; } =
     {
@@ -31,7 +35,7 @@ public class HomeUserPanelViewModel : BaseViewModel
             Labels = null
         }
     };
-    
+
     private Bitmap? _profilePicture;
 
     public Bitmap? ProfilePicture
@@ -39,13 +43,15 @@ public class HomeUserPanelViewModel : BaseViewModel
         get => _profilePicture;
         set => this.RaiseAndSetIfChanged(ref _profilePicture, value);
     }
-    
+
     public ObservableCollection<ISeries> Series { get; set; }
 
-    public HomeUserPanelViewModel(IStatisticsProvider? statisticsProvider)
+    public HomeUserPanelViewModel(IStatisticsProvider? statisticsProvider, IProfileManagerService profileManager)
     {
+        _profileManager = profileManager;
+
         var statsProvider = statisticsProvider;
-        
+
         if (statsProvider != null)
         {
             _graphValues.BindTo(statsProvider.GraphValues);
@@ -58,7 +64,7 @@ public class HomeUserPanelViewModel : BaseViewModel
 
             statsProvider.UserDataChanged += (_, _) => this.RaisePropertyChanged(nameof(CurrentUser));
         }
-        
+
         Activator = new ViewModelActivator();
 
         this.WhenActivated(Block);
@@ -67,7 +73,7 @@ public class HomeUserPanelViewModel : BaseViewModel
     private async void Block(CompositeDisposable obj)
     {
         ProfilePicture = await LoadProfilePictureAsync();
-        
+
         Series = new ObservableCollection<ISeries>
         {
             new LineSeries<ObservableValue>
@@ -105,12 +111,12 @@ public class HomeUserPanelViewModel : BaseViewModel
 
         var sessionToken = await File.ReadAllTextAsync("data/session.op");
 
-        await ProfileManager.Login(sessionToken);
+        await _profileManager.Login(sessionToken);
 
         this.RaisePropertyChanged(nameof(IsUserLoggedIn));
         this.RaisePropertyChanged(nameof(IsUserNotLoggedIn));
         this.RaisePropertyChanged(nameof(CurrentUser));
-        
+
         ProfilePicture = await LoadProfilePictureAsync();
     }
 
@@ -118,6 +124,6 @@ public class HomeUserPanelViewModel : BaseViewModel
     {
         if (CurrentUser == default || CurrentUser.UniqueId == Guid.Empty) return default;
 
-        return await Locator.Current.GetService<NorthFox>().User.GetProfilePictureAsync(CurrentUser.UniqueId);
+        return await Locator.Current.GetService<IOsuPlayerApiService>().User.GetProfilePictureAsync(CurrentUser.UniqueId);
     }
 }

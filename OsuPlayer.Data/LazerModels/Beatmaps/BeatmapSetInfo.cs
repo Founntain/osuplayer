@@ -1,17 +1,18 @@
 ﻿using JetBrains.Annotations;
 using Newtonsoft.Json;
-using OsuPlayer.IO.Storage.LazerModels.Extensions;
-using OsuPlayer.IO.Storage.LazerModels.Files;
+using OsuPlayer.Data.LazerModels.Extensions;
+using OsuPlayer.Data.LazerModels.Files;
 using Realms;
 
-namespace OsuPlayer.IO.Storage.LazerModels.Beatmaps;
+namespace OsuPlayer.Data.LazerModels.Beatmaps;
 
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 [MapTo("BeatmapSet")]
 public class BeatmapSetInfo : RealmObject, IHasRealmFiles, IEquatable<BeatmapSetInfo>, IBeatmapSetInfo
 {
-    [PrimaryKey] public Guid ID { get; set; }
+    [PrimaryKey]
+    public Guid ID { get; set; }
 
     public IList<BeatmapInfo> Beatmaps { get; } = null!;
 
@@ -22,7 +23,8 @@ public class BeatmapSetInfo : RealmObject, IHasRealmFiles, IEquatable<BeatmapSet
         set => StatusInt = (int) value;
     }
 
-    [MapTo(nameof(Status))] public int StatusInt { get; set; } = (int) BeatmapOnlineStatus.None;
+    [MapTo(nameof(Status))]
+    public int StatusInt { get; set; } = (int) BeatmapOnlineStatus.None;
 
     public bool DeletePending { get; set; }
 
@@ -31,11 +33,13 @@ public class BeatmapSetInfo : RealmObject, IHasRealmFiles, IEquatable<BeatmapSet
     /// </summary>
     public bool Protected { get; set; }
 
-    [Indexed] public int OnlineID { get; set; } = -1;
+    [Indexed]
+    public int OnlineID { get; set; } = -1;
 
     public DateTimeOffset DateAdded { get; set; }
 
-    [JsonIgnore] public IBeatmapMetadataInfo Metadata => Beatmaps.FirstOrDefault()?.Metadata ?? new BeatmapMetadata();
+    [JsonIgnore]
+    public IBeatmapMetadataInfo Metadata => Beatmaps.FirstOrDefault()?.Metadata ?? new BeatmapMetadata();
 
     public double MaxStarDifficulty => Beatmaps.Count == 0 ? 0 : Beatmaps.Max(b => b.StarRating);
 

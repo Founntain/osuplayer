@@ -40,7 +40,4 @@
             <DependentUpon>CrashHandlerMainWindow.axaml</DependentUpon>
         </Compile>
     </ItemGroup>
-    <ItemGroup>
-        <ProjectReference Include="..\OsuPlayer.Extensions\OsuPlayer.Extensions.csproj" />
-    </ItemGroup>
 </Project>

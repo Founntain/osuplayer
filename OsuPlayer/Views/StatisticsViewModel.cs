@@ -2,7 +2,9 @@ using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using System.Timers;
 using Nein.Base;
-using OsuPlayer.Network.API.Service.NorthFox.Endpoints;
+using Nein.Extensions;
+using OsuPlayer.Interfaces.Service;
+using OsuPlayer.Network.API.NorthFox;
 using ReactiveUI;
 using Splat;
 
@@ -122,7 +124,9 @@ public class StatisticsViewModel : BaseViewModel
 
     private async Task UpdateApiStatistics()
     {
-        var statistics = await Locator.Current.GetService<NorthFox>().ApiStatistics.GetApiStatistics();
+        if (Locator.Current.GetRequiredService<IOsuPlayerApiService>() is not NorthFox api) return;
+
+        var statistics = await api.ApiStatistics.GetApiStatistics();
 
         if (statistics == null) return;
 
@@ -136,12 +140,16 @@ public class StatisticsViewModel : BaseViewModel
 
     private async Task UpdateStorageAmount()
     {
-        MbUsed = (float) await Locator.Current.GetService<NorthFox>().ApiStatistics.GetStorageAmount();
+        if (Locator.Current.GetRequiredService<IOsuPlayerApiService>() is not NorthFox api) return;
+
+        MbUsed = (float) await api.ApiStatistics.GetStorageAmount();
     }
 
     private async Task UpdateBeatmapCount()
     {
-        var apiStatistics = await Locator.Current.GetService<NorthFox>().ApiStatistics.GetApiStatistics();
+        if (Locator.Current.GetRequiredService<IOsuPlayerApiService>() is not NorthFox api) return;
+
+        var apiStatistics = await api.ApiStatistics.GetApiStatistics();
 
         if (apiStatistics == null) return;
 

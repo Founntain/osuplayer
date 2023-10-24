@@ -6,8 +6,7 @@
              xmlns:valueConverters="clr-namespace:OsuPlayer.ValueConverters"
              xmlns:extensions="clr-namespace:OsuPlayer.Extensions.ValueConverters;assembly=OsuPlayer.Extensions"
              xmlns:views="clr-namespace:OsuPlayer.Views"
-             xmlns:dataModels="clr-namespace:OsuPlayer.IO.DbReader.DataModels;assembly=OsuPlayer.IO"
-             xmlns:interfaces="clr-namespace:OsuPlayer.IO.DbReader.Interfaces;assembly=OsuPlayer.IO"
+             xmlns:interfaces="clr-namespace:OsuPlayer.Data.DataModels.Interfaces;assembly=OsuPlayer.Data"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.PlaylistEditorView"
              FontWeight="{DynamicResource DefaultFontWeight}">

@@ -3,13 +3,15 @@ using Avalonia;
 using Avalonia.Platform;
 using Avalonia.ReactiveUI;
 using Nein.Extensions;
+using OsuPlayer.Data.DataModels;
 using OsuPlayer.Extensions;
+using OsuPlayer.Interfaces.Service;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.Modules.Audio.Engine;
 using OsuPlayer.Modules.Audio.Interfaces;
-using OsuPlayer.Modules.Services;
-using OsuPlayer.Network.API.Service.NorthFox.Endpoints;
-using OsuPlayer.Network.LastFM;
+using OsuPlayer.Network.API.NorthFox;
+using OsuPlayer.Network.LastFm;
+using OsuPlayer.Services;
 using OsuPlayer.Windows;
 using Splat;
 
@@ -71,16 +73,21 @@ internal static class Program
 
     private static void Register(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver, IRuntimePlatform platform)
     {
+        services.RegisterLazySingleton<ILoggingService>(() => new LoggingService());
+
         services.RegisterLazySingleton<IAudioEngine>(() => new BassEngine());
 
-        services.RegisterLazySingleton<IShuffleServiceProvider>(() => new ShuffleServiceProvider());
-        services.RegisterLazySingleton<IStatisticsProvider>(() => new ApiStatisticsProvider());
-        services.RegisterLazySingleton<ISortProvider>(() => new SortProvider());
-        services.RegisterLazySingleton<ISongSourceProvider>(() => new OsuSongSourceProvider(resolver.GetService<ISortProvider>()));
-        services.RegisterLazySingleton<IHistoryProvider>(() => new HistoryProvider());
-        services.RegisterLazySingleton<LastFmApi>(() => new LastFmApi());
+        services.RegisterLazySingleton<IDbReaderFactory>(() => new DbReaderFactory());
 
-        services.RegisterLazySingleton(() => new NorthFox());
+        services.RegisterLazySingleton<IProfileManagerService>(() => new ProfileManagerServiceService());
+        services.RegisterLazySingleton<IShuffleServiceProvider>(() => new ShuffleService());
+        services.RegisterLazySingleton<IStatisticsProvider>(() => new ApiStatisticsService(resolver.GetService<IProfileManagerService>()));
+        services.RegisterLazySingleton<ISortProvider>(() => new SortService());
+        services.RegisterLazySingleton<ISongSourceProvider>(() => new OsuSongSourceService(resolver.GetService<ISortProvider>()));
+        services.RegisterLazySingleton<IHistoryProvider>(() => new HistoryService());
+        services.RegisterLazySingleton<ILastFmApiService>(() => new LastFmService(new LastFmApi()));
+
+        services.RegisterLazySingleton<IOsuPlayerApiService>(() => new NorthFox());
 
         services.RegisterLazySingleton<IPlayer>(() => new Player(
             audioEngine: resolver.GetRequiredService<IAudioEngine>(),
@@ -89,18 +96,20 @@ internal static class Program
             statisticsProvider: resolver.GetRequiredService<IStatisticsProvider>(),
             sortProvider: resolver.GetRequiredService<ISortProvider>(),
             historyProvider: resolver.GetRequiredService<IHistoryProvider>(),
-            lastFmApi: resolver.GetRequiredService<LastFmApi>()
+            lastFmApi: resolver.GetRequiredService<ILastFmApiService>()
         ));
 
         services.Register(() => new MainWindowViewModel(
             resolver.GetRequiredService<IAudioEngine>(),
             resolver.GetRequiredService<IPlayer>(),
+            resolver.GetRequiredService<IProfileManagerService>(),
             resolver.GetService<IShuffleServiceProvider>(),
             resolver.GetService<IStatisticsProvider>(),
             resolver.GetService<ISortProvider>(),
             resolver.GetService<IHistoryProvider>()));
 
         services.RegisterLazySingleton(() => new MainWindow(
-            resolver.GetRequiredService<MainWindowViewModel>()));
+            resolver.GetRequiredService<MainWindowViewModel>(),
+            resolver.GetRequiredService<ILoggingService>()));
     }
 }

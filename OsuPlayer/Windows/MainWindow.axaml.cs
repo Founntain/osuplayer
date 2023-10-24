@@ -7,9 +7,11 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Nein.Base;
 using OsuPlayer.Extensions.EnumExtensions;
+using OsuPlayer.Interfaces.Service;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.Network;
-using OsuPlayer.Network.LastFM;
+using OsuPlayer.Network.LastFm;
+using OsuPlayer.Services;
 using OsuPlayer.Styles;
 using OsuPlayer.UI_Extensions;
 using ReactiveUI;
@@ -19,6 +21,9 @@ namespace OsuPlayer.Windows;
 
 public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 {
+    private readonly ILoggingService _loggingService;
+    private readonly IProfileManagerService _profileManager;
+
     public Miniplayer? Miniplayer;
 
     public FullscreenWindow? FullscreenWindow;
@@ -28,9 +33,12 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         InitializeComponent();
     }
 
-    public MainWindow(MainWindowViewModel viewModel)
+    public MainWindow(MainWindowViewModel viewModel, ILoggingService loggingService)
     {
         ViewModel = viewModel;
+
+        _profileManager = ViewModel.ProfileManager;
+        _loggingService = loggingService;
 
         var player = ViewModel.Player;
 
@@ -39,6 +47,9 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         InitializeComponent();
 
         using var config = new Config();
+
+        _loggingService.Log("Loaded config successfully", LogType.Success, config.Container);
+
         TransparencyLevelHint = (WindowTransparencyLevel) config.Container.BackgroundMode;
         FontWeight = (FontWeight) config.Container.DefaultFontWeight;
 
@@ -62,20 +73,21 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
             try
             {
                 var window = Locator.Current.GetService<MainWindow>();
-                var lastFmApi = Locator.Current.GetService<LastFmApi>();
+                var lastFmApi = Locator.Current.GetService<ILastFmApiService>();
+                var loggingService = Locator.Current.GetService<ILoggingService>();
 
                 await using var config = new Config();
 
                 var apiKey = config.Container.LastFmApiKey;
                 var apiSecret = config.Container.LastFmSecret;
                 var sessionKey = await lastFmApi.LoadSessionKeyAsync();
-    
+
                 if (!string.IsNullOrWhiteSpace(apiKey) || !string.IsNullOrWhiteSpace(apiSecret) || !sessionKey)
                 {
-                    Console.WriteLine("Can't connect to last.fm, because no apikey, apisecret or session key fast found");
+                    loggingService.Log("Can't connect to last.fm, because no apikey, apisecret or session key fast found", LogType.Warning);
                     return;
                 }
-            
+
                 // We only load the APIKey from the config, as it is the only key that we save
                 // 1. Because we always need the api key for all the request
                 // 2. The secret is only used for the first authentication of the token
@@ -86,11 +98,11 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
                 {
                     await lastFmApi.GetAuthToken();
                     lastFmApi.AuthorizeToken();
-    
+
                     await MessageBox.ShowDialogAsync(window, "Close this window, when you are done, authenticating in the browser");
-            
+
                     await lastFmApi.GetSessionKey();
-    
+
                     await lastFmApi.SaveSessionKeyAsync();
                 }
             }
@@ -125,7 +137,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         using var config = new Config();
 
         config.Container.Volume = ViewModel.Player.Volume.Value;
-        config.Container.Username = ProfileManager.User?.Name;
+        config.Container.Username = _profileManager.User?.Name;
         config.Container.RepeatMode = ViewModel.Player.RepeatMode.Value;
         config.Container.IsShuffle = ViewModel.Player.IsShuffle.Value;
         config.Container.SelectedPlaylist = ViewModel.Player.SelectedPlaylist.Value?.Id;

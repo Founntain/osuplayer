@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using Realms;
 
-namespace OsuPlayer.IO.Storage.LazerModels.Beatmaps;
+namespace OsuPlayer.Data.LazerModels.Beatmaps;
 
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
@@ -10,9 +10,11 @@ public class RulesetInfo : RealmObject, IEquatable<RulesetInfo>, IComparable<Rul
 {
     public bool Available { get; set; }
 
-    [PrimaryKey] public string ShortName { get; set; } = string.Empty;
+    [PrimaryKey]
+    public string ShortName { get; set; } = string.Empty;
 
-    [Indexed] public int OnlineID { get; set; } = -1;
+    [Indexed]
+    public int OnlineID { get; set; } = -1;
 
     public string Name { get; set; } = string.Empty;
 

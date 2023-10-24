@@ -57,8 +57,10 @@
         <ProjectReference Include="..\OsuPlayer.CrashHandler\OsuPlayer.CrashHandler.csproj" />
         <ProjectReference Include="..\OsuPlayer.Data\OsuPlayer.Data.csproj" />
         <ProjectReference Include="..\OsuPlayer.Extensions\OsuPlayer.Extensions.csproj" />
+        <ProjectReference Include="..\OsuPlayer.Interfaces\OsuPlayer.Interfaces.csproj" />
         <ProjectReference Include="..\OsuPlayer.IO\OsuPlayer.IO.csproj" />
         <ProjectReference Include="..\OsuPlayer.Network\OsuPlayer.Network.csproj" />
+        <ProjectReference Include="..\OsuPlayer.Services\OsuPlayer.Services.csproj" />
     </ItemGroup>
     <ItemGroup>
         <Compile Update="Windows\MainWindow.axaml.cs">
@@ -146,16 +148,16 @@
             <DependentUpon>BeatmapsView.axaml</DependentUpon>
         </Compile>
         <Compile Update="Views\ExportSongsViewModel.cs">
-          <DependentUpon>ExportSongsView.axaml</DependentUpon>
+            <DependentUpon>ExportSongsView.axaml</DependentUpon>
         </Compile>
         <Compile Update="Windows\ExportSongsProcessWindowViewModel.cs">
-          <DependentUpon>ExportSongsProcessWindow.axaml</DependentUpon>
+            <DependentUpon>ExportSongsProcessWindow.axaml</DependentUpon>
         </Compile>
         <Compile Update="Views\PlayHistoryView.axaml.cs">
-          <DependentUpon>PlayHistoryView.axaml</DependentUpon>
+            <DependentUpon>PlayHistoryView.axaml</DependentUpon>
         </Compile>
         <Compile Update="Views\PlayHistoryViewModel.cs">
-          <DependentUpon>PlayHistoryView.axaml</DependentUpon>
+            <DependentUpon>PlayHistoryView.axaml</DependentUpon>
         </Compile>
     </ItemGroup>
     <ItemGroup>

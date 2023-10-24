@@ -6,8 +6,9 @@ using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.Enums;
 using OsuPlayer.Api.Data.API.RequestModels.Beatmap;
 using OsuPlayer.Api.Data.API.ResponseModels;
+using OsuPlayer.Interfaces.Service;
 using OsuPlayer.Modules.Audio.Interfaces;
-using OsuPlayer.Network.API.Service.NorthFox.Endpoints;
+using OsuPlayer.Network.API.NorthFox;
 using ReactiveUI;
 using Splat;
 
@@ -133,14 +134,14 @@ public class BeatmapsViewModel : BaseViewModel
         // If we have beatmaps already loaded and reload the view we don't want to load them again
         if (Beatmaps?.Count > 0) return;
 
-        var api = Locator.Current.GetService<NorthFox>();
-
         await SearchBeatmaps();
     }
 
     public async Task<BeatmapSearchResponse> SearchBeatmaps(int newPage = 1, int pageSize = 64)
     {
-        var api = Locator.Current.GetService<NorthFox>();
+        var api = Locator.Current.GetService<IOsuPlayerApiService>() as NorthFox;
+
+        if (api == default) return new ();
 
         SearchingBeatmaps = true;
 

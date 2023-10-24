@@ -4,16 +4,30 @@ using ManagedBass;
 using ManagedBass.DirectX8;
 using ManagedBass.Fx;
 using OsuPlayer.Data.OsuPlayer.Classes;
+using OsuPlayer.Interfaces.Service;
 using OsuPlayer.IO.Storage.Equalizer;
 using OsuPlayer.Modules.Audio.Interfaces;
+using OsuPlayer.Services;
 
 namespace OsuPlayer.Modules.Audio.Engine;
 
 /// <summary>
 /// Audio engine for the osu!player using <see cref="ManagedBass" />
 /// </summary>
-public sealed class BassEngine : IAudioEngine
+public sealed class BassEngine : OsuPlayerService, IAudioEngine
 {
+    public override string ServiceName => "BASS_ENGINE";
+
+    public List<AudioDevice> AvailableAudioDevices { get; } = new();
+    public IAudioEngine.ChannelReachedEndHandler? ChannelReachedEnd { private get; set; }
+    public BindableArray<decimal> EqGains { get; } = new(10, 1);
+
+    public Bindable<double> ChannelLength { get; } = new();
+    public Bindable<double> ChannelPosition { get; } = new();
+    public Bindable<double> Volume { get; } = new();
+    public Bindable<bool> IsPlaying { get; } = new();
+    public Bindable<double> PlaybackSpeed { get; } = new();
+
     private readonly SyncProcedure _endTrackSyncProc;
     private readonly DispatcherTimer _positionTimer = new(DispatcherPriority.ApplicationIdle);
 
@@ -26,16 +40,6 @@ public sealed class BassEngine : IAudioEngine
     private DXParamEQ? _paramEq;
     private double _playbackSpeed;
     private int _sampleFrequency = 44100;
-
-    public List<AudioDevice> AvailableAudioDevices { get; } = new();
-    public IAudioEngine.ChannelReachedEndHandler? ChannelReachedEnd { private get; set; }
-    public BindableArray<decimal> EqGains { get; } = new(10, 1);
-
-    public Bindable<double> ChannelLength { get; } = new();
-    public Bindable<double> ChannelPosition { get; } = new();
-    public Bindable<double> Volume { get; } = new();
-    public Bindable<bool> IsPlaying { get; } = new();
-    public Bindable<double> PlaybackSpeed { get; } = new();
 
     public bool IsEqEnabled
     {
@@ -50,7 +54,7 @@ public sealed class BassEngine : IAudioEngine
         }
     }
 
-    public BassEngine()
+    public BassEngine() : base()
     {
         _positionTimer.Interval = TimeSpan.FromMilliseconds((double) 1000 / 60);
         _positionTimer.Tick += PositionTimer_Tick;
@@ -193,7 +197,7 @@ public sealed class BassEngine : IAudioEngine
         using var config = new Config();
         config.Container.SelectedAudioDeviceDriver = audioDevices[index].Driver;
 
-        Console.WriteLine($"[BASSENGINE] DEVICE {index} | LOADING PLAYBACK {Bass.LastError}");
+        LogToConsole($"DEVICE {index} | LOADING PLAYBACK {Bass.LastError}");
     }
 
     private void SetPlaybackSpeedOptions(double speed)
@@ -232,7 +236,7 @@ public sealed class BassEngine : IAudioEngine
         {
             var success = Bass.Init(counter);
 
-            Console.WriteLine($"[BASSENGINE] INIT DEVICE {deviceInfo} | SUCCESSFUL: {success} | CODE: {Bass.LastError}");
+            LogToConsole($"INIT DEVICE {deviceInfo} | SUCCESSFUL: {success} | CODE: {Bass.LastError}");
 
             if (success) AvailableAudioDevices.Add(deviceInfo);
 
@@ -346,6 +350,7 @@ public sealed class BassEngine : IAudioEngine
     private void PositionTimer_Tick(object sender, EventArgs e)
     {
         if (!IsPlaying.Value) return;
+
         if (_fxStream == 0)
         {
             ChannelPosition.Value = 0;

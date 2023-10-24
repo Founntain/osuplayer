@@ -7,7 +7,10 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Nein.Base;
 using Nein.Extensions;
-using OsuPlayer.Network.API.Service.NorthFox.Endpoints;
+using OsuPlayer.Data.DataModels;
+using OsuPlayer.Interfaces.Service;
+using OsuPlayer.Network.API.NorthFox;
+using OsuPlayer.Services;
 using OsuPlayer.UI_Extensions;
 using ReactiveUI;
 using Splat;
@@ -16,18 +19,17 @@ namespace OsuPlayer.Windows;
 
 public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
 {
-    public LoginWindow()
+    private readonly IProfileManagerService _profileManager;
+
+    public LoginWindow() :this(Locator.Current.GetRequiredService<IProfileManagerService>(), string.Empty)
     {
-        Init();
-
-        using var config = new Config();
-
-        FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
     }
 
-    public LoginWindow(string username)
+    public LoginWindow(IProfileManagerService profileManager, string username)
     {
         Init();
+
+        _profileManager = profileManager;
 
         if (ViewModel == default) return;
 
@@ -41,6 +43,8 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
         ViewModel = new LoginWindowViewModel();
 
         var config = new Config();
+
+        FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
         TransparencyLevelHint = (WindowTransparencyLevel) config.Container.BackgroundMode;
 #if DEBUG
         this.AttachDevTools();
@@ -63,7 +67,7 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
     {
         if (ViewModel == default) return;
 
-        var user = await Locator.Current.GetService<NorthFox>().LoginAndSaveAuthToken(ViewModel.Username, ViewModel.Password);
+        var user = await Locator.Current.GetService<IOsuPlayerApiService>().LoginAndSaveAuthToken(ViewModel.Username, ViewModel.Password);
 
         if (user == default)
         {
@@ -83,7 +87,7 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
             return;
         }
 
-        ProfileManager.User = user.ConvertObjectToJson<User>();
+        _profileManager.User = user.ConvertObjectToJson<User>();
 
         Close();
     }

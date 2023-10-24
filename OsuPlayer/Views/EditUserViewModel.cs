@@ -7,7 +7,9 @@ using Nein.Base;
 using Nein.Extensions;
 using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.RequestModels.Statistics;
-using OsuPlayer.Network.API.Service.NorthFox.Endpoints;
+using OsuPlayer.Interfaces.Service;
+using OsuPlayer.Network.API.NorthFox;
+using OsuPlayer.Services;
 using ReactiveUI;
 using Splat;
 
@@ -15,6 +17,8 @@ namespace OsuPlayer.Views;
 
 public class EditUserViewModel : BaseViewModel
 {
+    private readonly IProfileManagerService _profileManager;
+
     private CancellationTokenSource? _bannerCancellationTokenSource;
     private string _confirmDeletionPassword = string.Empty;
     private Bitmap? _currentProfileBanner;
@@ -24,8 +28,8 @@ public class EditUserViewModel : BaseViewModel
     private bool _isDeleteProfilePopupOpen;
     private bool _isNewBannerSelected;
     private bool _isNewProfilePictureSelected;
-    private string _newPassword = string.Empty;
-    private string _newUsername = ProfileManager.User?.Name ?? string.Empty;
+    private string? _newPassword;
+    private string? _newUsername;
     private string _password = string.Empty;
     private CancellationTokenSource? _profilePictureCancellationTokenSource;
     private CancellationTokenSource? _topSongsCancellationTokenSource;
@@ -106,18 +110,20 @@ public class EditUserViewModel : BaseViewModel
 
     public string NewUsername
     {
-        get => _newUsername;
+        get => _newUsername ??= _profileManager.User?.Name ?? string.Empty;
         set => this.RaiseAndSetIfChanged(ref _newUsername, value);
     }
 
-    public EditUserViewModel()
+    public EditUserViewModel(IProfileManagerService profileManager)
     {
+        _profileManager = profileManager;
+
         Activator = new ViewModelActivator();
         this.WhenActivated(disposables =>
         {
             Disposable.Create(() => { }).DisposeWith(disposables);
 
-            CurrentUser = ProfileManager.User;
+            CurrentUser = _profileManager.User;
         });
     }
 
@@ -139,7 +145,11 @@ public class EditUserViewModel : BaseViewModel
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            var stats = await Locator.Current.GetService<NorthFox>().Beatmap.GetBeatmapsPlayedByUser(CurrentUser.UniqueId);
+            var api = Locator.Current.GetService<IOsuPlayerApiService>() as NorthFox;
+
+            if (api == default) return;
+
+            var stats = await api.Beatmap.GetBeatmapsPlayedByUser(CurrentUser.UniqueId);
 
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
@@ -171,7 +181,7 @@ public class EditUserViewModel : BaseViewModel
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            var profilePicture = await Locator.Current.GetService<NorthFox>().User.GetProfilePictureAsync(CurrentUser.UniqueId);
+            var profilePicture = await Locator.Current.GetService<IOsuPlayerApiService>().User.GetProfilePictureAsync(CurrentUser.UniqueId);
 
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
@@ -203,7 +213,7 @@ public class EditUserViewModel : BaseViewModel
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            var banner = await Locator.Current.GetService<NorthFox>().User.GetProfileBannerAsync(CurrentUser.CustomBannerUrl);
+            var banner = await Locator.Current.GetService<IOsuPlayerApiService>().User.GetProfileBannerAsync(CurrentUser.CustomBannerUrl);
 
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();

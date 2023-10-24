@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using OsuPlayer.IO;
 
-namespace OsuPlayer.Tests;
+namespace OsuPlayer.Tests.IOTests;
 
 public class DirectoryManagerTests
 {

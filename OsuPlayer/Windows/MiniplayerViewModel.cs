@@ -2,9 +2,9 @@
 using Avalonia.Threading;
 using Nein.Base;
 using Nein.Extensions;
+using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
-using OsuPlayer.IO.DbReader.Interfaces;
 using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules;
@@ -171,7 +171,7 @@ public class MiniplayerViewModel : BaseWindowViewModel
                 if (!string.IsNullOrEmpty(d.NewValue) && File.Exists(d.NewValue))
                 {
                     CurrentSongImage = BitmapExtensions.BlurBitmap(d.NewValue, blurRadius: 25, opacity: 0.75f);
-                
+
                     return;
                 }
 

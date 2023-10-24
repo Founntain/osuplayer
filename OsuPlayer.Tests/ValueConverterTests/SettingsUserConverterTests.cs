@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Globalization;
 using NUnit.Framework;
+using OsuPlayer.Data.DataModels;
 using OsuPlayer.Extensions.ValueConverters;
-using OsuPlayer.Network.Online;
 
-namespace OsuPlayer.Tests;
+namespace OsuPlayer.Tests.ValueConverterTests;
 
 public class SettingsUserConverterTests
 {
@@ -47,11 +47,11 @@ public class SettingsUserConverterTests
     //     {
     //         Name = name
     //     };
-    //     
+    //
     //     Assert.IsInstanceOf(_expectedInput, input);
-    //     
+    //
     //     var output = _userConverter.Convert(input, _expectedOutput, null, CultureInfo.InvariantCulture);
-    //     
+    //
     //     Assert.IsInstanceOf(_expectedOutput, output);
     //     Assert.AreEqual(input.Name, output);
     // }

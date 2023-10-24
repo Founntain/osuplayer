@@ -1,8 +1,8 @@
-﻿using OsuPlayer.IO.Storage.LazerModels.Beatmaps;
-using OsuPlayer.IO.Storage.LazerModels.Files;
-using OsuPlayer.IO.Storage.LazerModels.Interfaces;
+﻿using OsuPlayer.Data.LazerModels.Beatmaps;
+using OsuPlayer.Data.LazerModels.Files;
+using OsuPlayer.Data.LazerModels.Interfaces;
 
-namespace OsuPlayer.IO.Storage.LazerModels.Extensions;
+namespace OsuPlayer.Data.LazerModels.Extensions;
 
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.

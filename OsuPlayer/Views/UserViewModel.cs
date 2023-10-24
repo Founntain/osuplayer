@@ -12,8 +12,11 @@ using Material.Icons.Avalonia;
 using Nein.Base;
 using Nein.Extensions;
 using OsuPlayer.Api.Data.API.RequestModels.Statistics;
+using OsuPlayer.Data.DataModels;
+using OsuPlayer.Interfaces.Service;
 using OsuPlayer.Modules.Audio.Interfaces;
-using OsuPlayer.Network.API.Service.NorthFox.Endpoints;
+using OsuPlayer.Network.API.NorthFox;
+using OsuPlayer.Services;
 using ReactiveUI;
 using SkiaSharp;
 using Splat;
@@ -23,6 +26,9 @@ namespace OsuPlayer.Views;
 public class UserViewModel : BaseViewModel
 {
     public readonly IPlayer Player;
+
+    private readonly IProfileManagerService _profileManager;
+
     private ObservableCollection<IControl>? _badges;
     private CancellationTokenSource? _bannerCancellationTokenSource;
     private Bitmap? _currentProfileBanner;
@@ -133,9 +139,11 @@ public class UserViewModel : BaseViewModel
         }
     }
 
-    public UserViewModel(IPlayer player)
+    public UserViewModel(IPlayer player, IProfileManagerService profileManager)
     {
         Player = player;
+
+        _profileManager = profileManager;
 
         Activator = new ViewModelActivator();
 
@@ -151,7 +159,7 @@ public class UserViewModel : BaseViewModel
     {
         Disposable.Create(() => { }).DisposeWith(disposables);
 
-        Users = (await Locator.Current.GetService<NorthFox>().User.GetAllUsers())
+        Users = (await Locator.Current.GetService<IOsuPlayerApiService>().User.GetAllUsers())
             ?.Select(x => new User(x))
             .ToObservableCollection() ?? new ObservableCollection<User>();
 
@@ -207,7 +215,7 @@ public class UserViewModel : BaseViewModel
 
         if (SelectedUser?.Name != default) return;
 
-        var user = ProfileManager.User;
+        var user = _profileManager.User;
 
         if (user?.Name == null)
         {
@@ -247,7 +255,9 @@ public class UserViewModel : BaseViewModel
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            var stats = await Locator.Current.GetService<NorthFox>().Beatmap.GetBeatmapsPlayedByUser(SelectedUser.UniqueId);
+            if (Locator.Current.GetService<IOsuPlayerApiService>() is not NorthFox api) return;
+
+            var stats = await api.Beatmap.GetBeatmapsPlayedByUser(SelectedUser.UniqueId);
 
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
@@ -279,7 +289,7 @@ public class UserViewModel : BaseViewModel
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            var profilePicture = await Locator.Current.GetService<NorthFox>().User.GetProfilePictureAsync(SelectedUser.UniqueId);
+            var profilePicture = await Locator.Current.GetService<IOsuPlayerApiService>().User.GetProfilePictureAsync(SelectedUser.UniqueId);
 
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
@@ -311,7 +321,7 @@ public class UserViewModel : BaseViewModel
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            var banner = await Locator.Current.GetService<NorthFox>().User.GetProfileBannerAsync(SelectedUser.CustomBannerUrl);
+            var banner = await Locator.Current.GetService<IOsuPlayerApiService>().User.GetProfileBannerAsync(SelectedUser.CustomBannerUrl);
 
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
@@ -336,7 +346,7 @@ public class UserViewModel : BaseViewModel
     {
         if (SelectedUser == default || SelectedUser.UniqueId == Guid.Empty) return;
 
-        var data = await Locator.Current.GetService<NorthFox>().User.GetActivityOfUser(SelectedUser.UniqueId);
+        var data = await Locator.Current.GetService<IOsuPlayerApiService>().User.GetActivityOfUser(SelectedUser.UniqueId);
 
         if (data == default) return;
 

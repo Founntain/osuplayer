@@ -1,6 +1,5 @@
-﻿using OsuPlayer.Data.OsuPlayer.StorageModels;
-using OsuPlayer.IO.DbReader.DataModels;
-using OsuPlayer.IO.DbReader.Interfaces;
+﻿using OsuPlayer.Data.DataModels.Interfaces;
+using OsuPlayer.Data.OsuPlayer.StorageModels;
 
 namespace OsuPlayer.IO.Storage.Playlists;
 

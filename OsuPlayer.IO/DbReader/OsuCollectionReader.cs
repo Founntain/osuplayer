@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using OsuPlayer.Data.DataModels;
 
 namespace OsuPlayer.IO.DbReader;
 
@@ -14,10 +15,10 @@ public class OsuCollectionReader : BinaryReader
     /// Reads the collection from the collection.db
     /// </summary>
     /// <param name="osuPath">the osu full path</param>
-    /// <returns>a <see cref="Collection" /> list</returns>
-    public static async Task<List<Collection>?> Read(string osuPath)
+    /// <returns>a <see cref="OsuCollection" /> list</returns>
+    public static async Task<List<OsuCollection>?> Read(string osuPath)
     {
-        var collections = new List<Collection>();
+        var collections = new List<OsuCollection>();
         var colLoc = Path.Combine(osuPath, "collection.db");
 
         if (!File.Exists(colLoc)) return null;
@@ -37,9 +38,9 @@ public class OsuCollectionReader : BinaryReader
         return collections;
     }
 
-    private static Collection ReadFromStream(OsuCollectionReader r)
+    private static OsuCollection ReadFromStream(OsuCollectionReader r)
     {
-        var collection = new Collection
+        var collection = new OsuCollection
         {
             Name = r.ReadString()
         };

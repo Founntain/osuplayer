@@ -321,7 +321,7 @@
                             </controls:SettingsDisplayer.InteractionControl>
 
                         </controls:SettingsDisplayer>
-                      
+
                         <controls:SettingsDisplayer Name="LastFmAuth" Title="Last.FM Scrobbler" Description="Enter your API-Key and Secret to use the Last.FM Scrobbler. When it shows a green border, then the connection is active."
                                                     Icon="Login" UseRoundedCorners="False">
 
@@ -399,6 +399,17 @@
 
                     <StackPanel Margin="1" Spacing="1" Name="HelpAndFeedbackSettingsPanel">
                         <controls:SettingsTitleDisplayer Title="Help and Feedback" Icon="HelpRhombus" UseRoundedCorners="False" />
+
+                        <controls:SettingsDisplayer Title="Stargaze us"
+                                                    Description="You like the osu!player? Then Head to our GitHub and give us a star! We would greatly appreciate it!"
+                                                    Icon="StarShooting" UseRoundedCorners="False">
+
+                            <controls:SettingsDisplayer.InteractionControl>
+                                <Button Content="open github" Click="Github_OnClick"
+                                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                            </controls:SettingsDisplayer.InteractionControl>
+
+                        </controls:SettingsDisplayer>
 
                         <controls:SettingsDisplayer Title="Report bug or request feature"
                                                     Description="Head to our GitHub to report a bugs or reuqest features"

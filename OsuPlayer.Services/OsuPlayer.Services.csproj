@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>annotations</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Founntain.Nein" Version="2023.1018.2" />
+        <PackageReference Include="LiveChartsCore" Version="2.0.0-beta.101" />
+        <PackageReference Include="OsuPlayer.Api.Data" Version="1.0.10" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\OsuPlayer.Extensions\OsuPlayer.Extensions.csproj" />
+        <ProjectReference Include="..\OsuPlayer.Interfaces\OsuPlayer.Interfaces.csproj" />
+        <ProjectReference Include="..\OsuPlayer.IO\OsuPlayer.IO.csproj" />
+    </ItemGroup>
+
+</Project>

@@ -3,9 +3,9 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using Nein.Base;
 using OsuPlayer.Extensions.EnumExtensions;
+using OsuPlayer.Interfaces.Service;
 using OsuPlayer.Modules;
 using OsuPlayer.Modules.Audio.Interfaces;
-using OsuPlayer.Modules.Services;
 using OsuPlayer.Views;
 using ReactiveUI;
 
@@ -14,6 +14,7 @@ namespace OsuPlayer.Windows;
 public class MainWindowViewModel : BaseWindowViewModel
 {
     public readonly IPlayer Player;
+    public readonly IProfileManagerService ProfileManager;
 
     private float _backgroundBlurRadius;
 
@@ -74,10 +75,11 @@ public class MainWindowViewModel : BaseWindowViewModel
         set => this.RaiseAndSetIfChanged(ref _displayBackgroundImage, value);
     }
 
-    public MainWindowViewModel(IAudioEngine engine, IPlayer player, IShuffleServiceProvider? shuffleServiceProvider = null,
+    public MainWindowViewModel(IAudioEngine engine, IPlayer player, IProfileManagerService profileManager, IShuffleServiceProvider? shuffleServiceProvider = null,
         IStatisticsProvider? statisticsProvider = null, ISortProvider? sortProvider = null, IHistoryProvider? historyProvider = null)
     {
         Player = player;
+        ProfileManager = profileManager;
 
         //Generate new ViewModels here
         TopBar = new TopBarViewModel();
@@ -87,11 +89,11 @@ public class MainWindowViewModel : BaseWindowViewModel
         PlaylistView = new PlaylistViewModel(Player);
         PlaylistEditorView = new PlaylistEditorViewModel(Player);
         BlacklistEditorView = new BlacklistEditorViewModel(Player);
-        HomeView = new HomeViewModel(Player, statisticsProvider);
-        UserView = new UserViewModel(Player);
-        EditUserView = new EditUserViewModel();
+        HomeView = new HomeViewModel(Player, statisticsProvider, profileManager);
+        UserView = new UserViewModel(Player, profileManager);
+        EditUserView = new EditUserViewModel(profileManager);
         PartyView = new PartyViewModel();
-        SettingsView = new SettingsViewModel(Player, sortProvider, shuffleServiceProvider);
+        SettingsView = new SettingsViewModel(Player, sortProvider, shuffleServiceProvider, profileManager);
         EqualizerView = new EqualizerViewModel(Player);
         UpdateView = new UpdateViewModel();
         StatisticsView = new StatisticsViewModel();

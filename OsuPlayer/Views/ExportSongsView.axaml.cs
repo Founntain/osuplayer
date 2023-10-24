@@ -1,20 +1,13 @@
-﻿using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using Avalonia.Threading;
 using Avalonia.VisualTree;
-using Nein.Extensions;
-using OsuPlayer.IO.DbReader.Interfaces;
-using OsuPlayer.Network;
+using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
 using ReactiveUI;
-using TagLib;
-using File = System.IO.File;
 
 namespace OsuPlayer.Views;
 

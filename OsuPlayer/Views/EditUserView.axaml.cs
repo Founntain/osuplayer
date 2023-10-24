@@ -8,7 +8,10 @@ using Avalonia.ReactiveUI;
 using Avalonia.VisualTree;
 using Nein.Extensions;
 using OsuPlayer.Api.Data.API.RequestModels.User;
-using OsuPlayer.Network.API.Service.NorthFox.Endpoints;
+using OsuPlayer.Data.DataModels;
+using OsuPlayer.Interfaces.Service;
+using OsuPlayer.Network.API.NorthFox;
+using OsuPlayer.Services;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
 using ReactiveUI;
@@ -19,9 +22,16 @@ namespace OsuPlayer.Views;
 public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 {
     private MainWindow? _mainWindow;
+    private readonly IProfileManagerService _profileManager;
 
-    public EditUserView()
+    public EditUserView() : this(Locator.Current.GetService<IProfileManagerService>())
     {
+    }
+
+    public EditUserView(IProfileManagerService profileManager)
+    {
+        _profileManager = profileManager;
+
         InitializeComponent();
     }
 
@@ -135,7 +145,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
     {
         if (_mainWindow == default || ViewModel?.CurrentUser == default || string.IsNullOrWhiteSpace(ViewModel?.CurrentUser.Name)) return;
 
-        var api = Locator.Current.GetService<NorthFox>();
+        if (Locator.Current.GetService<IOsuPlayerApiService>() is not NorthFox api) return;
 
         var tempUser = await api.User.GetUserFromLoginToken();
 
@@ -192,7 +202,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
         if (ViewModel == null)
         {
             if (!string.IsNullOrWhiteSpace(editUserModel.User.Name))
-                ProfileManager.User = (await api.User.GetUserFromLoginToken())?.ConvertObjectToJson<User>();
+                _profileManager.User = (await api.User.GetUserFromLoginToken())?.ConvertObjectToJson<User>();
 
             if (changedProfilePicture)
                 await MessageBox.ShowDialogAsync(_mainWindow,
@@ -203,7 +213,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
             ViewModel.NewPassword = string.Empty;
             ViewModel.Password = string.Empty;
 
-            ProfileManager.User = ViewModel.CurrentUser.ConvertObjectToJson<User>();
+            _profileManager.User = ViewModel.CurrentUser.ConvertObjectToJson<User>();
 
             var successMessage = "Profile updated successfully!";
 
@@ -223,7 +233,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
     {
         if (_mainWindow == default || ViewModel?.CurrentUser == default || ViewModel?.CurrentProfilePicture == default) return;
 
-        var api = Locator.Current.GetService<NorthFox>();
+        if (Locator.Current.GetService<IOsuPlayerApiService>() is not NorthFox api) return;
 
         await using var stream = new MemoryStream();
 
@@ -265,7 +275,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
     {
         if (ViewModel?.CurrentUser == default) return;
 
-        var banner = await Locator.Current.GetService<NorthFox>().User.GetProfileBannerAsync(ViewModel.CurrentUser.CustomBannerUrl);
+        var banner = await Locator.Current.GetService<IOsuPlayerApiService>().User.GetProfileBannerAsync(ViewModel.CurrentUser.CustomBannerUrl);
 
         if (banner == default) return;
 
@@ -276,7 +286,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
     {
         if (ViewModel?.CurrentUser == default || string.IsNullOrWhiteSpace(ViewModel.CurrentUser.Name)) return;
 
-        var api = Locator.Current.GetService<NorthFox>();
+        var api = Locator.Current.GetService<IOsuPlayerApiService>();
 
         var user = await api.User.GetUserFromLoginToken();
 
@@ -303,7 +313,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
     private async void ConfirmDeleteProfile_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (_mainWindow?.ViewModel == default || ProfileManager.User == default || ViewModel == default) return;
+        if (_mainWindow?.ViewModel == default || _profileManager.User == default || ViewModel == default) return;
 
         if (string.IsNullOrWhiteSpace(ViewModel.ConfirmDeletionPassword))
         {
@@ -312,7 +322,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
             return;
         }
 
-        var response = await Locator.Current.GetService<NorthFox>().User.DeleteUser();
+        var response = await Locator.Current.GetService<IOsuPlayerApiService>().User.DeleteUser();
 
         if (!response)
         {
@@ -321,7 +331,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
             return;
         }
 
-        ProfileManager.User = default;
+        _profileManager.User = default;
 
         await MessageBox.ShowDialogAsync(_mainWindow, "Profile deleted!\n\nSee you next time!");
 

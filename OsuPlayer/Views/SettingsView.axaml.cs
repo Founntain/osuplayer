@@ -3,13 +3,13 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
-using JetBrains.Annotations;
 using Nein.Base;
 using Nein.Controls;
 using Nein.Extensions;
+using OsuPlayer.Interfaces.Service;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.Modules.Audio.Interfaces;
-using OsuPlayer.Network.LastFM;
+using OsuPlayer.Network.LastFm;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
 using ReactiveUI;
@@ -129,24 +129,13 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
         _mainWindow.ViewModel.MainView = _mainWindow.ViewModel.EqualizerView;
     }
 
-    private void ReportBug_OnClick(object? sender, RoutedEventArgs e)
-    {
-        GeneralExtensions.OpenUrl("https://github.com/osu-player/osuplayer/issues/new/choose");
-    }
-
-    private void JoinDiscord_OnClick(object? sender, RoutedEventArgs e)
-    {
-        GeneralExtensions.OpenUrl("https://discord.gg/RJQSc5B");
-    }
-
-    private void ContactUs_OnClick(object? sender, RoutedEventArgs e)
-    {
-        GeneralExtensions.OpenUrl("https://github.com/osu-player/osuplayer#contact");
-    }
-
     private void OnUsePitch_Click(object? sender, RoutedEventArgs e)
     {
         var value = (sender as ToggleSwitch)?.IsChecked;
+
+        using var config = new Config();
+
+        config.Container.UsePitch = value ?? true;
 
         var engine = Locator.Current.GetRequiredService<IAudioEngine>();
 
@@ -156,7 +145,7 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
     private async void LastFmAuth_OnClick(object? sender, RoutedEventArgs e)
     {
         var window = Locator.Current.GetService<MainWindow>();
-        var lastFmApi = Locator.Current.GetService<LastFmApi>();
+        var lastFmApi = Locator.Current.GetService<ILastFmApiService>();
 
         await using var config = new Config();
 
@@ -168,7 +157,7 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
             await MessageBox.ShowDialogAsync(window, "Please enter a API-Key and API-Secret before authorizing");
             return;
         }
-        
+
         // We only load the APIKey from the config, as it is the only key that we save
         // 1. Because we always need the api key for all the request
         // 2. The secret is only used for the first authentication of the token
@@ -185,7 +174,7 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
             lastFmApi.AuthorizeToken();
 
             await MessageBox.ShowDialogAsync(window, "Close this window, when you are done, authenticating in the browser");
-        
+
             await lastFmApi.GetSessionKey();
 
             await lastFmApi.SaveSessionKeyAsync();
@@ -197,7 +186,7 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
     private void ExportCollectionsClick(object? sender, RoutedEventArgs e)
     {
         if (_mainWindow?.ViewModel == null) return;
-        
+
         _mainWindow.ViewModel.MainView = _mainWindow.ViewModel.ExportSongsView;
     }
 
@@ -207,4 +196,12 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
 
         _mainWindow.ViewModel.MainView = _mainWindow.ViewModel.PlayHistoryView;
     }
+    
+    private void ReportBug_OnClick(object? sender, RoutedEventArgs e) => GeneralExtensions.OpenUrl("https://github.com/founntain/osuplayer/issues/new/choose");
+
+    private void JoinDiscord_OnClick(object? sender, RoutedEventArgs e) => GeneralExtensions.OpenUrl("https://discord.gg/RJQSc5B");
+
+    private void ContactUs_OnClick(object? sender, RoutedEventArgs e) => GeneralExtensions.OpenUrl("https://github.com/founntain/osuplayer#-contact");
+
+    private void Github_OnClick(object? sender, RoutedEventArgs e) => GeneralExtensions.OpenUrl("https://github.com/founntain/osuplayer");
 }

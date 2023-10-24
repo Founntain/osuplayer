@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 using NUnit.Framework;
 using OsuPlayer.IO.Storage.Config;
 
-namespace OsuPlayer.Tests;
+namespace OsuPlayer.Tests.IOTests;
 
 public class ConfigTests
 {

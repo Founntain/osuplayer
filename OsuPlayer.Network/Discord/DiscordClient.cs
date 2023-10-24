@@ -1,20 +1,22 @@
 ﻿using System.Diagnostics;
-using System.Net;
 using System.Reflection;
 using System.Text;
 using DiscordRPC;
-using DiscordRPC.Logging;
 using DiscordRPC.Message;
 using Nein.Extensions;
-using OsuPlayer.Network.Online;
+using OsuPlayer.Interfaces.Service;
+using Splat;
+using ConsoleLogger = DiscordRPC.Logging.ConsoleLogger;
+using LogLevel = DiscordRPC.Logging.LogLevel;
 
 namespace OsuPlayer.Network.Discord;
 
 public class DiscordClient
 {
     private const string ApplicationId = "506435812397940736";
-    private readonly DiscordRpcClient _client;
     private const string DefaultImageKey = "logo";
+    private readonly DiscordRpcClient _client;
+    private readonly IProfileManagerService _profileManager;
     private readonly string _defaultOsuThumbnailUrl = "https://assets.ppy.sh/beatmaps/{0}/covers/list.jpg";
 
     /// <summary>
@@ -22,8 +24,13 @@ public class DiscordClient
     /// </summary>
     private readonly Assets _defaultAssets;
 
-    public DiscordClient()
+    public DiscordClient() : this(Locator.Current.GetRequiredService<IProfileManagerService>())
     {
+    }
+
+    public DiscordClient(IProfileManagerService profileManager)
+    {
+        _profileManager = profileManager;
         _client = new DiscordRpcClient(ApplicationId);
 
         _defaultAssets = new Assets
@@ -92,7 +99,7 @@ public class DiscordClient
         }
 
         var timestamps = durationLeft == null ? null : Timestamps.FromTimeSpan(durationLeft.Value);
-        
+
         _client.SetPresence(new RichPresence
         {
             Details = details,
@@ -121,10 +128,10 @@ public class DiscordClient
             return null;
 
         return new()
-            {
-                LargeImageKey = url,
-                LargeImageText = $"osu!player v{Assembly.GetEntryAssembly().ToVersionString()}"
-            };
+        {
+            LargeImageKey = url,
+            LargeImageText = $"osu!player v{Assembly.GetEntryAssembly().ToVersionString()}"
+        };
     }
 
     private Button[]? GetButtons()
@@ -138,12 +145,12 @@ public class DiscordClient
             }
         };
 
-        if (ProfileManager.User is null || string.IsNullOrWhiteSpace(ProfileManager.User.Name)) return buttons.ToArray();
+        if (_profileManager.User is null || string.IsNullOrWhiteSpace(_profileManager.User.Name)) return buttons.ToArray();
 
         buttons.Add(new Button
             {
-                Label = $"{ProfileManager.User.Name}'s profile",
-                Url = $"https://stats.founntain.dev/user/{Uri.EscapeDataString(ProfileManager.User.Name)}"
+                Label = $"{_profileManager.User.Name}'s profile",
+                Url = $"https://stats.founntain.dev/user/{Uri.EscapeDataString(_profileManager.User.Name)}"
             }
         );
 
