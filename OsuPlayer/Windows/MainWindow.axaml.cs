@@ -33,11 +33,12 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         InitializeComponent();
     }
 
-    public MainWindow(MainWindowViewModel viewModel)
+    public MainWindow(MainWindowViewModel viewModel, ILoggingService loggingService)
     {
         ViewModel = viewModel;
 
         _profileManager = ViewModel.ProfileManager;
+        _loggingService = loggingService;
 
         var player = ViewModel.Player;
 
@@ -46,6 +47,9 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         InitializeComponent();
 
         using var config = new Config();
+
+        _loggingService.Log("Loaded config successfully", LogType.Success, config.Container);
+
         TransparencyLevelHint = (WindowTransparencyLevel) config.Container.BackgroundMode;
         FontWeight = (FontWeight) config.Container.DefaultFontWeight;
 

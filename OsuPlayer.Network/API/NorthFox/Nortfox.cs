@@ -14,7 +14,7 @@ namespace OsuPlayer.Network.API.NorthFox;
 /// </summary>
 public class NorthFox : AbstractApiBase, IOsuPlayerApiService
 {
-    protected override string ApiName => "NorthFox API 🦊";
+    protected internal override string ApiName => "NorthFox API 🦊";
 
     #region API Endpoints
 
@@ -70,7 +70,7 @@ public class NorthFox : AbstractApiBase, IOsuPlayerApiService
 
         var url = new Uri($"{Url}User/login");
 
-        _loggingService.Log($"Requesting => {ApiName} => {url}");
+        loggingService.Log($"Requesting => {ApiName} => {url}");
 
         try
         {
@@ -102,7 +102,7 @@ public class NorthFox : AbstractApiBase, IOsuPlayerApiService
 
         var url = new Uri($"{Url}User/loginWithToken");
 
-        _loggingService.Log($"Requesting => {ApiName} => {url}");
+        loggingService.Log($"Requesting => {ApiName} => {url}");
 
         try
         {

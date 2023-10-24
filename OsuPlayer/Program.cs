@@ -109,6 +109,7 @@ internal static class Program
             resolver.GetService<IHistoryProvider>()));
 
         services.RegisterLazySingleton(() => new MainWindow(
-            resolver.GetRequiredService<MainWindowViewModel>()));
+            resolver.GetRequiredService<MainWindowViewModel>(),
+            resolver.GetRequiredService<ILoggingService>()));
     }
 }

@@ -8,6 +8,7 @@ using Avalonia.ReactiveUI;
 using Avalonia.Threading;
 using Nein.Extensions;
 using OsuPlayer.Data.DataModels.Interfaces;
+using OsuPlayer.Interfaces.Service;
 using OsuPlayer.Services;
 using Splat;
 using TagLib;
@@ -136,7 +137,7 @@ public partial class ExportSongsProcessWindow : ReactiveWindow<ExportSongsProces
 
                     successfulSongs++;
 
-                    Locator.Current.GetRequiredService<LoggingService>().Log($"Exported {fileName} successfully");
+                    Locator.Current.GetRequiredService<ILoggingService>().Log($"Exported {fileName} successfully");
                 }
                 catch (Exception _)
                 {
@@ -144,7 +145,7 @@ public partial class ExportSongsProcessWindow : ReactiveWindow<ExportSongsProces
 
                     System.IO.File.Delete(exportPath);
 
-                    Locator.Current.GetRequiredService<LoggingService>().Log($"Failed to export {fileName}", LogType.Error);
+                    Locator.Current.GetRequiredService<ILoggingService>().Log($"Failed to export {fileName}", LogType.Error);
                 }
 
                 Dispatcher.UIThread.Post(() =>

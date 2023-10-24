@@ -10,9 +10,16 @@ public abstract class OsuPlayerService : IOsuPlayerService
 
     protected OsuPlayerService()
     {
-        Console.OutputEncoding = Encoding.UTF8;
+        try
+        {
+            Console.OutputEncoding = Encoding.UTF8;
 
-        LogToConsole("Service initialized.", LogType.Success, includeLogTypeTag: false);
+            LogToConsole("Service initialized.", LogType.Success, includeLogTypeTag: false);
+        }
+        catch (Exception _)
+        {
+            LogToConsole($"Service initialized, but couldn't initialize with encoding {Encoding.UTF8.EncodingName}.", LogType.Warning, includeLogTypeTag: false);
+        }
     }
 
     ~OsuPlayerService() => LogToConsole("Service deinitialized.", LogType.Warning, includeLogTypeTag: false);
