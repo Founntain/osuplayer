@@ -129,15 +129,13 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
         _mainWindow.ViewModel.MainView = _mainWindow.ViewModel.EqualizerView;
     }
 
-    private void ReportBug_OnClick(object? sender, RoutedEventArgs e) => GeneralExtensions.OpenUrl("https://github.com/founntain/osuplayer/issues/new/choose");
-
-    private void JoinDiscord_OnClick(object? sender, RoutedEventArgs e) => GeneralExtensions.OpenUrl("https://discord.gg/RJQSc5B");
-
-    private void ContactUs_OnClick(object? sender, RoutedEventArgs e) => GeneralExtensions.OpenUrl("https://github.com/founntain/osuplayer#-contact");
-
     private void OnUsePitch_Click(object? sender, RoutedEventArgs e)
     {
         var value = (sender as ToggleSwitch)?.IsChecked;
+
+        using var config = new Config();
+
+        config.Container.UsePitch = value ?? true;
 
         var engine = Locator.Current.GetRequiredService<IAudioEngine>();
 
@@ -198,6 +196,12 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
 
         _mainWindow.ViewModel.MainView = _mainWindow.ViewModel.PlayHistoryView;
     }
+    
+    private void ReportBug_OnClick(object? sender, RoutedEventArgs e) => GeneralExtensions.OpenUrl("https://github.com/founntain/osuplayer/issues/new/choose");
+
+    private void JoinDiscord_OnClick(object? sender, RoutedEventArgs e) => GeneralExtensions.OpenUrl("https://discord.gg/RJQSc5B");
+
+    private void ContactUs_OnClick(object? sender, RoutedEventArgs e) => GeneralExtensions.OpenUrl("https://github.com/founntain/osuplayer#-contact");
 
     private void Github_OnClick(object? sender, RoutedEventArgs e) => GeneralExtensions.OpenUrl("https://github.com/founntain/osuplayer");
 }
