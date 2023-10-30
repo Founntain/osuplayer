@@ -87,57 +87,7 @@ public partial class ExportSongsProcessWindow : ReactiveWindow<ExportSongsProces
                     const FileOptions fileOptions = FileOptions.Asynchronous | FileOptions.SequentialScan;
                     const int bufferSize = 81920;
 
-                    if (mapEntry.FullPath.EndsWith(".mp3"))
-                    {
-                        // Copy the file directly if it is already a mp3 file
-
-                        await using (var sourceStream =
-                                     new FileStream(mapEntry.FullPath, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize, fileOptions))
-                        {
-                            await using (var destinationStream = new FileStream(exportPath, FileMode.Create, FileAccess.Write,
-                                             FileShare.None, bufferSize, fileOptions))
-                            {
-                                await sourceStream.CopyToAsync(destinationStream, bufferSize);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Re-encode the file if it is not already mp3 with quality preset 7 and bitrate 192
-
-                        var decodeHandle = Bass.CreateStream(mapEntry.FullPath, 0, 0, BassFlags.Decode | BassFlags.Float);
-
-                        if (decodeHandle == 0)
-                        {
-                            Console.WriteLine($"Opening file failed with error: {Bass.LastError}");
-                        }
-
-                        var encodeHandle = BassEnc_Mp3.Start(decodeHandle, "-q7 -b192", EncodeFlags.Default | EncodeFlags.AutoFree, exportPath);
-
-                        if (encodeHandle == 0)
-                        {
-                            Console.WriteLine($"Encoding file failed with error: {Bass.LastError}");
-                        }
-
-                        var buf = new byte[bufferSize];
-
-                        while (BassEnc.EncodeIsActive(encodeHandle) == PlaybackState.Playing)
-                        {
-                            var res = Bass.ChannelGetData(decodeHandle, buf, bufferSize);
-
-                            var lastError = Bass.LastError;
-
-                            if (res == -1 && lastError == Errors.Ended)
-                            {
-                                BassEnc.EncodeStop(encodeHandle);
-                                Bass.StreamFree(decodeHandle);
-                            }
-                            else
-                            {
-                                throw new BassException(lastError);
-                            }
-                        }
-                    }
+                    await TryCopyFile(mapEntry, exportPath);
 
                     #region Tag the song with metadata
 
@@ -207,6 +157,64 @@ public partial class ExportSongsProcessWindow : ReactiveWindow<ExportSongsProces
         GeneralExtensions.OpenUrl(_path);
 
         Close();
+    }
+
+    private async Task TryCopyFile(IMapEntry mapEntry, string exportPath)
+    {
+        const FileOptions fileOptions = FileOptions.Asynchronous | FileOptions.SequentialScan;
+        const int bufferSize = 81920;
+
+        if (mapEntry.FullPath.EndsWith(".mp3"))
+        {
+            // Copy the file directly if it is already a mp3 file
+
+            await using (var sourceStream =
+                         new FileStream(mapEntry.FullPath, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize, fileOptions))
+            {
+                await using (var destinationStream = new FileStream(exportPath, FileMode.Create, FileAccess.Write,
+                                 FileShare.None, bufferSize, fileOptions))
+                {
+                    await sourceStream.CopyToAsync(destinationStream, bufferSize);
+                }
+            }
+        }
+        else
+        {
+            // Re-encode the file if it is not already mp3 with quality preset 7 and bitrate 192
+
+            var decodeHandle = Bass.CreateStream(mapEntry.FullPath, 0, 0, BassFlags.Decode | BassFlags.Float);
+
+            if (decodeHandle == 0)
+            {
+                Console.WriteLine($"Opening file failed with error: {Bass.LastError}");
+            }
+
+            var encodeHandle = BassEnc_Mp3.Start(decodeHandle, "-q7 -b192", EncodeFlags.Default | EncodeFlags.AutoFree, exportPath);
+
+            if (encodeHandle == 0)
+            {
+                Console.WriteLine($"Encoding file failed with error: {Bass.LastError}");
+            }
+
+            var buf = new byte[bufferSize];
+
+            while (BassEnc.EncodeIsActive(encodeHandle) == PlaybackState.Playing)
+            {
+                var res = Bass.ChannelGetData(decodeHandle, buf, bufferSize);
+
+                var lastError = Bass.LastError;
+
+                if (res == -1 && lastError == Errors.Ended)
+                {
+                    BassEnc.EncodeStop(encodeHandle);
+                    Bass.StreamFree(decodeHandle);
+                }
+                else
+                {
+                    throw new BassException(lastError);
+                }
+            }
+        }
     }
 
     private async void TopLevel_OnOpened(object? sender, EventArgs e)
