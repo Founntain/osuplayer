@@ -36,7 +36,7 @@
         <PackageReference Include="Avalonia.Skia" Version="0.10.22" />
         <PackageReference Include="DynamicData" Version="8.0.2" />
         <PackageReference Include="Founntain.Nein" Version="2023.1018.2" />
-        <PackageReference Include="Founntain.OsuPlayer.NativeLibs" Version="1.0.4" />
+        <PackageReference Include="Founntain.OsuPlayer.NativeLibs" Version="1.0.5" />
         <PackageReference Include="LiveChartsCore.SkiaSharpView.Avalonia" Version="2.0.0-beta.101" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Include="ManagedBass" Version="3.1.1" />

@@ -7,7 +7,7 @@
         <PackageProjectUrl>https://github.com/Founntain/osuplayer</PackageProjectUrl>
         <RepositoryUrl>https://github.com/Founntain/osuplayer</RepositoryUrl>
         <Authors>Founntain</Authors>
-        <PackageVersion>1.0.4</PackageVersion>
+        <PackageVersion>1.0.5</PackageVersion>
         <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     </PropertyGroup>
 
@@ -20,6 +20,7 @@
         <IncludeBuildOutput>false</IncludeBuildOutput>
         <PackageIcon>icon.png</PackageIcon>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -36,6 +37,7 @@
             <Pack>true</Pack>
             <PackagePath>lib\$(TargetFramework)</PackagePath>
         </None>
+        <None Include="docs\README.md" Pack="true" PackagePath="\" />
     </ItemGroup>
 
 </Project>
