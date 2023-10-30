@@ -6,6 +6,8 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.ReactiveUI;
 using Avalonia.Threading;
+using ManagedBass;
+using ManagedBass.Enc;
 using Nein.Extensions;
 using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.Interfaces.Service;
@@ -74,7 +76,7 @@ public partial class ExportSongsProcessWindow : ReactiveWindow<ExportSongsProces
 
                 var hashLength = mapEntry.Hash.Length < 8 ? mapEntry.Hash.Length : 8;
 
-                var fileName = $"{mapEntry.GetArtist()} - {mapEntry.GetTitle()} ({mapEntry.Hash.Substring(0, hashLength)}).mp3";
+                var fileName = $"{mapEntry.Artist} - {mapEntry.Title} ({mapEntry.Hash.Substring(0, hashLength)}).mp3";
 
                 fileName = string.Join("_", fileName.Split(Path.GetInvalidFileNameChars(), StringSplitOptions.RemoveEmptyEntries));
 
@@ -82,21 +84,60 @@ public partial class ExportSongsProcessWindow : ReactiveWindow<ExportSongsProces
 
                 try
                 {
-                    #region Copy song to export folder asynchroniously
-
                     const FileOptions fileOptions = FileOptions.Asynchronous | FileOptions.SequentialScan;
                     const int bufferSize = 81920;
 
-                    await using (var sourceStream = new FileStream(mapEntry.FullPath, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize, fileOptions))
+                    if (mapEntry.FullPath.EndsWith(".mp3"))
                     {
-                        await using (var destinationStream = new FileStream(exportPath, FileMode.Create, FileAccess.Write,
-                                         FileShare.None, bufferSize, fileOptions))
+                        // Copy the file directly if it is already a mp3 file
+
+                        await using (var sourceStream =
+                                     new FileStream(mapEntry.FullPath, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize, fileOptions))
                         {
-                            await sourceStream.CopyToAsync(destinationStream, bufferSize);
+                            await using (var destinationStream = new FileStream(exportPath, FileMode.Create, FileAccess.Write,
+                                             FileShare.None, bufferSize, fileOptions))
+                            {
+                                await sourceStream.CopyToAsync(destinationStream, bufferSize);
+                            }
                         }
                     }
+                    else
+                    {
+                        // Re-encode the file if it is not already mp3 with quality preset 7 and bitrate 192
 
-                    #endregion
+                        var decodeHandle = Bass.CreateStream(mapEntry.FullPath, 0, 0, BassFlags.Decode | BassFlags.Float);
+
+                        if (decodeHandle == 0)
+                        {
+                            Console.WriteLine($"Opening file failed with error: {Bass.LastError}");
+                        }
+
+                        var encodeHandle = BassEnc_Mp3.Start(decodeHandle, "-q7 -b192", EncodeFlags.Default | EncodeFlags.AutoFree, exportPath);
+
+                        if (encodeHandle == 0)
+                        {
+                            Console.WriteLine($"Encoding file failed with error: {Bass.LastError}");
+                        }
+
+                        var buf = new byte[bufferSize];
+
+                        while (BassEnc.EncodeIsActive(encodeHandle) == PlaybackState.Playing)
+                        {
+                            var res = Bass.ChannelGetData(decodeHandle, buf, bufferSize);
+
+                            var lastError = Bass.LastError;
+
+                            if (res == -1 && lastError == Errors.Ended)
+                            {
+                                BassEnc.EncodeStop(encodeHandle);
+                                Bass.StreamFree(decodeHandle);
+                            }
+                            else
+                            {
+                                throw new BassException(lastError);
+                            }
+                        }
+                    }
 
                     #region Tag the song with metadata
 

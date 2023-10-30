@@ -40,6 +40,7 @@
         <PackageReference Include="LiveChartsCore.SkiaSharpView.Avalonia" Version="2.0.0-beta.101" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Include="ManagedBass" Version="3.1.1" />
+        <PackageReference Include="ManagedBass.Enc" Version="3.1.1" />
         <PackageReference Include="ManagedBass.Fx" Version="3.1.1" />
         <PackageReference Include="Markdown.Avalonia" Version="0.10.13" />
         <PackageReference Include="Material.Icons.Avalonia" Version="1.1.10" />
