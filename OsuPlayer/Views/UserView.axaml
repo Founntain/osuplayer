@@ -94,8 +94,6 @@
                             </Border>
                             <StackPanel Grid.Row="1" Spacing="5" Margin="10" VerticalAlignment="Stretch"
                                         HorizontalAlignment="Stretch">
-                                <Button Content="web profile" FontWeight="SemiBold" HorizontalAlignment="Stretch"
-                                        HorizontalContentAlignment="Center" Click="WebProfile_OnClick" />
                                 <Button Content="osu! profile"
                                         IsEnabled="{Binding SelectedUser.OsuProfile, Converter={StaticResource OsuProfileConverter}}"
                                         FontWeight="SemiBold" HorizontalAlignment="Stretch"

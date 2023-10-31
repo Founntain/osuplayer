@@ -87,7 +87,7 @@ public partial class ExportSongsProcessWindow : ReactiveWindow<ExportSongsProces
                     const FileOptions fileOptions = FileOptions.Asynchronous | FileOptions.SequentialScan;
                     const int bufferSize = 81920;
 
-                    await TryCopyFile(mapEntry, exportPath);
+                    await TryCopyFile(mapEntry, exportPath, fileName);
 
                     #region Tag the song with metadata
 
@@ -130,7 +130,7 @@ public partial class ExportSongsProcessWindow : ReactiveWindow<ExportSongsProces
 
                     Locator.Current.GetRequiredService<ILoggingService>().Log($"Exported {fileName} successfully");
                 }
-                catch (Exception _)
+                catch (Exception)
                 {
                     failedSongs++;
 
@@ -159,7 +159,7 @@ public partial class ExportSongsProcessWindow : ReactiveWindow<ExportSongsProces
         Close();
     }
 
-    private async Task TryCopyFile(IMapEntry mapEntry, string exportPath)
+    private async Task TryCopyFile(IMapEntry mapEntry, string exportPath, string filename)
     {
         const FileOptions fileOptions = FileOptions.Asynchronous | FileOptions.SequentialScan;
         const int bufferSize = 81920;
@@ -186,14 +186,14 @@ public partial class ExportSongsProcessWindow : ReactiveWindow<ExportSongsProces
 
             if (decodeHandle == 0)
             {
-                Console.WriteLine($"Opening file failed with error: {Bass.LastError}");
+                Locator.Current.GetRequiredService<ILoggingService>().Log($"Opening {filename} failed with error: {Bass.LastError}", LogType.Error);
             }
 
             var encodeHandle = BassEnc_Mp3.Start(decodeHandle, "-q7 -b192", EncodeFlags.Default | EncodeFlags.AutoFree, exportPath);
 
             if (encodeHandle == 0)
             {
-                Console.WriteLine($"Encoding file failed with error: {Bass.LastError}");
+                Locator.Current.GetRequiredService<ILoggingService>().Log($"Encoding {filename} failed with error: {Bass.LastError}", LogType.Error);
             }
 
             var buf = new byte[bufferSize];
@@ -208,8 +208,10 @@ public partial class ExportSongsProcessWindow : ReactiveWindow<ExportSongsProces
                 {
                     BassEnc.EncodeStop(encodeHandle);
                     Bass.StreamFree(decodeHandle);
+
+                    Locator.Current.GetRequiredService<ILoggingService>().Log($"Encoded {filename} to mp3 successfully", LogType.Success);
                 }
-                else
+                else if ( lastError != Errors.OK )
                 {
                     throw new BassException(lastError);
                 }
