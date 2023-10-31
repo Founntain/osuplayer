@@ -164,7 +164,7 @@ public partial class ExportSongsProcessWindow : ReactiveWindow<ExportSongsProces
         const FileOptions fileOptions = FileOptions.Asynchronous | FileOptions.SequentialScan;
         const int bufferSize = 81920;
 
-        if (mapEntry.FullPath.EndsWith(".mp3"))
+        if (mapEntry.FullPath.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase))
         {
             // Copy the file directly if it is already a mp3 file
 
