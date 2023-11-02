@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://user-images.githubusercontent.com/28785685/208073123-a308effa-033e-4f4f-94d4-3407e8d52165.png"/>
+    <img src="https://github.com/Founntain/osuplayer/assets/28785685/6f970ac4-7c22-408e-ab84-023fdbec37d9"/>
 </P>
 
 # osu!player
@@ -139,3 +139,4 @@ Thanks for reading and have fun with the player, cheers.
 ![](https://gud.founntain.dev/f/m8xBvVc14U.png)  
 ### Miniplayer  
 ![](https://gud.founntain.dev/f/TTc7bws1xU.png)
+![Uploading 208073123-a308effa-033e-4f4f-94d4-3407e8d52165.png…]()
