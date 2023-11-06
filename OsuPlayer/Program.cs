@@ -73,23 +73,11 @@ internal static class Program
 
     private static void Register(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver, IRuntimePlatform platform)
     {
-        services.RegisterLazySingleton<ILoggingService>(() => new LoggingService());
-
         services.RegisterLazySingleton<IAudioEngine>(() => new BassEngine());
 
         services.RegisterLazySingleton<IDbReaderFactory>(() => new DbReaderFactory());
 
-        services.RegisterLazySingleton<IDiscordService>(() => new DiscordService());
-
-        services.RegisterLazySingleton<IProfileManagerService>(() => new ProfileManagerServiceService());
-        services.RegisterLazySingleton<IShuffleServiceProvider>(() => new ShuffleService());
-        services.RegisterLazySingleton<IStatisticsProvider>(() => new ApiStatisticsService(resolver.GetService<IProfileManagerService>()));
-        services.RegisterLazySingleton<ISortProvider>(() => new SortService());
-        services.RegisterLazySingleton<ISongSourceProvider>(() => new OsuSongSourceService(resolver.GetService<ISortProvider>()));
-        services.RegisterLazySingleton<IHistoryProvider>(() => new HistoryService());
-        services.RegisterLazySingleton<ILastFmApiService>(() => new LastFmService(new LastFmApi()));
-
-        services.RegisterLazySingleton<IOsuPlayerApiService>(() => new NorthFox());
+        RegisterServices(services, resolver);
 
         services.RegisterLazySingleton<IPlayer>(() => new Player(
             audioEngine: resolver.GetRequiredService<IAudioEngine>(),
@@ -114,5 +102,21 @@ internal static class Program
         services.RegisterLazySingleton(() => new MainWindow(
             resolver.GetRequiredService<MainWindowViewModel>(),
             resolver.GetRequiredService<ILoggingService>()));
+    }
+
+    private static void RegisterServices(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver)
+    {
+        services.RegisterLazySingleton<ILoggingService>(() => new LoggingService());
+
+        services.RegisterLazySingleton<IDiscordService>(() => new DiscordService());
+        services.RegisterLazySingleton<IProfileManagerService>(() => new ProfileManagerService());
+        services.RegisterLazySingleton<IShuffleServiceProvider>(() => new ShuffleService());
+        services.RegisterLazySingleton<IStatisticsProvider>(() => new ApiStatisticsService(resolver.GetService<IProfileManagerService>()));
+        services.RegisterLazySingleton<ISortProvider>(() => new SortService());
+        services.RegisterLazySingleton<ISongSourceProvider>(() => new OsuSongSourceService(resolver.GetService<ISortProvider>()));
+        services.RegisterLazySingleton<IHistoryProvider>(() => new HistoryService());
+        services.RegisterLazySingleton<ILastFmApiService>(() => new LastFmService(new LastFmApi()));
+
+        services.RegisterLazySingleton<IOsuPlayerApiService>(() => new NorthFox());
     }
 }

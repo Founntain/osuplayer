@@ -74,11 +74,10 @@ public class Player : IPlayer, IImportNotifications
         IDiscordService? discordService = null,
         ILastFmApiService? lastFmApi = null)
     {
-        _audioEngine = audioEngine;
-
         var runtimePlatform = AvaloniaLocator.Current.GetRequiredService<IRuntimePlatform>();
 
         if (runtimePlatform.GetRuntimeInfo().OperatingSystem == OperatingSystemType.WinNT)
+        {
             try
             {
                 _winMediaControls = new WindowsMediaTransportControls(this);
@@ -87,41 +86,46 @@ public class Player : IPlayer, IImportNotifications
             {
                 _winMediaControls = null;
             }
-
-        _audioEngine.ChannelReachedEnd = () => NextSong(PlayDirection.Forward);
-
-        var config = new Config();
-
+        }
 
         SongSourceProvider = songSourceProvider;
+
+        _audioEngine = audioEngine;
+        _audioEngine.ChannelReachedEnd = () => NextSong(PlayDirection.Forward);
         _shuffleProvider = shuffleProvider;
         _statisticsProvider = statisticsProvider;
         _historyProvider = historyProvider;
-
+        _lastFmApi = lastFmApi;
         _discordService = discordService;
 
-        if(config.Container.UseDiscordRpc)
+        LoadPlayerConfiguration();
+
+        InitPlayer(songSourceProvider);
+    }
+
+    private void LoadPlayerConfiguration()
+    {
+        var config = new Config();
+
+        if (config.Container.UseDiscordRpc)
             _discordService?.Initialize();
 
-        _lastFmApi = lastFmApi;
-
-        IsPlaying.BindTo(_audioEngine.IsPlaying);
-
         Volume.Value = config.Container.Volume;
-
         BlacklistSkip.Value = config.Container.BlacklistSkip;
         PlaylistEnableOnPlay.Value = config.Container.PlaylistEnableOnPlay;
         RepeatMode.Value = config.Container.RepeatMode;
         IsShuffle.Value = config.Container.IsShuffle;
+    }
 
-        songSourceProvider.Songs?.Subscribe(_ => CurrentIndex = songSourceProvider.SongSourceList?.IndexOf(CurrentSong.Value) ?? -1);
+    private void InitPlayer(ISongSourceProvider songSourceProvider)
+    {
+        IsPlaying.BindTo(_audioEngine.IsPlaying);
+
+        SongSourceProvider.Songs?.Subscribe(_ => CurrentIndex = songSourceProvider.SongSourceList?.IndexOf(CurrentSong.Value) ?? -1);
 
         CurrentSong.BindValueChanged(OnCurrentSongChanged, true);
-
         RepeatMode.BindValueChanged(OnRepeatModeChanged, true);
-
         IsShuffle.BindValueChanged(_ => _shuffleProvider?.ShuffleImpl?.Init(0));
-
         SelectedPlaylist.BindValueChanged(OnSelectedPlaylistChanged, true);
     }
 
