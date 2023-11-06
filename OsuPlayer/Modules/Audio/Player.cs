@@ -17,8 +17,6 @@ using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules.Audio.Engine;
 using OsuPlayer.Modules.Audio.Interfaces;
-using OsuPlayer.Network.LastFm;
-using OsuPlayer.Services;
 
 namespace OsuPlayer.Modules.Audio;
 
@@ -67,7 +65,7 @@ public class Player : IPlayer, IImportNotifications
     }
 
     public Bindable<Playlist?> SelectedPlaylist { get; } = new();
-    private List<IMapEntryBase> ActivePlaylistSongs { get; set; }
+    private List<IMapEntryBase> ActivePlaylistSongs { get; set; } = new();
 
     public Player(IAudioEngine audioEngine, ISongSourceProvider songSourceProvider, IShuffleServiceProvider? shuffleProvider = null,
         IStatisticsProvider? statisticsProvider = null, ISortProvider? sortProvider = null, IHistoryProvider? historyProvider = null,
@@ -446,17 +444,7 @@ public class Player : IPlayer, IImportNotifications
 
         _currentSongTimer.Stop();
 
-        //We put the XP update to an own try catch because if the API fails or is not available,
-        //that the whole TryEnqueue does not fail
-        try
-        {
-            if (CurrentSong.Value != default)
-                _statisticsProvider?.UpdateXp(fullMapEntry.Hash, _currentSongTimer.ElapsedMilliseconds, _audioEngine.ChannelLength.Value);
-        }
-        catch (Exception e)
-        {
-            Debug.WriteLine($"Could not update XP error => {e}");
-        }
+        UpdateXpOnApi(fullMapEntry);
 
         CurrentSongImage.Value = await findBackgroundTask;
 
@@ -479,6 +467,26 @@ public class Player : IPlayer, IImportNotifications
         CurrentSong.Value = fullMapEntry;
         CurrentIndex = SongSourceProvider.SongSourceList.IndexOf(fullMapEntry);
 
+        await UpdateSongsPlayedOnApi(fullMapEntry, config);
+    }
+
+    private void UpdateXpOnApi(IMapEntryBase fullMapEntry)
+    {
+        //We put the XP update to an own try catch because if the API fails or is not available,
+        //that the whole TryEnqueue does not fail
+        try
+        {
+            if (CurrentSong.Value != default)
+                _statisticsProvider?.UpdateXp(fullMapEntry.Hash, _currentSongTimer.ElapsedMilliseconds, _audioEngine.ChannelLength.Value);
+        }
+        catch (Exception e)
+        {
+            Debug.WriteLine($"Could not update XP error => {e}");
+        }
+    }
+
+    private async Task UpdateSongsPlayedOnApi(IMapEntryBase fullMapEntry, Config config)
+    {
         //Same as update XP mentioned Above
         try
         {
@@ -493,6 +501,11 @@ public class Player : IPlayer, IImportNotifications
         try
         {
             if (!config.Container.EnableScrobbling)
+                return;
+
+            if(CurrentSong.Value == null
+                || (string.IsNullOrWhiteSpace(CurrentSong.Value.GetTitle())
+                        || string.IsNullOrWhiteSpace(CurrentSong.Value.GetArtist())))
                 return;
 
             await _lastFmApi?.Scrobble(CurrentSong.Value.Title, CurrentSong.Value.Artist)!;
