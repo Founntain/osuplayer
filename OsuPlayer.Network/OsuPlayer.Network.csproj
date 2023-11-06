@@ -8,7 +8,6 @@
 
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="0.10.22" />
-        <PackageReference Include="DiscordRichPresence" Version="1.2.1.24" />
         <PackageReference Include="Founntain.Nein" Version="2023.1018.2" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="Octokit" Version="7.1.0" />
@@ -19,5 +18,9 @@
         <ProjectReference Include="..\OsuPlayer.Data\OsuPlayer.Data.csproj" />
         <ProjectReference Include="..\OsuPlayer.Interfaces\OsuPlayer.Interfaces.csproj" />
         <ProjectReference Include="..\OsuPlayer.IO\OsuPlayer.IO.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Discord\" />
     </ItemGroup>
 </Project>

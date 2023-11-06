@@ -79,6 +79,8 @@ internal static class Program
 
         services.RegisterLazySingleton<IDbReaderFactory>(() => new DbReaderFactory());
 
+        services.RegisterLazySingleton<IDiscordService>(() => new DiscordService());
+
         services.RegisterLazySingleton<IProfileManagerService>(() => new ProfileManagerServiceService());
         services.RegisterLazySingleton<IShuffleServiceProvider>(() => new ShuffleService());
         services.RegisterLazySingleton<IStatisticsProvider>(() => new ApiStatisticsService(resolver.GetService<IProfileManagerService>()));
@@ -96,6 +98,7 @@ internal static class Program
             statisticsProvider: resolver.GetRequiredService<IStatisticsProvider>(),
             sortProvider: resolver.GetRequiredService<ISortProvider>(),
             historyProvider: resolver.GetRequiredService<IHistoryProvider>(),
+            discordService: resolver.GetRequiredService<IDiscordService>(),
             lastFmApi: resolver.GetRequiredService<ILastFmApiService>()
         ));
 

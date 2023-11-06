@@ -9,26 +9,29 @@ using Splat;
 using ConsoleLogger = DiscordRPC.Logging.ConsoleLogger;
 using LogLevel = DiscordRPC.Logging.LogLevel;
 
-namespace OsuPlayer.Network.Discord;
+namespace OsuPlayer.Services;
 
-public class DiscordClient
+public class DiscordService : OsuPlayerService, IDiscordService
 {
+    public override string ServiceName => "DISCORD_SERVICE";
+
     private const string ApplicationId = "506435812397940736";
     private const string DefaultImageKey = "logo";
     private readonly DiscordRpcClient _client;
     private readonly IProfileManagerService _profileManager;
     private readonly string _defaultOsuThumbnailUrl = "https://assets.ppy.sh/beatmaps/{0}/covers/list.jpg";
+    private string _lastOsuThumbnailUrl = string.Empty;
 
     /// <summary>
     /// Default assets for the RPC including the logo
     /// </summary>
     private readonly Assets _defaultAssets;
 
-    public DiscordClient() : this(Locator.Current.GetRequiredService<IProfileManagerService>())
+    public DiscordService() : this(Locator.Current.GetRequiredService<IProfileManagerService>())
     {
     }
 
-    public DiscordClient(IProfileManagerService profileManager)
+    public DiscordService(IProfileManagerService profileManager)
     {
         _profileManager = profileManager;
         _client = new DiscordRpcClient(ApplicationId);
@@ -43,8 +46,7 @@ public class DiscordClient
     /// <summary>
     /// Initializes the Discord Client and prepares all events
     /// </summary>
-    /// <returns>itself</returns>
-    public DiscordClient? Initialize()
+    public void Initialize()
     {
         _client.Logger = new ConsoleLogger
         {
@@ -66,11 +68,9 @@ public class DiscordClient
                 LargeImageText = "osu!player"
             }
         });
-
-        return this;
     }
 
-    ~DiscordClient()
+    ~DiscordService()
     {
         DeInitialize();
     }
@@ -114,18 +114,36 @@ public class DiscordClient
     {
         var url = string.Format(_defaultOsuThumbnailUrl, beatmapSetId);
 
-        // Discord can't accept URLs bigger than 256 bytes and throws an exception, so we check for that here
-        if (Encoding.UTF8.GetByteCount(url) > 256)
+        if (url != _lastOsuThumbnailUrl)
         {
-            return null;
+            // Discord can't accept URLs bigger than 256 bytes and throws an exception, so we check for that here
+            if (Encoding.UTF8.GetByteCount(url) > 256)
+            {
+                return null;
+            }
+
+            LogToConsole($"Request => {url}");
+
+            HttpResponseMessage response;
+
+            try
+            {
+                using var client = new HttpClient();
+
+                var req = new HttpRequestMessage(HttpMethod.Get, url);
+
+                response = await client.SendAsync(req);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
+            if (!response.IsSuccessStatusCode)
+                return null;
+
+            _lastOsuThumbnailUrl = url;
         }
-
-        var osuApi = new WebRequestBase(url);
-
-        var thumbnailResponse = await osuApi.GetRequestWithHttpResponseMessage(string.Empty);
-
-        if (!thumbnailResponse.IsSuccessStatusCode)
-            return null;
 
         return new()
         {
