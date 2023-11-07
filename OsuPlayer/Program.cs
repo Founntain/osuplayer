@@ -82,12 +82,12 @@ internal static class Program
         services.RegisterLazySingleton<IPlayer>(() => new Player(
             audioEngine: resolver.GetRequiredService<IAudioEngine>(),
             songSourceProvider: resolver.GetRequiredService<ISongSourceProvider>(),
-            shuffleProvider: resolver.GetRequiredService<IShuffleServiceProvider>(),
-            statisticsProvider: resolver.GetRequiredService<IStatisticsProvider>(),
-            sortProvider: resolver.GetRequiredService<ISortProvider>(),
-            historyProvider: resolver.GetRequiredService<IHistoryProvider>(),
-            discordService: resolver.GetRequiredService<IDiscordService>(),
-            lastFmApi: resolver.GetRequiredService<ILastFmApiService>()
+            shuffleProvider: resolver.GetService<IShuffleServiceProvider>(),
+            statisticsProvider: resolver.GetService<IStatisticsProvider>(),
+            sortProvider: resolver.GetService<ISortProvider>(),
+            historyProvider: resolver.GetService<IHistoryProvider>(),
+            discordService: resolver.GetService<IDiscordService>(),
+            lastFmApi: resolver.GetService<ILastFmApiService>()
         ));
 
         services.Register(() => new MainWindowViewModel(
