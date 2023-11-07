@@ -1,4 +1,5 @@
-﻿using Avalonia.Interactivity;
+﻿using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Nein.Base;
 
@@ -11,12 +12,7 @@ public partial class PlayHistoryView : ReactiveControl<PlayHistoryViewModel>
         InitializeComponent();
     }
 
-    private void InitializeComponent()
-    {
-        AvaloniaXamlLoader.Load(this);
-    }
-
-    private async void HistoryListBox_OnDoubleTapped(object? sender, RoutedEventArgs e)
+    private async void HistoryListBox_OnDoubleTapped(object? sender, TappedEventArgs e)
     {
         var mapEntryFromHash = ViewModel.SongSourceProvider.GetMapEntryFromHash(ViewModel.SelectedHistoricalMapEntry?.MapEntry.Hash);
 

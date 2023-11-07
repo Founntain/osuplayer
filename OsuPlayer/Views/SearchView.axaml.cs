@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Nein.Base;
@@ -15,14 +16,7 @@ public partial class SearchView : ReactiveControl<SearchViewModel>
         InitializeComponent();
     }
 
-    private void InitializeComponent()
-    {
-        this.WhenActivated(_ => { });
-
-        AvaloniaXamlLoader.Load(this);
-    }
-
-    private async void InputElement_OnDoubleTapped(object? sender, RoutedEventArgs e)
+    private async void InputElement_OnDoubleTapped(object? sender, TappedEventArgs e)
     {
         var list = sender as ListBox;
         var song = list!.SelectedItem as IMapEntryBase;

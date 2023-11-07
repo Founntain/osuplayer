@@ -1,5 +1,6 @@
 ﻿using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using Avalonia.ReactiveUI;
 using Avalonia.Threading;
 using DynamicData;
 using Nein.Base;

@@ -54,7 +54,7 @@
                                 <TextBlock Text="Search Artist" />
                                 <TextBox Text="{Binding SearchArtist}" />
                                 <TextBlock Text="Artist filter condition" />
-                                <ComboBox Items="{Binding StringFilterConditions}"
+                                <ComboBox ItemsSource="{Binding StringFilterConditions}"
                                           SelectedItem="{Binding SearchArtistFilterCondition}"
                                           HorizontalAlignment="Stretch" />
                             </StackPanel>
@@ -62,7 +62,7 @@
                                 <TextBlock Text="Search Title" />
                                 <TextBox Text="{Binding SearchTitle}" />
                                 <TextBlock Text="Title filter condition" />
-                                <ComboBox Items="{Binding StringFilterConditions}"
+                                <ComboBox ItemsSource="{Binding StringFilterConditions}"
                                           SelectedItem="{Binding SearchTitleFilterCondition}"
                                           HorizontalAlignment="Stretch" />
                             </StackPanel>
@@ -70,7 +70,7 @@
                                 <TextBlock Text="Search BeatmapSetID" />
                                 <TextBox Text="{Binding SearchBeatmapSetId}" />
                                 <TextBlock Text="BeatmapSetID filter condition" />
-                                <ComboBox Items="{Binding IntFilterConditions}"
+                                <ComboBox ItemsSource="{Binding IntFilterConditions}"
                                           SelectedItem="{Binding SearchBeatmapSetIdFilterCondition}"
                                           HorizontalAlignment="Stretch" />
                             </StackPanel>
@@ -78,7 +78,7 @@
                                 <TextBlock Text="Search BeatmapID" />
                                 <TextBox Text="{Binding SearchBeatmapId}" />
                                 <TextBlock Text="BeatmapID filter condition" />
-                                <ComboBox Items="{Binding IntFilterConditions}"
+                                <ComboBox ItemsSource="{Binding IntFilterConditions}"
                                           SelectedItem="{Binding SearchBeatmapIdFilterCondition}"
                                           HorizontalAlignment="Stretch" />
                             </StackPanel>
@@ -99,7 +99,7 @@
                                HorizontalAlignment="Left" />
                 </Grid>
 
-                <ListBox Name="SongsList" Grid.Row="1" Items="{Binding Beatmaps}"
+                <ListBox Name="SongsList" Grid.Row="1" ItemsSource="{Binding Beatmaps}"
                          DoubleTapped="SongsList_OnDoubleTapped" Background="{DynamicResource AcrylicBaseColor}"
                          Margin="0 1 0 0">
                     <ListBox.Styles>

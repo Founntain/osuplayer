@@ -22,8 +22,8 @@ public partial class CreateProfileWindow : ReactiveWindow<CreateProfileWindowVie
 
         var config = new Config();
 
-        TransparencyLevelHint = (WindowTransparencyLevel) config.Container.BackgroundMode;
-        FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
+        TransparencyLevelHint = new[] { WindowTransparencyLevel.Mica, WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None };
+        FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamily;
     }
 
     private void InitializeComponent()

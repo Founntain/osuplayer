@@ -24,23 +24,14 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
     public SettingsView()
     {
         InitializeComponent();
-    }
 
-    private void InitializeComponent()
-    {
         this.WhenActivated(_ =>
         {
-            if (this.GetVisualRoot() is MainWindow mainWindow)
-            {
-                _mainWindow = mainWindow;
-                ViewModel.MainWindow = mainWindow;
-            }
+            _mainWindow = Locator.Current.GetRequiredService<MainWindow>();
+            ViewModel.MainWindow = _mainWindow;
 
-            ViewModel.SettingsCategories =
-                this.FindControl<CascadingWrapPanel>("SettingsGrid").Children;
+            ViewModel.SettingsCategories = SettingsGrid.Children;
         });
-
-        AvaloniaXamlLoader.Load(this);
     }
 
     private void SettingsView_OnInitialized(object? sender, EventArgs e)
@@ -196,7 +187,7 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
 
         _mainWindow.ViewModel.MainView = _mainWindow.ViewModel.PlayHistoryView;
     }
-    
+
     private void ReportBug_OnClick(object? sender, RoutedEventArgs e) => GeneralExtensions.OpenUrl("https://github.com/founntain/osuplayer/issues/new/choose");
 
     private void JoinDiscord_OnClick(object? sender, RoutedEventArgs e) => GeneralExtensions.OpenUrl("https://discord.gg/RJQSc5B");

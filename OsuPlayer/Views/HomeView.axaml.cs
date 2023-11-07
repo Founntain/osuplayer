@@ -1,13 +1,17 @@
-﻿using Avalonia.Controls;
+﻿using Windows.UI.Input;
+using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
 using Nein.Base;
+using Nein.Extensions;
 using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
 using ReactiveUI;
+using Splat;
+using TappedEventArgs = Avalonia.Input.TappedEventArgs;
 
 namespace OsuPlayer.Views;
 
@@ -18,19 +22,10 @@ public partial class HomeView : ReactiveControl<HomeViewModel>
     public HomeView()
     {
         InitializeComponent();
-    }
 
-    private void InitializeComponent()
-    {
-        this.WhenActivated(_ =>
-        {
-            if (this.GetVisualRoot() is MainWindow mainWindow)
-                _mainWindow = mainWindow;
+        _mainWindow = Locator.Current.GetRequiredService<MainWindow>();
 
-            HomeViewInitialized();
-        });
-
-        AvaloniaXamlLoader.Load(this);
+        HomeViewInitialized();
     }
 
     private async void HomeViewInitialized()
@@ -47,7 +42,7 @@ public partial class HomeView : ReactiveControl<HomeViewModel>
         //ViewModel!.Songs = new ObservableCollection<SongEntry>(songs);
     }
 
-    private async void InputElement_OnDoubleTapped(object? sender, RoutedEventArgs e)
+    private async void InputElement_OnDoubleTapped(object? sender, TappedEventArgs e)
     {
         var list = sender as ListBox;
         var song = list!.SelectedItem as IMapEntryBase;

@@ -42,8 +42,8 @@ public partial class ExportSongsProcessWindow : ReactiveWindow<ExportSongsProces
 
         var config = new Config();
 
-        TransparencyLevelHint = (WindowTransparencyLevel) config.Container.BackgroundMode;
-        FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
+        TransparencyLevelHint = new[] { WindowTransparencyLevel.Mica, WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None };
+        FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamily;
     }
 
     private void InitializeComponent()
@@ -224,7 +224,7 @@ public partial class ExportSongsProcessWindow : ReactiveWindow<ExportSongsProces
         await ExportSongs(_cancellationTokenSource.Token);
     }
 
-    private void Window_OnClosing(object? sender, CancelEventArgs e)
+    private void Window_OnClosing(object? sender, WindowClosingEventArgs e)
     {
         _cancellationTokenSource.Cancel();
     }

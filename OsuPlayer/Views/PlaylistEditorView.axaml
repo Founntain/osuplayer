@@ -28,7 +28,7 @@
             </DockPanel>
 
             <DockPanel Grid.Column="1" VerticalAlignment="Center" Margin="10">
-                <ComboBox Items="{Binding Playlists, Converter={StaticResource SourceListValueConverter}}"
+                <ComboBox ItemsSource="{Binding Playlists, Converter={StaticResource SourceListValueConverter}}"
                           SelectedItem="{Binding CurrentSelectedPlaylist}" Margin="0 0 10 0" />
 
                 <Panel>
@@ -144,7 +144,7 @@
                 </Border>
 
                 <ListBox Grid.Row="1" Background="Transparent" SelectionMode="Multiple, Toggle"
-                         Items="{Binding FilteredSongEntries}" SelectedItems="{Binding SelectedSongListItems}"
+                         ItemsSource="{Binding FilteredSongEntries}" SelectedItems="{Binding SelectedSongListItems}"
                          SelectionChanged="SongList_OnSelectionChanged" DoubleTapped="PlaySong">
                     <ListBox.ItemTemplate>
                         <DataTemplate DataType="interfaces:IMapEntryBase">
@@ -163,7 +163,7 @@
                 </Border>
 
                 <ListBox Grid.Row="1" Background="Transparent" SelectionMode="Multiple, Toggle"
-                         Items="{Binding CurrentSelectedPlaylist.Songs, Converter={StaticResource PlaylistValueConverter}}"
+                         ItemsSource="{Binding CurrentSelectedPlaylist.Songs, Converter={StaticResource PlaylistValueConverter}}"
                          SelectionChanged="Playlist_OnSelectionChanged" DoubleTapped="PlaySong">
                     <ListBox.ItemTemplate>
                         <DataTemplate DataType="interfaces:IMapEntryBase">

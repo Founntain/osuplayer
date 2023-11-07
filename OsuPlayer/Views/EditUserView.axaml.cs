@@ -31,19 +31,9 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
     public EditUserView(IProfileManagerService profileManager)
     {
         _profileManager = profileManager;
+        _mainWindow = Locator.Current.GetRequiredService<MainWindow>();
 
         InitializeComponent();
-    }
-
-    private void InitializeComponent()
-    {
-        this.WhenActivated(_ =>
-        {
-            if (this.GetVisualRoot() is MainWindow mainWindow)
-                _mainWindow = mainWindow;
-        });
-
-        AvaloniaXamlLoader.Load(this);
     }
 
     private async void EditProfilePicture_OnClick(object? sender, RoutedEventArgs e)

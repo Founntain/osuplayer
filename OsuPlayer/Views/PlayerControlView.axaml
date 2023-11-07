@@ -140,11 +140,11 @@
             </DockPanel>
 
             <DockPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
-                <Button Name="Repeat" Width="38" Height="38" CornerRadius="50" Click="SongControl"
+                <Button Name="RepeatBtn" Width="38" Height="38" CornerRadius="50" Click="SongControl"
                         Background="Transparent">
                     <Button.ContextMenu>
                         <ContextMenu IsVisible="{Binding IsRepeating, Converter={StaticResource RepeatConverter}}"
-                                     Items="{Binding Playlists}" PointerReleased="RepeatContextMenu_OnPointerReleased" />
+                                     ItemsSource="{Binding Playlists}" PointerReleased="RepeatContextMenu_OnPointerReleased" />
                     </Button.ContextMenu>
                     <Panel>
                         <avalonia:MaterialIcon Kind="{Binding IsRepeating, Converter={StaticResource RepeatConverter}}"

@@ -11,6 +11,7 @@ using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
 using ReactiveUI;
+using Splat;
 
 namespace OsuPlayer.Views;
 
@@ -21,17 +22,8 @@ public partial class PlaylistEditorView : ReactiveControl<PlaylistEditorViewMode
     public PlaylistEditorView()
     {
         InitializeComponent();
-    }
 
-    private void InitializeComponent()
-    {
-        this.WhenActivated(_ =>
-        {
-            if (this.GetVisualRoot() is MainWindow mainWindow)
-                _mainWindow = mainWindow;
-        });
-
-        AvaloniaXamlLoader.Load(this);
+        _mainWindow = Locator.Current.GetRequiredService<MainWindow>();
     }
 
     private async void AddToPlaylist_OnClick(object? sender, RoutedEventArgs e)
@@ -180,7 +172,7 @@ public partial class PlaylistEditorView : ReactiveControl<PlaylistEditorViewMode
         ViewModel.IsDeletePlaylistPopupOpen = false;
     }
 
-    private async void PlaySong(object? sender, RoutedEventArgs e)
+    private async void PlaySong(object? sender, TappedEventArgs e)
     {
         var tapped = (TappedEventArgs) e;
         var controlSource = (Control) tapped.Pointer.Captured;

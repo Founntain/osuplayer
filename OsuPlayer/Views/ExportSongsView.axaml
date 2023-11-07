@@ -24,7 +24,7 @@
                    LastChildFill="False">
             <StackPanel DockPanel.Dock="Top" Spacing="5" Margin="5">
                 <TextBlock Text="Playlist to export" />
-                <ComboBox Items="{Binding Playlists}" SelectedItem="{Binding SelectedPlaylist}"
+                <ComboBox ItemsSource="{Binding Playlists}" SelectedItem="{Binding SelectedPlaylist}"
                           VerticalAlignment="Center" HorizontalAlignment="Stretch" />
             </StackPanel>
             <StackPanel DockPanel.Dock="Top" Spacing="5" Margin="5">
@@ -42,7 +42,7 @@
             </StackPanel>
         </DockPanel>
 
-        <ListBox Grid.Row="1" Grid.Column="1" Items="{Binding SelectedPlaylistSongs}"
+        <ListBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding SelectedPlaylistSongs}"
                  Background="{DynamicResource AcrylicBaseColor}" Margin="1 1 0 1">
             <ListBox.DataTemplates>
                 <DataTemplate DataType="interfaces:IMapEntryBase">

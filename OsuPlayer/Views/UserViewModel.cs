@@ -29,7 +29,7 @@ public class UserViewModel : BaseViewModel
 
     private readonly IProfileManagerService _profileManager;
 
-    private ObservableCollection<IControl>? _badges;
+    private ObservableCollection<Control>? _badges;
     private CancellationTokenSource? _bannerCancellationTokenSource;
     private Bitmap? _currentProfileBanner;
     private Bitmap? _currentProfilePicture;
@@ -100,9 +100,9 @@ public class UserViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _topSongsOfCurrentUser, value);
     }
 
-    public ObservableCollection<IControl> Badges
+    public ObservableCollection<Control> Badges
     {
-        get => _badges ?? new ObservableCollection<IControl>();
+        get => _badges ?? new ObservableCollection<Control>();
         set => this.RaiseAndSetIfChanged(ref _badges, value);
     }
 
@@ -147,7 +147,7 @@ public class UserViewModel : BaseViewModel
 
         Activator = new ViewModelActivator();
 
-        Badges = new ObservableCollection<IControl>();
+        Badges = new ObservableCollection<Control>();
 
         SongsPlayedGraphValues = new List<ObservableValue>();
         XpGainedGraphValues = new List<ObservableValue>();
@@ -375,9 +375,9 @@ public class UserViewModel : BaseViewModel
         this.RaisePropertyChanged(nameof(XAxes));
     }
 
-    public IEnumerable<IControl> LoadBadges(User? currentUser)
+    public IEnumerable<Control> LoadBadges(User? currentUser)
     {
-        return new List<IControl>();
+        return new List<Control>();
 
         // if (currentUser == default) return default!;
         //

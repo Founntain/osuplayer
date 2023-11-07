@@ -44,11 +44,8 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
 
         var config = new Config();
 
-        FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
-        TransparencyLevelHint = (WindowTransparencyLevel) config.Container.BackgroundMode;
-#if DEBUG
-        this.AttachDevTools();
-#endif
+        TransparencyLevelHint = new[] { WindowTransparencyLevel.Mica, WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None };
+        FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamily;
     }
 
     private void InitializeComponent()
@@ -57,7 +54,7 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
         {
             if (string.IsNullOrWhiteSpace(ViewModel?.Username)) return;
 
-            this.FindControl<TextBox>("PasswordBox").Focus();
+            PasswordBox.Focus();
         });
 
         AvaloniaXamlLoader.Load(this);

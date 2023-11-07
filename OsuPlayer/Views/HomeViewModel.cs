@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Avalonia.Media.Imaging;
+using Avalonia.ReactiveUI;
 using Avalonia.Threading;
 using DynamicData;
 using Nein.Base;

@@ -12,13 +12,6 @@ public partial class StatisticsView : ReactiveControl<StatisticsViewModel>
         InitializeComponent();
     }
 
-    private void InitializeComponent()
-    {
-        AvaloniaXamlLoader.Load(this);
-
-        this.WhenActivated(Block);
-    }
-
     private void Block(CompositeDisposable disposables)
     {
         Disposable.Create(() => { }).DisposeWith(disposables);

@@ -14,11 +14,6 @@ public partial class BeatmapsView : ReactiveControl<BeatmapsViewModel>
         InitializeComponent();
     }
 
-    private void InitializeComponent()
-    {
-        AvaloniaXamlLoader.Load(this);
-    }
-
     private async void SearchBeatmaps_OnClick(object? sender, RoutedEventArgs e)
     {
         if (ViewModel == null) return;
@@ -71,7 +66,7 @@ public partial class BeatmapsView : ReactiveControl<BeatmapsViewModel>
         await ViewModel.SearchBeatmaps(ViewModel.CurrentPage);
     }
 
-    private void SongsList_OnDoubleTapped(object? sender, RoutedEventArgs e)
+    private void SongsList_OnDoubleTapped(object? sender, TappedEventArgs e)
     {
         if (sender is not ListBox listBox) return;
 

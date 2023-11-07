@@ -40,7 +40,7 @@
             </Border>
 
             <ListBox Grid.Row="1" Background="Transparent" SelectionMode="Multiple, Toggle"
-                     Items="{Binding FilteredSongEntries}" SelectedItems="{Binding SelectedSongListItems}"
+                     ItemsSource="{Binding FilteredSongEntries}" SelectedItems="{Binding SelectedSongListItems}"
                      SelectionChanged="SongList_OnSelectionChanged" DoubleTapped="PlaySong">
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="interfaces:IMapEntryBase">
@@ -59,7 +59,7 @@
             </Border>
 
             <ListBox Grid.Row="1" Background="Transparent" SelectionMode="Multiple, Toggle"
-                     Items="{Binding Blacklist.Songs, Converter={StaticResource PlaylistValueConverter}}"
+                     ItemsSource="{Binding Blacklist.Songs, Converter={StaticResource PlaylistValueConverter}}"
                      SelectionChanged="Blacklist_OnSelectionChanged" DoubleTapped="PlaySong">
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="interfaces:IMapEntryBase">

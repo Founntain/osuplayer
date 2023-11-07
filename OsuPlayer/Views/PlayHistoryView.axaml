@@ -19,7 +19,7 @@
                        HorizontalAlignment="Left" />
         </Grid>
 
-        <ListBox Grid.Row="1" Items="{Binding History}" SelectedItem="{Binding SelectedHistoricalMapEntry}"
+        <ListBox Grid.Row="1" ItemsSource="{Binding History}" SelectedItem="{Binding SelectedHistoricalMapEntry}"
                  Background="{DynamicResource AcrylicBaseColor}"
                  Margin="0 1"
                  DoubleTapped="HistoryListBox_OnDoubleTapped">

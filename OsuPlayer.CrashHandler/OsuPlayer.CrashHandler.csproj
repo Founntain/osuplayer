@@ -33,7 +33,6 @@
         <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.22" />
         <PackageReference Include="Founntain.Nein" Version="2023.1018.2" />
         <PackageReference Include="ReactiveUI" Version="19.5.1" />
-        <PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1" />
     </ItemGroup>
     <ItemGroup>
         <Compile Update="CrashHandlerMainWindowViewModel.cs">

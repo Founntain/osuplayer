@@ -29,16 +29,14 @@
 
             <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                 <StackPanel.Background>
-                    <ImageBrush Source="{Binding CurrentProfileBanner}"
-                                RenderOptions.BitmapInterpolationMode="HighQuality" Opacity="0.5"
+                    <ImageBrush Source="{Binding CurrentProfileBanner}" Opacity="0.5"
                                 Stretch="UniformToFill" />
                 </StackPanel.Background>
 
                 <Border Margin="10" CornerRadius="1000" Height="150" Width="150" MaxHeight="150" MaxWidth="150"
                         BorderBrush="White" BorderThickness="3" HorizontalAlignment="Center">
                     <Border.Background>
-                        <ImageBrush Source="{Binding CurrentProfilePicture}"
-                                    RenderOptions.BitmapInterpolationMode="HighQuality" Stretch="UniformToFill" />
+                        <ImageBrush Source="{Binding CurrentProfilePicture}" Stretch="UniformToFill" />
                     </Border.Background>
                 </Border>
 

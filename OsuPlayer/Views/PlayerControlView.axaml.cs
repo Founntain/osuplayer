@@ -21,35 +21,27 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
 {
     public MainWindow? _mainWindow;
 
-    private Slider ProgressSlider => this.FindControl<Slider>("SongProgressSlider");
-    private Button RepeatButton => this.FindControl<Button>("Repeat");
-
     public PlayerControlView()
     {
         InitializeComponent();
-    }
 
-    private void InitializeComponent()
-    {
         this.WhenActivated(_ =>
         {
             if (this.GetVisualRoot() is MainWindow mainWindow)
                 _mainWindow = mainWindow;
 
-            ProgressSlider.AddHandler(PointerPressedEvent, SongProgressSlider_OnPointerPressed,
+            SongProgressSlider.AddHandler(PointerPressedEvent, SongProgressSlider_OnPointerPressed,
                 RoutingStrategies.Tunnel);
 
-            ProgressSlider.AddHandler(PointerReleasedEvent, SongProgressSlider_OnPointerReleased,
+            SongProgressSlider.AddHandler(PointerReleasedEvent, SongProgressSlider_OnPointerReleased,
                 RoutingStrategies.Tunnel);
 
-            RepeatButton.AddHandler(PointerReleasedEvent, Repeat_OnPointerReleased, RoutingStrategies.Tunnel);
+            RepeatBtn.AddHandler(PointerReleasedEvent, Repeat_OnPointerReleased, RoutingStrategies.Tunnel);
 
             ViewModel.RaisePropertyChanged(nameof(ViewModel.IsAPlaylistSelected));
             ViewModel.RaisePropertyChanged(nameof(ViewModel.IsCurrentSongInPlaylist));
             ViewModel.RaisePropertyChanged(nameof(ViewModel.IsCurrentSongOnBlacklist));
         });
-
-        AvaloniaXamlLoader.Load(this);
     }
 
     private void Repeat_OnPointerReleased(object? sender, PointerReleasedEventArgs e)

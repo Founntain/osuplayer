@@ -50,7 +50,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
         _loggingService.Log("Loaded config successfully", LogType.Success, config.Container);
 
-        TransparencyLevelHint = (WindowTransparencyLevel) config.Container.BackgroundMode;
+        TransparencyLevelHint = new[] { WindowTransparencyLevel.Mica, WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None };
         FontWeight = (FontWeight) config.Container.DefaultFontWeight;
 
         var backgroundColor = config.Container.BackgroundColor;
@@ -65,7 +65,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         Application.Current!.Resources["DefaultFontWeight"] = config.Container.DefaultFontWeight.ToFontWeight();
         Application.Current!.Resources["BiggerFontWeight"] = config.Container.GetNextBiggerFont().ToFontWeight();
 
-        FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
+        FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamily;
         config.Container.Font ??= FontFamily.Name;
 
         Task.Run(async () =>
@@ -111,10 +111,6 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
                 Console.WriteLine($"Something wrong happened when connecting to last.fm API {ex}");
             }
         });
-
-#if DEBUG
-        this.AttachDevTools();
-#endif
     }
 
     private void InitializeComponent()
@@ -128,7 +124,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         AvaloniaXamlLoader.Load(this);
     }
 
-    protected override void OnClosing(CancelEventArgs e)
+    protected override void OnClosing(WindowClosingEventArgs e)
     {
         base.OnClosing(e);
 

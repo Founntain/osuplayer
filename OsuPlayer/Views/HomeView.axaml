@@ -29,12 +29,12 @@
                 <TextBlock Text="your songs" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Center" />
             </Border>
 
-            <ListBox Grid.Row="1" Items="{Binding SortedSongEntries}" Background="Transparent"
+            <ListBox Grid.Row="1" ItemsSource="{Binding SortedSongEntries}" Background="Transparent"
                      DoubleTapped="InputElement_OnDoubleTapped" SelectedItem="{Binding SelectedSong}">
                 <ListBox.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="Add to playlist"
-                                  Items="{Binding PlaylistContextMenuEntries}"
+                                  ItemsSource="{Binding PlaylistContextMenuEntries}"
                                   Classes="SubItems">
                             <MenuItem.Styles>
                                 <Style Selector="MenuItem.SubItems MenuItem">

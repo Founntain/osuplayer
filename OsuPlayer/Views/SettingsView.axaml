@@ -89,7 +89,7 @@
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <ComboBox SelectedItem="{Binding SelectedReleaseChannel}"
-                                          Items="{Binding ReleaseChannels}"
+                                          ItemsSource="{Binding ReleaseChannels}"
                                           HorizontalAlignment="Stretch" />
                             </controls:SettingsDisplayer.InteractionControl>
 
@@ -100,7 +100,7 @@
                                                     Icon="PlayArrow" UseRoundedCorners="False">
 
                             <controls:SettingsDisplayer.InteractionControl>
-                                <ComboBox SelectedItem="{Binding SelectedStartupSong}" Items="{Binding StartupSongs}"
+                                <ComboBox SelectedItem="{Binding SelectedStartupSong}" ItemsSource="{Binding StartupSongs}"
                                           HorizontalAlignment="Stretch" />
                             </controls:SettingsDisplayer.InteractionControl>
 
@@ -111,7 +111,7 @@
                                                     Icon="SortVariant" UseRoundedCorners="False">
 
                             <controls:SettingsDisplayer.InteractionControl>
-                                <ComboBox SelectedItem="{Binding SelectedSortingMode}" Items="{Binding SortingModes}"
+                                <ComboBox SelectedItem="{Binding SelectedSortingMode}" ItemsSource="{Binding SortingModes}"
                                           HorizontalAlignment="Stretch" />
                             </controls:SettingsDisplayer.InteractionControl>
 
@@ -123,7 +123,7 @@
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <ComboBox SelectedItem="{Binding SelectedShuffleAlgorithm}"
-                                          Items="{Binding ShuffleAlgorithms}" HorizontalAlignment="Stretch" />
+                                          ItemsSource="{Binding ShuffleAlgorithms}" HorizontalAlignment="Stretch" />
                             </controls:SettingsDisplayer.InteractionControl>
 
                         </controls:SettingsDisplayer>
@@ -186,7 +186,7 @@
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <AutoCompleteBox SelectedItem="{Binding SelectedFont}" MinimumPrefixLength="0"
-                                                 Items="{Binding Fonts}" HorizontalAlignment="Stretch" />
+                                                 ItemsSource="{Binding Fonts}" HorizontalAlignment="Stretch" />
                             </controls:SettingsDisplayer.InteractionControl>
 
                         </controls:SettingsDisplayer>
@@ -197,7 +197,7 @@
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <ComboBox SelectedItem="{Binding SelectedFontWeight}"
-                                          Items="{Binding AvailableFontWeights}" HorizontalAlignment="Stretch" />
+                                          ItemsSource="{Binding AvailableFontWeights}" HorizontalAlignment="Stretch" />
                             </controls:SettingsDisplayer.InteractionControl>
 
                         </controls:SettingsDisplayer>
@@ -208,7 +208,7 @@
 
                             <controls:SettingsDisplayer.InteractionControl>
                                 <ComboBox SelectedItem="{Binding BackgroundMode}"
-                                          Items="{Binding BackgroundModes}" HorizontalAlignment="Stretch" />
+                                          ItemsSource="{Binding BackgroundModes}" HorizontalAlignment="Stretch" />
                             </controls:SettingsDisplayer.InteractionControl>
 
                         </controls:SettingsDisplayer>
@@ -221,7 +221,7 @@
                                 <AutoCompleteBox SelectedItem="{Binding SelectedBackgroundColor}"
                                                  Watermark="Type to search for color" FilterMode="ContainsOrdinal"
                                                  MinimumPrefixLength="0"
-                                                 Items="{Binding KnownColors}" HorizontalAlignment="Stretch" />
+                                                 ItemsSource="{Binding KnownColors}" HorizontalAlignment="Stretch" />
                             </controls:SettingsDisplayer.InteractionControl>
 
                         </controls:SettingsDisplayer>
@@ -254,7 +254,7 @@
                             <controls:SettingsDisplayer.InteractionControl>
                                 <AutoCompleteBox SelectedItem="{Binding SelectedAccentColor}"
                                                  Watermark="Type to search for color" FilterMode="ContainsOrdinal"
-                                                 MinimumPrefixLength="0" Items="{Binding KnownColors}"
+                                                 MinimumPrefixLength="0" ItemsSource="{Binding KnownColors}"
                                                  HorizontalAlignment="Stretch" />
                             </controls:SettingsDisplayer.InteractionControl>
 
@@ -275,7 +275,7 @@
                                                     Icon="SpeakerMultiple" UseRoundedCorners="False">
 
                             <controls:SettingsDisplayer.InteractionControl>
-                                <ComboBox Items="{Binding AvailableAudioDevices}"
+                                <ComboBox ItemsSource="{Binding AvailableAudioDevices}"
                                           SelectedItem="{Binding SelectedAudioDevice}" HorizontalAlignment="Stretch" />
                             </controls:SettingsDisplayer.InteractionControl>
 
@@ -455,7 +455,7 @@
                         <controls:SettingsTitleDisplayer Title="Contributers" Icon="AccountStar" UseRoundedCorners="False" />
 
                         <Border Background="{DynamicResource AcrylicBaseColor}" Padding="20">
-                            <ItemsRepeater Items="{Binding Contributors}">
+                            <ItemsRepeater ItemsSource="{Binding Contributors}">
                                 <ItemsRepeater.Layout>
                                     <WrapLayout HorizontalSpacing="5" VerticalSpacing="5" Orientation="Horizontal" />
                                 </ItemsRepeater.Layout>
@@ -467,8 +467,7 @@
                                                     VerticalAlignment="Center"
                                                     BorderBrush="White" BorderThickness="2">
                                                 <Border.Background>
-                                                    <ImageBrush Source="{Binding Avatar}"
-                                                                BitmapInterpolationMode="MediumQuality" />
+                                                    <ImageBrush Source="{Binding Avatar}" />
                                                 </Border.Background>
                                             </Border>
 

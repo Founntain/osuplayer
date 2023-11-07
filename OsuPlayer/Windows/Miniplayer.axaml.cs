@@ -27,10 +27,6 @@ public partial class Miniplayer : ReactiveWindow<MiniplayerViewModel>
         InitializeComponent();
 
         LoadSettings();
-
-#if DEBUG
-        this.AttachDevTools();
-#endif
     }
 
     public Miniplayer(IPlayer player, IAudioEngine engine)
@@ -40,10 +36,6 @@ public partial class Miniplayer : ReactiveWindow<MiniplayerViewModel>
         _mainWindow = Locator.GetLocator().GetRequiredService<MainWindow>();
 
         DataContext = new MiniplayerViewModel(player, engine);
-
-#if DEBUG
-        this.AttachDevTools();
-#endif
     }
 
     private void LoadSettings()
