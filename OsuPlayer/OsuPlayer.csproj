@@ -161,6 +161,9 @@
         <Compile Update="Views\PlayHistoryViewModel.cs">
             <DependentUpon>PlayHistoryView.axaml</DependentUpon>
         </Compile>
+        <Compile Update="Windows\FluentAppWindowViewModel.cs">
+          <DependentUpon>FluentAppWindow.axaml</DependentUpon>
+        </Compile>
     </ItemGroup>
     <ItemGroup>
         <UpToDateCheckInput Remove="Resources\Fonts\Montserrat-VariableFont_wght.ttf" />

@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Avalonia;
@@ -10,7 +9,6 @@ using OsuPlayer.Extensions.EnumExtensions;
 using OsuPlayer.Interfaces.Service;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.Network;
-using OsuPlayer.Network.LastFm;
 using OsuPlayer.Services;
 using OsuPlayer.Styles;
 using OsuPlayer.UI_Extensions;

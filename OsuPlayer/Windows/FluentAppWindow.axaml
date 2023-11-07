@@ -1,0 +1,35 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:windows="clr-namespace:OsuPlayer.Windows"
+        xmlns:ui="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="OsuPlayer.Windows.FluentAppWindow"
+        Title="FluentAppWindow">
+
+    <Design.DataContext>
+        <windows:FluentAppWindowViewModel />
+    </Design.DataContext>
+
+    <Grid Name="MainGrid" RowDefinitions="*, 100">
+        <ui:NavigationView Grid.Row="0" Name="AppNavigationView" PaneDisplayMode="LeftCompact" Content="{Binding MainView}">
+            <ui:NavigationView.MenuItems>
+                <ui:NavigationViewItem Content="Home" Tag="Home" IconSource="Home"/>
+                <ui:NavigationViewItem Content="Playlists" Tag="Playlists" IconSource="Audio" />
+                <ui:NavigationViewItem Content="Social" Tag="Social" IconSource="World" >
+                    <ui:NavigationViewItem.MenuItems>
+                        <ui:NavigationViewItem Content="Users" Tag="SamplePage3" IconSource="People" />
+                        <ui:NavigationViewItem Content="Party" Tag="SamplePage4" IconSource="Star" />
+                        <ui:NavigationViewItem Content="Edit User" Tag="SamplePage4" IconSource="Edit" />
+                        <ui:NavigationViewItem Content="Beatmaps" Tag="SamplePage4" IconSource="Library" />
+                    </ui:NavigationViewItem.MenuItems>
+                </ui:NavigationViewItem>
+            </ui:NavigationView.MenuItems>
+        </ui:NavigationView>
+
+        <ContentControl Name="PlayerControlPanel" Grid.Row="1" Content="{Binding PlayerControl}" />
+    </Grid>
+
+
+</Window>

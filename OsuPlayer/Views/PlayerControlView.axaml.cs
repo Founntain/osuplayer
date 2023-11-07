@@ -152,8 +152,10 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
         // _mainWindow.FullscreenWindow = new FullscreenWindow();
         //
         // _mainWindow.FullscreenWindow.Show();
-        //
-        // return;
+
+        Locator.Current.GetRequiredService<FluentAppWindow>().Show();
+
+        return;
 
         _mainWindow.Miniplayer = new Miniplayer(ViewModel.Player, Locator.Current.GetRequiredService<IAudioEngine>());
 
