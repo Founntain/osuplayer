@@ -1,5 +1,9 @@
-﻿using Nein.Base;
+﻿using Avalonia.Controls;
+using Avalonia.Media;
+using Avalonia.Media.Imaging;
+using Nein.Base;
 using Nein.Extensions;
+using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.Interfaces.Service;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Views;
@@ -14,6 +18,8 @@ public class FluentAppWindowViewModel : BaseWindowViewModel
     public readonly IProfileManagerService ProfileManager;
 
     private BaseViewModel? _mainView;
+    private bool _displayBackgroundImage;
+    private Bitmap? _backgroundImage;
 
     public TopBarViewModel TopBar { get; }
     public PlayerControlViewModel PlayerControl { get; }
@@ -34,10 +40,32 @@ public class FluentAppWindowViewModel : BaseWindowViewModel
     public ExportSongsViewModel ExportSongsView { get; }
     public PlayHistoryViewModel PlayHistoryView { get; set; }
 
+    public ExperimentalAcrylicMaterial? PanelMaterial { get; set; }
+
+    private ReadOnlyObservableCollection<IMapEntryBase>? _songList;
+
+    public ReadOnlyObservableCollection<IMapEntryBase>? SongList
+    {
+        get => _songList;
+        set => this.RaiseAndSetIfChanged(ref _songList, value);
+    }
+
+    public bool DisplayBackgroundImage
+    {
+        get => _displayBackgroundImage;
+        set => this.RaiseAndSetIfChanged(ref _displayBackgroundImage, value);
+    }
+
     public BaseViewModel? MainView
     {
         get => _mainView;
         set => this.RaiseAndSetIfChanged(ref _mainView, value);
+    }
+
+    public Bitmap? BackgroundImage
+    {
+        get => _backgroundImage;
+        set => this.RaiseAndSetIfChanged(ref _backgroundImage, value);
     }
 
     public FluentAppWindowViewModel(IAudioEngine engine, IPlayer player, IProfileManagerService profileManager, IShuffleServiceProvider? shuffleServiceProvider = null,
@@ -63,5 +91,15 @@ public class FluentAppWindowViewModel : BaseWindowViewModel
         BeatmapView = new BeatmapsViewModel(Player);
         ExportSongsView = new ExportSongsViewModel(Player.SongSourceProvider);
         PlayHistoryView = new PlayHistoryViewModel(Player, historyProvider, Player.SongSourceProvider);
+
+        PanelMaterial = new ExperimentalAcrylicMaterial
+        {
+            BackgroundSource = AcrylicBackgroundSource.Digger,
+            TintColor = Colors.Black,
+            TintOpacity = 0.75,
+            MaterialOpacity = 0.25
+        };
+
+        SongList = Player.SongSourceProvider.SongSourceList;
     }
 }

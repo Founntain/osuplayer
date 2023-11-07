@@ -305,58 +305,49 @@ public class Player : IPlayer, IImportNotifications
         }
     }
 
-    public async void NextSong(PlayDirection playDirection)
+    public async Task<bool> NextSong(PlayDirection playDirection)
     {
         if (SongSourceProvider.SongSourceList == null || !SongSourceProvider.SongSourceList.Any())
-            return;
+            return false;
 
         if (playDirection == PlayDirection.Backwards && _audioEngine.ChannelPosition.Value > 3)
         {
-            await TryStartSongAsync(CurrentSong.Value ?? SongSourceProvider.SongSourceList[0]);
-            return;
+            return await TryStartSongAsync(CurrentSong.Value ?? SongSourceProvider.SongSourceList[0]);
         }
 
-        switch (RepeatMode.Value)
+        return RepeatMode.Value switch
         {
-            case Data.OsuPlayer.Enums.RepeatMode.NoRepeat:
-                await TryPlaySongAsync(GetNextSongToPlay(SongSourceProvider.SongSourceList, CurrentIndex, playDirection), playDirection);
-                return;
-            case Data.OsuPlayer.Enums.RepeatMode.Playlist:
-                await TryPlaySongAsync(GetNextSongToPlay(ActivePlaylistSongs, CurrentIndex, playDirection), playDirection);
-                return;
-            case Data.OsuPlayer.Enums.RepeatMode.SingleSong:
-                await TryStartSongAsync(CurrentSong.Value!);
-                return;
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
+            Data.OsuPlayer.Enums.RepeatMode.NoRepeat => await TryPlaySongAsync(GetNextSongToPlay(SongSourceProvider.SongSourceList, CurrentIndex, playDirection), playDirection),
+            Data.OsuPlayer.Enums.RepeatMode.Playlist => await TryPlaySongAsync(GetNextSongToPlay(ActivePlaylistSongs, CurrentIndex, playDirection), playDirection),
+            Data.OsuPlayer.Enums.RepeatMode.SingleSong => await TryStartSongAsync(CurrentSong.Value!),
+            _ => throw new ArgumentOutOfRangeException()
+        };
     }
 
-    public async Task TryPlaySongAsync(IMapEntryBase? song, PlayDirection playDirection = PlayDirection.Normal)
+    public async Task<bool> TryPlaySongAsync(IMapEntryBase? song, PlayDirection playDirection = PlayDirection.Normal)
     {
         if (SongSourceProvider.SongSourceList == default || !SongSourceProvider.SongSourceList.Any())
             throw new NullOrEmptyException($"{nameof(SongSourceProvider.SongSourceList)} can't be null or empty");
         if (song == default)
         {
-            await TryStartSongAsync(SongSourceProvider.SongSourceList[0]);
-            return;
+            return await TryStartSongAsync(SongSourceProvider.SongSourceList[0]);
         }
 
         if ((await new Config().ReadAsync()).IgnoreSongsWithSameNameCheckBox &&
             string.Equals(CurrentSong.Value?.SongName, song.SongName, StringComparison.OrdinalIgnoreCase))
+        {
             switch (playDirection)
             {
                 case PlayDirection.Forward:
                 case PlayDirection.Backwards:
                     CurrentIndex += (int) playDirection;
-                    NextSong(playDirection);
-                    return;
+                    return await NextSong(playDirection);
                 default:
-                    await TryStartSongAsync(song);
-                    return;
+                    return await TryStartSongAsync(song);
             }
+        }
 
-        await TryStartSongAsync(song);
+        return await TryStartSongAsync(song);
     }
 
     /// <summary>
@@ -429,7 +420,7 @@ public class Player : IPlayer, IImportNotifications
     /// </summary>
     /// <param name="song">a <see cref="IMapEntryBase" /> to play next</param>
     /// <returns>a <see cref="Task" /> with the resulting state</returns>
-    private async Task TryStartSongAsync(IMapEntryBase song)
+    private async Task<bool> TryStartSongAsync(IMapEntryBase song)
     {
         if (SongSourceProvider.SongSourceList == null || !SongSourceProvider.SongSourceList.Any())
             throw new NullOrEmptyException($"{nameof(SongSourceProvider.SongSourceList)} can't be null or empty");
@@ -463,13 +454,15 @@ public class Player : IPlayer, IImportNotifications
         catch (Exception ex)
         {
             Debug.WriteLine(ex.ToString());
-            return;
+            return false;
         }
 
         CurrentSong.Value = fullMapEntry;
         CurrentIndex = SongSourceProvider.SongSourceList.IndexOf(fullMapEntry);
 
         await UpdateSongsPlayedOnApi(fullMapEntry, config);
+
+        return true;
     }
 
     private void UpdateXpOnApi(IMapEntryBase fullMapEntry)

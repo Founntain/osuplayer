@@ -38,9 +38,9 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         _profileManager = ViewModel.ProfileManager;
         _loggingService = loggingService;
 
-        var player = ViewModel.Player;
-
-        Task.Run(() => SongImporter.ImportSongsAsync(player.SongSourceProvider, player as IImportNotifications));
+        // var player = ViewModel.Player;
+        //
+        // Task.Run(() => SongImporter.ImportSongsAsync(player.SongSourceProvider, player as IImportNotifications));
 
         InitializeComponent();
 

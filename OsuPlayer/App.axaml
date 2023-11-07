@@ -14,7 +14,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceInclude Source="avares://OsuPlayer/Styles/Accents/AccentColors.axaml" />
+                <!-- <ResourceInclude Source="avares://OsuPlayer/Styles/Accents/AccentColors.axaml" /> -->
             </ResourceDictionary.MergedDictionaries>
 
             <Color x:Key="BaseColor">#FA282C34</Color>
@@ -38,7 +38,7 @@
     </Application.Resources>
 
     <Application.Styles>
-        <sty:FluentAvaloniaTheme />
+        <sty:FluentAvaloniaTheme PreferUserAccentColor="True" />
         <materialIcons:MaterialIconStyles />
         <!-- <FluentTheme /> -->
     </Application.Styles>
