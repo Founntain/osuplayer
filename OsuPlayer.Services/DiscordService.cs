@@ -154,7 +154,7 @@ public class DiscordService : OsuPlayerService, IDiscordService
 
     private Button[]? GetButtons()
     {
-        var buttons = new List<Button>
+        return new Button[]
         {
             new()
             {
@@ -162,17 +162,6 @@ public class DiscordService : OsuPlayerService, IDiscordService
                 Url = "https://github.com/osu-player/osuplayer"
             }
         };
-
-        if (_profileManager.User is null || string.IsNullOrWhiteSpace(_profileManager.User.Name)) return buttons.ToArray();
-
-        buttons.Add(new Button
-            {
-                Label = $"{_profileManager.User.Name}'s profile",
-                Url = $"https://stats.founntain.dev/user/{Uri.EscapeDataString(_profileManager.User.Name)}"
-            }
-        );
-
-        return buttons.ToArray();
     }
 
     private void Client_OnReady(object sender, ReadyMessage args)
