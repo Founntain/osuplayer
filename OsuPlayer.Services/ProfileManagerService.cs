@@ -5,7 +5,7 @@ using Splat;
 
 namespace OsuPlayer.Services;
 
-public class ProfileManagerServiceService : IProfileManagerService
+public class ProfileManagerService : IProfileManagerService
 {
     public User? User { get; set; }
 

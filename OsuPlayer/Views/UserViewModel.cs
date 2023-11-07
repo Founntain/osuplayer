@@ -379,24 +379,24 @@ public class UserViewModel : BaseViewModel
     {
         return new List<IControl>();
 
-        if (currentUser == default) return default!;
-
-        var badges = new List<MaterialIcon>();
-
-        var size = 32;
-
-        foreach (var badge in currentUser.Badges)
-        {
-            var materialIcon = new MaterialIcon
-            {
-                Kind = (MaterialIconKind) badge.Icon,
-                Height = size,
-                Width = size
-            };
-
-            badges.Add(materialIcon);
-        }
-
-        return badges;
+        // if (currentUser == default) return default!;
+        //
+        // var badges = new List<MaterialIcon>();
+        //
+        // var size = 32;
+        //
+        // foreach (var badge in currentUser.Badges)
+        // {
+        //     var materialIcon = new MaterialIcon
+        //     {
+        //         Kind = (MaterialIconKind) badge.Icon,
+        //         Height = size,
+        //         Width = size
+        //     };
+        //
+        //     badges.Add(materialIcon);
+        // }
+        //
+        // return badges;
     }
 }

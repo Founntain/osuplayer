@@ -17,8 +17,6 @@ using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules.Audio.Engine;
 using OsuPlayer.Modules.Audio.Interfaces;
-using OsuPlayer.Network.Discord;
-using OsuPlayer.Network.LastFm;
 
 namespace OsuPlayer.Modules.Audio;
 
@@ -30,7 +28,7 @@ public class Player : IPlayer, IImportNotifications
 {
     private readonly IAudioEngine _audioEngine;
     private readonly Stopwatch _currentSongTimer = new();
-    private readonly DiscordClient? _discordClient;
+    private readonly IDiscordService? _discordService;
     private readonly IShuffleServiceProvider? _shuffleProvider;
     private readonly IStatisticsProvider? _statisticsProvider;
     private readonly IHistoryProvider? _historyProvider;
@@ -67,17 +65,17 @@ public class Player : IPlayer, IImportNotifications
     }
 
     public Bindable<Playlist?> SelectedPlaylist { get; } = new();
-    private List<IMapEntryBase> ActivePlaylistSongs { get; set; }
+    private List<IMapEntryBase> ActivePlaylistSongs { get; set; } = new();
 
     public Player(IAudioEngine audioEngine, ISongSourceProvider songSourceProvider, IShuffleServiceProvider? shuffleProvider = null,
         IStatisticsProvider? statisticsProvider = null, ISortProvider? sortProvider = null, IHistoryProvider? historyProvider = null,
+        IDiscordService? discordService = null,
         ILastFmApiService? lastFmApi = null)
     {
-        _audioEngine = audioEngine;
-
         var runtimePlatform = AvaloniaLocator.Current.GetRequiredService<IRuntimePlatform>();
 
         if (runtimePlatform.GetRuntimeInfo().OperatingSystem == OperatingSystemType.WinNT)
+        {
             try
             {
                 _winMediaControls = new WindowsMediaTransportControls(this);
@@ -86,37 +84,46 @@ public class Player : IPlayer, IImportNotifications
             {
                 _winMediaControls = null;
             }
-
-        _audioEngine.ChannelReachedEnd = () => NextSong(PlayDirection.Forward);
-
-        var config = new Config();
-
-        _discordClient = config.Container.UseDiscordRpc ? new DiscordClient().Initialize() : null;
+        }
 
         SongSourceProvider = songSourceProvider;
+
+        _audioEngine = audioEngine;
+        _audioEngine.ChannelReachedEnd = () => NextSong(PlayDirection.Forward);
         _shuffleProvider = shuffleProvider;
         _statisticsProvider = statisticsProvider;
         _historyProvider = historyProvider;
-
         _lastFmApi = lastFmApi;
+        _discordService = discordService;
 
-        IsPlaying.BindTo(_audioEngine.IsPlaying);
+        LoadPlayerConfiguration();
+
+        InitPlayer(songSourceProvider);
+    }
+
+    private void LoadPlayerConfiguration()
+    {
+        var config = new Config();
+
+        if (config.Container.UseDiscordRpc)
+            _discordService?.Initialize();
 
         Volume.Value = config.Container.Volume;
-
         BlacklistSkip.Value = config.Container.BlacklistSkip;
         PlaylistEnableOnPlay.Value = config.Container.PlaylistEnableOnPlay;
         RepeatMode.Value = config.Container.RepeatMode;
         IsShuffle.Value = config.Container.IsShuffle;
+    }
 
-        songSourceProvider.Songs?.Subscribe(_ => CurrentIndex = songSourceProvider.SongSourceList?.IndexOf(CurrentSong.Value) ?? -1);
+    private void InitPlayer(ISongSourceProvider songSourceProvider)
+    {
+        IsPlaying.BindTo(_audioEngine.IsPlaying);
+
+        SongSourceProvider.Songs?.Subscribe(_ => CurrentIndex = songSourceProvider.SongSourceList?.IndexOf(CurrentSong.Value) ?? -1);
 
         CurrentSong.BindValueChanged(OnCurrentSongChanged, true);
-
         RepeatMode.BindValueChanged(OnRepeatModeChanged, true);
-
         IsShuffle.BindValueChanged(_ => _shuffleProvider?.ShuffleImpl?.Init(0));
-
         SelectedPlaylist.BindValueChanged(OnSelectedPlaylistChanged, true);
     }
 
@@ -165,7 +172,7 @@ public class Player : IPlayer, IImportNotifications
 
         var timestamp = TimeSpan.FromSeconds(_audioEngine.ChannelLength.Value * (1 - _audioEngine.PlaybackSpeed.Value));
 
-        _discordClient?.UpdatePresence(mapEntry.NewValue.Title, $"by {mapEntry.NewValue.Artist}", mapEntry.NewValue.BeatmapSetId, durationLeft: timestamp);
+        _discordService?.UpdatePresence(mapEntry.NewValue.Title, $"by {mapEntry.NewValue.Artist}", mapEntry.NewValue.BeatmapSetId, durationLeft: timestamp);
     }
 
     public void OnImportStarted()
@@ -225,7 +232,7 @@ public class Player : IPlayer, IImportNotifications
 
         var timestamp = TimeSpan.FromSeconds(_audioEngine.ChannelLength.Value * (1 - _audioEngine.PlaybackSpeed.Value) - _audioEngine.ChannelPosition.Value);
 
-        _discordClient?.UpdatePresence(CurrentSong.Value.Title, $"by {CurrentSong.Value.Artist}", CurrentSong.Value.BeatmapSetId, durationLeft: timestamp);
+        _discordService?.UpdatePresence(CurrentSong.Value.Title, $"by {CurrentSong.Value.Artist}", CurrentSong.Value.BeatmapSetId, durationLeft: timestamp);
     }
 
     public void UpdatePlaybackMethod()
@@ -235,7 +242,7 @@ public class Player : IPlayer, IImportNotifications
 
     public void DisposeDiscordClient()
     {
-        _discordClient?.DeInitialize();
+        _discordService?.DeInitialize();
     }
 
     public void PlayPause()
@@ -263,7 +270,7 @@ public class Player : IPlayer, IImportNotifications
 
         var timestamp = TimeSpan.FromSeconds(_audioEngine.ChannelLength.Value * (1 - _audioEngine.PlaybackSpeed.Value) - _audioEngine.ChannelPosition.Value);
 
-        _discordClient?.UpdatePresence(CurrentSong.Value.Title, $"by {CurrentSong.Value.Artist}", CurrentSong.Value.BeatmapSetId, durationLeft: timestamp);
+        _discordService?.UpdatePresence(CurrentSong.Value.Title, $"by {CurrentSong.Value.Artist}", CurrentSong.Value.BeatmapSetId, durationLeft: timestamp);
     }
 
     public void Pause()
@@ -273,7 +280,7 @@ public class Player : IPlayer, IImportNotifications
 
         _winMediaControls?.UpdatePlayingStatus(false);
 
-        _discordClient?.UpdatePresence(CurrentSong.Value.Title, $"by {CurrentSong.Value.Artist}", CurrentSong.Value.BeatmapSetId);
+        _discordService?.UpdatePresence(CurrentSong.Value.Title, $"by {CurrentSong.Value.Artist}", CurrentSong.Value.BeatmapSetId);
     }
 
     public void Stop()
@@ -437,17 +444,7 @@ public class Player : IPlayer, IImportNotifications
 
         _currentSongTimer.Stop();
 
-        //We put the XP update to an own try catch because if the API fails or is not available,
-        //that the whole TryEnqueue does not fail
-        try
-        {
-            if (CurrentSong.Value != default)
-                _statisticsProvider?.UpdateXp(fullMapEntry.Hash, _currentSongTimer.ElapsedMilliseconds, _audioEngine.ChannelLength.Value);
-        }
-        catch (Exception e)
-        {
-            Debug.WriteLine($"Could not update XP error => {e}");
-        }
+        UpdateXpOnApi(fullMapEntry);
 
         CurrentSongImage.Value = await findBackgroundTask;
 
@@ -470,6 +467,26 @@ public class Player : IPlayer, IImportNotifications
         CurrentSong.Value = fullMapEntry;
         CurrentIndex = SongSourceProvider.SongSourceList.IndexOf(fullMapEntry);
 
+        await UpdateSongsPlayedOnApi(fullMapEntry, config);
+    }
+
+    private void UpdateXpOnApi(IMapEntryBase fullMapEntry)
+    {
+        //We put the XP update to an own try catch because if the API fails or is not available,
+        //that the whole TryEnqueue does not fail
+        try
+        {
+            if (CurrentSong.Value != default)
+                _statisticsProvider?.UpdateXp(fullMapEntry.Hash, _currentSongTimer.ElapsedMilliseconds, _audioEngine.ChannelLength.Value);
+        }
+        catch (Exception e)
+        {
+            Debug.WriteLine($"Could not update XP error => {e}");
+        }
+    }
+
+    private async Task UpdateSongsPlayedOnApi(IMapEntryBase fullMapEntry, Config config)
+    {
         //Same as update XP mentioned Above
         try
         {
@@ -484,6 +501,11 @@ public class Player : IPlayer, IImportNotifications
         try
         {
             if (!config.Container.EnableScrobbling)
+                return;
+
+            if(CurrentSong.Value == null
+                || (string.IsNullOrWhiteSpace(CurrentSong.Value.GetTitle())
+                        || string.IsNullOrWhiteSpace(CurrentSong.Value.GetArtist())))
                 return;
 
             await _lastFmApi?.Scrobble(CurrentSong.Value.Title, CurrentSong.Value.Artist)!;
