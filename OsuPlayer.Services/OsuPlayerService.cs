@@ -16,7 +16,7 @@ public abstract class OsuPlayerService : IOsuPlayerService
 
             LogToConsole("Service initialized.", LogType.Success, includeLogTypeTag: false);
         }
-        catch (Exception _)
+        catch (Exception)
         {
             LogToConsole($"Service initialized, but couldn't initialize with encoding {Encoding.UTF8.EncodingName}.", LogType.Warning, includeLogTypeTag: false);
         }
