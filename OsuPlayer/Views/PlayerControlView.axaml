@@ -27,9 +27,10 @@
     </Design.DataContext>
 
     <Grid RowDefinitions="30, *">
-        <Grid.Background>
-            <SolidColorBrush Color="{DynamicResource AcrylicSecondaryColor}" />
-        </Grid.Background>
+        <Panel Grid.Row="0" Grid.RowSpan="2">
+            <ExperimentalAcrylicBorder IsHitTestVisible="False" Material="{Binding PanelMaterial}" >
+            </ExperimentalAcrylicBorder>
+        </Panel>
 
         <Grid Grid.Row="0" ColumnDefinitions="60, *, 60">
 
@@ -95,7 +96,7 @@
                             <Flyout>
                                 <StackPanel Orientation="Horizontal">
                                     <Button Name="PlaybackSpeedFly" Width="38" Height="38" CornerRadius="50"
-                                            Background="Transparent" Click="PlaybackSpeed_OnClick">
+                                            Theme="{StaticResource TransparentButton}" Click="PlaybackSpeed_OnClick">
                                         <avalonia:MaterialIcon Kind="PlaySpeed" Height="19" Width="19" />
                                     </Button>
                                     <Slider VerticalAlignment="Center" HorizontalAlignment="Center" Minimum="-0.25"
@@ -121,14 +122,6 @@
                     <avalonia:MaterialIcon
                         Kind="{Binding IsCurrentSongOnBlacklist, Converter={StaticResource IsCurrentSongOnBlacklistConverter}}"
                         Height="19" Width="19" />
-                </Button>
-
-                <Button Name="OpenMiniPlayer" Width="42" Height="42" CornerRadius="50" Click="OpenMiniPlayer_OnClick" Theme="{StaticResource TransparentButton}" ToolTip.Tip="open miniplayer">
-                    <avalonia:MaterialIcon Kind="ImageSizeSelectSmall" Height="32" Width="32" />
-                </Button>
-
-                <Button Name="Settings" Width="42" Height="42" CornerRadius="50" Click="Settings_OnClick" Theme="{StaticResource TransparentButton}">
-                    <avalonia:MaterialIcon Kind="Settings" Height="32" Width="32" />
                 </Button>
             </DockPanel>
 

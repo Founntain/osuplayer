@@ -9,8 +9,8 @@ namespace OsuPlayer.Views.HomeSubViews;
 
 public partial class HomeUserPanelView : ReactiveUserControl<HomeUserPanelViewModel>
 {
-    private MainWindow _mainWindow;
-    
+    private FluentAppWindow _mainWindow;
+
     public HomeUserPanelView()
     {
         InitializeComponent();
@@ -20,10 +20,10 @@ public partial class HomeUserPanelView : ReactiveUserControl<HomeUserPanelViewMo
     {
         this.WhenActivated(_ =>
         {
-            if (this.GetVisualRoot() is MainWindow mainWindow)
+            if (this.GetVisualRoot() is FluentAppWindow mainWindow)
                 _mainWindow = mainWindow;
         });
-        
+
         AvaloniaXamlLoader.Load(this);
     }
 
@@ -45,7 +45,7 @@ public partial class HomeUserPanelView : ReactiveUserControl<HomeUserPanelViewMo
     private void EditBtn_OnClick(object? sender, RoutedEventArgs e)
     {
         if (_mainWindow?.ViewModel == default) return;
-        
+
         _mainWindow.ViewModel.MainView = _mainWindow.ViewModel.EditUserView;
     }
 }

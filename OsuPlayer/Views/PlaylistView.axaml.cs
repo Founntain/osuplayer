@@ -22,11 +22,11 @@ namespace OsuPlayer.Views;
 
 public partial class PlaylistView : ReactiveControl<PlaylistViewModel>
 {
-    private MainWindow _mainWindow;
+    private FluentAppWindow _mainWindow;
 
     public PlaylistView()
     {
-        _mainWindow = Locator.Current.GetRequiredService<MainWindow>();
+        _mainWindow = Locator.Current.GetRequiredService<FluentAppWindow>();
 
         InitializeComponent();
     }

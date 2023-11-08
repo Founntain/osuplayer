@@ -17,13 +17,13 @@ namespace OsuPlayer.Views;
 
 public partial class PlaylistEditorView : ReactiveControl<PlaylistEditorViewModel>
 {
-    private MainWindow? _mainWindow;
+    private FluentAppWindow? _mainWindow;
 
     public PlaylistEditorView()
     {
         InitializeComponent();
 
-        _mainWindow = Locator.Current.GetRequiredService<MainWindow>();
+        _mainWindow = Locator.Current.GetRequiredService<FluentAppWindow>();
     }
 
     private async void AddToPlaylist_OnClick(object? sender, RoutedEventArgs e)

@@ -17,13 +17,13 @@ namespace OsuPlayer.Views;
 
 public partial class HomeView : ReactiveControl<HomeViewModel>
 {
-    private MainWindow? _mainWindow;
+    private FluentAppWindow? _mainWindow;
 
     public HomeView()
     {
         InitializeComponent();
 
-        _mainWindow = Locator.Current.GetRequiredService<MainWindow>();
+        _mainWindow = Locator.Current.GetRequiredService<FluentAppWindow>();
 
         HomeViewInitialized();
     }

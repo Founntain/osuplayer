@@ -19,7 +19,7 @@ namespace OsuPlayer.Views;
 
 public partial class SettingsView : ReactiveControl<SettingsViewModel>
 {
-    private MainWindow? _mainWindow;
+    private FluentAppWindow? _mainWindow;
 
     public SettingsView()
     {
@@ -27,7 +27,7 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
 
         this.WhenActivated(_ =>
         {
-            _mainWindow = Locator.Current.GetRequiredService<MainWindow>();
+            _mainWindow = Locator.Current.GetRequiredService<FluentAppWindow>();
             ViewModel.MainWindow = _mainWindow;
 
             ViewModel.SettingsCategories = SettingsGrid.Children;
@@ -135,7 +135,7 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
 
     private async void LastFmAuth_OnClick(object? sender, RoutedEventArgs e)
     {
-        var window = Locator.Current.GetService<MainWindow>();
+        var window = Locator.Current.GetService<FluentAppWindow>();
         var lastFmApi = Locator.Current.GetService<ILastFmApiService>();
 
         await using var config = new Config();

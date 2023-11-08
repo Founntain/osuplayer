@@ -10,13 +10,13 @@ namespace OsuPlayer.Views;
 
 internal partial class TopBarView : ReactiveControl<TopBarViewModel>
 {
-    private MainWindow? _mainWindow;
+    private FluentAppWindow? _mainWindow;
 
     public TopBarView()
     {
         InitializeComponent();
 
-        _mainWindow = Locator.Current.GetRequiredService<MainWindow>();
+        _mainWindow = Locator.Current.GetRequiredService<FluentAppWindow>();
     }
     private void Navigation_Clicked(object? sender, RoutedEventArgs e)
     {

@@ -87,15 +87,6 @@ internal static class Program
             lastFmApi: resolver.GetService<ILastFmApiService>()
         ));
 
-        services.Register(() => new MainWindowViewModel(
-            resolver.GetRequiredService<IAudioEngine>(),
-            resolver.GetRequiredService<IPlayer>(),
-            resolver.GetRequiredService<IProfileManagerService>(),
-            resolver.GetService<IShuffleServiceProvider>(),
-            resolver.GetService<IStatisticsProvider>(),
-            resolver.GetService<ISortProvider>(),
-            resolver.GetService<IHistoryProvider>()));
-
         services.Register(() => new FluentAppWindowViewModel(
             resolver.GetRequiredService<IAudioEngine>(),
             resolver.GetRequiredService<IPlayer>(),
@@ -104,10 +95,6 @@ internal static class Program
             resolver.GetService<IStatisticsProvider>(),
             resolver.GetService<ISortProvider>(),
             resolver.GetService<IHistoryProvider>()));
-
-        services.RegisterLazySingleton(() => new MainWindow(
-            resolver.GetRequiredService<MainWindowViewModel>(),
-            resolver.GetRequiredService<ILoggingService>()));
 
         services.RegisterLazySingleton(() => new FluentAppWindow(
             resolver.GetRequiredService<FluentAppWindowViewModel>(),

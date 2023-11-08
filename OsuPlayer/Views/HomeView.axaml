@@ -21,12 +21,10 @@
             <ContentControl Grid.Row="0" Grid.Column="0" Content="{Binding HomeUserPanelView}" />
         </Grid>
 
-
         <!--Songs Grid-->
-        <Grid Row="1" Column="0" ColumnSpan="2" RowDefinitions="40, *" Margin="0 1"
-              Background="{DynamicResource AcrylicBaseColor}">
-            <Border Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#7F000000">
-                <TextBlock Text="your songs" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Center" />
+        <Grid Row="1" Column="0" ColumnSpan="2" RowDefinitions="50, *" Margin="0 1">
+            <Border Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{DynamicResource BaseDarkTransparentColor}">
+                <TextBlock Text="Your songs" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Left" Margin=" 10 0 0 0" />
             </Border>
 
             <ListBox Grid.Row="1" ItemsSource="{Binding SortedSongEntries}" Background="Transparent"

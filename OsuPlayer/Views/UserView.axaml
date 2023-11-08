@@ -25,7 +25,7 @@
     <!-- https://7.founntain.dev/i6SnB9Ns.png -->
 
     <Grid ColumnDefinitions="25*, 75*" Margin="0 1">
-        <Grid Column="0" Margin="0 0 1 0" RowDefinitions="Auto, *" Background="{DynamicResource AcrylicBaseColor}">
+        <Grid Column="0" Margin="0 0 1 0" RowDefinitions="Auto, *" Background="{DynamicResource BaseBrightDarkTransparentColor}">
             <AutoCompleteBox Grid.Row="0" Margin="10 5" ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser}"
                              Watermark="type to search..." />
 
@@ -82,9 +82,9 @@
 
                 <!-- UserData -->
                 <Grid Row="1" ColumnDefinitions="25*, 50*, 25*">
-                    <Grid Column="0" Background="{DynamicResource AcrylicBaseColor}">
+                    <Grid Column="0" Background="{DynamicResource BaseBrighterDarkTransparentColor}">
                         <Grid RowDefinitions="50, Auto, *">
-                            <Border Grid.Row="0" Background="#7F000000" HorizontalAlignment="Stretch"
+                            <Border Grid.Row="0" Background="{DynamicResource BaseBrightDarkTransparentColor}" HorizontalAlignment="Stretch"
                                     VerticalAlignment="Stretch">
                                 <TextBlock Text="{Binding SelectedUser.TotalXpString}" FontSize="24"
                                            HorizontalAlignment="Center" VerticalAlignment="Center" />
@@ -115,9 +115,9 @@
 
                     </Grid>
 
-                    <Grid Column="1" Margin="1 0" Background="{DynamicResource AcrylicBaseColor}">
+                    <Grid Column="1" Margin="1 0" Background="{DynamicResource BaseBrighterDarkTransparentColor}">
                         <Grid RowDefinitions="50, *">
-                            <Border Grid.Row="0" Background="#7F000000" HorizontalAlignment="Stretch"
+                            <Border Grid.Row="0" Background="{DynamicResource BaseBrightDarkTransparentColor}" HorizontalAlignment="Stretch"
                                     VerticalAlignment="Stretch">
                                 <TextBlock Text="{Binding SelectedUser.RoleString}"
                                            Foreground="{Binding SelectedUser.RoleColor}" FontSize="28"
@@ -137,9 +137,9 @@
                         </Grid>
                     </Grid>
 
-                    <Grid Column="2" Background="{DynamicResource AcrylicBaseColor}">
+                    <Grid Column="2" Background="{DynamicResource BaseBrighterDarkTransparentColor}">
                         <Grid RowDefinitions="50, *">
-                            <Border Grid.Row="0" Background="#7F000000" HorizontalAlignment="Stretch"
+                            <Border Grid.Row="0" Background="{DynamicResource BaseBrightDarkTransparentColor}" HorizontalAlignment="Stretch"
                                     VerticalAlignment="Stretch">
                                 <TextBlock Text="{Binding SelectedUser.LevelString}" FontSize="24"
                                            HorizontalAlignment="Center" VerticalAlignment="Center" />
@@ -161,23 +161,23 @@
                     </Grid>
                 </Grid>
 
-                <Grid Row="2" RowDefinitions="50, 300" Margin="0 1 0 0" Background="{DynamicResource AcrylicBaseColor}">
-                    <Border Grid.Row="0" Background="#7F000000" HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch">
-                        <TextBlock Text="Lifetime statistics" FontSize="24"
-                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    </Border>
-
-                    <!-- <avalonia:CartesianChart Grid.Row="1" -->
-                    <!--                          VerticalAlignment="Stretch" HorizontalAlignment="Stretch" -->
-                    <!--                          YAxes="{Binding YAxes}" -->
-                    <!--                          XAxes="{Binding XAxes}" -->
-                    <!--                          Series="{Binding Series}" -->
-                    <!--                          TooltipBackground="#7F000000" -->
-                    <!--                          TooltipTextBrush="White" -->
-                    <!--                          TooltipFontFamily="{DynamicResource Montserrat}" -->
-                    <!--                          TooltipFontWeight="Bold" /> -->
-                </Grid>
+                <!-- <Grid Row="2" RowDefinitions="50, 300" Margin="0 1 0 0" Background="{DynamicResource BaseBrighterDarkTransparentColor}"> -->
+                <!--     <Border Grid.Row="0" Background="{DynamicResource BaseBrightDarkTransparentColor}" HorizontalAlignment="Stretch" -->
+                <!--             VerticalAlignment="Stretch"> -->
+                <!--         <TextBlock Text="Lifetime statistics" FontSize="24" -->
+                <!--                    HorizontalAlignment="Center" VerticalAlignment="Center" /> -->
+                <!--     </Border> -->
+                <!-- -->
+                <!--     ~1~ <avalonia:CartesianChart Grid.Row="1" @1@ -->
+                <!--     ~1~                          VerticalAlignment="Stretch" HorizontalAlignment="Stretch" @1@ -->
+                <!--     ~1~                          YAxes="{Binding YAxes}" @1@ -->
+                <!--     ~1~                          XAxes="{Binding XAxes}" @1@ -->
+                <!--     ~1~                          Series="{Binding Series}" @1@ -->
+                <!--     ~1~                          TooltipBackground="#7F000000" @1@ -->
+                <!--     ~1~                          TooltipTextBrush="White" @1@ -->
+                <!--     ~1~                          TooltipFontFamily="{DynamicResource Montserrat}" @1@ -->
+                <!--     ~1~                          TooltipFontWeight="Bold" /> @1@ -->
+                <!-- </Grid> -->
             </Grid>
 
         </ScrollViewer>

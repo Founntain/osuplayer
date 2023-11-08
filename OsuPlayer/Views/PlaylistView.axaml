@@ -17,13 +17,12 @@
     <UserControl.Resources>
     </UserControl.Resources>
     <Grid ColumnDefinitions="25*, 75*">
-        <Grid Column="0" Margin="0 1" RowDefinitions="50, *, 40, 40" Background="{DynamicResource AcrylicBaseColor}">
-            <Border Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#7F000000">
-                <TextBlock Text="your playlists" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Center" />
+        <Grid Column="0" Margin="0 1" RowDefinitions="50, *, 40, 40" Background="{DynamicResource BaseBrighterDarkTransparentColor}">
+            <Border Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{DynamicResource BaseDarkTransparentColor}">
+                <TextBlock Text="Your Playlists" FontSize="24" Margin="10 0 0 0" VerticalAlignment="Center" HorizontalAlignment="Left" />
             </Border>
 
-            <ListBox Grid.Row="1" SelectedItem="{Binding SelectedPlaylist}" ItemsSource="{Binding Playlists}"
-                     Background="Transparent">
+            <ListBox Grid.Row="1" SelectedItem="{Binding SelectedPlaylist}" ItemsSource="{Binding Playlists}">
                 <ListBox.Styles>
                     <Style Selector="ListBoxItem">
                         <Setter Property="Margin" Value="0" />
@@ -56,7 +55,7 @@
                     HorizontalAlignment="Stretch" Click="OpenBlacklistEditor_OnClick" FontWeight="SemiBold" />
         </Grid>
 
-        <Grid Column="1" Margin="1 1 0 1" RowDefinitions="Auto, *" Background="{DynamicResource AcrylicBaseColor}">
+        <Grid Column="1" Margin="1 1 0 1" RowDefinitions="Auto, *">
             <TextBox Grid.Row="0" Margin="10" Text="{Binding FilterText}" Watermark="type to search..." />
             <ListBox Grid.Row="1" Background="Transparent" ItemsSource="{Binding FilteredSongEntries}"
                      SelectedItem="{Binding SelectedSong}">

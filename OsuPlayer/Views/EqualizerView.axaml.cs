@@ -17,13 +17,13 @@ namespace OsuPlayer.Views;
 
 public partial class EqualizerView : ReactiveControl<EqualizerViewModel>
 {
-    private MainWindow? _mainWindow;
+    private FluentAppWindow? _mainWindow;
 
     public EqualizerView()
     {
         InitializeComponent();
 
-        _mainWindow = Locator.Current.GetRequiredService<MainWindow>();
+        _mainWindow = Locator.Current.GetRequiredService<FluentAppWindow>();
     }
 
     private void ResetSlider(object? sender, TappedEventArgs e)

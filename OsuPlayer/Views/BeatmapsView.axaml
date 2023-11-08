@@ -19,7 +19,7 @@
     </Design.DataContext>
 
     <Grid Margin="0 0 0 1">
-        <SplitView IsPaneOpen="{Binding IsFilterMenuOpen}" PaneBackground="{DynamicResource AcrylicBaseColor}"
+        <SplitView IsPaneOpen="{Binding IsFilterMenuOpen}"
                    OpenPaneLength="400" DisplayMode="CompactInline" CompactPaneLength="45">
             <SplitView.Pane>
                 <Grid RowDefinitions="*, 50" ColumnDefinitions="45, *" Background="{DynamicResource AcrylicBaseColor}">
@@ -92,7 +92,7 @@
             </SplitView.Pane>
             <Grid RowDefinitions="Auto, *">
                 <Grid Grid.Row="0" Grid.Column="0"
-                      Background="{DynamicResource AcrylicSecondaryColor}"
+                      Background="{DynamicResource BaseBrightDarkTransparentColor}"
                       VerticalAlignment="Center">
                     <TextBlock Text="Beatmaps played by users" Margin="10 5" FontSize="26"
                                VerticalAlignment="Center"
@@ -100,7 +100,7 @@
                 </Grid>
 
                 <ListBox Name="SongsList" Grid.Row="1" ItemsSource="{Binding Beatmaps}"
-                         DoubleTapped="SongsList_OnDoubleTapped" Background="{DynamicResource AcrylicBaseColor}"
+                         DoubleTapped="SongsList_OnDoubleTapped" Background="{DynamicResource BaseBrighterDarkTransparentColor}"
                          Margin="0 1 0 0">
                     <ListBox.Styles>
                         <Style Selector="ListBoxItem">

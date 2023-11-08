@@ -15,13 +15,13 @@ namespace OsuPlayer.Views;
 
 public partial class ExportSongsView : ReactiveUserControl<ExportSongsViewModel>
 {
-    private MainWindow? _mainWindow;
+    private FluentAppWindow? _mainWindow;
 
     public ExportSongsView()
     {
         InitializeComponent();
 
-        _mainWindow = Locator.Current.GetRequiredService<MainWindow>();
+        _mainWindow = Locator.Current.GetRequiredService<FluentAppWindow>();
     }
 
     private async void Export_OnClick(object? sender, RoutedEventArgs e)

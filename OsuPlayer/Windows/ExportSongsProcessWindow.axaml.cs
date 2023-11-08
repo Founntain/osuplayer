@@ -36,7 +36,7 @@ public partial class ExportSongsProcessWindow : ReactiveWindow<ExportSongsProces
 
         ViewModel = new ExportSongsProcessWindowViewModel(songs);
 
-        Locator.Current.GetService<MainWindow>();
+        Locator.Current.GetService<FluentAppWindow>();
         _path = path;
         _embedBackground = embedBackground;
 

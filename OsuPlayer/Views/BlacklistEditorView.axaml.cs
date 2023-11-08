@@ -15,13 +15,13 @@ namespace OsuPlayer.Views;
 
 public partial class BlacklistEditorView : ReactiveControl<BlacklistEditorViewModel>
 {
-    private MainWindow? _mainWindow;
+    private FluentAppWindow? _mainWindow;
 
     public BlacklistEditorView()
     {
         InitializeComponent();
 
-        _mainWindow = Locator.Current.GetRequiredService<MainWindow>();
+        _mainWindow = Locator.Current.GetRequiredService<FluentAppWindow>();
     }
 
     private async void PlaySong(object? sender, TappedEventArgs e)

@@ -83,13 +83,13 @@
         <DockPanel Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center">
             <Panel>
                 <Button Name="PlaybackSpeed" Width="38" Height="38" CornerRadius="50"
-                        Background="Transparent">
+                        Theme="{StaticResource TransparentButton}">
                     <avalonia:MaterialIcon Kind="PlaySpeed" Height="19" Width="19" />
                     <Button.Flyout>
                         <Flyout>
                             <StackPanel Orientation="Horizontal">
                                 <Button Name="PlaybackSpeedFly" Width="38" Height="38" CornerRadius="50"
-                                        Background="Transparent" Click="PlaybackSpeed_OnClick">
+                                        Theme="{StaticResource TransparentButton}" Click="PlaybackSpeed_OnClick">
                                     <avalonia:MaterialIcon Kind="PlaySpeed" Height="19" Width="19" />
                                 </Button>
                                 <Slider VerticalAlignment="Center" HorizontalAlignment="Center" Minimum="-0.25"
@@ -103,14 +103,14 @@
             </Panel>
 
             <Button Name="Blacklist" Width="38" Height="38" CornerRadius="50" Click="Blacklist_OnClick"
-                    Background="Transparent">
+                    Theme="{StaticResource TransparentButton}">
                 <avalonia:MaterialIcon
                     Kind="{Binding IsCurrentSongOnBlacklist, Converter={StaticResource IsCurrentSongOnBlacklistConverter}}"
                     Height="19" Width="19" />
             </Button>
 
             <Button Name="Repeat" Width="38" Height="38" CornerRadius="50" Click="SongControl"
-                    Background="Transparent">
+                    Theme="{StaticResource TransparentButton}">
                 <Button.ContextMenu>
                     <ContextMenu IsVisible="{Binding IsRepeating, Converter={StaticResource RepeatConverter}}"
                                  ItemsSource="{Binding Playlists}" PointerReleased="RepeatContextMenu_OnPointerReleased" />
@@ -127,7 +127,7 @@
             </Button>
 
             <Button Name="Previous" Width="38" Height="38" CornerRadius="50" Click="SongControl"
-                    Background="Transparent">
+                    Theme="{StaticResource TransparentButton}">
                 <avalonia:MaterialIcon Kind="SkipBackward" Height="19" Width="19" />
             </Button>
 
@@ -137,12 +137,12 @@
             </Button>
 
             <Button Name="Next" Width="38" Height="38" CornerRadius="50" Click="SongControl"
-                    Background="Transparent">
+                    Theme="{StaticResource TransparentButton}">
                 <avalonia:MaterialIcon Kind="SkipForward" Height="19" Width="19" />
             </Button>
 
             <Button Name="Shuffle" Width="38" Height="38" CornerRadius="50" Click="SongControl"
-                    Background="Transparent">
+                    Theme="{StaticResource TransparentButton}">
                 <avalonia:MaterialIcon Kind="{Binding IsShuffle, Converter={StaticResource ShuffleConverter}}"
                                        Height="19" Width="19" />
             </Button>
@@ -150,21 +150,21 @@
             <Button Name="Favorite" Width="38" Height="38" CornerRadius="50"
                     IsEnabled="{Binding IsAPlaylistSelected}"
                     Click="Favorite_OnClick"
-                    Background="Transparent">
+                    Theme="{StaticResource TransparentButton}">
                 <avalonia:MaterialIcon
                     Kind="{Binding IsCurrentSongInPlaylist, Converter={StaticResource IsCurrentSongInPlaylistConverter}}"
                     Height="19" Width="19" />
             </Button>
 
             <Panel HorizontalAlignment="Right">
-                <Button Name="Volume" Width="38" Height="38" CornerRadius="50" Background="Transparent">
+                <Button Name="Volume" Width="38" Height="38" CornerRadius="50" Theme="{StaticResource TransparentButton}">
                     <avalonia:MaterialIcon Kind="{Binding Volume, Converter={StaticResource VolumeConverter}}"
                                            Height="19" Width="19" />
                     <Button.Flyout>
                         <Flyout>
                             <StackPanel Orientation="Horizontal">
                                 <Button Name="VolumeFly" Width="38" Height="38" CornerRadius="50"
-                                        Background="Transparent" Click="Volume_OnClick">
+                                        Theme="{StaticResource TransparentButton}" Click="Volume_OnClick">
                                     <avalonia:MaterialIcon
                                         Kind="{Binding Volume, Converter={StaticResource VolumeConverter}}"
                                         Height="19" Width="19" />

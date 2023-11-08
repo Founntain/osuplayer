@@ -21,10 +21,10 @@
     </Design.DataContext>
 
     <Grid RowDefinitions="Auto, *">
-        <Grid Row="0" Background="{DynamicResource AcrylicBaseColor}">
+        <Grid Row="0">
             <AutoCompleteBox Name="SettingsSearch" Text="{Binding SettingsSearchQ}" ItemsSource="{Binding SettingsCategories}"
                              VerticalAlignment="Center" HorizontalAlignment="Stretch"
-                             Watermark="type to search for settings" Margin="5" >
+                             Watermark="type to search for settings" Margin="5" MaxWidth="1500" >
                 <AutoCompleteBox.ItemTemplate>
                     <DataTemplate x:DataType="Control">
                         <Panel>
@@ -58,19 +58,23 @@
                     <ui:SettingsExpanderItem Content="Import osu! songs"
                                              Description="Import your osu! songs via osu!.db (stable) or client.realm (lazer)"
                                              ActionIconSource="ChevronRight"
-                                             IsClickEnabled="True" />
+                                             IsClickEnabled="True"
+                                             Click="ImportSongsClick"/>
                     <ui:SettingsExpanderItem Content="Import osu! collections"
                                              Description="Import your osu! collections as playlists"
                                              IsClickEnabled="True"
-                                             ActionIconSource="ChevronRight"/>
+                                             ActionIconSource="ChevronRight"
+                                             Click="ImportCollectionsClick"/>
                     <ui:SettingsExpanderItem Content="Play history"
                                              Description="Display your current sessions play history."
                                              ActionIconSource=" ChevronRight"
-                                             IsClickEnabled="True" />
+                                             IsClickEnabled="True"
+                                             Click="OpenPlayerHistoryClick"/>
                     <ui:SettingsExpanderItem Content="Export songs"
                                              Description="Exports your osu! .mp3 files to a given directory. Handy if you want to listen to your songs on the go."
                                              ActionIconSource="ChevronRight"
-                                             IsClickEnabled="True" />
+                                             IsClickEnabled="True"
+                                             Click="ExportCollectionsClick"/>
                     <ui:SettingsExpanderItem Content="Update Channel"
                                              Description="Which update channel to use. This settings requires a restart">
                         <ui:SettingsExpanderItem.Footer>
@@ -126,13 +130,13 @@
                 <!-- ——————————————— -->
                 <ui:SettingsExpander Header="Visual Settings"
                                      IconSource="Scan"
-                                     Description="Settings for the visual appearance make it your own~"
+                                     Description="Settings for the visual appearance, make it your own~"
                                      Name="VisualSettingsExpander">
 
-                    <ui:SettingsExpanderItem Content="Display User Statistics on Home View"
-                                             Description="Toggle if you want to display your user stats and session graph on the home view">
+                    <ui:SettingsExpanderItem Content="App Theme"
+                                             Description="Do you prefer the dark or light side? Or let your system decide">
                         <ui:SettingsExpanderItem.Footer>
-                            <ToggleSwitch IsChecked="{Binding DisplayUserStats}" />
+                            <ui:FAComboBox ItemsSource="{Binding AppThemes}" SelectedItem="{Binding CurrentAppTheme}" />
                         </ui:SettingsExpanderItem.Footer>
                     </ui:SettingsExpanderItem>
 
@@ -171,10 +175,17 @@
                         </ui:SettingsExpanderItem.Footer>
                     </ui:SettingsExpanderItem>
 
-                    <ui:SettingsExpanderItem Content="Window Background Color"
-                                             Description="The background color of the window">
+                    <ui:SettingsExpanderItem Content="Use Song Background Image"
+                                             Description="Toggle if you want to use the current songs background image as window background">
                         <ui:SettingsExpanderItem.Footer>
                             <ToggleSwitch IsChecked="{Binding DisplayBackgroundImage}" />
+                        </ui:SettingsExpanderItem.Footer>
+                    </ui:SettingsExpanderItem>
+
+                    <ui:SettingsExpanderItem Content="Display User Statistics on Home View"
+                                             Description="Toggle if you want to display your user stats and session graph on the home view">
+                        <ui:SettingsExpanderItem.Footer>
+                            <ToggleSwitch IsChecked="{Binding DisplayUserStats}" />
                         </ui:SettingsExpanderItem.Footer>
                     </ui:SettingsExpanderItem>
                 </ui:SettingsExpander>
@@ -197,7 +208,8 @@
                     <ui:SettingsExpanderItem Content="Equalizer"
                                              Description="Here you can tune your audio frequencies to your liking"
                                              IsClickEnabled="True"
-                                             ActionIconSource="ChevronRight"/>
+                                             ActionIconSource="ChevronRight"
+                                             Click="OpenEqClick"/>
 
                     <ui:SettingsExpanderItem Content="Enable Pitch Change"
                                              Description="If turned on changing the playback speed will change the pitch. (Like Nightcore/Daycore). If turned of it just speeds up">
@@ -218,7 +230,8 @@
                     <ui:SettingsExpanderItem Content="Log into osu!player"
                                              Description="Log into your osu!player profile"
                                              IsClickEnabled="True"
-                                             ActionIconSource="ChevronRight"/>
+                                             ActionIconSource="ChevronRight"
+                                             Click="LoginClick"/>
 
                     <ui:SettingsExpanderItem Content="Last.FM Scrobbler"
                                              Description="Log into your Last.FM account with your API-Key and API-Secret to scrobble your play activity">
@@ -267,64 +280,66 @@
                     <ui:SettingsExpanderItem Content="Stargaze us"
                                              Description="You like the osu!player? Then Head to our GitHub and give us a star! We would greatly appreciate it!"
                                              IsClickEnabled="True"
-                                             ActionIconSource="Go"/>
+                                             ActionIconSource="Go"
+                                             Click="Github_OnClick"/>
 
                     <ui:SettingsExpanderItem Content="Request a feature"
                                              Description="You are missing something you would like to see in the osu!player? Head to our GitHub and request it"
                                              IsClickEnabled="True"
-                                             ActionIconSource="Go"/>
+                                             ActionIconSource="Go"
+                                             Click="ReportBug_OnClick"/>
                     <ui:SettingsExpanderItem Content="Report bug"
                                              Description="Found a bug or something that doesn't work as expected? Head to our GitHub to report it"
                                              IsClickEnabled="True"
-                                             ActionIconSource="Go"/>
+                                             ActionIconSource="Go"
+                                             Click="ReportBug_OnClick"/>
 
                     <ui:SettingsExpanderItem Content="osu!player Discord Server"
                                              Description="Join our Discord server to ask question, dev updates and other stuff"
                                              IsClickEnabled="True"
-                                             ActionIconSource="Go"/>
+                                             ActionIconSource="Go"
+                                             Click="JoinDiscord_OnClick"/>
 
                     <ui:SettingsExpanderItem Content="Contact us"
                                              Description="Here you can find our contact information if you need to contact us specifically"
                                              IsClickEnabled="True"
-                                             ActionIconSource="Go"/>
+                                             ActionIconSource="Go"
+                                             Click="ContactUs_OnClick"/>
                 </ui:SettingsExpander>
 
                 <!-- ——————————————————— -->
                 <!-- Patchnotes Settings -->
                 <!-- ——————————————————— -->
-                <Grid RowDefinitions="Auto" Margin="0 5 0 0" Name="PatchNotesSettings">
-
-                    <StackPanel Margin="1" Spacing="1" Name="PatchNotesSettingsPanel">
-
-                        <controls:SettingsTitleDisplayer Title="Patch notes" Icon="Notebook" UseRoundedCorners="False" />
-
-                        <Border Background="{DynamicResource AcrylicBaseColor}" Padding="20">
-                            <avalonia:MarkdownScrollViewer Markdown="{Binding Patchnotes}">
-                                <avalonia:MarkdownScrollViewer.Styles>
-                                    <Style Selector="ctxt|CTextBlock.Heading">
-                                        <Setter Property="Foreground" Value="White" />
-                                    </Style>
-                                    <Style Selector="ctxt|CTextBlock.Heading2">
-                                        <Setter Property="Foreground" Value="White" />
-                                    </Style>
-                                    <Style Selector="ctxt|CTextBlock.Heading3">
-                                        <Setter Property="Foreground" Value="White" />
-                                    </Style>
-                                </avalonia:MarkdownScrollViewer.Styles>
-                            </avalonia:MarkdownScrollViewer>
-                        </Border>
-                    </StackPanel>
-                </Grid>
+                <ui:SettingsExpander Header="Patchnotes"
+                                     IconSource="Edit"
+                                     Description="Check whats new in your current version"
+                                     Name="PatchnoteSettingsExpander">
+                    <Grid>
+                        <avalonia:MarkdownScrollViewer Markdown="{Binding Patchnotes}">
+                            <avalonia:MarkdownScrollViewer.Styles>
+                                <Style Selector="ctxt|CTextBlock.Heading">
+                                    <Setter Property="Foreground" Value="White" />
+                                </Style>
+                                <Style Selector="ctxt|CTextBlock.Heading2">
+                                    <Setter Property="Foreground" Value="White" />
+                                </Style>
+                                <Style Selector="ctxt|CTextBlock.Heading3">
+                                    <Setter Property="Foreground" Value="White" />
+                                </Style>
+                            </avalonia:MarkdownScrollViewer.Styles>
+                        </avalonia:MarkdownScrollViewer>
+                    </Grid>
+                </ui:SettingsExpander>
 
                 <!-- ——————————————————— -->
                 <!-- Contribute Settings -->
                 <!-- ——————————————————— -->
-                <Grid RowDefinitions="Auto" Margin="0 5 0 0" Name="ContributeSettings">
-
-                    <StackPanel Margin="1" Spacing="1" Name="ContributePanel">
-                        <controls:SettingsTitleDisplayer Title="Contributers" Icon="AccountStar" UseRoundedCorners="False" />
-
-                        <Border Background="{DynamicResource AcrylicBaseColor}" Padding="20">
+                <ui:SettingsExpander Header="Contributers"
+                                     IconSource="Code"
+                                     Description="The amazing people that help us make osu!player a better place"
+                                     Name="ContributeSettingsExpander">
+                                        <StackPanel Margin="1" Spacing="1" Name="ContributePanel">
+                        <Border>
                             <ItemsRepeater ItemsSource="{Binding Contributors}">
                                 <ItemsRepeater.Layout>
                                     <WrapLayout HorizontalSpacing="5" VerticalSpacing="5" Orientation="Horizontal" />
@@ -347,15 +362,13 @@
                                 </ItemsRepeater.ItemTemplate>
                             </ItemsRepeater>
                         </Border>
-
-                        <Border Background="{DynamicResource AcrylicBaseColor}" Margin="0 5 0 1" Padding="20">
-                            <TextBlock
-                                Text="Want to help or implement something? Head to our repository for project building info and guidelines. We would be happy to see your Pull-Request!"
-                                TextAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center"
-                                HorizontalAlignment="Stretch" />
-                        </Border>
                     </StackPanel>
-                </Grid>
+                    <ui:SettingsExpanderItem Content="Want to contribute?"
+                                             Description="Head to our repository for project building info and guidelines. We would be happy to see your Pull-Request!"
+                                             ActionIconSource="Go"
+                                             IsClickEnabled="True"
+                                             Click="Github_OnClick"/>
+                </ui:SettingsExpander>
             </controls:CascadingWrapPanel>
         </ScrollViewer>
     </Grid>

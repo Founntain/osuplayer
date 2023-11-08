@@ -14,11 +14,11 @@
         <views:StatisticsViewModel />
     </Design.DataContext>
 
-    <Grid RowDefinitions="25*, 25*, 25*, 25*" ColumnDefinitions="33*, 33*, 33*" Margin="0 1" 
+    <Grid RowDefinitions="25*, 25*, 25*, 25*" ColumnDefinitions="33*, 33*, 33*" Margin="0 1"
           HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <!-- Statistics Top 6 -->
         <Panel Grid.Row="0" Grid.Column="0" Margin="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-               Background="{DynamicResource AcrylicBaseColor}">
+               Background="{DynamicResource BaseBrighterDarkTransparentColor}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <TextBlock Text="Users" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center"
                            FontSize="20" />
@@ -27,7 +27,7 @@
             </StackPanel>
         </Panel>
 
-        <Panel Grid.Row="0" Grid.Column="1" Margin="1 0 1 0" Background="{DynamicResource AcrylicBaseColor}">
+        <Panel Grid.Row="0" Grid.Column="1" Margin="1 0 1 0" Background="{DynamicResource BaseBrighterDarkTransparentColor}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <TextBlock Text="Translators" Margin="10" HorizontalAlignment="Center" FontSize="20" />
                 <TextBlock Text="{Binding Translators, Converter={StaticResource DecimalFormatter}}" Margin="10"
@@ -35,7 +35,7 @@
             </StackPanel>
         </Panel>
 
-        <Panel Grid.Row="0" Grid.Column="2" Margin="0 0 1 0" Background="{DynamicResource AcrylicBaseColor}">
+        <Panel Grid.Row="0" Grid.Column="2" Margin="0 0 1 0" Background="{DynamicResource BaseBrighterDarkTransparentColor}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <TextBlock Text="Songs Played" Margin="10" HorizontalAlignment="Center" FontSize="20" />
                 <TextBlock Text="{Binding SongsPlayed, Converter={StaticResource DecimalFormatter}}" Margin="10"
@@ -43,7 +43,7 @@
             </StackPanel>
         </Panel>
 
-        <Panel Grid.Row="1" Grid.Column="0" Margin="0 1" Background="{DynamicResource AcrylicBaseColor}">
+        <Panel Grid.Row="1" Grid.Column="0" Margin="0 1" Background="{DynamicResource BaseBrighterDarkTransparentColor}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <TextBlock Text="XP earned" Margin="10" HorizontalAlignment="Center" FontSize="20" />
                 <TextBlock Text="{Binding XpEarned, Converter={StaticResource DecimalFormatter}}" Margin="10"
@@ -51,7 +51,7 @@
             </StackPanel>
         </Panel>
 
-        <Panel Grid.Row="1" Grid.Column="1" Margin="1 1 1 1" Background="{DynamicResource AcrylicBaseColor}">
+        <Panel Grid.Row="1" Grid.Column="1" Margin="1 1 1 1" Background="{DynamicResource BaseBrighterDarkTransparentColor}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <TextBlock Text="Community Level" Margin="10" HorizontalAlignment="Center" FontSize="20" />
                 <TextBlock Text="{Binding CommunityLevel, Converter={StaticResource DecimalFormatter}}" Margin="10"
@@ -59,7 +59,7 @@
             </StackPanel>
         </Panel>
 
-        <Panel Grid.Row="1" Grid.Column="2" Margin="0 1 0 1" Background="{DynamicResource AcrylicBaseColor}">
+        <Panel Grid.Row="1" Grid.Column="2" Margin="0 1 0 1" Background="{DynamicResource BaseBrighterDarkTransparentColor}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <TextBlock Text="XP left" Margin="10" HorizontalAlignment="Center" FontSize="20" />
                 <TextBlock Text="{Binding XpLeft, Converter={StaticResource DecimalFormatter}}" Margin="10"
@@ -68,7 +68,7 @@
         </Panel>
 
         <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="0 0 0 1" ColumnDefinitions="50*, 50*"
-              Background="{DynamicResource AcrylicBaseColor}">
+              Background="{DynamicResource BaseBrighterDarkTransparentColor}">
             <StackPanel Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <TextBlock Text="Beatmaps Tracked" Margin="10" HorizontalAlignment="Center" FontSize="20" />
                 <TextBlock Text="{Binding BeatmapsTracked, Converter={StaticResource DecimalFormatter}}" Margin="10"
@@ -81,7 +81,7 @@
         </Grid>
 
         <Panel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Margin="0" HorizontalAlignment="Stretch"
-               VerticalAlignment="Stretch" Background="{DynamicResource AcrylicBaseColor}">
+               VerticalAlignment="Stretch" Background="{DynamicResource BaseBrighterDarkTransparentColor}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <TextBlock Text="osu!player is" Margin="10" HorizontalAlignment="Center" FontSize="20" />
                 <TextBlock Text="{Binding PlayerAge}" Margin="10" HorizontalAlignment="Center" FontSize="20" />

@@ -18,6 +18,9 @@
             </ResourceDictionary.MergedDictionaries>
 
             <Color x:Key="BaseColor">#FA282C34</Color>
+            <Color x:Key="BaseDarkTransparentColor">#69000000</Color>
+            <Color x:Key="BaseBrightDarkTransparentColor">#42000000</Color>
+            <Color x:Key="BaseBrighterDarkTransparentColor">#22000000</Color>
             <Color x:Key="AcrylicBaseColor">#7F000000</Color>
             <Color x:Key="AcrylicSecondaryColor">#9F000000</Color>
             <Color x:Key="SecondaryColor">#FA21252B</Color>

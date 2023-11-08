@@ -20,7 +20,7 @@ namespace OsuPlayer.Windows;
 
 public partial class Miniplayer : ReactiveWindow<MiniplayerViewModel>
 {
-    private readonly MainWindow? _mainWindow;
+    private readonly FluentAppWindow? _mainWindow;
 
     public Miniplayer()
     {
@@ -33,7 +33,7 @@ public partial class Miniplayer : ReactiveWindow<MiniplayerViewModel>
     {
         InitializeComponent();
 
-        _mainWindow = Locator.GetLocator().GetRequiredService<MainWindow>();
+        _mainWindow = Locator.GetLocator().GetRequiredService<FluentAppWindow>();
 
         DataContext = new MiniplayerViewModel(player, engine);
     }

@@ -20,6 +20,7 @@ public class FluentAppWindowViewModel : BaseWindowViewModel
     private BaseViewModel? _mainView;
     private bool _displayBackgroundImage;
     private Bitmap? _backgroundImage;
+    private float _backgroundBlurRadius;
 
     public TopBarViewModel TopBar { get; }
     public PlayerControlViewModel PlayerControl { get; }
@@ -54,6 +55,12 @@ public class FluentAppWindowViewModel : BaseWindowViewModel
     {
         get => _displayBackgroundImage;
         set => this.RaiseAndSetIfChanged(ref _displayBackgroundImage, value);
+    }
+
+    public float BackgroundBlurRadius
+    {
+        get => _backgroundBlurRadius;
+        set => this.RaiseAndSetIfChanged(ref _backgroundBlurRadius, value);
     }
 
     public BaseViewModel? MainView

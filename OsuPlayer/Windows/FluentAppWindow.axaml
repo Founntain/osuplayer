@@ -7,7 +7,8 @@
         xmlns:interfaces="clr-namespace:OsuPlayer.Data.DataModels.Interfaces;assembly=OsuPlayer.Data"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="OsuPlayer.Windows.FluentAppWindow"
-        Title="osu!player">
+        Title="osu!player"
+        Initialized="Window_OnInitialized">
 
     <Design.DataContext>
         <windows:FluentAppWindowViewModel />
@@ -92,12 +93,13 @@
                         <ui:NavigationViewItem Content="Party" Tag="PartyNavigation" IconSource="Star" />
 
                         <ui:NavigationViewItem Content="Beatmaps" Tag="BeatmapsNavigation" IconSource="Library" />
-                        <ui:NavigationViewItem Content="Statistics" Tag="StatisticsNavigation" IconSource="Library" />
+                        <ui:NavigationViewItem Content="Statistics" Tag="StatisticsNavigation" IconSource="Target" />
                     </ui:NavigationViewItem.MenuItems>
                 </ui:NavigationViewItem>
             </ui:NavigationView.MenuItems>
             <ui:NavigationView.FooterMenuItems>
-                <ui:NavigationViewItem Content="Edit User" Tag="EditUserNavigation" IconSource="Edit" />
+                <ui:NavigationViewItem Content="Edit User" Tag="EditUserNavigation" IconSource="Edit" IsVisible="{Binding HomeView.IsUserLoggedIn}" />
+                <ui:NavigationViewItem Content="Open Miniplayer" Tag="MiniplayerNavigation" IconSource="FullScreenMinimize" />
             </ui:NavigationView.FooterMenuItems>
             <ui:NavigationView.Content>
                 <TransitioningContentControl Name="MainViewPanel" Content="{Binding MainView}">

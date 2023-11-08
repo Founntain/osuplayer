@@ -17,7 +17,7 @@ using Splat;
 
 namespace OsuPlayer.Windows;
 
-public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
+public partial class MainWindow2 : ReactiveWindow<MainWindowViewModel2>
 {
     private readonly ILoggingService _loggingService;
     private readonly IProfileManagerService _profileManager;
@@ -26,12 +26,12 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
     public FullscreenWindow? FullscreenWindow;
 
-    public MainWindow()
+    public MainWindow2()
     {
         InitializeComponent();
     }
 
-    public MainWindow(MainWindowViewModel viewModel, ILoggingService loggingService)
+    public MainWindow2(MainWindowViewModel2 viewModel, ILoggingService loggingService)
     {
         ViewModel = viewModel;
 
@@ -70,7 +70,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         {
             try
             {
-                var window = Locator.Current.GetService<MainWindow>();
+                var window = Locator.Current.GetService<FluentAppWindow>();
                 var lastFmApi = Locator.Current.GetService<ILastFmApiService>();
                 var loggingService = Locator.Current.GetService<ILoggingService>();
 
@@ -153,12 +153,5 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
         ViewModel.UpdateView.Update = result;
         ViewModel.MainView = ViewModel.UpdateView;
-    }
-
-    private void MainSplitView_OnPaneClosed(object? sender, EventArgs e)
-    {
-        if (ViewModel == default) return;
-
-        ViewModel.IsPaneOpen = false;
     }
 }

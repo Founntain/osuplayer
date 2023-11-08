@@ -30,16 +30,15 @@
             </StackPanel>
         </Grid>
 
-        <Grid Column="0" RowDefinitions="50, *" Background="{DynamicResource AcrylicBaseColor}">
-            <Border Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#7F000000">
+        <Grid Column="0" RowDefinitions="50, *">
+            <Border Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{DynamicResource BaseBrightDarkTransparentColor}">
                 <Grid ColumnDefinitions="Auto, *">
-                    <TextBlock Grid.Column="0" Text="Your songs" FontSize="22" VerticalAlignment="Center"
-                               HorizontalAlignment="Left" Margin="10 0" />
+                    <TextBlock Grid.Column="0" Text="Your songs" FontSize="22" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10 0" />
                     <TextBox Grid.Column="1" Margin="10" Text="{Binding FilterText}" Watermark="type to search..." />
                 </Grid>
             </Border>
 
-            <ListBox Grid.Row="1" Background="Transparent" SelectionMode="Multiple, Toggle"
+            <ListBox Grid.Row="1" Background="{DynamicResource BaseBrighterDarkTransparentColor}" SelectionMode="Multiple, Toggle"
                      ItemsSource="{Binding FilteredSongEntries}" SelectedItems="{Binding SelectedSongListItems}"
                      SelectionChanged="SongList_OnSelectionChanged" DoubleTapped="PlaySong">
                 <ListBox.ItemTemplate>
@@ -52,13 +51,12 @@
             </ListBox>
         </Grid>
 
-        <Grid Column="2" RowDefinitions="50, *" Background="{DynamicResource AcrylicBaseColor}">
-            <Border Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#7F000000">
-                <TextBlock Text="blacklist songs" FontSize="22" VerticalAlignment="Center"
-                           HorizontalAlignment="Center" />
+        <Grid Column="2" RowDefinitions="50, *">
+            <Border Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{DynamicResource BaseBrightDarkTransparentColor}">
+                <TextBlock Text="blacklist songs" FontSize="22" VerticalAlignment="Center" HorizontalAlignment="Center" />
             </Border>
 
-            <ListBox Grid.Row="1" Background="Transparent" SelectionMode="Multiple, Toggle"
+            <ListBox Grid.Row="1" Background="{DynamicResource BaseBrighterDarkTransparentColor}" SelectionMode="Multiple, Toggle"
                      ItemsSource="{Binding Blacklist.Songs, Converter={StaticResource PlaylistValueConverter}}"
                      SelectionChanged="Blacklist_OnSelectionChanged" DoubleTapped="PlaySong">
                 <ListBox.ItemTemplate>

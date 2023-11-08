@@ -3,6 +3,8 @@ using System.Reactive.Disposables;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using Avalonia.Styling;
+using FluentAvalonia.Styling;
 using Nein.Base;
 using Nein.Controls.Interfaces;
 using OsuPlayer.Api.Data.API.EntityModels;
@@ -31,6 +33,7 @@ public class SettingsViewModel : BaseViewModel
     private readonly Bindable<bool> _blacklistSkip = new();
     private readonly Bindable<bool> _playlistEnableOnPlay = new();
     private readonly Bindable<SortingMode> _sortingMode = new();
+    private readonly FluentAvaloniaTheme _faTheme;
 
     private bool _usePitch;
     private bool _useDiscordRpc;
@@ -43,6 +46,10 @@ public class SettingsViewModel : BaseViewModel
     private string _osuLocation = string.Empty;
     private string _patchnotes = string.Empty;
     private string _settingsSearchQ = string.Empty;
+    private string _currentAppTheme = _system;
+    private const string _system = "System";
+    private const string _dark = "Dark";
+    private const string _light = "Light";
     private string? _selectedFont;
     private KnownColors _selectedAccentColor;
     private KnownColors _selectedBackgroundColor;
@@ -55,6 +62,8 @@ public class SettingsViewModel : BaseViewModel
     private IShuffleServiceProvider? _shuffleServiceProvider;
     private List<OsuPlayerContributor>? _contributors;
 
+    public string[] AppThemes { get; } = { _system, _light , _dark };
+
     public bool DisplayUserStats
     {
         get => _displayUserStats;
@@ -66,7 +75,7 @@ public class SettingsViewModel : BaseViewModel
 
             config.Container.DisplayerUserStats = value;
 
-            var mainWindowViewModel = Locator.Current.GetService<MainWindowViewModel>();
+            var mainWindowViewModel = Locator.Current.GetService<FluentAppWindowViewModel>();
 
             mainWindowViewModel.HomeView.DisplayUserStats = value;
 
@@ -82,7 +91,7 @@ public class SettingsViewModel : BaseViewModel
         set => this.RaiseAndSetIfChanged(ref _isLastFmAuthorized, value);
     }
 
-    public MainWindow? MainWindow;
+    public FluentAppWindow? MainWindow;
 
     public bool EnableScrobbling
     {
@@ -469,6 +478,8 @@ public class SettingsViewModel : BaseViewModel
 
     public SettingsViewModel(IPlayer player, ISortProvider? sortProvider, IShuffleServiceProvider? shuffleServiceProvider, IProfileManagerService profileManager)
     {
+        _faTheme = (Application.Current!.Styles[0] as FluentAvaloniaTheme)!;
+
         Player = player;
         _shuffleServiceProvider = shuffleServiceProvider;
         _profileManager = profileManager;
@@ -525,5 +536,39 @@ public class SettingsViewModel : BaseViewModel
         Patchnotes = latestPatchNotes;
 
         Contributors = await GitHub.GetContributers() ?? new List<OsuPlayerContributor>();
+    }
+
+    public string CurrentAppTheme
+    {
+        get => _currentAppTheme;
+        set
+        {
+            if (string.IsNullOrWhiteSpace(this.RaiseAndSetIfChanged(ref _currentAppTheme, value)))
+                return;
+
+            var newTheme = GetThemeVariant(value);
+
+            if (newTheme != null)
+            {
+                if (Application.Current == null)
+                {
+                    return;
+                }
+
+                Application.Current.RequestedThemeVariant = newTheme;
+            }
+
+            _faTheme.PreferSystemTheme = value == _system;
+        }
+    }
+
+    private ThemeVariant? GetThemeVariant(string value)
+    {
+        return value switch
+        {
+            _light => ThemeVariant.Light,
+            _dark => ThemeVariant.Dark,
+            _ => null
+        };
     }
 }

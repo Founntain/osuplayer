@@ -19,7 +19,7 @@ namespace OsuPlayer.Views;
 
 public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
 {
-    public MainWindow? _mainWindow;
+    private FluentAppWindow? _mainWindow;
 
     public PlayerControlView()
     {
@@ -27,7 +27,7 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
 
         this.WhenActivated(_ =>
         {
-            if (this.GetVisualRoot() is MainWindow mainWindow)
+            if (this.GetVisualRoot() is FluentAppWindow mainWindow)
                 _mainWindow = mainWindow;
 
             SongProgressSlider.AddHandler(PointerPressedEvent, SongProgressSlider_OnPointerPressed,
@@ -58,14 +58,6 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
     private void SongProgressSlider_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         ViewModel.Player.Pause();
-    }
-
-    private void Settings_OnClick(object? sender, RoutedEventArgs e)
-    {
-        if (_mainWindow == default) return;
-
-        _mainWindow.ViewModel!.MainView = _mainWindow.ViewModel.SettingsView;
-        _mainWindow.ViewModel!.IsPaneOpen = true;
     }
 
     internal async void Blacklist_OnClick(object? sender, RoutedEventArgs e)
@@ -139,29 +131,6 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
     private void RepeatContextMenu_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
         ViewModel.Player.SelectedPlaylist.Value = (Playlist) (sender as ContextMenu)?.SelectedItem;
-    }
-
-    private void OpenMiniPlayer_OnClick(object? sender, RoutedEventArgs e)
-    {
-        if (_mainWindow == default) return;
-
-        if (_mainWindow.Miniplayer != null)
-            return;
-
-        // Here for debuggin and testing purpose until fully implemented
-        // _mainWindow.FullscreenWindow = new FullscreenWindow();
-        //
-        // _mainWindow.FullscreenWindow.Show();
-
-        Locator.Current.GetRequiredService<FluentAppWindow>().Show();
-
-        return;
-
-        _mainWindow.Miniplayer = new Miniplayer(ViewModel.Player, Locator.Current.GetRequiredService<IAudioEngine>());
-
-        _mainWindow.Miniplayer.Show();
-
-        _mainWindow.WindowState = WindowState.Minimized;
     }
 
     private void CurrentSongLabel_OnClick(object? sender, RoutedEventArgs e)

@@ -2,9 +2,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:windows="clr-namespace:OsuPlayer.Windows"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="OsuPlayer.Windows.MainWindow"
+        x:Class="OsuPlayer.Windows.MainWindow2"
         Title="osu!player" Width="1280" Height="720"
         WindowStartupLocation="CenterScreen" CanResize="True"
         Foreground="White"
@@ -18,24 +17,18 @@
         ExtendClientAreaToDecorationsHint="True"
         ExtendClientAreaChromeHints="PreferSystemChrome"
 
-        Icon="avares://OsuPlayer/Resources/x96.ico"
-
-        Initialized="Window_OnInitialized">
+        Icon="avares://OsuPlayer/Resources/x96.ico">
 
     <Window.Styles>
         <StyleInclude Source="/Styles/SliderStyle.axaml" />
     </Window.Styles>
-
-    <Design.DataContext>
-        <windows:MainWindowViewModel />
-    </Design.DataContext>
 
     <Grid Name="MainGrid" RowDefinitions="50, *, 100">
         <Panel Grid.Row="0" Grid.RowSpan="3">
             <ExperimentalAcrylicBorder IsHitTestVisible="False" Material="{Binding PanelMaterial}" >
             </ExperimentalAcrylicBorder>
         </Panel>
-        
+
         <Image Source="{Binding BackgroundImage}" Grid.Row="0" Grid.RowSpan="3" IsVisible="{Binding DisplayBackgroundImage}"
                VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Stretch="UniformToFill"/>
 

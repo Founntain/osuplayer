@@ -21,7 +21,7 @@ namespace OsuPlayer.Views;
 
 public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 {
-    private MainWindow? _mainWindow;
+    private FluentAppWindow? _mainWindow;
     private readonly IProfileManagerService _profileManager;
 
     public EditUserView() : this(Locator.Current.GetService<IProfileManagerService>())
@@ -31,7 +31,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
     public EditUserView(IProfileManagerService profileManager)
     {
         _profileManager = profileManager;
-        _mainWindow = Locator.Current.GetRequiredService<MainWindow>();
+        _mainWindow = Locator.Current.GetRequiredService<FluentAppWindow>();
 
         InitializeComponent();
     }

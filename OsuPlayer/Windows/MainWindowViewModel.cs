@@ -11,7 +11,7 @@ using ReactiveUI;
 
 namespace OsuPlayer.Windows;
 
-public class MainWindowViewModel : BaseWindowViewModel
+public class MainWindowViewModel2 : BaseWindowViewModel
 {
     public readonly IPlayer Player;
     public readonly IProfileManagerService ProfileManager;
@@ -75,7 +75,7 @@ public class MainWindowViewModel : BaseWindowViewModel
         set => this.RaiseAndSetIfChanged(ref _displayBackgroundImage, value);
     }
 
-    public MainWindowViewModel(IAudioEngine engine, IPlayer player, IProfileManagerService profileManager, IShuffleServiceProvider? shuffleServiceProvider = null,
+    public MainWindowViewModel2(IAudioEngine engine, IPlayer player, IProfileManagerService profileManager, IShuffleServiceProvider? shuffleServiceProvider = null,
         IStatisticsProvider? statisticsProvider = null, ISortProvider? sortProvider = null, IHistoryProvider? historyProvider = null)
     {
         Player = player;
