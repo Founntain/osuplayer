@@ -20,11 +20,10 @@
 
     <Grid ColumnDefinitions="50*, 50*" IsVisible="{Binding IsUserNotLoggedIn}">
         <!-- Not Login Grid -->
-        <ui:InfoBar Grid.Column="0" Grid.ColumnSpan="2" Severity="Warning" Title="Not logged in" IsOpen="True" Message="Log into your osu!player profile to gain XP and track your songs. You can also hide this in ">
+        <ui:InfoBar Grid.Column="0" Grid.ColumnSpan="2" Severity="Warning" Title="Not logged in" IsOpen="True" Message="Log into your osu!player profile to gain XP and track your songs. Head to the settings to log in. You can also hide this in ">
             <ui:InfoBar.ActionButton>
                 <Grid>
-                    <ui:HyperlinkButton Margin="-20 0 0 0" HorizontalAlignment="Left" Content="Visual Settings > Display User Statistics on Home View." NavigateUri="https://www.example.com" />
-                    <ui:HyperlinkButton HorizontalAlignment="Right" Content="Log in" NavigateUri="https://www.example.com" />
+                    <ui:HyperlinkButton Margin="-20 0 0 0" HorizontalAlignment="Left" Content="Visual Settings > Display User Statistics on Home View." Click="GoToSettings_Click" />
                 </Grid>
             </ui:InfoBar.ActionButton>
         </ui:InfoBar>

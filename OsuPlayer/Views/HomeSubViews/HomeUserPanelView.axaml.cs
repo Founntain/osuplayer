@@ -48,4 +48,13 @@ public partial class HomeUserPanelView : ReactiveUserControl<HomeUserPanelViewMo
 
         _mainWindow.ViewModel.MainView = _mainWindow.ViewModel.EditUserView;
     }
+
+    private void GoToSettings_Click(object? sender, RoutedEventArgs e)
+    {
+        if (_mainWindow.ViewModel == default) return;
+
+        _mainWindow.ViewModel.SettingsView.SettingsSearchQ = "Display User Statistics";
+        _mainWindow.ViewModel.MainView = _mainWindow.ViewModel.SettingsView;
+        _mainWindow.ViewModel.RaisePropertyChanged(nameof(_mainWindow.ViewModel.SettingsView.SettingsSearchQ));
+    }
 }
