@@ -1,9 +1,6 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
+﻿using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.ReactiveUI;
-using ReactiveUI;
 
 namespace OsuPlayer.UI_Extensions;
 

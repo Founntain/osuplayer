@@ -1,10 +1,7 @@
 ﻿using System.ComponentModel;
-using ABI.Windows.UI.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
-using Avalonia.VisualTree;
 using Material.Icons.Avalonia;
 using Nein.Base;
 using Nein.Extensions;
@@ -14,7 +11,6 @@ using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
-using ReactiveUI;
 using Splat;
 using TappedEventArgs = Avalonia.Input.TappedEventArgs;
 

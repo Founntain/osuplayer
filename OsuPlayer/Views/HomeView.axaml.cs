@@ -1,15 +1,11 @@
-﻿using Windows.UI.Input;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
-using Avalonia.VisualTree;
 using Nein.Base;
 using Nein.Extensions;
 using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
-using ReactiveUI;
 using Splat;
 using TappedEventArgs = Avalonia.Input.TappedEventArgs;
 

@@ -3,7 +3,6 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Avalonia.Media.Imaging;
 using Avalonia.ReactiveUI;
-using Avalonia.Threading;
 using DynamicData;
 using Nein.Base;
 using OsuPlayer.Data.DataModels;
@@ -14,7 +13,6 @@ using OsuPlayer.Interfaces.Service;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules.Audio.Interfaces;
-using OsuPlayer.Services;
 using OsuPlayer.Views.HomeSubViews;
 using ReactiveUI;
 

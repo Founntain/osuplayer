@@ -1,5 +1,4 @@
 ﻿using OsuPlayer.Data.DataModels;
-using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.Interfaces.Service;
 using Splat;
 

@@ -1,6 +1,4 @@
 ﻿using Avalonia.Input;
-using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Nein.Base;
 
 namespace OsuPlayer.Views;

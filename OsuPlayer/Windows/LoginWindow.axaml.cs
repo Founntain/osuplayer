@@ -9,8 +9,6 @@ using Nein.Base;
 using Nein.Extensions;
 using OsuPlayer.Data.DataModels;
 using OsuPlayer.Interfaces.Service;
-using OsuPlayer.Network.API.NorthFox;
-using OsuPlayer.Services;
 using OsuPlayer.UI_Extensions;
 using ReactiveUI;
 using Splat;

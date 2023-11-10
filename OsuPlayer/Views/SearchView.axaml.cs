@@ -1,11 +1,9 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Nein.Base;
 using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.IO.Storage.Blacklist;
-using ReactiveUI;
 
 namespace OsuPlayer.Views;
 

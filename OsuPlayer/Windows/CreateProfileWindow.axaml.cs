@@ -7,7 +7,6 @@ using Nein.Extensions;
 using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.RequestModels.User;
 using OsuPlayer.Interfaces.Service;
-using OsuPlayer.Network.API.NorthFox;
 using OsuPlayer.Network.Security;
 using OsuPlayer.UI_Extensions;
 using Splat;

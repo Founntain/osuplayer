@@ -2,16 +2,14 @@
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using Avalonia.ReactiveUI;
-using Avalonia.VisualTree;
 using Nein.Extensions;
+using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.RequestModels.User;
 using OsuPlayer.Data.DataModels;
 using OsuPlayer.Interfaces.Service;
 using OsuPlayer.Network.API.NorthFox;
-using OsuPlayer.Services;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
 using ReactiveUI;
@@ -137,41 +135,18 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
         if (Locator.Current.GetService<IOsuPlayerApiService>() is not NorthFox api) return;
 
-        var tempUser = await api.User.GetUserFromLoginToken();
+        var serverUser = await api.User.GetUserFromLoginToken();
+
+        if (serverUser == default)
+        {
+            await MessageBox.ShowDialogAsync(_mainWindow, "Couldn't fetch profile from server! Please try again later");
+
+            return;
+        }
 
         var changedProfilePicture = ViewModel.IsNewProfilePictureSelected;
 
-        if (tempUser == default)
-        {
-            await MessageBox.ShowDialogAsync(_mainWindow,
-                "Couldn't fetch profile from server! Please try again later");
-
-            return;
-        }
-
-        if (string.IsNullOrWhiteSpace(ViewModel.Password))
-        {
-            await MessageBox.ShowDialogAsync(_mainWindow,
-                "Please enter your current password to save your changes!");
-
-            return;
-        }
-
-        if (ViewModel.CurrentUser.OsuProfile?.Length > 0 && !ViewModel.CurrentUser.OsuProfile.IsDigitsOnly())
-        {
-            await MessageBox.ShowDialogAsync(_mainWindow,
-                "Your osu!profile ID should only contain numbers");
-
-            return;
-        }
-
-        if (!string.IsNullOrWhiteSpace(ViewModel.NewUsername) && !Regex.IsMatch(ViewModel.NewUsername, "^[a-zA-Z0-9]*$"))
-        {
-            await MessageBox.ShowDialogAsync(_mainWindow,
-                "Your newly entered username can only contain Letters and Numbers!");
-
-            return;
-        }
+        if (!await SaveUserInputValidation(serverUser)) return;
 
         var editUserModel = new EditUserModel
         {
@@ -207,7 +182,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
             var successMessage = "Profile updated successfully!";
 
-            if (response.Name == ViewModel.NewUsername && tempUser.Name != response.Name)
+            if (response.Name == ViewModel.NewUsername && serverUser.Name != response.Name)
                 successMessage = "Profile and username updated successfully. Restart your client to see you new username!";
 
             ViewModel.NewUsername = string.Empty;
@@ -217,6 +192,35 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
             if (changedProfilePicture)
                 await UpdateProfilePicture();
         }
+    }
+
+    private async Task<bool> SaveUserInputValidation(UserModel serverUser)
+    {
+        if (_mainWindow == default || ViewModel == default) return false;
+
+        if (string.IsNullOrWhiteSpace(ViewModel.Password))
+        {
+            await MessageBox.ShowDialogAsync(_mainWindow, "Please enter your current password to save your changes!");
+
+            return false;
+        }
+
+        if (ViewModel.CurrentUser?.OsuProfile?.Length > 0 && !ViewModel.CurrentUser.OsuProfile.IsDigitsOnly())
+        {
+            await MessageBox.ShowDialogAsync(_mainWindow, "Your osu!profile ID should only contain numbers");
+
+            return false;
+        }
+
+        if (!string.IsNullOrWhiteSpace(ViewModel.NewUsername) && !Regex.IsMatch(ViewModel.NewUsername, "^[a-zA-Z0-9]*$"))
+        {
+            await MessageBox.ShowDialogAsync(_mainWindow, "Your newly entered username can only contain Letters and Numbers!");
+
+            return false;
+        }
+
+        return true;
+
     }
 
     private async Task UpdateProfilePicture()

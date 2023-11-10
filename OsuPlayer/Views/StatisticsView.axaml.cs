@@ -1,7 +1,5 @@
 using System.Reactive.Disposables;
-using Avalonia.Markup.Xaml;
 using Nein.Base;
-using ReactiveUI;
 
 namespace OsuPlayer.Views;
 

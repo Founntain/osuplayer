@@ -1,7 +1,6 @@
 using System.Text;
 using OsuPlayer.Data.DataModels;
 using OsuPlayer.Data.DataModels.Interfaces;
-using Splat;
 
 namespace OsuPlayer.IO.DbReader;
 

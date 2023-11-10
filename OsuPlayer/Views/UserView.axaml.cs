@@ -1,7 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Nein.Base;
 using Nein.Extensions;
 using OsuPlayer.Api.Data.API.RequestModels.Statistics;

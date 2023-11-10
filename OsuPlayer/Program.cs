@@ -1,7 +1,5 @@
 ﻿using System.Diagnostics;
 using Avalonia;
-using Avalonia.OpenGL;
-using Avalonia.Platform;
 using Avalonia.ReactiveUI;
 using Nein.Extensions;
 using OsuPlayer.Data.DataModels;

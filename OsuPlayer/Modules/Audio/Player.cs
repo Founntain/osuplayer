@@ -1,9 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Platform;
 using Nein.Extensions;
 using Nein.Extensions.Exceptions;
 using OsuPlayer.Api.Data.API.Enums;

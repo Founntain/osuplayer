@@ -1,5 +1,4 @@
-﻿using Avalonia;
-using Avalonia.Markup.Xaml;
+﻿using Avalonia.Markup.Xaml;
 using Nein.Base;
 using Nein.Extensions;
 using OsuPlayer.Modules.Audio.Interfaces;

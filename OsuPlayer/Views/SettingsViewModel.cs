@@ -15,8 +15,6 @@ using OsuPlayer.Interfaces.Service;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Network;
 using OsuPlayer.Network.Data;
-using OsuPlayer.Network.LastFm;
-using OsuPlayer.Services;
 using OsuPlayer.Styles;
 using OsuPlayer.Windows;
 using ReactiveUI;
