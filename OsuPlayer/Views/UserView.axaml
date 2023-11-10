@@ -25,8 +25,8 @@
     <!-- Design Base -->
     <!-- https://7.founntain.dev/i6SnB9Ns.png -->
 
-    <Grid ColumnDefinitions="25*, 75*" Margin="0 1">
-        <Grid Column="0" Margin="0 0 1 0" RowDefinitions="Auto, *" Background="{DynamicResource BaseBrightDarkTransparentColor}">
+    <Grid ColumnDefinitions="Auto, *" Margin="0 1">
+        <Grid Column="0" Margin="0 0 1 0" RowDefinitions="Auto, *" MinWidth="300" Background="{DynamicResource BaseBrightDarkTransparentColor}">
             <ui:FAComboBox Grid.Row="0" Margin="10 5" ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser}" IsEditable="True" HorizontalAlignment="Stretch" PlaceholderText="type to search..." />
 
             <ListBox Grid.Row="1" Background="Transparent" ItemsSource="{Binding Users}"

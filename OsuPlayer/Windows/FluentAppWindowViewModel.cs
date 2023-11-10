@@ -1,8 +1,10 @@
 ﻿using Avalonia.Media;
 using Avalonia.Media.Imaging;
+using Avalonia.Threading;
 using Nein.Base;
 using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.Interfaces.Service;
+using OsuPlayer.Modules;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Views;
 using ReactiveUI;
@@ -107,5 +109,29 @@ public class FluentAppWindowViewModel : BaseWindowViewModel
         };
 
         SongList = Player.SongSourceProvider.SongSourceList;
+
+        Player.CurrentSongImage.BindValueChanged(d =>
+        {
+            Dispatcher.UIThread.Post(() =>
+            {
+                BackgroundImage?.Dispose();
+
+                if (!DisplayBackgroundImage)
+                {
+                    BackgroundImage = null;
+
+                    return;
+                }
+
+                if (!string.IsNullOrEmpty(d.NewValue) && File.Exists(d.NewValue))
+                {
+                    BackgroundImage = BitmapExtensions.BlurBitmap(d.NewValue, BackgroundBlurRadius, 0.75f, 25);
+
+                    return;
+                }
+
+                BackgroundImage = null;
+            });
+        }, true, true);
     }
 }

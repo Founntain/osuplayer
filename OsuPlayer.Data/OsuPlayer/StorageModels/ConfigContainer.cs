@@ -34,6 +34,7 @@ public class ConfigContainer : IStorableContainer
     public string LastFmSecret { get; set; }
     public bool EnableScrobbling { get; set; } = false;
     public bool DisplayerUserStats { get; set; } = true;
+    public bool UseLeftNavigationPosition { get; set; } = true;
 
     public IStorableContainer Init()
     {

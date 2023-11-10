@@ -54,8 +54,12 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
 
         _loggingService.Log("Loaded config successfully", LogType.Success, config.Container);
 
-        var backgroundColor = config.Container.BackgroundColor;
+        AppNavigationView.PaneDisplayMode = config.Container.UseLeftNavigationPosition ? NavigationViewPaneDisplayMode.Left : NavigationViewPaneDisplayMode.Top;
 
+        var backgroundColor = config.Container.BackgroundColor;
+        ViewModel.DisplayBackgroundImage = config.Container.DisplayBackgroundImage;
+        ViewModel.BackgroundBlurRadius = config.Container.BackgroundBlurRadius;
+        
         Background = new SolidColorBrush(backgroundColor.ToColor());
 
         var accentColor = config.Container.AccentColor;
@@ -182,6 +186,8 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
             case "EditUserNavigation":
                 OpenEditUserView();
                 break;
+            case "SocialNavigation":
+                break;
             default:
             {
                 ViewModel!.MainView = ViewModel!.HomeView;
@@ -208,6 +214,23 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
         }
 
         e.Handled = true;
+    }
+
+    protected override void OnClosing(WindowClosingEventArgs e)
+    {
+        base.OnClosing(e);
+
+        if (ViewModel == default) return;
+
+        using var config = new Config();
+
+        config.Container.Volume = ViewModel.Player.Volume.Value;
+        config.Container.Username = _profileManager.User?.Name;
+        config.Container.RepeatMode = ViewModel.Player.RepeatMode.Value;
+        config.Container.IsShuffle = ViewModel.Player.IsShuffle.Value;
+        config.Container.SelectedPlaylist = ViewModel.Player.SelectedPlaylist.Value?.Id;
+
+        ViewModel.Player.DisposeDiscordClient();
     }
 
     private async void Window_OnInitialized(object? sender, EventArgs e)

@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Styling;
 using FluentAvalonia.Styling;
+using FluentAvalonia.UI.Controls;
 using Nein.Base;
 using Nein.Controls.Interfaces;
 using OsuPlayer.Api.Data.API.EntityModels;
@@ -37,6 +38,7 @@ public class SettingsViewModel : BaseViewModel
     private bool _useDiscordRpc;
     private bool _displayUserStats;
     private bool _enableScrobbling;
+    private bool _useLeftNavigationPosition;
     private bool _displayBackgroundImage;
     private float _backgroundBlurRadius;
     private string _lastFmApiKey = string.Empty;
@@ -61,6 +63,22 @@ public class SettingsViewModel : BaseViewModel
     private List<OsuPlayerContributor>? _contributors;
 
     public string[] AppThemes { get; } = { _system, _light , _dark };
+
+
+    public bool UseLeftNavigationPosition
+    {
+        get => _useLeftNavigationPosition;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _useLeftNavigationPosition, value);
+
+            using var config = new Config();
+
+            config.Container.UseLeftNavigationPosition = value;
+
+            MainWindow.AppNavigationView.PaneDisplayMode = value ? NavigationViewPaneDisplayMode.Left : NavigationViewPaneDisplayMode.Top;
+        }
+    }
 
     public bool DisplayUserStats
     {
@@ -501,6 +519,7 @@ public class SettingsViewModel : BaseViewModel
         _backgroundBlurRadius = config.Container.BackgroundBlurRadius;
         _enableScrobbling = config.Container.EnableScrobbling;
         _displayUserStats = config.Container.DisplayerUserStats;
+        _useLeftNavigationPosition = config.Container.UseLeftNavigationPosition;
 
         var lastFmApi = Locator.Current.GetService<ILastFmApiService>();
 

@@ -23,7 +23,7 @@
 
         <!--Songs Grid-->
         <Grid Row="1" Column="0" ColumnSpan="2" RowDefinitions="50, *" Margin="0 1">
-            <Border Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{DynamicResource BaseDarkTransparentColor}">
+            <Border Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{DynamicResource BaseBrightDarkTransparentColor}">
                 <TextBlock Text="Your songs" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Left" Margin=" 10 0 0 0" />
             </Border>
 
@@ -51,7 +51,7 @@
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding TitleString}" FontSize="20" />
                             <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding ArtistString}"
                                        FontSize="14" Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}"
-                                       FontWeight="{DynamicResource SmallerFontWeight}" FontStyle="Italic" />
+                                       FontWeight="{DynamicResource SmallerFontWeight}"/>
 
                             <Grid Row="0" RowSpan="2" Column="1" ColumnDefinitions="*">
                                 <TextBlock Grid.Column="0" Text="{Binding TotalTimeString}"

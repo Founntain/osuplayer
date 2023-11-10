@@ -12,15 +12,15 @@
     </Design.DataContext>
     <Grid RowDefinitions="Auto, *">
         <Grid Grid.Row="0" Margin="0"
-              Background="{DynamicResource AcrylicSecondaryColor}"
+              Background="{DynamicResource BaseBrightDarkTransparentColor}"
               VerticalAlignment="Center">
-            <TextBlock Text="Play History" Margin="10 5" FontSize="26"
+            <TextBlock Text="Play History" Margin="10 5" FontSize="24"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Left" />
         </Grid>
 
         <ListBox Grid.Row="1" ItemsSource="{Binding History}" SelectedItem="{Binding SelectedHistoricalMapEntry}"
-                 Background="{DynamicResource AcrylicBaseColor}"
+                 Background="{DynamicResource BaseBrighterDarkTransparentColor}"
                  Margin="0 1"
                  DoubleTapped="HistoryListBox_OnDoubleTapped">
             <ListBox.DataTemplates>
@@ -28,12 +28,12 @@
                     <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto">
                         <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding MapEntry.TitleString}" FontSize="20"
                                    FontWeight="SemiBold" />
-                        <TextBlock Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Text="{Binding TimePlayedString}"
-                                   FontSize="14" VerticalAlignment="Center" Margin="0 0 15 0"
-                                   FontWeight="{DynamicResource SmallerFontWeight}" />
                         <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
                                    Text="{Binding MapEntry.ArtistString}"
-                                   FontSize="14" Foreground="#FFCCCCCC"
+                                   FontSize="14"  Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}"
+                                   FontWeight="{DynamicResource SmallerFontWeight}" />
+                        <TextBlock Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Text="{Binding TimePlayedString}"
+                                   FontSize="14" VerticalAlignment="Center" Margin="0 0 15 0"
                                    FontWeight="{DynamicResource SmallerFontWeight}" />
                     </Grid>
                 </DataTemplate>

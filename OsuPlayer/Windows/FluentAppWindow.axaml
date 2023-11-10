@@ -15,11 +15,18 @@
     </Design.DataContext>
 
     <Grid Name="MainGrid" RowDefinitions="Auto, *, 100">
+        <!-- Fancy Acrylic Background -->
         <Panel Grid.Row="0" Grid.RowSpan="2">
-            <ExperimentalAcrylicBorder IsHitTestVisible="False" Material="{Binding PanelMaterial}" >
-            </ExperimentalAcrylicBorder>
+            <ExperimentalAcrylicBorder IsHitTestVisible="False" Material="{Binding PanelMaterial}" />
         </Panel>
 
+        <!-- BackgroundImage of Song -->
+        <ExperimentalAcrylicBorder Grid.Row="0" Grid.RowSpan="2" Material="{Binding PanelMaterial}">
+            <Image Source="{Binding BackgroundImage}" IsVisible="{Binding DisplayBackgroundImage}" Opacity="0.25"
+                   VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Stretch="UniformToFill"/>
+        </ExperimentalAcrylicBorder>
+
+        <!-- TitleBar Host -->
         <Grid Row="0" Name="TitleBarHost"
               ColumnDefinitions="Auto,Auto,*,Auto"
               Background="Transparent">
@@ -66,8 +73,7 @@
                                          <TextBlock Text="{Binding TitleString}" />
                                          <TextBlock Text="{Binding ArtistString}"
                                                     Theme="{StaticResource CaptionTextBlockStyle}"
-                                                    Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}"
-                                                    FontStyle="Italic"/>
+                                                    Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}"/>
                                      </StackPanel>
 
                                      <TextBlock Grid.Column="1" Text="{Binding TotalTimeString}" VerticalAlignment="Center" HorizontalAlignment="Right" />
@@ -80,10 +86,7 @@
             </Border>
         </Grid>
 
-        <Image Source="{Binding BackgroundImage}" Grid.Row="1" Grid.RowSpan="2" IsVisible="{Binding DisplayBackgroundImage}"
-               VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Stretch="UniformToFill"/>
-
-        <ui:NavigationView Grid.Row="1" Name="AppNavigationView" PaneDisplayMode="Auto" ItemInvoked="AppNavigationView_OnItemInvoked">
+        <ui:NavigationView Grid.Row="1" Name="AppNavigationView" PaneDisplayMode="LeftCompact" ItemInvoked="AppNavigationView_OnItemInvoked">
             <ui:NavigationView.MenuItems>
                 <ui:NavigationViewItem Content="Home" Tag="HomeNavigation" IconSource="Home"/>
                 <ui:NavigationViewItem Content="Playlists" Tag="PlaylistNavigation" IconSource="Audio" />

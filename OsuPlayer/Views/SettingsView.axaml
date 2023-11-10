@@ -140,6 +140,13 @@
                         </ui:SettingsExpanderItem.Footer>
                     </ui:SettingsExpanderItem>
 
+                    <ui:SettingsExpanderItem Content="Navigation Position"
+                                             Description="Do you want to have the navigation on the left or top?">
+                        <ui:SettingsExpanderItem.Footer>
+                            <ToggleSwitch IsChecked="{Binding UseLeftNavigationPosition}" OnContent="Left" OffContent="Top" />
+                        </ui:SettingsExpanderItem.Footer>
+                    </ui:SettingsExpanderItem>
+
                     <ui:SettingsExpanderItem Content="UI Font"
                                              Description="Select the font you want to use as UI Font. We recommend Montserrat">
                         <ui:SettingsExpanderItem.Footer>
@@ -179,6 +186,13 @@
                                              Description="Toggle if you want to use the current songs background image as window background">
                         <ui:SettingsExpanderItem.Footer>
                             <ToggleSwitch IsChecked="{Binding DisplayBackgroundImage}" />
+                        </ui:SettingsExpanderItem.Footer>
+                    </ui:SettingsExpanderItem>
+
+                    <ui:SettingsExpanderItem Content="Background Image Blur" IsVisible="{Binding DisplayBackgroundImage}"
+                                             Description="Amount of blur you want to use for the background image. The change will be visible when a new song is played.">
+                        <ui:SettingsExpanderItem.Footer>
+                            <Slider Value="{Binding BackgroundBlurRadius}" Minimum="0" Maximum="100" TickFrequency="1" Width="150" />
                         </ui:SettingsExpanderItem.Footer>
                     </ui:SettingsExpanderItem>
 
