@@ -44,18 +44,13 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
 
         TransparencyLevelHint = new[] { WindowTransparencyLevel.Mica, WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None };
         FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamily;
-    }
 
-    private void InitializeComponent()
-    {
         this.WhenActivated(_ =>
         {
             if (string.IsNullOrWhiteSpace(ViewModel?.Username)) return;
 
             PasswordBox.Focus();
         });
-
-        AvaloniaXamlLoader.Load(this);
     }
 
     private async Task Login()
@@ -83,6 +78,11 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
         }
 
         _profileManager.User = user.ConvertObjectToJson<User>();
+
+        var mainWindow = Locator.Current.GetRequiredService<FluentAppWindow>();
+
+        mainWindow.LoginNavItem.IsVisible = mainWindow.ViewModel!.HomeView.IsUserNotLoggedIn;
+        mainWindow.EditUserNavItem.IsVisible = mainWindow.ViewModel!.HomeView.IsUserLoggedIn;
 
         Close();
     }

@@ -116,12 +116,16 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
 
         this.WhenActivated(_ =>
         {
-            if (ViewModel != null)
-                ViewModel.MainView = ViewModel.HomeView;
+            if (ViewModel == null) return;
+
+            ViewModel.MainView = ViewModel.HomeView;
+
+            LoginNavItem.IsVisible = ViewModel!.HomeView.IsUserNotLoggedIn;
+            EditUserNavItem.IsVisible = ViewModel!.HomeView.IsUserLoggedIn;
         });
     }
 
-    private void AppNavigationView_OnItemInvoked(object? sender, NavigationViewItemInvokedEventArgs e)
+    private async void AppNavigationView_OnItemInvoked(object? sender, NavigationViewItemInvokedEventArgs e)
     {
         if (e.IsSettingsInvoked)
         {
@@ -172,6 +176,12 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
                 OpenMiniplayer();
                 break;
             }
+            case "LoginNavigation":
+                await OpenLoginWindow();
+                break;
+            case "EditUserNavigation":
+                OpenEditUserView();
+                break;
             default:
             {
                 ViewModel!.MainView = ViewModel!.HomeView;
@@ -218,7 +228,7 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
 
     private void OpenMiniplayer()
     {
-        if (Miniplayer != null)
+        if (ViewModel == default || Miniplayer != null)
             return;
 
         Miniplayer = new Miniplayer(ViewModel.Player, Locator.Current.GetRequiredService<IAudioEngine>());
@@ -226,5 +236,27 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
         Miniplayer.Show();
 
         WindowState = WindowState.Minimized;
+    }
+
+    private async Task OpenLoginWindow()
+    {
+        if (ViewModel == default) return;
+
+        var loginWindow = new LoginWindow();
+
+        await loginWindow.ShowDialog(this);
+
+        ViewModel.RaisePropertyChanged(nameof(ViewModel.HomeView.CurrentUser));
+        ViewModel.RaisePropertyChanged(nameof(ViewModel.HomeView.IsUserLoggedIn));
+        ViewModel.RaisePropertyChanged(nameof(ViewModel.HomeView.IsUserNotLoggedIn));
+
+        await ViewModel.HomeView.HomeUserPanelView.LoadUserProfileAsync();
+    }
+
+    private void OpenEditUserView()
+    {
+        if (ViewModel == default) return;
+
+        ViewModel.MainView = ViewModel.EditUserView;
     }
 }

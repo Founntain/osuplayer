@@ -19,7 +19,6 @@ public class FluentAppWindowViewModel : BaseWindowViewModel
     private Bitmap? _backgroundImage;
     private float _backgroundBlurRadius;
 
-    public TopBarViewModel TopBar { get; }
     public PlayerControlViewModel PlayerControl { get; }
 
     public EditUserViewModel EditUserView { get; }
@@ -36,9 +35,12 @@ public class FluentAppWindowViewModel : BaseWindowViewModel
     public StatisticsViewModel StatisticsView { get; }
     public BeatmapsViewModel BeatmapView { get; }
     public ExportSongsViewModel ExportSongsView { get; }
-    public PlayHistoryViewModel PlayHistoryView { get; set; }
+    public PlayHistoryViewModel PlayHistoryView { get; }
 
     public ExperimentalAcrylicMaterial? PanelMaterial { get; set; }
+
+    public bool IsUserLoggedIn => ProfileManager.User != default && ProfileManager.User?.UniqueId != Guid.Empty;
+    public bool IsUserNotLoggedIn => ProfileManager.User == default || ProfileManager.User?.UniqueId == Guid.Empty;
 
     private ReadOnlyObservableCollection<IMapEntryBase>? _songList;
 

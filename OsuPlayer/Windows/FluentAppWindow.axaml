@@ -98,7 +98,8 @@
                 </ui:NavigationViewItem>
             </ui:NavigationView.MenuItems>
             <ui:NavigationView.FooterMenuItems>
-                <ui:NavigationViewItem Content="Edit User" Tag="EditUserNavigation" IconSource="Edit" IsVisible="{Binding HomeView.IsUserLoggedIn}" />
+                <ui:NavigationViewItem Name="LoginNavItem" Content="Log in" Tag="LoginNavigation" IconSource="Permissions" IsVisible="{Binding IsUserNotLoggedIn}" />
+                <ui:NavigationViewItem Name="EditUserNavItem" Content="Edit User" Tag="EditUserNavigation" IconSource="Edit" IsVisible="{Binding IsUserLoggedIn}" />
                 <ui:NavigationViewItem Content="Open Miniplayer" Tag="MiniplayerNavigation" IconSource="FullScreenMinimize" />
             </ui:NavigationView.FooterMenuItems>
             <ui:NavigationView.Content>

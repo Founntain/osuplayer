@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
+using Avalonia.Platform.Storage;
 using Avalonia.ReactiveUI;
 using Nein.Extensions;
 using OsuPlayer.Api.Data.API.EntityModels;
@@ -20,7 +21,7 @@ namespace OsuPlayer.Views;
 
 public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 {
-    private FluentAppWindow? _mainWindow;
+    private FluentAppWindow _mainWindow;
     private readonly IProfileManagerService _profileManager;
 
     public EditUserView() : this(Locator.Current.GetService<IProfileManagerService>())
@@ -37,32 +38,22 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
     private async void EditProfilePicture_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (_mainWindow == default || ViewModel?.CurrentUser == default) return;
+        if (ViewModel?.CurrentUser == default) return;
 
-        var dialog = new OpenFileDialog
+        var result = await _mainWindow.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
             AllowMultiple = false,
-            Filters = new List<FileDialogFilter>
+            FileTypeFilter = new[]
             {
-                new()
-                {
-                    Extensions = new List<string>
-                    {
-                        "png",
-                        "jpg",
-                        "jpeg"
-                    }
-                }
+                new FilePickerFileType("png"), new FilePickerFileType("jpg"), new FilePickerFileType("jpeg")
             }
-        };
-
-        var result = await dialog.ShowAsync(_mainWindow);
+        });
 
         var file = result?.FirstOrDefault();
 
         if (file == default) return;
 
-        var fileInfo = new FileInfo(file);
+        var fileInfo = new FileInfo(file.Path.ToString());
 
         switch (ViewModel.CurrentUser.IsDonator)
         {
@@ -76,7 +67,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
                 return;
         }
 
-        var picture = await File.ReadAllBytesAsync(file);
+        var picture = await File.ReadAllBytesAsync(file.Path.ToString());
 
         await using (var stream = new MemoryStream(picture))
         {
@@ -88,7 +79,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
     private async void EditBannerPicture_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (_mainWindow == default || ViewModel == default) return;
+        if (ViewModel == default) return;
 
         var dialog = new OpenFileDialog
         {
@@ -132,7 +123,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
     private async void SaveChanges_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (_mainWindow == default || ViewModel?.CurrentUser == default || string.IsNullOrWhiteSpace(ViewModel?.CurrentUser.Name)) return;
+        if (ViewModel?.CurrentUser == default || string.IsNullOrWhiteSpace(ViewModel?.CurrentUser.Name)) return;
 
         if (Locator.Current.GetService<IOsuPlayerApiService>() is not NorthFox api) return;
 
@@ -161,6 +152,11 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
         if (response == default)
             return;
 
+        await ChangeProfilePicture(editUserModel, api, changedProfilePicture, response, serverUser);
+    }
+
+    private async Task ChangeProfilePicture(EditUserModel editUserModel, IOsuPlayerApiService api, bool changedProfilePicture, UserModel response, UserModel serverUser)
+    {
         if (ViewModel == null)
         {
             if (!string.IsNullOrWhiteSpace(editUserModel.User.Name))
@@ -175,7 +171,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
             ViewModel.NewPassword = string.Empty;
             ViewModel.Password = string.Empty;
 
-            _profileManager.User = ViewModel.CurrentUser.ConvertObjectToJson<User>();
+            _profileManager.User = ViewModel.CurrentUser?.ConvertObjectToJson<User>();
 
             var successMessage = "Profile updated successfully!";
 
@@ -193,7 +189,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
     private async Task<bool> SaveUserInputValidation(UserModel serverUser)
     {
-        if (_mainWindow == default || ViewModel == default) return false;
+        if (ViewModel == default) return false;
 
         if (string.IsNullOrWhiteSpace(ViewModel.Password))
         {
@@ -221,7 +217,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
     private async Task UpdateProfilePicture()
     {
-        if (_mainWindow == default || ViewModel?.CurrentUser == default || ViewModel?.CurrentProfilePicture == default) return;
+        if (ViewModel?.CurrentUser == default || ViewModel?.CurrentProfilePicture == default) return;
 
         if (Locator.Current.GetService<IOsuPlayerApiService>() is not NorthFox api) return;
 
