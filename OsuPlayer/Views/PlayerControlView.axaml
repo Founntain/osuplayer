@@ -26,12 +26,7 @@
         <views:PlayerControlViewModel />
     </Design.DataContext>
 
-    <Grid RowDefinitions="30, *">
-        <Panel Grid.Row="0" Grid.RowSpan="2">
-            <ExperimentalAcrylicBorder IsHitTestVisible="False" Material="{Binding PanelMaterial}" >
-            </ExperimentalAcrylicBorder>
-        </Panel>
-
+    <Grid RowDefinitions="30, *" Background="{DynamicResource BaseBrightDarkTransparentColor}">
         <Grid Grid.Row="0" ColumnDefinitions="60, *, 60">
 
             <TextBlock x:Name="CurrentSongTimeText" Text="{Binding CurrentSongTime}" VerticalAlignment="Center"

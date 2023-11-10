@@ -9,9 +9,11 @@ using Nein.Extensions;
 using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
+using OsuPlayer.Interfaces.Service;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules.Audio.Interfaces;
 using ReactiveUI;
+using Splat;
 
 namespace OsuPlayer.Views;
 
@@ -45,9 +47,14 @@ public class PlaylistViewModel : BaseViewModel
                 _currentBind?.Dispose();
 
             if (_selectedPlaylist?.Songs != null)
-                _currentBind = Player.SongSourceProvider.GetMapEntriesFromHash(_selectedPlaylist.Songs, out _).ToSourceList().Connect()
+            {
+                _currentBind = Player.SongSourceProvider.GetMapEntriesFromHash(_selectedPlaylist.Songs, out _)
+                    .ToSourceList()
+                    .Connect()
+                    .Sort(Locator.Current.GetRequiredService<ISortProvider>().SortingModeObservable)
                     .Filter(_filter, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
                     .Bind(out _filteredSongEntries).Subscribe();
+            }
 
             this.RaisePropertyChanged();
             this.RaisePropertyChanged(nameof(FilteredSongEntries));

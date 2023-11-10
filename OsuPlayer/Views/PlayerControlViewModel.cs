@@ -163,13 +163,13 @@ public class PlayerControlViewModel : BaseViewModel
 
         _displayBackgroundImage = !config.Container.DisplayBackgroundImage;
 
-        PanelMaterial = new ExperimentalAcrylicMaterial
-        {
-            BackgroundSource = AcrylicBackgroundSource.Digger,
-            TintColor = Colors.Black,
-            TintOpacity = 1,
-            MaterialOpacity = 0.25
-        };
+        // PanelMaterial = new ExperimentalAcrylicMaterial
+        // {
+        //     BackgroundSource = AcrylicBackgroundSource.Digger,
+        //     TintColor = Colors.Black,
+        //     TintOpacity = 0.75,
+        //     MaterialOpacity = 0.25
+        // };
 
         _songTime.BindTo(bassEngine.ChannelPosition);
         _songTime.BindValueChanged(_ => this.RaisePropertyChanged(nameof(SongTime)));

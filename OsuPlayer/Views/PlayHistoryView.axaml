@@ -10,14 +10,13 @@
     <Design.DataContext>
         <views:PlayHistoryViewModel />
     </Design.DataContext>
-    <Grid RowDefinitions="Auto, *">
-        <Grid Grid.Row="0" Margin="0"
-              Background="{DynamicResource BaseBrightDarkTransparentColor}"
-              VerticalAlignment="Center">
-            <TextBlock Text="Play History" Margin="10 5" FontSize="24"
+    <Grid RowDefinitions="50, *">
+        <Border Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{DynamicResource BaseBrightDarkTransparentColor}">
+            <TextBlock Text="Play history" Margin="10 0" FontSize="26"
                        VerticalAlignment="Center"
-                       HorizontalAlignment="Left" />
-        </Grid>
+                       HorizontalAlignment="Left"
+                       FontWeight="{DynamicResource BiggerFontWeight}" />
+        </Border>
 
         <ListBox Grid.Row="1" ItemsSource="{Binding History}" SelectedItem="{Binding SelectedHistoricalMapEntry}"
                  Background="{DynamicResource BaseBrighterDarkTransparentColor}"

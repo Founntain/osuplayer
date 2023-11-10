@@ -161,8 +161,15 @@
                         </ui:SettingsExpanderItem.Footer>
                     </ui:SettingsExpanderItem>
 
-                    <ui:SettingsExpanderItem Content="Window Background Method"
-                                             Description="The method that should be used for the window background">
+                    <ui:SettingsExpanderItem Content="Accent Color"
+                                             Description="Accent color you want to use">
+                        <ui:SettingsExpanderItem.Footer>
+                            <ui:FAComboBox ItemsSource="{Binding KnownColors}" SelectedItem="{Binding SelectedAccentColor}" IsEditable="True" />
+                        </ui:SettingsExpanderItem.Footer>
+                    </ui:SettingsExpanderItem>
+
+                     <ui:SettingsExpanderItem Content="Window Background Method"
+                                     Description="The method that should be used for the window background">
                         <ui:SettingsExpanderItem.Footer>
                             <ui:FAComboBox ItemsSource="{Binding BackgroundModes}" SelectedItem="{Binding BackgroundMode}" />
                         </ui:SettingsExpanderItem.Footer>
@@ -172,13 +179,6 @@
                                              Description="The background color of the window">
                         <ui:SettingsExpanderItem.Footer>
                             <ui:FAComboBox ItemsSource="{Binding KnownColors}" SelectedItem="{Binding SelectedBackgroundColor}" IsEditable="True" />
-                        </ui:SettingsExpanderItem.Footer>
-                    </ui:SettingsExpanderItem>
-
-                    <ui:SettingsExpanderItem Content="Accent Color"
-                                             Description="Accent color you want to use">
-                        <ui:SettingsExpanderItem.Footer>
-                            <ui:FAComboBox ItemsSource="{Binding KnownColors}" SelectedItem="{Binding SelectedAccentColor}" IsEditable="True" />
                         </ui:SettingsExpanderItem.Footer>
                     </ui:SettingsExpanderItem>
 
