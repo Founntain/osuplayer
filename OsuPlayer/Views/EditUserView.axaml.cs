@@ -8,6 +8,7 @@ using Nein.Extensions;
 using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.RequestModels.User;
 using OsuPlayer.Data.DataModels;
+using OsuPlayer.Extensions;
 using OsuPlayer.Interfaces.Service;
 using OsuPlayer.Network.API.NorthFox;
 using OsuPlayer.UI_Extensions;
@@ -151,12 +152,8 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
         var editUserModel = new EditUserModel
         {
             User = ViewModel.CurrentUser,
-            NewUsername = string.IsNullOrWhiteSpace(ViewModel.NewUsername)
-                ? null
-                : ViewModel.NewUsername,
-            NewPassword = string.IsNullOrWhiteSpace(ViewModel.NewPassword)
-                ? null
-                : ViewModel.NewPassword
+            NewUsername = ViewModel.NewUsername.IsNullOrWhiteSpaceWithFallback(null),
+            NewPassword = ViewModel.NewPassword.IsNullOrWhiteSpaceWithFallback(null)
         };
 
         var response = await api.User.EditUser(editUserModel);
@@ -220,7 +217,6 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
         }
 
         return true;
-
     }
 
     private async Task UpdateProfilePicture()
