@@ -1,6 +1,10 @@
 using System.Text;
+using Nein.Extensions;
 using OsuPlayer.Data.DataModels;
 using OsuPlayer.Data.DataModels.Interfaces;
+using OsuPlayer.Interfaces.Service;
+using OsuPlayer.Services;
+using Splat;
 
 namespace OsuPlayer.IO.DbReader;
 
@@ -110,126 +114,137 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
 
     public IMapEntry? ReadFullEntry(string path, IMapEntryBase mapEntryBase, long? dbOffset = null, Guid? id = null)
     {
-        if (dbOffset == null)
+        try
+        {
+            if (dbOffset == null)
+                return null;
+
+            var version = _osuDbVersion;
+
+            BaseStream.Seek(dbOffset.Value, SeekOrigin.Begin);
+
+            ReadString(true); //Artist
+
+            var artistUnicode = "Unknown Artist";
+            if (version >= 20121008)
+                artistUnicode = ReadString();
+
+            ReadString(true); //Title
+
+            var titleUnicode = "Unknown Title";
+            if (version >= 20121008)
+                titleUnicode = ReadString();
+
+            ReadString(true); //Creator
+            ReadString(true); //Difficulty
+
+            var audioFileName = ReadString();
+            ReadString(true); //Hash
+
+            ReadString(true); //BeatmapFileName
+            ReadByte(); //RankedStatus
+            ReadUInt16(); //CountHitCircles
+            ReadUInt16(); //CountSliders
+            ReadUInt16(); //CountSpinners
+            ReadDateTime(); //LastModifiedTime
+
+            if (version >= 20140609)
+            {
+                ReadSingle(); //ApproachRate
+                ReadSingle(); //CircleSize
+                ReadSingle(); //HPDrainRate
+                ReadSingle(); //OverallDifficulty
+            }
+            else
+            {
+                //Float
+                ReadByte(); //ApproachRate
+                ReadByte(); //CircleSize
+                ReadByte(); //HPDrainRate
+                ReadByte(); //OverallDifficulty
+            }
+
+            ReadDouble(); //SliderVelocity
+
+            if (version >= 20140609)
+            {
+                ReadStarRating();
+                ReadStarRating();
+                ReadStarRating();
+                ReadStarRating();
+            }
+
+            ReadInt32(); //DrainTimeSeconds
+            ReadInt32(); //TotalTimeSeconds
+
+            ReadInt32(); //AudioPreviewTime
+            var timingCount = ReadInt32();
+
+            BaseStream.Position += 17 * timingCount;
+
+            ReadInt32();
+            ReadInt32(); //beatmapSetId
+
+            ReadInt32(); //ThreadId
+            ReadByte(); //GradeStandard
+            ReadByte(); //GradeTaiko
+            ReadByte(); //GradeCtB
+            ReadByte(); //GradeMania
+            ReadInt16(); //OffsetLocal
+            ReadSingle(); //StackLeniency
+            ReadByte(); //GameMode
+            ReadString(true); //SongSource
+            ReadString(true); //SongTags
+            ReadInt16(); //OffsetOnline
+            ReadString(true); //TitleFont
+            ReadBoolean(); //Unplayed
+            ReadDateTime(); //LastPlayed
+            ReadBoolean(); //IsOsz2
+
+            var folderName = ReadString();
+
+            ReadDateTime(); //LastCheckAgainstOsuRepo
+            ReadBoolean(); //IgnoreBeatmapSounds
+            ReadBoolean(); //IgnoreBeatmapSkin
+            ReadBoolean(); //DisableStoryBoard
+            ReadBoolean(); //DisableVideo
+            ReadBoolean(); //
+
+            if (version < 20140609)
+                ReadInt16(); //OldUnknown1
+
+            ReadInt32(); //LastEditTime
+            ReadByte(); //ManiaScrollSpeed
+
+            var fullPath = Path.Combine(path, "Songs", folderName, audioFileName);
+            var folderPath = Path.Combine(path, "Songs", folderName);
+
+            return new DbMapEntry
+            {
+                DbReaderFactory = _readerFactory,
+                DbOffset = dbOffset.Value,
+                OsuPath = path,
+                Artist = mapEntryBase.Artist,
+                ArtistUnicode = artistUnicode,
+                Title = mapEntryBase.Title,
+                TitleUnicode = titleUnicode,
+                AudioFileName = audioFileName,
+                BeatmapSetId = mapEntryBase.BeatmapSetId,
+                FolderName = folderName,
+                FolderPath = folderPath,
+                FullPath = fullPath,
+                Hash = mapEntryBase.Hash,
+                TotalTime = mapEntryBase.TotalTime
+            };
+        }
+        catch (Exception ex)
+        {
+            var loggingService = Locator.Current.GetRequiredService<ILoggingService>();
+
+            loggingService.Log($"There was an error reading the beatmap ({path})", LogType.Error, ex.Message);
+
             return null;
-
-        var version = _osuDbVersion;
-
-        BaseStream.Seek(dbOffset.Value, SeekOrigin.Begin);
-
-        ReadString(true); //Artist
-
-        var artistUnicode = "Unknown Artist";
-        if (version >= 20121008)
-            artistUnicode = ReadString();
-
-        ReadString(true); //Title
-
-        var titleUnicode = "Unknown Title";
-        if (version >= 20121008)
-            titleUnicode = ReadString();
-
-        ReadString(true); //Creator
-        ReadString(true); //Difficulty
-
-        var audioFileName = ReadString();
-        ReadString(true); //Hash
-
-        ReadString(true); //BeatmapFileName
-        ReadByte(); //RankedStatus
-        ReadUInt16(); //CountHitCircles
-        ReadUInt16(); //CountSliders
-        ReadUInt16(); //CountSpinners
-        ReadDateTime(); //LastModifiedTime
-
-        if (version >= 20140609)
-        {
-            ReadSingle(); //ApproachRate
-            ReadSingle(); //CircleSize
-            ReadSingle(); //HPDrainRate
-            ReadSingle(); //OverallDifficulty
         }
-        else
-        {
-            //Float
-            ReadByte(); //ApproachRate
-            ReadByte(); //CircleSize
-            ReadByte(); //HPDrainRate
-            ReadByte(); //OverallDifficulty
-        }
-
-        ReadDouble(); //SliderVelocity
-
-        if (version >= 20140609)
-        {
-            ReadStarRating();
-            ReadStarRating();
-            ReadStarRating();
-            ReadStarRating();
-        }
-
-        ReadInt32(); //DrainTimeSeconds
-        ReadInt32(); //TotalTimeSeconds
-
-        ReadInt32(); //AudioPreviewTime
-        var timingCount = ReadInt32();
-
-        BaseStream.Position += 17 * timingCount;
-
-        ReadInt32();
-        ReadInt32(); //beatmapSetId
-
-        ReadInt32(); //ThreadId
-        ReadByte(); //GradeStandard
-        ReadByte(); //GradeTaiko
-        ReadByte(); //GradeCtB
-        ReadByte(); //GradeMania
-        ReadInt16(); //OffsetLocal
-        ReadSingle(); //StackLeniency
-        ReadByte(); //GameMode
-        ReadString(true); //SongSource
-        ReadString(true); //SongTags
-        ReadInt16(); //OffsetOnline
-        ReadString(true); //TitleFont
-        ReadBoolean(); //Unplayed
-        ReadDateTime(); //LastPlayed
-        ReadBoolean(); //IsOsz2
-
-        var folderName = ReadString();
-
-        ReadDateTime(); //LastCheckAgainstOsuRepo
-        ReadBoolean(); //IgnoreBeatmapSounds
-        ReadBoolean(); //IgnoreBeatmapSkin
-        ReadBoolean(); //DisableStoryBoard
-        ReadBoolean(); //DisableVideo
-        ReadBoolean(); //
-
-        if (version < 20140609)
-            ReadInt16(); //OldUnknown1
-
-        ReadInt32(); //LastEditTime
-        ReadByte(); //ManiaScrollSpeed
-
-        var fullPath = Path.Combine(path, "Songs", folderName, audioFileName);
-        var folderPath = Path.Combine(path, "Songs", folderName);
-
-        return new DbMapEntry
-        {
-            DbReaderFactory = _readerFactory,
-            DbOffset = dbOffset.Value,
-            OsuPath = path,
-            Artist = mapEntryBase.Artist,
-            ArtistUnicode = artistUnicode,
-            Title = mapEntryBase.Title,
-            TitleUnicode = titleUnicode,
-            AudioFileName = audioFileName,
-            BeatmapSetId = mapEntryBase.BeatmapSetId,
-            FolderName = folderName,
-            FolderPath = folderPath,
-            FullPath = fullPath,
-            Hash = mapEntryBase.Hash,
-            TotalTime = mapEntryBase.TotalTime
-        };
     }
 
     /// <summary>
@@ -399,7 +414,7 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
                 BaseStream.Seek(strLen, SeekOrigin.Current);
                 return string.Empty;
             default:
-                throw new Exception();
+                throw new InvalidOperationException("The byte that marks the string length is neither 0 nor 11");
         }
     }
 

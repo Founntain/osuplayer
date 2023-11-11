@@ -426,7 +426,10 @@ public class Player : IPlayer, IImportNotifications
 
         var fullMapEntry = song.ReadFullEntry();
 
-        if (fullMapEntry == default) throw new NullReferenceException();
+        if (fullMapEntry == default)
+        {
+            return await NextSong(PlayDirection.Forward);
+        }
 
         fullMapEntry.UseUnicode = config.Container.UseSongNameUnicode;
 
