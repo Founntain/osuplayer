@@ -121,7 +121,7 @@
             </DockPanel>
 
             <DockPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
-                <Button Name="RepeatBtn" Width="38" Height="38" CornerRadius="50" Click="SongControl" Theme="{StaticResource TransparentButton}">
+                <Button Name="Repeat" Width="38" Height="38" CornerRadius="50" Click="SongControl" Theme="{StaticResource TransparentButton}">
                     <Button.ContextMenu>
                         <ContextMenu IsVisible="{Binding IsRepeating, Converter={StaticResource RepeatConverter}}"
                                      ItemsSource="{Binding Playlists}" PointerReleased="RepeatContextMenu_OnPointerReleased" />

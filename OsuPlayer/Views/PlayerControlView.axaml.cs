@@ -33,7 +33,7 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
             SongProgressSlider.AddHandler(PointerReleasedEvent, SongProgressSlider_OnPointerReleased,
                 RoutingStrategies.Tunnel);
 
-            RepeatBtn.AddHandler(PointerReleasedEvent, Repeat_OnPointerReleased, RoutingStrategies.Tunnel);
+            Repeat.AddHandler(PointerReleasedEvent, Repeat_OnPointerReleased, RoutingStrategies.Tunnel);
 
             ViewModel.RaisePropertyChanged(nameof(ViewModel.IsAPlaylistSelected));
             ViewModel.RaisePropertyChanged(nameof(ViewModel.IsCurrentSongInPlaylist));
