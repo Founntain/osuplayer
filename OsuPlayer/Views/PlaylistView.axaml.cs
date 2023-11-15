@@ -64,6 +64,7 @@ public partial class PlaylistView : ReactiveControl<PlaylistViewModel>
         }
 
         ViewModel.Player.RepeatMode.Value = RepeatMode.Playlist;
+        ViewModel.Player.SelectedPlaylist.Value = null;
         ViewModel.Player.SelectedPlaylist.Value = playlist;
     }
 

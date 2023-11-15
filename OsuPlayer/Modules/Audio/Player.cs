@@ -123,13 +123,13 @@ public class Player : IPlayer, IImportNotifications
         SelectedPlaylist.BindValueChanged(OnSelectedPlaylistChanged, true);
     }
 
-    private void OnSelectedPlaylistChanged(ValueChangedEvent<Playlist> selectedPlaylist)
+    private async void OnSelectedPlaylistChanged(ValueChangedEvent<Playlist?> selectedPlaylist)
     {
-        using var cfg = new Config();
-
-        cfg.Container.SelectedPlaylist = selectedPlaylist.NewValue?.Id;
-
         if (selectedPlaylist.NewValue == null) return;
+
+        await using var cfg = new Config();
+
+        cfg.Container.SelectedPlaylist = selectedPlaylist.NewValue.Id;
 
         ActivePlaylistSongs = SongSourceProvider.GetMapEntriesFromHash(selectedPlaylist.NewValue.Songs, out var invalidHashes);
 
@@ -144,7 +144,7 @@ public class Player : IPlayer, IImportNotifications
 
         if (RepeatMode.Value != Data.OsuPlayer.Enums.RepeatMode.Playlist || CurrentSong.Value == null) return;
 
-        if (!ActivePlaylistSongs.Contains(CurrentSong.Value)) NextSong(PlayDirection.Forward);
+        if (!ActivePlaylistSongs.Contains(CurrentSong.Value)) await NextSong(PlayDirection.Forward);
     }
 
     private void OnRepeatModeChanged(ValueChangedEvent<RepeatMode> repeatMode)
