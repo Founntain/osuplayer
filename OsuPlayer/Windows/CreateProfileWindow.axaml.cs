@@ -7,7 +7,6 @@ using Nein.Extensions;
 using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.RequestModels.User;
 using OsuPlayer.Interfaces.Service;
-using OsuPlayer.Network.API.NorthFox;
 using OsuPlayer.Network.Security;
 using OsuPlayer.UI_Extensions;
 using Splat;
@@ -22,8 +21,8 @@ public partial class CreateProfileWindow : ReactiveWindow<CreateProfileWindowVie
 
         var config = new Config();
 
-        TransparencyLevelHint = (WindowTransparencyLevel) config.Container.BackgroundMode;
-        FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
+        TransparencyLevelHint = new[] { WindowTransparencyLevel.Mica, WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None };
+        FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamily;
     }
 
     private void InitializeComponent()

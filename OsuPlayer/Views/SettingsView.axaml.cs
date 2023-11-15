@@ -1,15 +1,11 @@
 ﻿using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
-using Avalonia.VisualTree;
 using Nein.Base;
-using Nein.Controls;
 using Nein.Extensions;
 using OsuPlayer.Interfaces.Service;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.Modules.Audio.Interfaces;
-using OsuPlayer.Network.LastFm;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
 using ReactiveUI;
@@ -19,28 +15,19 @@ namespace OsuPlayer.Views;
 
 public partial class SettingsView : ReactiveControl<SettingsViewModel>
 {
-    private MainWindow? _mainWindow;
+    private FluentAppWindow? _mainWindow;
 
     public SettingsView()
     {
         InitializeComponent();
-    }
 
-    private void InitializeComponent()
-    {
         this.WhenActivated(_ =>
         {
-            if (this.GetVisualRoot() is MainWindow mainWindow)
-            {
-                _mainWindow = mainWindow;
-                ViewModel.MainWindow = mainWindow;
-            }
+            _mainWindow = Locator.Current.GetRequiredService<FluentAppWindow>();
+            ViewModel.MainWindow = _mainWindow;
 
-            ViewModel.SettingsCategories =
-                this.FindControl<CascadingWrapPanel>("SettingsGrid").Children;
+            ViewModel.SettingsCategories = SettingsGrid.Children;
         });
-
-        AvaloniaXamlLoader.Load(this);
     }
 
     private void SettingsView_OnInitialized(object? sender, EventArgs e)
@@ -144,7 +131,7 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
 
     private async void LastFmAuth_OnClick(object? sender, RoutedEventArgs e)
     {
-        var window = Locator.Current.GetService<MainWindow>();
+        var window = Locator.Current.GetService<FluentAppWindow>();
         var lastFmApi = Locator.Current.GetService<ILastFmApiService>();
 
         await using var config = new Config();
@@ -196,7 +183,7 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
 
         _mainWindow.ViewModel.MainView = _mainWindow.ViewModel.PlayHistoryView;
     }
-    
+
     private void ReportBug_OnClick(object? sender, RoutedEventArgs e) => GeneralExtensions.OpenUrl("https://github.com/founntain/osuplayer/issues/new/choose");
 
     private void JoinDiscord_OnClick(object? sender, RoutedEventArgs e) => GeneralExtensions.OpenUrl("https://discord.gg/RJQSc5B");

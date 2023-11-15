@@ -1,0 +1,122 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:windows="clr-namespace:OsuPlayer.Windows"
+        xmlns:ui="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+        xmlns:interfaces="clr-namespace:OsuPlayer.Data.DataModels.Interfaces;assembly=OsuPlayer.Data"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="OsuPlayer.Windows.FluentAppWindow"
+        Title="osu!player"
+        Initialized="Window_OnInitialized">
+
+    <Design.DataContext>
+        <windows:FluentAppWindowViewModel />
+    </Design.DataContext>
+
+    <Grid Name="MainGrid" RowDefinitions="Auto, *, 100">
+        <!-- Fancy Acrylic Background -->
+        <Panel Grid.Row="0" Grid.RowSpan="2">
+            <ExperimentalAcrylicBorder IsHitTestVisible="False" Material="{Binding PanelMaterial}" />
+        </Panel>
+
+        <!-- BackgroundImage of Song -->
+        <ExperimentalAcrylicBorder Grid.Row="0" Grid.RowSpan="3" Material="{Binding PanelMaterial}">
+            <Image Source="{Binding BackgroundImage}" IsVisible="{Binding DisplayBackgroundImage}" Opacity="0.25"
+                   VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Stretch="UniformToFill"/>
+        </ExperimentalAcrylicBorder>
+
+        <!-- TitleBar Host -->
+        <Grid Row="0" Name="TitleBarHost"
+              ColumnDefinitions="Auto,Auto,*,Auto"
+              Background="Transparent">
+            <Image Margin="12 4"
+                   IsHitTestVisible="False"
+                   Source="/Resources/x96.ico"
+                   Width="18" Height="18"
+                   DockPanel.Dock="Left"
+                   Name="WindowIcon"
+                   RenderOptions.BitmapInterpolationMode="HighQuality">
+                <Image.IsVisible>
+                    <OnPlatform Default="False">
+                        <On Options="Windows" Content="True" />
+                    </OnPlatform>
+                </Image.IsVisible>
+            </Image>
+
+            <TextBlock Text="{Binding Title, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                       FontSize="12"
+                       IsHitTestVisible="False"
+                       VerticalAlignment="Center"
+                       Grid.Column="1">
+                <TextBlock.IsVisible>
+                    <OnPlatform Default="False">
+                        <On Options="Windows" Content="True" />
+                    </OnPlatform>
+                </TextBlock.IsVisible>
+            </TextBlock>
+
+            <Border Grid.Column="2" Padding="6">
+                <AutoCompleteBox Name="SearchBox"
+                                 MaxWidth="500"
+                                 MaxDropDownHeight="500"
+                                 Watermark="Search songs (hit enter to play)" ItemsSource="{Binding SongList}"
+                                 FilterMode="ContainsOrdinal"
+                                 KeyUp="SearchBox_OnKeyUp">
+                    <!-- wnd:AppWindow.AllowInteractionInTitleBar="True" -->
+                     <AutoCompleteBox.ItemTemplate>
+                         <DataTemplate x:DataType="interfaces:IMapEntryBase">
+                             <Panel>
+                                 <Grid ColumnDefinitions="*, Auto">
+                                     <StackPanel Grid.Column="0" HorizontalAlignment="Left"
+                                                 VerticalAlignment="Center">
+                                         <TextBlock Text="{Binding TitleString}" />
+                                         <TextBlock Text="{Binding ArtistString}"
+                                                    Theme="{StaticResource CaptionTextBlockStyle}"
+                                                    Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}"/>
+                                     </StackPanel>
+
+                                     <TextBlock Grid.Column="1" Text="{Binding TotalTimeString}" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                                 </Grid>
+
+                             </Panel>
+                         </DataTemplate>
+                     </AutoCompleteBox.ItemTemplate>
+                </AutoCompleteBox>
+            </Border>
+        </Grid>
+
+        <ui:NavigationView Grid.Row="1" Name="AppNavigationView" PaneDisplayMode="LeftCompact" ItemInvoked="AppNavigationView_OnItemInvoked" IsSettingsVisible="False">
+            <ui:NavigationView.MenuItems>
+                <ui:NavigationViewItem Content="Home" Tag="HomeNavigation" IconSource="Home"/>
+                <ui:NavigationViewItem Content="Playlists" Tag="PlaylistNavigation" IconSource="Audio" />
+                <ui:NavigationViewItem Content="Social" Tag="SocialNavigation" IconSource="World" >
+                    <ui:NavigationViewItem.MenuItems>
+                        <ui:NavigationViewItem Content="Users" Tag="UserNavigation" IconSource="People" />
+                        <ui:NavigationViewItem Content="Party" Tag="PartyNavigation" IconSource="Star" />
+
+                        <ui:NavigationViewItem Content="Beatmaps" Tag="BeatmapsNavigation" IconSource="Library" />
+                        <ui:NavigationViewItem Content="Statistics" Tag="StatisticsNavigation" IconSource="Target" />
+                    </ui:NavigationViewItem.MenuItems>
+                </ui:NavigationViewItem>
+            </ui:NavigationView.MenuItems>
+            <ui:NavigationView.FooterMenuItems>
+                <ui:NavigationViewItem Name="LoginNavItem" Content="Log in" Tag="LoginNavigation" IconSource="Permissions" IsVisible="{Binding IsUserNotLoggedIn}" />
+                <ui:NavigationViewItem Name="EditUserNavItem" Content="Edit User" Tag="EditUserNavigation" IconSource="Edit" IsVisible="{Binding IsUserLoggedIn}" />
+                <ui:NavigationViewItem Content="Open Miniplayer" Tag="MiniplayerNavigation" IconSource="FullScreenMinimize" />
+                <ui:NavigationViewItem Name="Settings" Content="Settings" Tag="SettingsNavigation" IconSource="Settings" />
+            </ui:NavigationView.FooterMenuItems>
+            <ui:NavigationView.Content>
+                <TransitioningContentControl Name="MainViewPanel" Content="{Binding MainView}">
+                    <TransitioningContentControl.PageTransition>
+                        <CrossFade Duration="0:00:00.150" />
+                    </TransitioningContentControl.PageTransition>
+                </TransitioningContentControl>
+            </ui:NavigationView.Content>
+        </ui:NavigationView>
+
+        <ContentControl Name="PlayerControlPanel" Grid.Row="2" Content="{Binding PlayerControl}" />
+    </Grid>
+
+
+</Window>

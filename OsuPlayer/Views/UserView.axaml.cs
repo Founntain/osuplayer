@@ -1,6 +1,6 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Nein.Base;
 using Nein.Extensions;
 using OsuPlayer.Api.Data.API.RequestModels.Statistics;
@@ -13,11 +13,6 @@ public partial class UserView : ReactiveControl<UserViewModel>
     public UserView()
     {
         InitializeComponent();
-    }
-
-    private void InitializeComponent()
-    {
-        AvaloniaXamlLoader.Load(this);
     }
 
     private void UserList_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -47,7 +42,7 @@ public partial class UserView : ReactiveControl<UserViewModel>
         // viewer.UpdateChild();
     }
 
-    private async void UserTopSongsList_OnDoubleTapped(object? sender, RoutedEventArgs e)
+    private async void UserTopSongsList_OnDoubleTapped(object? sender, TappedEventArgs e)
     {
         var listBox = (ListBox) sender;
 

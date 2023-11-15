@@ -1,5 +1,4 @@
-﻿using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
+﻿using Avalonia.Input;
 using Nein.Base;
 
 namespace OsuPlayer.Views;
@@ -11,12 +10,7 @@ public partial class PlayHistoryView : ReactiveControl<PlayHistoryViewModel>
         InitializeComponent();
     }
 
-    private void InitializeComponent()
-    {
-        AvaloniaXamlLoader.Load(this);
-    }
-
-    private async void HistoryListBox_OnDoubleTapped(object? sender, RoutedEventArgs e)
+    private async void HistoryListBox_OnDoubleTapped(object? sender, TappedEventArgs e)
     {
         var mapEntryFromHash = ViewModel.SongSourceProvider.GetMapEntryFromHash(ViewModel.SelectedHistoricalMapEntry?.MapEntry.Hash);
 

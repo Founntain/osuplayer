@@ -1,4 +1,5 @@
 using System.Reactive.Disposables;
+using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using Nein.Base;
@@ -41,6 +42,8 @@ public class PlayerControlViewModel : BaseViewModel
             return config.Container.GetNextSmallerFont();
         }
     }
+
+    public ExperimentalAcrylicMaterial? PanelMaterial { get; set; }
 
     public bool IsCurrentSongInPlaylist => CurrentSong.Value != null
                                            && Player.SelectedPlaylist.Value != null
@@ -160,6 +163,14 @@ public class PlayerControlViewModel : BaseViewModel
 
         _displayBackgroundImage = !config.Container.DisplayBackgroundImage;
 
+        // PanelMaterial = new ExperimentalAcrylicMaterial
+        // {
+        //     BackgroundSource = AcrylicBackgroundSource.Digger,
+        //     TintColor = Colors.Black,
+        //     TintOpacity = 0.75,
+        //     MaterialOpacity = 0.25
+        // };
+
         _songTime.BindTo(bassEngine.ChannelPosition);
         _songTime.BindValueChanged(_ => this.RaisePropertyChanged(nameof(SongTime)));
 
@@ -210,6 +221,7 @@ public class PlayerControlViewModel : BaseViewModel
         }, true);
 
         Activator = new ViewModelActivator();
+
         this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
     }
 }

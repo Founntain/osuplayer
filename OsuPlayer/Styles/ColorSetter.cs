@@ -1,5 +1,5 @@
 ﻿using Avalonia;
-using Avalonia.Markup.Xaml.MarkupExtensions;
+using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Media;
 using Nein.Extensions;
 
@@ -9,6 +9,9 @@ public class ColorSetter
 {
     public static void SetColor(Color color)
     {
+        // TODO: Currently disabled
+        return;
+
         var resourceProvider = (ResourceInclude) Application.Current!.Resources.MergedDictionaries.First();
 
         color = Color.FromArgb(255, color.R, color.G, color.B);

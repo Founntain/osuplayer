@@ -1,34 +1,24 @@
 ﻿using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using Avalonia.VisualTree;
+using Nein.Extensions;
 using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
-using ReactiveUI;
+using Splat;
 
 namespace OsuPlayer.Views;
 
 public partial class ExportSongsView : ReactiveUserControl<ExportSongsViewModel>
 {
-    private MainWindow? _mainWindow;
+    private FluentAppWindow? _mainWindow;
 
     public ExportSongsView()
     {
         InitializeComponent();
-    }
 
-    private void InitializeComponent()
-    {
-        this.WhenActivated(_ =>
-        {
-            if (this.GetVisualRoot() is MainWindow mainWindow)
-                _mainWindow = mainWindow;
-        });
-
-        AvaloniaXamlLoader.Load(this);
+        _mainWindow = Locator.Current.GetRequiredService<FluentAppWindow>();
     }
 
     private async void Export_OnClick(object? sender, RoutedEventArgs e)

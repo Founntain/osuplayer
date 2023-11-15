@@ -1,7 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Nein.Base;
 using OsuPlayer.Api.Data.API.EntityModels;
 
@@ -12,11 +11,6 @@ public partial class BeatmapsView : ReactiveControl<BeatmapsViewModel>
     public BeatmapsView()
     {
         InitializeComponent();
-    }
-
-    private void InitializeComponent()
-    {
-        AvaloniaXamlLoader.Load(this);
     }
 
     private async void SearchBeatmaps_OnClick(object? sender, RoutedEventArgs e)
@@ -71,7 +65,7 @@ public partial class BeatmapsView : ReactiveControl<BeatmapsViewModel>
         await ViewModel.SearchBeatmaps(ViewModel.CurrentPage);
     }
 
-    private void SongsList_OnDoubleTapped(object? sender, RoutedEventArgs e)
+    private void SongsList_OnDoubleTapped(object? sender, TappedEventArgs e)
     {
         if (sender is not ListBox listBox) return;
 

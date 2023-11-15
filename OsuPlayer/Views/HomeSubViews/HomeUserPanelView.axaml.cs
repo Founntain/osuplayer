@@ -9,43 +9,25 @@ namespace OsuPlayer.Views.HomeSubViews;
 
 public partial class HomeUserPanelView : ReactiveUserControl<HomeUserPanelViewModel>
 {
-    private MainWindow _mainWindow;
-    
+    private FluentAppWindow _mainWindow;
+
     public HomeUserPanelView()
     {
         InitializeComponent();
-    }
 
-    private void InitializeComponent()
-    {
         this.WhenActivated(_ =>
         {
-            if (this.GetVisualRoot() is MainWindow mainWindow)
+            if (this.GetVisualRoot() is FluentAppWindow mainWindow)
                 _mainWindow = mainWindow;
         });
-        
-        AvaloniaXamlLoader.Load(this);
     }
 
-    private async void LoginBtn_OnClick(object? sender, RoutedEventArgs e)
+    private void GoToSettings_Click(object? sender, RoutedEventArgs e)
     {
-        if (ViewModel == default) return;
+        if (_mainWindow.ViewModel == default) return;
 
-        var loginWindow = new LoginWindow();
-
-        await loginWindow.ShowDialog(_mainWindow);
-
-        ViewModel.RaisePropertyChanged(nameof(ViewModel.CurrentUser));
-        ViewModel.RaisePropertyChanged(nameof(ViewModel.IsUserLoggedIn));
-        ViewModel.RaisePropertyChanged(nameof(ViewModel.IsUserNotLoggedIn));
-
-        await ViewModel.LoadUserProfileAsync();
-    }
-
-    private void EditBtn_OnClick(object? sender, RoutedEventArgs e)
-    {
-        if (_mainWindow?.ViewModel == default) return;
-        
-        _mainWindow.ViewModel.MainView = _mainWindow.ViewModel.EditUserView;
+        _mainWindow.ViewModel.SettingsView.SettingsSearchQ = "Display User Statistics";
+        _mainWindow.ViewModel.MainView = _mainWindow.ViewModel.SettingsView;
+        _mainWindow.ViewModel.RaisePropertyChanged(nameof(_mainWindow.ViewModel.SettingsView.SettingsSearchQ));
     }
 }

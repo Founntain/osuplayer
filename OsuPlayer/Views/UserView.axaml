@@ -9,6 +9,7 @@
              xmlns:avalonia1="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:entityModels="clr-namespace:OsuPlayer.Api.Data.API.EntityModels;assembly=OsuPlayer.Api.Data"
              xmlns:dataModels="clr-namespace:OsuPlayer.Data.DataModels;assembly=OsuPlayer.Data"
+             xmlns:ui="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.UserView"
              FontWeight="{DynamicResource DefaultFontWeight}">
@@ -24,12 +25,11 @@
     <!-- Design Base -->
     <!-- https://7.founntain.dev/i6SnB9Ns.png -->
 
-    <Grid ColumnDefinitions="25*, 75*" Margin="0 1">
-        <Grid Column="0" Margin="0 0 1 0" RowDefinitions="Auto, *" Background="{DynamicResource AcrylicBaseColor}">
-            <AutoCompleteBox Grid.Row="0" Margin="10 5" Items="{Binding Users}" SelectedItem="{Binding SelectedUser}"
-                             Watermark="type to search..." />
+    <Grid ColumnDefinitions="Auto, 1,  *" Margin="0 1">
+        <Grid Column="0" Margin="0 0 1 0" RowDefinitions="Auto, *" MinWidth="300" Background="{DynamicResource BaseBrightDarkTransparentColor}">
+            <ui:FAComboBox Grid.Row="0" Margin="10 5" ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser}" IsEditable="True" HorizontalAlignment="Stretch" PlaceholderText="type to search..." />
 
-            <ListBox Grid.Row="1" Background="Transparent" Items="{Binding Users}"
+            <ListBox Grid.Row="1" Background="Transparent" ItemsSource="{Binding Users}"
                      SelectedItem="{Binding SelectedUser}" SelectionChanged="UserList_OnSelectionChanged">
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="dataModels:User">
@@ -40,7 +40,9 @@
             </ListBox>
         </Grid>
 
-        <ScrollViewer Grid.Column="1">
+        <GridSplitter Grid.Column="1" Background="Transparent" ResizeDirection="Columns"/>
+
+        <ScrollViewer Grid.Column="2">
 
             <Grid Column="1" RowDefinitions="Auto, *, Auto">
                 <!-- Profile Picture  -->
@@ -59,16 +61,13 @@
 
                     <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                         <StackPanel.Background>
-                            <ImageBrush Source="{Binding CurrentProfileBanner}"
-                                        RenderOptions.BitmapInterpolationMode="HighQuality" Opacity="0.5"
-                                        Stretch="UniformToFill" />
+                            <ImageBrush Source="{Binding CurrentProfileBanner}" Opacity="0.5" Stretch="UniformToFill" />
                         </StackPanel.Background>
 
                         <Border Margin="10" CornerRadius="1000" Height="150" Width="150" MaxHeight="150" MaxWidth="150"
                                 BorderBrush="White" BorderThickness="3" HorizontalAlignment="Center">
                             <Border.Background>
-                                <ImageBrush Source="{Binding CurrentProfilePicture}"
-                                            RenderOptions.BitmapInterpolationMode="HighQuality" Stretch="UniformToFill" />
+                                <ImageBrush Source="{Binding CurrentProfilePicture}" Stretch="UniformToFill" />
                             </Border.Background>
                         </Border>
 
@@ -85,9 +84,9 @@
 
                 <!-- UserData -->
                 <Grid Row="1" ColumnDefinitions="25*, 50*, 25*">
-                    <Grid Column="0" Background="{DynamicResource AcrylicBaseColor}">
+                    <Grid Column="0" Background="{DynamicResource BaseBrighterDarkTransparentColor}">
                         <Grid RowDefinitions="50, Auto, *">
-                            <Border Grid.Row="0" Background="#7F000000" HorizontalAlignment="Stretch"
+                            <Border Grid.Row="0" Background="{DynamicResource BaseBrightDarkTransparentColor}" HorizontalAlignment="Stretch"
                                     VerticalAlignment="Stretch">
                                 <TextBlock Text="{Binding SelectedUser.TotalXpString}" FontSize="24"
                                            HorizontalAlignment="Center" VerticalAlignment="Center" />
@@ -101,7 +100,7 @@
                             </StackPanel>
 
                             <ScrollViewer Name="BadgeViewer" Grid.Row="2" Margin="10 0">
-                                <ItemsRepeater Name="BadgeItems" Items="{Binding SelectedUser.Badges}"
+                                <ItemsRepeater Name="BadgeItems" ItemsSource="{Binding SelectedUser.Badges}"
                                                VerticalAlignment="Top" HorizontalAlignment="Left">
                                     <ItemsRepeater.Layout>
                                         <StackLayout Orientation="Horizontal" Spacing="0" />
@@ -118,9 +117,9 @@
 
                     </Grid>
 
-                    <Grid Column="1" Margin="1 0" Background="{DynamicResource AcrylicBaseColor}">
+                    <Grid Column="1" Margin="1 0" Background="{DynamicResource BaseBrighterDarkTransparentColor}">
                         <Grid RowDefinitions="50, *">
-                            <Border Grid.Row="0" Background="#7F000000" HorizontalAlignment="Stretch"
+                            <Border Grid.Row="0" Background="{DynamicResource BaseBrightDarkTransparentColor}" HorizontalAlignment="Stretch"
                                     VerticalAlignment="Stretch">
                                 <TextBlock Text="{Binding SelectedUser.RoleString}"
                                            Foreground="{Binding SelectedUser.RoleColor}" FontSize="28"
@@ -140,15 +139,15 @@
                         </Grid>
                     </Grid>
 
-                    <Grid Column="2" Background="{DynamicResource AcrylicBaseColor}">
+                    <Grid Column="2" Background="{DynamicResource BaseBrighterDarkTransparentColor}">
                         <Grid RowDefinitions="50, *">
-                            <Border Grid.Row="0" Background="#7F000000" HorizontalAlignment="Stretch"
+                            <Border Grid.Row="0" Background="{DynamicResource BaseBrightDarkTransparentColor}" HorizontalAlignment="Stretch"
                                     VerticalAlignment="Stretch">
                                 <TextBlock Text="{Binding SelectedUser.LevelString}" FontSize="24"
                                            HorizontalAlignment="Center" VerticalAlignment="Center" />
                             </Border>
                             <ListBox Grid.Row="1" Background="Transparent"
-                                     Items="{Binding TopSongsOfCurrentUser.Items}"
+                                     ItemsSource="{Binding TopSongsOfCurrentUser.Items}"
                                      DoubleTapped="UserTopSongsList_OnDoubleTapped">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate DataType="statistics:BeatmapTimesPlayedModel">
@@ -164,23 +163,23 @@
                     </Grid>
                 </Grid>
 
-                <Grid Row="2" RowDefinitions="50, 300" Margin="0 1 0 0" Background="{DynamicResource AcrylicBaseColor}">
-                    <Border Grid.Row="0" Background="#7F000000" HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch">
-                        <TextBlock Text="Lifetime statistics" FontSize="24"
-                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    </Border>
-
-                    <avalonia:CartesianChart Grid.Row="1"
-                                             VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
-                                             YAxes="{Binding YAxes}"
-                                             XAxes="{Binding XAxes}"
-                                             Series="{Binding Series}"
-                                             TooltipBackground="#7F000000"
-                                             TooltipTextBrush="White"
-                                             TooltipFontFamily="{DynamicResource Montserrat}"
-                                             TooltipFontWeight="Bold" />
-                </Grid>
+                <!-- <Grid Row="2" RowDefinitions="50, 300" Margin="0 1 0 0" Background="{DynamicResource BaseBrighterDarkTransparentColor}"> -->
+                <!--     <Border Grid.Row="0" Background="{DynamicResource BaseBrightDarkTransparentColor}" HorizontalAlignment="Stretch" -->
+                <!--             VerticalAlignment="Stretch"> -->
+                <!--         <TextBlock Text="Lifetime statistics" FontSize="24" -->
+                <!--                    HorizontalAlignment="Center" VerticalAlignment="Center" /> -->
+                <!--     </Border> -->
+                <!-- -->
+                <!--     ~1~ <avalonia:CartesianChart Grid.Row="1" @1@ -->
+                <!--     ~1~                          VerticalAlignment="Stretch" HorizontalAlignment="Stretch" @1@ -->
+                <!--     ~1~                          YAxes="{Binding YAxes}" @1@ -->
+                <!--     ~1~                          XAxes="{Binding XAxes}" @1@ -->
+                <!--     ~1~                          Series="{Binding Series}" @1@ -->
+                <!--     ~1~                          TooltipBackground="#7F000000" @1@ -->
+                <!--     ~1~                          TooltipTextBrush="White" @1@ -->
+                <!--     ~1~                          TooltipFontFamily="{DynamicResource Montserrat}" @1@ -->
+                <!--     ~1~                          TooltipFontWeight="Bold" /> @1@ -->
+                <!-- </Grid> -->
             </Grid>
 
         </ScrollViewer>

@@ -1,8 +1,8 @@
-using Avalonia.Media;
+﻿using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using Nein.Base;
-using OsuPlayer.Extensions.EnumExtensions;
+using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.Interfaces.Service;
 using OsuPlayer.Modules;
 using OsuPlayer.Modules.Audio.Interfaces;
@@ -11,25 +11,17 @@ using ReactiveUI;
 
 namespace OsuPlayer.Windows;
 
-public class MainWindowViewModel2 : BaseWindowViewModel
+public class FluentAppWindowViewModel : BaseWindowViewModel
 {
     public readonly IPlayer Player;
     public readonly IProfileManagerService ProfileManager;
 
+    private BaseViewModel? _mainView;
+    private bool _displayBackgroundImage;
+    private Bitmap? _backgroundImage;
     private float _backgroundBlurRadius;
 
-    private Bitmap? _backgroundImage;
-
-    private bool _displayBackgroundImage;
-
-    private bool _isPaneOpen;
-    private BaseViewModel? _mainView;
-
-    public bool IsPaneOpen
-    {
-        get => _isPaneOpen;
-        set => this.RaiseAndSetIfChanged(ref _isPaneOpen, value);
-    }
+    public PlayerControlViewModel PlayerControl { get; }
 
     public EditUserViewModel EditUserView { get; }
     public HomeViewModel HomeView { get; }
@@ -40,25 +32,30 @@ public class MainWindowViewModel2 : BaseWindowViewModel
     public SearchViewModel SearchView { get; }
     public SettingsViewModel SettingsView { get; }
     public UserViewModel UserView { get; }
-    public TopBarViewModel TopBar { get; }
     public UpdateViewModel UpdateView { get; }
-    public PlayerControlViewModel PlayerControl { get; }
     public EqualizerViewModel EqualizerView { get; }
     public StatisticsViewModel StatisticsView { get; }
     public BeatmapsViewModel BeatmapView { get; }
     public ExportSongsViewModel ExportSongsView { get; }
-    public PlayHistoryViewModel PlayHistoryView { get; set; }
+    public PlayHistoryViewModel PlayHistoryView { get; }
 
-    public Bitmap? BackgroundImage
+    public ExperimentalAcrylicMaterial? PanelMaterial { get; set; }
+
+    public bool IsUserLoggedIn => ProfileManager.User != default && ProfileManager.User?.UniqueId != Guid.Empty;
+    public bool IsUserNotLoggedIn => ProfileManager.User == default || ProfileManager.User?.UniqueId == Guid.Empty;
+
+    private ReadOnlyObservableCollection<IMapEntryBase>? _songList;
+
+    public ReadOnlyObservableCollection<IMapEntryBase>? SongList
     {
-        get => _backgroundImage;
-        set => this.RaiseAndSetIfChanged(ref _backgroundImage, value);
+        get => _songList;
+        set => this.RaiseAndSetIfChanged(ref _songList, value);
     }
 
-    public BaseViewModel? MainView
+    public bool DisplayBackgroundImage
     {
-        get => _mainView;
-        set => this.RaiseAndSetIfChanged(ref _mainView, value);
+        get => _displayBackgroundImage;
+        set => this.RaiseAndSetIfChanged(ref _displayBackgroundImage, value);
     }
 
     public float BackgroundBlurRadius
@@ -67,22 +64,24 @@ public class MainWindowViewModel2 : BaseWindowViewModel
         set => this.RaiseAndSetIfChanged(ref _backgroundBlurRadius, value);
     }
 
-    public ExperimentalAcrylicMaterial? PanelMaterial { get; set; }
-
-    public bool DisplayBackgroundImage
+    public BaseViewModel? MainView
     {
-        get => _displayBackgroundImage;
-        set => this.RaiseAndSetIfChanged(ref _displayBackgroundImage, value);
+        get => _mainView;
+        set => this.RaiseAndSetIfChanged(ref _mainView, value);
     }
 
-    public MainWindowViewModel2(IAudioEngine engine, IPlayer player, IProfileManagerService profileManager, IShuffleServiceProvider? shuffleServiceProvider = null,
+    public Bitmap? BackgroundImage
+    {
+        get => _backgroundImage;
+        set => this.RaiseAndSetIfChanged(ref _backgroundImage, value);
+    }
+
+    public FluentAppWindowViewModel(IAudioEngine engine, IPlayer player, IProfileManagerService profileManager, IShuffleServiceProvider? shuffleServiceProvider = null,
         IStatisticsProvider? statisticsProvider = null, ISortProvider? sortProvider = null, IHistoryProvider? historyProvider = null)
     {
         Player = player;
         ProfileManager = profileManager;
 
-        //Generate new ViewModels here
-        TopBar = new TopBarViewModel();
         PlayerControl = new PlayerControlViewModel(Player, engine);
 
         SearchView = new SearchViewModel(Player);
@@ -101,20 +100,15 @@ public class MainWindowViewModel2 : BaseWindowViewModel
         ExportSongsView = new ExportSongsViewModel(Player.SongSourceProvider);
         PlayHistoryView = new PlayHistoryViewModel(Player, historyProvider, Player.SongSourceProvider);
 
-        using var config = new Config();
-
-        var backgroundColor = config.Container.BackgroundColor.ToColor();
-
         PanelMaterial = new ExperimentalAcrylicMaterial
         {
             BackgroundSource = AcrylicBackgroundSource.Digger,
-            TintColor = backgroundColor,
-            TintOpacity = 1,
+            TintColor = Colors.Black,
+            TintOpacity = 0.75,
             MaterialOpacity = 0.25
         };
 
-        DisplayBackgroundImage = config.Container.DisplayBackgroundImage;
-        BackgroundBlurRadius = config.Container.BackgroundBlurRadius;
+        SongList = Player.SongSourceProvider.SongSourceList;
 
         Player.CurrentSongImage.BindValueChanged(d =>
         {

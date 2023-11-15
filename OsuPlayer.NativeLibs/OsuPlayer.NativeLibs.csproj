@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup Label="Project">
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <OutputType>Library</OutputType>
         <AssemblyTitle>osu!player Libraries</AssemblyTitle>
         <AssemblyName>OsuPlayer.NativeLibs</AssemblyName>

@@ -1,34 +1,23 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
-using Avalonia.VisualTree;
 using Nein.Base;
+using Nein.Extensions;
 using OsuPlayer.Windows;
-using ReactiveUI;
+using Splat;
 
 namespace OsuPlayer.Views;
 
 internal partial class TopBarView : ReactiveControl<TopBarViewModel>
 {
-    private MainWindow? _mainWindow;
+    private FluentAppWindow? _mainWindow;
 
     public TopBarView()
     {
         InitializeComponent();
-    }
 
-    private void InitializeComponent()
-    {
-        this.WhenActivated(_ =>
-        {
-            if (this.GetVisualRoot() is MainWindow mainWindow)
-                _mainWindow = mainWindow;
-        });
-        
-        AvaloniaXamlLoader.Load(this);
+        _mainWindow = Locator.Current.GetRequiredService<FluentAppWindow>();
     }
-
     private void Navigation_Clicked(object? sender, RoutedEventArgs e)
     {
         if (_mainWindow?.ViewModel == default) return;

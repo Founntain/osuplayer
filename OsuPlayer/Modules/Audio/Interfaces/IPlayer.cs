@@ -24,12 +24,12 @@ public interface IPlayer : ICommonFeatures, IPlayModes, IHasPlaylists, IHasBlack
     /// Plays the next song in the list.
     /// </summary>
     /// <param name="playDirection">The <see cref="PlayDirection" /> for the next song</param>
-    public void NextSong(PlayDirection playDirection);
+    public Task<bool> NextSong(PlayDirection playDirection);
 
     /// <summary>
     /// Enqueues a specific song to play
     /// </summary>
     /// <param name="song">The song to enqueue</param>
     /// <param name="playDirection">The direction we went in the playlist. Mostly used by the Next and Prev method</param>
-    public Task TryPlaySongAsync(IMapEntryBase? song, PlayDirection playDirection = PlayDirection.Normal);
+    public Task<bool> TryPlaySongAsync(IMapEntryBase? song, PlayDirection playDirection = PlayDirection.Normal);
 }

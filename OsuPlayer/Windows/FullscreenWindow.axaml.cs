@@ -1,5 +1,4 @@
-﻿using Avalonia;
-using Avalonia.Markup.Xaml;
+﻿using Avalonia.Markup.Xaml;
 using Nein.Base;
 using Nein.Extensions;
 using OsuPlayer.Modules.Audio.Interfaces;
@@ -14,10 +13,6 @@ public partial class FullscreenWindow : ReactiveWindow<FullscreenWindowViewModel
         InitializeComponent();
 
         DataContext = new FullscreenWindowViewModel(Locator.Current.GetRequiredService<IPlayer>());
-        
-#if DEBUG
-        this.AttachDevTools();
-#endif
     }
 
     private void InitializeComponent()

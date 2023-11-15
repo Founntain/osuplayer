@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
@@ -36,14 +35,14 @@ public partial class ExportSongsProcessWindow : ReactiveWindow<ExportSongsProces
 
         ViewModel = new ExportSongsProcessWindowViewModel(songs);
 
-        Locator.Current.GetService<MainWindow>();
+        Locator.Current.GetService<FluentAppWindow>();
         _path = path;
         _embedBackground = embedBackground;
 
         var config = new Config();
 
-        TransparencyLevelHint = (WindowTransparencyLevel) config.Container.BackgroundMode;
-        FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
+        TransparencyLevelHint = new[] { WindowTransparencyLevel.Mica, WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None };
+        FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamily;
     }
 
     private void InitializeComponent()
@@ -224,7 +223,7 @@ public partial class ExportSongsProcessWindow : ReactiveWindow<ExportSongsProces
         await ExportSongs(_cancellationTokenSource.Token);
     }
 
-    private void Window_OnClosing(object? sender, CancelEventArgs e)
+    private void Window_OnClosing(object? sender, WindowClosingEventArgs e)
     {
         _cancellationTokenSource.Cancel();
     }

@@ -2,16 +2,16 @@
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
+using Avalonia.Platform.Storage;
 using Avalonia.ReactiveUI;
-using Avalonia.VisualTree;
 using Nein.Extensions;
+using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.RequestModels.User;
 using OsuPlayer.Data.DataModels;
+using OsuPlayer.Extensions;
 using OsuPlayer.Interfaces.Service;
 using OsuPlayer.Network.API.NorthFox;
-using OsuPlayer.Services;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
 using ReactiveUI;
@@ -21,7 +21,7 @@ namespace OsuPlayer.Views;
 
 public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 {
-    private MainWindow? _mainWindow;
+    private FluentAppWindow _mainWindow;
     private readonly IProfileManagerService _profileManager;
 
     public EditUserView() : this(Locator.Current.GetService<IProfileManagerService>())
@@ -31,49 +31,29 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
     public EditUserView(IProfileManagerService profileManager)
     {
         _profileManager = profileManager;
+        _mainWindow = Locator.Current.GetRequiredService<FluentAppWindow>();
 
         InitializeComponent();
     }
 
-    private void InitializeComponent()
-    {
-        this.WhenActivated(_ =>
-        {
-            if (this.GetVisualRoot() is MainWindow mainWindow)
-                _mainWindow = mainWindow;
-        });
-
-        AvaloniaXamlLoader.Load(this);
-    }
-
     private async void EditProfilePicture_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (_mainWindow == default || ViewModel?.CurrentUser == default) return;
+        if (ViewModel?.CurrentUser == default) return;
 
-        var dialog = new OpenFileDialog
+        var result = await _mainWindow.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
             AllowMultiple = false,
-            Filters = new List<FileDialogFilter>
+            FileTypeFilter = new[]
             {
-                new()
-                {
-                    Extensions = new List<string>
-                    {
-                        "png",
-                        "jpg",
-                        "jpeg"
-                    }
-                }
+                new FilePickerFileType("png"), new FilePickerFileType("jpg"), new FilePickerFileType("jpeg")
             }
-        };
-
-        var result = await dialog.ShowAsync(_mainWindow);
+        });
 
         var file = result?.FirstOrDefault();
 
         if (file == default) return;
 
-        var fileInfo = new FileInfo(file);
+        var fileInfo = new FileInfo(file.Path.ToString());
 
         switch (ViewModel.CurrentUser.IsDonator)
         {
@@ -87,7 +67,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
                 return;
         }
 
-        var picture = await File.ReadAllBytesAsync(file);
+        var picture = await File.ReadAllBytesAsync(file.Path.ToString());
 
         await using (var stream = new MemoryStream(picture))
         {
@@ -99,7 +79,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
     private async void EditBannerPicture_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (_mainWindow == default || ViewModel == default) return;
+        if (ViewModel == default) return;
 
         var dialog = new OpenFileDialog
         {
@@ -143,55 +123,28 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
     private async void SaveChanges_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (_mainWindow == default || ViewModel?.CurrentUser == default || string.IsNullOrWhiteSpace(ViewModel?.CurrentUser.Name)) return;
+        if (ViewModel?.CurrentUser == default || string.IsNullOrWhiteSpace(ViewModel?.CurrentUser.Name)) return;
 
         if (Locator.Current.GetService<IOsuPlayerApiService>() is not NorthFox api) return;
 
-        var tempUser = await api.User.GetUserFromLoginToken();
+        var serverUser = await api.User.GetUserFromLoginToken();
+
+        if (serverUser == default)
+        {
+            await MessageBox.ShowDialogAsync(_mainWindow, "Couldn't fetch profile from server! Please try again later");
+
+            return;
+        }
 
         var changedProfilePicture = ViewModel.IsNewProfilePictureSelected;
 
-        if (tempUser == default)
-        {
-            await MessageBox.ShowDialogAsync(_mainWindow,
-                "Couldn't fetch profile from server! Please try again later");
-
-            return;
-        }
-
-        if (string.IsNullOrWhiteSpace(ViewModel.Password))
-        {
-            await MessageBox.ShowDialogAsync(_mainWindow,
-                "Please enter your current password to save your changes!");
-
-            return;
-        }
-
-        if (ViewModel.CurrentUser.OsuProfile?.Length > 0 && !ViewModel.CurrentUser.OsuProfile.IsDigitsOnly())
-        {
-            await MessageBox.ShowDialogAsync(_mainWindow,
-                "Your osu!profile ID should only contain numbers");
-
-            return;
-        }
-
-        if (!string.IsNullOrWhiteSpace(ViewModel.NewUsername) && !Regex.IsMatch(ViewModel.NewUsername, "^[a-zA-Z0-9]*$"))
-        {
-            await MessageBox.ShowDialogAsync(_mainWindow,
-                "Your newly entered username can only contain Letters and Numbers!");
-
-            return;
-        }
+        if (!await SaveUserInputValidation(serverUser)) return;
 
         var editUserModel = new EditUserModel
         {
             User = ViewModel.CurrentUser,
-            NewUsername = string.IsNullOrWhiteSpace(ViewModel.NewUsername)
-                ? null
-                : ViewModel.NewUsername,
-            NewPassword = string.IsNullOrWhiteSpace(ViewModel.NewPassword)
-                ? null
-                : ViewModel.NewPassword
+            NewUsername = ViewModel.NewUsername.IsNullOrWhiteSpaceWithFallback(null),
+            NewPassword = ViewModel.NewPassword.IsNullOrWhiteSpaceWithFallback(null)
         };
 
         var response = await api.User.EditUser(editUserModel);
@@ -199,6 +152,11 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
         if (response == default)
             return;
 
+        await ChangeProfilePicture(editUserModel, api, changedProfilePicture, response, serverUser);
+    }
+
+    private async Task ChangeProfilePicture(EditUserModel editUserModel, IOsuPlayerApiService api, bool changedProfilePicture, UserModel response, UserModel serverUser)
+    {
         if (ViewModel == null)
         {
             if (!string.IsNullOrWhiteSpace(editUserModel.User.Name))
@@ -213,11 +171,11 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
             ViewModel.NewPassword = string.Empty;
             ViewModel.Password = string.Empty;
 
-            _profileManager.User = ViewModel.CurrentUser.ConvertObjectToJson<User>();
+            _profileManager.User = ViewModel.CurrentUser?.ConvertObjectToJson<User>();
 
             var successMessage = "Profile updated successfully!";
 
-            if (response.Name == ViewModel.NewUsername && tempUser.Name != response.Name)
+            if (response.Name == ViewModel.NewUsername && serverUser.Name != response.Name)
                 successMessage = "Profile and username updated successfully. Restart your client to see you new username!";
 
             ViewModel.NewUsername = string.Empty;
@@ -229,9 +187,37 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
         }
     }
 
+    private async Task<bool> SaveUserInputValidation(UserModel serverUser)
+    {
+        if (ViewModel == default) return false;
+
+        if (string.IsNullOrWhiteSpace(ViewModel.Password))
+        {
+            await MessageBox.ShowDialogAsync(_mainWindow, "Please enter your current password to save your changes!");
+
+            return false;
+        }
+
+        if (ViewModel.CurrentUser?.OsuProfile?.Length > 0 && !ViewModel.CurrentUser.OsuProfile.IsDigitsOnly())
+        {
+            await MessageBox.ShowDialogAsync(_mainWindow, "Your osu!profile ID should only contain numbers");
+
+            return false;
+        }
+
+        if (!string.IsNullOrWhiteSpace(ViewModel.NewUsername) && !Regex.IsMatch(ViewModel.NewUsername, "^[a-zA-Z0-9]*$"))
+        {
+            await MessageBox.ShowDialogAsync(_mainWindow, "Your newly entered username can only contain Letters and Numbers!");
+
+            return false;
+        }
+
+        return true;
+    }
+
     private async Task UpdateProfilePicture()
     {
-        if (_mainWindow == default || ViewModel?.CurrentUser == default || ViewModel?.CurrentProfilePicture == default) return;
+        if (ViewModel?.CurrentUser == default || ViewModel?.CurrentProfilePicture == default) return;
 
         if (Locator.Current.GetService<IOsuPlayerApiService>() is not NorthFox api) return;
 

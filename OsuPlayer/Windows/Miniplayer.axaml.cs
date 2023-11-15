@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -20,30 +19,22 @@ namespace OsuPlayer.Windows;
 
 public partial class Miniplayer : ReactiveWindow<MiniplayerViewModel>
 {
-    private readonly MainWindow? _mainWindow;
+    private readonly FluentAppWindow? _mainWindow;
 
     public Miniplayer()
     {
         InitializeComponent();
 
         LoadSettings();
-
-#if DEBUG
-        this.AttachDevTools();
-#endif
     }
 
     public Miniplayer(IPlayer player, IAudioEngine engine)
     {
         InitializeComponent();
 
-        _mainWindow = Locator.GetLocator().GetRequiredService<MainWindow>();
+        _mainWindow = Locator.GetLocator().GetRequiredService<FluentAppWindow>();
 
         DataContext = new MiniplayerViewModel(player, engine);
-
-#if DEBUG
-        this.AttachDevTools();
-#endif
     }
 
     private void LoadSettings()

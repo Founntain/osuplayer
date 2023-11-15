@@ -9,8 +9,6 @@ using Nein.Base;
 using Nein.Extensions;
 using OsuPlayer.Data.DataModels;
 using OsuPlayer.Interfaces.Service;
-using OsuPlayer.Network.API.NorthFox;
-using OsuPlayer.Services;
 using OsuPlayer.UI_Extensions;
 using ReactiveUI;
 using Splat;
@@ -44,23 +42,15 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
 
         var config = new Config();
 
-        FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
-        TransparencyLevelHint = (WindowTransparencyLevel) config.Container.BackgroundMode;
-#if DEBUG
-        this.AttachDevTools();
-#endif
-    }
+        TransparencyLevelHint = new[] { WindowTransparencyLevel.Mica, WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None };
+        FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamily;
 
-    private void InitializeComponent()
-    {
         this.WhenActivated(_ =>
         {
             if (string.IsNullOrWhiteSpace(ViewModel?.Username)) return;
 
-            this.FindControl<TextBox>("PasswordBox").Focus();
+            PasswordBox.Focus();
         });
-
-        AvaloniaXamlLoader.Load(this);
     }
 
     private async Task Login()
@@ -88,6 +78,11 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
         }
 
         _profileManager.User = user.ConvertObjectToJson<User>();
+
+        var mainWindow = Locator.Current.GetRequiredService<FluentAppWindow>();
+
+        mainWindow.LoginNavItem.IsVisible = mainWindow.ViewModel!.HomeView.IsUserNotLoggedIn;
+        mainWindow.EditUserNavItem.IsVisible = mainWindow.ViewModel!.HomeView.IsUserLoggedIn;
 
         Close();
     }

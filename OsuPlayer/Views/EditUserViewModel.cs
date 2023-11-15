@@ -9,7 +9,6 @@ using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.RequestModels.Statistics;
 using OsuPlayer.Interfaces.Service;
 using OsuPlayer.Network.API.NorthFox;
-using OsuPlayer.Services;
 using ReactiveUI;
 using Splat;
 

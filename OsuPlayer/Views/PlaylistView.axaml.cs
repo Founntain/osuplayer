@@ -2,37 +2,29 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
-using Avalonia.VisualTree;
 using Material.Icons.Avalonia;
 using Nein.Base;
+using Nein.Extensions;
 using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
-using ReactiveUI;
+using Splat;
+using TappedEventArgs = Avalonia.Input.TappedEventArgs;
 
 namespace OsuPlayer.Views;
 
 public partial class PlaylistView : ReactiveControl<PlaylistViewModel>
 {
-    private MainWindow _mainWindow;
+    private FluentAppWindow _mainWindow;
 
     public PlaylistView()
     {
-        this.WhenActivated(_ =>
-        {
-            if (this.GetVisualRoot() is MainWindow mainWindow)
-                _mainWindow = mainWindow;
-        });
-        InitializeComponent();
-    }
+        _mainWindow = Locator.Current.GetRequiredService<FluentAppWindow>();
 
-    private void InitializeComponent()
-    {
-        AvaloniaXamlLoader.Load(this);
+        InitializeComponent();
     }
 
     private void OpenPlaylistEditor_OnClick(object? sender, RoutedEventArgs e)
@@ -47,7 +39,7 @@ public partial class PlaylistView : ReactiveControl<PlaylistViewModel>
         _mainWindow.ViewModel.MainView = _mainWindow.ViewModel.BlacklistEditorView;
     }
 
-    private async void PlaySong(object? sender, RoutedEventArgs e)
+    private async void PlaySong(object? sender, TappedEventArgs e)
     {
         if (sender is not Control {DataContext: IMapEntryBase song}) return;
 
@@ -72,6 +64,7 @@ public partial class PlaylistView : ReactiveControl<PlaylistViewModel>
         }
 
         ViewModel.Player.RepeatMode.Value = RepeatMode.Playlist;
+        ViewModel.Player.SelectedPlaylist.Value = null;
         ViewModel.Player.SelectedPlaylist.Value = playlist;
     }
 

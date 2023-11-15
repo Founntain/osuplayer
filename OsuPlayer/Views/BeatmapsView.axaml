@@ -19,7 +19,7 @@
     </Design.DataContext>
 
     <Grid Margin="0 0 0 1">
-        <SplitView IsPaneOpen="{Binding IsFilterMenuOpen}" PaneBackground="{DynamicResource AcrylicBaseColor}"
+        <SplitView IsPaneOpen="{Binding IsFilterMenuOpen}"
                    OpenPaneLength="400" DisplayMode="CompactInline" CompactPaneLength="45">
             <SplitView.Pane>
                 <Grid RowDefinitions="*, 50" ColumnDefinitions="45, *" Background="{DynamicResource AcrylicBaseColor}">
@@ -54,7 +54,7 @@
                                 <TextBlock Text="Search Artist" />
                                 <TextBox Text="{Binding SearchArtist}" />
                                 <TextBlock Text="Artist filter condition" />
-                                <ComboBox Items="{Binding StringFilterConditions}"
+                                <ComboBox ItemsSource="{Binding StringFilterConditions}"
                                           SelectedItem="{Binding SearchArtistFilterCondition}"
                                           HorizontalAlignment="Stretch" />
                             </StackPanel>
@@ -62,7 +62,7 @@
                                 <TextBlock Text="Search Title" />
                                 <TextBox Text="{Binding SearchTitle}" />
                                 <TextBlock Text="Title filter condition" />
-                                <ComboBox Items="{Binding StringFilterConditions}"
+                                <ComboBox ItemsSource="{Binding StringFilterConditions}"
                                           SelectedItem="{Binding SearchTitleFilterCondition}"
                                           HorizontalAlignment="Stretch" />
                             </StackPanel>
@@ -70,7 +70,7 @@
                                 <TextBlock Text="Search BeatmapSetID" />
                                 <TextBox Text="{Binding SearchBeatmapSetId}" />
                                 <TextBlock Text="BeatmapSetID filter condition" />
-                                <ComboBox Items="{Binding IntFilterConditions}"
+                                <ComboBox ItemsSource="{Binding IntFilterConditions}"
                                           SelectedItem="{Binding SearchBeatmapSetIdFilterCondition}"
                                           HorizontalAlignment="Stretch" />
                             </StackPanel>
@@ -78,7 +78,7 @@
                                 <TextBlock Text="Search BeatmapID" />
                                 <TextBox Text="{Binding SearchBeatmapId}" />
                                 <TextBlock Text="BeatmapID filter condition" />
-                                <ComboBox Items="{Binding IntFilterConditions}"
+                                <ComboBox ItemsSource="{Binding IntFilterConditions}"
                                           SelectedItem="{Binding SearchBeatmapIdFilterCondition}"
                                           HorizontalAlignment="Stretch" />
                             </StackPanel>
@@ -92,15 +92,15 @@
             </SplitView.Pane>
             <Grid RowDefinitions="Auto, *">
                 <Grid Grid.Row="0" Grid.Column="0"
-                      Background="{DynamicResource AcrylicSecondaryColor}"
+                      Background="{DynamicResource BaseBrightDarkTransparentColor}"
                       VerticalAlignment="Center">
                     <TextBlock Text="Beatmaps played by users" Margin="10 5" FontSize="26"
                                VerticalAlignment="Center"
                                HorizontalAlignment="Left" />
                 </Grid>
 
-                <ListBox Name="SongsList" Grid.Row="1" Items="{Binding Beatmaps}"
-                         DoubleTapped="SongsList_OnDoubleTapped" Background="{DynamicResource AcrylicBaseColor}"
+                <ListBox Name="SongsList" Grid.Row="1" ItemsSource="{Binding Beatmaps}"
+                         DoubleTapped="SongsList_OnDoubleTapped" Background="{DynamicResource BaseBrighterDarkTransparentColor}"
                          Margin="0 1 0 0">
                     <ListBox.Styles>
                         <Style Selector="ListBoxItem">

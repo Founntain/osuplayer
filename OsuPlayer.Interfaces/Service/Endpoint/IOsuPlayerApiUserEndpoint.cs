@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using Avalonia.Media.Imaging;
+﻿using Avalonia.Media.Imaging;
 using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.RequestModels.User;
 

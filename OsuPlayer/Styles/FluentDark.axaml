@@ -3,6 +3,6 @@
     <!-- <StyleInclude Source="avares://OsuPlayer/Styles/Accents/AccentColors.axaml" /> -->
     <!-- <StyleInclude Source="avares://OsuPlayer/Styles/Accents/BaseDark.axaml" /> -->
     <!-- <StyleInclude Source="avares://OsuPlayer/Styles/Accents/Base.axaml" /> -->
-    <StyleInclude Source="avares://OsuPlayer/Styles/Accents/FluentControlResourcesDark.axaml" />
-    <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/FluentControls.xaml" />
+    <!-- <StyleInclude Source="avares://OsuPlayer/Styles/Accents/FluentControlResourcesDark.axaml" /> -->
+    <!-- <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/FluentControls.xaml" /> -->
 </Styles>

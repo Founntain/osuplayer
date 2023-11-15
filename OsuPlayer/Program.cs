@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using Avalonia;
-using Avalonia.Platform;
 using Avalonia.ReactiveUI;
 using Nein.Extensions;
 using OsuPlayer.Data.DataModels;
@@ -29,7 +28,7 @@ internal static class Program
         {
             var builder = BuildAvaloniaApp();
 
-            Register(Locator.CurrentMutable, Locator.Current, builder.RuntimePlatform);
+            Register(Locator.CurrentMutable, Locator.Current);
 
             builder.StartWithClassicDesktopLifetime(args);
         }
@@ -64,14 +63,10 @@ internal static class Program
             .LogToTrace()
             .UseSkia()
             .UseReactiveUI()
-            .With(new Win32PlatformOptions
-            {
-                AllowEglInitialization = true,
-                UseWindowsUIComposition = true
-            });
+            .With(new Win32PlatformOptions());
     }
 
-    private static void Register(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver, IRuntimePlatform platform)
+    private static void Register(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver)
     {
         services.RegisterLazySingleton<IAudioEngine>(() => new BassEngine());
 
@@ -90,7 +85,7 @@ internal static class Program
             lastFmApi: resolver.GetService<ILastFmApiService>()
         ));
 
-        services.Register(() => new MainWindowViewModel(
+        services.Register(() => new FluentAppWindowViewModel(
             resolver.GetRequiredService<IAudioEngine>(),
             resolver.GetRequiredService<IPlayer>(),
             resolver.GetRequiredService<IProfileManagerService>(),
@@ -99,8 +94,8 @@ internal static class Program
             resolver.GetService<ISortProvider>(),
             resolver.GetService<IHistoryProvider>()));
 
-        services.RegisterLazySingleton(() => new MainWindow(
-            resolver.GetRequiredService<MainWindowViewModel>(),
+        services.RegisterLazySingleton(() => new FluentAppWindow(
+            resolver.GetRequiredService<FluentAppWindowViewModel>(),
             resolver.GetRequiredService<ILoggingService>()));
     }
 

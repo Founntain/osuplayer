@@ -11,26 +11,24 @@
         <views:ExportSongsViewModel />
     </Design.DataContext>
 
-    <Grid RowDefinitions="Auto, *" ColumnDefinitions="25*, 75*">
-        <Grid Grid.Row="0" Grid.Column="0" ColumnSpan="2" Margin="0"
-              Background="{DynamicResource AcrylicSecondaryColor}"
-              VerticalAlignment="Center">
-            <TextBlock Text="Export songs" Margin="10 5" FontSize="26"
+    <Grid RowDefinitions="50, *" ColumnDefinitions="15*, 1, 85*">
+        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{DynamicResource BaseBrightDarkTransparentColor}">
+            <TextBlock Text="Export songs" Margin="10 0" FontSize="26"
                        VerticalAlignment="Center"
-                       HorizontalAlignment="Left" />
-        </Grid>
+                       HorizontalAlignment="Left"
+                       FontWeight="{DynamicResource BiggerFontWeight}" />
+        </Border>
 
-        <DockPanel Grid.Row="1" Grid.Column="0" Background="{DynamicResource AcrylicSecondaryColor}" Margin="0 1 0 1"
+        <DockPanel Grid.Row="1" Grid.Column="0" Background="{DynamicResource BaseBrighterDarkTransparentColor}" Margin="0 1 0 1"
                    LastChildFill="False">
             <StackPanel DockPanel.Dock="Top" Spacing="5" Margin="5">
                 <TextBlock Text="Playlist to export" />
-                <ComboBox Items="{Binding Playlists}" SelectedItem="{Binding SelectedPlaylist}"
+                <ComboBox ItemsSource="{Binding Playlists}" SelectedItem="{Binding SelectedPlaylist}"
                           VerticalAlignment="Center" HorizontalAlignment="Stretch" />
             </StackPanel>
             <StackPanel DockPanel.Dock="Top" Spacing="5" Margin="5">
                 <TextBlock Text="Embed song backgrounds?" />
-                <TextBlock Text="(Higher RAM usage)" FontSize="12" FontWeight="{DynamicResource SmallerFontWeight}" />
-                <ToggleSwitch IsChecked="{Binding EmbedBackground}" />
+                <ToggleSwitch IsChecked="{Binding EmbedBackground}" OnContent="Yes (higher RAM usage)" OffContent="No" />
             </StackPanel>
 
             <StackPanel DockPanel.Dock="Bottom" Margin="0 0 0 5" HorizontalAlignment="Stretch"
@@ -42,8 +40,10 @@
             </StackPanel>
         </DockPanel>
 
-        <ListBox Grid.Row="1" Grid.Column="1" Items="{Binding SelectedPlaylistSongs}"
-                 Background="{DynamicResource AcrylicBaseColor}" Margin="1 1 0 1">
+        <GridSplitter Grid.Row="1" Grid.Column="1" Background="Transparent" ResizeDirection="Columns"/>
+
+        <ListBox Grid.Row="1" Grid.Column="2" ItemsSource="{Binding SelectedPlaylistSongs}"
+                 Background="Transparent" Margin="1 1 0 1">
             <ListBox.DataTemplates>
                 <DataTemplate DataType="interfaces:IMapEntryBase">
                     <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto">
@@ -53,7 +53,7 @@
                                    FontSize="20" VerticalAlignment="Center" Margin="0 0 15 0"
                                    FontWeight="{DynamicResource SmallerFontWeight}" />
                         <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding ArtistString}"
-                                   FontSize="14" Foreground="#FFCCCCCC"
+                                   FontSize="14" Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}"
                                    FontWeight="{DynamicResource SmallerFontWeight}" />
                     </Grid>
                 </DataTemplate>

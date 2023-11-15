@@ -1,4 +1,5 @@
-﻿using OsuPlayer.Data.DataModels;
+﻿using Avalonia.Threading;
+using OsuPlayer.Data.DataModels;
 using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.Data.Enums;
 using OsuPlayer.Data.OsuPlayer.Enums;
@@ -29,20 +30,35 @@ public static class SongImporter
 
         await using (var config = new Config())
         {
-            var songEntries = (await DoImportAsync((await config.ReadAsync()).OsuPath!))?.ToList();
+            var osuPath = (await config.ReadAsync()).OsuPath;
 
-            if (songEntries == null || !songEntries.Any()) return;
-
-            songSourceProvider.SongSource.Edit(list =>
+            if (string.IsNullOrWhiteSpace(osuPath))
             {
-                list.Clear();
-                list.AddRange(songEntries.OrderBy(x => x.Title));
+                importNotificationsDestination?.OnImportFinished(false);
+                return;
+            }
+
+            var songEntries = (await DoImportAsync(osuPath))?.ToList();
+
+            if (songEntries == null || !songEntries.Any())
+            {
+                importNotificationsDestination?.OnImportFinished(false);
+                return;
+            }
+
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                songSourceProvider.SongSource.Edit(list =>
+                {
+                    list.Clear();
+                    list.AddRange(songEntries.OrderBy(x => x.Title));
+                });
             });
 
             if (songSourceProvider.SongSourceList == null || !songSourceProvider.SongSourceList.Any()) return;
         }
 
-        importNotificationsDestination?.OnImportFinished();
+        importNotificationsDestination?.OnImportFinished(true);
     }
 
     /// <summary>

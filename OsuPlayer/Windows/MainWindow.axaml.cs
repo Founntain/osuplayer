@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Avalonia;
@@ -8,9 +7,7 @@ using Avalonia.Media;
 using Nein.Base;
 using OsuPlayer.Extensions.EnumExtensions;
 using OsuPlayer.Interfaces.Service;
-using OsuPlayer.IO.Importer;
 using OsuPlayer.Network;
-using OsuPlayer.Network.LastFm;
 using OsuPlayer.Services;
 using OsuPlayer.Styles;
 using OsuPlayer.UI_Extensions;
@@ -19,7 +16,7 @@ using Splat;
 
 namespace OsuPlayer.Windows;
 
-public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
+public partial class MainWindow2 : ReactiveWindow<MainWindowViewModel2>
 {
     private readonly ILoggingService _loggingService;
     private readonly IProfileManagerService _profileManager;
@@ -28,21 +25,21 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
     public FullscreenWindow? FullscreenWindow;
 
-    public MainWindow()
+    public MainWindow2()
     {
         InitializeComponent();
     }
 
-    public MainWindow(MainWindowViewModel viewModel, ILoggingService loggingService)
+    public MainWindow2(MainWindowViewModel2 viewModel, ILoggingService loggingService)
     {
         ViewModel = viewModel;
 
         _profileManager = ViewModel.ProfileManager;
         _loggingService = loggingService;
 
-        var player = ViewModel.Player;
-
-        Task.Run(() => SongImporter.ImportSongsAsync(player.SongSourceProvider, player as IImportNotifications));
+        // var player = ViewModel.Player;
+        //
+        // Task.Run(() => SongImporter.ImportSongsAsync(player.SongSourceProvider, player as IImportNotifications));
 
         InitializeComponent();
 
@@ -50,7 +47,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
         _loggingService.Log("Loaded config successfully", LogType.Success, config.Container);
 
-        TransparencyLevelHint = (WindowTransparencyLevel) config.Container.BackgroundMode;
+        TransparencyLevelHint = new[] { WindowTransparencyLevel.Mica, WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None };
         FontWeight = (FontWeight) config.Container.DefaultFontWeight;
 
         var backgroundColor = config.Container.BackgroundColor;
@@ -65,14 +62,14 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         Application.Current!.Resources["DefaultFontWeight"] = config.Container.DefaultFontWeight.ToFontWeight();
         Application.Current!.Resources["BiggerFontWeight"] = config.Container.GetNextBiggerFont().ToFontWeight();
 
-        FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamilyName;
+        FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamily;
         config.Container.Font ??= FontFamily.Name;
 
         Task.Run(async () =>
         {
             try
             {
-                var window = Locator.Current.GetService<MainWindow>();
+                var window = Locator.Current.GetService<FluentAppWindow>();
                 var lastFmApi = Locator.Current.GetService<ILastFmApiService>();
                 var loggingService = Locator.Current.GetService<ILoggingService>();
 
@@ -111,10 +108,6 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
                 Console.WriteLine($"Something wrong happened when connecting to last.fm API {ex}");
             }
         });
-
-#if DEBUG
-        this.AttachDevTools();
-#endif
     }
 
     private void InitializeComponent()
@@ -128,7 +121,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         AvaloniaXamlLoader.Load(this);
     }
 
-    protected override void OnClosing(CancelEventArgs e)
+    protected override void OnClosing(WindowClosingEventArgs e)
     {
         base.OnClosing(e);
 
@@ -159,12 +152,5 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
         ViewModel.UpdateView.Update = result;
         ViewModel.MainView = ViewModel.UpdateView;
-    }
-
-    private void MainSplitView_OnPaneClosed(object? sender, EventArgs e)
-    {
-        if (ViewModel == default) return;
-
-        ViewModel.IsPaneOpen = false;
     }
 }

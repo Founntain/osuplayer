@@ -15,15 +15,15 @@
         <Grid Row="0" Background="{DynamicResource AcrylicSecondaryColor}" Margin="0">
             <TextBox Margin="5" Text="{Binding FilterText}" Watermark="type to search..." />
         </Grid>
-        <!-- <AutoCompleteBox Margin="0 2" Grid.Row="0" Text="{Binding FilterText}" Items="{Binding $parent[Window].DataContext.FilteredSongEntries}"/> -->
+        <!-- <AutoCompleteBox Margin="0 2" Grid.Row="0" Text="{Binding FilterText}" ItemsSource="{Binding $parent[Window].DataContext.FilteredSongEntries}"/> -->
 
-        <ListBox Margin="0 1" Grid.Row="1" Items="{Binding FilteredSongEntries}"
+        <ListBox Margin="0 1" Grid.Row="1" ItemsSource="{Binding FilteredSongEntries}"
                  Background="{DynamicResource AcrylicBaseColor}"
                  DoubleTapped="InputElement_OnDoubleTapped" SelectedItem="{Binding SelectedSong}">
             <ListBox.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Add to playlist"
-                              Items="{Binding PlaylistContextMenuEntries}"
+                              ItemsSource="{Binding PlaylistContextMenuEntries}"
                               Classes="SubItems">
                         <MenuItem.Styles>
                             <Style Selector="MenuItem.SubItems MenuItem">

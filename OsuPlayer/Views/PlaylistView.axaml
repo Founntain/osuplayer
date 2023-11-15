@@ -16,14 +16,13 @@
 
     <UserControl.Resources>
     </UserControl.Resources>
-    <Grid ColumnDefinitions="25*, 75*">
-        <Grid Column="0" Margin="0 1" RowDefinitions="50, *, 40, 40" Background="{DynamicResource AcrylicBaseColor}">
-            <Border Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#7F000000">
-                <TextBlock Text="your playlists" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Center" />
+    <Grid ColumnDefinitions="15*, 1, 85*">
+        <Grid Column="0" Margin="0 1" RowDefinitions="50, *, 40, 40" Background="{DynamicResource BaseBrighterDarkTransparentColor}">
+            <Border Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{DynamicResource BaseBrightDarkTransparentColor}">
+                <TextBlock Text="Your Playlists" FontSize="24" Margin="10 0 0 0" VerticalAlignment="Center" HorizontalAlignment="Left" />
             </Border>
 
-            <ListBox Grid.Row="1" SelectedItem="{Binding SelectedPlaylist}" Items="{Binding Playlists}"
-                     Background="Transparent">
+            <ListBox Grid.Row="1" SelectedItem="{Binding SelectedPlaylist}" ItemsSource="{Binding Playlists}">
                 <ListBox.Styles>
                     <Style Selector="ListBoxItem">
                         <Setter Property="Margin" Value="0" />
@@ -56,9 +55,11 @@
                     HorizontalAlignment="Stretch" Click="OpenBlacklistEditor_OnClick" FontWeight="SemiBold" />
         </Grid>
 
-        <Grid Column="1" Margin="1 1 0 1" RowDefinitions="Auto, *" Background="{DynamicResource AcrylicBaseColor}">
+        <GridSplitter Grid.Column="1" Background="Transparent" ResizeDirection="Columns"/>
+
+        <Grid Column="2" Margin="1 1 0 1" RowDefinitions="Auto, *">
             <TextBox Grid.Row="0" Margin="10" Text="{Binding FilterText}" Watermark="type to search..." />
-            <ListBox Grid.Row="1" Background="Transparent" Items="{Binding FilteredSongEntries}"
+            <ListBox Grid.Row="1" Background="Transparent" ItemsSource="{Binding FilteredSongEntries}"
                      SelectedItem="{Binding SelectedSong}">
                 <ListBox.ContextMenu>
                     <ContextMenu>
@@ -72,10 +73,10 @@
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding TitleString}" FontSize="20"
                                        FontWeight="SemiBold" />
                             <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding ArtistString}"
-                                       FontSize="14" Foreground="#FFCCCCCC" FontWeight="Medium" />
+                                       FontSize="14" Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" FontWeight="Medium" />
 
                             <TextBlock Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Text="{Binding TotalTimeString}"
-                                       FontSize="20" FontWeight="Light"
+                                       FontSize="20" FontWeight="{DynamicResource BiggerFontWeight}"
                                        VerticalAlignment="Center" HorizontalAlignment="Center" />
                         </Grid>
                     </DataTemplate>

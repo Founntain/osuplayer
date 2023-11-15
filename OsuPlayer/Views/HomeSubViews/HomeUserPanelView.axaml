@@ -6,6 +6,7 @@
              xmlns:valueConverters="clr-namespace:OsuPlayer.Extensions.ValueConverters;assembly=OsuPlayer.Extensions"
              xmlns:homeSubViews="clr-namespace:OsuPlayer.Views.HomeSubViews"
              xmlns:avalonia1="clr-namespace:LiveChartsCore.SkiaSharpView.Avalonia;assembly=LiveChartsCore.SkiaSharpView.Avalonia"
+             xmlns:ui="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.HomeSubViews.HomeUserPanelView">
 
@@ -17,23 +18,19 @@
         <valueConverters:UsernameConverter x:Key="UsernameConverter" />
     </UserControl.Resources>
 
-    <Grid ColumnDefinitions="50*, 50*" IsVisible="{Binding IsUserNotLoggedIn}">
+    <Grid ColumnDefinitions="50*, 50*">
         <!-- Not Login Grid -->
-        <Grid Grid.Column="0" Grid.ColumnSpan="2"
-              Background="{DynamicResource AcrylicBaseColor}"
-              RowDefinitions="Auto, Auto, Auto"
-              Margin="0 1 1 0">
-            <TextBlock Grid.Row="0" Margin="10 5" VerticalAlignment="Center" HorizontalAlignment="Left" Text="Not logged in" FontSize="30" FontWeight="{DynamicResource BiggerFontWeight}"/>
-            <TextBlock Grid.Row="1" Margin="10 5" VerticalAlignment="Center" HorizontalAlignment="Left" Text="Log in to your osu!player profile to gain XP and track your songs. You can also hide this in the settings under Visual Settings > Display User Statistics on Home View."
-                       FontSize="16"
-                       TextWrapping="Wrap"/>
-
-            <Button Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center"
-                    Width="42" Height="42" CornerRadius="50" Background="Transparent"
-                    Click="LoginBtn_OnClick">
-                <avalonia:MaterialIcon Kind="Login" Height="28" Width="28" />
-            </Button>
-        </Grid>
+        <ui:InfoBar Grid.Column="0" Grid.ColumnSpan="2" Severity="Warning" Title="Not logged in"
+                    IsOpen="{Binding IsUserNotLoggedIn}"
+                    Message="Log into your osu!player profile to gain XP and track your songs. Head to the settings to log in (or at the bottom of the navigation). You can also hide this in ">
+            <ui:InfoBar.ActionButton>
+                <Grid>
+                    <ui:HyperlinkButton Margin="-20 0 0 0" HorizontalAlignment="Left"
+                                        Content="Visual Settings > Display User Statistics on Home View."
+                                        Click="GoToSettings_Click" />
+                </Grid>
+            </ui:InfoBar.ActionButton>
+        </ui:InfoBar>
 
         <!-- User Grid -->
         <Grid Row="0" Column="0" ColumnDefinitions="Auto, *, Auto" Margin="0 1 1 0"
@@ -43,7 +40,7 @@
                     CornerRadius="50" Width="100" Height="100" BorderThickness="2" BorderBrush="White"
                     HorizontalAlignment="Left" VerticalAlignment="Center">
                 <Border.Background>
-                    <ImageBrush Source="{Binding ProfilePicture}" RenderOptions.BitmapInterpolationMode="HighQuality" />
+                    <ImageBrush Source="{Binding ProfilePicture}" />
                 </Border.Background>
             </Border>
 
@@ -59,13 +56,6 @@
                 <TextBlock Text="{Binding CurrentUser.LevelProgressString}" FontStyle="Italic"
                            TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding CurrentUser.LevelProgressString}" />
             </StackPanel>
-
-            <StackPanel Grid.Column="2" VerticalAlignment="Bottom" HorizontalAlignment="Right" Orientation="Horizontal"
-                        IsVisible="{Binding IsUserLoggedIn}">
-                <Button Width="42" Height="42" CornerRadius="50" Background="Transparent" Click="EditBtn_OnClick">
-                    <avalonia:MaterialIcon Kind="Edit" Height="28" Width="28" />
-                </Button>
-            </StackPanel>
         </Grid>
 
         <!--Stats Grid-->
@@ -74,14 +64,14 @@
               IsVisible="{Binding IsUserLoggedIn}">
             <TextBlock Grid.Row="0" Margin="10" Text="your session" Grid.Column="0" Grid.ColumnSpan="2" />
 
-            <avalonia1:CartesianChart Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
-                                      VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
-                                      YAxes="{Binding Axes}"
-                                      Series="{Binding Series}"
-                                      TooltipBackground="#7F000000"
-                                      TooltipTextBrush="White"
-                                      TooltipFontFamily="{DynamicResource Montserrat}"
-                                      TooltipFontWeight="Bold" />
+            <!-- <avalonia1:CartesianChart Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" -->
+            <!--                           VerticalAlignment="Stretch" HorizontalAlignment="Stretch" -->
+            <!--                           YAxes="{Binding Axes}" -->
+            <!--                           Series="{Binding Series}" -->
+            <!--                           TooltipBackground="#7F000000" -->
+            <!--                           TooltipTextBrush="White" -->
+            <!--                           TooltipFontFamily="{DynamicResource Montserrat}" -->
+            <!--                           TooltipFontWeight="Bold" /> -->
         </Grid>
     </Grid>
 

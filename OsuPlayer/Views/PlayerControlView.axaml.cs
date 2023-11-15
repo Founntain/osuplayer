@@ -2,7 +2,6 @@ using System.ComponentModel;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
 using Nein.Base;
 using Nein.Extensions;
@@ -10,46 +9,36 @@ using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.IO.Storage.Playlists;
-using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Windows;
 using ReactiveUI;
-using Splat;
 
 namespace OsuPlayer.Views;
 
 public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
 {
-    public MainWindow? _mainWindow;
-
-    private Slider ProgressSlider => this.FindControl<Slider>("SongProgressSlider");
-    private Button RepeatButton => this.FindControl<Button>("Repeat");
+    private FluentAppWindow? _mainWindow;
 
     public PlayerControlView()
     {
         InitializeComponent();
-    }
 
-    private void InitializeComponent()
-    {
         this.WhenActivated(_ =>
         {
-            if (this.GetVisualRoot() is MainWindow mainWindow)
+            if (this.GetVisualRoot() is FluentAppWindow mainWindow)
                 _mainWindow = mainWindow;
 
-            ProgressSlider.AddHandler(PointerPressedEvent, SongProgressSlider_OnPointerPressed,
+            SongProgressSlider.AddHandler(PointerPressedEvent, SongProgressSlider_OnPointerPressed,
                 RoutingStrategies.Tunnel);
 
-            ProgressSlider.AddHandler(PointerReleasedEvent, SongProgressSlider_OnPointerReleased,
+            SongProgressSlider.AddHandler(PointerReleasedEvent, SongProgressSlider_OnPointerReleased,
                 RoutingStrategies.Tunnel);
 
-            RepeatButton.AddHandler(PointerReleasedEvent, Repeat_OnPointerReleased, RoutingStrategies.Tunnel);
+            Repeat.AddHandler(PointerReleasedEvent, Repeat_OnPointerReleased, RoutingStrategies.Tunnel);
 
             ViewModel.RaisePropertyChanged(nameof(ViewModel.IsAPlaylistSelected));
             ViewModel.RaisePropertyChanged(nameof(ViewModel.IsCurrentSongInPlaylist));
             ViewModel.RaisePropertyChanged(nameof(ViewModel.IsCurrentSongOnBlacklist));
         });
-
-        AvaloniaXamlLoader.Load(this);
     }
 
     private void Repeat_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
@@ -66,14 +55,6 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
     private void SongProgressSlider_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         ViewModel.Player.Pause();
-    }
-
-    private void Settings_OnClick(object? sender, RoutedEventArgs e)
-    {
-        if (_mainWindow == default) return;
-
-        _mainWindow.ViewModel!.MainView = _mainWindow.ViewModel.SettingsView;
-        _mainWindow.ViewModel!.IsPaneOpen = true;
     }
 
     internal async void Blacklist_OnClick(object? sender, RoutedEventArgs e)
@@ -147,27 +128,6 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
     private void RepeatContextMenu_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
         ViewModel.Player.SelectedPlaylist.Value = (Playlist) (sender as ContextMenu)?.SelectedItem;
-    }
-
-    private void OpenMiniPlayer_OnClick(object? sender, RoutedEventArgs e)
-    {
-        if (_mainWindow == default) return;
-
-        if (_mainWindow.Miniplayer != null)
-            return;
-
-        // Here for debuggin and testing purpose until fully implemented
-        // _mainWindow.FullscreenWindow = new FullscreenWindow();
-        //
-        // _mainWindow.FullscreenWindow.Show();
-        //
-        // return;
-
-        _mainWindow.Miniplayer = new Miniplayer(ViewModel.Player, Locator.Current.GetRequiredService<IAudioEngine>());
-
-        _mainWindow.Miniplayer.Show();
-
-        _mainWindow.WindowState = WindowState.Minimized;
     }
 
     private void CurrentSongLabel_OnClick(object? sender, RoutedEventArgs e)
