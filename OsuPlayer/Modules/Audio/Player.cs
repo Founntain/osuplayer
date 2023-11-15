@@ -70,20 +70,17 @@ public class Player : IPlayer, IImportNotifications
         IDiscordService? discordService = null,
         ILastFmApiService? lastFmApi = null)
     {
-        // TODO: Implement this
-        // var runtimePlatform = AvaloniaLocator.Current.GetRequiredService<IRuntimePlatform>();
-        //
-        // if (runtimePlatform.GetRuntimeInfo().OperatingSystem == OperatingSystemType.WinNT)
-        // {
-        //     try
-        //     {
-        //         _winMediaControls = new WindowsMediaTransportControls(this);
-        //     }
-        //     catch
-        //     {
-        //         _winMediaControls = null;
-        //     }
-        // }
+        if (OperatingSystem.IsWindows())
+        {
+            try
+            {
+                _winMediaControls = new WindowsMediaTransportControls(this);
+            }
+            catch
+            {
+                _winMediaControls = null;
+            }
+        }
 
         SongSourceProvider = songSourceProvider;
 
