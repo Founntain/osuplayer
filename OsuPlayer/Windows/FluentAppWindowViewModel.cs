@@ -2,12 +2,14 @@
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using Nein.Base;
+using Nein.Extensions;
 using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.Interfaces.Service;
 using OsuPlayer.Modules;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Views;
 using ReactiveUI;
+using Splat;
 
 namespace OsuPlayer.Windows;
 
@@ -15,6 +17,8 @@ public class FluentAppWindowViewModel : BaseWindowViewModel
 {
     public readonly IPlayer Player;
     public readonly IProfileManagerService ProfileManager;
+
+    private readonly FluentAppWindow _mainWindow;
 
     private BaseViewModel? _mainView;
     private bool _displayBackgroundImage;

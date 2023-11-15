@@ -1,9 +1,10 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using FluentAvalonia.UI.Controls;
 using FluentAvalonia.UI.Windowing;
 using Nein.Extensions;
@@ -57,6 +58,8 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
         using var config = new Config();
 
         _loggingService.Log("Loaded config successfully", LogType.Success, config.Container);
+
+        SetRenderMode(config.Container.RenderingMode);
 
         AppNavigationView.PaneDisplayMode = config.Container.UseLeftNavigationPosition ? NavigationViewPaneDisplayMode.Left : NavigationViewPaneDisplayMode.Top;
 
@@ -288,5 +291,10 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
         if (ViewModel == default) return;
 
         ViewModel.MainView = ViewModel.EditUserView;
+    }
+
+    public void SetRenderMode(BitmapInterpolationMode renderMode)
+    {
+        RenderOptions.SetBitmapInterpolationMode(this, renderMode);
     }
 }

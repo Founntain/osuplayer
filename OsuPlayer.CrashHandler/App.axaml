@@ -1,7 +1,5 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="OsuPlayer.CrashHandler.App">
-    <Application.Styles>
-        <FluentTheme Mode="Dark" />
-    </Application.Styles>
+             x:Class="OsuPlayer.CrashHandler.App"
+             RequestedThemeVariant="Dark">
 </Application>

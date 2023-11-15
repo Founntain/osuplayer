@@ -49,20 +49,6 @@
             </StackPanel>
 
             <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Margin="10" Orientation="Horizontal">
-                <!-- <StackPanel> -->
-                <!--     <Button Name="EditBannerPicture" Width="38" Height="38" CornerRadius="50" -->
-                <!--             IsVisible="{Binding CurrentUser.IsDonator}" -->
-                <!--             Background="Transparent" Click="EditBannerPicture_OnClick"> -->
-                <!--         <avalonia:MaterialIcon Kind="Panorama" Height="28" Width="28" /> -->
-                <!--     </Button> -->
-                <!-- -->
-                <!--     <Button Name="ResetBannerPicture" Width="38" Height="38" CornerRadius="50" -->
-                <!--             IsVisible="{Binding IsNewBannerSelected}" -->
-                <!--             Background="Transparent" Click="ResetBannerPicture_OnClick"> -->
-                <!--         <avalonia:MaterialIcon Kind="Refresh" Height="28" Width="28" /> -->
-                <!--     </Button> -->
-                <!-- </StackPanel> -->
-
                 <StackPanel>
                     <Button Name="EditProfilePicture" Width="38" Height="38" CornerRadius="50"
                             Background="Transparent" Click="EditProfilePicture_OnClick">

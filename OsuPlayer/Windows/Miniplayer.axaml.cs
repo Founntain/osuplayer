@@ -124,7 +124,7 @@ public partial class Miniplayer : ReactiveWindow<MiniplayerViewModel>
                 blacklist.Container.Songs.Add(currentHash);
 
                 if (ViewModel.Player.BlacklistSkip.Value)
-                    ViewModel.Player.NextSong(PlayDirection.Forward);
+                    await ViewModel.Player.NextSong(PlayDirection.Forward);
             }
         }
 

@@ -75,7 +75,7 @@ public class MainWindowViewModel2 : BaseWindowViewModel
         set => this.RaiseAndSetIfChanged(ref _displayBackgroundImage, value);
     }
 
-    public MainWindowViewModel2(IAudioEngine engine, IPlayer player, IProfileManagerService profileManager, IShuffleServiceProvider? shuffleServiceProvider = null,
+    public MainWindowViewModel2(FluentAppWindow mainWindow, IAudioEngine engine, IPlayer player, IProfileManagerService profileManager, IShuffleServiceProvider? shuffleServiceProvider = null,
         IStatisticsProvider? statisticsProvider = null, ISortProvider? sortProvider = null, IHistoryProvider? historyProvider = null)
     {
         Player = player;
@@ -93,7 +93,7 @@ public class MainWindowViewModel2 : BaseWindowViewModel
         UserView = new UserViewModel(Player, profileManager);
         EditUserView = new EditUserViewModel(profileManager);
         PartyView = new PartyViewModel();
-        SettingsView = new SettingsViewModel(Player, sortProvider, shuffleServiceProvider, profileManager);
+//        SettingsView = new SettingsViewModel(Player, sortProvider, shuffleServiceProvider, profileManager);
         EqualizerView = new EqualizerViewModel(Player);
         UpdateView = new UpdateViewModel();
         StatisticsView = new StatisticsViewModel();
