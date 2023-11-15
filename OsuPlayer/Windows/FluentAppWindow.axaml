@@ -86,7 +86,7 @@
             </Border>
         </Grid>
 
-        <ui:NavigationView Grid.Row="1" Name="AppNavigationView" PaneDisplayMode="LeftCompact" ItemInvoked="AppNavigationView_OnItemInvoked">
+        <ui:NavigationView Grid.Row="1" Name="AppNavigationView" PaneDisplayMode="LeftCompact" ItemInvoked="AppNavigationView_OnItemInvoked" IsSettingsVisible="False">
             <ui:NavigationView.MenuItems>
                 <ui:NavigationViewItem Content="Home" Tag="HomeNavigation" IconSource="Home"/>
                 <ui:NavigationViewItem Content="Playlists" Tag="PlaylistNavigation" IconSource="Audio" />
@@ -104,6 +104,7 @@
                 <ui:NavigationViewItem Name="LoginNavItem" Content="Log in" Tag="LoginNavigation" IconSource="Permissions" IsVisible="{Binding IsUserNotLoggedIn}" />
                 <ui:NavigationViewItem Name="EditUserNavItem" Content="Edit User" Tag="EditUserNavigation" IconSource="Edit" IsVisible="{Binding IsUserLoggedIn}" />
                 <ui:NavigationViewItem Content="Open Miniplayer" Tag="MiniplayerNavigation" IconSource="FullScreenMinimize" />
+                <ui:NavigationViewItem Name="Settings" Content="Settings" Tag="SettingsNavigation" IconSource="Settings" />
             </ui:NavigationView.FooterMenuItems>
             <ui:NavigationView.Content>
                 <TransitioningContentControl Name="MainViewPanel" Content="{Binding MainView}">

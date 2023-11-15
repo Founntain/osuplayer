@@ -186,6 +186,9 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
             case "EditUserNavigation":
                 OpenEditUserView();
                 break;
+            case "SettingsNavigation":
+                ViewModel!.MainView = ViewModel.SettingsView;
+                break;
             case "SocialNavigation":
                 break;
             default:
