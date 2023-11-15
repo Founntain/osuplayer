@@ -179,9 +179,12 @@ public class Player : IPlayer, IImportNotifications
         SongsLoading.Value = true;
     }
 
-    public async void OnImportFinished()
+    public async void OnImportFinished(bool success)
     {
         SongsLoading.Value = false;
+
+        if (!success)
+            return;
 
         var config = new Config();
         var playlists = new PlaylistStorage();
@@ -314,8 +317,10 @@ public class Player : IPlayer, IImportNotifications
 
         return RepeatMode.Value switch
         {
-            Data.OsuPlayer.Enums.RepeatMode.NoRepeat => await TryPlaySongAsync(GetNextSongToPlay(SongSourceProvider.SongSourceList, CurrentIndex, playDirection), playDirection),
-            Data.OsuPlayer.Enums.RepeatMode.Playlist => await TryPlaySongAsync(GetNextSongToPlay(ActivePlaylistSongs, CurrentIndex, playDirection), playDirection),
+            Data.OsuPlayer.Enums.RepeatMode.NoRepeat => await TryPlaySongAsync(
+                GetNextSongToPlay(SongSourceProvider.SongSourceList, CurrentIndex, playDirection), playDirection),
+            Data.OsuPlayer.Enums.RepeatMode.Playlist => await TryPlaySongAsync(GetNextSongToPlay(ActivePlaylistSongs, CurrentIndex, playDirection),
+                playDirection),
             Data.OsuPlayer.Enums.RepeatMode.SingleSong => await TryStartSongAsync(CurrentSong.Value!),
             _ => throw new ArgumentOutOfRangeException()
         };
@@ -498,9 +503,9 @@ public class Player : IPlayer, IImportNotifications
             if (!config.Container.EnableScrobbling)
                 return;
 
-            if(CurrentSong.Value == null
+            if (CurrentSong.Value == null
                 || (string.IsNullOrWhiteSpace(CurrentSong.Value.GetTitle())
-                        || string.IsNullOrWhiteSpace(CurrentSong.Value.GetArtist())))
+                    || string.IsNullOrWhiteSpace(CurrentSong.Value.GetArtist())))
                 return;
 
             await _lastFmApi?.Scrobble(CurrentSong.Value.Title, CurrentSong.Value.Artist)!;

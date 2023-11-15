@@ -17,5 +17,6 @@ public interface IImportNotifications
     /// <summary>
     /// Is called when importing songs finished
     /// </summary>
-    public void OnImportFinished();
+    /// <param name="success">Indicates whether the import was successful or not</param>
+    public void OnImportFinished(bool success);
 }

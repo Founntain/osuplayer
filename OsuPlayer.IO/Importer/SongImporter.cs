@@ -30,9 +30,21 @@ public static class SongImporter
 
         await using (var config = new Config())
         {
-            var songEntries = (await DoImportAsync((await config.ReadAsync()).OsuPath!))?.ToList();
+            var osuPath = (await config.ReadAsync()).OsuPath;
 
-            if (songEntries == null || !songEntries.Any()) return;
+            if (string.IsNullOrWhiteSpace(osuPath))
+            {
+                importNotificationsDestination?.OnImportFinished(false);
+                return;
+            }
+
+            var songEntries = (await DoImportAsync(osuPath))?.ToList();
+
+            if (songEntries == null || !songEntries.Any())
+            {
+                importNotificationsDestination?.OnImportFinished(false);
+                return;
+            }
 
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
@@ -46,7 +58,7 @@ public static class SongImporter
             if (songSourceProvider.SongSourceList == null || !songSourceProvider.SongSourceList.Any()) return;
         }
 
-        importNotificationsDestination?.OnImportFinished();
+        importNotificationsDestination?.OnImportFinished(true);
     }
 
     /// <summary>

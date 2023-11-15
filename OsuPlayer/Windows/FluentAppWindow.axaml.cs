@@ -47,9 +47,13 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
         TitleBar.ExtendsContentIntoTitleBar = true;
         TitleBar.TitleBarHitTestType = TitleBarHitTestType.Complex;
 
-        TransparencyLevelHint = new [] { WindowTransparencyLevel.Mica, WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None };
+        TransparencyLevelHint = new[]
+        {
+            WindowTransparencyLevel.Mica, WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None
+        };
 
         // Loading config stuff
+
         using var config = new Config();
 
         _loggingService.Log("Loaded config successfully", LogType.Success, config.Container);
@@ -59,7 +63,7 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
         var backgroundColor = config.Container.BackgroundColor;
         ViewModel.DisplayBackgroundImage = config.Container.DisplayBackgroundImage;
         ViewModel.BackgroundBlurRadius = config.Container.BackgroundBlurRadius;
-        
+
         Background = new SolidColorBrush(backgroundColor.ToColor());
 
         var accentColor = config.Container.AccentColor;
