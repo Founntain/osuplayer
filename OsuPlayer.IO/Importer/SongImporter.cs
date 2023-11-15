@@ -1,4 +1,5 @@
-﻿using OsuPlayer.Data.DataModels;
+﻿using Avalonia.Threading;
+using OsuPlayer.Data.DataModels;
 using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.Data.Enums;
 using OsuPlayer.Data.OsuPlayer.Enums;
@@ -33,10 +34,13 @@ public static class SongImporter
 
             if (songEntries == null || !songEntries.Any()) return;
 
-            songSourceProvider.SongSource.Edit(list =>
+            await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                list.Clear();
-                list.AddRange(songEntries.OrderBy(x => x.Title));
+                songSourceProvider.SongSource.Edit(list =>
+                {
+                    list.Clear();
+                    list.AddRange(songEntries.OrderBy(x => x.Title));
+                });
             });
 
             if (songSourceProvider.SongSourceList == null || !songSourceProvider.SongSourceList.Any()) return;
