@@ -20,6 +20,9 @@ public class RepeatConverter : IValueConverter
                 _ => MaterialIconKind.RepeatOff
             };
 
+        if (targetType == typeof(int))
+            return val == RepeatMode.Playlist ? 400 : int.MaxValue;
+
         return targetType == typeof(bool) && val == RepeatMode.Playlist;
     }
 
