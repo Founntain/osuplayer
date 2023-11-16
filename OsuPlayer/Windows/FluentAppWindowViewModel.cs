@@ -18,8 +18,6 @@ public class FluentAppWindowViewModel : BaseWindowViewModel
     public readonly IPlayer Player;
     public readonly IProfileManagerService ProfileManager;
 
-    private readonly FluentAppWindow _mainWindow;
-
     private BaseViewModel? _mainView;
     private bool _displayBackgroundImage;
     private Bitmap? _backgroundImage;

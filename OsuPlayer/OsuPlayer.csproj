@@ -65,10 +65,6 @@
         <ProjectReference Include="..\OsuPlayer.Services\OsuPlayer.Services.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Update="Windows\MainWindow.axaml.cs">
-            <DependentUpon>MainWindow.axaml</DependentUpon>
-            <SubType>Code</SubType>
-        </Compile>
         <Compile Update="Views\PlaylistEditorViewModel.cs">
             <DependentUpon>PlaylistEditorView.axaml</DependentUpon>
         </Compile>
@@ -86,9 +82,6 @@
         </Compile>
         <Compile Update="Views\SearchViewModel.cs">
             <DependentUpon>SearchView.axaml</DependentUpon>
-        </Compile>
-        <Compile Update="Windows\MainWindowViewModel.cs">
-            <DependentUpon>MainWindow.axaml</DependentUpon>
         </Compile>
         <Compile Update="Windows\LoginWindowViewModel.cs">
             <DependentUpon>LoginWindow.axaml</DependentUpon>
