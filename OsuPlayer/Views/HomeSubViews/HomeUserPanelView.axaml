@@ -64,14 +64,14 @@
         <!--      IsVisible="{Binding IsUserLoggedIn}">-->
         <!--    <TextBlock Grid.Row="0" Margin="10" Text="your session" Grid.Column="0" Grid.ColumnSpan="2" />-->
 
-        <!--    &lt;!&ndash; <avalonia1:CartesianChart Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" &ndash;&gt;-->
-        <!--    &lt;!&ndash;                           VerticalAlignment="Stretch" HorizontalAlignment="Stretch" &ndash;&gt;-->
-        <!--    &lt;!&ndash;                           YAxes="{Binding Axes}" &ndash;&gt;-->
-        <!--    &lt;!&ndash;                           Series="{Binding Series}" &ndash;&gt;-->
-        <!--    &lt;!&ndash;                           TooltipBackground="#7F000000" &ndash;&gt;-->
-        <!--    &lt;!&ndash;                           TooltipTextBrush="White" &ndash;&gt;-->
-        <!--    &lt;!&ndash;                           TooltipFontFamily="{DynamicResource Montserrat}" &ndash;&gt;-->
-        <!--    &lt;!&ndash;                           TooltipFontWeight="Bold" /> &ndash;&gt;-->
+        <!--    <avalonia1:CartesianChart Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" -->
+        <!--                              VerticalAlignment="Stretch" HorizontalAlignment="Stretch" -->
+        <!--                              YAxes="{Binding Axes}" -->
+        <!--                              Series="{Binding Series}" -->
+        <!--                              TooltipBackground="#7F000000" -->
+        <!--                              TooltipTextBrush="White" -->
+        <!--                              TooltipFontFamily="{DynamicResource Montserrat}" -->
+        <!--                              TooltipFontWeight="Bold" /> -->
         <!--</Grid>-->
     </Grid>
 
