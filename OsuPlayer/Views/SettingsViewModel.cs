@@ -3,6 +3,7 @@ using System.Reactive.Disposables;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using Avalonia.Styling;
 using FluentAvalonia.Styling;
 using FluentAvalonia.UI.Controls;
@@ -25,6 +26,8 @@ namespace OsuPlayer.Views;
 
 public class SettingsViewModel : BaseViewModel
 {
+    public FluentAppWindow MainWindow;
+
     public readonly IPlayer Player;
 
     private readonly IProfileManagerService _profileManager;
@@ -50,6 +53,9 @@ public class SettingsViewModel : BaseViewModel
     private const string _system = "System";
     private const string _dark = "Dark";
     private const string _light = "Light";
+    private const string _lowQuality = "Low Quality";
+    private const string _mediumQuality = "Medium Quality";
+    private const string _highQuality = "High Quality";
     private string? _selectedFont;
     private KnownColors _selectedAccentColor;
     private KnownColors _selectedBackgroundColor;
@@ -61,9 +67,27 @@ public class SettingsViewModel : BaseViewModel
     private ReleaseChannels _selectedReleaseChannel;
     private IShuffleServiceProvider? _shuffleServiceProvider;
     private List<OsuPlayerContributor>? _contributors;
+    private string _renderingMode;
 
     public string[] AppThemes { get; } = { _system, _light , _dark };
+    public string[] RenderingModes { get; } = { _highQuality, _mediumQuality, _lowQuality  };
 
+    public string RenderingMode
+    {
+        get => _renderingMode;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _renderingMode, value);
+
+            using var config = new Config();
+
+            var renderingMode = GetRenderingMode(value);
+
+            config.Container.RenderingMode = renderingMode;
+
+            MainWindow.SetRenderMode(renderingMode);
+        }
+    }
 
     public bool UseLeftNavigationPosition
     {
@@ -106,8 +130,6 @@ public class SettingsViewModel : BaseViewModel
         get => _isLastFmAuthorized;
         set => this.RaiseAndSetIfChanged(ref _isLastFmAuthorized, value);
     }
-
-    public FluentAppWindow? MainWindow;
 
     public bool EnableScrobbling
     {
@@ -497,6 +519,7 @@ public class SettingsViewModel : BaseViewModel
         _faTheme = (Application.Current!.Styles[0] as FluentAvaloniaTheme)!;
 
         Player = player;
+
         _shuffleServiceProvider = shuffleServiceProvider;
         _profileManager = profileManager;
 
@@ -520,6 +543,7 @@ public class SettingsViewModel : BaseViewModel
         _enableScrobbling = config.Container.EnableScrobbling;
         _displayUserStats = config.Container.DisplayerUserStats;
         _useLeftNavigationPosition = config.Container.UseLeftNavigationPosition;
+        _renderingMode = GetRenderingModeString(config.Container.RenderingMode);
 
         var lastFmApi = Locator.Current.GetService<ILastFmApiService>();
 
@@ -586,6 +610,28 @@ public class SettingsViewModel : BaseViewModel
             _light => ThemeVariant.Light,
             _dark => ThemeVariant.Dark,
             _ => null
+        };
+    }
+
+    private BitmapInterpolationMode GetRenderingMode(string value)
+    {
+        return value switch
+        {
+          _highQuality => BitmapInterpolationMode.HighQuality,
+          _mediumQuality => BitmapInterpolationMode.MediumQuality,
+          _lowQuality => BitmapInterpolationMode.LowQuality,
+          _ => throw new ArgumentOutOfRangeException($"The value {value} is not supported here. How the heck did you even got here?")
+        };
+    }
+
+    private string GetRenderingModeString(BitmapInterpolationMode value)
+    {
+        return value switch
+        {
+            BitmapInterpolationMode.HighQuality => _highQuality,
+            BitmapInterpolationMode.MediumQuality => _mediumQuality,
+            BitmapInterpolationMode.LowQuality => _lowQuality,
+            _ => throw new ArgumentOutOfRangeException($"The value {value} is not supported here. How the heck did you even got here?")
         };
     }
 }

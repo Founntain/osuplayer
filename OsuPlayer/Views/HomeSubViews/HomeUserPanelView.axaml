@@ -33,46 +33,77 @@
         </ui:InfoBar>
 
         <!-- User Grid -->
-        <Grid Row="0" Column="0" ColumnDefinitions="Auto, *, Auto" Margin="0 1 1 0"
-              Background="{DynamicResource AcrylicBaseColor}"
+        <Grid Row="0" Column="0" ColumnSpan="2" ColumnDefinitions="Auto, *, *, *" Margin="0 1 1 0"
+              Background="{DynamicResource BaseBrightDarkTransparentColor}"
               IsVisible="{Binding IsUserLoggedIn}">
-            <Border Grid.Column="0" Margin="10"
-                    CornerRadius="50" Width="100" Height="100" BorderThickness="2" BorderBrush="White"
-                    HorizontalAlignment="Left" VerticalAlignment="Center">
-                <Border.Background>
-                    <ImageBrush Source="{Binding ProfilePicture}" />
-                </Border.Background>
-            </Border>
+            <ProgressBar Grid.Column="0" Grid.ColumnSpan="4" Minimum="0" Value="{Binding CurrentUser.Xp}" Maximum="{Binding CurrentUser.XpNeededForNextLevel}" ToolTip.Tip="{Binding CurrentUser.LevelProgressString}"
+                         Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Stretch"/>
 
-            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                <Border Margin="10"
+                        CornerRadius="50" Width="100" Height="100" BorderThickness="2" BorderBrush="White"
+                        HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <Border.Background>
+                        <ImageBrush Source="{Binding ProfilePicture}" />
+                    </Border.Background>
+                </Border>
+
                 <TextBlock Text="{Binding CurrentUser.Name, Converter={StaticResource UsernameConverter}}"
                            Foreground="{Binding CurrentUser.RoleColor}" FontSize="28"
                            FontWeight="{DynamicResource BiggerFontWeight}"
-                           TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding CurrentUser.Name}" />
-                <TextBlock Text="{Binding CurrentUser.SongsPlayedString}" FontStyle="Italic"
-                           TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding CurrentUser.SongsPlayedString}" />
-                <TextBlock Text="{Binding CurrentUser.LevelAndTotalXpString}" FontStyle="Italic"
-                           TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding CurrentUser.LevelAndTotalXpString}" />
-                <TextBlock Text="{Binding CurrentUser.LevelProgressString}" FontStyle="Italic"
-                           TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding CurrentUser.LevelProgressString}" />
+                           VerticalAlignment="Center"/>
             </StackPanel>
+
+            <Grid Grid.Column="1">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" >
+                    <TextBlock Text="Level" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding CurrentUser.Level}" FontSize="24" Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Grid>
+
+            <Grid Grid.Column="2">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" >
+                    <TextBlock Text="Songs Played" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding CurrentUser.SongsPlayedFormattedString}" FontSize="24" Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Grid>
+
+            <Grid Grid.Column="3">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" >
+                    <TextBlock Text="Total XP" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding CurrentUser.TotalXpFormattedString}" FontSize="24" Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Grid>
+
+            <!-- <StackPanel Grid.Column="1" VerticalAlignment="Center"> -->
+            <!--     <TextBlock Text="{Binding CurrentUser.Name, Converter={StaticResource UsernameConverter}}" -->
+            <!--                Foreground="{Binding CurrentUser.RoleColor}" FontSize="28" -->
+            <!--                FontWeight="{DynamicResource BiggerFontWeight}" -->
+            <!--                TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding CurrentUser.Name}" /> -->
+            <!--     <TextBlock Text="{Binding CurrentUser.SongsPlayedComplexString}" FontStyle="Italic" -->
+            <!--                TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding CurrentUser.SongsPlayedComplexString}" /> -->
+            <!--     <TextBlock Text="{Binding CurrentUser.LevelAndTotalXpString}" FontStyle="Italic" -->
+            <!--                TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding CurrentUser.LevelAndTotalXpString}" /> -->
+            <!--     <TextBlock Text="{Binding CurrentUser.LevelProgressString}" FontStyle="Italic" -->
+            <!--                TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding CurrentUser.LevelProgressString}" /> -->
+            <!-- </StackPanel> -->
         </Grid>
 
         <!--Stats Grid-->
-        <Grid Row="0" Column="1" ColumnDefinitions="50*, 50*" RowDefinitions="Auto, *" Margin="0 1 0 0"
-              Background="{DynamicResource AcrylicBaseColor}"
-              IsVisible="{Binding IsUserLoggedIn}">
-            <TextBlock Grid.Row="0" Margin="10" Text="your session" Grid.Column="0" Grid.ColumnSpan="2" />
+        <!--<Grid Row="0" Column="1" ColumnDefinitions="50*, 50*" RowDefinitions="Auto, *" Margin="0 1 0 0"-->
+        <!--      Background="{DynamicResource AcrylicBaseColor}"-->
+        <!--      IsVisible="{Binding IsUserLoggedIn}">-->
+        <!--    <TextBlock Grid.Row="0" Margin="10" Text="your session" Grid.Column="0" Grid.ColumnSpan="2" />-->
 
-            <!-- <avalonia1:CartesianChart Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" -->
-            <!--                           VerticalAlignment="Stretch" HorizontalAlignment="Stretch" -->
-            <!--                           YAxes="{Binding Axes}" -->
-            <!--                           Series="{Binding Series}" -->
-            <!--                           TooltipBackground="#7F000000" -->
-            <!--                           TooltipTextBrush="White" -->
-            <!--                           TooltipFontFamily="{DynamicResource Montserrat}" -->
-            <!--                           TooltipFontWeight="Bold" /> -->
-        </Grid>
+        <!--    <avalonia1:CartesianChart Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" -->
+        <!--                              VerticalAlignment="Stretch" HorizontalAlignment="Stretch" -->
+        <!--                              YAxes="{Binding Axes}" -->
+        <!--                              Series="{Binding Series}" -->
+        <!--                              TooltipBackground="#7F000000" -->
+        <!--                              TooltipTextBrush="White" -->
+        <!--                              TooltipFontFamily="{DynamicResource Montserrat}" -->
+        <!--                              TooltipFontWeight="Bold" /> -->
+        <!--</Grid>-->
     </Grid>
 
 

@@ -1,4 +1,5 @@
-﻿using OsuPlayer.Data.OsuPlayer.Enums;
+﻿using Avalonia.Media.Imaging;
+using OsuPlayer.Data.OsuPlayer.Enums;
 
 namespace OsuPlayer.Data.OsuPlayer.StorageModels;
 
@@ -35,6 +36,7 @@ public class ConfigContainer : IStorableContainer
     public bool EnableScrobbling { get; set; } = false;
     public bool DisplayerUserStats { get; set; } = true;
     public bool UseLeftNavigationPosition { get; set; } = true;
+    public BitmapInterpolationMode RenderingMode { get; set; } = BitmapInterpolationMode.HighQuality;
 
     public IStorableContainer Init()
     {

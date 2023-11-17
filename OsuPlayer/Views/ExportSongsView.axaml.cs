@@ -12,7 +12,7 @@ namespace OsuPlayer.Views;
 
 public partial class ExportSongsView : ReactiveUserControl<ExportSongsViewModel>
 {
-    private FluentAppWindow? _mainWindow;
+    private readonly FluentAppWindow? _mainWindow;
 
     public ExportSongsView()
     {
@@ -20,6 +20,8 @@ public partial class ExportSongsView : ReactiveUserControl<ExportSongsViewModel>
 
         _mainWindow = Locator.Current.GetRequiredService<FluentAppWindow>();
     }
+
+    public TopLevel? GetTopLevel() => TopLevel.GetTopLevel(_mainWindow);
 
     private async void Export_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -41,18 +43,21 @@ public partial class ExportSongsView : ReactiveUserControl<ExportSongsViewModel>
 
     private async Task ExportSongs(ICollection<IMapEntryBase> songs)
     {
-        if (_mainWindow == default) return;
+        var topLevel = GetTopLevel();
 
-        var dialog = new OpenFolderDialog()
+        if (_mainWindow == default || ViewModel == default || topLevel == default) return;
+
+        var result = await topLevel.StorageProvider.OpenFolderPickerAsync(new ()
         {
             Title = "Select your folder to export to",
-        };
+            AllowMultiple = false
+        });
 
-        var path = await dialog.ShowAsync(_mainWindow);
+        var path = result.First().Path.ToString();
 
-        if (path == default || string.IsNullOrWhiteSpace(path))
+        if (string.IsNullOrWhiteSpace(path))
         {
-            await MessageBox.ShowDialogAsync(_mainWindow, "Did you even selected a folder?!");
+            await MessageBox.ShowDialogAsync(_mainWindow, "Did you even select a folder?!");
 
             return;
         }

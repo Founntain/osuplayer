@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Nein.Base;
@@ -45,9 +46,11 @@ public partial class CrashHandlerMainWindow : ReactiveWindow<CrashHandlerMainWin
     {
         if (ViewModel == null) return;
 
-        if (Application.Current?.Clipboard == default) return;
+        var topLevel = TopLevel.GetTopLevel(this);
 
-        await Application.Current.Clipboard.SetTextAsync(ViewModel.CrashLog);
+        if (topLevel == default || topLevel.Clipboard == default) return;
+
+        await topLevel.Clipboard.SetTextAsync(ViewModel.CrashLog);
     }
 
     private void GitHub_OnClick(object? sender, RoutedEventArgs e)

@@ -21,7 +21,7 @@ namespace OsuPlayer.Views;
 
 public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 {
-    private FluentAppWindow _mainWindow;
+    private readonly FluentAppWindow _mainWindow;
     private readonly IProfileManagerService _profileManager;
 
     public EditUserView() : this(Locator.Current.GetService<IProfileManagerService>())
@@ -42,10 +42,12 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
         var result = await _mainWindow.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
+            Title = "Select profile picture",
             AllowMultiple = false,
             FileTypeFilter = new[]
             {
-                new FilePickerFileType("png"), new FilePickerFileType("jpg"), new FilePickerFileType("jpeg")
+                FilePickerFileTypes.ImagePng,
+                FilePickerFileTypes.ImageJpg
             }
         });
 
@@ -75,43 +77,6 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
         }
 
         ViewModel.IsNewProfilePictureSelected = true;
-    }
-
-    private async void EditBannerPicture_OnClick(object? sender, RoutedEventArgs e)
-    {
-        if (ViewModel == default) return;
-
-        var dialog = new OpenFileDialog
-        {
-            AllowMultiple = false,
-            Filters = new List<FileDialogFilter>
-            {
-                new()
-                {
-                    Extensions = new List<string>
-                    {
-                        "png",
-                        "jpg",
-                        "jpeg"
-                    }
-                }
-            }
-        };
-
-        var result = await dialog.ShowAsync(_mainWindow);
-
-        var file = result?.FirstOrDefault();
-
-        if (file == default) return;
-
-        var banner = await File.ReadAllBytesAsync(file);
-
-        await using (var stream = new MemoryStream(banner))
-        {
-            ViewModel.CurrentProfileBanner = new Bitmap(stream);
-        }
-
-        ViewModel.IsNewBannerSelected = true;
     }
 
     private void DeleteProfile_OnClick(object? sender, RoutedEventArgs e)

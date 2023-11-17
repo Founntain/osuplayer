@@ -2,10 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:views="clr-namespace:OsuPlayer.Views"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:valueConverters="clr-namespace:OsuPlayer.Extensions.ValueConverters;assembly=OsuPlayer.Extensions"
              xmlns:interfaces="clr-namespace:OsuPlayer.Data.DataModels.Interfaces;assembly=OsuPlayer.Data"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.HomeView"
@@ -23,7 +20,7 @@
 
         <!--Songs Grid-->
         <Grid Row="1" Column="0" ColumnSpan="2" RowDefinitions="50, *" Margin="0 1">
-            <Border Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{DynamicResource BaseBrightDarkTransparentColor}">
+            <Border Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{DynamicResource BaseBrighterDarkTransparentColor}">
                 <TextBlock Text="Your songs" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Left" Margin=" 10 0 0 0" />
             </Border>
 

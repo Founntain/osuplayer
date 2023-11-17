@@ -2,12 +2,14 @@
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using Nein.Base;
+using Nein.Extensions;
 using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.Interfaces.Service;
 using OsuPlayer.Modules;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Views;
 using ReactiveUI;
+using Splat;
 
 namespace OsuPlayer.Windows;
 

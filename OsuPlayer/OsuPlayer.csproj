@@ -37,7 +37,7 @@
         <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.5" />
         <PackageReference Include="DynamicData" Version="8.1.1" />
         <PackageReference Include="FluentAvaloniaUI" Version="2.0.4" />
-        <PackageReference Include="Founntain.Nein" Version="2023.1107.0" />
+        <PackageReference Include="Founntain.Nein" Version="2023.1115.0" />
         <PackageReference Include="Founntain.OsuPlayer.NativeLibs" Version="1.0.6" />
         <PackageReference Include="LiveChartsCore.SkiaSharpView.Avalonia" Version="2.0.0-beta.101" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
@@ -47,7 +47,7 @@
         <PackageReference Include="Markdown.Avalonia" Version="11.0.2" />
         <PackageReference Include="Material.Icons.Avalonia" Version="2.0.1" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-        <PackageReference Include="OsuPlayer.Api.Data" Version="1.0.10" />
+        <PackageReference Include="OsuPlayer.Api.Data" Version="1.0.11" />
         <PackageReference Include="TagLibSharp" Version="2.3.0" />
         <PackageReference Include="SkiaSharp" Version="2.88.6" />
     </ItemGroup>
@@ -65,10 +65,6 @@
         <ProjectReference Include="..\OsuPlayer.Services\OsuPlayer.Services.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Update="Windows\MainWindow.axaml.cs">
-            <DependentUpon>MainWindow.axaml</DependentUpon>
-            <SubType>Code</SubType>
-        </Compile>
         <Compile Update="Views\PlaylistEditorViewModel.cs">
             <DependentUpon>PlaylistEditorView.axaml</DependentUpon>
         </Compile>
@@ -86,9 +82,6 @@
         </Compile>
         <Compile Update="Views\SearchViewModel.cs">
             <DependentUpon>SearchView.axaml</DependentUpon>
-        </Compile>
-        <Compile Update="Windows\MainWindowViewModel.cs">
-            <DependentUpon>MainWindow.axaml</DependentUpon>
         </Compile>
         <Compile Update="Windows\LoginWindowViewModel.cs">
             <DependentUpon>LoginWindow.axaml</DependentUpon>

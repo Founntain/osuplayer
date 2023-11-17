@@ -85,7 +85,7 @@ public class Player : IPlayer, IImportNotifications
         SongSourceProvider = songSourceProvider;
 
         _audioEngine = audioEngine;
-        _audioEngine.ChannelReachedEnd = () => NextSong(PlayDirection.Forward);
+        _audioEngine.ChannelReachedEnd = async () => await NextSong(PlayDirection.Forward);
         _shuffleProvider = shuffleProvider;
         _statisticsProvider = statisticsProvider;
         _historyProvider = historyProvider;

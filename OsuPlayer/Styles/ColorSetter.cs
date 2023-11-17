@@ -12,17 +12,17 @@ public class ColorSetter
         // TODO: Currently disabled
         return;
 
-        var resourceProvider = (ResourceInclude) Application.Current!.Resources.MergedDictionaries.First();
-
-        color = Color.FromArgb(255, color.R, color.G, color.B);
-
-        resourceProvider.Loaded["SystemAccentColor"] = color;
-        resourceProvider.Loaded["SystemAccentColorDark1"] = CalculateShade(color, -0.1f);
-        resourceProvider.Loaded["SystemAccentColorDark2"] = CalculateShade(color, -0.2f);
-        resourceProvider.Loaded["SystemAccentColorDark3"] = CalculateShade(color, -0.3f);
-        resourceProvider.Loaded["SystemAccentColorLight1"] = CalculateShade(color, 0.1f);
-        resourceProvider.Loaded["SystemAccentColorLight2"] = CalculateShade(color, 0.2f);
-        resourceProvider.Loaded["SystemAccentColorLight3"] = CalculateShade(color, 0.3f);
+//        var resourceProvider = (ResourceInclude) Application.Current!.Resources.MergedDictionaries.First();
+//
+//        color = Color.FromArgb(255, color.R, color.G, color.B);
+//
+//        resourceProvider.Loaded["SystemAccentColor"] = color;
+//        resourceProvider.Loaded["SystemAccentColorDark1"] = CalculateShade(color, -0.1f);
+//        resourceProvider.Loaded["SystemAccentColorDark2"] = CalculateShade(color, -0.2f);
+//        resourceProvider.Loaded["SystemAccentColorDark3"] = CalculateShade(color, -0.3f);
+//        resourceProvider.Loaded["SystemAccentColorLight1"] = CalculateShade(color, 0.1f);
+//        resourceProvider.Loaded["SystemAccentColorLight2"] = CalculateShade(color, 0.2f);
+//        resourceProvider.Loaded["SystemAccentColorLight3"] = CalculateShade(color, 0.3f);
     }
 
     private static Color CalculateShade(Color baseColor, float offset)

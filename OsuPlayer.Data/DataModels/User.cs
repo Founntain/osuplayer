@@ -12,7 +12,45 @@ namespace OsuPlayer.Data.DataModels;
 /// </summary>
 public sealed class User : UserModel, IUser
 {
-    public string SongsPlayedString
+    public string XpFormattedString
+    {
+        get
+        {
+            if (UniqueId == Guid.Empty) return string.Empty;
+
+            return Xp == default ? "0" : $"{Xp.ToString("##,###", CultureInfo.InvariantCulture)}";
+        }
+    }
+
+    public int XpNeededForNextLevel
+    {
+        get
+        {
+            return GetXpNeededForNextLevel();
+        }
+    }
+
+    public string TotalXpFormattedString
+    {
+        get
+        {
+            if (UniqueId == Guid.Empty) return string.Empty;
+
+            return TotalXp == default ? "0" : $"{TotalXp.ToString("##,###", CultureInfo.InvariantCulture)}";
+        }
+    }
+
+    public string SongsPlayedFormattedString
+    {
+        get
+        {
+            if (UniqueId == Guid.Empty) return string.Empty;
+
+            return SongsPlayed == default ? "0" : $"{SongsPlayed.ToString("##,###", CultureInfo.InvariantCulture)}";
+        }
+    }
+
+    public string SongsPlayedComplexString
     {
         get
         {

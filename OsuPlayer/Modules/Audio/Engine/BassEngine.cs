@@ -53,7 +53,7 @@ public sealed class BassEngine : OsuPlayerService, IAudioEngine
         }
     }
 
-    public BassEngine() : base()
+    public BassEngine()
     {
         _positionTimer.Interval = TimeSpan.FromMilliseconds((double) 1000 / 60);
         _positionTimer.Tick += PositionTimer_Tick;
@@ -245,7 +245,7 @@ public sealed class BassEngine : OsuPlayerService, IAudioEngine
 
     private void EndTrack(int handle, int channel, int data, IntPtr user)
     {
-        ChannelReachedEnd?.Invoke();
+        ChannelReachedEnd?.Invoke().Wait();
     }
 
     private void SetupStream()

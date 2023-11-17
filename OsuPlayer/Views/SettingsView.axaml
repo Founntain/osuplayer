@@ -147,6 +147,13 @@
                         </ui:SettingsExpanderItem.Footer>
                     </ui:SettingsExpanderItem>
 
+                    <ui:SettingsExpanderItem Content="Image Rendering Mode"
+                                             Description="Tell the application at which quality you want to render images e.g. profile pictures, banners etc. Requires restart to work">
+                        <ui:SettingsExpanderItem.Footer>
+                            <ui:FAComboBox ItemsSource="{Binding RenderingModes}" SelectedItem="{Binding RenderingMode}" />
+                        </ui:SettingsExpanderItem.Footer>
+                    </ui:SettingsExpanderItem>
+
                     <ui:SettingsExpanderItem Content="UI Font"
                                              Description="Select the font you want to use as UI Font. We recommend Montserrat">
                         <ui:SettingsExpanderItem.Footer>

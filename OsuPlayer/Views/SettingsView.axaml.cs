@@ -1,8 +1,10 @@
 ﻿using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Platform.Storage;
 using Nein.Base;
 using Nein.Extensions;
+using OsuPlayer.Extensions;
 using OsuPlayer.Interfaces.Service;
 using OsuPlayer.IO.Importer;
 using OsuPlayer.Modules.Audio.Interfaces;
@@ -15,20 +17,23 @@ namespace OsuPlayer.Views;
 
 public partial class SettingsView : ReactiveControl<SettingsViewModel>
 {
-    private FluentAppWindow? _mainWindow;
+    private readonly FluentAppWindow? _mainWindow;
 
     public SettingsView()
     {
         InitializeComponent();
 
+        _mainWindow = Locator.Current.GetRequiredService<FluentAppWindow>();
+
         this.WhenActivated(_ =>
         {
-            _mainWindow = Locator.Current.GetRequiredService<FluentAppWindow>();
-            ViewModel.MainWindow = _mainWindow;
+            ViewModel.MainWindow = Locator.Current.GetRequiredService<FluentAppWindow>();
 
             ViewModel.SettingsCategories = SettingsGrid.Children;
         });
     }
+
+    private TopLevel? GetTopLevel() => TopLevel.GetTopLevel(_mainWindow);
 
     private void SettingsView_OnInitialized(object? sender, EventArgs e)
     {
@@ -39,43 +44,35 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
 
     public async void ImportSongsClick(object? sender, RoutedEventArgs routedEventArgs)
     {
-        if (_mainWindow == default) return;
+        var topLevel = GetTopLevel();
 
-        var dialog = new OpenFileDialog
+        if (_mainWindow == default || topLevel == default) return;
+
+        var result = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions()
         {
-            Title = "Select your osu!.db or client.realm file",
+            Title = "Select your osu!.db or client.realm",
             AllowMultiple = false,
-            Filters = new List<FileDialogFilter>
+            FileTypeFilter = new ReadOnlyCollection<FilePickerFileType>(new List<FilePickerFileType>()
             {
-                new()
-                {
-                    Extensions = new List<string>
-                    {
-                        "db",
-                        "realm"
-                    }
-                }
-            }
-        };
+                FilePickerFileTypesExtensions.OsuDb
+            })
+        });
 
-        var result = await dialog.ShowAsync(_mainWindow);
-
-        if (result == default)
+        if (result.Any() == false)
         {
             await MessageBox.ShowDialogAsync(_mainWindow, "Did you even selected a file?!");
             return;
         }
 
-        var path = result.FirstOrDefault();
+        var dbFilePath = result.First().Path.ToString();
 
-        if (Path.GetFileName(path) != "osu!.db" && Path.GetFileName(path) != "client.realm")
+        if (Path.GetFileName(dbFilePath) != "osu!.db" && Path.GetFileName(dbFilePath) != "client.realm")
         {
-            await MessageBox.ShowDialogAsync(_mainWindow,
-                "You had one job! Just one. Select your osu!.db or client.realm! Not anything else!");
+            await MessageBox.ShowDialogAsync(_mainWindow, "You had one job! Just one. Select your osu!.db or client.realm! Not anything else!");
             return;
         }
 
-        var osuFolder = Path.GetDirectoryName(path);
+        var osuFolder = Path.GetDirectoryName(dbFilePath);
 
         await using (var config = new Config())
         {

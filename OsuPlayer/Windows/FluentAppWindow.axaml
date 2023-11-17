@@ -90,15 +90,15 @@
             <ui:NavigationView.MenuItems>
                 <ui:NavigationViewItem Content="Home" Tag="HomeNavigation" IconSource="Home"/>
                 <ui:NavigationViewItem Content="Playlists" Tag="PlaylistNavigation" IconSource="Audio" />
-                <ui:NavigationViewItem Content="Social" Tag="SocialNavigation" IconSource="World" >
-                    <ui:NavigationViewItem.MenuItems>
-                        <ui:NavigationViewItem Content="Users" Tag="UserNavigation" IconSource="People" />
-                        <ui:NavigationViewItem Content="Party" Tag="PartyNavigation" IconSource="Star" />
-
-                        <ui:NavigationViewItem Content="Beatmaps" Tag="BeatmapsNavigation" IconSource="Library" />
-                        <ui:NavigationViewItem Content="Statistics" Tag="StatisticsNavigation" IconSource="Target" />
-                    </ui:NavigationViewItem.MenuItems>
-                </ui:NavigationViewItem>
+                <!--<ui:NavigationViewItem Content="Social" Tag="SocialNavigation" IconSource="World" >-->
+                <!--    <ui:NavigationViewItem.MenuItems>-->
+                <!--        -->
+                <!--    </ui:NavigationViewItem.MenuItems>-->
+                <!--</ui:NavigationViewItem>-->
+                <ui:NavigationViewItem Content="Users" Tag="UserNavigation" IconSource="People" />
+                <ui:NavigationViewItem Content="Party" Tag="PartyNavigation" IconSource="Star" />
+                <ui:NavigationViewItem Content="Beatmaps" Tag="BeatmapsNavigation" IconSource="Library" />
+                <ui:NavigationViewItem Content="Statistics" Tag="StatisticsNavigation" IconSource="Target" />
             </ui:NavigationView.MenuItems>
             <ui:NavigationView.FooterMenuItems>
                 <ui:NavigationViewItem Name="LoginNavItem" Content="Log in" Tag="LoginNavigation" IconSource="Permissions" IsVisible="{Binding IsUserNotLoggedIn}" />
