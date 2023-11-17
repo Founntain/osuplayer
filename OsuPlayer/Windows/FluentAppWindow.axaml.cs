@@ -7,12 +7,12 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using FluentAvalonia.UI.Controls;
 using FluentAvalonia.UI.Windowing;
+using Nein.Base;
 using Nein.Extensions;
 using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.Extensions.EnumExtensions;
 using OsuPlayer.Interfaces.Service;
 using OsuPlayer.IO.Importer;
-using OsuPlayer.Modules;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Network;
 using OsuPlayer.Services;
@@ -30,6 +30,10 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
 
     public Miniplayer? Miniplayer;
     public FullscreenWindow? FullscreenWindow;
+
+    public FluentAppWindow() : this(Locator.Current.GetRequiredService<FluentAppWindowViewModel>(), Locator.Current.GetRequiredService<ILoggingService>())
+    {
+    }
 
     public FluentAppWindow(FluentAppWindowViewModel viewModel, ILoggingService loggingService)
     {
