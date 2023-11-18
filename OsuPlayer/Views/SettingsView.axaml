@@ -154,26 +154,26 @@
                         </ui:SettingsExpanderItem.Footer>
                     </ui:SettingsExpanderItem>
 
-                    <ui:SettingsExpanderItem Content="UI Font"
-                                             Description="Select the font you want to use as UI Font. We recommend Montserrat">
-                        <ui:SettingsExpanderItem.Footer>
-                            <ui:FAComboBox ItemsSource="{Binding Fonts}" SelectedItem="{Binding SelectedFont}" IsEditable="True" />
-                        </ui:SettingsExpanderItem.Footer>
-                    </ui:SettingsExpanderItem>
+                    <!-- <ui:SettingsExpanderItem Content="UI Font" -->
+                    <!--                          Description="Select the font you want to use as UI Font. We recommend Montserrat"> -->
+                    <!--     <ui:SettingsExpanderItem.Footer> -->
+                    <!--         <ui:FAComboBox ItemsSource="{Binding Fonts}" SelectedItem="{Binding SelectedFont}" IsEditable="True" /> -->
+                    <!--     </ui:SettingsExpanderItem.Footer> -->
+                    <!-- </ui:SettingsExpanderItem> -->
+                    <!-- -->
+                    <!-- <ui:SettingsExpanderItem Content="UI Font-Weight" -->
+                    <!--                          Description="Select the font-weight you want to use as UI font-weight. We recommend something around SemiBold or Medium"> -->
+                    <!--     <ui:SettingsExpanderItem.Footer> -->
+                    <!--         <ui:FAComboBox ItemsSource="{Binding AvailableFontWeights}" SelectedItem="{Binding SelectedFontWeight}" /> -->
+                    <!--     </ui:SettingsExpanderItem.Footer> -->
+                    <!-- </ui:SettingsExpanderItem> -->
 
-                    <ui:SettingsExpanderItem Content="UI Font-Weight"
-                                             Description="Select the font-weight you want to use as UI font-weight. We recommend something around SemiBold or Medium">
-                        <ui:SettingsExpanderItem.Footer>
-                            <ui:FAComboBox ItemsSource="{Binding AvailableFontWeights}" SelectedItem="{Binding SelectedFontWeight}" />
-                        </ui:SettingsExpanderItem.Footer>
-                    </ui:SettingsExpanderItem>
-
-                    <ui:SettingsExpanderItem Content="Accent Color"
-                                             Description="Accent color you want to use">
-                        <ui:SettingsExpanderItem.Footer>
-                            <ui:FAComboBox ItemsSource="{Binding KnownColors}" SelectedItem="{Binding SelectedAccentColor}" IsEditable="True" />
-                        </ui:SettingsExpanderItem.Footer>
-                    </ui:SettingsExpanderItem>
+                    <!-- <ui:SettingsExpanderItem Content="Accent Color" -->
+                    <!--                          Description="Accent color you want to use"> -->
+                    <!--     <ui:SettingsExpanderItem.Footer> -->
+                    <!--         <ui:FAComboBox ItemsSource="{Binding KnownColors}" SelectedItem="{Binding SelectedAccentColor}" IsEditable="True" /> -->
+                    <!--     </ui:SettingsExpanderItem.Footer> -->
+                    <!-- </ui:SettingsExpanderItem> -->
 
                      <ui:SettingsExpanderItem Content="Window Background Method"
                                      Description="The method that should be used for the window background">

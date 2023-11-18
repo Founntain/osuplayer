@@ -44,9 +44,14 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
 
         var player = ViewModel.Player;
 
-        Task.Run(() => SongImporter.ImportSongsAsync(player.SongSourceProvider, player as IImportNotifications));
-
         InitializeComponent();
+
+        InitializeFluentAppWindow(player);
+    }
+
+    private void InitializeFluentAppWindow(IPlayer player)
+    {
+        Task.Run(() => SongImporter.ImportSongsAsync(player.SongSourceProvider, player as IImportNotifications));
 
         // Setting AppWindow Properties
         TitleBar.ExtendsContentIntoTitleBar = true;
@@ -59,30 +64,32 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
 
         // Loading config stuff
 
-        using var config = new Config();
+        using (var config = new Config())
+        {
+            _loggingService.Log("Loaded config successfully", LogType.Success, config.Container);
 
-        _loggingService.Log("Loaded config successfully", LogType.Success, config.Container);
+            SetRenderMode(config.Container.RenderingMode);
 
-        SetRenderMode(config.Container.RenderingMode);
+            AppNavigationView.PaneDisplayMode = config.Container.UseLeftNavigationPosition ? NavigationViewPaneDisplayMode.Left : NavigationViewPaneDisplayMode.Top;
 
-        AppNavigationView.PaneDisplayMode = config.Container.UseLeftNavigationPosition ? NavigationViewPaneDisplayMode.Left : NavigationViewPaneDisplayMode.Top;
+            var backgroundColor = config.Container.BackgroundColor;
+            ViewModel!.DisplayBackgroundImage = config.Container.DisplayBackgroundImage;
+            ViewModel.BackgroundBlurRadius = config.Container.BackgroundBlurRadius;
 
-        var backgroundColor = config.Container.BackgroundColor;
-        ViewModel.DisplayBackgroundImage = config.Container.DisplayBackgroundImage;
-        ViewModel.BackgroundBlurRadius = config.Container.BackgroundBlurRadius;
+            Background = new SolidColorBrush(backgroundColor.ToColor());
 
-        Background = new SolidColorBrush(backgroundColor.ToColor());
+            var accentColor = config.Container.AccentColor;
 
-        var accentColor = config.Container.AccentColor;
+            ColorSetter.SetColor(accentColor.ToColor());
 
-        ColorSetter.SetColor(accentColor.ToColor());
+            Application.Current!.Resources["SmallerFontWeight"] = config.Container.GetNextSmallerFont().ToFontWeight();
+            Application.Current!.Resources["DefaultFontWeight"] = config.Container.DefaultFontWeight.ToFontWeight();
+            Application.Current!.Resources["BiggerFontWeight"] = config.Container.GetNextBiggerFont().ToFontWeight();
 
-        Application.Current!.Resources["SmallerFontWeight"] = config.Container.GetNextSmallerFont().ToFontWeight();
-        Application.Current!.Resources["DefaultFontWeight"] = config.Container.DefaultFontWeight.ToFontWeight();
-        Application.Current!.Resources["BiggerFontWeight"] = config.Container.GetNextBiggerFont().ToFontWeight();
-
-        FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamily;
-        config.Container.Font ??= FontFamily.Name;
+            // Disabled for now
+            // FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamily;
+            // config.Container.Font ??= FontFamily.Name;
+        }
 
         // Setting up last.fm stuff if enabled
         Task.Run(async () =>
@@ -212,13 +219,13 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
 
     private async void SearchBox_OnKeyUp(object? sender, KeyEventArgs e)
     {
-        if (e.Key != Key.Enter) return;
+        if (ViewModel == default || e.Key != Key.Enter) return;
 
         var acb = (sender as AutoCompleteBox);
 
         if (acb?.SelectedItem is IMapEntryBase map)
         {
-            var result = await ViewModel?.Player?.TryPlaySongAsync(map);
+            var result = await ViewModel.Player.TryPlaySongAsync(map);
 
             if (result)
             {
