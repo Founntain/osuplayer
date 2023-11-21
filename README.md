@@ -50,15 +50,16 @@ You can also build the project for yourself; see the section below!
  - Pray that I accept your PR 😂 (I'm joking)
  - Profit 📈
 
-#### ⚠️ Please keep in mind
-You should implement features that are asked for and not ones you like or think will be good additions.
-A rule of thumb is: If you want a new feature, discuss it with us and if people want it, the feature may be added. So don't be afraid to ask!
+> [!WARNING]\
+> You should implement features that are asked for and not ones you like or think will be good additions.
+A rule of thumb is: If you want a new feature, discuss it with us to see if it makes sense implement, if it does the feature may be added. So don't be afraid to ask!
 **We appreciate your ideas and feedback!**
 
 ## 📦 Dependencies
 | Dependency                                                        | Description                                       |
 |-------------------------------------------------------------------|---------------------------------------------------|
 | [AvaloniaUI](https://github.com/AvaloniaUI/Avalonia)              | The UI-Framework                                  |
+| [FluentAvalonia](https://github.com/amwx/FluentAvalonia)          | UI-Framework Extensions                           |
 | [ManagedBass](https://github.com/ManagedBass/ManagedBass)         | The Audio-Engine                                  |
 | [Newtonsoft.Json](https://www.newtonsoft.com/json)                | Used for reading and editing various config files |
 | [discord-rpc-sharp](https://github.com/Lachee/discord-rpc-csharp) | Used to display Discord RPC                       |
@@ -139,4 +140,3 @@ Thanks for reading and have fun with the player, cheers.
 ![](https://gud.founntain.dev/f/m8xBvVc14U.png)  
 ### Miniplayer  
 ![](https://gud.founntain.dev/f/TTc7bws1xU.png)
-![Uploading 208073123-a308effa-033e-4f4f-94d4-3407e8d52165.png…]()
