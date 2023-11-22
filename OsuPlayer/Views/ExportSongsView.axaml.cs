@@ -53,7 +53,7 @@ public partial class ExportSongsView : ReactiveUserControl<ExportSongsViewModel>
             AllowMultiple = false
         });
 
-        var path = result.First().Path.ToString();
+        var path = result.First().Path.AbsolutePath;
 
         if (string.IsNullOrWhiteSpace(path))
         {

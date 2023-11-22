@@ -18,7 +18,7 @@
         <PackageReference Include="Founntain.Nein" Version="2023.1115.0" />
         <PackageReference Include="MongoDB.Bson" Version="2.22.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-        <PackageReference Include="Realm" Version="11.6.0">
+        <PackageReference Include="Realm" Version="11.6.1" >
             <IncludeAssets>native</IncludeAssets>
         </PackageReference>
         <!--        <PackageReference Include="Realm.Fody" Version="10.15.1">-->
@@ -33,6 +33,9 @@
         </Reference>
         <Reference Include="Realm.Fody">
             <HintPath>Realm.Fody.dll</HintPath>
+        </Reference>
+        <Reference Include="Realm.PlatformHelpers">
+            <HintPath>Realm.PlatformHelpers.dll</HintPath>
         </Reference>
     </ItemGroup>
 

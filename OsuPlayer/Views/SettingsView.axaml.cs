@@ -64,7 +64,7 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
             return;
         }
 
-        var dbFilePath = result.First().Path.ToString();
+        var dbFilePath = result.First().Path.AbsolutePath;
 
         if (Path.GetFileName(dbFilePath) != "osu!.db" && Path.GetFileName(dbFilePath) != "client.realm")
         {
