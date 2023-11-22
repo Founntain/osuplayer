@@ -55,7 +55,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
         if (file == default) return;
 
-        var fileInfo = new FileInfo(file.Path.ToString());
+        var fileInfo = new FileInfo(file.Path.AbsolutePath);
 
         switch (ViewModel.CurrentUser.IsDonator)
         {
@@ -69,7 +69,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
                 return;
         }
 
-        var picture = await File.ReadAllBytesAsync(file.Path.ToString());
+        var picture = await File.ReadAllBytesAsync(file.Path.AbsolutePath);
 
         await using (var stream = new MemoryStream(picture))
         {
