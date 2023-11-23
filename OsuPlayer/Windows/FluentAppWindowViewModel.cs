@@ -42,6 +42,9 @@ public class FluentAppWindowViewModel : BaseWindowViewModel
 
     public ExperimentalAcrylicMaterial? PanelMaterial { get; set; }
 
+    public bool IsNonLinuxOs { get; }
+    public bool IsLinuxOs { get; }
+
     public bool IsUserLoggedIn => ProfileManager.User != default && ProfileManager.User?.UniqueId != Guid.Empty;
     public bool IsUserNotLoggedIn => ProfileManager.User == default || ProfileManager.User?.UniqueId == Guid.Empty;
 
@@ -76,9 +79,6 @@ public class FluentAppWindowViewModel : BaseWindowViewModel
         get => _backgroundImage;
         set => this.RaiseAndSetIfChanged(ref _backgroundImage, value);
     }
-
-    public bool IsNonLinuxOs { get; }
-    public bool IsLinuxOs { get; }
 
     public FluentAppWindowViewModel(IAudioEngine engine, IPlayer player, IProfileManagerService profileManager, IShuffleServiceProvider? shuffleServiceProvider = null,
         IStatisticsProvider? statisticsProvider = null, ISortProvider? sortProvider = null, IHistoryProvider? historyProvider = null)
