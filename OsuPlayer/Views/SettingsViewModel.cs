@@ -282,8 +282,6 @@ public class SettingsViewModel : BaseViewModel
 
             config.Container.Font = value;
 
-            if (MainWindow == null) return;
-
             MainWindow.FontFamily = value;
         }
     }
@@ -295,26 +293,26 @@ public class SettingsViewModel : BaseViewModel
         {
             this.RaiseAndSetIfChanged(ref _backgroundMode, value);
 
-            if (MainWindow == null) return;
-
             using var config = new Config();
 
-            // switch (value)
-            // {
-            //     case BackgroundMode.AcrylicBlur:
-            //         MainWindow.TransparencyLevelHint = WindowTransparencyLevel.AcrylicBlur;
-            //
-            //         break;
-            //     case BackgroundMode.Mica:
-            //         MainWindow.TransparencyLevelHint = WindowTransparencyLevel.Mica;
-            //
-            //         break;
-            //     case BackgroundMode.SolidColor:
-            //     default:
-            //         MainWindow.TransparencyLevelHint = WindowTransparencyLevel.None;
-            //
-            //         break;
-            // }
+            switch (value)
+            {
+                case BackgroundMode.AcrylicBlur:
+                    MainWindow.TransparencyLevelHint = new []{ WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None, };
+
+                    break;
+                case BackgroundMode.Mica:
+                    MainWindow.TransparencyLevelHint = new []{ WindowTransparencyLevel.Mica, WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None,};
+
+                    break;
+                case BackgroundMode.SolidColor:
+                default:
+                    MainWindow.TransparencyLevelHint = new []{ WindowTransparencyLevel.None, };
+
+                    break;
+            }
+
+            config.Container.BackgroundMode = value;
         }
     }
 

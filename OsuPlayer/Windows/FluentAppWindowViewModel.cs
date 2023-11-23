@@ -1,15 +1,14 @@
-﻿using Avalonia.Media;
+﻿using System.Runtime.InteropServices;
+using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using Nein.Base;
-using Nein.Extensions;
 using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.Interfaces.Service;
 using OsuPlayer.Modules;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Views;
 using ReactiveUI;
-using Splat;
 
 namespace OsuPlayer.Windows;
 
@@ -42,6 +41,9 @@ public class FluentAppWindowViewModel : BaseWindowViewModel
     public PlayHistoryViewModel PlayHistoryView { get; }
 
     public ExperimentalAcrylicMaterial? PanelMaterial { get; set; }
+
+    public bool IsNonLinuxOs { get; }
+    public bool IsLinuxOs { get; }
 
     public bool IsUserLoggedIn => ProfileManager.User != default && ProfileManager.User?.UniqueId != Guid.Empty;
     public bool IsUserNotLoggedIn => ProfileManager.User == default || ProfileManager.User?.UniqueId == Guid.Empty;
@@ -101,6 +103,9 @@ public class FluentAppWindowViewModel : BaseWindowViewModel
         BeatmapView = new BeatmapsViewModel(Player);
         ExportSongsView = new ExportSongsViewModel(Player.SongSourceProvider);
         PlayHistoryView = new PlayHistoryViewModel(Player, historyProvider, Player.SongSourceProvider);
+
+        IsLinuxOs = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+        IsNonLinuxOs = !IsLinuxOs;
 
         PanelMaterial = new ExperimentalAcrylicMaterial
         {
