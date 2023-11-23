@@ -10,6 +10,7 @@ using FluentAvalonia.UI.Windowing;
 using Nein.Base;
 using Nein.Extensions;
 using OsuPlayer.Data.DataModels.Interfaces;
+using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Extensions.EnumExtensions;
 using OsuPlayer.Interfaces.Service;
 using OsuPlayer.IO.Importer;
@@ -57,16 +58,24 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
         TitleBar.ExtendsContentIntoTitleBar = true;
         TitleBar.TitleBarHitTestType = TitleBarHitTestType.Complex;
 
-        TransparencyLevelHint = new[]
-        {
-            WindowTransparencyLevel.Mica, WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None
-        };
-
         // Loading config stuff
 
         using (var config = new Config())
         {
             _loggingService.Log("Loaded config successfully", LogType.Success, config.Container);
+
+            TransparencyLevelHint = config.Container.BackgroundMode switch
+            {
+                BackgroundMode.SolidColor => new[] { WindowTransparencyLevel.None },
+                BackgroundMode.AcrylicBlur => new[] { WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None },
+                BackgroundMode.Mica => new[] { WindowTransparencyLevel.Mica, WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None },
+                _ => new[] { WindowTransparencyLevel.None },
+            };
+
+            TransparencyLevelHint = new[]
+            {
+                WindowTransparencyLevel.Mica, WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None
+            };
 
             SetRenderMode(config.Container.RenderingMode);
 

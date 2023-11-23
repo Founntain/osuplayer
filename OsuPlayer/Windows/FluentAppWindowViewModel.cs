@@ -1,4 +1,5 @@
-﻿using Avalonia.Media;
+﻿using System.Runtime.InteropServices;
+using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using Nein.Base;
@@ -77,6 +78,9 @@ public class FluentAppWindowViewModel : BaseWindowViewModel
         get => _backgroundImage;
         set => this.RaiseAndSetIfChanged(ref _backgroundImage, value);
     }
+
+    public bool IsNonLinuxOs => !RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+    public bool IsLinuxOs => RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
 
     public FluentAppWindowViewModel(IAudioEngine engine, IPlayer player, IProfileManagerService profileManager, IShuffleServiceProvider? shuffleServiceProvider = null,
         IStatisticsProvider? statisticsProvider = null, ISortProvider? sortProvider = null, IHistoryProvider? historyProvider = null)
