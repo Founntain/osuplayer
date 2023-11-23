@@ -3,14 +3,12 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using Nein.Base;
-using Nein.Extensions;
 using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.Interfaces.Service;
 using OsuPlayer.Modules;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Views;
 using ReactiveUI;
-using Splat;
 
 namespace OsuPlayer.Windows;
 
@@ -79,8 +77,8 @@ public class FluentAppWindowViewModel : BaseWindowViewModel
         set => this.RaiseAndSetIfChanged(ref _backgroundImage, value);
     }
 
-    public bool IsNonLinuxOs => !RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
-    public bool IsLinuxOs => RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+    public bool IsNonLinuxOs { get; }
+    public bool IsLinuxOs { get; }
 
     public FluentAppWindowViewModel(IAudioEngine engine, IPlayer player, IProfileManagerService profileManager, IShuffleServiceProvider? shuffleServiceProvider = null,
         IStatisticsProvider? statisticsProvider = null, ISortProvider? sortProvider = null, IHistoryProvider? historyProvider = null)
@@ -105,6 +103,9 @@ public class FluentAppWindowViewModel : BaseWindowViewModel
         BeatmapView = new BeatmapsViewModel(Player);
         ExportSongsView = new ExportSongsViewModel(Player.SongSourceProvider);
         PlayHistoryView = new PlayHistoryViewModel(Player, historyProvider, Player.SongSourceProvider);
+
+        IsLinuxOs = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+        IsNonLinuxOs = !IsLinuxOs;
 
         PanelMaterial = new ExperimentalAcrylicMaterial
         {
