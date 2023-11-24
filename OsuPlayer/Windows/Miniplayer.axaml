@@ -69,8 +69,8 @@
                        Margin="8 0" Grid.Column="0" FontSize="12" HorizontalAlignment="Center" />
 
             <Slider Name="SongProgressSlider" VerticalAlignment="Center"
-                    Value="{Binding SongTime}"
                     Maximum="{Binding SongLength}"
+                    Value="{Binding SongTime}"
                     Margin="4 0 " UseLayoutRounding="False" Grid.Column="1" />
 
             <TextBlock Name="CurrentSongTimeLeft" Text="{Binding CurrentSongLength}" VerticalAlignment="Center"
