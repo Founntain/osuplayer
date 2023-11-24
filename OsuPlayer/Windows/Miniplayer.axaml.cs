@@ -44,11 +44,6 @@ public partial class Miniplayer : ReactiveWindow<MiniplayerViewModel>
         Background = new SolidColorBrush(config.Container.BackgroundColor.ToColor());
     }
 
-    private void InitializeComponent()
-    {
-        AvaloniaXamlLoader.Load(this);
-    }
-
     private void SongControl(object? sender, RoutedEventArgs e)
     {
         if (ViewModel == default) return;
