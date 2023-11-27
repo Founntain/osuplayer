@@ -6,7 +6,7 @@
              xmlns:valueConverters="clr-namespace:OsuPlayer.Extensions.ValueConverters;assembly=OsuPlayer.Extensions"
              xmlns:avalonia="clr-namespace:LiveChartsCore.SkiaSharpView.Avalonia;assembly=LiveChartsCore.SkiaSharpView.Avalonia"
              xmlns:statistics="clr-namespace:OsuPlayer.Api.Data.API.RequestModels.Statistics;assembly=OsuPlayer.Api.Data"
-             xmlns:avalonia1="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:entityModels="clr-namespace:OsuPlayer.Api.Data.API.EntityModels;assembly=OsuPlayer.Api.Data"
              xmlns:dataModels="clr-namespace:OsuPlayer.Data.DataModels;assembly=OsuPlayer.Data"
              xmlns:ui="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
@@ -107,7 +107,7 @@
                                     </ItemsRepeater.Layout>
                                     <ItemsRepeater.ItemTemplate>
                                         <DataTemplate DataType="entityModels:BadgeModel">
-                                            <avalonia1:MaterialIcon Kind="{Binding Icon}" Width="32" Height="32"
+                                            <materialIcons:MaterialIcon Kind="{Binding Icon}" Width="32" Height="32"
                                                                     ToolTip.Tip="{Binding Description}" />
                                         </DataTemplate>
                                     </ItemsRepeater.ItemTemplate>
