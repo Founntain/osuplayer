@@ -1,4 +1,5 @@
 ﻿using Avalonia.Media;
+using OsuPlayer.Api.Data.API.EntityModels;
 
 namespace OsuPlayer.Data.DataModels.Interfaces;
 
@@ -24,8 +25,11 @@ public interface IUser
     public string JoinDateString { get; }
     public string TotalXpString { get; }
 
+    public List<BadgeModel> Badges { get; set; }
+
     public int GetXpNeededForNextLevel();
     public static abstract int GetXpNeededForNextLevel(int level);
     public Brush GetRoleColorBrush();
     public string GetRoleString();
+
 }
