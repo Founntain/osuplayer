@@ -4,6 +4,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
+using FluentAvalonia.UI.Windowing;
 using Nein.Base;
 using Nein.Extensions;
 using OsuPlayer.Data.OsuPlayer.Enums;
@@ -17,13 +18,16 @@ using Splat;
 
 namespace OsuPlayer.Windows;
 
-public partial class Miniplayer : ReactiveWindow<MiniplayerViewModel>
+public partial class Miniplayer : FluentReactiveWindow<MiniplayerViewModel>
 {
     private readonly FluentAppWindow? _mainWindow;
 
     public Miniplayer()
     {
         InitializeComponent();
+
+        TitleBar.ExtendsContentIntoTitleBar = true;
+        TitleBar.TitleBarHitTestType = TitleBarHitTestType.Complex;
 
         LoadSettings();
     }
@@ -32,9 +36,14 @@ public partial class Miniplayer : ReactiveWindow<MiniplayerViewModel>
     {
         InitializeComponent();
 
+        TitleBar.ExtendsContentIntoTitleBar = true;
+        TitleBar.TitleBarHitTestType = TitleBarHitTestType.Complex;
+
         _mainWindow = Locator.GetLocator().GetRequiredService<FluentAppWindow>();
 
         DataContext = new MiniplayerViewModel(player, engine);
+
+        LoadSettings();
     }
 
     private void LoadSettings()

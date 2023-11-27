@@ -5,9 +5,11 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
+using FluentAvalonia.UI.Windowing;
 using Nein.Base;
 using Nein.Extensions;
 using OsuPlayer.Data.DataModels;
+using OsuPlayer.Extensions.ValueConverters;
 using OsuPlayer.Interfaces.Service;
 using OsuPlayer.UI_Extensions;
 using ReactiveUI;
@@ -15,7 +17,7 @@ using Splat;
 
 namespace OsuPlayer.Windows;
 
-public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
+public partial class LoginWindow : FluentReactiveWindow<LoginWindowViewModel>
 {
     private readonly IProfileManagerService _profileManager;
 
@@ -42,12 +44,19 @@ public partial class LoginWindow : ReactiveWindow<LoginWindowViewModel>
 
         var config = new Config();
 
+        TitleBar.ExtendsContentIntoTitleBar = true;
+        TitleBar.TitleBarHitTestType = TitleBarHitTestType.Complex;
+
         TransparencyLevelHint = new[] { WindowTransparencyLevel.Mica, WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None };
-        FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamily;
 
         this.WhenActivated(_ =>
         {
-            if (string.IsNullOrWhiteSpace(ViewModel?.Username)) return;
+            if (string.IsNullOrWhiteSpace(ViewModel?.Username))
+            {
+                UsernameBox.Focus();
+
+                return;
+            }
 
             PasswordBox.Focus();
         });
