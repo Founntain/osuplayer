@@ -130,13 +130,13 @@ Thanks for reading and have fun with the player, cheers.
 ## ❤️ Supported by
 <img width=150 height=150 src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" alt="JetBrains Logo (Main) logo.">
 
-## Star History
+## ⭐ Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=founntain/osuplayer&type=Date)](https://star-history.com/#founntain/osuplayer&Date)
 
 ## 🖼️ Screenshots
 
-![](https://gud.founntain.dev/f/O5JQt59ZXE.png)
-![](https://gud.founntain.dev/f/m8xBvVc14U.png)  
+![](https://gud.founntain.dev/f/p5nrMbq5M0.jpg)
+![](https://gud.founntain.dev/f/KDEJNVggeU.jpg)  
 ### Miniplayer  
 ![](https://gud.founntain.dev/f/TTc7bws1xU.png)
