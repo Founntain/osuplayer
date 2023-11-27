@@ -31,5 +31,4 @@ public interface IUser
     public static abstract int GetXpNeededForNextLevel(int level);
     public Brush GetRoleColorBrush();
     public string GetRoleString();
-
 }
