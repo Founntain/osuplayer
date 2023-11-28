@@ -32,11 +32,11 @@
         <TextBlock Text="login to osu!player" Margin="10" FontSize="18" FontWeight="SemiBold" />
 
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="10 0 10 10" Spacing="10">
-            <TextBox Text="{Binding Username}" Watermark="username..." FontWeight="{DynamicResource DefaultFontWeight}"
+            <TextBox x:Name="UsernameBox" Text="{Binding Username}" Watermark="username..." FontWeight="{DynamicResource DefaultFontWeight}"
                      HorizontalAlignment="Stretch" AttachedToVisualTree="Visual_OnAttachedToVisualTree" />
-            <TextBox Text="{Binding Password}" Watermark="password..." FontWeight="{DynamicResource DefaultFontWeight}"
+            <TextBox x:Name="PasswordBox" Text="{Binding Password}" Watermark="password..." FontWeight="{DynamicResource DefaultFontWeight}"
                      PasswordChar="•"
-                     HorizontalAlignment="Stretch" x:Name="PasswordBox" KeyUp="InputElement_OnKeyUp" />
+                     HorizontalAlignment="Stretch" KeyUp="InputElement_OnKeyUp" />
         </StackPanel>
 
         <StackPanel VerticalAlignment="Bottom" Margin="10" Spacing="5">

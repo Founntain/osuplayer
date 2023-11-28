@@ -3,6 +3,8 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.ReactiveUI;
+using FluentAvalonia.UI.Windowing;
+using Nein.Base;
 using Nein.Extensions;
 using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.RequestModels.User;
@@ -13,16 +15,18 @@ using Splat;
 
 namespace OsuPlayer.Windows;
 
-public partial class CreateProfileWindow : ReactiveWindow<CreateProfileWindowViewModel>
+public partial class CreateProfileWindow : FluentReactiveWindow<CreateProfileWindowViewModel>
 {
     public CreateProfileWindow()
     {
         InitializeComponent();
 
+        TitleBar.ExtendsContentIntoTitleBar = true;
+        TitleBar.TitleBarHitTestType = TitleBarHitTestType.Complex;
+
         var config = new Config();
 
         TransparencyLevelHint = new[] { WindowTransparencyLevel.Mica, WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None };
-        FontFamily = config.Container.Font ?? FontManager.Current.DefaultFontFamily;
     }
 
     private void InitializeComponent()
