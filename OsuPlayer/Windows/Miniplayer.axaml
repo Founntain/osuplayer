@@ -131,7 +131,7 @@
             </Button>
 
             <Button Name="PlayPause" Width="50" Height="50" CornerRadius="50" Click="SongControl">
-                <avalonia:MaterialIcon Kind="{Binding IsPlaying, Converter={StaticResource PlayPauseConverter}}" Height="40" Width="40" Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" />
+                <avalonia:MaterialIcon Kind="{Binding IsPlaying, Converter={StaticResource PlayPauseConverter}}" Height="40" Width="40" />
             </Button>
 
             <Button Name="Next" Width="38" Height="38" CornerRadius="50" Click="SongControl"
