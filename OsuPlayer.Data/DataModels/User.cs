@@ -155,6 +155,14 @@ public sealed class User : UserModel, IUser
 
     public Brush GetRoleColorBrush()
     {
+        if (IsDonator)
+        {
+            if (!string.IsNullOrWhiteSpace(CustomRoleColor))
+            {
+                return new SolidColorBrush(Color.Parse($"#{CustomRoleColor}"));
+            }
+        }
+
         switch (Role)
         {
             case UserRole.Staff:
@@ -172,6 +180,14 @@ public sealed class User : UserModel, IUser
 
     public string GetRoleString()
     {
+        if (IsDonator)
+        {
+            if (!string.IsNullOrWhiteSpace(CustomRolename))
+            {
+                return CustomRolename;
+            }
+        }
+
         switch (Role)
         {
             case UserRole.Developer:
