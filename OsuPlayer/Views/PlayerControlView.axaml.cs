@@ -2,15 +2,19 @@ using System.ComponentModel;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
+using LiveChartsCore.Defaults;
 using Nein.Base;
 using Nein.Extensions;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.IO.Storage.Playlists;
+using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Windows;
 using ReactiveUI;
+using Splat;
 
 namespace OsuPlayer.Views;
 
@@ -27,17 +31,49 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
             if (this.GetVisualRoot() is FluentAppWindow mainWindow)
                 _mainWindow = mainWindow;
 
-            SongProgressSlider.AddHandler(PointerPressedEvent, SongProgressSlider_OnPointerPressed,
-                RoutingStrategies.Tunnel);
+            SongProgressSlider.AddHandler(PointerPressedEvent, SongProgressSlider_OnPointerPressed, RoutingStrategies.Tunnel);
 
-            SongProgressSlider.AddHandler(PointerReleasedEvent, SongProgressSlider_OnPointerReleased,
-                RoutingStrategies.Tunnel);
+            SongProgressSlider.AddHandler(PointerReleasedEvent, SongProgressSlider_OnPointerReleased, RoutingStrategies.Tunnel);
 
             Repeat.AddHandler(PointerReleasedEvent, Repeat_OnPointerReleased, RoutingStrategies.Tunnel);
 
             ViewModel.RaisePropertyChanged(nameof(ViewModel.IsAPlaylistSelected));
             ViewModel.RaisePropertyChanged(nameof(ViewModel.IsCurrentSongInPlaylist));
             ViewModel.RaisePropertyChanged(nameof(ViewModel.IsCurrentSongOnBlacklist));
+
+            ViewModel.AudioVisualizerUpdateTimer.Interval = TimeSpan.FromMilliseconds(2);
+            ViewModel.AudioVisualizerUpdateTimer.Tick += AudioVisualizerUpdateTimer_OnTick;
+
+            ViewModel.AudioVisualizerUpdateTimer.Start();
+        });
+    }
+
+    private void AudioVisualizerUpdateTimer_OnTick(object? sender, EventArgs e)
+    {
+        Dispatcher.UIThread.Invoke(() =>
+        {
+            var player = Locator.Current.GetRequiredService<IPlayer>();
+
+            if (ViewModel == default) return;
+
+            if (!player.IsPlaying.Value && ViewModel.SeriesValues.Any(x => x.Value > 0))
+            {
+                foreach (var t in ViewModel.SeriesValues)
+                {
+                    t.Value = 0;
+                }
+
+                return;
+            }
+
+            var audioEngine = Locator.Current.GetRequiredService<IAudioEngine>();
+
+            var vData = audioEngine.GetVisualizationData();
+
+            for (var i = 0; i < vData.Length; i++)
+            {
+                ViewModel.SeriesValues[i].Value = vData[i] * 5;
+            }
         });
     }
 

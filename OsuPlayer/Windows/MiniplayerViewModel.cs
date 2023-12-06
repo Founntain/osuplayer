@@ -1,5 +1,9 @@
 ﻿using Avalonia.Media.Imaging;
 using Avalonia.Threading;
+using LiveChartsCore;
+using LiveChartsCore.Defaults;
+using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
 using Nein.Base;
 using Nein.Extensions;
 using OsuPlayer.Data.DataModels.Interfaces;
@@ -10,6 +14,7 @@ using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules;
 using OsuPlayer.Modules.Audio.Interfaces;
 using ReactiveUI;
+using SkiaSharp;
 
 namespace OsuPlayer.Windows;
 
@@ -36,6 +41,57 @@ public class MiniplayerViewModel : BaseWindowViewModel
     public bool IsAPlaylistSelected => Player.SelectedPlaylist.Value != default;
 
     public bool IsCurrentSongOnBlacklist => new Blacklist().Contains(CurrentSong.Value);
+
+    #region Audio Visualizer Stuff
+
+    private DispatcherTimer _audioVisualizerUpdateTimer = new();
+
+    public DispatcherTimer AudioVisualizerUpdateTimer
+    {
+        get => _audioVisualizerUpdateTimer;
+        set => this.RaiseAndSetIfChanged(ref _audioVisualizerUpdateTimer, value);
+    }
+
+    private ObservableCollection<ObservableValue> _seriesValues = new();
+
+    public ObservableCollection<ObservableValue> SeriesValues
+    {
+        get => _seriesValues;
+        set => this.RaiseAndSetIfChanged(ref _seriesValues, value);
+    }
+
+    private ISeries[] _series;
+
+    public ISeries[] Series
+    {
+        get => _series;
+        set => this.RaiseAndSetIfChanged(ref _series, value);
+    }
+
+    public Axis[] XAxes { get; set; } =
+    {
+        new Axis
+        {
+            SeparatorsPaint = null,
+            LabelsPaint = null,
+            ShowSeparatorLines = false,
+            MaxLimit = 256
+        }
+    };
+
+    public Axis[] YAxes { get; set; } =
+    {
+        new Axis
+        {
+            MinLimit = 0,
+            MaxLimit = 1,
+            SeparatorsPaint = null,
+            LabelsPaint = null,
+            ShowSeparatorLines = false,
+        }
+    };
+
+    #endregion
 
     public double Volume
     {
@@ -184,5 +240,29 @@ public class MiniplayerViewModel : BaseWindowViewModel
             this.RaisePropertyChanged(nameof(IsAPlaylistSelected));
             this.RaisePropertyChanged(nameof(IsCurrentSongInPlaylist));
         }, true);
+
+        #region Init Audio Visualizer
+
+        const int size = 4096;
+
+        SeriesValues = new ObservableValue[size].ToObservableCollection();
+
+        for (var i = 0; i < size; i++)
+        {
+            SeriesValues[i] = new ObservableValue(0);
+        }
+
+        Series = new ISeries[]
+        {
+            new ColumnSeries<ObservableValue>
+            {
+                Values = SeriesValues,
+                IsHoverable = false,
+                Fill = new SolidColorPaint(new SKColor(164, 164, 164, 75)),
+                Stroke = null
+            }
+        };
+
+        #endregion
     }
 }

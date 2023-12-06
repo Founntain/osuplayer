@@ -5,6 +5,7 @@
         xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
         xmlns:cv="clr-namespace:OsuPlayer.Extensions.ValueConverters;assembly=OsuPlayer.Extensions"
         xmlns:views="clr-namespace:OsuPlayer.Windows"
+        xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="OsuPlayer.Windows.Miniplayer"
         Title="osu!player miniplayer"
@@ -78,6 +79,11 @@
         </Grid>
 
         <Border Background="{DynamicResource AcrylicBaseColor}" Grid.Row="3" />
+
+        <lvc:CartesianChart Grid.Row="3" IsHitTestVisible="False" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                            Series="{Binding Series}"
+                            XAxes="{Binding XAxes}"
+                            YAxes="{Binding YAxes}" />
 
         <DockPanel Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center">
             <Panel>

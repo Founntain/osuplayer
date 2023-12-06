@@ -4,6 +4,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
+using Avalonia.Threading;
 using FluentAvalonia.UI.Windowing;
 using Nein.Base;
 using Nein.Extensions;
@@ -44,6 +45,40 @@ public partial class Miniplayer : FluentReactiveWindow<MiniplayerViewModel>
         DataContext = new MiniplayerViewModel(player, engine);
 
         LoadSettings();
+
+        ViewModel.AudioVisualizerUpdateTimer.Interval = TimeSpan.FromMilliseconds(2);
+        ViewModel.AudioVisualizerUpdateTimer.Tick += AudioVisualizerUpdateTimer_OnTick;
+
+        ViewModel.AudioVisualizerUpdateTimer.Start();
+    }
+
+    private void AudioVisualizerUpdateTimer_OnTick(object? sender, EventArgs e)
+    {
+        Dispatcher.UIThread.Invoke(() =>
+        {
+            var player = Locator.Current.GetRequiredService<IPlayer>();
+
+            if (ViewModel == default) return;
+
+            if (!player.IsPlaying.Value && ViewModel.SeriesValues.Any(x => x.Value > 0))
+            {
+                foreach (var t in ViewModel.SeriesValues)
+                {
+                    t.Value = 0;
+                }
+
+                return;
+            }
+
+            var audioEngine = Locator.Current.GetRequiredService<IAudioEngine>();
+
+            var vData = audioEngine.GetVisualizationData();
+
+            for (var i = 0; i < vData.Length; i++)
+            {
+                ViewModel.SeriesValues[i].Value = vData[i] * 5;
+            }
+        });
     }
 
     private void LoadSettings()

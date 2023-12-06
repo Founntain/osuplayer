@@ -40,7 +40,7 @@ public sealed class BassEngine : OsuPlayerService, IAudioEngine
     private double _playbackSpeed;
     private int _sampleFrequency = 44100;
 
-    private float[] _visualizationData = new float [128];
+    private float[] _visualizationData = new float [2048];
 
     public bool IsEqEnabled
     {
@@ -203,7 +203,7 @@ public sealed class BassEngine : OsuPlayerService, IAudioEngine
 
     public float[] GetVisualizationData()
     {
-        var length = Bass.ChannelGetData(_fxStream, _visualizationData, (int) DataFlags.FFT256);
+        Bass.ChannelGetData(_fxStream, _visualizationData, (int) DataFlags.FFT4096);
 
         return _visualizationData;
     }

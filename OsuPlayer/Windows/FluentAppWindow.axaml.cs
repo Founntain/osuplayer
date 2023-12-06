@@ -283,12 +283,6 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
 
     private void OpenMiniplayer()
     {
-        var rWin = new RenderingTestWindow();
-
-        rWin.Show();
-
-        return;
-
         if (ViewModel == default || Miniplayer != null)
             return;
 
