@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
+using ABI.Windows.Perception.Spatial;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -14,6 +15,7 @@ using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Extensions.EnumExtensions;
 using OsuPlayer.Interfaces.Service;
 using OsuPlayer.IO.Importer;
+using OsuPlayer.Modules.Audio.Engine;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Network;
 using OsuPlayer.Services;
@@ -281,6 +283,12 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
 
     private void OpenMiniplayer()
     {
+        var rWin = new RenderingTestWindow();
+
+        rWin.Show();
+
+        return;
+
         if (ViewModel == default || Miniplayer != null)
             return;
 

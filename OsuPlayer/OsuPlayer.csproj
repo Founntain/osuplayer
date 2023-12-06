@@ -39,7 +39,8 @@
         <PackageReference Include="FluentAvaloniaUI" Version="2.0.4" />
         <PackageReference Include="Founntain.Nein" Version="2023.1115.0" />
         <PackageReference Include="Founntain.OsuPlayer.NativeLibs" Version="1.0.6" />
-        <PackageReference Include="LiveChartsCore.SkiaSharpView.Avalonia" Version="2.0.0-beta.101" />
+        <PackageReference Include="LiveChartsCore" Version="2.0.0-rc2" />
+        <PackageReference Include="LiveChartsCore.SkiaSharpView.Avalonia" Version="2.0.0-rc2" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Include="ManagedBass" Version="3.1.1" />
         <PackageReference Include="ManagedBass.Enc" Version="3.1.1" />
@@ -48,6 +49,7 @@
         <PackageReference Include="Material.Icons.Avalonia" Version="2.0.1" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="OsuPlayer.Api.Data" Version="1.0.11" />
+        <PackageReference Include="SkiaSharp.Views" Version="2.88.6" />
         <PackageReference Include="TagLibSharp" Version="2.3.0" />
         <PackageReference Include="SkiaSharp" Version="2.88.6" />
     </ItemGroup>
@@ -156,6 +158,9 @@
         </Compile>
         <Compile Update="Windows\FluentAppWindowViewModel.cs">
           <DependentUpon>FluentAppWindow.axaml</DependentUpon>
+        </Compile>
+        <Compile Update="Windows\RenderingTestWindowViewModel.cs">
+          <DependentUpon>RenderingTestWindow.axaml</DependentUpon>
         </Compile>
     </ItemGroup>
     <ItemGroup>
