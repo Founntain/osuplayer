@@ -22,16 +22,18 @@
 
     <Grid RowDefinitions="Auto, *">
         <Grid Row="0">
-            <AutoCompleteBox Name="SettingsSearch" Text="{Binding SettingsSearchQ}" ItemsSource="{Binding SettingsCategories}"
+            <AutoCompleteBox Name="SettingsSearch" Text="{Binding SettingsSearchQ}"
+                             ItemsSource="{Binding SettingsCategories}"
                              VerticalAlignment="Center" HorizontalAlignment="Stretch"
-                             Watermark="type to search for settings" Margin="5" MaxWidth="1500" >
+                             Watermark="type to search for settings" Margin="5" MaxWidth="1500">
                 <AutoCompleteBox.ItemTemplate>
                     <DataTemplate x:DataType="Control">
                         <Panel>
                             <Grid ColumnDefinitions="*, Auto">
                                 <StackPanel Grid.Column="0" HorizontalAlignment="Left"
                                             VerticalAlignment="Center">
-                                    <TextBlock Text="{Binding Name}" Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" />
+                                    <TextBlock Text="{Binding Name}"
+                                               Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" />
                                 </StackPanel>
                             </Grid>
 
@@ -59,47 +61,51 @@
                                              Description="Import your osu! songs via osu!.db (stable) or client.realm (lazer)"
                                              ActionIconSource="ChevronRight"
                                              IsClickEnabled="True"
-                                             Click="ImportSongsClick"/>
+                                             Click="ImportSongsClick" />
                     <ui:SettingsExpanderItem Content="Import osu! collections"
                                              Description="Import your osu! collections as playlists"
                                              IsClickEnabled="True"
                                              ActionIconSource="ChevronRight"
-                                             Click="ImportCollectionsClick"/>
+                                             Click="ImportCollectionsClick" />
                     <ui:SettingsExpanderItem Content="Play history"
                                              Description="Display your current sessions play history."
                                              ActionIconSource=" ChevronRight"
                                              IsClickEnabled="True"
-                                             Click="OpenPlayerHistoryClick"/>
+                                             Click="OpenPlayerHistoryClick" />
                     <ui:SettingsExpanderItem Content="Export songs"
                                              Description="Exports your osu! .mp3 files to a given directory. Handy if you want to listen to your songs on the go."
                                              ActionIconSource="ChevronRight"
                                              IsClickEnabled="True"
-                                             Click="ExportCollectionsClick"/>
+                                             Click="ExportCollectionsClick" />
                     <ui:SettingsExpanderItem Content="Update Channel"
                                              Description="Which update channel to use. This settings requires a restart">
                         <ui:SettingsExpanderItem.Footer>
-                            <ui:FAComboBox ItemsSource="{Binding ReleaseChannels}" SelectedItem="{Binding SelectedReleaseChannel}"/>
+                            <ui:FAComboBox ItemsSource="{Binding ReleaseChannels}"
+                                           SelectedItem="{Binding SelectedReleaseChannel}" />
                         </ui:SettingsExpanderItem.Footer>
                     </ui:SettingsExpanderItem>
 
                     <ui:SettingsExpanderItem Content="Startup song"
                                              Description="Select what song should be playing when the application started">
                         <ui:SettingsExpanderItem.Footer>
-                            <ui:FAComboBox ItemsSource="{Binding StartupSongs}" SelectedItem="{Binding SelectedStartupSong}" />
+                            <ui:FAComboBox ItemsSource="{Binding StartupSongs}"
+                                           SelectedItem="{Binding SelectedStartupSong}" />
                         </ui:SettingsExpanderItem.Footer>
                     </ui:SettingsExpanderItem>
 
                     <ui:SettingsExpanderItem Content="Song Sorting Mode"
                                              Description="Select in which order songs should be sorted in your song list">
                         <ui:SettingsExpanderItem.Footer>
-                            <ui:FAComboBox ItemsSource="{Binding SortingModes}" SelectedItem="{Binding SelectedSortingMode}" />
+                            <ui:FAComboBox ItemsSource="{Binding SortingModes}"
+                                           SelectedItem="{Binding SelectedSortingMode}" />
                         </ui:SettingsExpanderItem.Footer>
                     </ui:SettingsExpanderItem>
 
                     <ui:SettingsExpanderItem Content="Shuffle Algorithm"
                                              Description="{Binding SelectedShuffleAlgorithmInfoText}">
                         <ui:SettingsExpanderItem.Footer>
-                            <ui:FAComboBox ItemsSource="{Binding ShuffleAlgorithms}" SelectedItem="{Binding SelectedShuffleAlgorithm}" />
+                            <ui:FAComboBox ItemsSource="{Binding ShuffleAlgorithms}"
+                                           SelectedItem="{Binding SelectedShuffleAlgorithm}" />
                         </ui:SettingsExpanderItem.Footer>
                     </ui:SettingsExpanderItem>
 
@@ -143,14 +149,16 @@
                     <ui:SettingsExpanderItem Content="Navigation Position"
                                              Description="Do you want to have the navigation on the left or top?">
                         <ui:SettingsExpanderItem.Footer>
-                            <ToggleSwitch IsChecked="{Binding UseLeftNavigationPosition}" OnContent="Left" OffContent="Top" />
+                            <ToggleSwitch IsChecked="{Binding UseLeftNavigationPosition}" OnContent="Left"
+                                          OffContent="Top" />
                         </ui:SettingsExpanderItem.Footer>
                     </ui:SettingsExpanderItem>
 
                     <ui:SettingsExpanderItem Content="Image Rendering Mode"
                                              Description="Tell the application at which quality you want to render images e.g. profile pictures, banners etc. Requires restart to work">
                         <ui:SettingsExpanderItem.Footer>
-                            <ui:FAComboBox ItemsSource="{Binding RenderingModes}" SelectedItem="{Binding RenderingMode}" />
+                            <ui:FAComboBox ItemsSource="{Binding RenderingModes}"
+                                           SelectedItem="{Binding RenderingMode}" />
                         </ui:SettingsExpanderItem.Footer>
                     </ui:SettingsExpanderItem>
 
@@ -175,17 +183,19 @@
                     <!--     </ui:SettingsExpanderItem.Footer> -->
                     <!-- </ui:SettingsExpanderItem> -->
 
-                     <ui:SettingsExpanderItem Content="Window Background Method"
-                                     Description="The method that should be used for the window background">
+                    <ui:SettingsExpanderItem Content="Window Background Method"
+                                             Description="The method that should be used for the window background">
                         <ui:SettingsExpanderItem.Footer>
-                            <ui:FAComboBox ItemsSource="{Binding BackgroundModes}" SelectedItem="{Binding BackgroundMode}" />
+                            <ui:FAComboBox ItemsSource="{Binding BackgroundModes}"
+                                           SelectedItem="{Binding BackgroundMode}" />
                         </ui:SettingsExpanderItem.Footer>
                     </ui:SettingsExpanderItem>
 
                     <ui:SettingsExpanderItem Content="Window Background Color"
                                              Description="The background color of the window">
                         <ui:SettingsExpanderItem.Footer>
-                            <ui:FAComboBox ItemsSource="{Binding KnownColors}" SelectedItem="{Binding SelectedBackgroundColor}" IsEditable="True" />
+                            <ui:FAComboBox ItemsSource="{Binding KnownColors}"
+                                           SelectedItem="{Binding SelectedBackgroundColor}" IsEditable="True" />
                         </ui:SettingsExpanderItem.Footer>
                     </ui:SettingsExpanderItem>
 
@@ -196,10 +206,12 @@
                         </ui:SettingsExpanderItem.Footer>
                     </ui:SettingsExpanderItem>
 
-                    <ui:SettingsExpanderItem Content="Background Image Blur" IsVisible="{Binding DisplayBackgroundImage}"
+                    <ui:SettingsExpanderItem Content="Background Image Blur"
+                                             IsVisible="{Binding DisplayBackgroundImage}"
                                              Description="Amount of blur you want to use for the background image. The change will be visible when a new song is played.">
                         <ui:SettingsExpanderItem.Footer>
-                            <Slider Value="{Binding BackgroundBlurRadius}" Minimum="0" Maximum="100" TickFrequency="1" Width="150" />
+                            <Slider Value="{Binding BackgroundBlurRadius}" Minimum="0" Maximum="100" TickFrequency="1"
+                                    Width="150" />
                         </ui:SettingsExpanderItem.Footer>
                     </ui:SettingsExpanderItem>
 
@@ -222,7 +234,8 @@
                     <ui:SettingsExpanderItem Content="Audio Device"
                                              Description="Select the audio device that you want to use for audio playback">
                         <ui:SettingsExpanderItem.Footer>
-                            <ui:FAComboBox ItemsSource="{Binding AvailableAudioDevices}" SelectedItem="{Binding SelectedAudioDevice}" />
+                            <ui:FAComboBox ItemsSource="{Binding AvailableAudioDevices}"
+                                           SelectedItem="{Binding SelectedAudioDevice}" />
                         </ui:SettingsExpanderItem.Footer>
                     </ui:SettingsExpanderItem>
 
@@ -230,12 +243,19 @@
                                              Description="Here you can tune your audio frequencies to your liking"
                                              IsClickEnabled="True"
                                              ActionIconSource="ChevronRight"
-                                             Click="OpenEqClick"/>
+                                             Click="OpenEqClick" />
 
                     <ui:SettingsExpanderItem Content="Enable Pitch Change"
                                              Description="If turned on changing the playback speed will change the pitch. (Like Nightcore/Daycore). If turned of it just speeds up">
                         <ui:SettingsExpanderItem.Footer>
                             <ToggleSwitch IsChecked="{Binding UsePitch}" />
+                        </ui:SettingsExpanderItem.Footer>
+                    </ui:SettingsExpanderItem>
+
+                    <ui:SettingsExpanderItem Content="Enable Audio Normalization"
+                                             Description="Enables audio normalization so songs are around the same volume. (Applies on next song played)">
+                        <ui:SettingsExpanderItem.Footer>
+                            <ToggleSwitch IsChecked="{Binding UseAudioNormalization}" />
                         </ui:SettingsExpanderItem.Footer>
                     </ui:SettingsExpanderItem>
                 </ui:SettingsExpander>
@@ -252,7 +272,7 @@
                                              Description="Log into your osu!player profile"
                                              IsClickEnabled="True"
                                              ActionIconSource="ChevronRight"
-                                             Click="LoginClick"/>
+                                             Click="LoginClick" />
 
                     <ui:SettingsExpanderItem Content="Last.FM Scrobbler"
                                              Description="Log into your Last.FM account with your API-Key and API-Secret to scrobble your play activity">
@@ -302,30 +322,30 @@
                                              Description="You like the osu!player? Then Head to our GitHub and give us a star! We would greatly appreciate it!"
                                              IsClickEnabled="True"
                                              ActionIconSource="Go"
-                                             Click="Github_OnClick"/>
+                                             Click="Github_OnClick" />
 
                     <ui:SettingsExpanderItem Content="Request a feature"
                                              Description="You are missing something you would like to see in the osu!player? Head to our GitHub and request it"
                                              IsClickEnabled="True"
                                              ActionIconSource="Go"
-                                             Click="ReportBug_OnClick"/>
+                                             Click="ReportBug_OnClick" />
                     <ui:SettingsExpanderItem Content="Report bug"
                                              Description="Found a bug or something that doesn't work as expected? Head to our GitHub to report it"
                                              IsClickEnabled="True"
                                              ActionIconSource="Go"
-                                             Click="ReportBug_OnClick"/>
+                                             Click="ReportBug_OnClick" />
 
                     <ui:SettingsExpanderItem Content="osu!player Discord Server"
                                              Description="Join our Discord server to ask question, dev updates and other stuff"
                                              IsClickEnabled="True"
                                              ActionIconSource="Go"
-                                             Click="JoinDiscord_OnClick"/>
+                                             Click="JoinDiscord_OnClick" />
 
                     <ui:SettingsExpanderItem Content="Contact us"
                                              Description="Here you can find our contact information if you need to contact us specifically"
                                              IsClickEnabled="True"
                                              ActionIconSource="Go"
-                                             Click="ContactUs_OnClick"/>
+                                             Click="ContactUs_OnClick" />
                 </ui:SettingsExpander>
 
                 <!-- ——————————————————— -->
@@ -359,7 +379,7 @@
                                      IconSource="Code"
                                      Description="The amazing people that help us make osu!player a better place"
                                      Name="ContributeSettingsExpander">
-                                        <StackPanel Margin="1" Spacing="1" Name="ContributePanel">
+                    <StackPanel Margin="1" Spacing="1" Name="ContributePanel">
                         <Border>
                             <ItemsRepeater ItemsSource="{Binding Contributors}">
                                 <ItemsRepeater.Layout>
@@ -388,7 +408,7 @@
                                              Description="Head to our repository for project building info and guidelines. We would be happy to see your Pull-Request!"
                                              ActionIconSource="Go"
                                              IsClickEnabled="True"
-                                             Click="Github_OnClick"/>
+                                             Click="Github_OnClick" />
                 </ui:SettingsExpander>
             </controls:CascadingWrapPanel>
         </ScrollViewer>
