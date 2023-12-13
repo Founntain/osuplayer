@@ -10,7 +10,7 @@ public class SettingsUserConverterTests
 {
     private readonly Type _expectedInput = typeof(User);
     private readonly Type _expectedOutput = typeof(string);
-    private SettingsUserConverter _userConverter;
+    private SettingsUserConverter _userConverter = null!;
 
     [SetUp]
     public void Setup()
@@ -22,7 +22,7 @@ public class SettingsUserConverterTests
     [TestCase("test")]
     public void TestWrongInputHandled(object input)
     {
-        Assert.IsNotInstanceOf(_expectedInput, input);
+        Assert.That(input, Is.Not.InstanceOf(_expectedInput));
         Assert.DoesNotThrow(() => _userConverter.Convert(10, _expectedOutput, null, CultureInfo.InvariantCulture));
     }
 
@@ -36,7 +36,7 @@ public class SettingsUserConverterTests
     public void TestOutputOnNullInput()
     {
         var output = _userConverter.Convert(null, _expectedOutput, null, CultureInfo.InvariantCulture);
-        Assert.AreEqual("Not logged in", output);
+        Assert.That(output, Is.EqualTo("Not logged in"));
     }
 
     // [TestCase("Test")]
@@ -60,7 +60,7 @@ public class SettingsUserConverterTests
     public void TestOutputOnIncorrectInput()
     {
         var output = _userConverter.Convert(10, _expectedOutput, null, CultureInfo.InvariantCulture);
-        Assert.IsInstanceOf(_expectedOutput, output);
-        Assert.AreEqual(output, "Not logged in");
+        Assert.That(output, Is.InstanceOf(_expectedOutput));
+        Assert.That(output, Is.EqualTo("Not logged in"));
     }
 }

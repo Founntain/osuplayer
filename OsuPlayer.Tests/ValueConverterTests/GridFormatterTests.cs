@@ -10,7 +10,7 @@ public class GridFormatterTests
     private readonly Type _expectedInput = typeof(double);
     private readonly Type _expectedOutput = typeof(double);
     private readonly Type _expectedParameter = typeof(string);
-    private GridFormatter _gridFormatter;
+    private GridFormatter _gridFormatter = null!;
 
     [SetUp]
     public void Setup()
@@ -23,7 +23,7 @@ public class GridFormatterTests
     [TestCase(true)]
     public void TestWrongInputHandled(object input)
     {
-        Assert.IsNotInstanceOf(_expectedInput, input.GetType());
+        Assert.That(input, Is.Not.InstanceOf(_expectedInput));
         Assert.DoesNotThrow(() =>
             _gridFormatter.Convert(input, _expectedOutput, input, CultureInfo.InvariantCulture));
     }
@@ -50,15 +50,15 @@ public class GridFormatterTests
         var expected = input[2];
         Assert.Multiple(() =>
         {
-            Assert.IsInstanceOf(_expectedInput, width);
-            Assert.IsInstanceOf(_expectedParameter, param);
-            Assert.IsInstanceOf(_expectedOutput, expected);
+            Assert.That(width, Is.InstanceOf(_expectedInput));
+            Assert.That(param, Is.InstanceOf(_expectedParameter));
+            Assert.That(expected, Is.InstanceOf(_expectedOutput));
         });
         object output = null;
         Assert.DoesNotThrow(() =>
             output = _gridFormatter.Convert(width, _expectedOutput, param, CultureInfo.InvariantCulture));
-        Assert.IsInstanceOf(_expectedOutput, output);
-        Assert.AreEqual(expected, output);
+        Assert.That(output, Is.InstanceOf(_expectedOutput));
+        Assert.That(output, Is.EqualTo(expected));
     }
 
     [TestCase(new object[]
@@ -80,7 +80,7 @@ public class GridFormatterTests
         object? output = null;
         Assert.DoesNotThrow(() =>
             output = _gridFormatter.Convert(width, _expectedOutput, param, CultureInfo.InvariantCulture));
-        Assert.IsInstanceOf(_expectedOutput, output);
-        Assert.AreEqual(output, 0.0);
+        Assert.That(output, Is.InstanceOf(_expectedOutput));
+        Assert.That(output, Is.EqualTo(0.0));
     }
 }

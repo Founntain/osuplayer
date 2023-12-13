@@ -33,26 +33,26 @@ public class OnlineTests
             HasXpLock = default
         };
 
-        Assert.IsNotNull(user);
+        Assert.That(user, Is.Not.Null);
 
         for (var i = 0; i <= 7; i++)
         {
             user.Role = (UserRole) i;
 
-            Assert.IsNotNull(user.RoleColor);
-            Assert.IsNotEmpty(user.RoleString);
+            Assert.That(user.RoleColor, Is.Not.Null);
+            Assert.That(user.RoleString, Is.Not.Empty);
         }
 
-        Assert.IsNotEmpty(user.ToString());
-        Assert.IsEmpty(user.SongsPlayedComplexString);
-        Assert.IsNotEmpty(user.LevelString);
-        Assert.IsEmpty(user.LevelProgressString);
-        Assert.IsEmpty(user.LevelAndTotalXpString);
-        Assert.IsNotEmpty(user.DescriptionTitleString);
-        Assert.IsNotEmpty(user.JoinDateString);
-        Assert.IsNotEmpty(user.TotalXpString);
+        Assert.That(user.ToString(), Is.Not.Empty);
+        Assert.That(user.SongsPlayedComplexString, Is.Empty);
+        Assert.That(user.LevelString, Is.Not.Empty);
+        Assert.That(user.LevelProgressString, Is.Empty);
+        Assert.That(user.LevelAndTotalXpString, Is.Empty);
+        Assert.That(user.DescriptionTitleString, Is.Not.Empty);
+        Assert.That(user.JoinDateString, Is.Not.Empty);
+        Assert.That(user.TotalXpString, Is.Not.Empty);
 
-        Assert.GreaterOrEqual(User.GetXpNeededForNextLevel(1), 0);
+        Assert.That(User.GetXpNeededForNextLevel(1), Is.GreaterThanOrEqualTo(0));
     }
 
     [Test]
@@ -66,13 +66,13 @@ public class OnlineTests
             CreationTime = DateTime.UtcNow
         };
 
-        Assert.IsNotNull(article);
+        Assert.That(article, Is.Not.Null);
 
-        Assert.IsNotEmpty(article.Content);
-        Assert.IsNotEmpty(article.Creator);
-        Assert.IsNotEmpty(article.Title);
-        Assert.Greater(article.CreationTime, DateTime.MinValue);
-        Assert.IsNotEmpty(article.CreationTimeString);
+        Assert.That(article.Content, Is.Not.Null);
+        Assert.That(article.Creator, Is.Not.Null);
+        Assert.That(article.Title, Is.Not.Null);
+        Assert.That(article.CreationTime, Is.GreaterThan(DateTime.MinValue));
+        Assert.That(article.CreationTimeString, Is.Not.Empty);
     }
 
     [Test]
@@ -86,10 +86,10 @@ public class OnlineTests
             CreationTime = DateTime.UtcNow
         };
 
-        Assert.IsNotEmpty(news.Content);
-        Assert.IsNotEmpty(news.Creator);
-        Assert.IsNotEmpty(news.Title);
-        Assert.Greater(news.CreationTime, DateTime.MinValue);
-        Assert.IsNotEmpty(news.CreationTimeString);
+        Assert.That(news.Content, Is.Not.Empty);
+        Assert.That(news.Creator, Is.Not.Empty);
+        Assert.That(news.Title, Is.Not.Empty);
+        Assert.That(news.CreationTime, Is.GreaterThan(DateTime.MinValue));
+        Assert.That(news.CreationTimeString, Is.Not.Empty);
     }
 }
