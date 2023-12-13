@@ -10,7 +10,7 @@ public class VolumeConverterTests
 {
     private readonly Type _expectedInput = typeof(double);
     private readonly Type _expectedOutput = typeof(MaterialIconKind);
-    private VolumeConverter _playPauseConverter;
+    private VolumeConverter _playPauseConverter = null!;
 
     [SetUp]
     public void Setup()
@@ -22,7 +22,7 @@ public class VolumeConverterTests
     [TestCase("test")]
     public void TestWrongInputHandled(object input)
     {
-        Assert.IsNotInstanceOf(_expectedInput, input.GetType());
+        Assert.That(input, Is.Not.InstanceOf(_expectedInput));
         Assert.DoesNotThrow(() =>
             _playPauseConverter.Convert(input, _expectedOutput, null, CultureInfo.InvariantCulture));
     }
@@ -55,15 +55,15 @@ public class VolumeConverterTests
         var volume = input[0];
         var icon = input[1];
         var output = _playPauseConverter.Convert(volume, _expectedOutput, null, CultureInfo.InvariantCulture);
-        Assert.IsInstanceOf(_expectedOutput, output);
-        Assert.AreEqual(icon, output);
+        Assert.That(output, Is.InstanceOf(_expectedOutput));
+        Assert.That(output, Is.EqualTo(icon));
     }
 
     [Test]
     public void TestOutputOnIncorrectInput()
     {
         var output = _playPauseConverter.Convert(true, _expectedOutput, null, CultureInfo.InvariantCulture);
-        Assert.IsInstanceOf(_expectedOutput, output);
-        Assert.AreEqual(output, MaterialIconKind.QuestionMark);
+        Assert.That(output, Is.InstanceOf(_expectedOutput));
+        Assert.That(output, Is.EqualTo(MaterialIconKind.QuestionMark));
     }
 }

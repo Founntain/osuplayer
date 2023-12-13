@@ -58,7 +58,7 @@ public class PlaylistTests
 
         var playlists = await PlaylistManager.GetAllPlaylistsAsync();
 
-        Assert.IsTrue(playlists.Any(x => x.Name == "New Name"));
+        Assert.That(playlists?.Any(x => x.Name == "New Name"), Is.True);
     }
 
     [Test]
@@ -78,7 +78,7 @@ public class PlaylistTests
 
         var playlists = await PlaylistManager.GetAllPlaylistsAsync();
 
-        Assert.IsFalse(playlists.Any(x => x.Name == id.ToString()));
+        Assert.That(playlists?.Any(x => x.Name == id.ToString()), Is.False);
     }
 
     [Test]
@@ -86,6 +86,6 @@ public class PlaylistTests
     {
         var obj = new PlaylistContainer().Init();
 
-        Assert.IsNotNull(obj);
+        Assert.That(obj, Is.Not.Null);
     }
 }

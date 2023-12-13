@@ -12,7 +12,7 @@ public class SourceListValueConverterTests
 {
     private readonly Type _expectedInput = typeof(SourceList<Playlist>);
     private readonly Type _expectedOutput = typeof(List<Playlist>);
-    private SourceListValueConverter _playPauseConverter;
+    private SourceListValueConverter _playPauseConverter = null!;
 
     [SetUp]
     public void Setup()
@@ -24,7 +24,7 @@ public class SourceListValueConverterTests
     [TestCase("test")]
     public void TestWrongInputHandled(object input)
     {
-        Assert.IsNotInstanceOf(_expectedInput, input.GetType());
+        Assert.That(input, Is.Not.InstanceOf(_expectedInput));
         Assert.DoesNotThrow(() =>
             _playPauseConverter.Convert(input, _expectedOutput, null, CultureInfo.InvariantCulture));
     }
@@ -42,16 +42,16 @@ public class SourceListValueConverterTests
         var input = new SourceList<Playlist>();
         input.Add(new Playlist());
         var initialItemCount = input.Count;
-        Assert.IsInstanceOf(_expectedInput, input);
+        Assert.That(input, Is.InstanceOf(_expectedInput));
         var output = _playPauseConverter.Convert(input, _expectedOutput, null, CultureInfo.InvariantCulture);
-        Assert.IsInstanceOf(_expectedOutput, output);
-        Assert.AreEqual(initialItemCount, ((List<Playlist>) output)!.Count);
+        Assert.That(output, Is.InstanceOf(_expectedOutput));
+        Assert.That(((List<Playlist>) output)!.Count, Is.EqualTo(initialItemCount));
     }
 
     [Test]
     public void TestOutputOnIncorrectInput()
     {
         var output = _playPauseConverter.Convert(10, _expectedOutput, null, CultureInfo.InvariantCulture);
-        Assert.IsInstanceOf(_expectedOutput, output);
+        Assert.That(output, Is.InstanceOf(_expectedOutput));
     }
 }
