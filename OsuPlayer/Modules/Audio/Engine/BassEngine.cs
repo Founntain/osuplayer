@@ -142,17 +142,7 @@ public sealed class BassEngine : OsuPlayerService, IAudioEngine
         // Create Stream
         _decodeStreamHandle = Bass.CreateStream(path, 0, 0, BassFlags.Decode | BassFlags.Float);
 
-        var peakLevel = Bass.ChannelGetLevel(_decodeStreamHandle, Bass.ChannelGetLength(_decodeStreamHandle), LevelRetrievalFlags.Stereo).Max();
-
-        var volumeCorrection = 1 / peakLevel;
-
-        Bass.ChannelSetPosition(_decodeStreamHandle, 0);
-
         _fxStream = BassFx.TempoCreate(_decodeStreamHandle, BassFlags.FxFreeSource | BassFlags.Float);
-
-        LogToConsole($"Peak Level of Song: {peakLevel}. Normalizing with factor: {volumeCorrection}");
-
-        Bass.ChannelSetAttribute(_fxStream, ChannelAttribute.Volume, volumeCorrection);
 
         ChannelLength.Value = Bass.ChannelBytes2Seconds(_fxStream, Bass.ChannelGetLength(_fxStream));
 
@@ -276,6 +266,9 @@ public sealed class BassEngine : OsuPlayerService, IAudioEngine
         var config = new Config();
         SetDevice(AvailableAudioDevices.FirstOrDefault(x => x.Driver == config.Container.SelectedAudioDeviceDriver));
 
+        if (config.Container.UseAudioNormalization)
+            ApplyAudioNormalizationForChannel();
+
         // Set the stream to call Stop() when it ends.
         var syncHandle = Bass.ChannelSetSync(_fxStream,
             SyncFlags.End,
@@ -285,6 +278,19 @@ public sealed class BassEngine : OsuPlayerService, IAudioEngine
 
         if (syncHandle == 0)
             throw new ArgumentException(@"Error establishing End Sync on file stream.");
+    }
+
+    private void ApplyAudioNormalizationForChannel()
+    {
+        var peakLevel = Bass.ChannelGetLevel(_decodeStreamHandle, Bass.ChannelGetLength(_decodeStreamHandle), LevelRetrievalFlags.Stereo).Max();
+
+        var volumeCorrection = 1 / peakLevel;
+
+        Bass.ChannelSetPosition(_decodeStreamHandle, 0);
+
+        LogToConsole($"Peak Level of Song: {peakLevel}. Normalizing with factor: {volumeCorrection}");
+
+        Bass.ChannelSetAttribute(_fxStream, ChannelAttribute.Volume, volumeCorrection);
     }
 
     private bool PlayCurrentStream()
