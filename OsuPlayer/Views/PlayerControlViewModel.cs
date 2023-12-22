@@ -2,10 +2,6 @@ using System.Reactive.Disposables;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
-using LiveChartsCore;
-using LiveChartsCore.Defaults;
-using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Painting;
 using Nein.Base;
 using Nein.Extensions;
 using OsuPlayer.Data.DataModels.Interfaces;
@@ -15,13 +11,15 @@ using OsuPlayer.Extensions.EnumExtensions;
 using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules.Audio.Interfaces;
+using OsuPlayer.Windows;
 using ReactiveUI;
-using SkiaSharp;
 
 namespace OsuPlayer.Views;
 
 public class PlayerControlViewModel : BaseViewModel
 {
+    public FluentAppWindowViewModel MainWindowViewModel { get; }
+
     private readonly Bindable<bool> _isPlaying = new();
     private readonly Bindable<RepeatMode> _isRepeating = new();
     private readonly Bindable<bool> _isShuffle = new();
@@ -37,57 +35,6 @@ public class PlayerControlViewModel : BaseViewModel
     private string _currentSongTime = "00:00";
 
     private double _playbackSpeed;
-
-    #region Audio Visualizer Stuff
-
-    private DispatcherTimer _audioVisualizerUpdateTimer = new();
-
-    public DispatcherTimer AudioVisualizerUpdateTimer
-    {
-        get => _audioVisualizerUpdateTimer;
-        set => this.RaiseAndSetIfChanged(ref _audioVisualizerUpdateTimer, value);
-    }
-
-    private ObservableCollection<ObservableValue> _seriesValues = new();
-
-    public ObservableCollection<ObservableValue> SeriesValues
-    {
-        get => _seriesValues;
-        set => this.RaiseAndSetIfChanged(ref _seriesValues, value);
-    }
-
-    private ISeries[] _series;
-
-    public ISeries[] Series
-    {
-        get => _series;
-        set => this.RaiseAndSetIfChanged(ref _series, value);
-    }
-
-    public Axis[] XAxes { get; set; } =
-    {
-        new Axis
-        {
-            SeparatorsPaint = null,
-            LabelsPaint = null,
-            ShowSeparatorLines = false,
-            MaxLimit = 256
-        }
-    };
-
-    public Axis[] YAxes { get; set; } =
-    {
-        new Axis
-        {
-            MinLimit = 0,
-            MaxLimit = 1,
-            SeparatorsPaint = null,
-            LabelsPaint = null,
-            ShowSeparatorLines = false,
-        }
-    };
-
-    #endregion
 
     public FontWeights SmallerFont
     {
@@ -211,9 +158,10 @@ public class PlayerControlViewModel : BaseViewModel
 
     public string ActivePlaylist => $"Active playlist: {Player.SelectedPlaylist.Value?.Name ?? "none"}";
 
-    public PlayerControlViewModel(IPlayer player, IAudioEngine bassEngine)
+    public PlayerControlViewModel(IPlayer player, IAudioEngine bassEngine, FluentAppWindowViewModel mainWindowViewModel)
     {
         Player = player;
+        MainWindowViewModel = mainWindowViewModel;
 
         var config = new Config();
 
@@ -275,30 +223,6 @@ public class PlayerControlViewModel : BaseViewModel
             this.RaisePropertyChanged(nameof(IsAPlaylistSelected));
             this.RaisePropertyChanged(nameof(IsCurrentSongInPlaylist));
         }, true);
-
-        #region Init Audio Visualizer
-
-        const int size = 4096;
-
-        SeriesValues = new ObservableValue[size].ToObservableCollection();
-
-        for (var i = 0; i < size; i++)
-        {
-            SeriesValues[i] = new ObservableValue(0);
-        }
-
-        Series = new ISeries[]
-        {
-            new ColumnSeries<ObservableValue>
-            {
-                Values = SeriesValues,
-                IsHoverable = false,
-                Fill = new SolidColorPaint(new SKColor(164, 164, 164, 75)),
-                Stroke = null
-            }
-        };
-
-        #endregion
 
         Activator = new ViewModelActivator();
 

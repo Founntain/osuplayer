@@ -2,19 +2,15 @@ using System.ComponentModel;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Threading;
 using Avalonia.VisualTree;
-using LiveChartsCore.Defaults;
 using Nein.Base;
 using Nein.Extensions;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.IO.Storage.Playlists;
-using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Windows;
 using ReactiveUI;
-using Splat;
 
 namespace OsuPlayer.Views;
 
@@ -40,45 +36,6 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
             ViewModel.RaisePropertyChanged(nameof(ViewModel.IsAPlaylistSelected));
             ViewModel.RaisePropertyChanged(nameof(ViewModel.IsCurrentSongInPlaylist));
             ViewModel.RaisePropertyChanged(nameof(ViewModel.IsCurrentSongOnBlacklist));
-
-            ViewModel.AudioVisualizerUpdateTimer.Interval = TimeSpan.FromMilliseconds(2);
-            ViewModel.AudioVisualizerUpdateTimer.Tick += AudioVisualizerUpdateTimer_OnTick;
-
-            ViewModel.AudioVisualizerUpdateTimer.Start();
-        });
-    }
-
-    private void AudioVisualizerUpdateTimer_OnTick(object? sender, EventArgs e)
-    {
-        Dispatcher.UIThread.Invoke(() =>
-        {
-            using var config = new Config();
-
-            // Do nothing if audio visualizer is disabled
-            if (!config.Container.DisplayAudioVisualizer) return;
-
-            var player = Locator.Current.GetRequiredService<IPlayer>();
-
-            if (ViewModel == default) return;
-
-            if (!player.IsPlaying.Value)
-            {
-                foreach (var t in ViewModel.SeriesValues.Where(x => x.Value != 0))
-                {
-                    t.Value = 0;
-                }
-
-                return;
-            }
-
-            var audioEngine = Locator.Current.GetRequiredService<IAudioEngine>();
-
-            var vData = audioEngine.GetVisualizationData();
-
-            for (var i = 0; i < vData.Length; i++)
-            {
-                ViewModel.SeriesValues[i].Value = vData[i] * 5;
-            }
         });
     }
 

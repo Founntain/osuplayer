@@ -2,9 +2,7 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Avalonia.Media;
-using Avalonia.Threading;
 using FluentAvalonia.UI.Windowing;
 using Nein.Base;
 using Nein.Extensions;
@@ -42,48 +40,9 @@ public partial class Miniplayer : FluentReactiveWindow<MiniplayerViewModel>
 
         _mainWindow = Locator.GetLocator().GetRequiredService<FluentAppWindow>();
 
-        DataContext = new MiniplayerViewModel(player, engine);
+        DataContext = new MiniplayerViewModel(player, engine, _mainWindow!.ViewModel!);
 
         LoadSettings();
-
-        ViewModel.AudioVisualizerUpdateTimer.Interval = TimeSpan.FromMilliseconds(2);
-        ViewModel.AudioVisualizerUpdateTimer.Tick += AudioVisualizerUpdateTimer_OnTick;
-
-        ViewModel.AudioVisualizerUpdateTimer.Start();
-    }
-
-    private void AudioVisualizerUpdateTimer_OnTick(object? sender, EventArgs e)
-    {
-        Dispatcher.UIThread.Invoke(() =>
-        {
-            using var config = new Config();
-
-            // Do nothing if audio visualizer is disabled
-            if (!config.Container.DisplayAudioVisualizer) return;
-
-            var player = Locator.Current.GetRequiredService<IPlayer>();
-
-            if (ViewModel == default) return;
-
-            if (!player.IsPlaying.Value)
-            {
-                foreach (var t in ViewModel.SeriesValues.Where(x => x.Value != 0))
-                {
-                    t.Value = 0;
-                }
-
-                return;
-            }
-
-            var audioEngine = Locator.Current.GetRequiredService<IAudioEngine>();
-
-            var vData = audioEngine.GetVisualizationData();
-
-            for (var i = 0; i < vData.Length; i++)
-            {
-                ViewModel.SeriesValues[i].Value = vData[i] * 5;
-            }
-        });
     }
 
     private void LoadSettings()

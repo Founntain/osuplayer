@@ -331,31 +331,15 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
 
         if(value)
         {
-            ViewModel.PlayerControl.AudioVisualizerUpdateTimer.Start();
+            ViewModel.AudioVisualizer.AudioVisualizerUpdateTimer.Start();
         }
         else
         {
-            ViewModel.PlayerControl.AudioVisualizerUpdateTimer.Stop();
+            ViewModel.AudioVisualizer.AudioVisualizerUpdateTimer.Stop();
 
             for (var i = 0; i < 4096; i++)
             {
-                ViewModel.PlayerControl.SeriesValues[i] = new ObservableValue(0);
-            }
-        }
-
-        if (Miniplayer?.ViewModel == default) return;
-
-        if(value)
-        {
-            Miniplayer.ViewModel.AudioVisualizerUpdateTimer.Start();
-        }
-        else
-        {
-            Miniplayer.ViewModel.AudioVisualizerUpdateTimer.Stop();
-
-            for (var i = 0; i < 4096; i++)
-            {
-                Miniplayer.ViewModel.SeriesValues[i] = new ObservableValue(0);
+                ViewModel.AudioVisualizer.SeriesValues[i] = new ObservableValue(0);
             }
         }
     }

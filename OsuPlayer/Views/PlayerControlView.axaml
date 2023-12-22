@@ -44,10 +44,7 @@
         </Grid>
 
         <Grid Grid.Row="1" ColumnDefinitions="*, Auto, *">
-            <lvc:CartesianChart Grid.Column="0" Grid.ColumnSpan="3" IsHitTestVisible="False" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
-                                Series="{Binding Series}"
-                                XAxes="{Binding XAxes}"
-                                YAxes="{Binding YAxes}" />
+            <ContentControl Grid.ColumnSpan="3" Content="{Binding MainWindowViewModel.AudioVisualizer}"/>
 
             <Grid Grid.Column="0" ColumnDefinitions="Auto, *">
                 <Image Grid.Column="0" Stretch="UniformToFill" Source="{Binding CurrentSongImage}" Margin="6"

@@ -159,6 +159,12 @@
         <Compile Update="Windows\FluentAppWindowViewModel.cs">
           <DependentUpon>FluentAppWindow.axaml</DependentUpon>
         </Compile>
+        <Compile Update="Views\Controls\AudioVisualizerViewModel.cs">
+          <DependentUpon>AudioVisualizer.axaml</DependentUpon>
+        </Compile>
+        <Compile Update="Views\CustomControls\AudioVisualizerViewModel.cs">
+          <DependentUpon>AudioVisualizerView.axaml</DependentUpon>
+        </Compile>
     </ItemGroup>
     <ItemGroup>
         <UpToDateCheckInput Remove="Resources\Fonts\Montserrat-VariableFont_wght.ttf" />
