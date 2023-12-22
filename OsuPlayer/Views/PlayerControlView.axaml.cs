@@ -52,13 +52,18 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
     {
         Dispatcher.UIThread.Invoke(() =>
         {
+            using var config = new Config();
+
+            // Do nothing if audio visualizer is disabled
+            if (!config.Container.DisplayAudioVisualizer) return;
+
             var player = Locator.Current.GetRequiredService<IPlayer>();
 
             if (ViewModel == default) return;
 
-            if (!player.IsPlaying.Value && ViewModel.SeriesValues.Any(x => x.Value > 0))
+            if (!player.IsPlaying.Value)
             {
-                foreach (var t in ViewModel.SeriesValues)
+                foreach (var t in ViewModel.SeriesValues.Where(x => x.Value != 0))
                 {
                     t.Value = 0;
                 }

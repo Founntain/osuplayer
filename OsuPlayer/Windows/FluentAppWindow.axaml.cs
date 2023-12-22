@@ -8,6 +8,7 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using FluentAvalonia.UI.Controls;
 using FluentAvalonia.UI.Windowing;
+using LiveChartsCore.Defaults;
 using Nein.Base;
 using Nein.Extensions;
 using OsuPlayer.Data.DataModels.Interfaces;
@@ -155,6 +156,10 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
 
             LoginNavItem.IsVisible = ViewModel!.HomeView.IsUserNotLoggedIn;
             EditUserNavItem.IsVisible = ViewModel!.HomeView.IsUserLoggedIn;
+
+            using var config = new Config();
+
+            SetAudioVisualization(config.Container.DisplayAudioVisualizer);
         });
     }
 
@@ -318,5 +323,40 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
     public void SetRenderMode(BitmapInterpolationMode renderMode)
     {
         RenderOptions.SetBitmapInterpolationMode(this, renderMode);
+    }
+
+    public void SetAudioVisualization(bool value)
+    {
+        if (ViewModel == default) return;
+
+        if(value)
+        {
+            ViewModel.PlayerControl.AudioVisualizerUpdateTimer.Start();
+        }
+        else
+        {
+            ViewModel.PlayerControl.AudioVisualizerUpdateTimer.Stop();
+
+            for (var i = 0; i < 4096; i++)
+            {
+                ViewModel.PlayerControl.SeriesValues[i] = new ObservableValue(0);
+            }
+        }
+
+        if (Miniplayer?.ViewModel == default) return;
+
+        if(value)
+        {
+            Miniplayer.ViewModel.AudioVisualizerUpdateTimer.Start();
+        }
+        else
+        {
+            Miniplayer.ViewModel.AudioVisualizerUpdateTimer.Stop();
+
+            for (var i = 0; i < 4096; i++)
+            {
+                Miniplayer.ViewModel.SeriesValues[i] = new ObservableValue(0);
+            }
+        }
     }
 }

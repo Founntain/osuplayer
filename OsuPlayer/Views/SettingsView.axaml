@@ -154,6 +154,13 @@
                         </ui:SettingsExpanderItem.Footer>
                     </ui:SettingsExpanderItem>
 
+                    <ui:SettingsExpanderItem Content="Display Audio Visualizer"
+                                             Description="If enabled it displays an audio visualizer on the bottom of the window (and miniplayer). Increases GPU usage">
+                        <ui:SettingsExpanderItem.Footer>
+                            <ToggleSwitch IsChecked="{Binding DisplayAudioVisualizer}" OnContent="On" OffContent="Off" />
+                        </ui:SettingsExpanderItem.Footer>
+                    </ui:SettingsExpanderItem>
+
                     <!-- <ui:SettingsExpanderItem Content="UI Font" -->
                     <!--                          Description="Select the font you want to use as UI Font. We recommend Montserrat"> -->
                     <!--     <ui:SettingsExpanderItem.Footer> -->
