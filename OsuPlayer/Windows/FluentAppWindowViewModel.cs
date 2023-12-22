@@ -111,7 +111,6 @@ public class FluentAppWindowViewModel : BaseWindowViewModel
         ExportSongsView = new ExportSongsViewModel(Player.SongSourceProvider);
         PlayHistoryView = new PlayHistoryViewModel(Player, historyProvider, Player.SongSourceProvider);
 
-
         IsLinuxOs = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
         IsNonLinuxOs = !IsLinuxOs;
 
