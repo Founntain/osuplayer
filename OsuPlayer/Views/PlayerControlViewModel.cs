@@ -11,12 +11,15 @@ using OsuPlayer.Extensions.EnumExtensions;
 using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules.Audio.Interfaces;
+using OsuPlayer.Windows;
 using ReactiveUI;
 
 namespace OsuPlayer.Views;
 
 public class PlayerControlViewModel : BaseViewModel
 {
+    public FluentAppWindowViewModel MainWindowViewModel { get; }
+
     private readonly Bindable<bool> _isPlaying = new();
     private readonly Bindable<RepeatMode> _isRepeating = new();
     private readonly Bindable<bool> _isShuffle = new();
@@ -155,9 +158,10 @@ public class PlayerControlViewModel : BaseViewModel
 
     public string ActivePlaylist => $"Active playlist: {Player.SelectedPlaylist.Value?.Name ?? "none"}";
 
-    public PlayerControlViewModel(IPlayer player, IAudioEngine bassEngine)
+    public PlayerControlViewModel(IPlayer player, IAudioEngine bassEngine, FluentAppWindowViewModel mainWindowViewModel)
     {
         Player = player;
+        MainWindowViewModel = mainWindowViewModel;
 
         var config = new Config();
 

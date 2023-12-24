@@ -27,11 +27,9 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
             if (this.GetVisualRoot() is FluentAppWindow mainWindow)
                 _mainWindow = mainWindow;
 
-            SongProgressSlider.AddHandler(PointerPressedEvent, SongProgressSlider_OnPointerPressed,
-                RoutingStrategies.Tunnel);
+            SongProgressSlider.AddHandler(PointerPressedEvent, SongProgressSlider_OnPointerPressed, RoutingStrategies.Tunnel);
 
-            SongProgressSlider.AddHandler(PointerReleasedEvent, SongProgressSlider_OnPointerReleased,
-                RoutingStrategies.Tunnel);
+            SongProgressSlider.AddHandler(PointerReleasedEvent, SongProgressSlider_OnPointerReleased, RoutingStrategies.Tunnel);
 
             Repeat.AddHandler(PointerReleasedEvent, Repeat_OnPointerReleased, RoutingStrategies.Tunnel);
 

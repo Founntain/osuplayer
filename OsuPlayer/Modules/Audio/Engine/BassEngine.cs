@@ -40,6 +40,8 @@ public sealed class BassEngine : OsuPlayerService, IAudioEngine
     private double _playbackSpeed;
     private int _sampleFrequency = 44100;
 
+    private float[] _visualizationData = new float [2048];
+
     public bool IsEqEnabled
     {
         get => _isEqEnabled;
@@ -199,6 +201,13 @@ public sealed class BassEngine : OsuPlayerService, IAudioEngine
         config.Container.SelectedAudioDeviceDriver = audioDevices[index].Driver;
 
         LogToConsole($"DEVICE {index} | LOADING PLAYBACK {Bass.LastError}");
+    }
+
+    public float[] GetVisualizationData()
+    {
+        Bass.ChannelGetData(_fxStream, _visualizationData, (int) DataFlags.FFT4096);
+
+        return _visualizationData;
     }
 
     private void SetPlaybackSpeedOptions(double speed)

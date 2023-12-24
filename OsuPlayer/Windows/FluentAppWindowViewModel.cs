@@ -3,12 +3,15 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using Nein.Base;
+using Nein.Extensions;
 using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.Interfaces.Service;
 using OsuPlayer.Modules;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Views;
+using OsuPlayer.Views.CustomControls;
 using ReactiveUI;
+using Splat;
 
 namespace OsuPlayer.Windows;
 
@@ -39,6 +42,8 @@ public class FluentAppWindowViewModel : BaseWindowViewModel
     public BeatmapsViewModel BeatmapView { get; }
     public ExportSongsViewModel ExportSongsView { get; }
     public PlayHistoryViewModel PlayHistoryView { get; }
+
+    public AudioVisualizerViewModel AudioVisualizer { get; }
 
     public ExperimentalAcrylicMaterial? PanelMaterial { get; set; }
 
@@ -86,7 +91,9 @@ public class FluentAppWindowViewModel : BaseWindowViewModel
         Player = player;
         ProfileManager = profileManager;
 
-        PlayerControl = new PlayerControlViewModel(Player, engine);
+        AudioVisualizer = new AudioVisualizerViewModel(Locator.Current.GetRequiredService<IAudioEngine>());
+
+        PlayerControl = new PlayerControlViewModel(Player, engine, this);
 
         SearchView = new SearchViewModel(Player);
         PlaylistView = new PlaylistViewModel(Player);

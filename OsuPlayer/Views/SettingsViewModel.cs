@@ -7,8 +7,12 @@ using Avalonia.Media.Imaging;
 using Avalonia.Styling;
 using FluentAvalonia.Styling;
 using FluentAvalonia.UI.Controls;
+using LiveChartsCore;
+using LiveChartsCore.Defaults;
+using Microsoft.CodeAnalysis.Diagnostics;
 using Nein.Base;
 using Nein.Controls.Interfaces;
+using Nein.Extensions;
 using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
@@ -72,6 +76,23 @@ public class SettingsViewModel : BaseViewModel
 
     public string[] AppThemes { get; } = { _system, _light , _dark };
     public string[] RenderingModes { get; } = { _highQuality, _mediumQuality, _lowQuality  };
+
+    private bool _displayAudioVisualizer;
+
+    public bool DisplayAudioVisualizer
+    {
+        get => _displayAudioVisualizer;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _displayAudioVisualizer, value);
+
+            using var config = new Config();
+
+            config.Container.DisplayAudioVisualizer = value;
+
+            MainWindow.SetAudioVisualization(value);
+        }
+    }
 
     public string RenderingMode
     {
@@ -556,6 +577,7 @@ public class SettingsViewModel : BaseViewModel
         _displayUserStats = config.Container.DisplayerUserStats;
         _useLeftNavigationPosition = config.Container.UseLeftNavigationPosition;
         _renderingMode = GetRenderingModeString(config.Container.RenderingMode);
+        _displayAudioVisualizer = config.Container.DisplayAudioVisualizer;
 
         var lastFmApi = Locator.Current.GetService<ILastFmApiService>();
 

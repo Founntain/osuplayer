@@ -5,6 +5,7 @@
              xmlns:cv="using:OsuPlayer.Extensions.ValueConverters"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:views="clr-namespace:OsuPlayer.Views"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.PlayerControlView"
              FontWeight="{DynamicResource DefaultFontWeight}">
@@ -43,6 +44,8 @@
         </Grid>
 
         <Grid Grid.Row="1" ColumnDefinitions="*, Auto, *">
+            <ContentControl Grid.ColumnSpan="3" Content="{Binding MainWindowViewModel.AudioVisualizer}"/>
+
             <Grid Grid.Column="0" ColumnDefinitions="Auto, *">
                 <Image Grid.Column="0" Stretch="UniformToFill" Source="{Binding CurrentSongImage}" Margin="6"
                        VerticalAlignment="Center" Width="80" Height="58" IsVisible="{Binding DisplayBackgroundImage}" />

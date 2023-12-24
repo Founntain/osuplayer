@@ -2,7 +2,6 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using FluentAvalonia.UI.Windowing;
 using Nein.Base;
@@ -41,7 +40,7 @@ public partial class Miniplayer : FluentReactiveWindow<MiniplayerViewModel>
 
         _mainWindow = Locator.GetLocator().GetRequiredService<FluentAppWindow>();
 
-        DataContext = new MiniplayerViewModel(player, engine);
+        DataContext = new MiniplayerViewModel(player, engine, _mainWindow!.ViewModel!);
 
         LoadSettings();
     }

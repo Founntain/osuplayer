@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
+using ABI.Windows.Perception.Spatial;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -7,6 +8,7 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using FluentAvalonia.UI.Controls;
 using FluentAvalonia.UI.Windowing;
+using LiveChartsCore.Defaults;
 using Nein.Base;
 using Nein.Extensions;
 using OsuPlayer.Data.DataModels.Interfaces;
@@ -14,6 +16,7 @@ using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Extensions.EnumExtensions;
 using OsuPlayer.Interfaces.Service;
 using OsuPlayer.IO.Importer;
+using OsuPlayer.Modules.Audio.Engine;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Network;
 using OsuPlayer.Services;
@@ -153,6 +156,10 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
 
             LoginNavItem.IsVisible = ViewModel!.HomeView.IsUserNotLoggedIn;
             EditUserNavItem.IsVisible = ViewModel!.HomeView.IsUserLoggedIn;
+
+            using var config = new Config();
+
+            SetAudioVisualization(config.Container.DisplayAudioVisualizer);
         });
     }
 
@@ -316,5 +323,24 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
     public void SetRenderMode(BitmapInterpolationMode renderMode)
     {
         RenderOptions.SetBitmapInterpolationMode(this, renderMode);
+    }
+
+    public void SetAudioVisualization(bool value)
+    {
+        if (ViewModel == default) return;
+
+        if(value)
+        {
+            ViewModel.AudioVisualizer.AudioVisualizerUpdateTimer.Start();
+        }
+        else
+        {
+            ViewModel.AudioVisualizer.AudioVisualizerUpdateTimer.Stop();
+
+            for (var i = 0; i < 4096; i++)
+            {
+                ViewModel.AudioVisualizer.SeriesValues[i] = new ObservableValue(0);
+            }
+        }
     }
 }

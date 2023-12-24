@@ -15,6 +15,8 @@ namespace OsuPlayer.Windows;
 
 public class MiniplayerViewModel : BaseWindowViewModel
 {
+    public FluentAppWindowViewModel MainWindowViewModel { get; }
+
     private readonly Bindable<bool> _isPlaying = new();
     private readonly Bindable<RepeatMode> _isRepeating = new();
     private readonly Bindable<bool> _isShuffle = new();
@@ -131,9 +133,11 @@ public class MiniplayerViewModel : BaseWindowViewModel
 
     public string ActivePlaylist => $"Active playlist: {Player.SelectedPlaylist.Value?.Name ?? "none"}";
 
-    public MiniplayerViewModel(IPlayer player, IAudioEngine bassEngine)
+    public MiniplayerViewModel(IPlayer player, IAudioEngine bassEngine, FluentAppWindowViewModel mainWindowViewModel)
     {
         Player = player;
+
+        MainWindowViewModel = mainWindowViewModel;
 
         _songTime.BindTo(bassEngine.ChannelPosition);
         _songTime.BindValueChanged(_ => this.RaisePropertyChanged(nameof(SongTime)));

@@ -21,6 +21,7 @@
         <entry key="OsuPlayer/UI Extensions/MessageBoxWindow.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/Views/BeatmapsView.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/Views/BlacklistEditorView.axaml" value="OsuPlayer/OsuPlayer.csproj" />
+        <entry key="OsuPlayer/Views/Controls/AudioVisualizer.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/Views/EditUserView.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/Views/EqualizerView.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/Views/ExportSongsView.axaml" value="OsuPlayer/OsuPlayer.csproj" />
@@ -49,6 +50,9 @@
         <entry key="OsuPlayer/Windows/LoginWindow.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/Windows/MainWindow.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/Windows/Miniplayer.axaml" value="OsuPlayer/OsuPlayer.csproj" />
+        <entry key="OsuPlayer/Windows/RenderTest.axaml" value="OsuPlayer/OsuPlayer.csproj" />
+        <entry key="OsuPlayer/Windows/RenderingTest.axaml" value="OsuPlayer/OsuPlayer.csproj" />
+        <entry key="OsuPlayer/Windows/RenderingTestWindow.axaml" value="OsuPlayer/OsuPlayer.csproj" />
         <entry key="OsuPlayer/Windows/Test.axaml" value="OsuPlayer/OsuPlayer.csproj" />
       </map>
     </option>
