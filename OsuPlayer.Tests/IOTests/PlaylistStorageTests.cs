@@ -10,7 +10,7 @@ namespace OsuPlayer.Tests.IOTests;
 
 public class PlaylistStorageTests
 {
-    private PlaylistStorage _playlist;
+    private PlaylistStorage _playlist = null!;
 
     [SetUp]
     public void Setup()
@@ -24,27 +24,27 @@ public class PlaylistStorageTests
     [Test]
     public void TestPlaylistsPath()
     {
-        Assert.IsTrue(Regex.IsMatch(_playlist.Path, @"^data[\/\\]{1,2}playlists\.json$"));
+        Assert.That(Regex.IsMatch(_playlist.Path, @"^data[\/\\]{1,2}playlists\.json$"), Is.True);
     }
 
     [Test]
     public void TestContainerNotNullOnInit()
     {
-        Assert.IsNotNull(_playlist.Container);
+        Assert.That(_playlist.Container, Is.Not.Null);
     }
 
     [Test]
     public void TestContainerNotNullOnRead()
     {
         _playlist.Read();
-        Assert.IsNotNull(_playlist.Container);
+        Assert.That(_playlist.Container, Is.Not.Null);
     }
 
     [Test]
     public void TestContainerNotNullOnAsyncRead()
     {
         Assert.DoesNotThrowAsync(async () => await _playlist.ReadAsync());
-        Assert.IsNotNull(_playlist.Container);
+        Assert.That(_playlist.Container, Is.Not.Null);
     }
 
     [Test]
@@ -80,7 +80,7 @@ public class PlaylistStorageTests
         var sequenceEqual =
             testPlaylist.Select(x => x.Id).SequenceEqual(newContainer.Playlists!.Select(x => x.Id));
 
-        Assert.IsTrue(sequenceEqual);
+        Assert.That(sequenceEqual, Is.True);
     }
 
     [Test]
@@ -92,7 +92,7 @@ public class PlaylistStorageTests
         };
 
         Assert.DoesNotThrow(() => _playlist.Container.Playlists = testPlaylist);
-        Assert.AreEqual(testPlaylist, _playlist.Read().Playlists);
+        Assert.That(_playlist.Read().Playlists, Is.EqualTo(testPlaylist));
     }
 
     [Test]

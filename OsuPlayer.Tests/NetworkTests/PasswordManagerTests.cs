@@ -12,6 +12,6 @@ public class PasswordManagerTests
     {
         var result = PasswordManager.CheckIfPasswordMeetsRequirements(pw);
 
-        Assert.AreEqual(result, expected);
+        Assert.That(result, Is.EqualTo(expected));
     }
 }

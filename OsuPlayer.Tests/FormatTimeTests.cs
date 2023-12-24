@@ -27,6 +27,6 @@ public class FormatTimeTests
         var seconds = (int) input[2];
         var expectedString = input[3];
         var actualString = new TimeSpan(hours, minutes, seconds).FormatTime();
-        Assert.AreEqual(expectedString, actualString);
+        Assert.That(actualString, Is.EqualTo(expectedString));
     }
 }

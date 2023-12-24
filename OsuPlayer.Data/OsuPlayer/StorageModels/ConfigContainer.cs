@@ -28,6 +28,7 @@ public class ConfigContainer : IStorableContainer
     public string? Font { get; set; }
     public bool UseDiscordRpc { get; set; }
     public bool UsePitch { get; set; } = true;
+    public bool UseAudioNormalization { get; set; } = false;
     public BackgroundMode BackgroundMode { get; set; } = BackgroundMode.AcrylicBlur;
     public float BackgroundBlurRadius { get; set; } = 50f;
     public bool DisplayBackgroundImage { get; set; } = false;

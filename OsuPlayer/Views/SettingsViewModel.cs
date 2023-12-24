@@ -42,6 +42,7 @@ public class SettingsViewModel : BaseViewModel
     private readonly FluentAvaloniaTheme _faTheme;
 
     private bool _usePitch;
+    private bool _useAudioNormalization;
     private bool _useDiscordRpc;
     private bool _displayUserStats;
     private bool _enableScrobbling;
@@ -224,6 +225,18 @@ public class SettingsViewModel : BaseViewModel
 
             using var config = new Config();
             config.Container.UsePitch = value;
+        }
+    }
+    
+    public bool UseAudioNormalization
+    {
+        get => _useAudioNormalization;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _useAudioNormalization, value);
+
+            using var config = new Config();
+            config.Container.UseAudioNormalization = value;
         }
     }
 
@@ -557,6 +570,7 @@ public class SettingsViewModel : BaseViewModel
         _selectedAudioDevice = AvailableAudioDevices.FirstOrDefault(x => x.Driver == config.Container.SelectedAudioDeviceDriver);
         _useDiscordRpc = config.Container.UseDiscordRpc;
         _usePitch = config.Container.UsePitch;
+        _useAudioNormalization = config.Container.UseAudioNormalization;
         _displayBackgroundImage = config.Container.DisplayBackgroundImage;
         _backgroundBlurRadius = config.Container.BackgroundBlurRadius;
         _enableScrobbling = config.Container.EnableScrobbling;
