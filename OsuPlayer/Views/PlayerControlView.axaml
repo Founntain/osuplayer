@@ -97,8 +97,8 @@
                                             Theme="{StaticResource TransparentButton}" Click="PlaybackSpeed_OnClick">
                                         <avalonia:MaterialIcon Kind="PlaySpeed" Height="19" Width="19" />
                                     </Button>
-                                    <Slider VerticalAlignment="Center" HorizontalAlignment="Center" Minimum="-0.25"
-                                            Maximum="0.25"
+                                    <Slider VerticalAlignment="Center" HorizontalAlignment="Center" Minimum="-0.5"
+                                            Maximum="0.5"
                                             Value="{Binding PlaybackSpeed}"
                                             Orientation="Horizontal" Width="100" Margin="6" />
                                 </StackPanel>
