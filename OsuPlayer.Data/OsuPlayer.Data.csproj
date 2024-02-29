@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.0.6" />
+        <PackageReference Include="Avalonia" Version="11.0.9" />
         <PackageReference Include="Founntain.Nein" Version="2023.1115.0" />
         <PackageReference Include="JetBrains.Annotations" Version="2023.3.0" />
         <PackageReference Include="ManagedBass" Version="3.1.1" />
