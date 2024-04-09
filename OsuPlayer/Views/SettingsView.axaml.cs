@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using System.Web;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
@@ -73,6 +74,9 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
         }
 
         var osuFolder = Path.GetDirectoryName(dbFilePath);
+
+        // Decode the path, so stuff like %20 are encoded properly
+        osuFolder = HttpUtility.UrlDecode(osuFolder);
 
         await using (var config = new Config())
         {
