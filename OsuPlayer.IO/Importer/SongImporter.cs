@@ -84,6 +84,13 @@ public static class SongImporter
 
         using var reader = dbReaderFactory.CreateDatabaseReader(path);
 
+        if (reader == null)
+        {
+            loggingService.Log($"Couldn't create database reader for given path {path}", LogType.Error);
+
+            return null;
+        }
+
         loggingService.Log("Starting beatmap import...");
 
         readMaps = await reader.ReadBeatmaps();
