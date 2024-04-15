@@ -155,4 +155,33 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
             _mainWindow.ViewModel.MainView = _mainWindow.ViewModel.PlaylistView;
         }
     }
+
+    private void Volume_OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
+    {
+        if (ViewModel == default) return;
+
+        if (e.Delta.Y > 0)
+        {
+            if (ViewModel.Player.Volume.Value + 10 > ViewModel.MaximumVolume)
+            {
+                ViewModel.Player.Volume.Value = 100;
+
+                return;
+            }
+
+            ViewModel.Player.Volume.Value += 10;
+
+        }
+        else if (e.Delta.Y < 0)
+        {
+            if (ViewModel.Player.Volume.Value - 10 < 0)
+            {
+                ViewModel.Player.Volume.Value = 0;
+
+                return;
+            }
+
+            ViewModel.Player.Volume.Value -= 10;
+        }
+    }
 }

@@ -5,7 +5,6 @@
              xmlns:cv="using:OsuPlayer.Extensions.ValueConverters"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:views="clr-namespace:OsuPlayer.Views"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.PlayerControlView"
              FontWeight="{DynamicResource DefaultFontWeight}">
@@ -44,7 +43,7 @@
         </Grid>
 
         <Grid Grid.Row="1" ColumnDefinitions="*, Auto, *">
-            <ContentControl Grid.ColumnSpan="3" Content="{Binding MainWindowViewModel.AudioVisualizer}"/>
+            <ContentControl Grid.ColumnSpan="3" Content="{Binding MainWindowViewModel.AudioVisualizer}" />
 
             <Grid Grid.Column="0" ColumnDefinitions="Auto, *">
                 <Image Grid.Column="0" Stretch="UniformToFill" Source="{Binding CurrentSongImage}" Margin="6"
@@ -66,21 +65,21 @@
             <DockPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5">
                 <Panel>
                     <Button Name="Volume" Width="38" Height="38" CornerRadius="50"
-                            Theme="{StaticResource TransparentButton}">
+                            Theme="{StaticResource TransparentButton}" PointerWheelChanged="Volume_OnPointerWheelChanged">
                         <avalonia:MaterialIcon Kind="{Binding Volume, Converter={StaticResource VolumeConverter}}"
                                                Height="19" Width="19" />
                         <Button.Flyout>
                             <Flyout>
                                 <StackPanel Orientation="Horizontal">
                                     <Button Name="VolumeFly" Width="38" Height="38" CornerRadius="50"
-                                            Theme="{StaticResource TransparentButton}" Click="Volume_OnClick">
+                                            Theme="{StaticResource TransparentButton}" Click="Volume_OnClick" >
                                         <avalonia:MaterialIcon
                                             Kind="{Binding Volume, Converter={StaticResource VolumeConverter}}"
                                             Height="19" Width="19" />
                                     </Button>
                                     <Slider VerticalAlignment="Center" HorizontalAlignment="Center"
-                                            Minimum="0" Maximum="100" Value="{Binding Volume}" Orientation="Horizontal"
-                                            Width="100" Margin="6" />
+                                            Minimum="0" Maximum="{Binding MaximimumVolume}" Value="{Binding Volume}" Orientation="Horizontal"
+                                            Width="100" Margin="6" PointerWheelChanged="Volume_OnPointerWheelChanged"/>
                                 </StackPanel>
                             </Flyout>
                         </Button.Flyout>
