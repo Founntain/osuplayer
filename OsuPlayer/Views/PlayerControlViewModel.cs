@@ -95,6 +95,14 @@ public class PlayerControlViewModel : BaseViewModel
         }
     }
 
+    private double _maximumVolume;
+
+    public double MaximumVolume
+    {
+        get => _maximumVolume;
+        set => this.RaiseAndSetIfChanged(ref _maximumVolume, value);
+    }
+
     public double SongTime
     {
         get
@@ -162,6 +170,8 @@ public class PlayerControlViewModel : BaseViewModel
     {
         Player = player;
         MainWindowViewModel = mainWindowViewModel;
+
+        MaximumVolume = 100;
 
         var config = new Config();
 

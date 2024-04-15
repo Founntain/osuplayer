@@ -155,4 +155,31 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
             _mainWindow.ViewModel.MainView = _mainWindow.ViewModel.PlaylistView;
         }
     }
+
+    private void Volume_OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
+    {
+        if (ViewModel == default) return;
+
+        switch (e.Delta.Y)
+        {
+            // When we scroll up and exceed the maximum volume, we set it to the max possible volume
+            case > 0 when ViewModel.Player.Volume.Value + 10 > ViewModel.MaximumVolume:
+                ViewModel.Player.Volume.Value = ViewModel.MaximumVolume;
+
+                return;
+            // When we scroll up we add 10 (10% as the max volume should always be 100)
+            case > 0:
+                ViewModel.Player.Volume.Value += 10;
+                break;
+            // When we scroll up and exceed the maximum volume, we set it to 0, otherwise the slider would set it to max volume if we have a negative number
+            case < 0 when ViewModel.Player.Volume.Value - 10 < 0:
+                ViewModel.Player.Volume.Value = 0;
+
+                return;
+            // When we scroll up we subtract 10 (10% as the max volume should always be 100)
+            case < 0:
+                ViewModel.Player.Volume.Value -= 10;
+                break;
+        }
+    }
 }
