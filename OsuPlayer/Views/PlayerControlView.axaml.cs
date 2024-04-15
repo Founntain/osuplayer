@@ -160,28 +160,26 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
     {
         if (ViewModel == default) return;
 
-        if (e.Delta.Y > 0)
+        switch (e.Delta.Y)
         {
-            if (ViewModel.Player.Volume.Value + 10 > ViewModel.MaximumVolume)
-            {
-                ViewModel.Player.Volume.Value = 100;
+            // When we scroll up and exceed the maximum volume, we set it to the max possible volume
+            case > 0 when ViewModel.Player.Volume.Value + 10 > ViewModel.MaximumVolume:
+                ViewModel.Player.Volume.Value = ViewModel.MaximumVolume;
 
                 return;
-            }
-
-            ViewModel.Player.Volume.Value += 10;
-
-        }
-        else if (e.Delta.Y < 0)
-        {
-            if (ViewModel.Player.Volume.Value - 10 < 0)
-            {
+            // When we scroll up we add 10 (10% as the max volume should always be 100)
+            case > 0:
+                ViewModel.Player.Volume.Value += 10;
+                break;
+            // When we scroll up and exceed the maximum volume, we set it to 0, otherwise the slider would set it to max volume if we have a negative number
+            case < 0 when ViewModel.Player.Volume.Value - 10 < 0:
                 ViewModel.Player.Volume.Value = 0;
 
                 return;
-            }
-
-            ViewModel.Player.Volume.Value -= 10;
+            // When we scroll up we subtract 10 (10% as the max volume should always be 100)
+            case < 0:
+                ViewModel.Player.Volume.Value -= 10;
+                break;
         }
     }
 }
