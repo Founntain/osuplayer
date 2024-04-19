@@ -5,15 +5,8 @@
              xmlns:views="clr-namespace:OsuPlayer.Views"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:entityModels="clr-namespace:OsuPlayer.Api.Data.API.EntityModels;assembly=OsuPlayer.Api.Data"
-             xmlns:valueConverters="clr-namespace:OsuPlayer.Extensions.ValueConverters;assembly=OsuPlayer.Extensions"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.BeatmapsView">
-    <UserControl.Resources>
-        <valueConverters:BeatmapModelFullSongNameConverter x:Key="FullSongNameConverter" />
-        <valueConverters:BeatmapModelLastPlayedConverter x:Key="LastPlayedConverter" />
-        <valueConverters:BeatmapModelMostPlayedConverter x:Key="MostPlayedConverter" />
-        <valueConverters:BeatmapModelTimesPlayedConverter x:Key="TimesPlayedConverter" />
-    </UserControl.Resources>
     <Design.DataContext>
         <views:BeatmapsViewModel />
     </Design.DataContext>

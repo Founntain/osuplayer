@@ -3,19 +3,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-             xmlns:valueConverters="clr-namespace:OsuPlayer.ValueConverters"
-             xmlns:extensions="clr-namespace:OsuPlayer.Extensions.ValueConverters;assembly=OsuPlayer.Extensions"
              xmlns:views="clr-namespace:OsuPlayer.Views"
              xmlns:interfaces="clr-namespace:OsuPlayer.Data.DataModels.Interfaces;assembly=OsuPlayer.Data"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.PlaylistEditorView"
              FontWeight="{DynamicResource DefaultFontWeight}">
-    <UserControl.Resources>
-        <valueConverters:PlaylistValueConverter x:Key="PlaylistValueConverter" />
-        <extensions:SourceListValueConverter x:Key="SourceListValueConverter" />
-
-        <Color x:Key="PopupBase">#FF2B2B2B</Color>
-    </UserControl.Resources>
 
     <Design.DataContext>
         <views:PlaylistEditorViewModel />

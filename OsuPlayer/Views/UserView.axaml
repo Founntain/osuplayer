@@ -3,8 +3,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:OsuPlayer.Views"
-             xmlns:valueConverters="clr-namespace:OsuPlayer.Extensions.ValueConverters;assembly=OsuPlayer.Extensions"
-             xmlns:avalonia="clr-namespace:LiveChartsCore.SkiaSharpView.Avalonia;assembly=LiveChartsCore.SkiaSharpView.Avalonia"
              xmlns:statistics="clr-namespace:OsuPlayer.Api.Data.API.RequestModels.Statistics;assembly=OsuPlayer.Api.Data"
              xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:entityModels="clr-namespace:OsuPlayer.Api.Data.API.EntityModels;assembly=OsuPlayer.Api.Data"
@@ -17,13 +15,6 @@
     <Design.DataContext>
         <views:UserViewModel />
     </Design.DataContext>
-
-    <UserControl.Resources>
-        <valueConverters:OsuProfileConverter x:Key="OsuProfileConverter" />
-    </UserControl.Resources>
-
-    <!-- Design Base -->
-    <!-- https://7.founntain.dev/i6SnB9Ns.png -->
 
     <Grid ColumnDefinitions="Auto, 1,  *" Margin="0 1">
         <Grid Column="0" Margin="0 0 1 0" RowDefinitions="Auto, *" MinWidth="300" Background="{DynamicResource BaseBrightDarkTransparentColor}">
@@ -107,8 +98,7 @@
                                     </ItemsRepeater.Layout>
                                     <ItemsRepeater.ItemTemplate>
                                         <DataTemplate DataType="entityModels:BadgeModel">
-                                            <materialIcons:MaterialIcon Kind="{Binding Icon}" Width="32" Height="32"
-                                                                    ToolTip.Tip="{Binding Description}" />
+                                            <materialIcons:MaterialIcon Kind="{Binding IconName, Converter={StaticResource IconNameToIconKindConverter}}" Width="32" Height="32" ToolTip.Tip="{Binding Description}" />
                                         </DataTemplate>
                                     </ItemsRepeater.ItemTemplate>
                                 </ItemsRepeater>

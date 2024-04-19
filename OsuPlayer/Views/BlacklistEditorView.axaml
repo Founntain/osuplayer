@@ -2,7 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:valueConverters="clr-namespace:OsuPlayer.ValueConverters"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:views="clr-namespace:OsuPlayer.Views"
              xmlns:interfaces="clr-namespace:OsuPlayer.Data.DataModels.Interfaces;assembly=OsuPlayer.Data"
@@ -12,10 +11,7 @@
     <Design.DataContext>
         <views:BlacklistEditorViewModel />
     </Design.DataContext>
-
-    <UserControl.Resources>
-        <valueConverters:PlaylistValueConverter x:Key="PlaylistValueConverter" />
-    </UserControl.Resources>
+    
     <Grid Row="1" ColumnDefinitions="*, 50, *" Margin="0 1">
         <Grid Column="1">
             <StackPanel Spacing="10" VerticalAlignment="Center" HorizontalAlignment="Center">

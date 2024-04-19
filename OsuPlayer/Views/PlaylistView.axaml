@@ -14,8 +14,6 @@
         <views:PlaylistViewModel />
     </Design.DataContext>
 
-    <UserControl.Resources>
-    </UserControl.Resources>
     <Grid ColumnDefinitions="15*, 1, 85*">
         <Grid Column="0" Margin="0 1" RowDefinitions="50, *, 40, 40" Background="{DynamicResource BaseBrighterDarkTransparentColor}">
             <Border Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{DynamicResource BaseBrightDarkTransparentColor}">

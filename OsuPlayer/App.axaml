@@ -5,6 +5,8 @@
              xmlns:ui="using:FluentAvalonia.UI.Controls"
              xmlns:uip="using:FluentAvalonia.UI.Controls.Primitives"
              xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:valueConverters="clr-namespace:OsuPlayer.Extensions.ValueConverters;assembly=OsuPlayer.Extensions"
+             xmlns:internalValueConverters="clr-namespace:OsuPlayer.ValueConverters"
              x:Class="OsuPlayer.App"
              RequestedThemeVariant="Dark">
     <Application.DataTemplates>
@@ -36,12 +38,38 @@
             <SolidColorBrush x:Key="ProgressbarColorBrush" Color="{DynamicResource ProgressbarColor}" />
             <SolidColorBrush x:Key="ButtonBackground" Color="#4C000000" />
 
+            <Color x:Key="PopupBase">#FF2B2B2B</Color>
+
             <Color x:Key="AppBackgroundColor">Black</Color>
         </ResourceDictionary>
+
+        <!-- Value Converters -->
+        <internalValueConverters:PlaylistValueConverter x:Key="PlaylistValueConverter" />
+
+        <valueConverters:UsernameConverter x:Key="UsernameConverter" />
+        <valueConverters:IconNameToIconKindConverter x:Key="IconNameToIconKindConverter" />
+        <valueConverters:PlayPauseConverter x:Key="PlayPauseConverter" />
+        <valueConverters:ShuffleConverter x:Key="ShuffleConverter" />
+        <valueConverters:RepeatConverter x:Key="RepeatConverter" />
+        <valueConverters:VolumeConverter x:Key="VolumeConverter" />
+        <valueConverters:IsCurrentSongInPlaylistConverter x:Key="IsCurrentSongInPlaylistConverter" />
+        <valueConverters:IsCurrentSongOnBlacklistConverter x:Key="IsCurrentSongOnBlacklistConverter" />
+        <valueConverters:SourceListValueConverter x:Key="SourceListValueConverter" />
+        <valueConverters:GridFormatter x:Key="GridFormatter" />
+        <valueConverters:LastFmToAuthConverter x:Key="LastFmToAuthConverter" />
+        <valueConverters:DecimalFormatter x:Key="DecimalFormatter" />
+        <valueConverters:OsuProfileConverter x:Key="OsuProfileConverter" />
+        <valueConverters:BeatmapModelFullSongNameConverter x:Key="FullSongNameConverter" />
+        <valueConverters:BeatmapModelLastPlayedConverter x:Key="LastPlayedConverter" />
+        <valueConverters:BeatmapModelMostPlayedConverter x:Key="MostPlayedConverter" />
+        <valueConverters:BeatmapModelTimesPlayedConverter x:Key="TimesPlayedConverter" />
     </Application.Resources>
 
     <Application.Styles>
+
+        <!-- Framework and Addons Styles -->
         <sty:FluentAvaloniaTheme PreferUserAccentColor="True" />
+
         <materialIcons:MaterialIconStyles />
         <!-- <FluentTheme /> -->
     </Application.Styles>

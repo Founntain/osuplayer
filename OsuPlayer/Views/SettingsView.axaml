@@ -3,7 +3,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:OsuPlayer.Views"
-             xmlns:valueConverters="clr-namespace:OsuPlayer.Extensions.ValueConverters;assembly=OsuPlayer.Extensions"
              xmlns:controls="clr-namespace:Nein.Controls;assembly=Nein"
              xmlns:avalonia="clr-namespace:Markdown.Avalonia;assembly=Markdown.Avalonia"
              xmlns:ctxt="clr-namespace:ColorTextBlock.Avalonia;assembly=ColorTextBlock.Avalonia"
@@ -12,10 +11,7 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.SettingsView"
              Initialized="SettingsView_OnInitialized">
-    <UserControl.Resources>
-        <valueConverters:GridFormatter x:Key="GridFormatter" />
-        <valueConverters:LastFmToAuthConverter x:Key="LastFmToAuthConverter" />
-    </UserControl.Resources>
+
     <Design.DataContext>
         <views:SettingsViewModel />
     </Design.DataContext>

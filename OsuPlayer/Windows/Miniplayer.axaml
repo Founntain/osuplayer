@@ -34,16 +34,7 @@
         Icon="avares://OsuPlayer/Resources/x96.ico"
 
         Closed="Miniplayer_OnClosed">
-
-    <Window.Resources>
-        <cv:PlayPauseConverter x:Key="PlayPauseConverter" />
-        <cv:ShuffleConverter x:Key="ShuffleConverter" />
-        <cv:RepeatConverter x:Key="RepeatConverter" />
-        <cv:VolumeConverter x:Key="VolumeConverter" />
-        <cv:IsCurrentSongInPlaylistConverter x:Key="IsCurrentSongInPlaylistConverter" />
-        <cv:IsCurrentSongOnBlacklistConverter x:Key="IsCurrentSongOnBlacklistConverter" />
-    </Window.Resources>
-
+    
     <Design.DataContext>
         <views:MiniplayerViewModel />
     </Design.DataContext>

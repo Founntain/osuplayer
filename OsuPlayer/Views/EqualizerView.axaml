@@ -8,9 +8,6 @@
              x:Class="OsuPlayer.Views.EqualizerView"
              FontWeight="{DynamicResource DefaultFontWeight}"
              FontSize="16">
-    <UserControl.Resources>
-        <Color x:Key="PopupBase">#FF2B2B2B</Color>
-    </UserControl.Resources>
 
     <Design.DataContext>
         <vm:EqualizerViewModel />
