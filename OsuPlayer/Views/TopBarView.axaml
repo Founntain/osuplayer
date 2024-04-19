@@ -6,10 +6,8 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.TopBarView"
              FontWeight="{DynamicResource DefaultFontWeight}">
-    <Grid Name="TopBarGrid">
-        <Grid.Background>
-            <SolidColorBrush Color="{StaticResource AcrylicSecondaryColor}" />
-        </Grid.Background>
+
+    <Grid Name="TopBarGrid" Background="{StaticResource AcrylicSecondaryColor}">
 
         <Border Background="Transparent" PointerPressed="TopBarGrid_PointerPressed" />
 

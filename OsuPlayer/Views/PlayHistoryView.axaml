@@ -10,6 +10,7 @@
     <Design.DataContext>
         <views:PlayHistoryViewModel />
     </Design.DataContext>
+
     <Grid RowDefinitions="50, *">
         <Border Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{DynamicResource BaseBrightDarkTransparentColor}">
             <TextBlock Text="Play history" Margin="10 0" FontSize="26"
