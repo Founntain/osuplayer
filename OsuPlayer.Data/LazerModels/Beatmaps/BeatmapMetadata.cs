@@ -1,5 +1,5 @@
-﻿using JetBrains.Annotations;
-using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
+using JetBrains.Annotations;
 using OsuPlayer.Data.LazerModels.Extensions;
 using OsuPlayer.Data.LazerModels.Interfaces;
 using Realms;
@@ -16,17 +16,17 @@ public class BeatmapMetadata : RealmObject, IBeatmapMetadataInfo
 
     public string Title { get; set; } = string.Empty;
 
-    [JsonProperty("title_unicode")]
+    [JsonPropertyName("title_unicode")]
     public string TitleUnicode { get; set; } = string.Empty;
 
     public string Artist { get; set; } = string.Empty;
 
-    [JsonProperty("artist_unicode")]
+    [JsonPropertyName("artist_unicode")]
     public string ArtistUnicode { get; set; } = string.Empty;
 
     public string Source { get; set; } = string.Empty;
 
-    [JsonProperty(@"tags")]
+    [JsonPropertyName(@"tags")]
     public string Tags { get; set; } = string.Empty;
 
     /// <summary>

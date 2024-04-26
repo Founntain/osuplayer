@@ -61,7 +61,6 @@ A rule of thumb is: If you want a new feature, discuss it with us to see if it m
 | [AvaloniaUI](https://github.com/AvaloniaUI/Avalonia)              | The UI-Framework                                  |
 | [FluentAvalonia](https://github.com/amwx/FluentAvalonia)          | UI-Framework Extensions                           |
 | [ManagedBass](https://github.com/ManagedBass/ManagedBass)         | The Audio-Engine                                  |
-| [Newtonsoft.Json](https://www.newtonsoft.com/json)                | Used for reading and editing various config files |
 | [discord-rpc-sharp](https://github.com/Lachee/discord-rpc-csharp) | Used to display Discord RPC                       |
 
 ## ✨ Special thanks

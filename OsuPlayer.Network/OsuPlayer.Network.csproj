@@ -8,8 +8,7 @@
 
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="11.0.10" />
-        <PackageReference Include="Founntain.Nein" Version="2023.1115.0" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="Founntain.Nein" Version="2024.427.0" />
         <PackageReference Include="Octokit" Version="11.0.1" />
         <PackageReference Include="OsuPlayer.Api.Data" Version="1.0.12" />
     </ItemGroup>

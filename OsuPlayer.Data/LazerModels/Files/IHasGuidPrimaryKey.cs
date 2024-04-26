@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using Realms;
 
 namespace OsuPlayer.Data.LazerModels.Files;
