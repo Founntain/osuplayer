@@ -39,7 +39,6 @@ public abstract class Storable<T> : IDisposable, IAsyncDisposable where T : ISto
         _jsonService = Locator.Current.GetRequiredService<IJsonService>();
     }
 
-
     public async ValueTask DisposeAsync()
     {
         if (_storableContainer != null)
