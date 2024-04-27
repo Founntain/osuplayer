@@ -1,7 +1,10 @@
 ﻿using System.IO;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
+using OsuPlayer.Interfaces.Service;
 using OsuPlayer.IO.Storage.Config;
+using OsuPlayer.Services;
+using Splat;
 
 namespace OsuPlayer.Tests.IOTests;
 
@@ -12,6 +15,8 @@ public class ConfigTests
     [SetUp]
     public void Setup()
     {
+        Locator.CurrentMutable.RegisterLazySingleton<IJsonService>(() => new JsonService());
+
         _config = new Config();
         if (Directory.Exists("data"))
             Directory.Delete("data", true);
