@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using System.Text;
-using Newtonsoft.Json;
+using Nein.Extensions;
 using OsuPlayer.Interfaces.Service;
 using OsuPlayer.Services;
 using Splat;
@@ -10,6 +10,7 @@ namespace OsuPlayer.Network;
 public class WebRequestBase : IWebRequest
 {
     private readonly ILoggingService _loggingService;
+    private readonly IJsonService _jsonService;
     protected string BaseUrl;
     protected readonly CancellationTokenSource CancellationTokenSource = new();
 
@@ -22,6 +23,7 @@ public class WebRequestBase : IWebRequest
         BaseUrl = baseUrl;
 
         _loggingService = Locator.Current.GetService<ILoggingService>();
+        _jsonService = Locator.Current.GetRequiredService<IJsonService>();
     }
 
     protected void ParseWebException(Exception ex, Uri url)
@@ -46,13 +48,13 @@ public class WebRequestBase : IWebRequest
             var req = new HttpRequestMessage(HttpMethod.Get, url);
 
             if ( data != null )
-                req.Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                req.Content = new StringContent(await _jsonService.SerializeToJsonStringAsync(data), Encoding.UTF8, "application/json");
 
             var result = await client.SendAsync(req, CancellationTokenSource.Token);
 
             var respString = await result.Content.ReadAsStringAsync();
 
-            var response = JsonConvert.DeserializeObject<TResponse>(respString);
+            var response = await _jsonService.DeserializeAsync<TResponse>(respString);
 
             return response;
         }
@@ -103,12 +105,12 @@ public class WebRequestBase : IWebRequest
                 if (data is FormUrlEncodedContent content)
                     req.Content = content;
                 else
-                    req.Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                    req.Content = new StringContent(await _jsonService.SerializeToJsonStringAsync(data), Encoding.UTF8, "application/json");
             }
 
             var result = await client.SendAsync(req, CancellationTokenSource.Token);
 
-            var response = JsonConvert.DeserializeObject<TResponse>(await result.Content.ReadAsStringAsync());
+            var response = await _jsonService.DeserializeAsync<TResponse>(await result.Content.ReadAsStringAsync());
 
             return response;
         }

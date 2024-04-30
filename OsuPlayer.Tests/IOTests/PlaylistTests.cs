@@ -3,12 +3,21 @@ using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
+using OsuPlayer.Interfaces.Service;
 using OsuPlayer.IO.Storage.Playlists;
+using OsuPlayer.Services;
+using Splat;
 
 namespace OsuPlayer.Tests.IOTests;
 
 public class PlaylistTests
 {
+    [SetUp]
+    public void Initialize()
+    {
+        Locator.CurrentMutable.RegisterLazySingleton<IJsonService>(() => new JsonService());
+    }
+
     [Test]
     public void GetAllPlaylistsTest()
     {

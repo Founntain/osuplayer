@@ -1,6 +1,8 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using System.Text.Json;
+using Nein.Extensions;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
+using OsuPlayer.Interfaces.Service;
+using Splat;
 
 namespace OsuPlayer.IO.Storage;
 
@@ -12,11 +14,7 @@ namespace OsuPlayer.IO.Storage;
 public abstract class Storable<T> : IDisposable, IAsyncDisposable where T : IStorableContainer, new()
 {
     private T? _storableContainer;
-
-    protected virtual JsonSerializerSettings SerializerSettings { get; } = new()
-    {
-        Formatting = Formatting.Indented
-    };
+    private readonly IJsonService _jsonService;
 
     /// <summary>
     /// The path in which the <see cref="IStorableContainer" /> is to be stored
@@ -34,6 +32,11 @@ public abstract class Storable<T> : IDisposable, IAsyncDisposable where T : ISto
     {
         get => _storableContainer ?? Read();
         set => _storableContainer = value;
+    }
+
+    protected Storable()
+    {
+        _jsonService = Locator.Current.GetRequiredService<IJsonService>();
     }
 
     public async ValueTask DisposeAsync()
@@ -67,14 +70,11 @@ public abstract class Storable<T> : IDisposable, IAsyncDisposable where T : ISto
         {
             return _storableContainer ??= (string.IsNullOrWhiteSpace(data)
                 ? (T) new T().Init()
-                : JsonConvert.DeserializeObject<T>(data, SerializerSettings))!;
+                : _jsonService.Deserialize<T>(data))!;
         }
-        catch (JsonReaderException e)
+        catch (JsonException)
         {
-            var rawJson = JObject.Parse(data);
-            rawJson.Remove(e.Path ?? string.Empty);
-
-            return _storableContainer = JsonConvert.DeserializeObject<T>(rawJson.ToString(), SerializerSettings)!;
+            return _storableContainer ??= (T) new T().Init();
         }
     }
 
@@ -93,13 +93,11 @@ public abstract class Storable<T> : IDisposable, IAsyncDisposable where T : ISto
         {
             return _storableContainer ??= (string.IsNullOrWhiteSpace(data)
                 ? (T) new T().Init()
-                : JsonConvert.DeserializeObject<T>(data, SerializerSettings))!;
+                : await _jsonService.DeserializeAsync<T>(data))!;
         }
-        catch (JsonReaderException e)
+        catch (JsonException)
         {
-            var rawJson = JObject.Parse(data);
-            rawJson.Remove(e.Path ?? string.Empty);
-            return _storableContainer = JsonConvert.DeserializeObject<T>(rawJson.ToString(), SerializerSettings)!;
+            return _storableContainer ??= (T)new T().Init();
         }
     }
 
@@ -123,7 +121,7 @@ public abstract class Storable<T> : IDisposable, IAsyncDisposable where T : ISto
         for (var i = 0; i < 3; i++)
             try
             {
-                File.WriteAllText(Path!, JsonConvert.SerializeObject(container, SerializerSettings));
+                _jsonService.SerializeToJsonFile(Path!, container);
                 break;
             }
             catch (Exception e)
@@ -153,7 +151,7 @@ public abstract class Storable<T> : IDisposable, IAsyncDisposable where T : ISto
         for (var i = 0; i < 3; i++)
             try
             {
-                await File.WriteAllTextAsync(Path!, JsonConvert.SerializeObject(container, SerializerSettings));
+                await _jsonService.SerializeToJsonFileAsync(Path!, container);
             }
             catch (Exception e)
             {

@@ -1,5 +1,5 @@
-﻿using JetBrains.Annotations;
-using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
+using JetBrains.Annotations;
 using OsuPlayer.Data.LazerModels.Extensions;
 using OsuPlayer.Data.LazerModels.Files;
 using Realms;

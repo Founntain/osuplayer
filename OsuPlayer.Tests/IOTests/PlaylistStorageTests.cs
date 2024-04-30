@@ -4,7 +4,10 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
 using OsuPlayer.Data.OsuPlayer.StorageModels;
+using OsuPlayer.Interfaces.Service;
 using OsuPlayer.IO.Storage.Playlists;
+using OsuPlayer.Services;
+using Splat;
 
 namespace OsuPlayer.Tests.IOTests;
 
@@ -15,6 +18,8 @@ public class PlaylistStorageTests
     [SetUp]
     public void Setup()
     {
+        Locator.CurrentMutable.RegisterLazySingleton<IJsonService>(() => new JsonService());
+
         _playlist = new PlaylistStorage();
 
         if (Directory.Exists("data"))

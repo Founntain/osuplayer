@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
-using Newtonsoft.Json;
+using Nein.Extensions;
 using OsuPlayer.Api.Data.API;
 using OsuPlayer.Interfaces.Service;
 using OsuPlayer.Services;
@@ -13,7 +13,8 @@ public abstract class AbstractApiBase
 {
     protected internal abstract string ApiName { get; }
 
-    protected internal readonly ILoggingService loggingService;
+    protected internal readonly IJsonService JsonService;
+    protected internal readonly ILoggingService LoggingService;
     private readonly IProfileManagerService _profileManager;
 
     protected static CancellationTokenSource CancellationTokenSource = new();
@@ -24,10 +25,11 @@ public abstract class AbstractApiBase
 
     protected AbstractApiBase()
     {
-        loggingService = Locator.Current.GetService<ILoggingService>();
+        JsonService = Locator.Current.GetRequiredService<IJsonService>();
+        LoggingService = Locator.Current.GetService<ILoggingService>();
         _profileManager = Locator.Current.GetService<IProfileManagerService>();
 
-        loggingService.Log($"{ApiName} uses the following base URL: {Url}");
+        LoggingService.Log($"{ApiName} uses the following base URL: {Url}");
     }
 
     private string GetApiUrl()
@@ -56,7 +58,7 @@ public abstract class AbstractApiBase
 
         var webEx = (WebException) ex;
 
-        loggingService.Log($"Error while requesting {url}: {webEx.Message}", LogType.Error, webEx);
+        LoggingService.Log($"Error while requesting {url}: {webEx.Message}", LogType.Error, webEx);
 
         if (webEx.Status != WebExceptionStatus.ConnectFailure && webEx.Status != WebExceptionStatus.Timeout) return;
         if (Constants.OfflineMode) return;
@@ -102,7 +104,7 @@ public abstract class AbstractApiBase
 
         var url = new Uri($"{Url}{controller}/{action}");
 
-        loggingService.Log($"Requesting => {ApiName} => {url}");
+        LoggingService.Log($"Requesting => {ApiName} => {url}");
 
         try
         {
@@ -113,13 +115,14 @@ public abstract class AbstractApiBase
             req.Headers.Add("username", _profileManager.User?.Name);
             req.Headers.Add("session-token", UserAuthToken);
 
-            req.Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+            if (data != null)
+                req.Content = new StringContent(await JsonService.SerializeToJsonStringAsync(data), Encoding.UTF8, "application/json");
 
             // CancelCancellationToken();
 
             var result = await client.SendAsync(req, CancellationTokenSource.Token);
 
-            var response = JsonConvert.DeserializeObject<ApiResponse<T>>(await result.Content.ReadAsStringAsync());
+            var response = await JsonService.DeserializeAsync<ApiResponse<T>>(await result.Content.ReadAsStringAsync());
 
             return response.Errors?.Any() == true
                 ? default
@@ -173,7 +176,7 @@ public abstract class AbstractApiBase
 
         var url = new Uri($"{Url}{controller}/{action}");
 
-        loggingService.Log($"Requesting => {ApiName} => {url}");
+        LoggingService.Log($"Requesting => {ApiName} => {url}");
 
         try
         {
@@ -186,7 +189,7 @@ public abstract class AbstractApiBase
 
             var result = await client.SendAsync(req, CancellationTokenSource.Token);
 
-            var response = JsonConvert.DeserializeObject<ApiResponse<T>>(await result.Content.ReadAsStringAsync());
+            var response = await JsonService.DeserializeAsync<ApiResponse<T>>(await result.Content.ReadAsStringAsync());
 
             return response.Errors?.Any() == true
                 ? default
@@ -215,7 +218,7 @@ public abstract class AbstractApiBase
 
         var url = new Uri($"{Url}{controller}/{action}?{parameters}");
 
-        loggingService.Log($"Requesting => {ApiName} => {url}");
+        LoggingService.Log($"Requesting => {ApiName} => {url}");
 
         try
         {
@@ -228,7 +231,7 @@ public abstract class AbstractApiBase
 
             var result = await client.SendAsync(req, CancellationTokenSource.Token);
 
-            var response = JsonConvert.DeserializeObject<ApiResponse<T>>(await result.Content.ReadAsStringAsync());
+            var response = await JsonService.DeserializeAsync<ApiResponse<T>>(await result.Content.ReadAsStringAsync());
 
             return response.Errors?.Any() == true
                 ? default
@@ -262,7 +265,7 @@ public abstract class AbstractApiBase
 
         var url = new Uri($"{Url}{controller}/{action}");
 
-        loggingService.Log($"Requesting => {ApiName} => {url}");
+        LoggingService.Log($"Requesting => {ApiName} => {url}");
 
         try
         {
@@ -273,11 +276,12 @@ public abstract class AbstractApiBase
             req.Headers.Add("username", _profileManager.User?.Name);
             req.Headers.Add("session-token", UserAuthToken);
 
-            req.Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+            if (data != null)
+                req.Content = new StringContent(await JsonService.SerializeToJsonStringAsync(data), Encoding.UTF8, "application/json");
 
             var result = await client.SendAsync(req, CancellationTokenSource.Token);
 
-            var response = JsonConvert.DeserializeObject<ApiResponse<T>>(await result.Content.ReadAsStringAsync());
+            var response = await JsonService.DeserializeAsync<ApiResponse<T>>(await result.Content.ReadAsStringAsync());
 
             return response.Errors?.Any() == true
                 ? default
@@ -307,7 +311,7 @@ public abstract class AbstractApiBase
 
         var url = new Uri($"{Url}{controller}/{action}?{parameters}");
 
-        loggingService.Log($"Requesting => {ApiName} => {url}");
+        LoggingService.Log($"Requesting => {ApiName} => {url}");
 
         try
         {
@@ -320,7 +324,7 @@ public abstract class AbstractApiBase
 
             var result = await client.SendAsync(req, CancellationTokenSource.Token);
 
-            var response = JsonConvert.DeserializeObject<ApiResponse<T>>(await result.Content.ReadAsStringAsync());
+            var response = await JsonService.DeserializeAsync<ApiResponse<T>>(await result.Content.ReadAsStringAsync());
 
             return response.Errors?.Any() == true
                 ? default

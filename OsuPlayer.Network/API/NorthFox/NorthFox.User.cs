@@ -41,7 +41,7 @@ public class NorthFoxUserEndpoint : IOsuPlayerApiUserEndpoint
 
         var url = new Uri($"{_apiBase.Url}User/getProfilePicture?id={uniqueId}");
 
-        _apiBase.loggingService.Log($"Requesting => {_apiBase.ApiName} => {url}");
+        _apiBase.LoggingService.Log($"Requesting => {_apiBase.ApiName} => {url}");
 
         try
         {
@@ -71,7 +71,7 @@ public class NorthFoxUserEndpoint : IOsuPlayerApiUserEndpoint
 
         using var client = new HttpClient();
 
-        _apiBase.loggingService.Log($"Requesting => {_apiBase.ApiName} => {bannerUrl}");
+        _apiBase.LoggingService.Log($"Requesting => {_apiBase.ApiName} => {bannerUrl}");
 
         try
         {

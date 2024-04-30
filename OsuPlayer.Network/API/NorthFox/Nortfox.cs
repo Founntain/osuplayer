@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using Newtonsoft.Json;
 using OsuPlayer.Api.Data.API;
 using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.RequestModels.User.Responses;
@@ -70,7 +69,7 @@ public class NorthFox : AbstractApiBase, IOsuPlayerApiService
 
         var url = new Uri($"{Url}User/login");
 
-        loggingService.Log($"Requesting => {ApiName} => {url}");
+        LoggingService.Log($"Requesting => {ApiName} => {url}");
 
         try
         {
@@ -81,7 +80,7 @@ public class NorthFox : AbstractApiBase, IOsuPlayerApiService
 
             var result = await client.SendAsync(req, CancellationTokenSource.Token);
 
-            var response = JsonConvert.DeserializeObject<ApiResponse<UserTokenResponse>>(await result.Content.ReadAsStringAsync());
+            var response = await JsonService.DeserializeAsync<ApiResponse<UserTokenResponse>>(await result.Content.ReadAsStringAsync());
 
             return response.Errors?.Any() == true
                 ? default
@@ -102,7 +101,7 @@ public class NorthFox : AbstractApiBase, IOsuPlayerApiService
 
         var url = new Uri($"{Url}User/loginWithToken");
 
-        loggingService.Log($"Requesting => {ApiName} => {url}");
+        LoggingService.Log($"Requesting => {ApiName} => {url}");
 
         try
         {
@@ -114,7 +113,7 @@ public class NorthFox : AbstractApiBase, IOsuPlayerApiService
 
             var result = await client.SendAsync(req, CancellationTokenSource.Token);
 
-            var response = JsonConvert.DeserializeObject<ApiResponse<UserTokenResponse>>(await result.Content.ReadAsStringAsync());
+            var response = await JsonService.DeserializeAsync<ApiResponse<UserTokenResponse>>(await result.Content.ReadAsStringAsync());
 
             return response.Errors?.Any() == true
                 ? default

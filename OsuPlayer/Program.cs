@@ -101,6 +101,8 @@ internal static class Program
 
     private static void RegisterServices(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver)
     {
+        services.RegisterLazySingletonAnd<IJsonService>(() => new JsonService());
+
         services.RegisterLazySingleton<ILoggingService>(() => new LoggingService());
 
         services.RegisterLazySingleton<IDiscordService>(() => new DiscordService());
