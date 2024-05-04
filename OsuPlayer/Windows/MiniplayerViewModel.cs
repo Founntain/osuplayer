@@ -103,7 +103,7 @@ public class MiniplayerViewModel : BaseWindowViewModel
 
     public bool IsPlaying => _isPlaying.Value;
 
-    public string TitleText => CurrentSong.Value?.Title ?? "No song is playing";
+    public string TitleText => CurrentSong.Value?.GetTitle() ?? "No song is playing";
 
     public RepeatMode IsRepeating
     {
@@ -115,7 +115,7 @@ public class MiniplayerViewModel : BaseWindowViewModel
         }
     }
 
-    public string ArtistText => CurrentSong.Value?.Artist ?? "please select from song list";
+    public string ArtistText => CurrentSong.Value?.GetArtist() ?? "please select from song list";
 
     public string SongText => $"{ArtistText} - {TitleText}";
 

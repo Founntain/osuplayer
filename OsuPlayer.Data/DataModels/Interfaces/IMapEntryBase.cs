@@ -7,7 +7,9 @@ public interface IMapEntryBase : IEquatable<IMapEntryBase>, IComparable<IMapEntr
     public IDbReaderFactory DbReaderFactory { get; init; }
 
     public string Artist { get; }
+    public string ArtistUnicode { get; }
     public string Title { get; }
+    public string TitleUnicode { get; }
     public string Hash { get; }
     public int BeatmapSetId { get; }
     public int TotalTime { get; }
@@ -15,6 +17,8 @@ public interface IMapEntryBase : IEquatable<IMapEntryBase>, IComparable<IMapEntr
     public string SongName => GetSongName();
     public string ArtistString => GetArtist();
     public string TitleString => GetTitle();
+
+    public bool UseUnicode { get; set; }
 
     public string GetArtist();
 

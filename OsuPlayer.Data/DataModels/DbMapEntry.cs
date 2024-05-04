@@ -9,19 +9,16 @@ namespace OsuPlayer.Data.DataModels;
 /// </summary>
 public class DbMapEntry : DbMapEntryBase, IMapEntry
 {
-    public string ArtistUnicode { get; init; } = string.Empty;
-    public string TitleUnicode { get; init; } = string.Empty;
     public string AudioFileName { get; init; } = string.Empty;
     public string FolderName { get; init; } = string.Empty;
     public string FolderPath { get; init; } = string.Empty;
     public string FullPath { get; init; } = string.Empty;
-    public bool UseUnicode { get; set; }
 
     public async Task<string?> FindBackground()
     {
         var eventCount = 0;
 
-        if (string.IsNullOrEmpty(FolderPath))
+        if (string.IsNullOrWhiteSpace(FolderPath))
             return null;
 
         string[] files;
@@ -64,26 +61,12 @@ public class DbMapEntry : DbMapEntryBase, IMapEntry
                 break;
             }
 
-        if (string.IsNullOrEmpty(background))
+        if (string.IsNullOrWhiteSpace(background))
             return null;
 
         var fileName = background.Split(',')[2].Replace("\"", string.Empty);
         var path = Path.Combine(FolderPath, fileName);
 
         return File.Exists(path) ? path : null;
-    }
-
-    public override string GetArtist()
-    {
-        if (UseUnicode)
-            return string.IsNullOrEmpty(ArtistUnicode) ? Artist : ArtistUnicode;
-        return Artist;
-    }
-
-    public override string GetTitle()
-    {
-        if (UseUnicode)
-            return string.IsNullOrEmpty(TitleUnicode) ? Title : TitleUnicode;
-        return Title;
     }
 }
