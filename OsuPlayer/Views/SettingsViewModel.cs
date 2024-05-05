@@ -7,12 +7,8 @@ using Avalonia.Media.Imaging;
 using Avalonia.Styling;
 using FluentAvalonia.Styling;
 using FluentAvalonia.UI.Controls;
-using LiveChartsCore;
-using LiveChartsCore.Defaults;
-using Microsoft.CodeAnalysis.Diagnostics;
 using Nein.Base;
 using Nein.Controls.Interfaces;
-using Nein.Extensions;
 using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
@@ -30,54 +26,65 @@ namespace OsuPlayer.Views;
 
 public class SettingsViewModel : BaseViewModel
 {
-    public FluentAppWindow MainWindow;
-
-    public readonly IPlayer Player;
-
-    private readonly IProfileManagerService _profileManager;
-
-    private readonly Bindable<bool> _blacklistSkip = new();
-    private readonly Bindable<bool> _playlistEnableOnPlay = new();
-    private readonly Bindable<SortingMode> _sortingMode = new();
-    private readonly FluentAvaloniaTheme _faTheme;
-
-    private bool _usePitch;
-    private bool _useAudioNormalization;
-    private bool _useDiscordRpc;
-    private bool _displayUserStats;
-    private bool _enableScrobbling;
-    private bool _useLeftNavigationPosition;
-    private bool _displayBackgroundImage;
-    private float _backgroundBlurRadius;
-    private string _lastFmApiKey = string.Empty;
-    private string _lastFmApiSecret = string.Empty;
-    private string _osuLocation = string.Empty;
-    private string _patchnotes = string.Empty;
-    private string _settingsSearchQ = string.Empty;
-    private string _currentAppTheme = _system;
     private const string _system = "System";
     private const string _dark = "Dark";
     private const string _light = "Light";
     private const string _lowQuality = "Low Quality";
     private const string _mediumQuality = "Medium Quality";
     private const string _highQuality = "High Quality";
-    private string? _selectedFont;
-    private KnownColors _selectedAccentColor;
-    private KnownColors _selectedBackgroundColor;
-    private FontWeights _selectedFontWeight;
-    private StartupSong _selectedStartupSong;
-    private AudioDevice? _selectedAudioDevice;
-    private IShuffleImpl? _selectedShuffleAlgorithm;
-    private BackgroundMode _backgroundMode;
-    private ReleaseChannels _selectedReleaseChannel;
-    private IShuffleServiceProvider? _shuffleServiceProvider;
-    private List<OsuPlayerContributor>? _contributors;
-    private string _renderingMode;
 
-    public string[] AppThemes { get; } = { _system, _light , _dark };
-    public string[] RenderingModes { get; } = { _highQuality, _mediumQuality, _lowQuality  };
+    private readonly Bindable<bool> _blacklistSkip = new();
+    private readonly FluentAvaloniaTheme _faTheme;
+    private readonly Bindable<bool> _playlistEnableOnPlay = new();
+
+    private readonly IProfileManagerService _profileManager;
+    private readonly Bindable<SortingMode> _sortingMode = new();
+
+    public readonly IPlayer Player;
+    private float _backgroundBlurRadius;
+    private BackgroundMode _backgroundMode;
+    private List<OsuPlayerContributor>? _contributors;
+    private string _currentAppTheme = _system;
 
     private bool _displayAudioVisualizer;
+    private bool _displayBackgroundImage;
+    private bool _displayUserStats;
+    private bool _enableScrobbling;
+
+    private bool _isLastFmAuthorized;
+    private string _lastFmApiKey = string.Empty;
+    private string _lastFmApiSecret = string.Empty;
+    private string _osuLocation = string.Empty;
+    private string _patchnotes = string.Empty;
+    private string _renderingMode;
+    private KnownColors _selectedAccentColor;
+    private AudioDevice? _selectedAudioDevice;
+    private KnownColors _selectedBackgroundColor;
+    private string? _selectedFont;
+    private FontWeights _selectedFontWeight;
+    private ReleaseChannels _selectedReleaseChannel;
+    private IShuffleImpl? _selectedShuffleAlgorithm;
+    private StartupSong _selectedStartupSong;
+    private string _settingsSearchQ = string.Empty;
+    private readonly IShuffleServiceProvider? _shuffleServiceProvider;
+    private bool _useAudioNormalization;
+    private bool _useDiscordRpc;
+    private bool _useLeftNavigationPosition;
+
+    private bool _usePitch;
+
+    private bool _useSongNameUnicode;
+    public FluentAppWindow MainWindow;
+
+    public string[] AppThemes { get; } =
+    {
+        _system, _light, _dark
+    };
+
+    public string[] RenderingModes { get; } =
+    {
+        _highQuality, _mediumQuality, _lowQuality
+    };
 
     public bool DisplayAudioVisualizer
     {
@@ -91,6 +98,19 @@ public class SettingsViewModel : BaseViewModel
             config.Container.DisplayAudioVisualizer = value;
 
             MainWindow.SetAudioVisualization(value);
+        }
+    }
+
+    public bool UseSongNameUnicode
+    {
+        get => _useSongNameUnicode;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _useSongNameUnicode, value);
+
+            using var config = new Config();
+
+            config.Container.UseLeftNavigationPosition = value;
         }
     }
 
@@ -141,11 +161,9 @@ public class SettingsViewModel : BaseViewModel
 
             mainWindowViewModel.HomeView.DisplayUserStats = value;
 
-            mainWindowViewModel.HomeView.RaisePropertyChanged(nameof(mainWindowViewModel.HomeView.DisplayUserStats));
+            mainWindowViewModel.HomeView.RaisePropertyChanged();
         }
     }
-
-    private bool _isLastFmAuthorized;
 
     public bool IsLastFmAuthorized
     {
@@ -227,7 +245,7 @@ public class SettingsViewModel : BaseViewModel
             config.Container.UsePitch = value;
         }
     }
-    
+
     public bool UseAudioNormalization
     {
         get => _useAudioNormalization;
@@ -332,16 +350,25 @@ public class SettingsViewModel : BaseViewModel
             switch (value)
             {
                 case BackgroundMode.AcrylicBlur:
-                    MainWindow.TransparencyLevelHint = new []{ WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None, };
+                    MainWindow.TransparencyLevelHint = new[]
+                    {
+                        WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None
+                    };
 
                     break;
                 case BackgroundMode.Mica:
-                    MainWindow.TransparencyLevelHint = new []{ WindowTransparencyLevel.Mica, WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None,};
+                    MainWindow.TransparencyLevelHint = new[]
+                    {
+                        WindowTransparencyLevel.Mica, WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None
+                    };
 
                     break;
                 case BackgroundMode.SolidColor:
                 default:
-                    MainWindow.TransparencyLevelHint = new []{ WindowTransparencyLevel.None, };
+                    MainWindow.TransparencyLevelHint = new[]
+                    {
+                        WindowTransparencyLevel.None
+                    };
 
                     break;
             }
@@ -546,6 +573,27 @@ public class SettingsViewModel : BaseViewModel
 
     public Controls? SettingsCategories { get; set; }
 
+    public string CurrentAppTheme
+    {
+        get => _currentAppTheme;
+        set
+        {
+            if (string.IsNullOrWhiteSpace(this.RaiseAndSetIfChanged(ref _currentAppTheme, value)))
+                return;
+
+            var newTheme = GetThemeVariant(value);
+
+            if (newTheme != null)
+            {
+                if (Application.Current == null) return;
+
+                Application.Current.RequestedThemeVariant = newTheme;
+            }
+
+            _faTheme.PreferSystemTheme = value == _system;
+        }
+    }
+
     public SettingsViewModel(IPlayer player, ISortProvider? sortProvider, IShuffleServiceProvider? shuffleServiceProvider, IProfileManagerService profileManager)
     {
         _faTheme = (Application.Current!.Styles[0] as FluentAvaloniaTheme)!;
@@ -578,6 +626,7 @@ public class SettingsViewModel : BaseViewModel
         _useLeftNavigationPosition = config.Container.UseLeftNavigationPosition;
         _renderingMode = GetRenderingModeString(config.Container.RenderingMode);
         _displayAudioVisualizer = config.Container.DisplayAudioVisualizer;
+        _useSongNameUnicode = config.Container.UseSongNameUnicode;
 
         var lastFmApi = Locator.Current.GetService<ILastFmApiService>();
 
@@ -613,30 +662,6 @@ public class SettingsViewModel : BaseViewModel
         Contributors = await GitHub.GetContributers() ?? new List<OsuPlayerContributor>();
     }
 
-    public string CurrentAppTheme
-    {
-        get => _currentAppTheme;
-        set
-        {
-            if (string.IsNullOrWhiteSpace(this.RaiseAndSetIfChanged(ref _currentAppTheme, value)))
-                return;
-
-            var newTheme = GetThemeVariant(value);
-
-            if (newTheme != null)
-            {
-                if (Application.Current == null)
-                {
-                    return;
-                }
-
-                Application.Current.RequestedThemeVariant = newTheme;
-            }
-
-            _faTheme.PreferSystemTheme = value == _system;
-        }
-    }
-
     private ThemeVariant? GetThemeVariant(string value)
     {
         return value switch
@@ -651,10 +676,10 @@ public class SettingsViewModel : BaseViewModel
     {
         return value switch
         {
-          _highQuality => BitmapInterpolationMode.HighQuality,
-          _mediumQuality => BitmapInterpolationMode.MediumQuality,
-          _lowQuality => BitmapInterpolationMode.LowQuality,
-          _ => throw new ArgumentOutOfRangeException($"The value {value} is not supported here. How the heck did you even got here?")
+            _highQuality => BitmapInterpolationMode.HighQuality,
+            _mediumQuality => BitmapInterpolationMode.MediumQuality,
+            _lowQuality => BitmapInterpolationMode.LowQuality,
+            _ => throw new ArgumentOutOfRangeException($"The value {value} is not supported here. How the heck did you even got here?")
         };
     }
 

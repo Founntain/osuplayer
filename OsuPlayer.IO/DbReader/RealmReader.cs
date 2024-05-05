@@ -3,6 +3,7 @@ using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.Data.LazerModels.Beatmaps;
 using OsuPlayer.Data.LazerModels.Collections;
 using OsuPlayer.Data.LazerModels.Files;
+using OsuPlayer.IO.Storage.Config;
 using Realms;
 using Realms.Dynamic;
 using Splat;
@@ -103,6 +104,8 @@ public class RealmReader : IDatabaseReader
         var audioFolderName = Path.Combine($"{audioHash[0]}", $"{audioHash[0]}{audioHash[1]}");
         var backgroundFolderName = Path.Combine($"{backgroundHash?[0]}", $"{backgroundHash?[0]}{backgroundHash?[1]}");
 
+        using var config = new Config();
+
         var newMap = new RealmMapEntry
         {
             DbReaderFactory = _readerFactory,
@@ -120,7 +123,8 @@ public class RealmReader : IDatabaseReader
             BeatmapSetId = mapEntryBase.BeatmapSetId,
             FolderName = audioFolderName,
             FolderPath = Path.Combine("files", audioFolderName),
-            FullPath = Path.Combine(path, "files", audioFolderName, audioHash)
+            FullPath = Path.Combine(path, "files", audioFolderName, audioHash),
+            UseUnicode = config.Container.UseSongNameUnicode
         };
 
         _realm.Dispose();
@@ -130,6 +134,8 @@ public class RealmReader : IDatabaseReader
 
     public Task<List<IMapEntryBase>?> ReadBeatmaps()
     {
+        using var config = new Config();
+
         var minBeatMaps = new List<IMapEntryBase>();
 
         var beatmaps = _realm.DynamicApi.All("BeatmapSet").ToList().OfType<DynamicRealmObject>().ToList();
@@ -156,7 +162,8 @@ public class RealmReader : IDatabaseReader
                 BeatmapSetId = beatmapSetId,
                 Title = title,
                 TotalTime = (int) totalTime,
-                Id = id
+                Id = id,
+                UseUnicode = config.Container.UseSongNameUnicode
             });
         }
 

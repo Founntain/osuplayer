@@ -135,31 +135,33 @@
                                      Description="Settings for the visual appearance, make it your own~"
                                      Name="VisualSettingsExpander">
 
-                    <ui:SettingsExpanderItem Content="App Theme"
-                                             Description="Do you prefer the dark or light side? Or let your system decide">
+                    <ui:SettingsExpanderItem Content="App Theme" Description="Do you prefer the dark or light side? Or let your system decide">
                         <ui:SettingsExpanderItem.Footer>
                             <ui:FAComboBox ItemsSource="{Binding AppThemes}" SelectedItem="{Binding CurrentAppTheme}" />
+                        </ui:SettingsExpanderItem.Footer>
+                    </ui:SettingsExpanderItem>
+
+                    <ui:SettingsExpanderItem Content="Display titles and artists in unicode" Description="Shows titles and artists in their respective unicode characters e.g. japanese (this also means you have to search in unicode). Requires restart to work properly">
+                        <ui:SettingsExpanderItem.Footer>
+                            <ToggleSwitch IsChecked="{Binding UseSongNameUnicode}" OnContent="Yes" OffContent="No" />
                         </ui:SettingsExpanderItem.Footer>
                     </ui:SettingsExpanderItem>
 
                     <ui:SettingsExpanderItem Content="Navigation Position"
                                              Description="Do you want to have the navigation on the left or top?">
                         <ui:SettingsExpanderItem.Footer>
-                            <ToggleSwitch IsChecked="{Binding UseLeftNavigationPosition}" OnContent="Left"
-                                          OffContent="Top" />
+                            <ToggleSwitch IsChecked="{Binding UseLeftNavigationPosition}" OnContent="Left" OffContent="Top" />
                         </ui:SettingsExpanderItem.Footer>
                     </ui:SettingsExpanderItem>
 
-                    <ui:SettingsExpanderItem Content="Image Rendering Mode"
-                                             Description="Tell the application at which quality you want to render images e.g. profile pictures, banners etc. Requires restart to work">
+                    <ui:SettingsExpanderItem Content="Image Rendering Mode" Description="Tell the application at which quality you want to render images e.g. profile pictures, banners etc. Requires restart to work">
                         <ui:SettingsExpanderItem.Footer>
                             <ui:FAComboBox ItemsSource="{Binding RenderingModes}"
                                            SelectedItem="{Binding RenderingMode}" />
                         </ui:SettingsExpanderItem.Footer>
                     </ui:SettingsExpanderItem>
 
-                    <ui:SettingsExpanderItem Content="Display Audio Visualizer"
-                                             Description="If enabled it displays an audio visualizer on the bottom of the window (and miniplayer). Increases GPU usage">
+                    <ui:SettingsExpanderItem Content="Display Audio Visualizer" Description="If enabled it displays an audio visualizer on the bottom of the window (and miniplayer). Increases GPU usage">
                         <ui:SettingsExpanderItem.Footer>
                             <ToggleSwitch IsChecked="{Binding DisplayAudioVisualizer}" OnContent="On" OffContent="Off" />
                         </ui:SettingsExpanderItem.Footer>
@@ -186,8 +188,7 @@
                     <!--     </ui:SettingsExpanderItem.Footer> -->
                     <!-- </ui:SettingsExpanderItem> -->
 
-                    <ui:SettingsExpanderItem Content="Window Background Method"
-                                             Description="The method that should be used for the window background">
+                    <ui:SettingsExpanderItem Content="Window Background Method" Description="The method that should be used for the window background">
                         <ui:SettingsExpanderItem.Footer>
                             <ui:FAComboBox ItemsSource="{Binding BackgroundModes}"
                                            SelectedItem="{Binding BackgroundMode}" />

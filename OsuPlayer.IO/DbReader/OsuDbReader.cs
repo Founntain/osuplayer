@@ -3,6 +3,7 @@ using Nein.Extensions;
 using OsuPlayer.Data.DataModels;
 using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.Interfaces.Service;
+using OsuPlayer.IO.Storage.Config;
 using OsuPlayer.Services;
 using Splat;
 
@@ -27,11 +28,13 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
 
     public Task<List<IMapEntryBase>?> ReadBeatmaps()
     {
+        using var config = new Config();
+
         var minBeatMaps = new List<IMapEntryBase>();
 
-        var ver = ReadInt32();
-        _osuDbVersion = ver;
-        var flag = ver is >= 20160408 and < 20191107;
+        _osuDbVersion = ReadInt32();
+
+        var flag = _osuDbVersion is >= 20160408 and < 20191107;
 
         ReadInt32();
         ReadBoolean();
@@ -64,6 +67,8 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
 
             ReadFromStream(out var minBeatMap);
 
+            minBeatMap.UseUnicode = config.Container.UseSongNameUnicode;
+
             prevId = minBeatMap.BeatmapSetId;
             minBeatMaps.Add(minBeatMap);
         }
@@ -78,9 +83,9 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
     {
         var hashes = new Dictionary<string, int>();
 
-        var ver = ReadInt32();
-        _osuDbVersion = ver;
-        var flag = ver is >= 20160408 and < 20191107;
+        _osuDbVersion = ReadInt32();
+
+        var flag = _osuDbVersion is >= 20160408 and < 20191107;
 
         ReadInt32();
         ReadBoolean();
@@ -219,6 +224,8 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
             var fullPath = Path.Combine(path, "Songs", folderName, audioFileName);
             var folderPath = Path.Combine(path, "Songs", folderName);
 
+            using var config = new Config();
+
             return new DbMapEntry
             {
                 DbReaderFactory = _readerFactory,
@@ -234,7 +241,8 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
                 FolderPath = folderPath,
                 FullPath = fullPath,
                 Hash = mapEntryBase.Hash,
-                TotalTime = mapEntryBase.TotalTime
+                TotalTime = mapEntryBase.TotalTime,
+                UseUnicode = config.Container.UseSongNameUnicode
             };
         }
         catch (Exception ex)
@@ -256,11 +264,14 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
         var dbOffset = BaseStream.Position;
         var artist = string.Intern(ReadString());
 
+        string artistUnicode = string.Empty;
+        string titleUnicode = string.Empty;
+
         if (artist.Length == 0)
             artist = "Unknown Artist";
 
         if (_osuDbVersion >= 20121008)
-            ReadString(true);
+            artistUnicode = ReadString();
 
         var title = string.Intern(ReadString());
 
@@ -268,7 +279,7 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
             title = "Unknown Title";
 
         if (_osuDbVersion >= 20121008)
-            ReadString(true);
+            titleUnicode = ReadString();
 
         ReadString(true);
         ReadString(true); //Difficulty
@@ -319,7 +330,9 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
             DbReaderFactory = _readerFactory,
             OsuPath = string.Intern(_path),
             Artist = artist,
+            ArtistUnicode = artistUnicode,
             Title = title,
+            TitleUnicode = titleUnicode,
             BeatmapSetId = beatmapSetId,
             DbOffset = dbOffset,
             Hash = hash,

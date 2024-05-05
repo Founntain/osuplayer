@@ -14,7 +14,9 @@ public class DbMapEntryBase : IMapEntryBase
     public long DbOffset { get; init; }
     public string? OsuPath { get; init; }
     public string Artist { get; init; } = string.Empty;
+    public string ArtistUnicode { get; init; } = string.Empty;
     public string Title { get; init; } = string.Empty;
+    public string TitleUnicode { get; init; } = string.Empty;
     public string Hash { get; init; } = string.Empty;
     public int BeatmapSetId { get; init; }
     public int TotalTime { get; init; }
@@ -22,24 +24,27 @@ public class DbMapEntryBase : IMapEntryBase
     public string SongName => GetSongName();
     public string ArtistString => GetArtist();
     public string TitleString => GetTitle();
+    public bool UseUnicode { get; set; }
 
     /// <summary>
     /// Gets the artist
-    /// <remarks>may be overridden for usage with <see cref="DbMapEntry.UseUnicode" /></remarks>
     /// </summary>
     /// <returns>the artist</returns>
-    public virtual string GetArtist()
+    public string GetArtist()
     {
+        if (UseUnicode)
+            return string.IsNullOrWhiteSpace(ArtistUnicode) ? Artist : ArtistUnicode;
         return Artist;
     }
 
     /// <summary>
     /// Gets the title
-    /// <remarks>may be overridden for usage with <see cref="DbMapEntry.UseUnicode" /></remarks>
     /// </summary>
     /// <returns>the title</returns>
-    public virtual string GetTitle()
+    public string GetTitle()
     {
+        if (UseUnicode)
+            return string.IsNullOrWhiteSpace(TitleUnicode) ? Title : TitleUnicode;
         return Title;
     }
 
