@@ -12,6 +12,7 @@ using Nein.Extensions;
 using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.Interfaces.Service;
 using OsuPlayer.Services;
+using OsuPlayer.UI_Extensions;
 using Splat;
 using TagLib;
 using File = TagLib.File;
@@ -38,7 +39,7 @@ public partial class ExportSongsProcessWindow : ReactiveWindow<ExportSongsProces
 
         Locator.Current.GetService<FluentAppWindow>();
         // Decode the path, so stuff like %20 are encoded properly
-        _path = HttpUtility.UrlDecode(_path);
+        _path = HttpUtility.UrlDecode(path);
         _embedBackground = embedBackground;
 
         var config = new Config();
@@ -66,6 +67,8 @@ public partial class ExportSongsProcessWindow : ReactiveWindow<ExportSongsProces
 
         var copyTask = Task.Run(async () =>
         {
+            var logger = Locator.Current.GetRequiredService<ILoggingService>();
+
             for (var index = 0; index < songs.Count; index++)
             {
                 if (token.IsCancellationRequested)
@@ -86,6 +89,8 @@ public partial class ExportSongsProcessWindow : ReactiveWindow<ExportSongsProces
                 // Decode the path, so stuff like %20 are encoded properly
                 exportPath = HttpUtility.UrlDecode(exportPath);
 
+                logger.Log($"Export path: {exportPath}");
+
                 try
                 {
                     const FileOptions fileOptions = FileOptions.Asynchronous | FileOptions.SequentialScan;
@@ -105,15 +110,16 @@ public partial class ExportSongsProcessWindow : ReactiveWindow<ExportSongsProces
                         mapEntry.GetArtist()
                     };
 
-                    #region Get thumbnail from osu! website
+                    #region Get background image
 
                     if (_embedBackground)
                     {
+                        logger.Log($"Loading and setting background image to audio file {fileName}");
+
                         var findBackground = await mapEntry.FindBackground();
 
                         if (findBackground != null)
-                            await using (var backgroundStream =
-                                         new FileStream(findBackground, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize, fileOptions))
+                            await using (var backgroundStream = new FileStream(findBackground, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize, fileOptions))
                             {
                                 tFile.Tag.Pictures = new IPicture[]
                                 {
@@ -132,7 +138,7 @@ public partial class ExportSongsProcessWindow : ReactiveWindow<ExportSongsProces
 
                     successfulSongs++;
 
-                    Locator.Current.GetRequiredService<ILoggingService>().Log($"Exported {fileName} successfully");
+                    logger.Log($"Exported {fileName} successfully");
                 }
                 catch (Exception)
                 {
@@ -140,7 +146,7 @@ public partial class ExportSongsProcessWindow : ReactiveWindow<ExportSongsProces
 
                     System.IO.File.Delete(exportPath);
 
-                    Locator.Current.GetRequiredService<ILoggingService>().Log($"Failed to export {fileName}", LogType.Error);
+                    logger.Log($"Failed to export {fileName}", LogType.Error);
                 }
 
                 Dispatcher.UIThread.Post(() =>
@@ -148,6 +154,7 @@ public partial class ExportSongsProcessWindow : ReactiveWindow<ExportSongsProces
                     ViewModel.ExportingSongsProgress = successfulSongs + failedSongs;
 
                     ViewModel.ExportString = $"💾 Exported {successfulSongs} out of {totalSongCount} songs ({failedSongs} failed) 💾";
+                    Locator.Current.GetRequiredService<ILoggingService>().Log($"💾 Exported {successfulSongs} out of {totalSongCount} songs ({failedSongs} failed) 💾");
                 });
             }
         }, token);
@@ -158,13 +165,22 @@ public partial class ExportSongsProcessWindow : ReactiveWindow<ExportSongsProces
 
         ViewModel.IsExportRunning = false;
 
-        GeneralExtensions.OpenUrl(_path);
+        try
+        {
+            GeneralExtensions.OpenUrl(_path);
+        }
+        catch (Exception)
+        {
+            await MessageBox.ShowDialogAsync(this, $"Successfully exported {successfulSongs} out of {totalSongCount} songs ({failedSongs} failed)");
+        }
 
         Close();
     }
 
     private async Task TryCopyFile(IMapEntry mapEntry, string exportPath, string filename)
     {
+        var logger = Locator.Current.GetRequiredService<ILoggingService>();
+
         const FileOptions fileOptions = FileOptions.Asynchronous | FileOptions.SequentialScan;
         const int bufferSize = 81920;
 
@@ -172,11 +188,11 @@ public partial class ExportSongsProcessWindow : ReactiveWindow<ExportSongsProces
         {
             // Copy the file directly if it is already a mp3 file
 
-            await using (var sourceStream =
-                         new FileStream(mapEntry.FullPath, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize, fileOptions))
+            logger.Log($"Copying {filename} from {mapEntry.FullPath} to {exportPath}");
+
+            await using (var sourceStream = new FileStream(mapEntry.FullPath, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize, fileOptions))
             {
-                await using (var destinationStream = new FileStream(exportPath, FileMode.Create, FileAccess.Write,
-                                 FileShare.None, bufferSize, fileOptions))
+                await using (var destinationStream = new FileStream(exportPath, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize, fileOptions))
                 {
                     await sourceStream.CopyToAsync(destinationStream, bufferSize);
                 }
@@ -190,14 +206,14 @@ public partial class ExportSongsProcessWindow : ReactiveWindow<ExportSongsProces
 
             if (decodeHandle == 0)
             {
-                Locator.Current.GetRequiredService<ILoggingService>().Log($"Opening {filename} failed with error: {Bass.LastError}", LogType.Error);
+                logger.Log($"Opening {filename} failed with error: {Bass.LastError}", LogType.Error);
             }
 
             var encodeHandle = BassEnc_Mp3.Start(decodeHandle, "-q7 -b192", EncodeFlags.Default | EncodeFlags.AutoFree, exportPath);
 
             if (encodeHandle == 0)
             {
-                Locator.Current.GetRequiredService<ILoggingService>().Log($"Encoding {filename} failed with error: {Bass.LastError}", LogType.Error);
+                logger.Log($"Encoding {filename} failed with error: {Bass.LastError}", LogType.Error);
             }
 
             var buf = new byte[bufferSize];
@@ -213,7 +229,7 @@ public partial class ExportSongsProcessWindow : ReactiveWindow<ExportSongsProces
                     BassEnc.EncodeStop(encodeHandle);
                     Bass.StreamFree(decodeHandle);
 
-                    Locator.Current.GetRequiredService<ILoggingService>().Log($"Encoded {filename} to mp3 successfully", LogType.Success);
+                    logger.Log($"Encoded {filename} to mp3 successfully", LogType.Success);
                 }
                 else if ( lastError != Errors.OK )
                 {
