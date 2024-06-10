@@ -37,7 +37,8 @@ public partial class ExportSongsProcessWindow : ReactiveWindow<ExportSongsProces
         ViewModel = new ExportSongsProcessWindowViewModel(songs);
 
         Locator.Current.GetService<FluentAppWindow>();
-        _path = path;
+        // Decode the path, so stuff like %20 are encoded properly
+        _path = HttpUtility.UrlDecode(_path);
         _embedBackground = embedBackground;
 
         var config = new Config();
