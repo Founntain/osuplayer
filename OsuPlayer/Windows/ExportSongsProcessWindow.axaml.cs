@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
@@ -80,6 +81,9 @@ public partial class ExportSongsProcessWindow : ReactiveWindow<ExportSongsProces
                 fileName = string.Join("_", fileName.Split(Path.GetInvalidFileNameChars(), StringSplitOptions.RemoveEmptyEntries));
 
                 var exportPath = Path.Combine(_path, fileName);
+
+                // Decode the path, so stuff like %20 are encoded properly
+                exportPath = HttpUtility.UrlDecode(exportPath);
 
                 try
                 {
