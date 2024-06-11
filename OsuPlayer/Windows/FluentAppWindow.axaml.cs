@@ -51,6 +51,27 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
         InitializeComponent();
 
         InitializeFluentAppWindow(player);
+
+        PerformUpdate();
+    }
+
+    private void PerformUpdate()
+    {
+        if (Directory.Exists("update_temp"))
+        {
+            var files = Directory.EnumerateFiles("update_temp").Where(x => x.Contains("OsuPlayer.Updater"));
+
+            foreach (string file in files)
+            {
+                var newPath = Path.GetFileName(file);
+
+                File.Delete(newPath);
+
+                File.Move(file, newPath, true);
+            }
+
+            Directory.Delete("update_temp", true);
+        }
     }
 
     private void InitializeFluentAppWindow(IPlayer player)
@@ -69,10 +90,22 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
 
             TransparencyLevelHint = config.Container.BackgroundMode switch
             {
-                BackgroundMode.SolidColor => new[] { WindowTransparencyLevel.None },
-                BackgroundMode.AcrylicBlur => new[] { WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None },
-                BackgroundMode.Mica => new[] { WindowTransparencyLevel.Mica, WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None },
-                _ => new[] { WindowTransparencyLevel.None },
+                BackgroundMode.SolidColor => new[]
+                {
+                    WindowTransparencyLevel.None
+                },
+                BackgroundMode.AcrylicBlur => new[]
+                {
+                    WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None
+                },
+                BackgroundMode.Mica => new[]
+                {
+                    WindowTransparencyLevel.Mica, WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None
+                },
+                _ => new[]
+                {
+                    WindowTransparencyLevel.None
+                },
             };
 
             TransparencyLevelHint = new[]
@@ -82,7 +115,8 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
 
             SetRenderMode(config.Container.RenderingMode);
 
-            AppNavigationView.PaneDisplayMode = config.Container.UseLeftNavigationPosition ? NavigationViewPaneDisplayMode.Left : NavigationViewPaneDisplayMode.Top;
+            AppNavigationView.PaneDisplayMode =
+                config.Container.UseLeftNavigationPosition ? NavigationViewPaneDisplayMode.Left : NavigationViewPaneDisplayMode.Top;
 
             var backgroundColor = config.Container.BackgroundColor;
             ViewModel!.DisplayBackgroundImage = config.Container.DisplayBackgroundImage;
@@ -329,7 +363,7 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
     {
         if (ViewModel == default) return;
 
-        if(value)
+        if (value)
         {
             ViewModel.AudioVisualizer.AudioVisualizerUpdateTimer.Start();
         }
