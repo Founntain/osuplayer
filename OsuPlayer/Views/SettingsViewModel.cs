@@ -110,7 +110,7 @@ public class SettingsViewModel : BaseViewModel
 
             using var config = new Config();
 
-            config.Container.UseLeftNavigationPosition = value;
+            config.Container.UseSongNameUnicode = value;
         }
     }
 
