@@ -78,7 +78,7 @@ jobs:
     name: Publish ${{ matrix.release }}
     strategy:
       matrix:
-        release: [osx-x64]
+        release: [osx-x64, osx-arm64]
 
     runs-on: macos-latest
 
