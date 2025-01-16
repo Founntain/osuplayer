@@ -32,16 +32,16 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
 
         var minBeatMaps = new List<IMapEntryBase>();
 
-        _osuDbVersion = ReadInt32();
+        _osuDbVersion = ReadInt32(); //Osu version
 
         var flag = _osuDbVersion is >= 20160408 and < 20191107;
 
-        ReadInt32();
-        ReadBoolean();
-        ReadInt64();
-        ReadString();
+        ReadInt32(); //Folder count
+        ReadBoolean(); //Account unlocked
+        ReadInt64(); //Date account will unlock
+        ReadString(); //Player name
 
-        var mapCount = ReadInt32();
+        int mapCount = ReadInt32(); //Map count
 
         minBeatMaps.Capacity = mapCount;
 
@@ -50,7 +50,7 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
         for (var i = 1; i < mapCount; i++)
         {
             if (flag)
-                ReadInt32(); //bt length
+                ReadInt32(); //Beatmap byte length
 
             if (prevId != null)
             {
@@ -73,7 +73,7 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
             minBeatMaps.Add(minBeatMap);
         }
 
-        ReadInt32(); //account rank
+        ReadInt32(); //Account rank
 
         Dispose();
         return Task.FromResult(minBeatMaps);
@@ -97,7 +97,7 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
         for (var i = 1; i < mapCount; i++)
         {
             if (flag)
-                ReadInt32(); //bt length
+                ReadInt32(); //Beatmap length
 
             CalculateMapLength(out var setId, out var hash);
 
@@ -262,7 +262,7 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
     private void ReadFromStream(out DbMapEntryBase minBeatmap)
     {
         var dbOffset = BaseStream.Position;
-        var artist = string.Intern(ReadString());
+        string? artist = string.Intern(ReadString()); //Artist name
 
         string artistUnicode = string.Empty;
         string titleUnicode = string.Empty;
@@ -271,25 +271,48 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
             artist = "Unknown Artist";
 
         if (_osuDbVersion >= 20121008)
-            artistUnicode = ReadString();
+            artistUnicode = ReadString(); //Artist unicode
 
-        var title = string.Intern(ReadString());
+        string? title = string.Intern(ReadString()); //Title name
 
         if (title.Length == 0)
             title = "Unknown Title";
 
         if (_osuDbVersion >= 20121008)
-            titleUnicode = ReadString();
+            titleUnicode = ReadString(); //Title unicode
 
-        ReadString(true);
-        ReadString(true); //Difficulty
-        ReadString(true);
+        ReadString(true); //Creator name
+        ReadString(true); //Difficulty name
+        ReadString(true); //Audio file name
 
         var hash = ReadString(); //Hash
 
         ReadString(true); //BeatmapFileName
 
-        BaseStream.Seek(_osuDbVersion >= 20140609 ? 39 : 27, SeekOrigin.Current);
+        ReadByte(); //Ranked status
+        ReadInt16(); //Number of hitcircles
+        ReadInt16(); //Number of sliders
+        ReadInt16(); //Number of spinners
+        ReadInt64(); //Last modification time, windows ticks
+
+        //BaseStream.Seek(_osuDbVersion >= 20140609 ? 39 : 27, SeekOrigin.Current);
+
+        if (_osuDbVersion >= 20140609) //Approach rate, Circle size, HP drain, OD
+        {
+            ReadSingle();
+            ReadSingle();
+            ReadSingle();
+            ReadSingle();
+        }
+        else
+        {
+            ReadByte();
+            ReadByte();
+            ReadByte();
+            ReadByte();
+        }
+
+        ReadDouble(); //Slider velocity
 
         if (_osuDbVersion >= 20140609)
         {
@@ -437,7 +460,10 @@ public class OsuDbReader : BinaryReader, IDatabaseReader
     public void ReadStarRating()
     {
         var count = ReadInt32();
-        BaseStream.Seek(14 * count, SeekOrigin.Current);
+        if (_osuDbVersion <= 20250107)
+            BaseStream.Seek(14L * count, SeekOrigin.Current);
+        else
+            BaseStream.Seek(10L * count, SeekOrigin.Current);
     }
 
     /// <summary>
