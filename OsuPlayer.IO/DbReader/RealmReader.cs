@@ -146,9 +146,11 @@ public class RealmReader : IDatabaseReader
             var firstBeatmap = infos.First().DynamicApi;
             var metadata = firstBeatmap.Get<DynamicRealmObject>(nameof(BeatmapInfo.Metadata)).DynamicApi;
             var artist = metadata.Get<string>(nameof(BeatmapMetadata.Artist));
+            var artistUnicode = metadata.Get<string>(nameof(BeatmapMetadata.ArtistUnicode));
             var hash = firstBeatmap.Get<string>(nameof(BeatmapInfo.MD5Hash));
             var beatmapSetId = dynamicBeatmap.DynamicApi.Get<int>(nameof(BeatmapSetInfo.OnlineID));
             var title = metadata.Get<string>(nameof(BeatmapMetadata.Title));
+            var titleUnicode = metadata.Get<string>(nameof(BeatmapMetadata.TitleUnicode));
 
             var totalTime = infos.Select(x => x.DynamicApi.Get<double>(nameof(BeatmapInfo.Length))).Max();
             var id = dynamicBeatmap.DynamicApi.Get<Guid>(nameof(BeatmapSetInfo.ID));
@@ -158,9 +160,11 @@ public class RealmReader : IDatabaseReader
                 DbReaderFactory = _readerFactory,
                 OsuPath = string.Intern(_path),
                 Artist = string.Intern(artist),
+                ArtistUnicode = string.Intern(artistUnicode),
                 Hash = hash,
                 BeatmapSetId = beatmapSetId,
                 Title = title,
+                TitleUnicode = titleUnicode,
                 TotalTime = (int) totalTime,
                 Id = id,
                 UseUnicode = config.Container.UseSongNameUnicode
