@@ -17,7 +17,7 @@
         <PackageReference Include="DynamicData" Version="8.4.1" />
         <PackageReference Include="Founntain.Nein" Version="2024.427.0" />
         <PackageReference Include="MongoDB.Bson" Version="2.25.0" />
-        <PackageReference Include="Realm" Version="11.6.1" >
+        <PackageReference Include="Realm" Version="20.1.0">
             <IncludeAssets>native</IncludeAssets>
         </PackageReference>
         <!--        <PackageReference Include="Realm.Fody" Version="10.15.1">-->
@@ -32,9 +32,6 @@
         </Reference>
         <Reference Include="Realm.Fody">
             <HintPath>Realm.Fody.dll</HintPath>
-        </Reference>
-        <Reference Include="Realm.PlatformHelpers">
-            <HintPath>Realm.PlatformHelpers.dll</HintPath>
         </Reference>
     </ItemGroup>
 
