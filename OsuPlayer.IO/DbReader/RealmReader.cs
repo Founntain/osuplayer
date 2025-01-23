@@ -163,7 +163,7 @@ public class RealmReader : IDatabaseReader
                 ArtistUnicode = string.Intern(artistUnicode),
                 Hash = hash,
                 BeatmapSetId = beatmapSetId,
-                Title = title,
+                Title = string.Intern(title),
                 TitleUnicode = string.Intern(titleUnicode),
                 TotalTime = (int) totalTime,
                 Id = id,
