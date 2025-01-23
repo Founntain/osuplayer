@@ -35,10 +35,9 @@ public partial class UpdateView : ReactiveControl<UpdateViewModel>
             return;
         }
 
-        var processStartInfo = new ProcessStartInfo("dotnet", new[]
-        {
+        var processStartInfo = new ProcessStartInfo("dotnet", [
             "OsuPlayer.Updater.dll", asset.BrowserDownloadUrl
-        });
+        ]);
 
         Process.Start(processStartInfo);
         

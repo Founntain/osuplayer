@@ -14,9 +14,10 @@ public static class Program
 
         var url = args[0];
 
-        Console.WriteLine($"Updating in 5 seconds, with binary from: {url}");
+        Console.WriteLine($"Updating with binary from: {url}");
+        Console.WriteLine($"Press key to continue or close the window to cancel");
 
-        //await Task.Delay(5000);
+        Console.ReadKey();
 
         Console.WriteLine("Updating now!");
 
@@ -38,6 +39,26 @@ public static class Program
         bool containsUpdaterFiles = filesRaw.Any(x => x.Contains("OsuPlayer.Updater"));
 
         var files = filesRaw.Where(x => !x.Contains("OsuPlayer.Updater"));
+
+        var oldFiles = Directory.EnumerateFiles(".").ToList().Where(x => !x.Contains("OsuPlayer.Updater"));
+
+        foreach (string oldFile in oldFiles)
+        {
+            try
+            {
+                File.Delete(oldFile);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error deleting old file {oldFile} with exception: {e.Message}");
+                Console.WriteLine(
+                    "Please delete all old files (not the folders!) and copy the content from 'update_temp' manually into your osu!player directory");
+
+                Console.ReadKey();
+
+                return;
+            }
+        }
 
         foreach (string file in files)
         {
@@ -62,7 +83,7 @@ public static class Program
         if (!containsUpdaterFiles)
             Directory.Delete("update_temp");
 
-        Console.WriteLine("Updating finished successfully. Press any key to quit.");
+        Console.WriteLine("Updating finished successfully. Please restart the osu!player manually. Press any key to quit.");
 
         Console.ReadLine();
     }
