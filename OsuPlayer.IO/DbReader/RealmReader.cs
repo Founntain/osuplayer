@@ -112,9 +112,9 @@ public class RealmReader : IDatabaseReader
             Id = id.Value,
             OsuPath = string.Intern(path),
             Artist = string.Intern(mapEntryBase.Artist),
-            ArtistUnicode = metadata.Get<string>(nameof(BeatmapMetadata.ArtistUnicode)),
-            Title = mapEntryBase.Title,
-            TitleUnicode = metadata.Get<string>(nameof(BeatmapMetadata.TitleUnicode)),
+            ArtistUnicode = string.Intern(mapEntryBase.ArtistUnicode),
+            Title = string.Intern(mapEntryBase.Title),
+            TitleUnicode = string.Intern(mapEntryBase.TitleUnicode),
             AudioFileName = audioFileName,
             BackgroundFileLocation = string.IsNullOrEmpty(backgroundFolderName)
                 ? string.Empty
@@ -146,11 +146,11 @@ public class RealmReader : IDatabaseReader
             var firstBeatmap = infos.First().DynamicApi;
             var metadata = firstBeatmap.Get<DynamicRealmObject>(nameof(BeatmapInfo.Metadata)).DynamicApi;
             var artist = metadata.Get<string>(nameof(BeatmapMetadata.Artist));
-            var artistUnicode = metadata.Get<string>(nameof(BeatmapMetadata.ArtistUnicode));
+            var artistUnicode = metadata.Get<string>(nameof(BeatmapMetadata.ArtistUnicode)) ?? string.Empty;
             var hash = firstBeatmap.Get<string>(nameof(BeatmapInfo.MD5Hash));
             var beatmapSetId = dynamicBeatmap.DynamicApi.Get<int>(nameof(BeatmapSetInfo.OnlineID));
             var title = metadata.Get<string>(nameof(BeatmapMetadata.Title));
-            var titleUnicode = metadata.Get<string>(nameof(BeatmapMetadata.TitleUnicode));
+            var titleUnicode = metadata.Get<string>(nameof(BeatmapMetadata.TitleUnicode)) ?? string.Empty;
 
             var totalTime = infos.Select(x => x.DynamicApi.Get<double>(nameof(BeatmapInfo.Length))).Max();
             var id = dynamicBeatmap.DynamicApi.Get<Guid>(nameof(BeatmapSetInfo.ID));
@@ -163,8 +163,8 @@ public class RealmReader : IDatabaseReader
                 ArtistUnicode = string.Intern(artistUnicode),
                 Hash = hash,
                 BeatmapSetId = beatmapSetId,
-                Title = title,
-                TitleUnicode = titleUnicode,
+                Title = string.Intern(title),
+                TitleUnicode = string.Intern(titleUnicode),
                 TotalTime = (int) totalTime,
                 Id = id,
                 UseUnicode = config.Container.UseSongNameUnicode

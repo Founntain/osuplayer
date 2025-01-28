@@ -9,11 +9,14 @@ using FluentAvalonia.Styling;
 using FluentAvalonia.UI.Controls;
 using Nein.Base;
 using Nein.Controls.Interfaces;
+using Nein.Extensions;
 using OsuPlayer.Api.Data.API.EntityModels;
+using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.Data.OsuPlayer.Classes;
 using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Extensions.EnumExtensions;
 using OsuPlayer.Interfaces.Service;
+using OsuPlayer.IO.Importer;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Network;
 using OsuPlayer.Network.Data;
@@ -111,6 +114,16 @@ public class SettingsViewModel : BaseViewModel
             using var config = new Config();
 
             config.Container.UseSongNameUnicode = value;
+
+            var provider = Locator.Current.GetRequiredService<ISongSourceProvider>();
+
+            provider.SongSource.Edit(mapEntryBases =>
+            {
+                foreach (IMapEntryBase mapEntryBase in mapEntryBases)
+                {
+                    mapEntryBase.UseUnicode = value;
+                }
+            });
         }
     }
 
