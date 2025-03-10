@@ -84,7 +84,7 @@ A rule of thumb is: If you want a new feature, discuss it with us to see if it m
 ### 🦊 Founntain
 
 <a href="https://github.com/Founntain">
-  <img style="border-radius: 50%;" align="right" width=200 height=200 src="https://gud.founntain.dev/f/G46RnkQMDk.png" />
+  <img style="border-radius: 50%;" align="right" width=200 height=200 src="https://osuplayer.founntain.dev/user/getProfilePicture?id=68c561ec-2313-43bc-8e1b-4227a2936e35" />
 </a>
 Hey, there my name is Founntain!
 A bit about myself: I'm currently `currentYear - 1999` years old and from Germany. 
