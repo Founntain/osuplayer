@@ -45,7 +45,8 @@ public static class GitHub
                     IsPrerelease = releaseChannel == ReleaseChannels.PreReleases,
                     Version = release.TagName,
                     ReleaseDate = release.CreatedAt,
-                    PatchNotes = await GetLatestPatchNotes(releaseChannel)
+                    PatchNotes = await GetLatestPatchNotes(releaseChannel),
+                    Assets = release.Assets
                 };
 
             return new UpdateResponse
@@ -81,11 +82,13 @@ public static class GitHub
 
             Release latestRelease = null;
 
-            foreach (var release in releases.OrderBy(x => x.CreatedAt))
+            foreach (var release in releases.OrderByDescending(x => x.CreatedAt))
             {
                 if (release.Prerelease && !includePreReleases) continue;
 
                 latestRelease = release;
+
+                break;
             }
 
             return latestRelease;

@@ -8,7 +8,7 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="OsuPlayer.Windows.FluentAppWindow"
         Title="osu!player"
-        Initialized="Window_OnInitialized">
+        Opened="Window_OnOpened">
 
     <Design.DataContext>
         <windows:FluentAppWindowViewModel />

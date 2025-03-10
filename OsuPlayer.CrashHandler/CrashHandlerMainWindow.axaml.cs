@@ -1,13 +1,10 @@
 using System;
 using System.IO;
 using System.Linq;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Nein.Base;
 using Nein.Extensions;
-using ReactiveUI;
 
 namespace OsuPlayer.CrashHandler;
 
@@ -15,16 +12,11 @@ public partial class CrashHandlerMainWindow : ReactiveWindow<CrashHandlerMainWin
 {
     public CrashHandlerMainWindow()
     {
+        ViewModel = new CrashHandlerMainWindowViewModel();
+
         InitializeComponent();
 
-        ViewModel = new CrashHandlerMainWindowViewModel();
-    }
-
-    private void InitializeComponent()
-    {
-        this.WhenActivated(_ => { });
-
-        AvaloniaXamlLoader.Load(this);
+        // this.WhenActivated(_ => { });
     }
 
     private async void Window_OnActivated(object? sender, EventArgs e)

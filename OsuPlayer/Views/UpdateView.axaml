@@ -26,8 +26,11 @@
                 </avalonia:MarkdownScrollViewer.Styles>
             </avalonia:MarkdownScrollViewer>
 
-            <Button Grid.Row="2" Content="open github" HorizontalAlignment="Center" Click="Button_OnClick"
-                    FontSize="18" />
+            <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="5" HorizontalAlignment="Center">
+                <Button Content="open github" HorizontalAlignment="Center" Click="Button_OnClick"
+                        FontSize="18" />
+                <Button Content="update now!" HorizontalAlignment="Center" Click="Update_OnClick" FontSize="18" />
+            </StackPanel>
         </Grid>
     </Grid>
 </UserControl>
