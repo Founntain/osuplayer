@@ -134,7 +134,10 @@ Thanks for reading and have fun with the player, cheers.
 
 ## 🖼️ Screenshots
 
-![](https://gud.founntain.dev/f/p5nrMbq5M0.jpg)
-![](https://gud.founntain.dev/f/KDEJNVggeU.jpg)  
+![image](https://github.com/user-attachments/assets/4d5c7ba2-1b40-4c1e-aeab-867f5d72b0da)  
+![image](https://github.com/user-attachments/assets/e9894f29-8958-47f7-95ff-1af0261b1726)  
+![image](https://github.com/user-attachments/assets/43c30551-3b51-408f-a464-9521798a166d)
+
 ### Miniplayer  
-![](https://gud.founntain.dev/f/TTc7bws1xU.png)
+![image](https://github.com/user-attachments/assets/edb674d3-edc7-4457-81c8-60b833115fcc)
+
