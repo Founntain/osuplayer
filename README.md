@@ -7,7 +7,6 @@
 [![GitHub release](https://img.shields.io/github/release-pre/Founntain/osuplayer.svg)](https://github.com/founntain/osuplayer/releases/latest)
 ![](https://img.shields.io/github/languages/code-size/Founntain/osuplayer)
 ![](https://img.shields.io/github/repo-size/Founntain/osuplayer)
-![](https://img.shields.io/tokei/lines/github/Founntain/osuplayer)
 ![](https://img.shields.io/github/issues/Founntain/osuplayer?color=red)
 ![](https://img.shields.io/github/contributors/Founntain/osuplayer?color=blueviolet)  
 [![CI](https://github.com/Founntain/osuplayer/actions/workflows/dotnet.yml/badge.svg?branch=master)](https://github.com/Founntain/osuplayer/actions/workflows/dotnet.yml)
