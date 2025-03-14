@@ -66,7 +66,7 @@ A rule of thumb is: If you want a new feature, discuss it with us to see if it m
 - ***SourRaindrop***: for creating a lot of custom images and assets like our logo
 - ***You, the user***: for using this project and helping us improving it and simply enjoying your osu! music
 
-## 🪛 Features that are missing to have the full osu!player plus a feature set
+## 🪛 Features that are missing to have the full osu!player plus feature set
 
 #### 🔧 Features with lower priority
 - [x] Audio-Equalizer 
