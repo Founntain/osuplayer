@@ -58,6 +58,7 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\OsuPlayer.CrashHandler\OsuPlayer.CrashHandler.csproj" />
+        <ProjectReference Include="..\OsuPlayer.Updater\OsuPlayer.Updater.csproj" />
         <ProjectReference Include="..\OsuPlayer.Data\OsuPlayer.Data.csproj" />
         <ProjectReference Include="..\OsuPlayer.Extensions\OsuPlayer.Extensions.csproj" />
         <ProjectReference Include="..\OsuPlayer.Interfaces\OsuPlayer.Interfaces.csproj" />

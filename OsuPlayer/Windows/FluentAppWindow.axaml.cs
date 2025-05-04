@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
-using ABI.Windows.Perception.Spatial;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -16,7 +15,6 @@ using OsuPlayer.Data.OsuPlayer.Enums;
 using OsuPlayer.Extensions.EnumExtensions;
 using OsuPlayer.Interfaces.Service;
 using OsuPlayer.IO.Importer;
-using OsuPlayer.Modules.Audio.Engine;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Network;
 using OsuPlayer.Services;
@@ -69,10 +67,22 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
 
             TransparencyLevelHint = config.Container.BackgroundMode switch
             {
-                BackgroundMode.SolidColor => new[] { WindowTransparencyLevel.None },
-                BackgroundMode.AcrylicBlur => new[] { WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None },
-                BackgroundMode.Mica => new[] { WindowTransparencyLevel.Mica, WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None },
-                _ => new[] { WindowTransparencyLevel.None },
+                BackgroundMode.SolidColor => new[]
+                {
+                    WindowTransparencyLevel.None
+                },
+                BackgroundMode.AcrylicBlur => new[]
+                {
+                    WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None
+                },
+                BackgroundMode.Mica => new[]
+                {
+                    WindowTransparencyLevel.Mica, WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None
+                },
+                _ => new[]
+                {
+                    WindowTransparencyLevel.None
+                },
             };
 
             TransparencyLevelHint = new[]
@@ -82,7 +92,8 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
 
             SetRenderMode(config.Container.RenderingMode);
 
-            AppNavigationView.PaneDisplayMode = config.Container.UseLeftNavigationPosition ? NavigationViewPaneDisplayMode.Left : NavigationViewPaneDisplayMode.Top;
+            AppNavigationView.PaneDisplayMode =
+                config.Container.UseLeftNavigationPosition ? NavigationViewPaneDisplayMode.Left : NavigationViewPaneDisplayMode.Top;
 
             var backgroundColor = config.Container.BackgroundColor;
             ViewModel!.DisplayBackgroundImage = config.Container.DisplayBackgroundImage;
@@ -270,11 +281,16 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
         ViewModel.Player.DisposeDiscordClient();
     }
 
-    private async void Window_OnInitialized(object? sender, EventArgs e)
+    private async void Window_OnOpened(object? sender, EventArgs e)
     {
         if (Debugger.IsAttached) return;
 
         if (ViewModel == default) return;
+
+        if (Directory.Exists("update_temp"))
+        {
+            await CleanupAfterUpdate();
+        }
 
         await using var config = new Config();
 
@@ -284,6 +300,43 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
 
         ViewModel.UpdateView.Update = result;
         ViewModel.MainView = ViewModel.UpdateView;
+    }
+
+    private async Task CleanupAfterUpdate()
+    {
+        List<string> remainingUpdateFiles = Directory.EnumerateFiles("update_temp").ToList();
+
+        if (remainingUpdateFiles.Any(x => !x.Contains("OsuPlayer.Updater")))
+        {
+            await MessageBox.ShowDialogAsync(this,
+                "The remaining update files contain files that are not related to the updater. Please close the player and move the update files from 'update_temp' to the main directory manually and delete the 'update_temp' folder afterwards.");
+
+            GeneralExtensions.OpenUrl($"{Directory.GetCurrentDirectory()}{Path.DirectorySeparatorChar}");
+
+            return;
+        }
+
+        foreach (string remainingUpdateFile in remainingUpdateFiles)
+        {
+            try
+            {
+                var newPath = Path.GetFileName(remainingUpdateFile);
+
+                File.Delete(newPath);
+
+                File.Move(remainingUpdateFile, newPath, true);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"{remainingUpdateFile} has error with exception: {e.Message}");
+                Console.WriteLine("Please restart the updater and make sure osu!player has quit.");
+
+                Console.ReadKey();
+                return;
+            }
+        }
+
+        Directory.Delete("update_temp");
     }
 
     private void OpenMiniplayer()
@@ -329,7 +382,7 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
     {
         if (ViewModel == default) return;
 
-        if(value)
+        if (value)
         {
             ViewModel.AudioVisualizer.AudioVisualizerUpdateTimer.Start();
         }
