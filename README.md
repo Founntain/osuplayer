@@ -125,9 +125,6 @@ Thanks for reading and have fun with the player, cheers.
 - [✉️ 7@founntain.dev](mailto:7@founntain.dev)
 - 📣 [Discord](https://discord.gg/RJQSc5B)
 
-## ❤️ Supported by
-<img width=150 height=150 src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" alt="JetBrains Logo (Main) logo.">
-
 ## ⭐ Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=founntain/osuplayer&type=Date)](https://star-history.com/#founntain/osuplayer&Date)
