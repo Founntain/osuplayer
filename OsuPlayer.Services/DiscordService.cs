@@ -66,7 +66,8 @@ public class DiscordService : OsuPlayerService, IDiscordService
             {
                 LargeImageKey = DefaultImageKey,
                 LargeImageText = "osu!player"
-            }
+            },
+            Type = ActivityType.Listening
         });
     }
 
@@ -106,7 +107,8 @@ public class DiscordService : OsuPlayerService, IDiscordService
             State = state,
             Assets = assets ?? _defaultAssets,
             Buttons = GetButtons(),
-            Timestamps = timestamps
+            Timestamps = timestamps,
+            Type = ActivityType.Listening
         });
     }
 
