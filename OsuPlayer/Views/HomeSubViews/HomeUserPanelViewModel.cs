@@ -110,9 +110,9 @@ public class HomeUserPanelViewModel : BaseViewModel
 
         await _profileManager.Login(sessionToken);
 
+        this.RaisePropertyChanged(nameof(CurrentUser));
         this.RaisePropertyChanged(nameof(IsUserLoggedIn));
         this.RaisePropertyChanged(nameof(IsUserNotLoggedIn));
-        this.RaisePropertyChanged(nameof(CurrentUser));
 
         ProfilePicture = await LoadProfilePictureAsync();
     }

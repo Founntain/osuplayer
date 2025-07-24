@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Reactive.Disposables;
+using System.Runtime.InteropServices;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
@@ -50,8 +51,8 @@ public class FluentAppWindowViewModel : BaseWindowViewModel
     public bool IsNonLinuxOs { get; }
     public bool IsLinuxOs { get; }
 
-    public bool IsUserLoggedIn => ProfileManager.User != default && ProfileManager.User?.UniqueId != Guid.Empty;
-    public bool IsUserNotLoggedIn => ProfileManager.User == default || ProfileManager.User?.UniqueId == Guid.Empty;
+    public bool IsUserLoggedIn => ProfileManager.User != null && ProfileManager.User?.UniqueId != Guid.Empty;
+    public bool IsUserNotLoggedIn => ProfileManager.User == null || ProfileManager.User?.UniqueId == Guid.Empty;
 
     private ReadOnlyObservableCollection<IMapEntryBase>? _songList;
 
@@ -147,5 +148,15 @@ public class FluentAppWindowViewModel : BaseWindowViewModel
                 BackgroundImage = null;
             });
         }, true, true);
+
+        if (!File.Exists("data/session.op"))
+            return;
+
+        var sessionToken = File.ReadAllText("data/session.op");
+
+        profileManager.Login(sessionToken);
+
+        this.RaisePropertyChanged(nameof(IsUserLoggedIn));
+        this.RaisePropertyChanged(nameof(IsUserNotLoggedIn));
     }
 }

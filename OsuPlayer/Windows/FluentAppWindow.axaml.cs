@@ -92,8 +92,7 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
 
             SetRenderMode(config.Container.RenderingMode);
 
-            AppNavigationView.PaneDisplayMode =
-                config.Container.UseLeftNavigationPosition ? NavigationViewPaneDisplayMode.Left : NavigationViewPaneDisplayMode.Top;
+            AppNavigationView.PaneDisplayMode = config.Container.UseLeftNavigationPosition ? NavigationViewPaneDisplayMode.Left : NavigationViewPaneDisplayMode.Top;
 
             var backgroundColor = config.Container.BackgroundColor;
             ViewModel!.DisplayBackgroundImage = config.Container.DisplayBackgroundImage;

@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
@@ -55,7 +56,10 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
 
         if (file == default) return;
 
-        var fileInfo = new FileInfo(file.Path.AbsolutePath);
+
+        var absolutePath = HttpUtility.UrlDecode(file.Path.AbsolutePath);
+
+        var fileInfo = new FileInfo(absolutePath);
 
         switch (ViewModel.CurrentUser.IsDonator)
         {
@@ -69,7 +73,7 @@ public partial class EditUserView : ReactiveUserControl<EditUserViewModel>
                 return;
         }
 
-        var picture = await File.ReadAllBytesAsync(file.Path.AbsolutePath);
+        var picture = await File.ReadAllBytesAsync(absolutePath);
 
         await using (var stream = new MemoryStream(picture))
         {
