@@ -12,9 +12,9 @@
     </Design.DataContext>
 
     <Grid IsHitTestVisible="False">
-        <lvc:CartesianChart IsHitTestVisible="False" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
-                            Series="{Binding Series}"
-                            XAxes="{Binding XAxes}"
-                            YAxes="{Binding YAxes}" />
+        <!-- <lvc:CartesianChart IsHitTestVisible="False" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" -->
+        <!--                     Series="{Binding Series}" -->
+        <!--                     XAxes="{Binding XAxes}" -->
+        <!--                     YAxes="{Binding YAxes}" /> -->
     </Grid>
 </UserControl>

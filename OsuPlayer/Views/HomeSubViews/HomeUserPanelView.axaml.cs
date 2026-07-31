@@ -1,7 +1,9 @@
 ﻿using Avalonia.Interactivity;
+using Nein.Extensions;
 using OsuPlayer.Windows;
 using ReactiveUI;
 using ReactiveUI.Avalonia;
+using Splat;
 
 namespace OsuPlayer.Views.HomeSubViews;
 
@@ -15,8 +17,7 @@ public partial class HomeUserPanelView : ReactiveUserControl<HomeUserPanelViewMo
 
         this.WhenActivated((Action<IDisposable> _) =>
         {
-            if (this.VisualRoot is FluentAppWindow mainWindow)
-                _mainWindow = mainWindow;
+            _mainWindow = Locator.Current.GetRequiredService<FluentAppWindow>();
         });
     }
 

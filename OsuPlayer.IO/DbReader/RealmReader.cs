@@ -3,7 +3,9 @@ using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.Data.LazerModels.Beatmaps;
 using OsuPlayer.Data.LazerModels.Collections;
 using OsuPlayer.Data.LazerModels.Files;
+using OsuPlayer.Interfaces.Service;
 using OsuPlayer.IO.Storage.Config;
+using OsuPlayer.Services;
 using Realms;
 using Realms.Dynamic;
 using Splat;
@@ -18,6 +20,7 @@ public class RealmReader : IDatabaseReader
     private readonly string _path;
     private readonly Realm _realm;
     private readonly IDbReaderFactory _readerFactory;
+    private readonly string? _tempRealmPath;
 
     public RealmReader(string path, IDbReaderFactory readerFactory)
     {
@@ -27,13 +30,41 @@ public class RealmReader : IDatabaseReader
 
         var realmLoc = Path.Combine(_path, "client.realm");
 
-        var realmConfig = new RealmConfiguration(realmLoc)
-        {
-            IsDynamic = true,
-            IsReadOnly = true
-        };
+        // Create a temporary copy to avoid modifying the original
+        _tempRealmPath = Path.Combine(Path.GetTempPath(), $"osuplayer_realm_{Guid.NewGuid()}.realm");
 
-        _realm = Realm.GetInstance(realmConfig);
+        try
+        {
+            File.Copy(realmLoc, _tempRealmPath, overwrite: true);
+
+            var realmConfig = new RealmConfiguration(_tempRealmPath)
+            {
+                IsDynamic = true,
+                SchemaVersion = 0 // Allow automatic migration on the temporary copy
+            };
+
+            _realm = Realm.GetInstance(realmConfig);
+        }
+        catch (Exception ex)
+        {
+            // Clean up temp file if something goes wrong
+            if (_tempRealmPath != null && File.Exists(_tempRealmPath))
+            {
+                try
+                {
+                    File.Delete(_tempRealmPath);
+                }
+                catch
+                {
+                    // Ignore cleanup errors
+                }
+            }
+
+            var loggingService = Locator.Current.GetService<ILoggingService>();
+            loggingService?.Log($"Failed to open Realm database: {ex.Message}", LogType.Error);
+
+            throw new InvalidOperationException($"Unable to open Realm database at {realmLoc}. The database format may be incompatible with this version of OsuPlayer.", ex);
+        }
     }
 
     public Dictionary<string, int> GetBeatmapHashes()
@@ -127,8 +158,6 @@ public class RealmReader : IDatabaseReader
             UseUnicode = config.Container.UseSongNameUnicode
         };
 
-        _realm.Dispose();
-
         return newMap;
     }
 
@@ -176,12 +205,25 @@ public class RealmReader : IDatabaseReader
 
     public void Dispose()
     {
-        _realm.Dispose();
+        _realm?.Dispose();
+
+        // Clean up temporary file
+        if (_tempRealmPath != null && File.Exists(_tempRealmPath))
+        {
+            try
+            {
+                File.Delete(_tempRealmPath);
+            }
+            catch
+            {
+                // Ignore cleanup errors - temp files will be cleaned up by OS eventually
+            }
+        }
     }
 
     ~RealmReader()
     {
-        _realm.Dispose();
+        Dispose();
     }
 
     /// <summary>

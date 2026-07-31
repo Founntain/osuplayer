@@ -10,6 +10,7 @@ using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Windows;
 using ReactiveUI;
+using Splat;
 
 namespace OsuPlayer.Views;
 
@@ -23,8 +24,7 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
 
         this.WhenActivated((Action<IDisposable> disposables) =>
         {
-            if (this.VisualRoot is FluentAppWindow mainWindow)
-                _mainWindow = mainWindow;
+            _mainWindow = Locator.Current.GetRequiredService<FluentAppWindow>();
 
             SongProgressSlider.AddHandler(PointerPressedEvent, SongProgressSlider_OnPointerPressed, RoutingStrategies.Tunnel);
 

@@ -394,4 +394,12 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
             }
         }
     }
+
+    private void TitleBarHost_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+        {
+            BeginMoveDrag(e);
+        }
+    }
 }

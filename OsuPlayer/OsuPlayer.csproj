@@ -45,6 +45,7 @@
         <PackageReference Include="ManagedBass.Enc" Version="4.0.2" />
         <PackageReference Include="ManagedBass.Fx" Version="4.0.2" />
         <PackageReference Include="Markdown.Avalonia" Version="11.0.3" />
+        <PackageReference Include="Markdown.Avalonia.Tight" Version="12.0.0-a3" />
         <PackageReference Include="Material.Icons.Avalonia" Version="3.0.2" />
         <PackageReference Include="OsuPlayer.Api.Data" Version="1.0.13" />
         <PackageReference Include="ReactiveUI" Version="24.0.0" />
