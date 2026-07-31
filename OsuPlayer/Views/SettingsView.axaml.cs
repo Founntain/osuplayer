@@ -26,7 +26,7 @@ public partial class SettingsView : ReactiveControl<SettingsViewModel>
 
         _mainWindow = Locator.Current.GetRequiredService<FluentAppWindow>();
 
-        this.WhenActivated(_ =>
+        this.WhenActivated((Action<IDisposable> disposables) =>
         {
             ViewModel.MainWindow = Locator.Current.GetRequiredService<FluentAppWindow>();
 

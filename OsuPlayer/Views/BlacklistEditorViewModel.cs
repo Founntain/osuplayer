@@ -55,9 +55,9 @@ public class BlacklistEditorViewModel : BaseViewModel
 
         this.RaisePropertyChanged(nameof(FilteredSongEntries));
 
-        this.WhenActivated(disposables =>
+        this.WhenActivated((Action<IDisposable> disposables) =>
         {
-            Disposable.Create(() => { }).DisposeWith(disposables);
+            disposables(Disposable.Create(() => { }));
 
             Blacklist = new Blacklist().Container;
         });

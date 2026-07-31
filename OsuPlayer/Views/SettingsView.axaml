@@ -10,6 +10,7 @@
              xmlns:ui="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.SettingsView"
+             x:DataType="views:SettingsViewModel"
              Initialized="SettingsView_OnInitialized">
 
     <Design.DataContext>

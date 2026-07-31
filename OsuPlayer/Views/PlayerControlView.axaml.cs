@@ -22,9 +22,9 @@ public partial class PlayerControlView : ReactiveControl<PlayerControlViewModel>
     {
         InitializeComponent();
 
-        this.WhenActivated(_ =>
+        this.WhenActivated((Action<IDisposable> disposables) =>
         {
-            if (this.GetVisualRoot() is FluentAppWindow mainWindow)
+            if (this.VisualRoot is FluentAppWindow mainWindow)
                 _mainWindow = mainWindow;
 
             SongProgressSlider.AddHandler(PointerPressedEvent, SongProgressSlider_OnPointerPressed, RoutingStrategies.Tunnel);

@@ -7,11 +7,12 @@
              xmlns:interfaces="clr-namespace:OsuPlayer.Data.DataModels.Interfaces;assembly=OsuPlayer.Data"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.BlacklistEditorView"
+             x:DataType="views:BlacklistEditorViewModel"
              FontWeight="{DynamicResource DefaultFontWeight}">
     <Design.DataContext>
         <views:BlacklistEditorViewModel />
     </Design.DataContext>
-    
+
     <Grid Row="1" ColumnDefinitions="*, 50, *" Margin="0 1">
         <Grid Column="1">
             <StackPanel Spacing="10" VerticalAlignment="Center" HorizontalAlignment="Center">

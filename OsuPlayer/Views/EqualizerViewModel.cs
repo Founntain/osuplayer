@@ -118,7 +118,7 @@ public class EqualizerViewModel : BaseViewModel
             SelectedPreset = eqStorage.Container.EqPresets?.FirstOrDefault(x => x.Id == eqStorage.Container.LastUsedEqId);
         }
 
-        this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
+        this.WhenActivated((Action<IDisposable> disposables) => {  disposables(Disposable.Create(() => { })); });
     }
 
     private void UpdateEq(object? sender, NotifyCollectionChangedEventArgs args)

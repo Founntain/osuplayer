@@ -97,9 +97,9 @@ public class PlaylistEditorViewModel : BaseViewModel
 
         Activator = new ViewModelActivator();
 
-        this.WhenActivated(disposables =>
+        this.WhenActivated((Action<IDisposable> disposables) =>
         {
-            Disposable.Create(() => { }).DisposeWith(disposables);
+            disposables(Disposable.Create(() => { }));
 
             var config = new Config();
 

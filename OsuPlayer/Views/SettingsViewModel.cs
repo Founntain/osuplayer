@@ -662,9 +662,9 @@ public class SettingsViewModel : BaseViewModel
         this.WhenActivated(Block);
     }
 
-    private async void Block(CompositeDisposable disposables)
+    private async void Block(Action<IDisposable> disposables)
     {
-        Disposable.Create(() => { }).DisposeWith(disposables);
+        disposables(Disposable.Create(() => { }));
 
         var latestPatchNotes = await GitHub.GetLatestPatchNotes(_selectedReleaseChannel);
 

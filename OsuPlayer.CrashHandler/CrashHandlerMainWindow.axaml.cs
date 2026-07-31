@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Nein.Base;
 using Nein.Extensions;
@@ -42,7 +43,13 @@ public partial class CrashHandlerMainWindow : ReactiveWindow<CrashHandlerMainWin
 
         if (topLevel == default || topLevel.Clipboard == default) return;
 
-        await topLevel.Clipboard.SetTextAsync(ViewModel.CrashLog);
+        var transfer = new DataTransfer();
+        var transferItem = new DataTransferItem();
+
+        transferItem.SetText(ViewModel.CrashLog);
+        transfer.Add(transferItem);
+
+        await topLevel.Clipboard.SetDataAsync(transfer);
     }
 
     private void GitHub_OnClick(object? sender, RoutedEventArgs e)

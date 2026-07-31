@@ -6,6 +6,7 @@
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.EditUserView"
+             x:DataType="views:EditUserViewModel"
              FontWeight="{DynamicResource DefaultFontWeight}">
 
     <Design.DataContext>
@@ -71,7 +72,7 @@
                     <avalonia:MaterialIcon Kind="AccountRemove" Height="28" Width="28" />
                 </Button>
 
-                <Popup PlacementMode="AnchorAndGravity"
+                <Popup Placement="AnchorAndGravity"
                        HorizontalOffset="-225" VerticalOffset="-60" IsOpen="{Binding IsDeleteProfilePopupOpen}">
 
                     <Border Background="#F7000000" CornerRadius="5"

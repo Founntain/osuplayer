@@ -5,7 +5,8 @@
              xmlns:views="clr-namespace:OsuPlayer.Views"
              xmlns:extensions="clr-namespace:OsuPlayer.Data.DataModels.Extensions;assembly=OsuPlayer.Data"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="OsuPlayer.Views.PlayHistoryView">
+             x:Class="OsuPlayer.Views.PlayHistoryView"
+             x:DataType="views:PlayHistoryViewModel">
 
     <Design.DataContext>
         <views:PlayHistoryViewModel />

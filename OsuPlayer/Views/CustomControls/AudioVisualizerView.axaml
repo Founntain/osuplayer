@@ -5,7 +5,8 @@
              xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Avalonia;assembly=LiveChartsCore.SkiaSharpView.Avalonia"
              xmlns:views="clr-namespace:OsuPlayer.Views.CustomControls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="OsuPlayer.Views.CustomControls.AudioVisualizerView">
+             x:Class="OsuPlayer.Views.CustomControls.AudioVisualizerView"
+             x:DataType="views:AudioVisualizerViewModel">
     <Design.DataContext>
         <views:AudioVisualizerViewModel />
     </Design.DataContext>

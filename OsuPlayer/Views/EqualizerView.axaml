@@ -6,6 +6,7 @@
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.EqualizerView"
+             x:DataType="vm:EqualizerViewModel"
              FontWeight="{DynamicResource DefaultFontWeight}"
              FontSize="16">
 
@@ -28,7 +29,7 @@
                             Background="Transparent" Click="DeleteEqPreset_OnClick">
                         <avalonia:MaterialIcon Kind="Delete" Height="28" Width="28" />
                     </Button>
-                    <Popup PlacementMode="AnchorAndGravity" Width="250" MaxWidth="250"
+                    <Popup Placement="AnchorAndGravity" Width="250" MaxWidth="250"
                            HorizontalOffset="-150" IsOpen="{Binding IsDeleteEqPresetPopupOpen}">
 
                         <Border Background="{DynamicResource PopupBase}" CornerRadius="5"
@@ -61,7 +62,7 @@
                             Background="Transparent" Click="RenameEqPreset_OnClick">
                         <avalonia:MaterialIcon Kind="FormTextbox" Height="28" Width="28" />
                     </Button>
-                    <Popup PlacementMode="AnchorAndGravity" Width="250" MaxWidth="250"
+                    <Popup Placement="AnchorAndGravity" Width="250" MaxWidth="250"
                            HorizontalOffset="-150" IsOpen="{Binding IsRenameEqPresetPopupOpen}">
 
                         <Border Background="{DynamicResource PopupBase}" CornerRadius="5"
@@ -89,7 +90,7 @@
                             Background="Transparent" Click="AddEqPreset_OnClick">
                         <avalonia:MaterialIcon Kind="ContentDuplicate" Height="28" Width="28" />
                     </Button>
-                    <Popup PlacementMode="AnchorAndGravity" Width="250" MaxWidth="250"
+                    <Popup Placement="AnchorAndGravity" Width="250" MaxWidth="250"
                            HorizontalOffset="-150" IsOpen="{Binding IsNewEqPresetPopupOpen}">
 
                         <Border Background="{DynamicResource PopupBase}" CornerRadius="5"

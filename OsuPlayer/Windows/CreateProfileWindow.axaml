@@ -5,6 +5,7 @@
         xmlns:windows="clr-namespace:OsuPlayer.Windows"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="OsuPlayer.Windows.CreateProfileWindow"
+        x:DataType="windows:CreateProfileWindowViewModel"
         Title="create new profile"
 
         FontWeight="{DynamicResource DefaultFontWeight}"
@@ -18,7 +19,7 @@
         Background="Transparent"
         TransparencyLevelHint="Mica"
         ExtendClientAreaToDecorationsHint="True"
-        ExtendClientAreaChromeHints="PreferSystemChrome">
+        WindowDecorations="BorderOnly">
 
     <Design.DataContext>
         <windows:CreateProfileWindowViewModel />

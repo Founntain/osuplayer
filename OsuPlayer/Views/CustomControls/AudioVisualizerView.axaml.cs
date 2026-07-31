@@ -1,6 +1,5 @@
 ﻿using Avalonia.ReactiveUI;
 using Avalonia.Threading;
-using Nein.Base;
 using Nein.Extensions;
 using OsuPlayer.Modules.Audio.Interfaces;
 using ReactiveUI;
@@ -16,7 +15,7 @@ public partial class AudioVisualizerView : ReactiveUserControl<AudioVisualizerVi
     {
         InitializeComponent();
 
-        this.WhenActivated(_ =>
+        this.WhenActivated((Action<IDisposable> _) =>
         {
             ViewModel.AudioVisualizerUpdateTimer.Interval = TimeSpan.FromMilliseconds(2);
             ViewModel.AudioVisualizerUpdateTimer.Tick += AudioVisualizerUpdateTimer_OnTick;

@@ -5,6 +5,7 @@
         xmlns:window="clr-namespace:OsuPlayer.CrashHandler"
         mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
         x:Class="OsuPlayer.CrashHandler.CrashHandlerMainWindow"
+        x:DataType="window:CrashHandlerMainWindowViewModel"
         Title="osu!player crashed :("
         Width="600" Height="400"
         WindowStartupLocation="CenterScreen"

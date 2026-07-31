@@ -124,9 +124,9 @@ public class BeatmapsViewModel : BaseViewModel
         this.WhenActivated(Block);
     }
 
-    private async void Block(CompositeDisposable disposables)
+    private async void Block(Action<IDisposable> disposables)
     {
-        Disposable.Create(() => { }).DisposeWith(disposables);
+        disposables(Disposable.Create(() => { }));
 
         SearchBeatmapIdFilterCondition = FilterCondition.GreaterOrEqualThan;
         SearchBeatmapSetIdFilterCondition = FilterCondition.GreaterOrEqualThan;

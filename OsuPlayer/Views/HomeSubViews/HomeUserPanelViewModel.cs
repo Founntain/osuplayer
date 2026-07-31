@@ -67,7 +67,7 @@ public class HomeUserPanelViewModel : BaseViewModel
         this.WhenActivated(Block);
     }
 
-    private async void Block(CompositeDisposable obj)
+    private async void Block(Action<IDisposable> _)
     {
         ProfilePicture = await LoadProfilePictureAsync();
 

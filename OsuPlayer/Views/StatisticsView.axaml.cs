@@ -10,8 +10,8 @@ public partial class StatisticsView : ReactiveControl<StatisticsViewModel>
         InitializeComponent();
     }
 
-    private void Block(CompositeDisposable disposables)
+    private void Block(Action<IDisposable> disposables)
     {
-        Disposable.Create(() => { }).DisposeWith(disposables);
+        disposables(Disposable.Create(() => { }));
     }
 }

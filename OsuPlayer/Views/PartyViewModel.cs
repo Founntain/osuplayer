@@ -9,6 +9,6 @@ public class PartyViewModel : BaseViewModel
     public PartyViewModel()
     {
         Activator = new ViewModelActivator();
-        this.WhenActivated(disposables => { Disposable.Create(() => { }).DisposeWith(disposables); });
+        this.WhenActivated((Action<IDisposable> disposables) => {  disposables(Disposable.Create(() => { })); });
     }
 }

@@ -1,18 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>annotations</Nullable>
         <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.0.10" />
+        <PackageReference Include="Avalonia" Version="12.1.1" />
         <PackageReference Include="Founntain.Nein" Version="2024.427.0" />
-        <PackageReference Include="JetBrains.Annotations" Version="2023.3.0" />
-        <PackageReference Include="ManagedBass" Version="3.1.1" />
-        <PackageReference Include="OsuPlayer.Api.Data" Version="1.0.12" />
+        <PackageReference Include="JetBrains.Annotations" Version="2026.2.0" />
+        <PackageReference Include="ManagedBass" Version="4.0.2" />
+        <PackageReference Include="OsuPlayer.Api.Data" Version="1.0.13" />
     </ItemGroup>
 
     <ItemGroup>

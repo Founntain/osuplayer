@@ -6,6 +6,7 @@
              xmlns:views="clr-namespace:OsuPlayer.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.PlayerControlView"
+             x:DataType="views:PlayerControlViewModel"
              FontWeight="{DynamicResource DefaultFontWeight}">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/SliderStyle.axaml" />
@@ -68,7 +69,7 @@
                                             Height="19" Width="19" />
                                     </Button>
                                     <Slider VerticalAlignment="Center" HorizontalAlignment="Center"
-                                            Minimum="0" Maximum="{Binding MaximimumVolume}" Value="{Binding Volume}" Orientation="Horizontal"
+                                            Minimum="0" Maximum="{Binding MaximumVolume}" Value="{Binding Volume}" Orientation="Horizontal"
                                             Width="100" Margin="6" PointerWheelChanged="Volume_OnPointerWheelChanged"/>
                                 </StackPanel>
                             </Flyout>

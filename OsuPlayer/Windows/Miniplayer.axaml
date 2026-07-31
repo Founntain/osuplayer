@@ -8,6 +8,7 @@
         xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="OsuPlayer.Windows.Miniplayer"
+        x:DataType="views:MiniplayerViewModel"
         Title="osu!player miniplayer"
 
         MinWidth="375"
@@ -27,14 +28,14 @@
         Background="Transparent"
         TransparencyLevelHint="None"
         ExtendClientAreaToDecorationsHint="True"
-        ExtendClientAreaChromeHints="PreferSystemChrome"
+        WindowDecorations="BorderOnly"
 
         Topmost="True"
 
         Icon="avares://OsuPlayer/Resources/x96.ico"
 
         Closed="Miniplayer_OnClosed">
-    
+
     <Design.DataContext>
         <views:MiniplayerViewModel />
     </Design.DataContext>

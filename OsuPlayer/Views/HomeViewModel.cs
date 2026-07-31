@@ -88,9 +88,9 @@ public class HomeViewModel : BaseViewModel
         this.WhenActivated(Block);
     }
 
-    private async void Block(CompositeDisposable disposables)
+    private async void Block(Action<IDisposable> disposables)
     {
-        Disposable.Create(() => { SelectedSong = null; }).DisposeWith(disposables);
+        disposables(Disposable.Create(() => { }));
 
         _playlists = (await PlaylistManager.GetAllPlaylistsAsync())?.ToList();
         PlaylistContextMenuEntries = _playlists?.Select(x => new AddToPlaylistContextMenuEntry(x.Name, AddToPlaylist)).ToList();

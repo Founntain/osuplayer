@@ -152,9 +152,9 @@ public class UserViewModel : BaseViewModel
         this.WhenActivated(Block);
     }
 
-    private async void Block(CompositeDisposable disposables)
+    private async void Block(Action<IDisposable> disposables)
     {
-        Disposable.Create(() => { }).DisposeWith(disposables);
+        disposables(Disposable.Create(() => { }));
 
         Users = (await Locator.Current.GetService<IOsuPlayerApiService>().User.GetAllUsers())
             ?.Select(x => new User(x))

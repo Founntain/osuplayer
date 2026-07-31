@@ -7,6 +7,7 @@ using Nein.Base;
 using Nein.Extensions;
 using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.RequestModels.Statistics;
+using OsuPlayer.Data.DataModels;
 using OsuPlayer.Interfaces.Service;
 using OsuPlayer.Network.API.NorthFox;
 using ReactiveUI;
@@ -23,7 +24,7 @@ public class EditUserViewModel : BaseViewModel
     private Bitmap? _currentProfileBanner;
     private Bitmap? _currentProfilePicture;
 
-    private UserModel? _currentUser;
+    private User? _currentUser;
     private bool _isDeleteProfilePopupOpen;
     private bool _isNewBannerSelected;
     private bool _isNewProfilePictureSelected;
@@ -88,7 +89,7 @@ public class EditUserViewModel : BaseViewModel
         set => _currentUser!.CustomBannerUrl = value;
     }
 
-    public UserModel? CurrentUser
+    public User? CurrentUser
     {
         get => _currentUser;
         set
@@ -118,9 +119,9 @@ public class EditUserViewModel : BaseViewModel
         _profileManager = profileManager;
 
         Activator = new ViewModelActivator();
-        this.WhenActivated(disposables =>
+        this.WhenActivated((Action<IDisposable> disposables) =>
         {
-            Disposable.Create(() => { }).DisposeWith(disposables);
+            disposables(Disposable.Create(() => { }));
 
             CurrentUser = _profileManager.User;
         });

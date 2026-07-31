@@ -96,9 +96,9 @@ public class StatisticsViewModel : BaseViewModel
         this.WhenActivated(Block);
     }
 
-    private async void Block(CompositeDisposable disposable)
+    private async void Block(Action<IDisposable> disposables)
     {
-        Disposable.Create(() => { _timer?.Close(); }).DisposeWith(disposable);
+        disposables(Disposable.Create(() => { _timer?.Close(); }));
 
         // Done separately so they can fail independently
         var tasks = new[]

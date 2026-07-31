@@ -49,7 +49,7 @@ public partial class LoginWindow : FluentReactiveWindow<LoginWindowViewModel>
 
         TransparencyLevelHint = new[] { WindowTransparencyLevel.Mica, WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None };
 
-        this.WhenActivated(_ =>
+        this.WhenActivated((Action<IDisposable> disposables) =>
         {
             if (string.IsNullOrWhiteSpace(ViewModel?.Username))
             {

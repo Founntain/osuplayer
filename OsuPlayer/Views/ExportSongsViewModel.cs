@@ -100,9 +100,9 @@ public class ExportSongsViewModel : BaseViewModel
         this.WhenActivated(Block);
     }
 
-    private async void Block(CompositeDisposable disposables)
+    private async void Block(Action<IDisposable> disposables)
     {
-        Disposable.Create(() => { }).DisposeWith(disposables);
+        disposables(Disposable.Create(() => { }));
 
         await using var playlists = new PlaylistStorage();
 

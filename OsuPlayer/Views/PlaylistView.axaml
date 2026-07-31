@@ -8,6 +8,7 @@
              xmlns:interfaces="clr-namespace:OsuPlayer.Data.DataModels.Interfaces;assembly=OsuPlayer.Data"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.PlaylistView"
+             x:DataType="views:PlaylistViewModel"
              FontWeight="{DynamicResource DefaultFontWeight}">
 
     <Design.DataContext>

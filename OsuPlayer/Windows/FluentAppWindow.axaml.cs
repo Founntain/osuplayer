@@ -158,7 +158,7 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
             }
         });
 
-        this.WhenActivated(_ =>
+        this.WhenActivated((Action<IDisposable> disposables)  =>
         {
             if (ViewModel == null) return;
 

@@ -15,9 +15,9 @@ public partial class HomeUserPanelView : ReactiveUserControl<HomeUserPanelViewMo
     {
         InitializeComponent();
 
-        this.WhenActivated(_ =>
+        this.WhenActivated((Action<IDisposable> _) =>
         {
-            if (this.GetVisualRoot() is FluentAppWindow mainWindow)
+            if (this.VisualRoot is FluentAppWindow mainWindow)
                 _mainWindow = mainWindow;
         });
     }

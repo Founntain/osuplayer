@@ -7,6 +7,8 @@ public interface IUser
 {
     public Guid UniqueId { get; }
 
+    public string Name { get; set; }
+    
     public int Xp { get; set; }
     public int XpNeededForNextLevel { get; }
     public int Level { get; set; }
