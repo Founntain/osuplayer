@@ -1,8 +1,8 @@
-﻿using Avalonia.ReactiveUI;
-using Avalonia.Threading;
+﻿using Avalonia.Threading;
 using Nein.Extensions;
 using OsuPlayer.Modules.Audio.Interfaces;
 using ReactiveUI;
+using ReactiveUI.Avalonia;
 using Splat;
 
 namespace OsuPlayer.Views.CustomControls;

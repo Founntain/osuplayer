@@ -1,6 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Media;
-using Avalonia.ReactiveUI;
+using ReactiveUI.Avalonia;
 
 namespace OsuPlayer.UI_Extensions;
 

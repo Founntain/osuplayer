@@ -3,7 +3,6 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
-using FluentAvalonia.UI.Windowing;
 using Nein.Base;
 using Nein.Extensions;
 using OsuPlayer.Data.OsuPlayer.Enums;
@@ -25,8 +24,9 @@ public partial class Miniplayer : FluentReactiveWindow<MiniplayerViewModel>
     {
         InitializeComponent();
 
-        TitleBar.ExtendsContentIntoTitleBar = true;
-        TitleBar.TitleBarHitTestType = TitleBarHitTestType.Complex;
+        // Setting Window Properties
+        ExtendClientAreaToDecorationsHint = true;
+        ExtendClientAreaTitleBarHeightHint = -1;
 
         LoadSettings();
     }
@@ -35,8 +35,9 @@ public partial class Miniplayer : FluentReactiveWindow<MiniplayerViewModel>
     {
         InitializeComponent();
 
-        TitleBar.ExtendsContentIntoTitleBar = true;
-        TitleBar.TitleBarHitTestType = TitleBarHitTestType.Complex;
+        // Setting Window Properties
+        ExtendClientAreaToDecorationsHint = true;
+        ExtendClientAreaTitleBarHeightHint = -1;
 
         _mainWindow = Locator.GetLocator().GetRequiredService<FluentAppWindow>();
 

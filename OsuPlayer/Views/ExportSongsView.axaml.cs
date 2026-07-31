@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.ReactiveUI;
 using Nein.Extensions;
 using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
+using ReactiveUI.Avalonia;
 using Splat;
 
 namespace OsuPlayer.Views;

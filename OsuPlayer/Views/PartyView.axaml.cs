@@ -1,7 +1,5 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Material.Icons;
-using Material.Icons.Avalonia;
 using Nein.Extensions;
 
 namespace OsuPlayer.Views;

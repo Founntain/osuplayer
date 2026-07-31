@@ -5,7 +5,6 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using Nein.Base;
 using Nein.Extensions;
-using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.RequestModels.Statistics;
 using OsuPlayer.Data.DataModels;
 using OsuPlayer.Interfaces.Service;

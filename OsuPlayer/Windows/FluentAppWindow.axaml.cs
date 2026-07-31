@@ -6,7 +6,6 @@ using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using FluentAvalonia.UI.Controls;
-using FluentAvalonia.UI.Windowing;
 using LiveChartsCore.Defaults;
 using Nein.Base;
 using Nein.Extensions;
@@ -55,9 +54,9 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
     {
         Task.Run(() => SongImporter.ImportSongsAsync(player.SongSourceProvider, player as IImportNotifications));
 
-        // Setting AppWindow Properties
-        TitleBar.ExtendsContentIntoTitleBar = true;
-        TitleBar.TitleBarHitTestType = TitleBarHitTestType.Complex;
+        // Setting Window Properties
+        ExtendClientAreaToDecorationsHint = true;
+        ExtendClientAreaTitleBarHeightHint = -1;
 
         // Loading config stuff
 
@@ -92,7 +91,7 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
 
             SetRenderMode(config.Container.RenderingMode);
 
-            AppNavigationView.PaneDisplayMode = config.Container.UseLeftNavigationPosition ? NavigationViewPaneDisplayMode.Left : NavigationViewPaneDisplayMode.Top;
+            AppNavigationView.PaneDisplayMode = config.Container.UseLeftNavigationPosition ? FANavigationViewPaneDisplayMode.Left : FANavigationViewPaneDisplayMode.Top;
 
             var backgroundColor = config.Container.BackgroundColor;
             ViewModel!.DisplayBackgroundImage = config.Container.DisplayBackgroundImage;
@@ -173,7 +172,7 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
         });
     }
 
-    private async void AppNavigationView_OnItemInvoked(object? sender, NavigationViewItemInvokedEventArgs e)
+    private async void AppNavigationView_OnItemInvoked(object? sender, FANavigationViewItemInvokedEventArgs e)
     {
         if (e.IsSettingsInvoked)
         {

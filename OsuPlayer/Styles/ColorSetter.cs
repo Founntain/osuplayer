@@ -1,6 +1,4 @@
-﻿using Avalonia;
-using Avalonia.Markup.Xaml.Styling;
-using Avalonia.Media;
+﻿using Avalonia.Media;
 using Nein.Extensions;
 
 namespace OsuPlayer.Styles;

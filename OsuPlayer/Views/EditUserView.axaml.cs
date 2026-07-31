@@ -1,11 +1,9 @@
 ﻿using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
-using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
-using Avalonia.ReactiveUI;
 using Nein.Extensions;
 using OsuPlayer.Api.Data.API.EntityModels;
 using OsuPlayer.Api.Data.API.RequestModels.User;
@@ -16,6 +14,7 @@ using OsuPlayer.Network.API.NorthFox;
 using OsuPlayer.UI_Extensions;
 using OsuPlayer.Windows;
 using ReactiveUI;
+using ReactiveUI.Avalonia;
 using Splat;
 
 namespace OsuPlayer.Views;

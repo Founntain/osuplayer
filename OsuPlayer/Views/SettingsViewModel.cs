@@ -155,7 +155,7 @@ public class SettingsViewModel : BaseViewModel
 
             config.Container.UseLeftNavigationPosition = value;
 
-            MainWindow.AppNavigationView.PaneDisplayMode = value ? NavigationViewPaneDisplayMode.Left : NavigationViewPaneDisplayMode.Top;
+            MainWindow.AppNavigationView.PaneDisplayMode = value ? FANavigationViewPaneDisplayMode.Left : FANavigationViewPaneDisplayMode.Top;
         }
     }
 

@@ -16,17 +16,28 @@
 
     <Grid ColumnDefinitions="50*, 50*">
         <!-- Not Login Grid -->
-        <ui:InfoBar Grid.Column="0" Grid.ColumnSpan="2" Severity="Warning" Title="Not logged in"
+        <ui:FAInfoBar Grid.Column="0" Grid.ColumnSpan="2" Severity="Warning" Title="Not logged in"
                     IsOpen="{Binding IsUserNotLoggedIn}"
                     Message="Log into your osu!player profile to gain XP and track your songs. Head to the settings to log in (or at the bottom of the navigation). You can also hide this in ">
-            <ui:InfoBar.ActionButton>
+            <ui:FAInfoBar.ActionButton>
                 <Grid>
-                    <ui:HyperlinkButton Margin="-20 0 0 0" HorizontalAlignment="Left"
-                                        Content="Visual Settings > Display User Statistics on Home View."
-                                        Click="GoToSettings_Click" />
+                    <Button Margin="-20 0 0 0" HorizontalAlignment="Left"
+                            Content="Visual Settings > Display User Statistics on Home View."
+                            Click="GoToSettings_Click"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}"
+                            Cursor="Hand">
+                        <Button.Styles>
+                            <Style Selector="Button:pointerover /template/ ContentPresenter">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="TextBlock.TextDecorations" Value="Underline"/>
+                            </Style>
+                        </Button.Styles>
+                    </Button>
                 </Grid>
-            </ui:InfoBar.ActionButton>
-        </ui:InfoBar>
+            </ui:FAInfoBar.ActionButton>
+        </ui:FAInfoBar>
 
         <!-- User Grid -->
         <Grid Row="0" Column="0" ColumnSpan="2" ColumnDefinitions="Auto, *, *, *" Margin="0 1 1 0"
@@ -51,16 +62,18 @@
                     <TextBlock Text="{Binding CurrentUser.RoleString, Converter={StaticResource UsernameConverter}}"
                                FontSize="14" FontWeight="{DynamicResource BiggerFontWeight}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
 
-                    <ItemsRepeater Name="BadgeItems" ItemsSource="{Binding CurrentUser.Badges}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0 5 0 0">
-                        <ItemsRepeater.Layout>
-                            <StackLayout Orientation="Horizontal" Spacing="0" />
-                        </ItemsRepeater.Layout>
-                        <ItemsRepeater.ItemTemplate>
+                    <ItemsControl Name="BadgeItems" ItemsSource="{Binding CurrentUser.Badges}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0 5 0 0" >
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" Spacing="0" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
                             <DataTemplate DataType="entityModels:BadgeModel">
                                 <avalonia:MaterialIcon Kind="{Binding IconName, Converter={StaticResource IconNameToIconKindConverter}}" Width="24" Height="24" ToolTip.Tip="{Binding Description}" />
                             </DataTemplate>
-                        </ItemsRepeater.ItemTemplate>
-                    </ItemsRepeater>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </StackPanel>
             </StackPanel>
 

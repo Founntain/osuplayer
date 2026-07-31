@@ -1,5 +1,4 @@
-﻿using System.Reactive.Disposables;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;

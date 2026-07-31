@@ -1,6 +1,6 @@
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Avalonia.ReactiveUI;
+using System.Threading;
 using DynamicData;
 using Nein.Base;
 using Nein.Extensions;
@@ -9,6 +9,7 @@ using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules.Audio.Interfaces;
 using ReactiveUI;
+using ReactiveUI.Primitives.Concurrency;
 
 namespace OsuPlayer.Views;
 
@@ -90,7 +91,7 @@ public class PlaylistEditorViewModel : BaseViewModel
 
         Player.PlaylistChanged += (_, _) => { Playlists = PlaylistManager.GetAllPlaylists().ToSourceList(); };
 
-        player.SongSourceProvider.Songs?.Filter(filter, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
+        player.SongSourceProvider.Songs?.Filter(filter, ListFilterPolicy.ClearAndReplace).ObserveOn(SynchronizationContext.Current!)
             .Bind(out _filteredSongEntries).Subscribe();
 
         this.RaisePropertyChanged(nameof(FilteredSongEntries));

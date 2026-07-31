@@ -1,8 +1,8 @@
 using System.ComponentModel;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Threading;
 using Avalonia.Media.Imaging;
-using Avalonia.ReactiveUI;
 using DynamicData;
 using Nein.Base;
 using OsuPlayer.Data.DataModels;
@@ -15,6 +15,7 @@ using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Views.HomeSubViews;
 using ReactiveUI;
+using ReactiveUI.Primitives.Concurrency;
 
 namespace OsuPlayer.Views;
 
@@ -79,7 +80,7 @@ public class HomeViewModel : BaseViewModel
         _songsLoading.BindTo(((IImportNotifications) Player).SongsLoading);
         _songsLoading.BindValueChanged(_ => this.RaisePropertyChanged(nameof(SongsLoading)));
 
-        player.SongSourceProvider.Songs?.ObserveOn(AvaloniaScheduler.Instance).Bind(out _sortedSongEntries).Subscribe();
+        player.SongSourceProvider.Songs?.ObserveOn(SynchronizationContext.Current!).Bind(out _sortedSongEntries).Subscribe();
 
         this.RaisePropertyChanged(nameof(SortedSongEntries));
 

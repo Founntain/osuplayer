@@ -1,8 +1,7 @@
 using System.ComponentModel;
 using System.Reactive.Disposables;
-using System.Reactive.Disposables.Fluent;
 using System.Reactive.Linq;
-using Avalonia.ReactiveUI;
+using System.Threading;
 using DynamicData;
 using Nein.Base;
 using OsuPlayer.Data.DataModels.Interfaces;
@@ -11,6 +10,7 @@ using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules.Audio.Interfaces;
 using ReactiveUI;
+using ReactiveUI.Primitives.Concurrency;
 
 namespace OsuPlayer.Views;
 
@@ -51,7 +51,7 @@ public class SearchViewModel : BaseViewModel
             .Throttle(TimeSpan.FromMilliseconds(20))
             .Select(BuildFilter);
 
-        player.SongSourceProvider.Songs?.Filter(filter, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
+        player.SongSourceProvider.Songs?.Filter(filter, ListFilterPolicy.ClearAndReplace).ObserveOn(SynchronizationContext.Current!)
             .Bind(out _filteredSongEntries).Subscribe();
 
         this.RaisePropertyChanged(nameof(FilteredSongEntries));

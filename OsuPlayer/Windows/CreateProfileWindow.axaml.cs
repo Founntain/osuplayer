@@ -1,9 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
-using Avalonia.Media;
-using Avalonia.ReactiveUI;
-using FluentAvalonia.UI.Windowing;
 using Nein.Base;
 using Nein.Extensions;
 using OsuPlayer.Api.Data.API.EntityModels;
@@ -21,8 +18,9 @@ public partial class CreateProfileWindow : FluentReactiveWindow<CreateProfileWin
     {
         InitializeComponent();
 
-        TitleBar.ExtendsContentIntoTitleBar = true;
-        TitleBar.TitleBarHitTestType = TitleBarHitTestType.Complex;
+        // Setting Window Properties
+        ExtendClientAreaToDecorationsHint = true;
+        ExtendClientAreaTitleBarHeightHint = -1;
 
         var config = new Config();
 

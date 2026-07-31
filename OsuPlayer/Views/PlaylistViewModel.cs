@@ -1,6 +1,6 @@
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Avalonia.ReactiveUI;
+using System.Threading;
 using Avalonia.Threading;
 using DynamicData;
 using Material.Icons.Avalonia;
@@ -13,6 +13,7 @@ using OsuPlayer.Interfaces.Service;
 using OsuPlayer.IO.Storage.Playlists;
 using OsuPlayer.Modules.Audio.Interfaces;
 using ReactiveUI;
+using ReactiveUI.Primitives.Concurrency;
 using Splat;
 
 namespace OsuPlayer.Views;
@@ -52,7 +53,7 @@ public class PlaylistViewModel : BaseViewModel
                     .ToSourceList()
                     .Connect()
                     .Sort(Locator.Current.GetRequiredService<ISortProvider>().SortingModeObservable)
-                    .Filter(_filter, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
+                    .Filter(_filter, ListFilterPolicy.ClearAndReplace).ObserveOn(SynchronizationContext.Current!)
                     .Bind(out _filteredSongEntries).Subscribe();
             }
 

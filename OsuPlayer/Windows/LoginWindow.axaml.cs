@@ -3,13 +3,9 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
-using Avalonia.Media;
-using FluentAvalonia.UI.Windowing;
 using Nein.Base;
 using Nein.Extensions;
 using OsuPlayer.Data.DataModels;
-using OsuPlayer.Extensions.ValueConverters;
 using OsuPlayer.Interfaces.Service;
 using OsuPlayer.UI_Extensions;
 using ReactiveUI;
@@ -44,8 +40,9 @@ public partial class LoginWindow : FluentReactiveWindow<LoginWindowViewModel>
 
         var config = new Config();
 
-        TitleBar.ExtendsContentIntoTitleBar = true;
-        TitleBar.TitleBarHitTestType = TitleBarHitTestType.Complex;
+        // Setting Window Properties
+        ExtendClientAreaToDecorationsHint = true;
+        ExtendClientAreaTitleBarHeightHint = -1;
 
         TransparencyLevelHint = new[] { WindowTransparencyLevel.Mica, WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None };
 

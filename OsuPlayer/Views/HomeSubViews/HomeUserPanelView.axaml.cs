@@ -1,9 +1,7 @@
 ﻿using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
-using Avalonia.ReactiveUI;
-using Avalonia.VisualTree;
 using OsuPlayer.Windows;
 using ReactiveUI;
+using ReactiveUI.Avalonia;
 
 namespace OsuPlayer.Views.HomeSubViews;
 

@@ -1,6 +1,6 @@
 ﻿using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Avalonia.ReactiveUI;
+using System.Threading;
 using Avalonia.Threading;
 using DynamicData;
 using Nein.Base;
@@ -9,6 +9,7 @@ using OsuPlayer.Data.OsuPlayer.StorageModels;
 using OsuPlayer.IO.Storage.Blacklist;
 using OsuPlayer.Modules.Audio.Interfaces;
 using ReactiveUI;
+using ReactiveUI.Primitives.Concurrency;
 
 namespace OsuPlayer.Views;
 
@@ -50,8 +51,7 @@ public class BlacklistEditorViewModel : BaseViewModel
             .Throttle(TimeSpan.FromMilliseconds(20))
             .Select(BuildFilter);
 
-        player.SongSourceProvider.Songs?.Filter(filter, ListFilterPolicy.ClearAndReplace).ObserveOn(AvaloniaScheduler.Instance)
-            .Bind(out _filteredSongEntries).Subscribe();
+        player.SongSourceProvider.Songs?.Filter(filter, ListFilterPolicy.ClearAndReplace).ObserveOn(SynchronizationContext.Current!).Bind(out _filteredSongEntries).Subscribe();
 
         this.RaisePropertyChanged(nameof(FilteredSongEntries));
 

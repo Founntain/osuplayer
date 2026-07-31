@@ -49,239 +49,239 @@
                 <!-- General Settings -->
                 <!-- ———————————————— -->
 
-                <ui:SettingsExpander Header="General Settings"
+                <ui:FASettingsExpander Header="General Settings"
                                      IconSource="Settings"
                                      Description="Settings for import and export songs and other general stuff"
                                      Name="GeneralSettingsExpander">
 
-                    <ui:SettingsExpanderItem Content="Import osu! songs"
+                    <ui:FASettingsExpanderItem Content="Import osu! songs"
                                              Description="Import your osu! songs via osu!.db (stable) or client.realm (lazer)"
                                              ActionIconSource="ChevronRight"
                                              IsClickEnabled="True"
                                              Click="ImportSongsClick" />
-                    <ui:SettingsExpanderItem Content="Import osu! collections"
+                    <ui:FASettingsExpanderItem Content="Import osu! collections"
                                              Description="Import your osu! collections as playlists"
                                              IsClickEnabled="True"
                                              ActionIconSource="ChevronRight"
                                              Click="ImportCollectionsClick" />
-                    <ui:SettingsExpanderItem Content="Play history"
+                    <ui:FASettingsExpanderItem Content="Play history"
                                              Description="Display your current sessions play history."
                                              ActionIconSource=" ChevronRight"
                                              IsClickEnabled="True"
                                              Click="OpenPlayerHistoryClick" />
-                    <ui:SettingsExpanderItem Content="Export songs"
+                    <ui:FASettingsExpanderItem Content="Export songs"
                                              Description="Exports your osu! .mp3 files to a given directory. Handy if you want to listen to your songs on the go."
                                              ActionIconSource="ChevronRight"
                                              IsClickEnabled="True"
                                              Click="ExportCollectionsClick" />
-                    <ui:SettingsExpanderItem Content="Update Channel"
+                    <ui:FASettingsExpanderItem Content="Update Channel"
                                              Description="Which update channel to use. This settings requires a restart">
-                        <ui:SettingsExpanderItem.Footer>
+                        <ui:FASettingsExpanderItem.Footer>
                             <ui:FAComboBox ItemsSource="{Binding ReleaseChannels}"
                                            SelectedItem="{Binding SelectedReleaseChannel}" />
-                        </ui:SettingsExpanderItem.Footer>
-                    </ui:SettingsExpanderItem>
+                        </ui:FASettingsExpanderItem.Footer>
+                    </ui:FASettingsExpanderItem>
 
-                    <ui:SettingsExpanderItem Content="Startup song"
+                    <ui:FASettingsExpanderItem Content="Startup song"
                                              Description="Select what song should be playing when the application started">
-                        <ui:SettingsExpanderItem.Footer>
+                        <ui:FASettingsExpanderItem.Footer>
                             <ui:FAComboBox ItemsSource="{Binding StartupSongs}"
                                            SelectedItem="{Binding SelectedStartupSong}" />
-                        </ui:SettingsExpanderItem.Footer>
-                    </ui:SettingsExpanderItem>
+                        </ui:FASettingsExpanderItem.Footer>
+                    </ui:FASettingsExpanderItem>
 
-                    <ui:SettingsExpanderItem Content="Song Sorting Mode"
+                    <ui:FASettingsExpanderItem Content="Song Sorting Mode"
                                              Description="Select in which order songs should be sorted in your song list">
-                        <ui:SettingsExpanderItem.Footer>
+                        <ui:FASettingsExpanderItem.Footer>
                             <ui:FAComboBox ItemsSource="{Binding SortingModes}"
                                            SelectedItem="{Binding SelectedSortingMode}" />
-                        </ui:SettingsExpanderItem.Footer>
-                    </ui:SettingsExpanderItem>
+                        </ui:FASettingsExpanderItem.Footer>
+                    </ui:FASettingsExpanderItem>
 
-                    <ui:SettingsExpanderItem Content="Shuffle Algorithm"
+                    <ui:FASettingsExpanderItem Content="Shuffle Algorithm"
                                              Description="{Binding SelectedShuffleAlgorithmInfoText}">
-                        <ui:SettingsExpanderItem.Footer>
+                        <ui:FASettingsExpanderItem.Footer>
                             <ui:FAComboBox ItemsSource="{Binding ShuffleAlgorithms}"
                                            SelectedItem="{Binding SelectedShuffleAlgorithm}" />
-                        </ui:SettingsExpanderItem.Footer>
-                    </ui:SettingsExpanderItem>
+                        </ui:FASettingsExpanderItem.Footer>
+                    </ui:FASettingsExpanderItem>
 
-                    <ui:SettingsExpanderItem Content="Blacklist skipping"
+                    <ui:FASettingsExpanderItem Content="Blacklist skipping"
                                              Description="Enable if you want songs on your blacklist get automatically skipped">
-                        <ui:SettingsExpanderItem.Footer>
+                        <ui:FASettingsExpanderItem.Footer>
                             <ToggleSwitch IsChecked="{Binding BlacklistSkip}" />
-                        </ui:SettingsExpanderItem.Footer>
-                    </ui:SettingsExpanderItem>
+                        </ui:FASettingsExpanderItem.Footer>
+                    </ui:FASettingsExpanderItem>
 
-                    <ui:SettingsExpanderItem Content="Enable playlist mode on song play"
+                    <ui:FASettingsExpanderItem Content="Enable playlist mode on song play"
                                              Description="Enable if you want playlist mode to be enabled when you play a song directly from the playlist viewer">
-                        <ui:SettingsExpanderItem.Footer>
+                        <ui:FASettingsExpanderItem.Footer>
                             <ToggleSwitch IsChecked="{Binding PlaylistEnableOnPlay}" />
-                        </ui:SettingsExpanderItem.Footer>
-                    </ui:SettingsExpanderItem>
+                        </ui:FASettingsExpanderItem.Footer>
+                    </ui:FASettingsExpanderItem>
 
-                    <ui:SettingsExpanderItem Content="Enable Discord Rich Presence"
+                    <ui:FASettingsExpanderItem Content="Enable Discord Rich Presence"
                                              Description="Enable if you want to display your current playing song in your Discord Status">
-                        <ui:SettingsExpanderItem.Footer>
+                        <ui:FASettingsExpanderItem.Footer>
                             <ToggleSwitch IsChecked="{Binding UseDiscordRpc}" />
-                        </ui:SettingsExpanderItem.Footer>
-                    </ui:SettingsExpanderItem>
-                </ui:SettingsExpander>
+                        </ui:FASettingsExpanderItem.Footer>
+                    </ui:FASettingsExpanderItem>
+                </ui:FASettingsExpander>
 
                 <!-- ——————————————— -->
                 <!-- Visual Settings -->
                 <!-- ——————————————— -->
-                <ui:SettingsExpander Header="Visual Settings"
+                <ui:FASettingsExpander Header="Visual Settings"
                                      IconSource="Scan"
                                      Description="Settings for the visual appearance, make it your own~"
                                      Name="VisualSettingsExpander">
 
-                    <ui:SettingsExpanderItem Content="App Theme" Description="Do you prefer the dark or light side? Or let your system decide">
-                        <ui:SettingsExpanderItem.Footer>
+                    <ui:FASettingsExpanderItem Content="App Theme" Description="Do you prefer the dark or light side? Or let your system decide">
+                        <ui:FASettingsExpanderItem.Footer>
                             <ui:FAComboBox ItemsSource="{Binding AppThemes}" SelectedItem="{Binding CurrentAppTheme}" />
-                        </ui:SettingsExpanderItem.Footer>
-                    </ui:SettingsExpanderItem>
+                        </ui:FASettingsExpanderItem.Footer>
+                    </ui:FASettingsExpanderItem>
 
-                    <ui:SettingsExpanderItem Content="Display titles and artists in unicode" Description="Shows titles and artists in their respective unicode characters e.g. japanese (this also means you have to search in unicode). Requires restart to work properly">
-                        <ui:SettingsExpanderItem.Footer>
+                    <ui:FASettingsExpanderItem Content="Display titles and artists in unicode" Description="Shows titles and artists in their respective unicode characters e.g. japanese (this also means you have to search in unicode). Requires restart to work properly">
+                        <ui:FASettingsExpanderItem.Footer>
                             <ToggleSwitch IsChecked="{Binding UseSongNameUnicode}" OnContent="Yes" OffContent="No" />
-                        </ui:SettingsExpanderItem.Footer>
-                    </ui:SettingsExpanderItem>
+                        </ui:FASettingsExpanderItem.Footer>
+                    </ui:FASettingsExpanderItem>
 
-                    <ui:SettingsExpanderItem Content="Navigation Position"
+                    <ui:FASettingsExpanderItem Content="Navigation Position"
                                              Description="Do you want to have the navigation on the left or top?">
-                        <ui:SettingsExpanderItem.Footer>
+                        <ui:FASettingsExpanderItem.Footer>
                             <ToggleSwitch IsChecked="{Binding UseLeftNavigationPosition}" OnContent="Left" OffContent="Top" />
-                        </ui:SettingsExpanderItem.Footer>
-                    </ui:SettingsExpanderItem>
+                        </ui:FASettingsExpanderItem.Footer>
+                    </ui:FASettingsExpanderItem>
 
-                    <ui:SettingsExpanderItem Content="Image Rendering Mode" Description="Tell the application at which quality you want to render images e.g. profile pictures, banners etc. Requires restart to work">
-                        <ui:SettingsExpanderItem.Footer>
+                    <ui:FASettingsExpanderItem Content="Image Rendering Mode" Description="Tell the application at which quality you want to render images e.g. profile pictures, banners etc. Requires restart to work">
+                        <ui:FASettingsExpanderItem.Footer>
                             <ui:FAComboBox ItemsSource="{Binding RenderingModes}"
                                            SelectedItem="{Binding RenderingMode}" />
-                        </ui:SettingsExpanderItem.Footer>
-                    </ui:SettingsExpanderItem>
+                        </ui:FASettingsExpanderItem.Footer>
+                    </ui:FASettingsExpanderItem>
 
-                    <ui:SettingsExpanderItem Content="Display Audio Visualizer" Description="If enabled it displays an audio visualizer on the bottom of the window (and miniplayer). Increases GPU usage">
-                        <ui:SettingsExpanderItem.Footer>
+                    <ui:FASettingsExpanderItem Content="Display Audio Visualizer" Description="If enabled it displays an audio visualizer on the bottom of the window (and miniplayer). Increases GPU usage">
+                        <ui:FASettingsExpanderItem.Footer>
                             <ToggleSwitch IsChecked="{Binding DisplayAudioVisualizer}" OnContent="On" OffContent="Off" />
-                        </ui:SettingsExpanderItem.Footer>
-                    </ui:SettingsExpanderItem>
+                        </ui:FASettingsExpanderItem.Footer>
+                    </ui:FASettingsExpanderItem>
 
-                    <!-- <ui:SettingsExpanderItem Content="UI Font" -->
+                    <!-- <ui:FASettingsExpanderItem Content="UI Font" -->
                     <!--                          Description="Select the font you want to use as UI Font. We recommend Montserrat"> -->
-                    <!--     <ui:SettingsExpanderItem.Footer> -->
+                    <!--     <ui:FASettingsExpanderItem.Footer> -->
                     <!--         <ui:FAComboBox ItemsSource="{Binding Fonts}" SelectedItem="{Binding SelectedFont}" IsEditable="True" /> -->
-                    <!--     </ui:SettingsExpanderItem.Footer> -->
-                    <!-- </ui:SettingsExpanderItem> -->
+                    <!--     </ui:FASettingsExpanderItem.Footer> -->
+                    <!-- </ui:FASettingsExpanderItem> -->
                     <!-- -->
-                    <!-- <ui:SettingsExpanderItem Content="UI Font-Weight" -->
+                    <!-- <ui:FASettingsExpanderItem Content="UI Font-Weight" -->
                     <!--                          Description="Select the font-weight you want to use as UI font-weight. We recommend something around SemiBold or Medium"> -->
-                    <!--     <ui:SettingsExpanderItem.Footer> -->
+                    <!--     <ui:FASettingsExpanderItem.Footer> -->
                     <!--         <ui:FAComboBox ItemsSource="{Binding AvailableFontWeights}" SelectedItem="{Binding SelectedFontWeight}" /> -->
-                    <!--     </ui:SettingsExpanderItem.Footer> -->
-                    <!-- </ui:SettingsExpanderItem> -->
+                    <!--     </ui:FASettingsExpanderItem.Footer> -->
+                    <!-- </ui:FASettingsExpanderItem> -->
 
-                    <!-- <ui:SettingsExpanderItem Content="Accent Color" -->
+                    <!-- <ui:FASettingsExpanderItem Content="Accent Color" -->
                     <!--                          Description="Accent color you want to use"> -->
-                    <!--     <ui:SettingsExpanderItem.Footer> -->
+                    <!--     <ui:FASettingsExpanderItem.Footer> -->
                     <!--         <ui:FAComboBox ItemsSource="{Binding KnownColors}" SelectedItem="{Binding SelectedAccentColor}" IsEditable="True" /> -->
-                    <!--     </ui:SettingsExpanderItem.Footer> -->
-                    <!-- </ui:SettingsExpanderItem> -->
+                    <!--     </ui:FASettingsExpanderItem.Footer> -->
+                    <!-- </ui:FASettingsExpanderItem> -->
 
-                    <ui:SettingsExpanderItem Content="Window Background Method" Description="The method that should be used for the window background">
-                        <ui:SettingsExpanderItem.Footer>
+                    <ui:FASettingsExpanderItem Content="Window Background Method" Description="The method that should be used for the window background">
+                        <ui:FASettingsExpanderItem.Footer>
                             <ui:FAComboBox ItemsSource="{Binding BackgroundModes}"
                                            SelectedItem="{Binding BackgroundMode}" />
-                        </ui:SettingsExpanderItem.Footer>
-                    </ui:SettingsExpanderItem>
+                        </ui:FASettingsExpanderItem.Footer>
+                    </ui:FASettingsExpanderItem>
 
-                    <ui:SettingsExpanderItem Content="Window Background Color"
+                    <ui:FASettingsExpanderItem Content="Window Background Color"
                                              Description="The background color of the window">
-                        <ui:SettingsExpanderItem.Footer>
+                        <ui:FASettingsExpanderItem.Footer>
                             <ui:FAComboBox ItemsSource="{Binding KnownColors}"
                                            SelectedItem="{Binding SelectedBackgroundColor}" IsEditable="True" />
-                        </ui:SettingsExpanderItem.Footer>
-                    </ui:SettingsExpanderItem>
+                        </ui:FASettingsExpanderItem.Footer>
+                    </ui:FASettingsExpanderItem>
 
-                    <ui:SettingsExpanderItem Content="Use Song Background Image"
+                    <ui:FASettingsExpanderItem Content="Use Song Background Image"
                                              Description="Toggle if you want to use the current songs background image as window background">
-                        <ui:SettingsExpanderItem.Footer>
+                        <ui:FASettingsExpanderItem.Footer>
                             <ToggleSwitch IsChecked="{Binding DisplayBackgroundImage}" />
-                        </ui:SettingsExpanderItem.Footer>
-                    </ui:SettingsExpanderItem>
+                        </ui:FASettingsExpanderItem.Footer>
+                    </ui:FASettingsExpanderItem>
 
-                    <ui:SettingsExpanderItem Content="Background Image Blur"
+                    <ui:FASettingsExpanderItem Content="Background Image Blur"
                                              IsVisible="{Binding DisplayBackgroundImage}"
                                              Description="Amount of blur you want to use for the background image. The change will be visible when a new song is played.">
-                        <ui:SettingsExpanderItem.Footer>
+                        <ui:FASettingsExpanderItem.Footer>
                             <Slider Value="{Binding BackgroundBlurRadius}" Minimum="0" Maximum="100" TickFrequency="1"
                                     Width="150" />
-                        </ui:SettingsExpanderItem.Footer>
-                    </ui:SettingsExpanderItem>
+                        </ui:FASettingsExpanderItem.Footer>
+                    </ui:FASettingsExpanderItem>
 
-                    <ui:SettingsExpanderItem Content="Display User Statistics on Home View"
+                    <ui:FASettingsExpanderItem Content="Display User Statistics on Home View"
                                              Description="Toggle if you want to display your user stats and session graph on the home view">
-                        <ui:SettingsExpanderItem.Footer>
+                        <ui:FASettingsExpanderItem.Footer>
                             <ToggleSwitch IsChecked="{Binding DisplayUserStats}" />
-                        </ui:SettingsExpanderItem.Footer>
-                    </ui:SettingsExpanderItem>
-                </ui:SettingsExpander>
+                        </ui:FASettingsExpanderItem.Footer>
+                    </ui:FASettingsExpanderItem>
+                </ui:FASettingsExpander>
 
                 <!-- —————————————— -->
                 <!-- Audio Settings -->
                 <!-- —————————————— -->
-                <ui:SettingsExpander Header="Audio Settings"
+                <ui:FASettingsExpander Header="Audio Settings"
                                      IconSource="Audio"
                                      Description="Settings regarding audio make it sound perfect for you"
                                      Name="AudioSettingsExpander">
 
-                    <ui:SettingsExpanderItem Content="Audio Device"
+                    <ui:FASettingsExpanderItem Content="Audio Device"
                                              Description="Select the audio device that you want to use for audio playback">
-                        <ui:SettingsExpanderItem.Footer>
+                        <ui:FASettingsExpanderItem.Footer>
                             <ui:FAComboBox ItemsSource="{Binding AvailableAudioDevices}"
                                            SelectedItem="{Binding SelectedAudioDevice}" />
-                        </ui:SettingsExpanderItem.Footer>
-                    </ui:SettingsExpanderItem>
+                        </ui:FASettingsExpanderItem.Footer>
+                    </ui:FASettingsExpanderItem>
 
-                    <ui:SettingsExpanderItem Content="Equalizer"
+                    <ui:FASettingsExpanderItem Content="Equalizer"
                                              Description="Here you can tune your audio frequencies to your liking"
                                              IsClickEnabled="True"
                                              ActionIconSource="ChevronRight"
                                              Click="OpenEqClick" />
 
-                    <ui:SettingsExpanderItem Content="Enable Pitch Change"
+                    <ui:FASettingsExpanderItem Content="Enable Pitch Change"
                                              Description="If turned on changing the playback speed will change the pitch. (Like Nightcore/Daycore). If turned of it just speeds up">
-                        <ui:SettingsExpanderItem.Footer>
+                        <ui:FASettingsExpanderItem.Footer>
                             <ToggleSwitch IsChecked="{Binding UsePitch}" />
-                        </ui:SettingsExpanderItem.Footer>
-                    </ui:SettingsExpanderItem>
+                        </ui:FASettingsExpanderItem.Footer>
+                    </ui:FASettingsExpanderItem>
 
-                    <ui:SettingsExpanderItem Content="Enable Audio Normalization"
+                    <ui:FASettingsExpanderItem Content="Enable Audio Normalization"
                                              Description="Enables audio normalization so songs are around the same volume. (Applies on next song played)">
-                        <ui:SettingsExpanderItem.Footer>
+                        <ui:FASettingsExpanderItem.Footer>
                             <ToggleSwitch IsChecked="{Binding UseAudioNormalization}" />
-                        </ui:SettingsExpanderItem.Footer>
-                    </ui:SettingsExpanderItem>
-                </ui:SettingsExpander>
+                        </ui:FASettingsExpanderItem.Footer>
+                    </ui:FASettingsExpanderItem>
+                </ui:FASettingsExpander>
 
                 <!-- ——————————————— -->
                 <!-- Network Settings -->
                 <!-- ——————————————— -->
-                <ui:SettingsExpander Header="Network Settings"
+                <ui:FASettingsExpander Header="Network Settings"
                                      IconSource="Wifi4"
                                      Description="Settings regarding anything that goes beyond the application itself"
                                      Name="NetworkSettingsExpander">
 
-                    <ui:SettingsExpanderItem Content="Log into osu!player"
+                    <ui:FASettingsExpanderItem Content="Log into osu!player"
                                              Description="Log into your osu!player profile"
                                              IsClickEnabled="True"
                                              ActionIconSource="ChevronRight"
                                              Click="LoginClick" />
 
-                    <ui:SettingsExpanderItem Content="Last.FM Scrobbler"
+                    <ui:FASettingsExpanderItem Content="Last.FM Scrobbler"
                                              Description="Log into your Last.FM account with your API-Key and API-Secret to scrobble your play activity">
-                        <ui:SettingsExpanderItem.Footer>
+                        <ui:FASettingsExpanderItem.Footer>
                             <StackPanel Orientation="Horizontal" Spacing="10">
                                 <StackPanel Orientation="Vertical" Spacing="2">
                                     <TextBlock Text="Last.FM API-Key" />
@@ -304,59 +304,59 @@
                                 </StackPanel>
 
                             </StackPanel>
-                        </ui:SettingsExpanderItem.Footer>
-                    </ui:SettingsExpanderItem>
+                        </ui:FASettingsExpanderItem.Footer>
+                    </ui:FASettingsExpanderItem>
 
-                    <ui:SettingsExpanderItem Content="Enable Scrobbling"
+                    <ui:FASettingsExpanderItem Content="Enable Scrobbling"
                                              Description="Toggle if you want to send your play activity as scrobbles to Last.FM">
-                        <ui:SettingsExpanderItem.Footer>
+                        <ui:FASettingsExpanderItem.Footer>
                             <ToggleSwitch IsChecked="{Binding EnableScrobbling}" />
-                        </ui:SettingsExpanderItem.Footer>
-                    </ui:SettingsExpanderItem>
-                </ui:SettingsExpander>
+                        </ui:FASettingsExpanderItem.Footer>
+                    </ui:FASettingsExpanderItem>
+                </ui:FASettingsExpander>
 
                 <!-- ———————————————————————— -->
                 <!-- HelpAndFeedback Settings -->
                 <!-- ———————————————————————— -->
-                <ui:SettingsExpander Header="Help and Feedback"
+                <ui:FASettingsExpander Header="Help and Feedback"
                                      IconSource="Help"
                                      Description="Need help, want to report a bug or request a feature? Here you can find all the information you need"
                                      Name="HelpSettingsExpander">
 
-                    <ui:SettingsExpanderItem Content="Stargaze us"
+                    <ui:FASettingsExpanderItem Content="Stargaze us"
                                              Description="You like the osu!player? Then Head to our GitHub and give us a star! We would greatly appreciate it!"
                                              IsClickEnabled="True"
                                              ActionIconSource="Go"
                                              Click="Github_OnClick" />
 
-                    <ui:SettingsExpanderItem Content="Request a feature"
+                    <ui:FASettingsExpanderItem Content="Request a feature"
                                              Description="You are missing something you would like to see in the osu!player? Head to our GitHub and request it"
                                              IsClickEnabled="True"
                                              ActionIconSource="Go"
                                              Click="ReportBug_OnClick" />
-                    <ui:SettingsExpanderItem Content="Report bug"
+                    <ui:FASettingsExpanderItem Content="Report bug"
                                              Description="Found a bug or something that doesn't work as expected? Head to our GitHub to report it"
                                              IsClickEnabled="True"
                                              ActionIconSource="Go"
                                              Click="ReportBug_OnClick" />
 
-                    <ui:SettingsExpanderItem Content="osu!player Discord Server"
+                    <ui:FASettingsExpanderItem Content="osu!player Discord Server"
                                              Description="Join our Discord server to ask question, dev updates and other stuff"
                                              IsClickEnabled="True"
                                              ActionIconSource="Go"
                                              Click="JoinDiscord_OnClick" />
 
-                    <ui:SettingsExpanderItem Content="Contact us"
+                    <ui:FASettingsExpanderItem Content="Contact us"
                                              Description="Here you can find our contact information if you need to contact us specifically"
                                              IsClickEnabled="True"
                                              ActionIconSource="Go"
                                              Click="ContactUs_OnClick" />
-                </ui:SettingsExpander>
+                </ui:FASettingsExpander>
 
                 <!-- ——————————————————— -->
                 <!-- Patchnotes Settings -->
                 <!-- ——————————————————— -->
-                <ui:SettingsExpander Header="Patchnotes"
+                <ui:FASettingsExpander Header="Patchnotes"
                                      IconSource="Edit"
                                      Description="Check whats new in your current version"
                                      Name="PatchnoteSettingsExpander">
@@ -375,23 +375,25 @@
                             </avalonia:MarkdownScrollViewer.Styles>
                         </avalonia:MarkdownScrollViewer>
                     </Grid>
-                </ui:SettingsExpander>
+                </ui:FASettingsExpander>
 
                 <!-- ——————————————————— -->
                 <!-- Contribute Settings -->
                 <!-- ——————————————————— -->
-                <ui:SettingsExpander Header="Contributers"
+                <ui:FASettingsExpander Header="Contributers"
                                      IconSource="Code"
                                      Description="The amazing people that help us make osu!player a better place"
                                      Name="ContributeSettingsExpander">
                     <StackPanel Margin="1" Spacing="1" Name="ContributePanel">
                         <Border>
-                            <ItemsRepeater ItemsSource="{Binding Contributors}">
-                                <ItemsRepeater.Layout>
-                                    <WrapLayout HorizontalSpacing="5" VerticalSpacing="5" Orientation="Horizontal" />
-                                </ItemsRepeater.Layout>
+                            <ItemsControl ItemsSource="{Binding Contributors}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
 
-                                <ItemsRepeater.ItemTemplate>
+                                <ItemsControl.ItemTemplate>
                                     <DataTemplate DataType="data:OsuPlayerContributor">
                                         <StackPanel Orientation="Horizontal" Spacing="5">
                                             <Border CornerRadius="100" Width="50" Height="50"
@@ -405,16 +407,16 @@
                                             <TextBlock Text="{Binding Name}" FontSize="20" VerticalAlignment="Center" />
                                         </StackPanel>
                                     </DataTemplate>
-                                </ItemsRepeater.ItemTemplate>
-                            </ItemsRepeater>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
                         </Border>
                     </StackPanel>
-                    <ui:SettingsExpanderItem Content="Want to contribute?"
+                    <ui:FASettingsExpanderItem Content="Want to contribute?"
                                              Description="Head to our repository for project building info and guidelines. We would be happy to see your Pull-Request!"
                                              ActionIconSource="Go"
                                              IsClickEnabled="True"
                                              Click="Github_OnClick" />
-                </ui:SettingsExpander>
+                </ui:FASettingsExpander>
             </controls:CascadingWrapPanel>
         </ScrollViewer>
     </Grid>

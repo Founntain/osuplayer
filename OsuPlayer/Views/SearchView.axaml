@@ -5,6 +5,7 @@
              xmlns:views="clr-namespace:OsuPlayer.Views"
              xmlns:interfaces="clr-namespace:OsuPlayer.Data.DataModels.Interfaces;assembly=OsuPlayer.Data"
              xmlns:storageModels="clr-namespace:OsuPlayer.Data.OsuPlayer.StorageModels;assembly=OsuPlayer.Data"
+             xmlns:classes="clr-namespace:OsuPlayer.Data.OsuPlayer.Classes;assembly=OsuPlayer.Data"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OsuPlayer.Views.SearchView"
              x:DataType="views:SearchViewModel"
@@ -29,10 +30,10 @@
                               ItemsSource="{Binding PlaylistContextMenuEntries}"
                               Classes="SubItems">
                         <MenuItem.Styles>
-                            <Style Selector="MenuItem.SubItems MenuItem">
-                                <Setter Property="Header" x:DataType="storageModels:Playlist" Value="{Binding Name}" />
+                            <Style Selector="MenuItem.SubItems MenuItem" x:DataType="classes:AddToPlaylistContextMenuEntry">
+                                <Setter Property="Header" Value="{Binding Name}" />
                                 <Setter Property="Command" Value="{Binding Action}" />
-                                <Setter Property="CommandParameter" x:DataType="storageModels:Playlist" Value="{Binding Name}" />
+                                <Setter Property="CommandParameter" Value="{Binding Name}" />
                             </Style>
                         </MenuItem.Styles>
                     </MenuItem>

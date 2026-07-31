@@ -92,34 +92,34 @@
             </Border>
         </Grid>
 
-        <ui:NavigationView Grid.Row="1" Name="AppNavigationView" PaneDisplayMode="LeftCompact" ItemInvoked="AppNavigationView_OnItemInvoked" IsSettingsVisible="False">
-            <ui:NavigationView.MenuItems>
-                <ui:NavigationViewItem Content="Home" Tag="HomeNavigation" IconSource="Home"/>
-                <ui:NavigationViewItem Content="Playlists" Tag="PlaylistNavigation" IconSource="Audio" />
+        <ui:FANavigationView Grid.Row="1" Name="AppNavigationView" PaneDisplayMode="LeftCompact" ItemInvoked="AppNavigationView_OnItemInvoked" IsSettingsVisible="False">
+            <ui:FANavigationView.MenuItems>
+                <ui:FANavigationViewItem Content="Home" Tag="HomeNavigation" IconSource="Home"/>
+                <ui:FANavigationViewItem Content="Playlists" Tag="PlaylistNavigation" IconSource="Audio" />
                 <!--<ui:NavigationViewItem Content="Social" Tag="SocialNavigation" IconSource="World" >-->
                 <!--    <ui:NavigationViewItem.MenuItems>-->
                 <!--        -->
                 <!--    </ui:NavigationViewItem.MenuItems>-->
                 <!--</ui:NavigationViewItem>-->
-                <ui:NavigationViewItem Content="Users" Tag="UserNavigation" IconSource="People" />
-                <ui:NavigationViewItem Content="Party" Tag="PartyNavigation" IconSource="Star" />
-                <ui:NavigationViewItem Content="Beatmaps" Tag="BeatmapsNavigation" IconSource="Library" />
-                <ui:NavigationViewItem Content="Statistics" Tag="StatisticsNavigation" IconSource="Target" />
-            </ui:NavigationView.MenuItems>
-            <ui:NavigationView.FooterMenuItems>
-                <ui:NavigationViewItem Name="LoginNavItem" Content="Log in" Tag="LoginNavigation" IconSource="Permissions" IsVisible="{Binding IsUserNotLoggedIn}" />
-                <ui:NavigationViewItem Name="EditUserNavItem" Content="Edit User" Tag="EditUserNavigation" IconSource="Edit" IsVisible="{Binding IsUserLoggedIn}" />
-                <ui:NavigationViewItem Content="Open Miniplayer" Tag="MiniplayerNavigation" IconSource="FullScreenMinimize" />
-                <ui:NavigationViewItem Name="Settings" Content="Settings" Tag="SettingsNavigation" IconSource="Settings" />
-            </ui:NavigationView.FooterMenuItems>
-            <ui:NavigationView.Content>
+                <ui:FANavigationViewItem Content="Users" Tag="UserNavigation" IconSource="People" />
+                <ui:FANavigationViewItem Content="Party" Tag="PartyNavigation" IconSource="Star" />
+                <ui:FANavigationViewItem Content="Beatmaps" Tag="BeatmapsNavigation" IconSource="Library" />
+                <ui:FANavigationViewItem Content="Statistics" Tag="StatisticsNavigation" IconSource="Target" />
+            </ui:FANavigationView.MenuItems>
+            <ui:FANavigationView.FooterMenuItems>
+                <ui:FANavigationViewItem Name="LoginNavItem" Content="Log in" Tag="LoginNavigation" IconSource="Permissions" IsVisible="{Binding IsUserNotLoggedIn}" />
+                <ui:FANavigationViewItem Name="EditUserNavItem" Content="Edit User" Tag="EditUserNavigation" IconSource="Edit" IsVisible="{Binding IsUserLoggedIn}" />
+                <ui:FANavigationViewItem Content="Open Miniplayer" Tag="MiniplayerNavigation" IconSource="FullScreenMinimize" />
+                <ui:FANavigationViewItem Name="Settings" Content="Settings" Tag="SettingsNavigation" IconSource="Settings" />
+            </ui:FANavigationView.FooterMenuItems>
+            <ui:FANavigationView.Content>
                 <TransitioningContentControl Name="MainViewPanel" Content="{Binding MainView}">
                     <TransitioningContentControl.PageTransition>
                         <CrossFade Duration="0:00:00.150" />
                     </TransitioningContentControl.PageTransition>
                 </TransitioningContentControl>
-            </ui:NavigationView.Content>
-        </ui:NavigationView>
+            </ui:FANavigationView.Content>
+        </ui:FANavigationView>
 
         <ContentControl Name="PlayerControlPanel" Grid.Row="2" Content="{Binding PlayerControl}" />
     </Grid>

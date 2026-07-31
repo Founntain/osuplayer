@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using Avalonia;
-using Avalonia.ReactiveUI;
 using Nein.Extensions;
 using OsuPlayer.Data.DataModels;
 using OsuPlayer.Extensions;
@@ -12,6 +11,7 @@ using OsuPlayer.Network.API.NorthFox;
 using OsuPlayer.Network.LastFm;
 using OsuPlayer.Services;
 using OsuPlayer.Windows;
+using ReactiveUI.Avalonia;
 using Splat;
 
 namespace OsuPlayer;
@@ -62,7 +62,7 @@ internal static class Program
             .UsePlatformDetect()
             .LogToTrace()
             .UseSkia()
-            .UseReactiveUI()
+            .UseReactiveUI(builder => {})
             .With(new Win32PlatformOptions());
     }
 

@@ -9,7 +9,7 @@
 
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="12.1.1" />
-        <PackageReference Include="Founntain.Nein" Version="2024.427.0" />
+        <PackageReference Include="Founntain.Nein" Version="2026.731.2" />
         <PackageReference Include="JetBrains.Annotations" Version="2026.2.0" />
         <PackageReference Include="ManagedBass" Version="4.0.2" />
         <PackageReference Include="OsuPlayer.Api.Data" Version="1.0.13" />
