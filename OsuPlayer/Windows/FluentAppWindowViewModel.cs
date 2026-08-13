@@ -93,7 +93,8 @@ public class FluentAppWindowViewModel : BaseWindowViewModel
         set => this.RaiseAndSetIfChanged(ref _backgroundImage, value);
     }
 
-    public FluentAppWindowViewModel(IAudioEngine engine, IPlayer player, IProfileManagerService profileManager, IShuffleServiceProvider? shuffleServiceProvider = null,
+    public FluentAppWindowViewModel(IAudioEngine engine, IPlayer player, IProfileManagerService profileManager,
+        ILyricsService lyricsService, IShuffleServiceProvider? shuffleServiceProvider = null,
         IStatisticsProvider? statisticsProvider = null, ISortProvider? sortProvider = null, IHistoryProvider? historyProvider = null)
     {
         Player = player;
@@ -102,7 +103,7 @@ public class FluentAppWindowViewModel : BaseWindowViewModel
         AudioVisualizer = new AudioVisualizerViewModel(Locator.Current.GetRequiredService<IAudioEngine>());
 
         PlayerControl = new PlayerControlViewModel(Player, engine, this);
-        NowPlayingView = new NowPlayingViewModel(Player, engine);
+        NowPlayingView = new NowPlayingViewModel(Player, engine, lyricsService);
 
         SearchView = new SearchViewModel(Player);
         PlaylistView = new PlaylistViewModel(Player);

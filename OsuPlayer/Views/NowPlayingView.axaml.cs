@@ -1,3 +1,5 @@
+using System.ComponentModel;
+using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -16,6 +18,8 @@ public partial class NowPlayingView : ReactiveControl<NowPlayingViewModel>
     private readonly DispatcherTimer _rotationTimer;
     private bool _wasPlayingBeforeSeek;
     private bool _isImmersiveTransitioning;
+    private INotifyPropertyChanged? _observedViewModel;
+    private CancellationTokenSource? _lyricAnimationCancellation;
 
     public NowPlayingView()
     {
@@ -33,7 +37,13 @@ public partial class NowPlayingView : ReactiveControl<NowPlayingViewModel>
         _rotationTimer.Tick += RotationTimer_OnTick;
 
         AttachedToVisualTree += (_, _) => _rotationTimer.Start();
-        DetachedFromVisualTree += (_, _) => _rotationTimer.Stop();
+        AttachedToVisualTree += (_, _) => ObserveViewModel();
+        DetachedFromVisualTree += (_, _) =>
+        {
+            _rotationTimer.Stop();
+            StopObservingViewModel();
+        };
+        DataContextChanged += (_, _) => ObserveViewModel();
     }
 
     private void RotationTimer_OnTick(object? sender, EventArgs e)
@@ -47,6 +57,49 @@ public partial class NowPlayingView : ReactiveControl<NowPlayingViewModel>
         var nextAngle = (coverRotation.Angle + 0.14) % 360;
         coverRotation.Angle = nextAngle;
         placeholderRotation.Angle = nextAngle;
+    }
+
+    private void ObserveViewModel()
+    {
+        if (ReferenceEquals(_observedViewModel, DataContext)) return;
+
+        StopObservingViewModel();
+        _observedViewModel = DataContext as INotifyPropertyChanged;
+        if (_observedViewModel != null)
+            _observedViewModel.PropertyChanged += ViewModel_OnPropertyChanged;
+    }
+
+    private void StopObservingViewModel()
+    {
+        if (_observedViewModel != null)
+            _observedViewModel.PropertyChanged -= ViewModel_OnPropertyChanged;
+        _observedViewModel = null;
+        _lyricAnimationCancellation?.Cancel();
+        _lyricAnimationCancellation?.Dispose();
+        _lyricAnimationCancellation = null;
+    }
+
+    private async void ViewModel_OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName != nameof(NowPlayingViewModel.CurrentLyricIndex)) return;
+
+        _lyricAnimationCancellation?.Cancel();
+        _lyricAnimationCancellation?.Dispose();
+        _lyricAnimationCancellation = new CancellationTokenSource();
+        var cancellationToken = _lyricAnimationCancellation.Token;
+
+        LyricsCarousel.Opacity = 0.32;
+        LyricsCarousel.RenderTransform = TransformOperations.Parse("translate(0px, 7px)");
+        try
+        {
+            await Task.Delay(55, cancellationToken);
+            LyricsCarousel.Opacity = 1;
+            LyricsCarousel.RenderTransform = TransformOperations.Parse("translate(0px, 0px)");
+        }
+        catch (OperationCanceledException)
+        {
+            // A seek or track change has superseded this transition.
+        }
     }
 
     private void PlayPause_OnClick(object? sender, RoutedEventArgs e)

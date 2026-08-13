@@ -114,48 +114,82 @@
                 </StackPanel>
             </Grid>
 
-            <Grid Grid.Row="1" Width="{Binding SpectrumSize}" Height="{Binding SpectrumSize}"
-                  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,4,0,0">
-                <visuals:CircularSpectrumControl Width="{Binding SpectrumSize}" Height="{Binding SpectrumSize}"
-                                                 AudioEngine="{Binding AudioEngine}"
-                                                 IsActive="{Binding IsPlaying}"
-                                                 ArtworkDiameter="{Binding ArtworkSize}"
-                                                 AccentBrush="{Binding AccentBrush}" />
+            <Grid Grid.Row="1">
+                <Grid Width="{Binding SpectrumSize}" Height="{Binding SpectrumSize}"
+                      HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{Binding SpectrumMargin}">
+                    <visuals:CircularSpectrumControl Width="{Binding SpectrumSize}" Height="{Binding SpectrumSize}"
+                                                     AudioEngine="{Binding AudioEngine}"
+                                                     IsActive="{Binding IsPlaying}"
+                                                     ArtworkDiameter="{Binding ArtworkSize}"
+                                                     AccentBrush="{Binding AccentBrush}" />
 
-                <Grid Width="{Binding ArtworkSize}" Height="{Binding ArtworkSize}" HorizontalAlignment="Center">
-                    <Ellipse x:Name="PlaceholderArtwork" Width="{Binding ArtworkSize}" Height="{Binding ArtworkSize}" Fill="#15252B2E">
-                        <Ellipse.RenderTransform>
-                            <RotateTransform />
-                        </Ellipse.RenderTransform>
-                    </Ellipse>
+                    <Grid Width="{Binding ArtworkSize}" Height="{Binding ArtworkSize}" HorizontalAlignment="Center">
+                        <Ellipse x:Name="PlaceholderArtwork" Width="{Binding ArtworkSize}" Height="{Binding ArtworkSize}" Fill="#15252B2E">
+                            <Ellipse.RenderTransform>
+                                <RotateTransform />
+                            </Ellipse.RenderTransform>
+                        </Ellipse>
 
-                    <Ellipse x:Name="CoverArtwork" Width="{Binding ArtworkSize}" Height="{Binding ArtworkSize}">
-                        <Ellipse.Fill>
-                            <ImageBrush Source="{Binding CurrentSongImage}" Stretch="UniformToFill" />
-                        </Ellipse.Fill>
-                        <Ellipse.RenderTransform>
-                            <RotateTransform />
-                        </Ellipse.RenderTransform>
-                    </Ellipse>
+                        <Ellipse x:Name="CoverArtwork" Width="{Binding ArtworkSize}" Height="{Binding ArtworkSize}">
+                            <Ellipse.Fill>
+                                <ImageBrush Source="{Binding CurrentSongImage}" Stretch="UniformToFill" />
+                            </Ellipse.Fill>
+                            <Ellipse.RenderTransform>
+                                <RotateTransform />
+                            </Ellipse.RenderTransform>
+                        </Ellipse>
 
-                    <Ellipse Width="{Binding CenterHoleSize}" Height="{Binding CenterHoleSize}" Fill="#E6071014"
-                             Stroke="#4DFFFFFF" StrokeThickness="1" />
-                    <Ellipse Width="12" Height="12" Fill="{Binding AccentBrush}" />
+                        <Ellipse Width="{Binding CenterHoleSize}" Height="{Binding CenterHoleSize}" Fill="#E6071014"
+                                 Stroke="#4DFFFFFF" StrokeThickness="1" />
+                        <Ellipse Width="12" Height="12" Fill="{Binding AccentBrush}" />
 
-                    <Border MaxWidth="{Binding ArtworkTextWidth}" Padding="16,10"
-                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                            Background="#52051014" CornerRadius="12">
-                        <StackPanel HorizontalAlignment="Stretch" Spacing="4">
-                            <TextBlock Text="{Binding TitleText}" FontFamily="Montserrat" FontSize="17"
-                                       LetterSpacing="0.35" TextAlignment="Center"
-                                       TextTrimming="CharacterEllipsis" HorizontalAlignment="Stretch"
-                                       Foreground="White" FontWeight="SemiBold" />
-                            <TextBlock Text="{Binding ArtistText}" FontFamily="Montserrat" FontSize="12"
-                                       LetterSpacing="0.5" TextAlignment="Center"
-                                       TextTrimming="CharacterEllipsis" HorizontalAlignment="Stretch"
-                                       Foreground="#D0FFFFFF" FontWeight="Medium" />
-                        </StackPanel>
-                    </Border>
+                        <Border MaxWidth="{Binding ArtworkTextWidth}" Padding="16,10"
+                                HorizontalAlignment="Center" VerticalAlignment="Center"
+                                Background="#52051014" CornerRadius="12">
+                            <StackPanel HorizontalAlignment="Stretch" Spacing="4">
+                                <TextBlock Text="{Binding TitleText}" FontFamily="Montserrat" FontSize="17"
+                                           LetterSpacing="0.35" TextAlignment="Center"
+                                           TextTrimming="CharacterEllipsis" HorizontalAlignment="Stretch"
+                                           Foreground="White" FontWeight="SemiBold" />
+                                <TextBlock Text="{Binding ArtistText}" FontFamily="Montserrat" FontSize="12"
+                                           LetterSpacing="0.5" TextAlignment="Center"
+                                           TextTrimming="CharacterEllipsis" HorizontalAlignment="Stretch"
+                                           Foreground="#D0FFFFFF" FontWeight="Medium" />
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </Grid>
+
+                <Grid x:Name="LyricsCarousel" Width="{Binding LyricsPanelWidth}"
+                      HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,12"
+                      RenderTransformOrigin="50%,50%" RenderTransform="translate(0px, 0px)">
+                    <Grid.Transitions>
+                        <Transitions>
+                            <DoubleTransition Property="Opacity" Duration="0:0:0.20" />
+                            <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.24" />
+                        </Transitions>
+                    </Grid.Transitions>
+
+                    <StackPanel Spacing="4" IsVisible="{Binding HasSynchronizedLyrics}">
+                        <TextBlock Text="{Binding PreviousLyricText}" FontFamily="Montserrat"
+                                   FontSize="{Binding ContextLyricFontSize}" TextAlignment="Center"
+                                   TextTrimming="CharacterEllipsis" Foreground="#52FFFFFF" />
+                        <TextBlock Text="{Binding CurrentLyricText}" FontFamily="Montserrat"
+                                   FontSize="{Binding CurrentLyricFontSize}" FontWeight="SemiBold"
+                                   TextAlignment="Center" TextWrapping="Wrap" MaxLines="2"
+                                   Foreground="{Binding AccentBrush}" />
+                        <TextBlock Text="{Binding CurrentLyricTranslation}" FontFamily="Montserrat" FontSize="12"
+                                   IsVisible="{Binding HasCurrentLyricTranslation}"
+                                   TextAlignment="Center" TextWrapping="Wrap" MaxLines="2"
+                                   Foreground="#A8FFFFFF" />
+                        <TextBlock Text="{Binding NextLyricText}" FontFamily="Montserrat"
+                                   FontSize="{Binding ContextLyricFontSize}" TextAlignment="Center"
+                                   TextTrimming="CharacterEllipsis" Foreground="#70FFFFFF" />
+                    </StackPanel>
+
+                    <TextBlock Text="{Binding LyricsStatusText}" IsVisible="{Binding IsLyricsStatusVisible}"
+                               FontFamily="Montserrat" FontSize="13" LetterSpacing="0.25"
+                               TextAlignment="Center" Foreground="#8FFFFFFF" />
                 </Grid>
             </Grid>
 

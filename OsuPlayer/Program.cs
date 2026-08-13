@@ -89,6 +89,7 @@ internal static class Program
             resolver.GetRequiredService<IAudioEngine>(),
             resolver.GetRequiredService<IPlayer>(),
             resolver.GetRequiredService<IProfileManagerService>(),
+            resolver.GetRequiredService<ILyricsService>(),
             resolver.GetService<IShuffleServiceProvider>(),
             resolver.GetService<IStatisticsProvider>(),
             resolver.GetService<ISortProvider>(),
