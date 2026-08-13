@@ -73,6 +73,9 @@
         <Compile Update="Views\PlayerControlViewModel.cs">
             <DependentUpon>PlayerControlView.axaml</DependentUpon>
         </Compile>
+        <Compile Update="Views\NowPlayingViewModel.cs">
+            <DependentUpon>NowPlayingView.axaml</DependentUpon>
+        </Compile>
         <Compile Update="Views\PlaylistViewModel.cs">
             <DependentUpon>PlaylistView.axaml</DependentUpon>
         </Compile>

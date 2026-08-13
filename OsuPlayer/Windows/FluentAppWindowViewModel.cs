@@ -27,6 +27,7 @@ public class FluentAppWindowViewModel : BaseWindowViewModel
     private float _backgroundBlurRadius;
 
     public PlayerControlViewModel PlayerControl { get; }
+    public NowPlayingViewModel NowPlayingView { get; }
 
     public EditUserViewModel EditUserView { get; }
     public HomeViewModel HomeView { get; }
@@ -77,8 +78,14 @@ public class FluentAppWindowViewModel : BaseWindowViewModel
     public BaseViewModel? MainView
     {
         get => _mainView;
-        set => this.RaiseAndSetIfChanged(ref _mainView, value);
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _mainView, value);
+            this.RaisePropertyChanged(nameof(IsPlayerControlVisible));
+        }
     }
+
+    public bool IsPlayerControlVisible => MainView is not NowPlayingViewModel;
 
     public Bitmap? BackgroundImage
     {
@@ -95,6 +102,7 @@ public class FluentAppWindowViewModel : BaseWindowViewModel
         AudioVisualizer = new AudioVisualizerViewModel(Locator.Current.GetRequiredService<IAudioEngine>());
 
         PlayerControl = new PlayerControlViewModel(Player, engine, this);
+        NowPlayingView = new NowPlayingViewModel(Player, engine);
 
         SearchView = new SearchViewModel(Player);
         PlaylistView = new PlaylistViewModel(Player);

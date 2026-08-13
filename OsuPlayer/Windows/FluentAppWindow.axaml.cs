@@ -184,6 +184,11 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
 
         switch (e.InvokedItemContainer.Tag)
         {
+            case "NowPlayingNavigation":
+            {
+                ViewModel!.MainView = ViewModel.NowPlayingView;
+                break;
+            }
             case "BeatmapsNavigation":
             {
                 ViewModel!.MainView = ViewModel.BeatmapView;

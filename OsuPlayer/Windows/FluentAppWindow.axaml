@@ -14,7 +14,7 @@
         <windows:FluentAppWindowViewModel />
     </Design.DataContext>
 
-    <Grid Name="MainGrid" RowDefinitions="Auto, *, 100">
+    <Grid Name="MainGrid" RowDefinitions="Auto, *, Auto">
         <!-- Fancy Acrylic Background -->
         <Panel Grid.Row="0" Grid.RowSpan="2" IsVisible="{Binding IsNonLinuxOs}">
             <ExperimentalAcrylicBorder IsHitTestVisible="False" Material="{Binding PanelMaterial}" />
@@ -94,6 +94,7 @@
         <ui:NavigationView Grid.Row="1" Name="AppNavigationView" PaneDisplayMode="LeftCompact" ItemInvoked="AppNavigationView_OnItemInvoked" IsSettingsVisible="False">
             <ui:NavigationView.MenuItems>
                 <ui:NavigationViewItem Content="Home" Tag="HomeNavigation" IconSource="Home"/>
+                <ui:NavigationViewItem Content="Now Playing" Tag="NowPlayingNavigation" IconSource="Audio" />
                 <ui:NavigationViewItem Content="Playlists" Tag="PlaylistNavigation" IconSource="Audio" />
                 <!--<ui:NavigationViewItem Content="Social" Tag="SocialNavigation" IconSource="World" >-->
                 <!--    <ui:NavigationViewItem.MenuItems>-->
@@ -120,7 +121,9 @@
             </ui:NavigationView.Content>
         </ui:NavigationView>
 
-        <ContentControl Name="PlayerControlPanel" Grid.Row="2" Content="{Binding PlayerControl}" />
+        <ContentControl Name="PlayerControlPanel" Grid.Row="2" Height="100"
+                        IsVisible="{Binding IsPlayerControlVisible}"
+                        Content="{Binding PlayerControl}" />
     </Grid>
 
 

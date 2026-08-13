@@ -1,0 +1,161 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:views="clr-namespace:OsuPlayer.Views"
+             mc:Ignorable="d"
+             d:DesignWidth="1400" d:DesignHeight="820"
+             x:Class="OsuPlayer.Views.NowPlayingView"
+             FontWeight="{DynamicResource DefaultFontWeight}">
+
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/SliderStyle.axaml" />
+
+        <Style Selector="Button.player-control">
+            <Setter Property="Width" Value="52" />
+            <Setter Property="Height" Value="52" />
+            <Setter Property="CornerRadius" Value="26" />
+            <Setter Property="Background" Value="#26FFFFFF" />
+            <Setter Property="BorderBrush" Value="#28FFFFFF" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+
+        <Style Selector="Button.player-control:pointerover">
+            <Setter Property="Background" Value="#3DFFFFFF" />
+            <Setter Property="BorderBrush" Value="#68F8D4" />
+        </Style>
+
+        <Style Selector="Button.play-control">
+            <Setter Property="Width" Value="68" />
+            <Setter Property="Height" Value="68" />
+            <Setter Property="CornerRadius" Value="34" />
+            <Setter Property="Background" Value="#68F8D4" />
+            <Setter Property="Foreground" Value="#071512" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+
+        <Style Selector="Button.play-control:pointerover">
+            <Setter Property="Background" Value="#8CFFE5" />
+        </Style>
+    </UserControl.Styles>
+
+    <Design.DataContext>
+        <views:NowPlayingViewModel />
+    </Design.DataContext>
+
+    <Grid Background="#071014" ClipToBounds="True">
+        <Image Source="{Binding BackgroundImage}"
+               Stretch="UniformToFill"
+               Opacity="0.88"
+               IsHitTestVisible="False" />
+
+        <Rectangle IsHitTestVisible="False">
+            <Rectangle.Fill>
+                <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                    <GradientStop Color="#6B071014" Offset="0" />
+                    <GradientStop Color="#C0071014" Offset="0.58" />
+                    <GradientStop Color="#F2071014" Offset="1" />
+                </LinearGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+
+        <Ellipse Width="720" Height="720" HorizontalAlignment="Center" VerticalAlignment="Center"
+                 IsHitTestVisible="False" Opacity="0.5">
+            <Ellipse.Fill>
+                <RadialGradientBrush>
+                    <GradientStop Color="#1F68F8D4" Offset="0" />
+                    <GradientStop Color="#0068F8D4" Offset="1" />
+                </RadialGradientBrush>
+            </Ellipse.Fill>
+        </Ellipse>
+
+        <Grid Margin="48,28,48,36" RowDefinitions="Auto,*,Auto">
+            <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+                <StackPanel Spacing="2">
+                    <TextBlock Text="NOW PLAYING" FontSize="12" LetterSpacing="2.8"
+                               Foreground="#B868F8D4" />
+                    <TextBlock Text="osu!player elite" FontSize="14" Foreground="#8CFFFFFF"
+                               FontWeight="{DynamicResource SmallerFontWeight}" />
+                </StackPanel>
+
+                <Border Grid.Column="1" Padding="12,6" CornerRadius="16"
+                        Background="#1FFFFFFF" BorderBrush="#22FFFFFF" BorderThickness="1">
+                    <StackPanel Orientation="Horizontal" Spacing="7">
+                        <Ellipse Width="7" Height="7" Fill="#68F8D4" VerticalAlignment="Center" />
+                        <TextBlock Text="LOCAL LIBRARY" FontSize="11" LetterSpacing="1.2"
+                                   Foreground="#BFFFFFFF" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <Grid Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"
+                  RowDefinitions="Auto,Auto" Margin="0,8,0,0">
+                <Grid Width="356" Height="356" HorizontalAlignment="Center">
+                    <Ellipse Width="356" Height="356" Fill="#13000000"
+                             Stroke="#26FFFFFF" StrokeThickness="1" />
+                    <Ellipse Width="336" Height="336" Fill="#1021282B"
+                             Stroke="#4268F8D4" StrokeThickness="1" />
+
+                    <Ellipse x:Name="PlaceholderArtwork" Width="320" Height="320" Fill="#15252B2E">
+                        <Ellipse.RenderTransform>
+                            <RotateTransform />
+                        </Ellipse.RenderTransform>
+                    </Ellipse>
+
+                    <Ellipse x:Name="CoverArtwork" Width="320" Height="320">
+                        <Ellipse.Fill>
+                            <ImageBrush Source="{Binding CurrentSongImage}" Stretch="UniformToFill" />
+                        </Ellipse.Fill>
+                        <Ellipse.RenderTransform>
+                            <RotateTransform />
+                        </Ellipse.RenderTransform>
+                    </Ellipse>
+
+                    <Ellipse Width="68" Height="68" Fill="#E6071014"
+                             Stroke="#4DFFFFFF" StrokeThickness="1" />
+                    <Ellipse Width="12" Height="12" Fill="#68F8D4" />
+                </Grid>
+
+                <StackPanel Grid.Row="1" HorizontalAlignment="Center" Margin="0,24,0,0" Spacing="6">
+                    <TextBlock Text="{Binding TitleText}" FontSize="32" MaxWidth="720"
+                               TextAlignment="Center" TextTrimming="CharacterEllipsis"
+                               Foreground="White" FontWeight="{DynamicResource BiggerFontWeight}" />
+                    <TextBlock Text="{Binding ArtistText}" FontSize="16" MaxWidth="640"
+                               TextAlignment="Center" TextTrimming="CharacterEllipsis"
+                               Foreground="#A8FFFFFF" FontWeight="{DynamicResource SmallerFontWeight}" />
+                </StackPanel>
+            </Grid>
+
+            <Grid Grid.Row="2" Width="620" MaxWidth="620" HorizontalAlignment="Center"
+                  RowDefinitions="Auto,Auto,Auto">
+                <Grid ColumnDefinitions="Auto,*,Auto" Margin="0,0,0,4">
+                    <TextBlock Text="{Binding CurrentSongTime}" FontSize="12" Foreground="#A8FFFFFF" />
+                    <TextBlock Grid.Column="2" Text="{Binding CurrentSongLength}" FontSize="12"
+                               Foreground="#A8FFFFFF" />
+                </Grid>
+
+                <Slider x:Name="SongProgressSlider" Grid.Row="1"
+                        Minimum="0" Maximum="{Binding SongLength}"
+                        Value="{Binding SongTime}"
+                        Foreground="#68F8D4" Background="#40FFFFFF" />
+
+                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center"
+                            Spacing="18" Margin="0,18,0,0">
+                    <Button Classes="player-control" Click="Previous_OnClick" ToolTip.Tip="Previous">
+                        <icons:MaterialIcon Kind="SkipBackward" Width="24" Height="24" />
+                    </Button>
+                    <Button Classes="play-control" Click="PlayPause_OnClick" ToolTip.Tip="Play / pause">
+                        <icons:MaterialIcon Kind="{Binding IsPlaying, Converter={StaticResource PlayPauseConverter}}"
+                                            Width="34" Height="34" />
+                    </Button>
+                    <Button Classes="player-control" Click="Next_OnClick" ToolTip.Tip="Next">
+                        <icons:MaterialIcon Kind="SkipForward" Width="24" Height="24" />
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>
