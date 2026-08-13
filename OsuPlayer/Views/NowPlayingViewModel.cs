@@ -27,10 +27,10 @@ public class NowPlayingViewModel : BaseViewModel
 
     private SolidColorBrush _accentBrush = new(Color.FromRgb(104, 248, 212));
     private SolidColorBrush _accentSoftBrush = new(Color.FromArgb(66, 104, 248, 212));
-    private SolidColorBrush _accentGlowBrush = new(Color.FromArgb(30, 104, 248, 212));
     private SolidColorBrush _accentForegroundBrush = new(Color.FromRgb(7, 21, 18));
 
     public IPlayer Player { get; }
+    public IAudioEngine AudioEngine { get; }
 
     public string TitleText => _currentSong.Value?.GetTitle() ?? "Nothing playing";
     public string ArtistText => _currentSong.Value?.GetArtist() ?? "Choose a song to begin";
@@ -45,9 +45,9 @@ public class NowPlayingViewModel : BaseViewModel
             this.RaisePropertyChanged(nameof(IsNotImmersive));
             this.RaisePropertyChanged(nameof(PageMargin));
             this.RaisePropertyChanged(nameof(ControlsWidth));
-            this.RaisePropertyChanged(nameof(ArtworkOuterSize));
-            this.RaisePropertyChanged(nameof(ArtworkMiddleSize));
             this.RaisePropertyChanged(nameof(ArtworkSize));
+            this.RaisePropertyChanged(nameof(SpectrumSize));
+            this.RaisePropertyChanged(nameof(ArtworkTextWidth));
             this.RaisePropertyChanged(nameof(CenterHoleSize));
         }
     }
@@ -55,9 +55,9 @@ public class NowPlayingViewModel : BaseViewModel
     public bool IsNotImmersive => !IsImmersive;
     public Thickness PageMargin => IsImmersive ? new Thickness(28, 22, 28, 20) : new Thickness(48, 28, 48, 36);
     public double ControlsWidth => IsImmersive ? 860 : 620;
-    public double ArtworkOuterSize => IsImmersive ? 436 : 356;
-    public double ArtworkMiddleSize => IsImmersive ? 416 : 336;
-    public double ArtworkSize => IsImmersive ? 400 : 320;
+    public double ArtworkSize => IsImmersive ? 370 : 320;
+    public double SpectrumSize => IsImmersive ? 520 : 450;
+    public double ArtworkTextWidth => IsImmersive ? 280 : 238;
     public double CenterHoleSize => IsImmersive ? 76 : 68;
 
     public SolidColorBrush AccentBrush
@@ -70,12 +70,6 @@ public class NowPlayingViewModel : BaseViewModel
     {
         get => _accentSoftBrush;
         private set => this.RaiseAndSetIfChanged(ref _accentSoftBrush, value);
-    }
-
-    public SolidColorBrush AccentGlowBrush
-    {
-        get => _accentGlowBrush;
-        private set => this.RaiseAndSetIfChanged(ref _accentGlowBrush, value);
     }
 
     public SolidColorBrush AccentForegroundBrush
@@ -118,6 +112,7 @@ public class NowPlayingViewModel : BaseViewModel
     public NowPlayingViewModel(IPlayer player, IAudioEngine audioEngine)
     {
         Player = player;
+        AudioEngine = audioEngine;
 
         _currentSong.BindTo(Player.CurrentSong);
         _currentSong.BindValueChanged(_ =>
@@ -163,7 +158,7 @@ public class NowPlayingViewModel : BaseViewModel
         }
 
         CurrentSongImage = new Bitmap(path);
-        BackgroundImage = BitmapExtensions.BlurBitmap(path, blurRadius: 30, opacity: 0.9f, quality: 65);
+        BackgroundImage = BitmapExtensions.BlurBitmap(path, blurRadius: 10, opacity: 0.96f, quality: 75);
     }
 
     private async Task UpdateAccentColorAsync(string? path, int revision)
@@ -180,8 +175,6 @@ public class NowPlayingViewModel : BaseViewModel
 
             AccentBrush = new SolidColorBrush(color);
             AccentSoftBrush = new SolidColorBrush(Color.FromArgb(66, color.R, color.G, color.B));
-            AccentGlowBrush = new SolidColorBrush(Color.FromArgb(30, color.R, color.G, color.B));
-
             var luminance = (0.2126 * color.R) + (0.7152 * color.G) + (0.0722 * color.B);
             AccentForegroundBrush = new SolidColorBrush(luminance > 150
                 ? Color.FromRgb(7, 15, 18)

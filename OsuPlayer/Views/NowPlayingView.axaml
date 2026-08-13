@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:visuals="clr-namespace:OsuPlayer.Views.CustomControls"
              xmlns:views="clr-namespace:OsuPlayer.Views"
              mc:Ignorable="d"
              d:DesignWidth="1400" d:DesignHeight="820"
@@ -67,17 +68,24 @@
         <Rectangle IsHitTestVisible="False">
             <Rectangle.Fill>
                 <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
-                    <GradientStop Color="#6B071014" Offset="0" />
-                    <GradientStop Color="#C0071014" Offset="0.58" />
-                    <GradientStop Color="#F2071014" Offset="1" />
+                    <GradientStop Color="#40071014" Offset="0" />
+                    <GradientStop Color="#78071014" Offset="0.62" />
+                    <GradientStop Color="#D8071014" Offset="1" />
                 </LinearGradientBrush>
             </Rectangle.Fill>
         </Rectangle>
 
-        <Ellipse Width="720" Height="720" HorizontalAlignment="Center" VerticalAlignment="Center"
-                 IsHitTestVisible="False" Fill="{Binding AccentGlowBrush}" />
+        <visuals:AmbientParticleControl IsActive="{Binding IsPlaying}" Opacity="0.72" />
 
-        <Grid Margin="{Binding PageMargin}" RowDefinitions="Auto,*,Auto">
+        <Grid x:Name="ImmersiveStage" Margin="{Binding PageMargin}" RowDefinitions="Auto,*,Auto"
+              RenderTransformOrigin="50%,50%" RenderTransform="scale(1)">
+            <Grid.Transitions>
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.26" />
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.32" />
+                </Transitions>
+            </Grid.Transitions>
+
             <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto">
                 <StackPanel Spacing="2" IsVisible="{Binding IsNotImmersive}">
                     <TextBlock Text="NOW PLAYING" FontSize="12" LetterSpacing="2.8"
@@ -85,14 +93,6 @@
                     <TextBlock Text="osu!player elite" FontSize="14" Foreground="#8CFFFFFF"
                                FontWeight="{DynamicResource SmallerFontWeight}" />
                 </StackPanel>
-
-                <Button Classes="overlay-action" IsVisible="{Binding IsImmersive}"
-                        Click="ExitImmersive_OnClick" ToolTip.Tip="Exit immersive mode (Esc)">
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <icons:MaterialIcon Kind="ArrowBack" Width="19" Height="19" />
-                        <TextBlock Text="EXIT" FontSize="11" LetterSpacing="1.2" VerticalAlignment="Center" />
-                    </StackPanel>
-                </Button>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10">
                     <Border Padding="12,6" CornerRadius="16" IsVisible="{Binding IsNotImmersive}"
@@ -114,14 +114,15 @@
                 </StackPanel>
             </Grid>
 
-            <Grid Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"
-                  RowDefinitions="Auto,Auto" Margin="0,8,0,0">
-                <Grid Width="{Binding ArtworkOuterSize}" Height="{Binding ArtworkOuterSize}" HorizontalAlignment="Center">
-                    <Ellipse Width="{Binding ArtworkOuterSize}" Height="{Binding ArtworkOuterSize}" Fill="#13000000"
-                             Stroke="#26FFFFFF" StrokeThickness="1" />
-                    <Ellipse Width="{Binding ArtworkMiddleSize}" Height="{Binding ArtworkMiddleSize}" Fill="#1021282B"
-                             Stroke="{Binding AccentSoftBrush}" StrokeThickness="1" />
+            <Grid Grid.Row="1" Width="{Binding SpectrumSize}" Height="{Binding SpectrumSize}"
+                  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,4,0,0">
+                <visuals:CircularSpectrumControl Width="{Binding SpectrumSize}" Height="{Binding SpectrumSize}"
+                                                 AudioEngine="{Binding AudioEngine}"
+                                                 IsActive="{Binding IsPlaying}"
+                                                 ArtworkDiameter="{Binding ArtworkSize}"
+                                                 AccentBrush="{Binding AccentBrush}" />
 
+                <Grid Width="{Binding ArtworkSize}" Height="{Binding ArtworkSize}" HorizontalAlignment="Center">
                     <Ellipse x:Name="PlaceholderArtwork" Width="{Binding ArtworkSize}" Height="{Binding ArtworkSize}" Fill="#15252B2E">
                         <Ellipse.RenderTransform>
                             <RotateTransform />
@@ -140,46 +141,113 @@
                     <Ellipse Width="{Binding CenterHoleSize}" Height="{Binding CenterHoleSize}" Fill="#E6071014"
                              Stroke="#4DFFFFFF" StrokeThickness="1" />
                     <Ellipse Width="12" Height="12" Fill="{Binding AccentBrush}" />
-                </Grid>
 
-                <StackPanel Grid.Row="1" HorizontalAlignment="Center" Margin="0,24,0,0" Spacing="6">
-                    <TextBlock Text="{Binding TitleText}" FontSize="32" MaxWidth="720"
-                               TextAlignment="Center" TextTrimming="CharacterEllipsis"
-                               Foreground="White" FontWeight="{DynamicResource BiggerFontWeight}" />
-                    <TextBlock Text="{Binding ArtistText}" FontSize="16" MaxWidth="640"
-                               TextAlignment="Center" TextTrimming="CharacterEllipsis"
-                               Foreground="#A8FFFFFF" FontWeight="{DynamicResource SmallerFontWeight}" />
-                </StackPanel>
+                    <Border MaxWidth="{Binding ArtworkTextWidth}" Padding="16,10"
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Background="#52051014" CornerRadius="12">
+                        <StackPanel HorizontalAlignment="Stretch" Spacing="4">
+                            <TextBlock Text="{Binding TitleText}" FontFamily="Montserrat" FontSize="17"
+                                       LetterSpacing="0.35" TextAlignment="Center"
+                                       TextTrimming="CharacterEllipsis" HorizontalAlignment="Stretch"
+                                       Foreground="White" FontWeight="SemiBold" />
+                            <TextBlock Text="{Binding ArtistText}" FontFamily="Montserrat" FontSize="12"
+                                       LetterSpacing="0.5" TextAlignment="Center"
+                                       TextTrimming="CharacterEllipsis" HorizontalAlignment="Stretch"
+                                       Foreground="#D0FFFFFF" FontWeight="Medium" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
             </Grid>
 
-            <Grid Grid.Row="2" Width="{Binding ControlsWidth}" MaxWidth="860" HorizontalAlignment="Center"
-                  RowDefinitions="Auto,Auto,Auto">
-                <Grid ColumnDefinitions="Auto,*,Auto" Margin="0,0,0,4">
-                    <TextBlock Text="{Binding CurrentSongTime}" FontSize="12" Foreground="#A8FFFFFF" />
-                    <TextBlock Grid.Column="2" Text="{Binding CurrentSongLength}" FontSize="12"
-                               Foreground="#A8FFFFFF" />
+            <Grid Grid.Row="2" ColumnDefinitions="*,Auto,*" VerticalAlignment="Bottom">
+                <Button Grid.Column="0" Classes="overlay-action" IsVisible="{Binding IsImmersive}"
+                        HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,10"
+                        Click="ExitImmersive_OnClick" ToolTip.Tip="Exit immersive mode (Esc)">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <icons:MaterialIcon Kind="ArrowBack" Width="19" Height="19" />
+                        <TextBlock Text="EXIT FULLSCREEN" FontSize="11" LetterSpacing="1.1" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+
+                <Grid Grid.Column="1" Width="{Binding ControlsWidth}" MaxWidth="860"
+                      HorizontalAlignment="Center" RowDefinitions="Auto,Auto,Auto">
+                    <Grid ColumnDefinitions="Auto,*,Auto" Margin="0,0,0,4">
+                        <TextBlock Text="{Binding CurrentSongTime}" FontSize="12" Foreground="#A8FFFFFF" />
+                        <TextBlock Grid.Column="2" Text="{Binding CurrentSongLength}" FontSize="12"
+                                   Foreground="#A8FFFFFF" />
+                    </Grid>
+
+                    <Grid Grid.Row="1" Height="20">
+                        <Border Height="4" CornerRadius="2" Background="#48FFFFFF"
+                                VerticalAlignment="Center" IsHitTestVisible="False" />
+
+                        <Slider x:Name="SongProgressSlider" Height="20"
+                                Minimum="0" Maximum="{Binding SongLength}"
+                                Value="{Binding SongTime}"
+                                Foreground="{Binding AccentBrush}" Background="Transparent">
+                            <Slider.Template>
+                                <ControlTemplate>
+                                    <Track Name="PART_Track" Orientation="Horizontal" Height="20">
+                                        <Track.DecreaseButton>
+                                            <RepeatButton Background="{Binding AccentBrush}">
+                                                <RepeatButton.Template>
+                                                    <ControlTemplate>
+                                                        <Border Height="4" CornerRadius="2"
+                                                                Background="{TemplateBinding Background}"
+                                                                VerticalAlignment="Center" />
+                                                    </ControlTemplate>
+                                                </RepeatButton.Template>
+                                            </RepeatButton>
+                                        </Track.DecreaseButton>
+                                        <Track.IncreaseButton>
+                                            <RepeatButton Background="Transparent">
+                                                <RepeatButton.Template>
+                                                    <ControlTemplate>
+                                                        <Border Background="Transparent" />
+                                                    </ControlTemplate>
+                                                </RepeatButton.Template>
+                                            </RepeatButton>
+                                        </Track.IncreaseButton>
+                                        <Thumb Width="14" Height="14" Background="{Binding AccentBrush}">
+                                            <Thumb.Template>
+                                                <ControlTemplate>
+                                                    <Grid>
+                                                        <Ellipse Fill="#F2FFFFFF" />
+                                                        <Ellipse Margin="3" Fill="{TemplateBinding Background}" />
+                                                    </Grid>
+                                                </ControlTemplate>
+                                            </Thumb.Template>
+                                        </Thumb>
+                                    </Track>
+                                </ControlTemplate>
+                            </Slider.Template>
+                        </Slider>
+                    </Grid>
+
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center"
+                                Spacing="18" Margin="0,16,0,0">
+                        <Button Classes="player-control" Click="Previous_OnClick" ToolTip.Tip="Previous">
+                            <icons:MaterialIcon Kind="SkipBackward" Width="24" Height="24" />
+                        </Button>
+                        <Button Classes="play-control" Click="PlayPause_OnClick" ToolTip.Tip="Play / pause"
+                                Background="{Binding AccentBrush}" Foreground="{Binding AccentForegroundBrush}">
+                            <icons:MaterialIcon Kind="{Binding IsPlaying, Converter={StaticResource PlayPauseConverter}}"
+                                                Width="34" Height="34" />
+                        </Button>
+                        <Button Classes="player-control" Click="Next_OnClick" ToolTip.Tip="Next">
+                            <icons:MaterialIcon Kind="SkipForward" Width="24" Height="24" />
+                        </Button>
+                    </StackPanel>
                 </Grid>
-
-                <Slider x:Name="SongProgressSlider" Grid.Row="1"
-                        Minimum="0" Maximum="{Binding SongLength}"
-                        Value="{Binding SongTime}"
-                        Foreground="{Binding AccentBrush}" Background="#40FFFFFF" />
-
-                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center"
-                            Spacing="18" Margin="0,18,0,0">
-                    <Button Classes="player-control" Click="Previous_OnClick" ToolTip.Tip="Previous">
-                        <icons:MaterialIcon Kind="SkipBackward" Width="24" Height="24" />
-                    </Button>
-                    <Button Classes="play-control" Click="PlayPause_OnClick" ToolTip.Tip="Play / pause"
-                            Background="{Binding AccentBrush}" Foreground="{Binding AccentForegroundBrush}">
-                        <icons:MaterialIcon Kind="{Binding IsPlaying, Converter={StaticResource PlayPauseConverter}}"
-                                            Width="34" Height="34" />
-                    </Button>
-                    <Button Classes="player-control" Click="Next_OnClick" ToolTip.Tip="Next">
-                        <icons:MaterialIcon Kind="SkipForward" Width="24" Height="24" />
-                    </Button>
-                </StackPanel>
             </Grid>
         </Grid>
+
+        <Rectangle x:Name="TransitionCurtain" Fill="#FF020608" Opacity="0" IsHitTestVisible="False">
+            <Rectangle.Transitions>
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.24" />
+                </Transitions>
+            </Rectangle.Transitions>
+        </Rectangle>
     </Grid>
 </UserControl>

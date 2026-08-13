@@ -1,7 +1,9 @@
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.Media.Transformation;
 using Avalonia.Threading;
 using Nein.Base;
 using OsuPlayer.Data.OsuPlayer.Enums;
@@ -13,6 +15,7 @@ public partial class NowPlayingView : ReactiveControl<NowPlayingViewModel>
 {
     private readonly DispatcherTimer _rotationTimer;
     private bool _wasPlayingBeforeSeek;
+    private bool _isImmersiveTransitioning;
 
     public NowPlayingView()
     {
@@ -51,14 +54,41 @@ public partial class NowPlayingView : ReactiveControl<NowPlayingViewModel>
         ViewModel?.Player.PlayPause();
     }
 
-    private void EnterImmersive_OnClick(object? sender, RoutedEventArgs e)
+    private async void EnterImmersive_OnClick(object? sender, RoutedEventArgs e)
     {
-        (TopLevel.GetTopLevel(this) as FluentAppWindow)?.SetImmersiveMode(true);
+        await SetImmersiveModeAsync(true);
     }
 
-    private void ExitImmersive_OnClick(object? sender, RoutedEventArgs e)
+    private async void ExitImmersive_OnClick(object? sender, RoutedEventArgs e)
     {
-        (TopLevel.GetTopLevel(this) as FluentAppWindow)?.SetImmersiveMode(false);
+        await SetImmersiveModeAsync(false);
+    }
+
+    private async Task SetImmersiveModeAsync(bool enabled)
+    {
+        if (_isImmersiveTransitioning || TopLevel.GetTopLevel(this) is not FluentAppWindow window)
+            return;
+
+        _isImmersiveTransitioning = true;
+        try
+        {
+            TransitionCurtain.Opacity = 0.62;
+            ImmersiveStage.Opacity = 0.28;
+            ImmersiveStage.RenderTransform = TransformOperations.Parse("scale(0.975)");
+
+            await Task.Delay(105);
+            window.SetImmersiveMode(enabled);
+            await Task.Delay(55);
+
+            ImmersiveStage.RenderTransform = TransformOperations.Parse("scale(1)");
+            ImmersiveStage.Opacity = 1;
+            TransitionCurtain.Opacity = 0;
+            await Task.Delay(280);
+        }
+        finally
+        {
+            _isImmersiveTransitioning = false;
+        }
     }
 
     private async void Previous_OnClick(object? sender, RoutedEventArgs e)

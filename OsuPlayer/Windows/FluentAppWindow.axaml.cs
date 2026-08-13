@@ -1,10 +1,12 @@
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
+using Avalonia.Threading;
 using FluentAvalonia.UI.Controls;
 using FluentAvalonia.UI.Windowing;
 using LiveChartsCore.Defaults;
@@ -30,6 +32,12 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
     private readonly ILoggingService _loggingService;
     private readonly IProfileManagerService _profileManager;
     private WindowState _windowStateBeforeImmersive = WindowState.Normal;
+    private SystemDecorations _decorationsBeforeImmersive = SystemDecorations.Full;
+    private bool _topmostBeforeImmersive;
+    private PixelPoint _positionBeforeImmersive;
+    private double _widthBeforeImmersive;
+    private double _heightBeforeImmersive;
+    private IntPtr _nativeStyleBeforeImmersive;
 
     public Miniplayer? Miniplayer;
     public FullscreenWindow? FullscreenWindow;
@@ -290,17 +298,122 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
             _windowStateBeforeImmersive = WindowState == WindowState.Minimized
                 ? WindowState.Normal
                 : WindowState;
+            _decorationsBeforeImmersive = SystemDecorations;
+            _topmostBeforeImmersive = Topmost;
+            _positionBeforeImmersive = Position;
+            _widthBeforeImmersive = Width;
+            _heightBeforeImmersive = Height;
+
             ViewModel.NowPlayingView.IsImmersive = true;
-            WindowState = WindowState.FullScreen;
+            WindowState = WindowState.Normal;
+            SystemDecorations = SystemDecorations.None;
+            Topmost = true;
+
+            Dispatcher.UIThread.Post(ApplyNativeFullscreen, DispatcherPriority.Loaded);
         }
         else
         {
             ViewModel.NowPlayingView.IsImmersive = false;
-            WindowState = _windowStateBeforeImmersive;
+            RestoreNativeWindow();
         }
 
         Focus();
     }
+
+    private void ApplyNativeFullscreen()
+    {
+        if (!OperatingSystem.IsWindows())
+        {
+            WindowState = WindowState.FullScreen;
+            return;
+        }
+
+        var handle = TryGetPlatformHandle()?.Handle ?? IntPtr.Zero;
+        if (handle == IntPtr.Zero) return;
+
+        var monitor = MonitorFromWindow(handle, MonitorDefaultToNearest);
+        var monitorInfo = new MonitorInfo { Size = Marshal.SizeOf<MonitorInfo>() };
+
+        if (monitor == IntPtr.Zero || !GetMonitorInfo(monitor, ref monitorInfo)) return;
+
+        _nativeStyleBeforeImmersive = GetWindowLongPtr(handle, GwlStyle);
+        var fullscreenStyle = new IntPtr((_nativeStyleBeforeImmersive.ToInt64() & ~WsOverlappedWindow) | WsPopup);
+        SetWindowLongPtr(handle, GwlStyle, fullscreenStyle);
+
+        var bounds = monitorInfo.Monitor;
+        SetWindowPos(handle, HwndTopmost, bounds.Left, bounds.Top,
+            bounds.Right - bounds.Left, bounds.Bottom - bounds.Top,
+            SwpFrameChanged | SwpShowWindow);
+    }
+
+    private void RestoreNativeWindow()
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            var handle = TryGetPlatformHandle()?.Handle ?? IntPtr.Zero;
+            if (handle != IntPtr.Zero && _nativeStyleBeforeImmersive != IntPtr.Zero)
+            {
+                SetWindowLongPtr(handle, GwlStyle, _nativeStyleBeforeImmersive);
+                SetWindowPos(handle, HwndNotTopmost, 0, 0, 0, 0,
+                    SwpNoMove | SwpNoSize | SwpFrameChanged);
+            }
+        }
+
+        Topmost = _topmostBeforeImmersive;
+        SystemDecorations = _decorationsBeforeImmersive;
+        WindowState = WindowState.Normal;
+        Position = _positionBeforeImmersive;
+        Width = _widthBeforeImmersive;
+        Height = _heightBeforeImmersive;
+        WindowState = _windowStateBeforeImmersive;
+    }
+
+    private const int GwlStyle = -16;
+    private const long WsPopup = 0x80000000L;
+    private const long WsOverlappedWindow = 0x00CF0000L;
+    private const uint MonitorDefaultToNearest = 2;
+    private const uint SwpNoSize = 0x0001;
+    private const uint SwpNoMove = 0x0002;
+    private const uint SwpFrameChanged = 0x0020;
+    private const uint SwpShowWindow = 0x0040;
+    private static readonly IntPtr HwndTopmost = new(-1);
+    private static readonly IntPtr HwndNotTopmost = new(-2);
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct NativeRect
+    {
+        public int Left;
+        public int Top;
+        public int Right;
+        public int Bottom;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct MonitorInfo
+    {
+        public int Size;
+        public NativeRect Monitor;
+        public NativeRect WorkArea;
+        public uint Flags;
+    }
+
+    [DllImport("user32.dll", EntryPoint = "GetWindowLongPtrW")]
+    private static extern IntPtr GetWindowLongPtr(IntPtr windowHandle, int index);
+
+    [DllImport("user32.dll", EntryPoint = "SetWindowLongPtrW")]
+    private static extern IntPtr SetWindowLongPtr(IntPtr windowHandle, int index, IntPtr newValue);
+
+    [DllImport("user32.dll")]
+    private static extern IntPtr MonitorFromWindow(IntPtr windowHandle, uint flags);
+
+    [DllImport("user32.dll", CharSet = CharSet.Auto)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool GetMonitorInfo(IntPtr monitorHandle, ref MonitorInfo monitorInfo);
+
+    [DllImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool SetWindowPos(IntPtr windowHandle, IntPtr insertAfter, int x, int y,
+        int width, int height, uint flags);
 
     protected override void OnClosing(WindowClosingEventArgs e)
     {
