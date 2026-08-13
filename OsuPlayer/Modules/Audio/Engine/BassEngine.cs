@@ -256,7 +256,23 @@ public sealed class BassEngine : OsuPlayerService, IAudioEngine
 
     private void EndTrack(int handle, int channel, int data, IntPtr user)
     {
-        ChannelReachedEnd?.Invoke().Wait();
+        var handler = ChannelReachedEnd;
+        if (handler == null) return;
+
+        // BASS executes end synchronizers on its dedicated sync thread. Waiting for the
+        // complete track-change task here can deadlock when that task frees this stream,
+        // because BASS cannot finish freeing it until this callback has returned.
+        Dispatcher.UIThread.Post(async () =>
+        {
+            try
+            {
+                await handler();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Failed to advance after reaching the end of a track: {ex}");
+            }
+        });
     }
 
     private void SetupStream()
