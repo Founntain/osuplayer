@@ -40,8 +40,8 @@ public class NowPlayingViewModel : BaseViewModel
     public IPlayer Player { get; }
     public IAudioEngine AudioEngine { get; }
 
-    public string TitleText => _currentSong.Value?.GetTitle() ?? "Nothing playing";
-    public string ArtistText => _currentSong.Value?.GetArtist() ?? "Choose a song to begin";
+    public string TitleText => _currentSong.Value?.GetDisplayTitle() ?? "Nothing playing";
+    public string ArtistText => _currentSong.Value?.GetDisplayArtist() ?? "Choose a song to begin";
     public bool IsPlaying => _isPlaying.Value;
 
     public bool IsImmersive
@@ -203,7 +203,12 @@ public class NowPlayingViewModel : BaseViewModel
 
         try
         {
-            var result = await _lyricsService.GetLyricsAsync(song.GetTitle(), song.GetArtist(), cancellationToken);
+            var request = new LyricsLookupRequest(
+                song.Title,
+                song.Artist,
+                song.TitleUnicode,
+                song.ArtistUnicode);
+            var result = await _lyricsService.GetLyricsAsync(request, cancellationToken);
             if (revision != _lyricsRevision || cancellationToken.IsCancellationRequested) return;
 
             var lines = result.Status == LyricsLookupStatus.Found

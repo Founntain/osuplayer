@@ -15,14 +15,39 @@ public interface IMapEntryBase : IEquatable<IMapEntryBase>, IComparable<IMapEntr
     public int TotalTime { get; }
     public string TotalTimeString => TimeSpan.FromMilliseconds(TotalTime).FormatTime();
     public string SongName => GetSongName();
-    public string ArtistString => GetArtist();
-    public string TitleString => GetTitle();
+    public string DisplaySongName => GetDisplaySongName();
+    public string ArtistString => GetDisplayArtist();
+    public string TitleString => GetDisplayTitle();
 
     public bool UseUnicode { get; set; }
 
     public string GetArtist();
 
     public string GetTitle();
+
+    /// <summary>
+    /// Gets the artist for display, preferring the original Unicode metadata.
+    /// </summary>
+    public string GetDisplayArtist()
+    {
+        return string.IsNullOrWhiteSpace(ArtistUnicode) ? Artist : ArtistUnicode;
+    }
+
+    /// <summary>
+    /// Gets the title for display, preferring the original Unicode metadata.
+    /// </summary>
+    public string GetDisplayTitle()
+    {
+        return string.IsNullOrWhiteSpace(TitleUnicode) ? Title : TitleUnicode;
+    }
+
+    /// <summary>
+    /// Gets the Unicode-first artist and title used by the UI.
+    /// </summary>
+    public string GetDisplaySongName()
+    {
+        return $"{GetDisplayArtist()} - {GetDisplayTitle()}";
+    }
 
     /// <summary>
     /// Gets a formatted version of artist and title

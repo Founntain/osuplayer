@@ -39,12 +39,19 @@ public sealed class LyricsService : ILyricsService
     public async Task<LyricsLookupResult> GetLyricsAsync(string title, string artist,
         CancellationToken cancellationToken = default)
     {
-        if (string.IsNullOrWhiteSpace(title))
+        return await GetLyricsAsync(new LyricsLookupRequest(title, artist, string.Empty, string.Empty),
+            cancellationToken);
+    }
+
+    public async Task<LyricsLookupResult> GetLyricsAsync(LyricsLookupRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var candidates = BuildSearchCandidates(request);
+        if (candidates.Count == 0)
             return CreateResult(LyricsLookupStatus.NotFound, "No song title is available.");
 
-        var cleanedTitle = CleanTitle(title);
-        var cleanedArtist = CleanArtist(artist);
-        var cachePath = GetCachePath(cleanedTitle, cleanedArtist);
+        var cachePath = GetCachePath(candidates);
+        var primaryCandidate = candidates[0];
 
         try
         {
@@ -52,18 +59,20 @@ public sealed class LyricsService : ILyricsService
             if (cached != null && IsCacheUsable(cached))
                 return cached.ToResult(fromCache: true);
 
-            var match = await SearchBestMatchAsync(cleanedTitle, cleanedArtist, cancellationToken);
+            var match = await SearchBestMatchAsync(candidates, cancellationToken);
             if (match == null)
             {
                 var notFound = CreateResult(LyricsLookupStatus.NotFound,
                     "No matching song was found on NetEase Cloud Music.");
-                await WriteCacheAsync(cachePath, LyricsCacheEntry.FromResult(cleanedTitle, cleanedArtist, notFound),
+                await WriteCacheAsync(cachePath, LyricsCacheEntry.FromResult(
+                        primaryCandidate.Title, primaryCandidate.Artist, notFound),
                     cancellationToken);
                 return notFound;
             }
 
             var result = await DownloadLyricsAsync(match, cancellationToken);
-            await WriteCacheAsync(cachePath, LyricsCacheEntry.FromResult(cleanedTitle, cleanedArtist, result),
+            await WriteCacheAsync(cachePath, LyricsCacheEntry.FromResult(
+                    primaryCandidate.Title, primaryCandidate.Artist, result),
                 cancellationToken);
             return result;
         }
@@ -78,44 +87,55 @@ public sealed class LyricsService : ILyricsService
         }
     }
 
-    private async Task<SongMatch?> SearchBestMatchAsync(string title, string artist,
+    private async Task<SongMatch?> SearchBestMatchAsync(IReadOnlyList<SearchCandidate> candidates,
         CancellationToken cancellationToken)
     {
-        var query = string.IsNullOrWhiteSpace(artist) ? title : $"{title} {artist}";
-        using var content = new FormUrlEncodedContent(new Dictionary<string, string>
-        {
-            ["s"] = query,
-            ["type"] = "1",
-            ["offset"] = "0",
-            ["limit"] = "20"
-        });
-        using var response = await _httpClient.PostAsync(SearchUri, content, cancellationToken);
-        response.EnsureSuccessStatusCode();
-
-        await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
-        using var document = await JsonDocument.ParseAsync(stream, cancellationToken: cancellationToken);
-        var root = document.RootElement;
-        if (!root.TryGetProperty("code", out var code) || code.GetInt32() != 200 ||
-            !root.TryGetProperty("result", out var result) ||
-            !result.TryGetProperty("songs", out var songs))
-            return null;
-
         SongMatch? best = null;
-        foreach (var song in songs.EnumerateArray())
+        var evaluatedSongIds = new HashSet<long>();
+
+        foreach (var searchCandidate in candidates)
         {
-            if (!song.TryGetProperty("id", out var idElement) ||
-                !song.TryGetProperty("name", out var nameElement))
+            var query = string.IsNullOrWhiteSpace(searchCandidate.Artist)
+                ? searchCandidate.Title
+                : $"{searchCandidate.Title} {searchCandidate.Artist}";
+            using var content = new FormUrlEncodedContent(new Dictionary<string, string>
+            {
+                ["s"] = query,
+                ["type"] = "1",
+                ["offset"] = "0",
+                ["limit"] = "20"
+            });
+            using var response = await _httpClient.PostAsync(SearchUri, content, cancellationToken);
+            response.EnsureSuccessStatusCode();
+
+            await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
+            using var document = await JsonDocument.ParseAsync(stream, cancellationToken: cancellationToken);
+            var root = document.RootElement;
+            if (!root.TryGetProperty("code", out var code) || code.GetInt32() != 200 ||
+                !root.TryGetProperty("result", out var result) ||
+                !result.TryGetProperty("songs", out var songs))
                 continue;
 
-            var name = nameElement.GetString() ?? string.Empty;
-            var artists = ReadArtists(song);
-            var score = CalculateMatchScore(title, artist, name, artists);
-            if (score.Title < 0.52 || score.Total < 0.62)
-                continue;
+            foreach (var song in songs.EnumerateArray())
+            {
+                if (!song.TryGetProperty("id", out var idElement) ||
+                    !song.TryGetProperty("name", out var nameElement))
+                    continue;
 
-            var candidate = new SongMatch(idElement.GetInt64(), name, artists, score.Total);
-            if (best == null || candidate.Score > best.Score)
-                best = candidate;
+                var songId = idElement.GetInt64();
+                if (!evaluatedSongIds.Add(songId))
+                    continue;
+
+                var name = nameElement.GetString() ?? string.Empty;
+                var artists = ReadArtists(song);
+                var score = CalculateMatchScore(candidates, name, artists);
+                if (score.Title < 0.52 || score.Total < 0.62)
+                    continue;
+
+                var candidate = new SongMatch(songId, name, artists, score.Total);
+                if (best == null || candidate.Score > best.Score)
+                    best = candidate;
+            }
         }
 
         return best;
@@ -189,9 +209,10 @@ public sealed class LyricsService : ILyricsService
         }
     }
 
-    private string GetCachePath(string title, string artist)
+    private string GetCachePath(IReadOnlyList<SearchCandidate> candidates)
     {
-        var key = NormalizeForComparison($"{title}\n{artist}");
+        var key = string.Join('\n', candidates.Select(candidate =>
+            $"{NormalizeForComparison(candidate.Title)}\t{NormalizeForComparison(candidate.Artist)}"));
         var hash = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(key))).ToLowerInvariant();
         return Path.Combine(_cacheDirectory, $"{hash}.json");
     }
@@ -223,15 +244,49 @@ public sealed class LyricsService : ILyricsService
         return WhitespaceRegex.Replace(artist.Trim(), " ");
     }
 
-    private static (double Title, double Total) CalculateMatchScore(string queryTitle, string queryArtist,
+    private static (double Title, double Total) CalculateMatchScore(IReadOnlyList<SearchCandidate> candidates,
         string candidateTitle, string candidateArtists)
     {
-        var titleScore = Similarity(NormalizeForComparison(queryTitle),
-            NormalizeForComparison(CleanTitle(candidateTitle)));
-        var artistScore = string.IsNullOrWhiteSpace(queryArtist)
+        var normalizedCandidateTitle = NormalizeForComparison(CleanTitle(candidateTitle));
+        var titleScore = candidates.Max(candidate => Similarity(
+            NormalizeForComparison(candidate.Title), normalizedCandidateTitle));
+        var artistCandidates = candidates
+            .Select(candidate => candidate.Artist)
+            .Where(artist => !string.IsNullOrWhiteSpace(artist))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+        var artistScore = artistCandidates.Length == 0
             ? 1d
-            : ArtistSimilarity(queryArtist, candidateArtists);
+            : artistCandidates.Max(artist => ArtistSimilarity(artist, candidateArtists));
         return (titleScore, (titleScore * 0.82) + (artistScore * 0.18));
+    }
+
+    private static IReadOnlyList<SearchCandidate> BuildSearchCandidates(LyricsLookupRequest request)
+    {
+        var candidates = new List<SearchCandidate>();
+        var keys = new HashSet<string>(StringComparer.Ordinal);
+
+        void Add(string? title, string? artist)
+        {
+            if (string.IsNullOrWhiteSpace(title)) return;
+
+            var cleanedTitle = CleanTitle(title);
+            var cleanedArtist = CleanArtist(artist ?? string.Empty);
+            if (string.IsNullOrWhiteSpace(cleanedTitle)) return;
+
+            var key = $"{NormalizeForComparison(cleanedTitle)}\n{NormalizeForComparison(cleanedArtist)}";
+            if (keys.Add(key))
+                candidates.Add(new SearchCandidate(cleanedTitle, cleanedArtist));
+        }
+
+        Add(request.Title, request.Artist);
+        Add(request.TitleUnicode, string.IsNullOrWhiteSpace(request.ArtistUnicode)
+            ? request.Artist
+            : request.ArtistUnicode);
+        Add(request.TitleUnicode, request.Artist);
+        Add(request.Title, request.ArtistUnicode);
+
+        return candidates;
     }
 
     private static double ArtistSimilarity(string queryArtist, string candidateArtists)
@@ -315,6 +370,7 @@ public sealed class LyricsService : ILyricsService
     }
 
     private sealed record SongMatch(long Id, string Title, string Artist, double Score);
+    private sealed record SearchCandidate(string Title, string Artist);
 
     private sealed class LyricsCacheEntry
     {

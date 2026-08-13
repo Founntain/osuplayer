@@ -76,7 +76,6 @@ public class SettingsViewModel : BaseViewModel
 
     private bool _usePitch;
 
-    private bool _useSongNameUnicode;
     public FluentAppWindow MainWindow;
 
     public string[] AppThemes { get; } =
@@ -101,29 +100,6 @@ public class SettingsViewModel : BaseViewModel
             config.Container.DisplayAudioVisualizer = value;
 
             MainWindow.SetAudioVisualization(value);
-        }
-    }
-
-    public bool UseSongNameUnicode
-    {
-        get => _useSongNameUnicode;
-        set
-        {
-            this.RaiseAndSetIfChanged(ref _useSongNameUnicode, value);
-
-            using var config = new Config();
-
-            config.Container.UseSongNameUnicode = value;
-
-            var provider = Locator.Current.GetRequiredService<ISongSourceProvider>();
-
-            provider.SongSource.Edit(mapEntryBases =>
-            {
-                foreach (IMapEntryBase mapEntryBase in mapEntryBases)
-                {
-                    mapEntryBase.UseUnicode = value;
-                }
-            });
         }
     }
 
@@ -639,8 +615,6 @@ public class SettingsViewModel : BaseViewModel
         _useLeftNavigationPosition = config.Container.UseLeftNavigationPosition;
         _renderingMode = GetRenderingModeString(config.Container.RenderingMode);
         _displayAudioVisualizer = config.Container.DisplayAudioVisualizer;
-        _useSongNameUnicode = config.Container.UseSongNameUnicode;
-
         var lastFmApi = Locator.Current.GetService<ILastFmApiService>();
 
         _isLastFmAuthorized = lastFmApi.LoadSessionKey();

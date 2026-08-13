@@ -22,8 +22,9 @@ public class RealmMapEntryBase : IMapEntryBase
     public int TotalTime { get; init; }
     public string TotalTimeString => TimeSpan.FromMilliseconds(TotalTime).FormatTime();
     public string SongName => GetSongName();
-    public string ArtistString => GetArtist();
-    public string TitleString => GetTitle();
+    public string DisplaySongName => GetDisplaySongName();
+    public string ArtistString => GetDisplayArtist();
+    public string TitleString => GetDisplayTitle();
     public bool UseUnicode { get; set; }
 
     /// <summary>
@@ -48,6 +49,21 @@ public class RealmMapEntryBase : IMapEntryBase
         if (UseUnicode)
             return string.IsNullOrWhiteSpace(TitleUnicode) ? Title : TitleUnicode;
         return Title;
+    }
+
+    public string GetDisplayArtist()
+    {
+        return string.IsNullOrWhiteSpace(ArtistUnicode) ? Artist : ArtistUnicode;
+    }
+
+    public string GetDisplayTitle()
+    {
+        return string.IsNullOrWhiteSpace(TitleUnicode) ? Title : TitleUnicode;
+    }
+
+    public string GetDisplaySongName()
+    {
+        return $"{GetDisplayArtist()} - {GetDisplayTitle()}";
     }
 
     public virtual string GetSongName()

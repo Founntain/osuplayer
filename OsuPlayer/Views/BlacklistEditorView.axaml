@@ -40,7 +40,7 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="interfaces:IMapEntryBase">
                         <Grid>
-                            <TextBlock Text="{Binding SongName}" FontWeight="SemiBold" />
+                            <TextBlock Text="{Binding DisplaySongName}" FontWeight="SemiBold" />
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
@@ -58,7 +58,7 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="interfaces:IMapEntryBase">
                         <Grid>
-                            <TextBlock Text="{Binding SongName}" FontWeight="SemiBold" />
+                            <TextBlock Text="{Binding DisplaySongName}" FontWeight="SemiBold" />
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

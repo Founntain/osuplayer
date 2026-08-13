@@ -141,12 +141,6 @@
                         </ui:SettingsExpanderItem.Footer>
                     </ui:SettingsExpanderItem>
 
-                    <ui:SettingsExpanderItem Content="Display titles and artists in unicode" Description="Shows titles and artists in their respective unicode characters e.g. japanese (this also means you have to search in unicode). Requires restart to work properly">
-                        <ui:SettingsExpanderItem.Footer>
-                            <ToggleSwitch IsChecked="{Binding UseSongNameUnicode}" OnContent="Yes" OffContent="No" />
-                        </ui:SettingsExpanderItem.Footer>
-                    </ui:SettingsExpanderItem>
-
                     <ui:SettingsExpanderItem Content="Navigation Position"
                                              Description="Do you want to have the navigation on the left or top?">
                         <ui:SettingsExpanderItem.Footer>

@@ -4,7 +4,16 @@ public interface ILyricsService
 {
     Task<LyricsLookupResult> GetLyricsAsync(string title, string artist,
         CancellationToken cancellationToken = default);
+
+    Task<LyricsLookupResult> GetLyricsAsync(LyricsLookupRequest request,
+        CancellationToken cancellationToken = default);
 }
+
+public sealed record LyricsLookupRequest(
+    string Title,
+    string Artist,
+    string TitleUnicode,
+    string ArtistUnicode);
 
 public enum LyricsLookupStatus
 {
