@@ -113,6 +113,7 @@ internal static class Program
         services.RegisterLazySingleton<ISongSourceProvider>(() => new OsuSongSourceService(resolver.GetService<ISortProvider>()));
         services.RegisterLazySingleton<IHistoryProvider>(() => new HistoryService());
         services.RegisterLazySingleton<ILastFmApiService>(() => new LastFmService(new LastFmApi()));
+        services.RegisterLazySingleton<ILyricsService>(() => new LyricsService());
 
         services.RegisterLazySingleton<IOsuPlayerApiService>(() => new NorthFox());
     }
