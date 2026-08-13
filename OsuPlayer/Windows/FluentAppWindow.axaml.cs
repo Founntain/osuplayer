@@ -29,6 +29,7 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
 {
     private readonly ILoggingService _loggingService;
     private readonly IProfileManagerService _profileManager;
+    private WindowState _windowStateBeforeImmersive = WindowState.Normal;
 
     public Miniplayer? Miniplayer;
     public FullscreenWindow? FullscreenWindow;
@@ -266,6 +267,39 @@ public partial class FluentAppWindow : FluentReactiveWindow<FluentAppWindowViewM
         }
 
         e.Handled = true;
+    }
+
+    protected override void OnKeyDown(KeyEventArgs e)
+    {
+        if (e.Key == Key.Escape && ViewModel?.NowPlayingView.IsImmersive == true)
+        {
+            SetImmersiveMode(false);
+            e.Handled = true;
+            return;
+        }
+
+        base.OnKeyDown(e);
+    }
+
+    public void SetImmersiveMode(bool enabled)
+    {
+        if (ViewModel == null || ViewModel.NowPlayingView.IsImmersive == enabled) return;
+
+        if (enabled)
+        {
+            _windowStateBeforeImmersive = WindowState == WindowState.Minimized
+                ? WindowState.Normal
+                : WindowState;
+            ViewModel.NowPlayingView.IsImmersive = true;
+            WindowState = WindowState.FullScreen;
+        }
+        else
+        {
+            ViewModel.NowPlayingView.IsImmersive = false;
+            WindowState = _windowStateBeforeImmersive;
+        }
+
+        Focus();
     }
 
     protected override void OnClosing(WindowClosingEventArgs e)

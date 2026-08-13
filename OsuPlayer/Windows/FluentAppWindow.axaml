@@ -124,6 +124,12 @@
         <ContentControl Name="PlayerControlPanel" Grid.Row="2" Height="100"
                         IsVisible="{Binding IsPlayerControlVisible}"
                         Content="{Binding PlayerControl}" />
+
+        <ContentControl Name="ImmersiveNowPlayingPanel"
+                        Grid.Row="0" Grid.RowSpan="3"
+                        ZIndex="100"
+                        IsVisible="{Binding NowPlayingView.IsImmersive}"
+                        Content="{Binding NowPlayingView}" />
     </Grid>
 
 

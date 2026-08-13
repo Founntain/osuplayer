@@ -1,9 +1,11 @@
+using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Threading;
 using Nein.Base;
 using OsuPlayer.Data.OsuPlayer.Enums;
+using OsuPlayer.Windows;
 
 namespace OsuPlayer.Views;
 
@@ -47,6 +49,16 @@ public partial class NowPlayingView : ReactiveControl<NowPlayingViewModel>
     private void PlayPause_OnClick(object? sender, RoutedEventArgs e)
     {
         ViewModel?.Player.PlayPause();
+    }
+
+    private void EnterImmersive_OnClick(object? sender, RoutedEventArgs e)
+    {
+        (TopLevel.GetTopLevel(this) as FluentAppWindow)?.SetImmersiveMode(true);
+    }
+
+    private void ExitImmersive_OnClick(object? sender, RoutedEventArgs e)
+    {
+        (TopLevel.GetTopLevel(this) as FluentAppWindow)?.SetImmersiveMode(false);
     }
 
     private async void Previous_OnClick(object? sender, RoutedEventArgs e)

@@ -25,20 +25,32 @@
 
         <Style Selector="Button.player-control:pointerover">
             <Setter Property="Background" Value="#3DFFFFFF" />
-            <Setter Property="BorderBrush" Value="#68F8D4" />
+            <Setter Property="BorderBrush" Value="#68FFFFFF" />
         </Style>
 
         <Style Selector="Button.play-control">
             <Setter Property="Width" Value="68" />
             <Setter Property="Height" Value="68" />
             <Setter Property="CornerRadius" Value="34" />
-            <Setter Property="Background" Value="#68F8D4" />
-            <Setter Property="Foreground" Value="#071512" />
             <Setter Property="Padding" Value="0" />
         </Style>
 
         <Style Selector="Button.play-control:pointerover">
-            <Setter Property="Background" Value="#8CFFE5" />
+            <Setter Property="Opacity" Value="0.88" />
+        </Style>
+
+        <Style Selector="Button.overlay-action">
+            <Setter Property="Height" Value="42" />
+            <Setter Property="CornerRadius" Value="21" />
+            <Setter Property="Padding" Value="14,0" />
+            <Setter Property="Background" Value="#2BFFFFFF" />
+            <Setter Property="BorderBrush" Value="#38FFFFFF" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+
+        <Style Selector="Button.overlay-action:pointerover">
+            <Setter Property="Background" Value="#45FFFFFF" />
         </Style>
     </UserControl.Styles>
 
@@ -63,49 +75,60 @@
         </Rectangle>
 
         <Ellipse Width="720" Height="720" HorizontalAlignment="Center" VerticalAlignment="Center"
-                 IsHitTestVisible="False" Opacity="0.5">
-            <Ellipse.Fill>
-                <RadialGradientBrush>
-                    <GradientStop Color="#1F68F8D4" Offset="0" />
-                    <GradientStop Color="#0068F8D4" Offset="1" />
-                </RadialGradientBrush>
-            </Ellipse.Fill>
-        </Ellipse>
+                 IsHitTestVisible="False" Fill="{Binding AccentGlowBrush}" />
 
-        <Grid Margin="48,28,48,36" RowDefinitions="Auto,*,Auto">
-            <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
-                <StackPanel Spacing="2">
+        <Grid Margin="{Binding PageMargin}" RowDefinitions="Auto,*,Auto">
+            <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto">
+                <StackPanel Spacing="2" IsVisible="{Binding IsNotImmersive}">
                     <TextBlock Text="NOW PLAYING" FontSize="12" LetterSpacing="2.8"
-                               Foreground="#B868F8D4" />
+                               Foreground="{Binding AccentBrush}" />
                     <TextBlock Text="osu!player elite" FontSize="14" Foreground="#8CFFFFFF"
                                FontWeight="{DynamicResource SmallerFontWeight}" />
                 </StackPanel>
 
-                <Border Grid.Column="1" Padding="12,6" CornerRadius="16"
-                        Background="#1FFFFFFF" BorderBrush="#22FFFFFF" BorderThickness="1">
-                    <StackPanel Orientation="Horizontal" Spacing="7">
-                        <Ellipse Width="7" Height="7" Fill="#68F8D4" VerticalAlignment="Center" />
-                        <TextBlock Text="LOCAL LIBRARY" FontSize="11" LetterSpacing="1.2"
-                                   Foreground="#BFFFFFFF" VerticalAlignment="Center" />
+                <Button Classes="overlay-action" IsVisible="{Binding IsImmersive}"
+                        Click="ExitImmersive_OnClick" ToolTip.Tip="Exit immersive mode (Esc)">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <icons:MaterialIcon Kind="ArrowBack" Width="19" Height="19" />
+                        <TextBlock Text="EXIT" FontSize="11" LetterSpacing="1.2" VerticalAlignment="Center" />
                     </StackPanel>
-                </Border>
+                </Button>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10">
+                    <Border Padding="12,6" CornerRadius="16" IsVisible="{Binding IsNotImmersive}"
+                            Background="#1FFFFFFF" BorderBrush="#22FFFFFF" BorderThickness="1">
+                        <StackPanel Orientation="Horizontal" Spacing="7">
+                            <Ellipse Width="7" Height="7" Fill="{Binding AccentBrush}" VerticalAlignment="Center" />
+                            <TextBlock Text="LOCAL LIBRARY" FontSize="11" LetterSpacing="1.2"
+                                       Foreground="#BFFFFFFF" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+
+                    <Button Classes="overlay-action" IsVisible="{Binding IsNotImmersive}"
+                            Click="EnterImmersive_OnClick" ToolTip.Tip="Immersive fullscreen">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <icons:MaterialIcon Kind="Fullscreen" Width="20" Height="20" />
+                            <TextBlock Text="FULLSCREEN" FontSize="11" LetterSpacing="1.1" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
             </Grid>
 
             <Grid Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"
                   RowDefinitions="Auto,Auto" Margin="0,8,0,0">
-                <Grid Width="356" Height="356" HorizontalAlignment="Center">
-                    <Ellipse Width="356" Height="356" Fill="#13000000"
+                <Grid Width="{Binding ArtworkOuterSize}" Height="{Binding ArtworkOuterSize}" HorizontalAlignment="Center">
+                    <Ellipse Width="{Binding ArtworkOuterSize}" Height="{Binding ArtworkOuterSize}" Fill="#13000000"
                              Stroke="#26FFFFFF" StrokeThickness="1" />
-                    <Ellipse Width="336" Height="336" Fill="#1021282B"
-                             Stroke="#4268F8D4" StrokeThickness="1" />
+                    <Ellipse Width="{Binding ArtworkMiddleSize}" Height="{Binding ArtworkMiddleSize}" Fill="#1021282B"
+                             Stroke="{Binding AccentSoftBrush}" StrokeThickness="1" />
 
-                    <Ellipse x:Name="PlaceholderArtwork" Width="320" Height="320" Fill="#15252B2E">
+                    <Ellipse x:Name="PlaceholderArtwork" Width="{Binding ArtworkSize}" Height="{Binding ArtworkSize}" Fill="#15252B2E">
                         <Ellipse.RenderTransform>
                             <RotateTransform />
                         </Ellipse.RenderTransform>
                     </Ellipse>
 
-                    <Ellipse x:Name="CoverArtwork" Width="320" Height="320">
+                    <Ellipse x:Name="CoverArtwork" Width="{Binding ArtworkSize}" Height="{Binding ArtworkSize}">
                         <Ellipse.Fill>
                             <ImageBrush Source="{Binding CurrentSongImage}" Stretch="UniformToFill" />
                         </Ellipse.Fill>
@@ -114,9 +137,9 @@
                         </Ellipse.RenderTransform>
                     </Ellipse>
 
-                    <Ellipse Width="68" Height="68" Fill="#E6071014"
+                    <Ellipse Width="{Binding CenterHoleSize}" Height="{Binding CenterHoleSize}" Fill="#E6071014"
                              Stroke="#4DFFFFFF" StrokeThickness="1" />
-                    <Ellipse Width="12" Height="12" Fill="#68F8D4" />
+                    <Ellipse Width="12" Height="12" Fill="{Binding AccentBrush}" />
                 </Grid>
 
                 <StackPanel Grid.Row="1" HorizontalAlignment="Center" Margin="0,24,0,0" Spacing="6">
@@ -129,7 +152,7 @@
                 </StackPanel>
             </Grid>
 
-            <Grid Grid.Row="2" Width="620" MaxWidth="620" HorizontalAlignment="Center"
+            <Grid Grid.Row="2" Width="{Binding ControlsWidth}" MaxWidth="860" HorizontalAlignment="Center"
                   RowDefinitions="Auto,Auto,Auto">
                 <Grid ColumnDefinitions="Auto,*,Auto" Margin="0,0,0,4">
                     <TextBlock Text="{Binding CurrentSongTime}" FontSize="12" Foreground="#A8FFFFFF" />
@@ -140,14 +163,15 @@
                 <Slider x:Name="SongProgressSlider" Grid.Row="1"
                         Minimum="0" Maximum="{Binding SongLength}"
                         Value="{Binding SongTime}"
-                        Foreground="#68F8D4" Background="#40FFFFFF" />
+                        Foreground="{Binding AccentBrush}" Background="#40FFFFFF" />
 
                 <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center"
                             Spacing="18" Margin="0,18,0,0">
                     <Button Classes="player-control" Click="Previous_OnClick" ToolTip.Tip="Previous">
                         <icons:MaterialIcon Kind="SkipBackward" Width="24" Height="24" />
                     </Button>
-                    <Button Classes="play-control" Click="PlayPause_OnClick" ToolTip.Tip="Play / pause">
+                    <Button Classes="play-control" Click="PlayPause_OnClick" ToolTip.Tip="Play / pause"
+                            Background="{Binding AccentBrush}" Foreground="{Binding AccentForegroundBrush}">
                         <icons:MaterialIcon Kind="{Binding IsPlaying, Converter={StaticResource PlayPauseConverter}}"
                                             Width="34" Height="34" />
                     </Button>
