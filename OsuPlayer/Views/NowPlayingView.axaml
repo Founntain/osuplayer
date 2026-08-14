@@ -123,6 +123,12 @@
                                                      ArtworkDiameter="{Binding ArtworkSize}"
                                                      AccentBrush="{Binding AccentBrush}" />
 
+                    <visuals:CircularProgressRingControl Width="{Binding SpectrumSize}" Height="{Binding SpectrumSize}"
+                                                         SongPosition="{Binding SongTime}"
+                                                         SongLength="{Binding SongLength}"
+                                                         ArtworkDiameter="{Binding ArtworkSize}"
+                                                         AccentBrush="{Binding AccentBrush}" />
+
                     <Grid Width="{Binding ArtworkSize}" Height="{Binding ArtworkSize}" HorizontalAlignment="Center">
                         <Ellipse x:Name="PlaceholderArtwork" Width="{Binding ArtworkSize}" Height="{Binding ArtworkSize}" Fill="#15252B2E">
                             <Ellipse.RenderTransform>

@@ -9,7 +9,10 @@ namespace OsuPlayer.Views.CustomControls;
 
 public sealed class CircularSpectrumControl : Control
 {
-    private const int BarCount = 128;
+    private const int SegmentCount = 3;
+    private const int BarsPerSegment = 40;
+    private const int BarCount = SegmentCount * BarsPerSegment;
+    private const double SegmentGapRadians = Math.PI / 17;
     private readonly float[] _levels = new float[BarCount];
     private readonly DispatcherTimer _timer;
 
@@ -102,7 +105,7 @@ public sealed class CircularSpectrumControl : Control
 
         var center = new Point(Bounds.Width / 2, Bounds.Height / 2);
         var outerLimit = Math.Min(Bounds.Width, Bounds.Height) / 2;
-        var innerRadius = Math.Min((ArtworkDiameter / 2) + 7, outerLimit - 12);
+        var innerRadius = Math.Min((ArtworkDiameter / 2) + 20, outerLimit - 12);
         var availableLength = Math.Max(5, outerLimit - innerRadius - 5);
 
         var ringBrush = AccentBrush ?? Brushes.White;
@@ -111,18 +114,121 @@ public sealed class CircularSpectrumControl : Control
         var barPen = new Pen(new SolidColorBrush(Color.FromArgb(222, 255, 255, 255)), 1.25,
             lineCap: PenLineCap.Round);
 
-        for (var i = 0; i < BarCount; i++)
+        var segmentSweep = ((Math.PI * 2) / SegmentCount) - SegmentGapRadians;
+        for (var segment = 0; segment < SegmentCount; segment++)
         {
-            var angle = (-Math.PI / 2) + (i * Math.PI * 2 / BarCount);
-            var level = _levels[i];
-            var length = 3 + (level * availableLength);
-            var cos = Math.Cos(angle);
-            var sin = Math.Sin(angle);
-            var start = new Point(center.X + (cos * innerRadius), center.Y + (sin * innerRadius));
-            var end = new Point(center.X + (cos * (innerRadius + length)),
-                center.Y + (sin * (innerRadius + length)));
-            context.DrawLine(barPen, start, end);
+            var segmentStart = (-Math.PI / 2) + (segment * Math.PI * 2 / SegmentCount) +
+                               (SegmentGapRadians / 2);
+            for (var bar = 0; bar < BarsPerSegment; bar++)
+            {
+                var index = (segment * BarsPerSegment) + bar;
+                var angle = segmentStart + ((bar + 0.5) * segmentSweep / BarsPerSegment);
+                var level = _levels[index];
+                var length = 3 + (level * availableLength);
+                var cos = Math.Cos(angle);
+                var sin = Math.Sin(angle);
+                var start = new Point(center.X + (cos * innerRadius), center.Y + (sin * innerRadius));
+                var end = new Point(center.X + (cos * (innerRadius + length)),
+                    center.Y + (sin * (innerRadius + length)));
+                context.DrawLine(barPen, start, end);
+            }
         }
+    }
+}
+
+public sealed class CircularProgressRingControl : Control
+{
+    public static readonly StyledProperty<double> SongPositionProperty =
+        AvaloniaProperty.Register<CircularProgressRingControl, double>(nameof(SongPosition));
+
+    public static readonly StyledProperty<double> SongLengthProperty =
+        AvaloniaProperty.Register<CircularProgressRingControl, double>(nameof(SongLength));
+
+    public static readonly StyledProperty<double> ArtworkDiameterProperty =
+        AvaloniaProperty.Register<CircularProgressRingControl, double>(nameof(ArtworkDiameter), 320);
+
+    public static readonly StyledProperty<IBrush?> AccentBrushProperty =
+        AvaloniaProperty.Register<CircularProgressRingControl, IBrush?>(nameof(AccentBrush));
+
+    public double SongPosition
+    {
+        get => GetValue(SongPositionProperty);
+        set => SetValue(SongPositionProperty, value);
+    }
+
+    public double SongLength
+    {
+        get => GetValue(SongLengthProperty);
+        set => SetValue(SongLengthProperty, value);
+    }
+
+    public double ArtworkDiameter
+    {
+        get => GetValue(ArtworkDiameterProperty);
+        set => SetValue(ArtworkDiameterProperty, value);
+    }
+
+    public IBrush? AccentBrush
+    {
+        get => GetValue(AccentBrushProperty);
+        set => SetValue(AccentBrushProperty, value);
+    }
+
+    static CircularProgressRingControl()
+    {
+        AffectsRender<CircularProgressRingControl>(SongPositionProperty, SongLengthProperty,
+            ArtworkDiameterProperty, AccentBrushProperty);
+    }
+
+    public CircularProgressRingControl()
+    {
+        IsHitTestVisible = false;
+    }
+
+    public override void Render(DrawingContext context)
+    {
+        base.Render(context);
+
+        var center = new Point(Bounds.Width / 2, Bounds.Height / 2);
+        var outerLimit = Math.Min(Bounds.Width, Bounds.Height) / 2;
+        var radius = Math.Min((ArtworkDiameter / 2) + 8, outerLimit - 14);
+        var trackPen = new Pen(new SolidColorBrush(Color.FromArgb(54, 255, 255, 255)), 2);
+        context.DrawEllipse(null, trackPen, center, radius, radius);
+
+        if (SongLength <= 0) return;
+
+        var progress = Math.Clamp(SongPosition / SongLength, 0, 1);
+        if (progress <= 0) return;
+
+        DrawArc(context, AccentBrush ?? Brushes.White, center, radius, -Math.PI / 2,
+            progress * Math.PI * 2, 3);
+    }
+
+    private static void DrawArc(DrawingContext context, IBrush brush, Point center, double radius,
+        double startAngle, double sweepAngle, double thickness)
+    {
+        var geometry = new StreamGeometry();
+        using var path = geometry.Open();
+        path.BeginFigure(PolarPoint(center, radius, startAngle), false);
+
+        var remaining = sweepAngle;
+        var currentAngle = startAngle;
+        while (remaining > 0)
+        {
+            var arc = Math.Min(remaining, Math.PI - 0.001);
+            currentAngle += arc;
+            path.ArcTo(PolarPoint(center, radius, currentAngle), new Size(radius, radius), 0,
+                false, SweepDirection.Clockwise);
+            remaining -= arc;
+        }
+
+        path.EndFigure(false);
+        context.DrawGeometry(null, new Pen(brush, thickness, lineCap: PenLineCap.Round), geometry);
+    }
+
+    private static Point PolarPoint(Point center, double radius, double angle)
+    {
+        return new Point(center.X + (Math.Cos(angle) * radius), center.Y + (Math.Sin(angle) * radius));
     }
 }
 

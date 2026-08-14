@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Controls;
@@ -16,6 +17,7 @@ namespace OsuPlayer.Views;
 public partial class NowPlayingView : ReactiveControl<NowPlayingViewModel>
 {
     private readonly DispatcherTimer _rotationTimer;
+    private readonly Stopwatch _rotationClock = new();
     private bool _wasPlayingBeforeSeek;
     private bool _isImmersiveTransitioning;
     private INotifyPropertyChanged? _observedViewModel;
@@ -32,15 +34,20 @@ public partial class NowPlayingView : ReactiveControl<NowPlayingViewModel>
 
         _rotationTimer = new DispatcherTimer
         {
-            Interval = TimeSpan.FromMilliseconds(30)
+            Interval = TimeSpan.FromMilliseconds(16)
         };
         _rotationTimer.Tick += RotationTimer_OnTick;
 
-        AttachedToVisualTree += (_, _) => _rotationTimer.Start();
+        AttachedToVisualTree += (_, _) =>
+        {
+            _rotationClock.Restart();
+            _rotationTimer.Start();
+        };
         AttachedToVisualTree += (_, _) => ObserveViewModel();
         DetachedFromVisualTree += (_, _) =>
         {
             _rotationTimer.Stop();
+            _rotationClock.Reset();
             StopObservingViewModel();
         };
         DataContextChanged += (_, _) => ObserveViewModel();
@@ -48,13 +55,15 @@ public partial class NowPlayingView : ReactiveControl<NowPlayingViewModel>
 
     private void RotationTimer_OnTick(object? sender, EventArgs e)
     {
+        var elapsedSeconds = _rotationClock.Elapsed.TotalSeconds;
+        _rotationClock.Restart();
         if (ViewModel?.IsPlaying != true) return;
 
         if (CoverArtwork.RenderTransform is not RotateTransform coverRotation ||
             PlaceholderArtwork.RenderTransform is not RotateTransform placeholderRotation)
             return;
 
-        var nextAngle = (coverRotation.Angle + 0.14) % 360;
+        var nextAngle = (coverRotation.Angle + (elapsedSeconds * 4.7)) % 360;
         coverRotation.Angle = nextAngle;
         placeholderRotation.Angle = nextAngle;
     }
