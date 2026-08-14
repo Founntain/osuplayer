@@ -39,6 +39,7 @@ public class ConfigContainer : IStorableContainer
     public bool UseLeftNavigationPosition { get; set; } = true;
     public BitmapInterpolationMode RenderingMode { get; set; } = BitmapInterpolationMode.HighQuality;
     public bool DisplayAudioVisualizer { get; set; } = false;
+    public int AmbientParticleCount { get; set; } = 160;
 
     public IStorableContainer Init()
     {

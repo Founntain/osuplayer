@@ -20,6 +20,7 @@ public partial class NowPlayingView : ReactiveControl<NowPlayingViewModel>
     private readonly Stopwatch _rotationClock = new();
     private bool _wasPlayingBeforeSeek;
     private bool _isImmersiveTransitioning;
+    private bool _isParticleDrawerVisible;
     private INotifyPropertyChanged? _observedViewModel;
     private CancellationTokenSource? _lyricAnimationCancellation;
 
@@ -66,6 +67,29 @@ public partial class NowPlayingView : ReactiveControl<NowPlayingViewModel>
         var nextAngle = (coverRotation.Angle + (elapsedSeconds * 4.7)) % 360;
         coverRotation.Angle = nextAngle;
         placeholderRotation.Angle = nextAngle;
+    }
+
+    private void NowPlayingRoot_OnPointerMoved(object? sender, PointerEventArgs e)
+    {
+        var point = e.GetPosition(NowPlayingRoot);
+        var nearRightEdge = NowPlayingRoot.Bounds.Width - point.X <= 88;
+        SetParticleDrawerVisible(nearRightEdge || ParticleDensityDrawer.IsPointerOver);
+    }
+
+    private void NowPlayingRoot_OnPointerExited(object? sender, PointerEventArgs e)
+    {
+        if (!ParticleDensityDrawer.IsPointerOver)
+            SetParticleDrawerVisible(false);
+    }
+
+    private void SetParticleDrawerVisible(bool visible)
+    {
+        if (_isParticleDrawerVisible == visible) return;
+
+        _isParticleDrawerVisible = visible;
+        ParticleDensityDrawer.Opacity = visible ? 1 : 0;
+        ParticleDensityDrawer.RenderTransform = TransformOperations.Parse(
+            visible ? "translate(0px, 0px)" : "translate(86px, 0px)");
     }
 
     private void ObserveViewModel()

@@ -59,7 +59,8 @@
         <views:NowPlayingViewModel />
     </Design.DataContext>
 
-    <Grid Background="#071014" ClipToBounds="True">
+    <Grid x:Name="NowPlayingRoot" Background="#071014" ClipToBounds="True"
+          PointerMoved="NowPlayingRoot_OnPointerMoved" PointerExited="NowPlayingRoot_OnPointerExited">
         <Image Source="{Binding BackgroundImage}"
                Stretch="UniformToFill"
                Opacity="0.88"
@@ -75,7 +76,8 @@
             </Rectangle.Fill>
         </Rectangle>
 
-        <visuals:AmbientParticleControl IsActive="{Binding IsPlaying}" Opacity="0.72" />
+        <visuals:AmbientParticleControl IsActive="{Binding IsPlaying}" ParticleCount="{Binding ParticleCount}"
+                                        Opacity="0.86" />
 
         <Grid x:Name="ImmersiveStage" Margin="{Binding PageMargin}" RowDefinitions="Auto,*,Auto"
               RenderTransformOrigin="50%,50%" RenderTransform="scale(1)">
@@ -281,6 +283,29 @@
                 </Grid>
             </Grid>
         </Grid>
+
+        <Border x:Name="ParticleDensityDrawer" Width="64" Height="224" HorizontalAlignment="Right"
+                VerticalAlignment="Center" Margin="0,0,18,0" Padding="10,12"
+                Background="#BE0A151A" BorderBrush="#52FFFFFF" BorderThickness="1" CornerRadius="24"
+                Opacity="0" RenderTransform="translate(86px, 0px)">
+            <Border.Transitions>
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.18" />
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.22" />
+                </Transitions>
+            </Border.Transitions>
+            <StackPanel HorizontalAlignment="Center" Spacing="7">
+                <TextBlock Text="MORE" FontSize="9" LetterSpacing="1.1" Foreground="#AFFFFFFF"
+                           HorizontalAlignment="Center" />
+                <Slider Width="24" Height="128" Orientation="Vertical" Minimum="40" Maximum="280"
+                        SmallChange="10" LargeChange="20" TickFrequency="20" TickPlacement="None"
+                        Value="{Binding ParticleCount, Mode=TwoWay}" Foreground="{Binding AccentBrush}" />
+                <TextBlock Text="LESS" FontSize="9" LetterSpacing="1.1" Foreground="#AFFFFFFF"
+                           HorizontalAlignment="Center" />
+                <TextBlock Text="{Binding ParticleCount}" FontSize="11" Foreground="White"
+                           HorizontalAlignment="Center" />
+            </StackPanel>
+        </Border>
 
         <Rectangle x:Name="TransitionCurtain" Fill="#FF020608" Opacity="0" IsHitTestVisible="False">
             <Rectangle.Transitions>

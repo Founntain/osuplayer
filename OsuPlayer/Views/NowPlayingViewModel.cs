@@ -8,6 +8,7 @@ using Nein.Base;
 using Nein.Extensions;
 using OsuPlayer.Data.DataModels.Interfaces;
 using OsuPlayer.Interfaces.Service;
+using OsuPlayer.IO.Storage.Config;
 using OsuPlayer.Modules;
 using OsuPlayer.Modules.Audio.Interfaces;
 using OsuPlayer.Services;
@@ -29,6 +30,7 @@ public class NowPlayingViewModel : BaseViewModel
     private int _artworkRevision;
     private int _lyricsRevision;
     private int _currentLyricIndex = -2;
+    private int _particleCount;
     private CancellationTokenSource? _lyricsCancellation;
     private IReadOnlyList<LrcLine> _lyrics = Array.Empty<LrcLine>();
     private string _lyricsStatusText = "Play a song to see lyrics";
@@ -43,6 +45,21 @@ public class NowPlayingViewModel : BaseViewModel
     public string TitleText => _currentSong.Value?.GetDisplayTitle() ?? "Nothing playing";
     public string ArtistText => _currentSong.Value?.GetDisplayArtist() ?? "Choose a song to begin";
     public bool IsPlaying => _isPlaying.Value;
+
+    public int ParticleCount
+    {
+        get => _particleCount;
+        set
+        {
+            var clamped = Math.Clamp(value, 40, 280);
+            if (_particleCount == clamped) return;
+
+            this.RaiseAndSetIfChanged(ref _particleCount, clamped);
+
+            using var config = new Config();
+            config.Container.AmbientParticleCount = clamped;
+        }
+    }
 
     public bool IsImmersive
     {
@@ -151,6 +168,9 @@ public class NowPlayingViewModel : BaseViewModel
         Player = player;
         AudioEngine = audioEngine;
         _lyricsService = lyricsService;
+
+        using (var config = new Config())
+            _particleCount = Math.Clamp(config.Container.AmbientParticleCount, 40, 280);
 
         _currentSong.BindTo(Player.CurrentSong);
         _currentSong.BindValueChanged(change =>

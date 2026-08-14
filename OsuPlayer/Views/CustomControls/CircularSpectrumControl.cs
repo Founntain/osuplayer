@@ -234,13 +234,17 @@ public sealed class CircularProgressRingControl : Control
 
 public sealed class AmbientParticleControl : Control
 {
-    private const int ParticleCount = 76;
-    private readonly Particle[] _particles = new Particle[ParticleCount];
+    private const int MinimumParticleCount = 40;
+    private const int MaximumParticleCount = 280;
+    private Particle[] _particles = Array.Empty<Particle>();
     private readonly DispatcherTimer _timer;
     private readonly Random _random = new(8027);
 
     public static readonly StyledProperty<bool> IsActiveProperty =
         AvaloniaProperty.Register<AmbientParticleControl, bool>(nameof(IsActive));
+
+    public static readonly StyledProperty<int> ParticleCountProperty =
+        AvaloniaProperty.Register<AmbientParticleControl, int>(nameof(ParticleCount), 160);
 
     public bool IsActive
     {
@@ -248,11 +252,16 @@ public sealed class AmbientParticleControl : Control
         set => SetValue(IsActiveProperty, value);
     }
 
+    public int ParticleCount
+    {
+        get => GetValue(ParticleCountProperty);
+        set => SetValue(ParticleCountProperty, value);
+    }
+
     public AmbientParticleControl()
     {
         IsHitTestVisible = false;
-        for (var i = 0; i < _particles.Length; i++)
-            _particles[i] = CreateParticle(initial: true);
+        EnsureParticleCount();
 
         _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(40) };
         _timer.Tick += (_, _) => AdvanceParticles();
@@ -282,6 +291,7 @@ public sealed class AmbientParticleControl : Control
 
     private void AdvanceParticles()
     {
+        EnsureParticleCount();
         var speedMultiplier = IsActive ? 1d : 0.32d;
         for (var i = 0; i < _particles.Length; i++)
         {
@@ -302,6 +312,8 @@ public sealed class AmbientParticleControl : Control
     {
         base.Render(context);
 
+        EnsureParticleCount();
+
         foreach (var particle in _particles)
         {
             var point = new Point(particle.X * Bounds.Width, particle.Y * Bounds.Height);
@@ -309,6 +321,19 @@ public sealed class AmbientParticleControl : Control
             var brush = new SolidColorBrush(Color.FromArgb(alpha, 255, 255, 255));
             context.DrawEllipse(brush, null, point, particle.Size, particle.Size);
         }
+    }
+
+    private void EnsureParticleCount()
+    {
+        var count = Math.Clamp(ParticleCount, MinimumParticleCount, MaximumParticleCount);
+        if (_particles.Length == count) return;
+
+        var previous = _particles;
+        _particles = new Particle[count];
+        var copied = Math.Min(previous.Length, _particles.Length);
+        Array.Copy(previous, _particles, copied);
+        for (var i = copied; i < _particles.Length; i++)
+            _particles[i] = CreateParticle(initial: true);
     }
 
     private struct Particle(double x, double y, double speed, double size, double opacity)
