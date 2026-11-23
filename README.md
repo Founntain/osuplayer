@@ -17,6 +17,9 @@ This is the *official* **osu!player** repository and is mainly developed by [@Fo
 
 If you want to contribute, feel free to fork this repository, read the [contributing information](https://github.com/osu-player/osuplayer#-contributing-to-the-project) and head to the [official osu!player discord](https://discord.gg/RJQSc5B) (not mandatory, but helpful). There you can add all valuable ideas and discuss other stuff regarding development.
 
+> [!NOTE]
+> ***This repository contains no AI-Generated code. This project was written way before AI even was a thing.***
+
 ## ☝️ Requirements
 
 #### osu!player requirements
